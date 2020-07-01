@@ -1,9 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:gravity="center" android:layout_gravity="center" android:orientation="vertical" android:id="@+id/layout" android:background="@drawable/filled_bar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:keepScreenOn="true">
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="30sp" android:id="@+id/left_hand" android:background="@drawable/back_puased" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="左手"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="30sp" android:id="@+id/right_hand" android:background="@drawable/back_puased" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="右手" android:layout_toRightOf="@+id/left_hand"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="30sp" android:textColor="#ffffff" android:id="@+id/yidiao" android:background="#630000" android:layout_width="wrap_content" android:layout_height="0dp" android:text="" android:layout_below="@+id/left_hand"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="30sp" android:textColor="#ffffff" android:gravity="center" android:id="@+id/yidiao0" android:background="#630000" android:layout_width="wrap_content" android:layout_height="0dp" android:text="" android:layout_toRightOf="@+id/yidiao" android:layout_below="@+id/right_hand"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="30sp" android:id="@+id/jiangdiao" android:background="@drawable/back_puased" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="降调" android:layout_below="@+id/yidiao"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="30sp" android:id="@+id/shengdiao" android:background="@drawable/back_puased" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="升调" android:layout_toRightOf="@+id/jiangdiao" android:layout_below="@+id/yidiao0"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/filled_bar"
+    android:gravity="center"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/left_hand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_puased"
+        android:text="左手"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/right_hand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/left_hand"
+        android:background="@drawable/back_puased"
+        android:text="右手"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/jiangdiao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/left_hand"
+        android:layout_alignStart="@id/left_hand"
+        android:layout_alignEnd="@id/left_hand"
+        android:background="@drawable/selector_ol_green"
+        android:text="降调"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/shengdiao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/right_hand"
+        android:layout_alignStart="@id/right_hand"
+        android:layout_alignEnd="@id/right_hand"
+        android:layout_toEndOf="@+id/jiangdiao"
+        android:background="@drawable/selector_ol_green"
+        android:text="升调"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/jiangdiao"
+        android:layout_alignStart="@id/jiangdiao"
+        android:layout_alignEnd="@id/shengdiao">
+
+        <ImageView
+            android:id="@+id/note_speed_0"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_orange"
+            android:src="@drawable/umeng_fb_back_selector" />
+
+        <TextView
+            android:id="@+id/note_speed"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="2"
+            android:background="@color/white1"
+            android:gravity="center"
+            android:text="中"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/note_speed_1"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_orange"
+            android:rotation="180"
+            android:src="@drawable/umeng_fb_back_selector" />
+
+    </LinearLayout>
+
 </RelativeLayout>

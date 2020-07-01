@@ -1,27 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@drawable/ground" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
-    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/ads" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textSize="20sp" android:typeface="monospace" android:textStyle="bold" android:textColor="@color/white1" android:gravity="center" android:id="@+id/title_bar" android:layout_width="wrap_content" android:layout_height="50dp" android:text="选择曲谱:" android:keepScreenOn="true"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ground"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ads"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:ignore="Suspicious0dp">
+
+        <TextView
+            android:id="@+id/title_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:keepScreenOn="true"
+            android:text="选择曲谱:"
+            android:textColor="@color/white1"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
     </LinearLayout>
-    <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@+id/linearLayout9" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <LinearLayout android:orientation="horizontal" android:id="@+id/linearLayout11" android:layout_width="wrap_content" android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayout11"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
     </LinearLayout>
-    <RelativeLayout android:gravity="center" android:orientation="horizontal" android:id="@+id/RelativeLayout1" android:background="@drawable/selector_ol_blue" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:gravity="center" android:layout_gravity="center" android:id="@+id/totle_score_all" android:background="@drawable/grounpbar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
-        <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:textColorHighlight="@color/blue_d" android:gravity="center" android:layout_gravity="center" android:id="@+id/all_mel" android:background="@drawable/wait_back" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:layout_toRightOf="@+id/totle_score_all" android:layout_alignBaseline="@+id/totle_score_all" android:layout_centerVertical="true"/>
-        <Button android:textSize="18sp" android:textColor="@color/white1" android:gravity="center" android:id="@+id/list_sort_b" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="排序方式" android:singleLine="true" android:layout_toRightOf="@+id/all_mel" android:layout_centerVertical="true"/>
-        <Button android:textSize="18sp" android:textColor="@color/white1" android:gravity="center" android:id="@+id/search_button" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="搜索" android:singleLine="true" android:layout_toRightOf="@+id/list_sort_b" android:layout_centerVertical="true"/>
-        <CheckBox android:textSize="12sp" android:id="@+id/check_record" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="录音" android:layout_toRightOf="@+id/search_button" android:layout_alignBottom="@+id/search_button" android:layout_alignParentTop="true"/>
-        <CheckBox android:textSize="12sp" android:id="@+id/check_play" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="连续" android:layout_toRightOf="@+id/check_record" android:layout_alignTop="@+id/search_button" android:layout_alignBottom="@+id/search_button"/>
-        <Button android:textSize="10sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:id="@+id/show_button" android:background="@drawable/filled_list" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="隐藏标题" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
-        <CheckBox android:textSize="12sp" android:id="@+id/check_hand" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="左手" android:layout_toLeftOf="@+id/show_button" android:layout_toRightOf="@+id/check_play" android:layout_alignBottom="@+id/check_play" android:layout_alignParentTop="true"/>
-    </RelativeLayout>
-    <LinearLayout android:orientation="horizontal" android:id="@+id/linearLayout1" android:fadingEdge="horizontal" android:fadingEdgeLength="5dp" android:layout_width="match_parent" android:layout_height="match_parent">
-        <LinearLayout android:id="@+id/linearLayout13" android:background="@drawable/filled_bar" android:layout_width="120dp" android:layout_height="match_parent">
-            <ListView android:id="@+id/f_list" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="@drawable/divider" android:fastScrollEnabled="false"/>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_d"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="0.1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/totle_score_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总分"
+                android:textColor="@color/white1"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/all_mel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="曲谱数"
+                android:textColor="#ffffffff"
+                android:textSize="12sp" />
         </LinearLayout>
-        <LinearLayout android:orientation="horizontal" android:id="@+id/linearLayout14" android:background="@drawable/filled_bar" android:layout_width="match_parent" android:layout_height="match_parent">
-            <ListView android:id="@+id/c_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:cacheColorHint="#00ffffff" android:divider="@drawable/divider"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="0.03" />
+
+        <Button
+            android:id="@+id/list_sort_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="排序方式"
+            android:textColor="@color/white1"
+            android:textSize="14sp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/search_edit"
+            style="@style/AutoCompleteStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@drawable/search_box"
+            android:completionThreshold="1"
+            android:configChanges="keyboard"
+            android:divider="@null"
+            android:dropDownWidth="300dp"
+            android:dropDownHeight="130dp"
+            android:ems="10"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="搜索"
+            android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
+            android:listSelector="@android:color/transparent"
+            android:singleLine="true"
+            android:textColor="#ffffffff"
+            android:textColorHint="#90ffffff"
+            android:textSize="14sp" />
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.22"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.1" />
+
+            <ImageView
+                android:id="@+id/search_fast"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                android:src="@drawable/search" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.1" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/check_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="录音"
+            android:textSize="15sp" />
+
+        <CheckBox
+            android:id="@+id/check_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="连续"
+            android:textSize="15sp" />
+
+        <CheckBox
+            android:id="@+id/check_hand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="左手"
+            android:textSize="15sp" />
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.45"
+
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.1" />
+
+            <ImageView
+                android:id="@+id/setting_fast"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+
+                android:src="@drawable/setting" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.1" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/blue_d"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+
+            android:background="@drawable/grounpbar"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="搜索: "
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+
+        <Button
+            android:id="@+id/show_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/filled_list"
+            android:gravity="fill"
+            android:text="隐藏标题"
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="95dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar">
+
+            <ListView
+                android:id="@+id/f_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@drawable/divider"
+                android:fastScrollEnabled="false"
+                android:listSelector="#00000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar"
+            android:orientation="horizontal">
+
+            <ListView
+                android:id="@+id/c_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00ffffff"
+                android:divider="@drawable/divider" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

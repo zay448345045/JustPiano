@@ -1,41 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@+id/layout" android:background="@drawable/ground" android:layout_width="wrap_content" android:layout_height="match_parent" android:keepScreenOn="true">
-    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/ads" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <LinearLayout android:gravity="left" android:layout_gravity="center" android:orientation="horizontal" android:id="@+id/linearLayout5" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <TextView android:textSize="20sp" android:typeface="monospace" android:textStyle="bold" android:textColor="@color/white1" android:gravity="center" android:layout_gravity="center" android:id="@+id/title_bar" android:layout_width="match_parent" android:layout_height="50dp" android:text="在线曲库:" android:keepScreenOn="true"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/ground"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ads"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title_bar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:keepScreenOn="true"
+                android:text="在线曲库:"
+                android:textColor="@color/white1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
         </LinearLayout>
-        <LinearLayout android:gravity="right" android:id="@+id/linearLayout8" android:layout_width="match_parent" android:layout_height="wrap_content">
-            <Button android:textSize="12sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:id="@+id/show_button" android:background="@drawable/umeng_common_gradient_orange" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 隐藏标题 "/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/show_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/umeng_common_gradient_orange"
+                android:gravity="fill"
+                android:text=" 隐藏标题 "
+                android:textColor="@color/white1"
+                android:textColorHint="@color/yellow_r"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout android:gravity="left|center_vertical|center_horizontal|center" android:orientation="horizontal" android:id="@+id/linearLayout6" android:background="@drawable/selector_ol_blue" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <Button android:textSize="16sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:layout_gravity="center" android:id="@+id/ol_date_b" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5sp" android:text=" 更新 "/>
-        <Button android:textSize="16sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:layout_gravity="center" android:id="@+id/ol_degree_b" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5sp" android:text=" 难度 "/>
-        <Button android:textSize="16sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:layout_gravity="center" android:id="@+id/ol_name_b" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5sp" android:text=" 歌名 "/>
-        <Button android:textSize="16sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:layout_gravity="center" android:id="@+id/ol_artist_b" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5sp" android:text=" 歌手 "/>
-        <Button android:textSize="16sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:layout_gravity="center" android:id="@+id/ol_hot_b" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5sp" android:text=" 热度 "/>
-        <Button android:textSize="16sp" android:textColor="@color/white1" android:textColorHint="@color/yellow_r" android:gravity="fill" android:layout_gravity="center" android:id="@+id/ol_search_button" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginRight="5sp" android:text=" 搜索 "/>
-        <LinearLayout android:gravity="right|center_vertical|center_horizontal|center" android:id="@+id/parent" android:layout_width="match_parent" android:layout_height="match_parent">
-            <TextView android:textStyle="bold" android:textColor="@color/online" android:id="@+id/ol_time_text" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <Button android:textSize="18sp" android:textColor="@color/white1" android:id="@+id/ol_top_next" android:background="@drawable/selector_orange_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 第1页 "/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_ol_blue"
+        android:gravity="start|center_vertical|center_horizontal|center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ol_date_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5sp"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text=" 更新 "
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_degree_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5sp"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text=" 难度 "
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_name_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5sp"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text=" 歌名 "
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_items_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5sp"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text=" 歌手 "
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_hot_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5sp"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text=" 热度 "
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5sp"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text=" 搜索 "
+            android:textColor="@color/white1"
+            android:textColorHint="@color/yellow_r"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical|center_horizontal|center">
+
+            <TextView
+                android:id="@+id/ol_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/online"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/ol_top_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_orange_button"
+                android:text=" 第1页 "
+                android:textColor="@color/white1"
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout android:orientation="horizontal" android:id="@+id/linearLayout1" android:fadingEdge="horizontal" android:fadingEdgeLength="5dp" android:layout_width="match_parent" android:layout_height="match_parent">
-        <LinearLayout android:id="@+id/linearLayout13" android:background="@drawable/filled_bar" android:layout_width="120dp" android:layout_height="match_parent">
-            <ListView android:scrollbarAlwaysDrawVerticalTrack="false" android:id="@+id/ol_f_list" android:layout_width="match_parent" android:layout_height="match_parent" android:drawSelectorOnTop="false" android:cacheColorHint="@color/blue_l" android:divider="@drawable/divider" android:fastScrollEnabled="false" android:headerDividersEnabled="false" android:footerDividersEnabled="false"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar">
+
+            <ListView
+                android:id="@+id/ol_f_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@color/blue_l"
+                android:divider="@drawable/divider"
+                android:drawSelectorOnTop="false"
+                android:fastScrollEnabled="false"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"
+                android:scrollbarAlwaysDrawVerticalTrack="false" />
         </LinearLayout>
-        <LinearLayout android:orientation="horizontal" android:id="@+id/linearLayout14" android:background="@drawable/filled_bar" android:layout_width="match_parent" android:layout_height="match_parent">
-            <LinearLayout android:orientation="vertical" android:id="@+id/sup_view" android:layout_width="match_parent" android:layout_height="match_parent">
-                <LinearLayout android:gravity="center" android:layout_gravity="top" android:orientation="horizontal" android:id="@+id/linearLayout18" android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:textColor="@color/white1" android:gravity="top" android:id="@+id/textView2" android:background="@drawable/filled_list" android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/thanks"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/sup_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/filled_list"
+                        android:gravity="top"
+                        android:text="@string/thanks"
+                        android:textColor="@color/white1" />
                 </LinearLayout>
-                <LinearLayout android:gravity="bottom|right|center_vertical|center_horizontal|center" android:id="@+id/linearLayout15" android:layout_width="match_parent" android:layout_height="match_parent">
-                    <LinearLayout android:gravity="bottom|right|center_vertical|center_horizontal|center" android:orientation="vertical" android:id="@+id/linearLayout17" android:layout_width="wrap_content" android:layout_height="wrap_content">
-                        <ImageButton android:id="@+id/sup" android:background="@color/translent" android:paddingRight="1dp" android:layout_width="match_parent" android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout15"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom|end|center_vertical|center_horizontal|center">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom|end|center_vertical|center_horizontal|center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/sup"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/translent"
+                            android:paddingEnd="1dp"
+                            tools:ignore="RtlSymmetry" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-            <ListView android:id="@+id/ol_c_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:cacheColorHint="#00ffffff" android:divider="@drawable/divider"/>
+
+            <ListView
+                android:id="@+id/ol_c_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00ffffff"
+                android:divider="@drawable/divider" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

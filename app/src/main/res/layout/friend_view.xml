@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <RelativeLayout android:orientation="horizontal" android:id="@+id/ol_friend_bar" android:background="@drawable/ol_rectangle_orange" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textSize="24sp" android:textStyle="bold" android:textColor="@color/white1" android:gravity="center" android:id="@+id/friend_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:layout_toRightOf="@+id/friend_sex" android:layout_centerVertical="true"/>
-        <ImageView android:id="@+id/friend_sex" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/f" android:layout_centerVertical="true"/>
-        <Button android:textSize="18sp" android:textColor="@color/white1" android:id="@+id/friend_dele" android:background="@drawable/selector_ol_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="删除" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
-        <Button android:textSize="18sp" android:textColor="@color/white1" android:id="@+id/friend_send" android:background="@drawable/selector_ol_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="私信" android:layout_toLeftOf="@+id/friend_dele" android:layout_centerVertical="true"/>
-        <Button android:textSize="18sp" android:textColor="@color/white1" android:id="@+id/friend_info" android:background="@drawable/selector_ol_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="资料" android:layout_toLeftOf="@+id/friend_send" android:layout_centerVertical="true"/>
-        <TextView android:textSize="18sp" android:textStyle="bold" android:textColor="@color/white1" android:gravity="center" android:id="@+id/friend_level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LV.36" android:layout_toLeftOf="@+id/friend_info" android:layout_centerVertical="true"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/ol_friend_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ol_rectangle_orange"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/friend_sex"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/white1"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/friend_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/f" />
+
+        <Button
+            android:id="@+id/friend_dele"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_ol_button"
+            android:text="删除"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/friend_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/friend_dele"
+            android:background="@drawable/selector_ol_button"
+            android:text="私信"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/friend_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/friend_send"
+            android:background="@drawable/selector_ol_button"
+            android:text="资料"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/friend_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/friend_info"
+            android:gravity="center"
+            android:text="LV.36"
+            android:textColor="@color/white1"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 </LinearLayout>

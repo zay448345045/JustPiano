@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="30dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ol_rectangle_orange"
+    android:keepScreenOn="true"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/white"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="10dp"
+        android:background="#ffffff"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/yellow"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#FFFACD"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/blue"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#00ffff"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/red"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#FF6666"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/orange"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#FFA500"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/purple"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#BA55D3"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/pink"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#fa60ea"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/gold"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#FFD700"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/green"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#b7ff72"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/black"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="#000000"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+</LinearLayout>

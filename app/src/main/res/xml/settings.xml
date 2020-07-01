@@ -1,37 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:title="@string/settings_name">
-    <PreferenceCategory android:title="音源管理">
-        <ly.pp.addsongs.SoundListPreference android:persistent="true" android:title="音源" android:key="sound_list" android:dialogTitle="设置管理音源"/>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings_name">
+    <PreferenceCategory android:title="音块与界面">
+        <ly.pp.justpiano3.SkinListPreference
+            android:dialogTitle="设置管理皮肤"
+            android:key="skin_list"
+            android:persistent="true"
+            android:title="皮肤" />
+        <ListPreference
+            android:defaultValue="6"
+            android:dialogTitle="音块下落速率"
+            android:entries="@array/down_nentries"
+            android:entryValues="@array/down_value"
+            android:key="down_speed"
+            android:summary="设置音块的滑落速度，会影响弹奏难度，可根据个人习惯进行调整"
+            android:title="音块速率" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="compatible_mode"
+            android:summary="此模式缓解近年来新设备(尤其Android 10)的弹奏卡顿，如果开启后您的旧设备弹奏时有不适感，推荐关闭此模式!"
+            android:title="新设备兼容模式" />
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="音块大小"
+            android:entries="@array/note_s"
+            android:entryValues="@array/note_size"
+            android:key="note_size"
+            android:summary="设置音块大小，可根据个人习惯进行调整"
+            android:title="音块大小" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="note_dismiss"
+            android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
+            android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
+            android:title="击中音块消失" />
+        <ListPreference
+            android:defaultValue="8"
+            android:dialogTitle="音块下落帧率"
+            android:entries="@array/anim_entries"
+            android:entryValues="@array/anim_value"
+            android:key="anim_frame"
+            android:summary="音块下落动画流畅度(调低可提高性能，减少流畅度；调高可增加手机负担，增加流畅度)"
+            android:title="音块下落帧率" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="change_color"
+            android:summaryOff="&lt;关闭&gt;首音块不变色"
+            android:summaryOn="&lt;打开&gt;首音块变色"
+            android:title="音块变色" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyboard_perfer"
+            android:summaryOff="&lt;关闭&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
+            android:summaryOn="&lt;打开&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
+            android:title="按键效果" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="tishi_cj"
+            android:summaryOff="关闭弹奏等级显示"
+            android:summaryOn="打开弹奏等级显示"
+            android:title="提示弹奏等级显示(暴击、完美等)" />
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="判断线加粗"
+            android:entries="@array/rough_line"
+            android:entryValues="@array/rough_linev"
+            android:key="rough_line"
+            android:summary="设置判断线位置是否加粗及加粗样式"
+            android:title="判断线加粗" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="auto_play"
+            android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"
+            android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符"
+            android:title="自动弹奏" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="show_line"
+            android:summaryOff="关闭吊线提示"
+            android:summaryOn="打开吊线提示"
+            android:title="弹奏提示" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="open_long_key"
+            android:summaryOff="键盘缩略图已关闭"
+            android:summaryOn="键盘缩略图已打开"
+            android:title="键盘缩略图" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="皮肤管理">
-        <ly.pp.addsongs.SkinListPreference android:persistent="true" android:title="皮肤" android:key="skin_list" android:dialogTitle="设置管理皮肤"/>
-        <CheckBoxPreference android:title="重叠音块" android:key="overlap" android:defaultValue="false" android:summaryOn="&lt;已允许&gt;高分辨率设备音块重叠问题,允许后相邻音块会重叠." android:summaryOff="&lt;已禁止&gt;高分辨率设备音块重叠问题,禁止后音块下落速率会稍快."/>
-        <CheckBoxPreference android:title="音块变色" android:key="changecolor" android:defaultValue="true" android:summaryOn="&lt;打开&gt;首音块变色" android:summaryOff="&lt;关闭&gt;首音块不变色"/>
-        <ListPreference android:entries="@array/note_s" android:title="音块大小" android:key="note_size" android:summary="解决不同手机分辨率适配问题，对音块进行缩放" android:defaultValue="10" android:dialogTitle="调整音块大小" android:entryValues="@array/note_size"/>
+    <PreferenceCategory android:title="声音">
+        <ly.pp.justpiano3.SoundListPreference
+            android:dialogTitle="设置管理音源"
+            android:key="sound_list"
+            android:persistent="true"
+            android:title="音源" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/b_s_key"
+            android:summary="@string/b_s_open_1"
+            android:summaryOff="@string/b_s_open_2"
+            android:summaryOn="@string/b_s_open_1"
+            android:title="@string/b_s_open" />
+        <ListPreference
+            android:defaultValue="1.0"
+            android:dependency="@string/b_s_key"
+            android:dialogTitle="@string/b_s_vol_title"
+            android:entries="@array/vol_entries"
+            android:entryValues="@array/vol_entries"
+            android:key="b_s_vol"
+            android:summary="@string/b_s_vol_sum"
+            android:title="@string/b_s_vol_title" />
+        <ListPreference
+            android:defaultValue="1.0"
+            android:dialogTitle="节拍比率(仅本地模式有效)"
+            android:entries="@array/temp_e"
+            android:entryValues="@array/temp_e"
+            android:key="temp_speed"
+            android:summary="值越小，音乐整体节拍越慢，持续时间越长"
+            android:title="节拍比率(仅本地模式有效)" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="八度调整"
+            android:entries="@array/badu"
+            android:entryValues="@array/badu_value"
+            android:key="badu"
+            android:summary="调整曲谱的整体音高(除非特别需求，一般情况下无需修改)"
+            android:title="八度调整" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="操作">
-        <CheckBoxPreference android:title="立体音(需插上立体声耳机或音响)" android:key="is3d" android:defaultValue="false" android:summaryOn="立体音已打开" android:summaryOff="立体音已关闭"/>
-        <CheckBoxPreference android:title="键盘音符时长" android:key="keyboard_press" android:defaultValue="true" android:summaryOn="固定时长打开" android:summaryOff="固定时长关闭"/>
-        <CheckBoxPreference android:title="按键震动" android:key="vib_ison" android:defaultValue="false" android:summaryOn="按键震动开启" android:summaryOff="按键震动关闭"/>
-        <ListPreference android:entries="@array/vib_len" android:title="震动时长" android:key="vib_len" android:summary="键盘震动的时长" android:dependency="vib_ison" android:dialogTitle="调整震动持续时间(MS)" android:entryValues="@array/vib_len"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/background_sound" android:summary="@string/b_s_sum">
-        <CheckBoxPreference android:title="@string/b_s_open" android:key="@string/b_s_key" android:summary="@string/b_s_open_1" android:defaultValue="true" android:summaryOn="@string/b_s_open_1" android:summaryOff="@string/b_s_open_2"/>
-        <ListPreference android:entries="@array/vol_entries" android:title="@string/b_s_vol_title" android:key="b_s_vol" android:summary="@string/b_s_vol_sum" android:dependency="@string/b_s_key" android:defaultValue="0.5" android:dialogTitle="@string/b_s_vol_title" android:entryValues="@array/vol_entries"/>
-        <CheckBoxPreference android:title="自动弹奏" android:key="auto_play" android:defaultValue="true" android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符" android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="速度(非练习模式)">
-        <ListPreference android:entries="@array/temp_e" android:title="节拍比率(非练习模式)" android:key="temp_speed" android:summary="值越小，越简单，但影响播放效果" android:defaultValue="1" android:dialogTitle="节拍比率(非练习模式)" android:entryValues="@array/temp_e"/>
-        <ListPreference android:entries="@array/down_nentries" android:title="音块速率(非练习模式)" android:key="down_speed" android:summary="设置音块的滑落速度，会影响弹奏难度" android:defaultValue="3" android:dialogTitle="音块速率(非练习模式)" android:entryValues="@array/down_value"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="画面效果">
-        <CheckBoxPreference android:title="键盘效果" android:key="keyboard_perfer" android:defaultValue="true" android:summaryOn="&lt;打开&gt;显示键盘按下效果(对于低配置手机关闭可以提高帧率)" android:summaryOff="&lt;关闭&gt;显示键盘按下效果(对于低配置手机关闭可以提高帧率)"/>
-        <ListPreference android:entries="@array/anim_entries" android:title="动画精细" android:key="anim_grade" android:summary="音块滑落精细度" android:defaultValue="5" android:dialogTitle="动画精细度" android:entryValues="@array/anim_value"/>
-        <CheckBoxPreference android:title="提示弹奏等级显示(Perfect,Cool等)" android:key="tishi_cj" android:defaultValue="true" android:summaryOn="打开弹奏等级显示" android:summaryOff="关闭弹奏等级显示"/>
-        <CheckBoxPreference android:title="弹奏提示" android:key="show_line" android:defaultValue="true" android:summaryOn="打开吊线提示" android:summaryOff="关闭吊线提示"/>
-        <CheckBoxPreference android:title="键盘缩略图" android:key="open_long_key" android:defaultValue="false" android:summaryOn="键盘缩略图已打开" android:summaryOff="键盘缩略图已关闭"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="音高修正">
-        <ListPreference android:entries="@array/badu" android:title="八度修正" android:key="badu" android:summary="修正曲谱的整体音高(除非特别需求，一般情况下无需修改)" android:defaultValue="0" android:dialogTitle="八度修正" android:entryValues="@array/badu_value"/>
+    <PreferenceCategory android:title="其他功能">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="save_chats"
+            android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
+            android:summaryOn="&lt;打开&gt; 联网模式的的聊天记录会保存在文件中"
+            android:title="存储聊天记录" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,0 +1,48 @@
+package ly.pp.justpiano3;
+
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+final class SendMessageClick implements OnClickListener {
+    private final PopUserInfo popUserInfo;
+    private final TextView textView;
+    private final String f5775c;
+    private final String f5776d;
+
+    SendMessageClick(PopUserInfo popUserInfo, TextView textView, String str, String str2) {
+        this.popUserInfo = popUserInfo;
+        this.textView = textView;
+        f5775c = str;
+        f5776d = str2;
+    }
+
+    @Override
+    public final void onClick(DialogInterface dialogInterface, int i) {
+        String valueOf = String.valueOf(textView.getText());
+        JSONObject jSONObject = new JSONObject();
+        try {
+            if (valueOf.isEmpty() || valueOf.equals("\'")) {
+                Toast.makeText(popUserInfo, "请输入消息内容!", Toast.LENGTH_SHORT).show();
+            } else if (valueOf.length() > 300) {
+                Toast.makeText(popUserInfo, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+            } else {
+                jSONObject.put("H", 0);
+                jSONObject.put("T", f5775c);
+                jSONObject.put("F", f5776d);
+                jSONObject.put("M", valueOf);
+                if (!f5775c.isEmpty() && !f5776d.isEmpty()) {
+                    popUserInfo.f4830d = jSONObject.toString();
+                    new PopUserInfoTask(popUserInfo).execute();
+                }
+            }
+            dialogInterface.dismiss();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+}

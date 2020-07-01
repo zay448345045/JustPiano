@@ -1,32 +1,447 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:gravity="center" android:orientation="vertical" android:id="@+id/layout" android:background="@drawable/ground" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
-    <LinearLayout android:gravity="center" android:id="@+id/LinearLayout01" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="3dp">
-        <LinearLayout android:orientation="vertical" android:background="@color/yellow_l" android:layout_width="160dp" android:layout_height="120dp">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/local_game" android:background="@drawable/selector_ol_orange" android:layout_width="160dp" android:layout_height="120dp" android:text="本地弹奏" android:drawableTop="@drawable/local" android:drawablePadding="0dp"/>
-        </LinearLayout>
-        <LinearLayout android:orientation="vertical" android:background="@color/yellow_l" android:layout_width="160dp" android:layout_height="120dp" android:layout_marginLeft="6dp" android:layout_marginRight="6dp">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/online_game" android:background="@drawable/selector_ol_green" android:layout_width="160dp" android:layout_height="120dp" android:text="联网对战" android:drawableTop="@drawable/online"/>
-        </LinearLayout>
-        <LinearLayout android:orientation="vertical" android:background="@color/yellow_l" android:layout_width="160dp" android:layout_height="120dp">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/sounds" android:background="@drawable/selector_ol_orange" android:layout_width="160dp" android:layout_height="57dp" android:text="音源" android:drawableLeft="@drawable/sound"/>
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/skins" android:background="@drawable/selector_ol_blue" android:layout_width="160dp" android:layout_height="57dp" android:layout_marginTop="6dp" android:text="皮肤" android:drawableLeft="@drawable/download"/>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout android:gravity="center" android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp">
-        <LinearLayout android:orientation="vertical" android:background="@color/yellow_l" android:layout_width="160dp" android:layout_height="120dp">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/about_game" android:background="@drawable/selector_ol_bluelight" android:layout_width="160dp" android:layout_height="57dp" android:text="说明" android:drawableLeft="@drawable/about"/>
-            <Button android:textSize="18sp" android:textColor="@color/white1" android:id="@+id/listen" android:background="@drawable/selector_ol_blue" android:layout_width="160dp" android:layout_height="57dp" android:layout_marginTop="6dp" android:text="录音管理" android:drawableLeft="@drawable/record"/>
-        </LinearLayout>
-        <LinearLayout android:orientation="vertical" android:background="@color/yellow_l" android:layout_width="160dp" android:layout_height="120dp" android:layout_marginLeft="6dp" android:layout_marginRight="6dp">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/piano_help" android:background="@drawable/selector_ol_orange" android:layout_width="match_parent" android:layout_height="57dp" android:text="帮助" android:drawableLeft="@drawable/help"/>
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/more_game" android:background="@drawable/selector_ol_blue" android:layout_width="160dp" android:layout_height="57dp" android:layout_marginTop="6dp" android:text="评分" android:drawableLeft="@drawable/comment"/>
-        </LinearLayout>
-        <LinearLayout android:orientation="vertical" android:background="@color/yellow_l" android:layout_width="160dp" android:layout_height="120dp">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/settings" android:background="@drawable/selector_ol_bluelight" android:layout_width="160dp" android:layout_height="57dp" android:text="设置" android:drawableLeft="@drawable/setting"/>
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/share_button" android:background="@drawable/selector_ol_green" android:layout_width="77dp" android:layout_height="57dp" android:layout_marginTop="6dp" android:text="分享"/>
-                <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/feed_back" android:background="@drawable/selector_ol_orange" android:layout_width="77dp" android:layout_height="57dp" android:layout_marginLeft="6dp" android:layout_marginTop="6dp" android:text="反馈"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ground"
+    android:gravity="center"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="40dp"
+        android:layout_weight="2.5"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/local_game"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_corner"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/local" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="本地弹奏"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp" />
+
             </LinearLayout>
-        </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/online_game"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_corner"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/online" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="联网模式"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_corner"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/setting" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="参数设置"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/skins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_corner"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/skins" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="皮肤下载"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除"
+        android:textColor="#FFF7AF"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="1.6">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/about_game"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/about" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="软件说明"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/listen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/record" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="录音文件"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/piano_help"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/help" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="软件帮助"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/chat_files"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/info" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="聊天记录"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/feed_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/feedback" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="问题反馈"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/sounds"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawablePadding="0dp"
+                android:text=""
+                android:textColor="@color/white1"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.5"
+                    android:src="@drawable/sound" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="音源下载"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

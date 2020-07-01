@@ -1,13 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@drawable/ol_rectangle_orange" android:layout_width="match_parent" android:layout_height="wrap_content" android:minWidth="280dp">
-    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/title" android:paddingLeft="8dp" android:paddingRight="8dp" android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/DialogText_Title"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ol_rectangle_orange"
+    android:minWidth="280dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogText_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
     </LinearLayout>
-    <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@+id/content" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textSize="16sp" android:textColor="@color/white1" android:id="@+id/message" android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/DialogText"/>
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/message"
+            style="@style/DialogText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/Etext"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/search_box"
+            android:ems="10"
+            android:hint="@string/null0"
+            android:minWidth="200dp"
+            android:visibility="gone"
+            android:textColor="@color/white1" />
     </LinearLayout>
-    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <Button android:textColor="@color/white1" android:id="@+id/positiveButton" android:background="@drawable/selector_ol_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="确定" android:singleLine="true" android:layout_weight="1"/>
-        <Button android:textColor="@color/white1" android:id="@+id/negativeButton" android:background="@drawable/selector_ol_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="取消" android:singleLine="true" android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/positiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_button"
+            android:singleLine="true"
+            android:text="确定"
+            android:textColor="@color/white1" />
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_button"
+            android:singleLine="true"
+            android:text="取消"
+            android:textColor="@color/white1" />
     </LinearLayout>
 </LinearLayout>

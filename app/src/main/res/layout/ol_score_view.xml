@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:gravity="top|right|center_vertical|center_horizontal|center" android:orientation="vertical" android:id="@+id/RelativeLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:keepScreenOn="true">
-    <ListView android:layout_gravity="right" android:id="@+id/ol_score_list" android:layout_width="wrap_content" android:layout_height="wrap_content" android:listSelector="@color/translent" android:cacheColorHint="#00000000" android:divider="@drawable/divider" android:layout_alignParentTop="true"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="12sp" android:textColor="@color/more" android:gravity="left" android:id="@+id/ol_score_button" android:background="@drawable/filled_bar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="隐藏成绩" android:layout_below="@+id/ol_score_list" android:layout_alignParentLeft="true"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="top|end|center_vertical|center_horizontal|center"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ol_score_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/filled_bar"
+        android:gravity="start"
+        android:text="隐藏成绩"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/more"
+        android:textSize="12sp" />
+
+    <ly.pp.justpiano3.HorizontalListView
+        android:id="@+id/ol_score_list"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="end"
+        android:layout_marginStart="70dp"
+        android:divider="@drawable/divider"
+        android:listSelector="@color/translent"
+        android:visibility="gone" />
+
 </RelativeLayout>

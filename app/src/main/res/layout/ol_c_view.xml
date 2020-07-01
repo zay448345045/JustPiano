@@ -1,20 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:gravity="left|center_vertical|center_horizontal|center" android:orientation="horizontal" android:background="@drawable/selector_list_c" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <LinearLayout android:orientation="vertical" android:id="@+id/linearLayout7" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <LinearLayout android:gravity="left|center_vertical|center_horizontal|center" android:orientation="horizontal" android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <TextView android:textSize="15sp" android:textStyle="bold" android:textColor="@color/white1" android:id="@+id/ol_s_n" android:layout_width="100dp" android:layout_height="wrap_content" android:maxWidth="120dp" android:minWidth="120dp" android:singleLine="true" style="@style/ShadowText"/>
-            <TextView android:textSize="15sp" android:textStyle="bold" android:textColor="@color/yellow" android:textColorHighlight="@color/black" android:gravity="left" android:id="@+id/ol_topuser" android:layout_width="80dp" android:layout_height="wrap_content" android:text="1" android:singleLine="true" android:onClick="null" style="@style/ShadowText"/>
-            <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:textColorHighlight="@color/black" android:gravity="center" android:id="@+id/ol_topscore" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginLeft="5dp" android:singleLine="true" android:onClick="null"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_list_c"
+    android:gravity="start|center_vertical|center_horizontal|center"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical|center_horizontal|center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ol_s_n"
+                style="@style/ShadowText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="曲目名称"
+                android:textColor="@color/white1"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ol_topuser"
+                style="@style/ShadowText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="冠军:"
+                android:textColor="@color/yellow"
+                android:textColorHighlight="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ol_topscore"
+                style="@style/ShadowText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="高分:"
+                android:textColor="@color/white1"
+                android:textColorHighlight="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/linearLayout4" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <TextView android:textSize="10sp" android:textColor="@color/white1" android:textColorHighlight="@color/black" android:gravity="left|center_vertical|center_horizontal|center" android:layout_gravity="left|center_vertical|center_horizontal|center" android:id="@+id/ol_nandu" android:layout_width="wrap_content" android:layout_height="match_parent" android:text="TextView" android:singleLine="true" android:onClick="null"/>
-            <TextView android:textSize="10sp" android:textColor="@color/white1" android:gravity="center" android:id="@+id/ol_artist" android:layout_width="50dp" android:layout_height="wrap_content" android:text="" android:singleLine="true"/>
-            <TextView android:textSize="10sp" android:textColor="@color/white1" android:textColorHighlight="@color/black" android:gravity="center" android:id="@+id/ol_update" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginLeft="5dp" android:singleLine="true" android:onClick="null"/>
-            <TextView android:textSize="10sp" android:textColor="@color/white1" android:textColorHighlight="@color/black" android:gravity="center" android:id="@+id/ol_playcount" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginLeft="5dp" android:singleLine="true"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/ol_nandu"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="难度"
+                android:textColor="@color/white1"
+                android:textColorHighlight="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ol_items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="分类"
+                android:textColor="@color/white1"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ol_length"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="长度"
+                android:textColor="@color/white1"
+                android:textColorHighlight="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ol_playcount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="播放量"
+                android:textColor="@color/white1"
+                android:textColorHighlight="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ol_update"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:gravity="start"
+                android:singleLine="true"
+                android:text="冠军时间"
+                android:textColor="@color/white1"
+                android:textColorHighlight="@color/black"
+                android:textSize="12sp" />
+
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout android:gravity="right|center_vertical|center_horizontal|center" android:orientation="horizontal" android:id="@+id/linearLayout8" android:layout_width="match_parent" android:layout_height="match_parent">
-        <ImageButton android:id="@+id/ol_favor_b" android:background="@color/translent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="30dp" android:src="@drawable/selector_favor_background"/>
-        <ImageView android:id="@+id/ol_play_button" android:background="@color/translent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/selector_child_paly"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="end|center_vertical|center_horizontal|center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ol_favor_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@color/translent"
+            android:src="@drawable/selector_favor_background" />
+
+        <ImageView
+            android:id="@+id/ol_play_button"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:background="@color/translent"
+            android:src="@drawable/selector_child_paly" />
     </LinearLayout>
 </LinearLayout>

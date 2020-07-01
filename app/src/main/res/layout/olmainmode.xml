@@ -1,17 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:gravity="center" android:layout_gravity="right" android:orientation="vertical" android:id="@+id/layout" android:background="@drawable/ground" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="@color/white1" android:id="@+id/app_size" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="在线游戏"/>
-    <LinearLayout android:gravity="center" android:id="@+id/LinearLayout01" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="3dp">
-        <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_ance_b" android:background="@drawable/selector_ol_bluelight" android:layout_width="100dp" android:layout_height="match_parent" android:text="框框"/>
-        <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_songs_b" android:background="@drawable/selector_ol_blue" android:layout_width="100dp" android:layout_height="match_parent" android:text="曲库" android:drawableTop="@drawable/music"/>
-        <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_playhall_b" android:background="@drawable/selector_ol_orange" android:layout_width="100dp" android:layout_height="match_parent" android:text="对战" android:drawableTop="@drawable/online"/>
-        <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_top_b" android:background="@drawable/selector_ol_bluelight" android:layout_width="100dp" android:layout_height="match_parent" android:text="排行" android:drawableTop="@drawable/ranking"/>
-        <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_users_b" android:background="@drawable/selector_ol_green" android:layout_width="100dp" android:layout_height="160dp" android:text="我的" android:drawableTop="@drawable/mine"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="right"
+    android:background="@drawable/ground"
+    android:gravity="center"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/app_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="在线游戏"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white1" />
+
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/ol_ance_b"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#10c6ffe9"
+            android:drawableTop="@drawable/kuang"
+            android:text="官网"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/ol_songs_b"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#10293535"
+            android:drawableTop="@drawable/music"
+            android:text="曲库"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/ol_playhall_b"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#10c6ffe9"
+            android:drawableTop="@drawable/friends"
+            android:text="对战"
+            android:textColor="#ffff4664"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/ol_top_b"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#10293535"
+            android:drawableTop="@drawable/ranking"
+            android:text="排行"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/ol_users_b"
+            android:layout_width="100dp"
+            android:layout_height="160dp"
+            android:background="#10c6ffe9"
+            android:drawableTop="@drawable/mine"
+            android:text="我的"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
     </LinearLayout>
-    <RelativeLayout android:orientation="vertical" android:id="@+id/RelativeLayout1" android:layout_width="match_parent" android:layout_height="32dp">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="50dp" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" android:layout_centerVertical="true">
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_bindmail_b" android:background="@drawable/selector_ol_green" android:layout_width="100dp" android:layout_height="wrap_content" android:text="绑定邮箱" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
-            <Button android:textSize="24sp" android:textColor="@color/white1" android:id="@+id/ol_zhuanyi_b" android:background="@drawable/selector_ol_orange" android:layout_width="100dp" android:layout_height="wrap_content" android:text="账号转移" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+
+            <Button
+                android:id="@+id/ol_bindmail_b"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="#40000000"
+                android:text="绑定邮箱"
+                android:textColor="@color/online"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/ol_zhuanyi_b"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="#40000000"
+                android:text="账号转移"
+                android:textColor="#fffff66b"
+                android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

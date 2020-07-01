@@ -1,24 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:mySwitch="http://schemas.android.com/apk/res-auto" android:gravity="center" android:layout_gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent">
-    <RelativeLayout android:gravity="center" android:layout_gravity="center" android:orientation="vertical" android:id="@+id/RelativeLayout1" android:background="@drawable/filled_box" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <TextView android:textSize="15dp" android:textStyle="bold" android:textColor="@color/white1" android:gravity="center" android:id="@+id/app_size" android:background="@drawable/selector_list_c" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 得分排行  " android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
-        <RelativeLayout android:id="@+id/relativeLayout3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/app_size" android:layout_centerHorizontal="true">
-            <ListView android:id="@+id/ol_finish_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:cacheColorHint="#00000000" android:divider="@drawable/divider" android:layout_below="@+id/RelativeLayout1" android:layout_alignLeft="@+id/RelativeLayout1" android:layout_alignRight="@+id/RelativeLayout1"/>
-            <RelativeLayout android:id="@+id/relativeLayout2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/ol_finish_list" android:layout_centerHorizontal="true">
-                <ImageButton android:id="@+id/ol_ok" android:background="@color/translent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/selector_ok" android:layout_alignParentTop="true"/>
-            </RelativeLayout>
-            <RelativeLayout android:orientation="vertical" android:id="@+id/RelativeLayout1" android:background="@drawable/selector_list_c" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_centerHorizontal="true">
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:layout_gravity="left" android:id="@+id/TextView05" android:layout_width="48sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="很棒 " android:layout_toRightOf="@+id/TextView02" android:layout_alignTop="@+id/TextView09" android:layout_alignParentTop="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:layout_gravity="left" android:id="@+id/TextView01" android:layout_width="48sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="完美 " android:layout_toRightOf="@+id/TextView05" android:layout_alignTop="@+id/TextView09" android:layout_alignParentTop="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:layout_gravity="left" android:id="@+id/TextView04" android:layout_width="48sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="一般 " android:layout_toRightOf="@+id/TextView01" android:layout_alignTop="@+id/TextView09" android:layout_alignParentTop="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:layout_gravity="left" android:id="@+id/TextView03" android:layout_width="48sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="失误 " android:layout_toRightOf="@+id/TextView04" android:layout_alignTop="@+id/TextView09" android:layout_alignParentTop="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/exit" android:layout_gravity="left" android:id="@+id/TextView08" android:layout_width="48sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="连击 " android:layout_toRightOf="@+id/TextView03" android:layout_alignTop="@+id/TextView09" android:layout_alignParentTop="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/online" android:layout_gravity="center" android:id="@+id/TextView06" android:layout_width="60sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="总分 " android:layout_toRightOf="@+id/TextView08" android:layout_alignTop="@+id/TextView09" android:layout_alignParentTop="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:gravity="left" android:id="@+id/TextView02" android:layout_width="48sp" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:text="暴击 " android:layout_toRightOf="@+id/TextView09" android:layout_alignBaseline="@+id/TextView09" android:layout_alignBottom="@+id/TextView09"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/white1" android:gravity="left" android:id="@+id/TextView09" android:layout_width="60sp" android:layout_height="wrap_content" android:text="玩家 " android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
-                <TextView android:textSize="12sp" android:textStyle="bold" android:textColor="@color/settings" android:gravity="center" android:id="@+id/TextView07" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="经验奖励" android:layout_toRightOf="@+id/TextView06" android:layout_alignBaseline="@+id/TextView06" android:layout_alignBottom="@+id/TextView06"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@id/RelativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/filled_box"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ol_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selector_list_c"
+            android:gravity="center"
+            android:text="曲名"
+            android:textColor="@color/white1"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ol_song_name"
+            android:layout_centerHorizontal="true">
+
+            <ListView
+                android:id="@+id/ol_finish_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativeLayout1"
+                android:layout_alignStart="@+id/RelativeLayout1"
+                android:layout_alignEnd="@+id/RelativeLayout1"
+                android:cacheColorHint="#00000000"
+                android:divider="@drawable/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/ol_finish_list"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout32"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/share_score"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:background="@drawable/selector_ol_button"
+                        android:text="分享我的战绩"
+                        android:textColor="@color/white1"
+                        android:visibility="invisible" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_corner"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.4"
+                            android:src="@drawable/share" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.5"
+                            android:gravity="center"
+
+                            android:text="分享"
+                            android:textColor="#ffffffff"
+                            android:textSize="16sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/ol_ok"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:background="#00000000" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_corner"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.4"
+                            android:src="@drawable/back" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.5"
+                            android:gravity="center"
+
+                            android:text="完成"
+                            android:textColor="#ffffffff"
+                            android:textSize="16sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5" />
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/RelativeLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/selector_list_c"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/TextView05"
+                    android:layout_width="48sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/TextView09"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView02"
+                    android:text="很棒 "
+                    android:textColor="@color/white1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView01"
+                    android:layout_width="48sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/TextView09"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView05"
+                    android:text="完美 "
+                    android:textColor="@color/white1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView04"
+                    android:layout_width="48sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/TextView09"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView01"
+                    android:text="一般 "
+                    android:textColor="@color/white1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView03"
+                    android:layout_width="48sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/TextView09"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView04"
+                    android:text="失误 "
+                    android:textColor="@color/white1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView08"
+                    android:layout_width="48sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/TextView09"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView03"
+                    android:text="连击 "
+                    android:textColor="@color/exit"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView06"
+                    android:layout_width="60sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/TextView09"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView08"
+                    android:text="总分 "
+                    android:textColor="@color/online"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="48sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/TextView09"
+                    android:layout_alignBottom="@+id/TextView09"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@+id/TextView09"
+                    android:gravity="start"
+                    android:text="暴击 "
+                    android:textColor="@color/white1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView09"
+                    android:layout_width="60sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="start"
+                    android:text="玩家 "
+                    android:textColor="@color/white1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TextView07"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/TextView06"
+                    android:layout_alignBottom="@+id/TextView06"
+                    android:layout_toEndOf="@+id/TextView06"
+                    android:gravity="center"
+                    android:text="经验奖励"
+                    android:textColor="@color/settings"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
         </RelativeLayout>
-        <Button android:textColor="@color/white1" android:id="@+id/share_score" android:background="@drawable/selector_ol_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="分享我的战绩" android:layout_above="@+id/relativeLayout3" android:layout_alignRight="@+id/relativeLayout3"/>
+
+
     </RelativeLayout>
 </LinearLayout>
