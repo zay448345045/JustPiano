@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,19 +15,16 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Build;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.SparseIntArray;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,19 +35,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
-import nl.bravobit.ffmpeg.FFmpeg;
-
 public final class JPApplication extends Application {
-    public static SoundPool mp;
-    public static SoundPool sp;
     public static String kitiName = "";
-    public long serverTimeInterval;
     static SharedPreferences sharedpreferences;
-    private static SparseIntArray soundsIdMap = new SparseIntArray();
     private static Context context;
-    public int mpIndex;
-    boolean isMusicPause;
+
+    static {
+        System.loadLibrary("soundengine");
+    }
+
     String title = "";
     String f4072f = "";
     String f4073g = "";
@@ -58,7 +52,6 @@ public final class JPApplication extends Application {
     String f4076j;
     boolean changeNotesColor = true;
     private ConnectionService connectionService;
-    private boolean isMusicPlay;
     private int whiteKeyHeight;
     private float f4034C;
     private float blackKeyWidth;
@@ -73,7 +66,6 @@ public final class JPApplication extends Application {
     private boolean showLine = true;
     private boolean loadLongKeyboard;
     private boolean isShowDialog;
-    private boolean compatibleMode = true;
     private boolean noteDismiss = true;
     private int playSongsMode;
     private float noteSize = 1;
@@ -95,30 +87,35 @@ public final class JPApplication extends Application {
     private float whiteKeyHeightAdd90;
     private int roughLine;
 
-    public static void createSounds() {
-        if (sp != null) {
-            sp.release();
-            sp = null;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes.Builder attrBuilder = new AudioAttributes.Builder();
-            attrBuilder.setLegacyStreamType(AudioManager.STREAM_MUSIC);
-            SoundPool.Builder SoundPoolbuild = new SoundPool.Builder();
-            SoundPoolbuild.setMaxStreams(6);
-            SoundPoolbuild.setAudioAttributes(attrBuilder.build());
-            sp = SoundPoolbuild.build();
-        } else {
-            sp = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
-        }
-    }
+    public long serverTimeInterval;
+
+    public static native void setupAudioStreamNative(int var1, int var2);
+
+    public static native void teardownAudioStreamNative();
+
+    public static native void loadWavAssetNative(byte[] var1, int var2, float var3);
+
+    public static native void unloadWavAssetsNative();
+
+    public static native void trigger(int var1);
 
     public static void preloadSounds(int i) {
         try {
-            soundsIdMap.put(i, sp.load(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".ogg", 1));
+            FileInputStream dataStream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
+            int dataLen = dataStream.available();
+            byte[] dataBytes = new byte[dataLen];
+            dataStream.read(dataBytes, 0, dataLen);
+            loadWavAssetNative(dataBytes, i, 0);
         } catch (Exception e1) {
             try {
-                soundsIdMap.put(i, sp.load(context.getResources().getAssets().openFd("sound/" + i + ".ogg"), 1));
-                copySound("sound/" + i + ".ogg", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".ogg");
+                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".wav");
+                FileInputStream dataStream = assetFD.createInputStream();
+                int dataLen = (int) assetFD.getLength();
+                byte[] dataBytes = new byte[dataLen];
+                dataStream.read(dataBytes, 0, dataLen);
+                loadWavAssetNative(dataBytes, i, 0);
+                assetFD.close();
+                copySound("sound/" + i + ".wav", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -168,23 +165,34 @@ public final class JPApplication extends Application {
         edit.apply();
         for (int i = 108; i >= 24; i--) {
             try {
-                soundsIdMap.put(i, sp.load(context.getResources().getAssets().openFd("sound/" + i + ".ogg"), 1));
-                copySound("sound/" + i + ".ogg", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".ogg");
+                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".wav");
+                FileInputStream dataStream = assetFD.createInputStream();
+                int dataLen = (int) assetFD.getLength();
+                byte[] dataBytes = new byte[dataLen];
+                dataStream.read(dataBytes, 0, dataLen);
+                loadWavAssetNative(dataBytes, i, 0);
+                assetFD.close();
+                copySound("sound/" + i + ".wav", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             } catch (IOException ignored) {
             }
         }
     }
 
     public static void confirmLoadSounds() {
-        try {
-            copySound("sound/110.ogg", context.getFilesDir().getAbsolutePath() + "/Sounds/110.ogg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (soundsIdMap.get(24) != 0) {
-            return;
-        }
-        reLoadOriginalSounds();
+        setupAudioStreamNative(2, 44100);
+    }
+
+    public static void initSettings() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("down_speed", "6");
+        editor.putString("anim_frame", "8");
+        editor.putBoolean("note_dismiss", false);
+        editor.putString("note_size", "1");
+        editor.putString("b_s_vol", "1.0");
+        editor.putString("temp_speed", "1.0");
+        editor.putString("sound_list", "original");
+        editor.apply();
     }
 
     public void m3520a(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
@@ -492,13 +500,12 @@ public final class JPApplication extends Application {
         keyboardPerfer = sharedPreferences.getBoolean("keyboard_perfer", true);
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true);
         showLine = sharedPreferences.getBoolean("show_line", true);
-        compatibleMode = sharedPreferences.getBoolean("compatible_mode", true);
         loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false);
         roughLine = Integer.parseInt(sharedPreferences.getString("rough_line", "1"));
         badu = Integer.parseInt(sharedPreferences.getString("badu", "0"));
         notesDownSpeed = Integer.parseInt(sharedPreferences.getString("down_speed", "6"));
         noteSize = Float.parseFloat(sharedPreferences.getString("note_size", "1"));
-        noteDismiss = sharedPreferences.getBoolean("note_dismiss", true);
+        noteDismiss = sharedPreferences.getBoolean("note_dismiss", false);
         changeNotesColor = sharedPreferences.getBoolean("change_color", true);
     }
 
@@ -510,7 +517,7 @@ public final class JPApplication extends Application {
         return tempSpeed;
     }
 
-    public final boolean getNoteDismiss(){
+    public final boolean getNoteDismiss() {
         return noteDismiss;
     }
 
@@ -524,18 +531,7 @@ public final class JPApplication extends Application {
         notesDownSpeed = speed;
     }
 
-    public static void initSettings(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("down_speed", "6");
-        editor.putString("anim_frame", "8");
-        editor.putString("note_size", "1");
-        editor.putString("b_s_vol", "1.0");
-        editor.putString("temp_speed", "1.0");
-        editor.apply();
-    }
-
-    public final boolean getIfLoadlongKeyboard() {
+    public final boolean getIfLoadLongKeyboard() {
         return loadLongKeyboard;
     }
 
@@ -557,19 +553,6 @@ public final class JPApplication extends Application {
             StrictMode.setVmPolicy(builder.build());
         }
         context = getApplicationContext();
-        soundsIdMap.put(0, 0);
-        soundsIdMap.put(1, 0);
-        soundsIdMap.put(2, 0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes.Builder attrBuilder = new AudioAttributes.Builder();
-            attrBuilder.setLegacyStreamType(AudioManager.STREAM_MUSIC);
-            SoundPool.Builder SoundPoolBuild = new SoundPool.Builder();
-            SoundPoolBuild.setMaxStreams(3);
-            SoundPoolBuild.setAudioAttributes(attrBuilder.build());
-            mp = SoundPoolBuild.build();
-        } else {
-            mp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
-        }
         sharedpreferences = getSharedPreferences(getSharedPreferences("account_list", 0).getString("accountList", "account"), 0);
     }
 
@@ -597,16 +580,6 @@ public final class JPApplication extends Application {
 
     public final void setPlaySongsMode(int n) {
         playSongsMode = n;
-    }
-
-    public final boolean getCompatibleMode() {
-        return compatibleMode;
-    }
-
-    public final void setCompatibleMode(boolean mode) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.edit().putBoolean("compatible_mode", mode).apply();
-        compatibleMode = mode;
     }
 
     public final boolean getAutoPlay() {
@@ -690,132 +663,19 @@ public final class JPApplication extends Application {
     }
 
     public final int playSound(int note, float volume) {
-        float f2 = volume > 1 ? (chordVolume * volume) / 100 : volume;
-        int i2 = soundsIdMap.get(note);
-        return i2 == 0 ? 0 : sp.play(i2, f2, f2, 1, 0, 1);
+//        float f2 = volume > 1 ? (chordVolume * volume) / 100 : volume;
+//        int i2 = soundsIdMap.get(note);
+//        return i2 == 0 ? 0 : sp.play(i2, f2, f2, 1, 0, 1);
+        //setGain(note, volume);
+        if (note >= 24 && note <= 108) {
+            trigger(108 - note);
+            return note;
+        }
+        return 0;
     }
 
     public final void stopSongs(int i) {
-        sp.stop(i);
-    }
-
-    public void startMusic() {
-        isMusicPause = false;
-        isMusicPlay = false;
-    }
-
-    public void stopMusic() {
-        mp.stop(soundsIdMap.get((mpIndex + 2) % 3));
-        isMusicPause = false;
-        isMusicPlay = false;
-    }
-
-    public boolean isPlayingMusic() {
-        return isMusicPlay;
-    }
-
-    public void playMusic() {
-        soundsIdMap.put(mpIndex, mp.play(soundsIdMap.get(mpIndex), 1, 1, 5, 0, 1));
-        isMusicPause = false;
-        isMusicPlay = true;
-        mpIndex = (mpIndex + 1) % 3;
-    }
-
-    public void pauseMusic() {
-        mp.pause(soundsIdMap.get((mpIndex + 2) % 3));
-        isMusicPause = true;
-        isMusicPlay = false;
-    }
-
-    public void resumeMusic() {
-        mp.resume(soundsIdMap.get((mpIndex + 2) % 3));
-        isMusicPause = false;
-        isMusicPlay = true;
-    }
-
-    public String[] makeFFmpegCmd(int[] tickArray, byte[] trackArray, byte[] noteArray, byte[] volumeArray, int offset, int end, int mpIndex) {
-        if (offset < end) {
-            int length = end - offset;
-            List<String> _commands = new ArrayList<>();
-            for (int i = offset; i < end; i++) {
-                _commands.add("-i");
-                if ((trackArray != null && trackArray[i] == 85 && gameMode != 3) || noteArray[i] < 24 || noteArray[i] > 108) {
-                    _commands.add(getFilesDir().getAbsolutePath() + "/Sounds/110.ogg");
-                } else {
-                    _commands.add(getFilesDir().getAbsolutePath() + "/Sounds/" + noteArray[i] + ".ogg");
-                }
-            }
-            _commands.add("-filter_complex");
-            StringBuilder delayCmd = new StringBuilder();
-            if (trackArray == null) {
-                for (int i = offset; i < end; i++) {
-                    delayCmd.append('[').append(i - offset).append("]adelay=").append(tickArray[i]).append(",volume=")
-                            .append(volumeArray[i] / 188f * length).append("[d").append(i).append("];");
-                }
-            } else {
-                for (int i = offset; i < end; i++) {
-                    delayCmd.append('[').append(i - offset).append("]adelay=").append(tickArray[i] * 1.025 / tempSpeed).append(",volume=")
-                            .append(volumeArray[i] / 188f * length * chordVolume).append("[d").append(i).append("];");
-                }
-            }
-            for (int i = offset; i < end; i++) {
-                delayCmd.append("[d").append(i).append(']');
-            }
-            delayCmd.append("amix=inputs=").append(length).append(":duration=longest");
-            _commands.add(delayCmd.toString());
-            _commands.add("-ac");
-            _commands.add("2");
-            _commands.add("-ar");
-            _commands.add("22050");
-            _commands.add("-y");
-            _commands.add(getFilesDir().getAbsolutePath() + "/temp" + mpIndex + ".wav");
-            String[] commands = new String[_commands.size()];
-            for (int i = 0; i < _commands.size(); i++) {
-                commands[i] = _commands.get(i);
-            }
-            return commands;
-        }
-        return null;
-    }
-
-    public void ffmpegSongsTask(String[] command, final Runnable finishTask, int mpCount) {
-        if (command != null) {
-            FFmpeg.getInstance(this).execute(command, new ExecuteBinaryResponseHandler() {
-                @Override
-                public void onSuccess(String message) {
-                    try {
-                        mp.setOnLoadCompleteListener(null);
-                        soundsIdMap.put(mpCount, mp.load(context.getFilesDir().getAbsolutePath() + "/temp" + mpCount + ".wav", 5));
-                        if (finishTask != null) {
-                            mp.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
-                                soundsIdMap.put(mpCount, soundPool.play(sampleId, 1, 1, 5, 0, 1));
-                                isMusicPlay = true;
-                            });
-                            mpIndex = (mpCount + 1) % 3;
-                        }
-                        ThreadPoolUtils.execute(finishTask);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    }
-
-    public void ffmpegPlayTask(String[] command, int mpCount) {
-        if (command != null) {
-            FFmpeg.getInstance(this).execute(command, new ExecuteBinaryResponseHandler() {
-                @Override
-                public void onSuccess(String message) {
-                    try {
-                        mp.setOnLoadCompleteListener(null);
-                        soundsIdMap.put(mpCount, mp.load(context.getFilesDir().getAbsolutePath() + "/temp" + mpCount + ".wav", 5));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
+        //sp.stop(i);
     }
 
     private static class CrashHandler implements Thread.UncaughtExceptionHandler {

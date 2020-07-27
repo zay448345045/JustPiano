@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -175,7 +174,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             sqlitedatabase.close();
         }
         if (playSongs != null) {
-            jpapplication.stopMusic();
             playSongs.isPlayingSongs = false;
             playSongs = null;
         }
@@ -357,7 +355,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     @Override
     protected void onDestroy() {
         if (playSongs != null) {
-            jpapplication.stopMusic();
             playSongs.isPlayingSongs = false;
             playSongs = null;
         }
@@ -425,7 +422,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (!autoctv.getText().toString().contains("\'")) {
+        if (!autoctv.getText().toString().contains("'")) {
             cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString() + "%' AND " + f4238O, null, null, null, sortStr);
             MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
             autoctv.setAdapter(adapter);
@@ -439,7 +436,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     }
 
     public Cursor search(String str) {
-        str = str.replace("\'", "\'\'");
+        str = str.replace("'", "''");
         cursor = sqlitedatabase.query("jp_data", null, "name like '%" + str + "%' AND " + f4238O, null, null, null, sortStr);
         return cursor;
     }

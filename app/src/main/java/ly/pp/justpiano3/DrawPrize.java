@@ -21,7 +21,7 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
     /**
      * 盘块的奖项
      */
-    private String[] mStrs = new String[]{"框框", "经验", "祝福", "考级", "挑战", "极币"};
+    private String[] mStrs = new String[]{"框框", "经验", "祝福", "考级", "挑战", "音符"};
     /**
      * 盘块的图片
      */
@@ -254,9 +254,9 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
     /**
      * 绘制每个盘块的文本（弧形）
      *
-     * @param tmpAngle 当前绘制的倾斜角度
+     * @param tmpAngle   当前绘制的倾斜角度
      * @param sweepAngle 每个扇区的角度
-     * @param mStr 文字
+     * @param mStr       文字
      */
     private void drawText(float tmpAngle, float sweepAngle, String mStr) {
         Path path = new Path();

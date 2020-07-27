@@ -37,7 +37,7 @@ final class sendMailClick implements OnClickListener {
         JSONObject jSONObject = new JSONObject();
         try {
             if (f6047c == 0) {
-                if (valueOf.isEmpty() || valueOf.equals("\'") || valueOf.equals("\'\'")) {
+                if (valueOf.isEmpty() || valueOf.equals("'") || valueOf.equals("''")) {
                     Toast.makeText(friendmailpage, "请输入消息内容!", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (valueOf.length() > 300) {

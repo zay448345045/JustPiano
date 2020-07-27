@@ -48,7 +48,6 @@ public class PlayFinish extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        jpapplication.stopMusic();
         Intent intent = new Intent(this, PianoPlay.class);
         int i = Math.max(topScore, totalScore);
         if (view == f4671o) {
@@ -120,7 +119,7 @@ public class PlayFinish extends Activity implements OnClickListener {
                 Date f4652P = new Date(System.currentTimeMillis());
                 clickNum = perfect + cool + great + bad + miss;
                 SQLiteDatabase writableDatabase = new TestSQL(this, "data").getWritableDatabase();
-                Cursor query = writableDatabase.query("jp_data", new String[]{"_id", "name", "score", "date", "isnew"}, "name='" + name.replace("\'", "\'\'") + "'", null, null, null, null);
+                Cursor query = writableDatabase.query("jp_data", new String[]{"_id", "name", "score", "date", "isnew"}, "name='" + name.replace("'", "''") + "'", null, null, null, null);
                 while (query.moveToNext()) {
                     topScore = query.getInt(query.getColumnIndexOrThrow("score"));
                 }
@@ -130,7 +129,7 @@ public class PlayFinish extends Activity implements OnClickListener {
                     contentValues.put("score", totalScore);
                     contentValues.put("date", String.valueOf(f4652P));
                     contentValues.put("isnew", 0);
-                    writableDatabase.update("jp_data", contentValues, "name='" + name.replace("\'", "\'\'") + "'", null);
+                    writableDatabase.update("jp_data", contentValues, "name='" + name.replace("'", "''") + "'", null);
                     contentValues.clear();
                 } else {
                     isWinner = false;

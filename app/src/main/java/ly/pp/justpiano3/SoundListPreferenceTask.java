@@ -32,6 +32,8 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         if (!objects[0].equals("original")) {
             GZIP.ZIPFileTo(new File(objects[1]), dir.toString());
         }
+        JPApplication.teardownAudioStreamNative();
+        JPApplication.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
             JPApplication.preloadSounds(i);
         }

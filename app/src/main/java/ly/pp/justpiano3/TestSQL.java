@@ -3,11 +3,15 @@ package ly.pp.justpiano3;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+
+import java.io.File;
 
 public final class TestSQL extends SQLiteOpenHelper {
 
     TestSQL(Context context, String str) {
-        super(context, str, null, 39);
+        //4.34版本的数据库版本号为40
+        super(context, str, null, 40);
     }
 
     @Override
@@ -22,11 +26,27 @@ public final class TestSQL extends SQLiteOpenHelper {
             sQLiteDatabase.execSQL("DELETE FROM sqlite_sequence;");
             sQLiteDatabase.execSQL("DROP TABLE IF EXISTS jp_data;");
             sQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS jp_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,item TEXT NOT NULL,path TEXT NOT NULL,isnew INTEGER,ishot INTEGER,isfavo INTEGER,player TEXT,score INTEGER,date LONG,count INTEGER,diff FLOAT DEFAULT 0,online INTEGER,Ldiff FLOAT DEFAULT 0,length INTEGER DEFAULT 0,Lscore INTEGER);");
+        }
+        if (sQLiteDatabase.getVersion() >= 38 && sQLiteDatabase.getVersion() < 40) {
             JustPiano.updateSQL = true;
         }
-        if (sQLiteDatabase.getVersion() <= 38){
+        if (sQLiteDatabase.getVersion() < 40) {
             JPApplication.initSettings();
+            File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
+            if (file.isDirectory()) {
+                File[] files = file.listFiles(pathname -> {
+                    String filename = pathname.getName().toLowerCase();
+                    return filename.endsWith(".ss");
+                });
+                if (files != null) {
+                    for (File fileTemp : files) {
+                        if (fileTemp.exists()) {
+                            fileTemp.delete();
+                        }
+                    }
+                }
+            }
         }
-        sQLiteDatabase.setVersion(39);
+        sQLiteDatabase.setVersion(40);
     }
 }

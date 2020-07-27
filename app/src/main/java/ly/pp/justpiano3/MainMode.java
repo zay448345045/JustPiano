@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import nl.bravobit.ffmpeg.FFmpeg;
 
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;
@@ -91,8 +91,14 @@ public class MainMode extends Activity implements OnClickListener {
             case R.id.feed_back:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("反馈");
-                jpdialog.setMessage("官网制作完成后，可在官网反馈版块进行意见反馈!");
-                jpdialog.setFirstButton("确定", new DialogDismissClick());
+                jpdialog.setMessage("反馈问题请使用极品钢琴账号登录官网，打开官网问题反馈页面进行意见反馈");
+                jpdialog.setFirstButton("访问官网", (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                    intent1.setData(Uri.parse("http://111.67.204.158"));
+                    startActivity(intent1);
+                });
+                jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.showDialog();
                 return;
             default:
@@ -104,9 +110,6 @@ public class MainMode extends Activity implements OnClickListener {
         super.onCreate(bundle);
         JPApplication jpApplication = (JPApplication) getApplication();
         jpApplication.loadSettings(0);
-        if (!FFmpeg.getInstance(this).isSupported()) {
-            jpApplication.setCompatibleMode(false);
-        }
         pressAgain = false;
         setContentView(R.layout.main_mode);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));

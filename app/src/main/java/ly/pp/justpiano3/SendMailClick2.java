@@ -24,7 +24,7 @@ final class SendMailClick2 implements OnClickListener {
         String valueOf = String.valueOf(textView.getText());
         JSONObject jSONObject = new JSONObject();
         try {
-            if (valueOf.isEmpty() || valueOf.equals("\'")) {
+            if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(olPlayRoom, "请输入信件内容!", Toast.LENGTH_SHORT).show();
             } else if (valueOf.length() > 300) {
                 Toast.makeText(olPlayRoom, "确定在三百字之内!", Toast.LENGTH_SHORT).show();

@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-import static ly.pp.justpiano3.PlaySongs.GROUP;
-
 public final class PianoPlay extends BaseActivity {
     private static final int f4579ab = 44100;
     private static int f4609ae = 0;
@@ -67,7 +65,6 @@ public final class PianoPlay extends BaseActivity {
     PlayView playView;
     double nandu;
     int score;
-    JPDialog jpdialog = new JPDialog(this);
     JPApplication jpapplication;
     View finishView;
     private View f4592K;
@@ -243,7 +240,7 @@ public final class PianoPlay extends BaseActivity {
                 f4592K.setVisibility(View.VISIBLE);
                 JSONObject jSONObject = new JSONObject();
                 try {
-                    jSONObject.put("T", 1);
+                    jSONObject.put("T", 2);
                     sendMsg((byte) 40, (byte) 0, jSONObject.toString(), null);
                     return;
                 } catch (JSONException e) {
@@ -316,18 +313,7 @@ public final class PianoPlay extends BaseActivity {
         return z;
     }
 
-    public void generateMusicStart(int[] tickGroupArray, byte[] trackXArray, byte[] noteArray, byte[] volumeArray, int arrayLength) {
-        jpapplication.startMusic();
-        String[] commands = jpapplication.makeFFmpegCmd(tickGroupArray, trackXArray, noteArray, volumeArray, 0, Math.min(arrayLength, GROUP), jpapplication.mpIndex);
-        jpapplication.ffmpegPlayTask(commands, jpapplication.mpIndex);
-        if (GROUP < arrayLength) {
-            commands = jpapplication.makeFFmpegCmd(tickGroupArray, trackXArray, noteArray, volumeArray, GROUP, Math.min(arrayLength, GROUP << 1), (jpapplication.mpIndex + 1) % 3);
-            jpapplication.ffmpegPlayTask(commands, (jpapplication.mpIndex + 1) % 3);
-        }
-    }
-
     public void m3794f() {
-        jpdialog = new JPDialog(this);
         f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
         layoutparams2 = new LayoutParams(-2, -2);
         layoutparams2.gravity = android.view.Gravity.CENTER;
@@ -431,7 +417,8 @@ public final class PianoPlay extends BaseActivity {
         jpapplication.setHeightPixels(displayMetrics.heightPixels);
         jpapplication.setWidthPixels(displayMetrics.widthPixels);
         jpapplication.loadSettings(1);
-        JPApplication.createSounds();
+        JPApplication.teardownAudioStreamNative();
+        JPApplication.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
             JPApplication.preloadSounds(i);
         }
@@ -521,12 +508,12 @@ public final class PianoPlay extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        JPDialog jpdialog = new JPDialog(this);
         switch (playKind) {
             case 0:
                 m3785a(playKind, true);
                 if (!isShowingSongsInfo) {
                     playView.startFirstNoteTouching = false;
-                    jpapplication.pauseMusic();
                     isShowingSongsInfo = true;
                     f4591J.setVisibility(View.VISIBLE);
                     return;
@@ -543,7 +530,6 @@ public final class PianoPlay extends BaseActivity {
                 m3785a(playKind, true);
                 if (!isShowingSongsInfo) {
                     playView.startFirstNoteTouching = false;
-                    jpapplication.pauseMusic();
                     isShowingSongsInfo = true;
                     f4591J.setVisibility(View.VISIBLE);
                 } else {
@@ -563,11 +549,11 @@ public final class PianoPlay extends BaseActivity {
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
                     f4619j = true;
-                    jpapplication.stopMusic();
                     dialog.dismiss();
                     finish();
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
+                jpdialog.setCancelableFalse();
                 jpdialog.showDialog();
                 return;
             case 3:
@@ -578,11 +564,11 @@ public final class PianoPlay extends BaseActivity {
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
                     f4619j = true;
-                    jpapplication.stopMusic();
                     dialog.dismiss();
                     finish();
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
+                jpdialog.setCancelableFalse();
                 jpdialog.showDialog();
                 return;
             case 4:
@@ -593,11 +579,11 @@ public final class PianoPlay extends BaseActivity {
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
                     f4619j = true;
-                    jpapplication.stopMusic();
                     dialog.dismiss();
                     finish();
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
+                jpdialog.setCancelableFalse();
                 jpdialog.showDialog();
                 return;
             default:
@@ -640,7 +626,6 @@ public final class PianoPlay extends BaseActivity {
     protected void onDestroy() {
         JPStack.create();
         JPStack.pop(this);
-        jpapplication.stopMusic();
         if (isRecord) {
             mo2908c();
         }
@@ -661,7 +646,6 @@ public final class PianoPlay extends BaseActivity {
                 }
                 isPlayingStart = false;
                 if (!f4620k) {
-                    jpapplication.stopMusic();
                     finish();
                     return;
                 }
@@ -725,7 +709,6 @@ public final class PianoPlay extends BaseActivity {
     @Override
     protected void onResume() {
         if (f4619j) {
-            jpapplication.stopMusic();
             finish();
             f4619j = false;
         }
@@ -737,7 +720,6 @@ public final class PianoPlay extends BaseActivity {
         super.onStop();
         if (f4619j) {
             f4619j = false;
-            jpapplication.stopMusic();
             isPlayingStart = false;
             f4620k = false;
             finish();

@@ -163,10 +163,6 @@ final class Receive {
                                     olPlayHall.jpprogressBar.dismiss();
                                     bundle.putInt("result", jSONObject3.getInt("R"));
                                     bundle.putString("info", jSONObject3.getString("I"));
-                                    bundle.putInt("songsID", jSONObject3.getInt("CL"));
-                                    bundle.putString("songBytes", GZIP.ZIPTo(jSONObject3.getString("P")));
-                                    bundle.putInt("type", jSONObject3.getInt("T"));
-                                    bundle.putInt("hand", jSONObject3.has("G") ? jSONObject3.getInt("G") : 0);
                                     message.setData(bundle);
                                     message.what = 11;
                                     olPlayHall.olPlayHallHandler.handleMessage(message);
@@ -174,6 +170,22 @@ final class Receive {
                                 }
                                 return;
                             case 1:
+                                JPStack.create();
+                                if (JPStack.top() instanceof OLPlayHall) {
+                                    JPStack.create();
+                                    olPlayHall = (OLPlayHall) JPStack.top();
+                                    assert olPlayHall != null;
+                                    olPlayHall.jpprogressBar.dismiss();
+                                    bundle.putInt("songsID", jSONObject3.getInt("CL"));
+                                    bundle.putString("songBytes", GZIP.ZIPTo(jSONObject3.getString("P")));
+                                    bundle.putInt("hand", jSONObject3.has("G") ? jSONObject3.getInt("G") : 0);
+                                    message.setData(bundle);
+                                    message.what = 13;
+                                    olPlayHall.olPlayHallHandler.handleMessage(message);
+                                    return;
+                                }
+                                return;
+                            case 2:
                                 JPStack.create();
                                 if (JPStack.top() instanceof PianoPlay) {
                                     JPStack.create();
@@ -185,7 +197,7 @@ final class Receive {
                                     return;
                                 }
                                 return;
-                            case 2:
+                            case 3:
                                 JPStack.create();
                                 if (JPStack.top() instanceof PianoPlay) {
                                     JPStack.create();
@@ -201,13 +213,11 @@ final class Receive {
                                     return;
                                 }
                                 return;
-                            default:
-                                return;
                         }
                     } catch (JSONException e22) {
                         e22.printStackTrace();
-                        return;
                     }
+                    return;
                 case 43:
                     JsonHandle.m3954b(string);
                     return;

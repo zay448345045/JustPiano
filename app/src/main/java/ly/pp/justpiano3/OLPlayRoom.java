@@ -81,11 +81,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     Bundle bundle2;
     boolean timeUpdateRunning;
     int currentHand;
+    ListView msgListView;
     private int diao;
     private Button playSongsModeButton;
     private TextView searchText;
     private ImageView express;
-    ListView msgListView;
     private LayoutInflater layoutInflater;
     private List<Bundle> playerList = new ArrayList<>();
     private PopupWindow expressWindow = null;
@@ -265,8 +265,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             textView.setText("玩家名称:" + b.getString("U")
                     + "\n玩家等级:Lv." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:" + (b.getInt("CL") / 10) + "级" + (b.getInt("CL") % 10)
-                    + "阶\n所在家族:" + b.getString("F")
+                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
@@ -717,7 +717,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_soundstop:
                 if (playSongs != null) {
-                    jpapplication.stopMusic();
                     playSongs.isPlayingSongs = false;
                     playSongs = null;
                     Toast.makeText(this, "当前曲目已停止播放", Toast.LENGTH_SHORT).show();
@@ -799,7 +798,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.ol_ready_b:
                 if (playerKind.equals("G")) {
                     sendMsg((byte) 4, roomID0, hallID0, "R");
-                } else if (jpapplication.isPlayingMusic() || !jpapplication.getCompatibleMode()) {
+                } else {
                     sendMsg((byte) 3, roomID0, hallID0, "");
                 }
                 return;
@@ -1198,16 +1197,16 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     @Override
     protected void onStart() {
         super.onStart();
-        if (!isOnStart){
+        if (!isOnStart) {
             sendMsg((byte) 4, roomID0, hallID0, "N");
         }
         isOnStart = true;
     }
 
     @Override
-    protected void onRestart(){
+    protected void onRestart() {
         super.onRestart();
-        if (!isOnStart){
+        if (!isOnStart) {
             sendMsg((byte) 4, roomID0, hallID0, "N");
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
@@ -1220,7 +1219,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     @Override
     protected void onStop() {
         super.onStop();
-        if (isOnStart){
+        if (isOnStart) {
             sendMsg((byte) 4, roomID0, hallID0, "B");
         }
         isOnStart = false;

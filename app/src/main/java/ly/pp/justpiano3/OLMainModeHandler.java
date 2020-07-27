@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,7 +9,7 @@ import android.os.Message;
 import java.lang.ref.WeakReference;
 
 final class OLMainModeHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     OLMainModeHandler(OLMainMode oLMainMode) {
         weakReference = new WeakReference<>(oLMainMode);

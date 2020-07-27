@@ -18,7 +18,6 @@ final class ReturnHallClick implements OnClickListener {
         olPlayRoom.isOnStart = false;
         olPlayRoom.sendMsg((byte) 8, olPlayRoom.roomID0, olPlayRoom.hallID0, olPlayRoom.roomTitleString);
         if (olPlayRoom.playSongs != null) {
-            olPlayRoom.jpapplication.stopMusic();
             olPlayRoom.playSongs.isPlayingSongs = false;
             olPlayRoom.playSongs = null;
         }

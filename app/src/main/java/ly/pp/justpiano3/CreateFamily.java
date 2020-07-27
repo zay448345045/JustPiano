@@ -19,7 +19,7 @@ final class CreateFamily implements OnClickListener {
 
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
-        String name = jpDialog.editText.getText().toString();
+        String name = jpDialog.getEditTextString();
         if (name.isEmpty()) {
             Toast.makeText(olPlayHallRoom, "家族名称不能为空!", Toast.LENGTH_SHORT).show();
         } else if (name.length() > 8) {

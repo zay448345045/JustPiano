@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +14,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class FamilyHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     FamilyHandler(OLFamily family) {
         weakReference = new WeakReference<>(family);

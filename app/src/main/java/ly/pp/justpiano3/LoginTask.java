@@ -42,7 +42,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             arrayList.add(new BasicNameValuePair("versionCode", String.valueOf(login.versionNum)));
             arrayList.add(new BasicNameValuePair("username", login.accountX));
             arrayList.add(new BasicNameValuePair("password", login.password));
-            arrayList.add(new BasicNameValuePair("local", "4.33"));
+            arrayList.add(new BasicNameValuePair("local", "4.34"));
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
                 DefaultHttpClient defaultHttpClient = new DefaultHttpClient();

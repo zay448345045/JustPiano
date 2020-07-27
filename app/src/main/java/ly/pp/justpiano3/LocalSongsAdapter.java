@@ -1,6 +1,5 @@
 package ly.pp.justpiano3;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.method.ScrollingMovementMethod;
@@ -10,7 +9,6 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public final class LocalSongsAdapter extends CursorAdapter {
     final MelodySelect melodyselect;

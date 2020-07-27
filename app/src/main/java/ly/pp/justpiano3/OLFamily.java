@@ -152,8 +152,8 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             textView.setText("玩家名称:" + b.getString("U")
                     + "\n玩家等级:Lv." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:" + (b.getInt("CL") / 10) + "级" + (b.getInt("CL") % 10)
-                    + "阶\n所在家族:" + b.getString("F")
+                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));

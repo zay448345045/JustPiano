@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,10 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -367,6 +363,20 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 intent.putExtra("O", f4430T - 1);
                 startActivityForResult(intent, 0);
                 return;
+            case R.id.ol_shop_button:
+                if (lv < 0) {
+                    Toast.makeText(this, "测试进入商城!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                intent.setClass(this, OLShop.class);
+//                intent.putExtra("T", f4427Q - 1);
+//                intent.putExtra("J", f4428R - 1);
+//                intent.putExtra("H", f4429S - 1);
+//                intent.putExtra("S", sex);
+//                intent.putExtra("Lv", lv);
+//                intent.putExtra("O", f4430T - 1);
+                startActivityForResult(intent, 0);
+                return;
             case R.id.create_family:
                 try {
                     JSONObject jSONObject2 = new JSONObject();
@@ -543,6 +553,9 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         Button f4464o = findViewById(R.id.ol_dress_button);
         f4464o.setText("换衣间");
         f4464o.setOnClickListener(this);
+        /*Button olshop = findViewById(R.id.ol_shop_button);
+        olshop.setText("商城");
+        olshop.setOnClickListener(this);*/
         userLevel = findViewById(R.id.ol_player_level);
         userExp = findViewById(R.id.user_exp);
         userLevel.setText("");

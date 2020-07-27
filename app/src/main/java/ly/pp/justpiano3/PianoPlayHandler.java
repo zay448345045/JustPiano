@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,7 +10,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 final class PianoPlayHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     PianoPlayHandler(PianoPlay pianoPlay) {
         weakReference = new WeakReference<>(pianoPlay);
@@ -84,7 +85,8 @@ final class PianoPlayHandler extends Handler {
                 return;
             case 6:
                 post(() -> {
-                    pianoPlay.jpdialog.setTitle("考级结果");
+                    JPDialog jpdialog = new JPDialog(pianoPlay);
+                    jpdialog.setTitle("考级结果");
                     Bundle data = message.getData();
                     int i = data.getInt("R");
                     StringBuilder stringBuffer = new StringBuilder();
@@ -102,13 +104,13 @@ final class PianoPlayHandler extends Handler {
                             stringBuffer.append("恭喜您,您已通过该阶段的全部曲目,晋升一级!\n");
                             break;
                     }
-                    pianoPlay.jpdialog.setMessage(stringBuffer.toString());
-                    pianoPlay.jpdialog.setCancelableFalse();
-                    pianoPlay.jpdialog.setFirstButton("确定", (dialog, which) -> {
+                    jpdialog.setMessage(stringBuffer.toString());
+                    jpdialog.setCancelableFalse();
+                    jpdialog.setFirstButton("确定", (dialog, which) -> {
                         dialog.dismiss();
                         pianoPlay.finish();
                     });
-                    pianoPlay.jpdialog.showDialog();
+                    jpdialog.showDialog();
                 });
                 return;
             case 7:
@@ -123,9 +125,6 @@ final class PianoPlayHandler extends Handler {
                         pianoPlay.songName.setText(pianoPlay.songsName);
                         pianoPlay.isShowingSongsInfo = false;
                         pianoPlay.playView.startFirstNoteTouching = true;
-                        if (pianoPlay.jpapplication.isMusicPause) {
-                            pianoPlay.jpapplication.resumeMusic();
-                        }
                         pianoPlay.songName.setEnabled(true);
                         return;
                     }
@@ -141,14 +140,15 @@ final class PianoPlayHandler extends Handler {
                 return;
             case 9:
                 post(() -> {
-                    pianoPlay.jpdialog.setTitle("挑战结束");
-                    pianoPlay.jpdialog.setMessage(message.getData().getString("I"));
-                    pianoPlay.jpdialog.setCancelableFalse();
-                    pianoPlay.jpdialog.setFirstButton("确定", (dialog, which) -> {
+                    JPDialog jpdialog = new JPDialog(pianoPlay);
+                    jpdialog.setTitle("挑战结束");
+                    jpdialog.setMessage(message.getData().getString("I"));
+                    jpdialog.setCancelableFalse();
+                    jpdialog.setFirstButton("确定", (dialog, which) -> {
                         dialog.dismiss();
                         pianoPlay.finish();
                     });
-                    pianoPlay.jpdialog.showDialog();
+                    jpdialog.showDialog();
                 });
                 return;
             case 21:

@@ -632,22 +632,28 @@ final class JsonHandle {
             case (byte) 33:
                 try {
                     JSONObject jSONObject3 = new JSONObject(str);
-                    message.what = jSONObject3.getInt("T");
-                    switch (jSONObject3.getInt("T")) {
+                    int type = jSONObject3.getInt("T");
+                    message.what = type;
+                    Bundle bundle5 = new Bundle();
+                    switch (type) {
                         case 0:  //保存服装
-                            Bundle bundle5 = new Bundle();
                             bundle5.putString("I", jSONObject3.getString("I"));
-                            message.setData(bundle5);
-                            JPStack.create();
-                            if (JPStack.top() instanceof OLPlayDressRoom) {
-                                JPStack.create();
-                                ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
-                            }
                             break;
-                        case 1:  //进入换衣间加载极品币和解锁情况
+                        case 1:  //进入换衣间加载音符和解锁情况
+                            bundle5.putString("G", jSONObject3.getString("G"));
+                            bundle5.putString("U", jSONObject3.getString("U"));
                             break;
                         case 2:  //购买服装
+                            bundle5.putString("I", jSONObject3.getString("I"));
+                            bundle5.putString("G", jSONObject3.getString("G"));
+                            bundle5.putString("U", jSONObject3.getString("U"));
                             break;
+                    }
+                    message.setData(bundle5);
+                    JPStack.create();
+                    if (JPStack.top() instanceof OLPlayDressRoom) {
+                        JPStack.create();
+                        ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
                     }
                 } catch (JSONException e2) {
                     e2.printStackTrace();

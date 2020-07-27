@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -25,16 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static ly.pp.justpiano3.PlaySongs.GROUP;
-
 public final class PlayView extends SurfaceView implements Callback {
+    static long serialID = 2825651233768L;
     Bitmap whiteKeyRightImage;
     Bitmap whiteKeyMiddleImage;
     Bitmap whiteKeyLeftImage;
     Bitmap blackKeyImage;
     Bitmap fireImage;
     Bitmap longKeyboardImage;
-    static long serialID = 2825651233768L;
     int noteMod12 = 4;
     boolean startFirstNoteTouching;
     SurfaceHolder surfaceholder;
@@ -267,23 +264,6 @@ public final class PlayView extends SurfaceView implements Callback {
             }
         }
         arrayLength = length;
-        if (jpapplication.getOpenChord() && jpapplication.getCompatibleMode()) {
-            tickGroupArray = new int[length];
-            for (int i1 = 1; i1 < length; i1++) {
-                if (i1 % GROUP != 0) {
-                    tickGroupArray[i1] = tickGroupArray[i1 - 1] + pm_2 * tickArray[i1];
-                }
-            }
-            trackXArray = new byte[length];
-            for (int i1 = 0; i1 < length; i1++) {
-                if (handValue == trackArray[i1] && tickArray[i1] >= 20) {
-                    trackXArray[i1] = 85;
-                } else {
-                    trackXArray[i1] = trackArray[i1];
-                }
-            }
-            pianoPlay.generateMusicStart(tickGroupArray, trackXArray, noteArray, volumeArray, arrayLength);
-        }
         int i3 = 0;
         lastPosition = 0;
         length = 0;
@@ -335,23 +315,6 @@ public final class PlayView extends SurfaceView implements Callback {
         int i = 0;
         if (pm_2 <= 0) {
             pm_2 += 256;
-        }
-        if (jpapplication.getOpenChord() && jpapplication.getCompatibleMode()) {
-            tickGroupArray = new int[arrayLength];
-            for (int i1 = 1; i1 < arrayLength; i1++) {
-                if (i1 % GROUP != 0) {
-                    tickGroupArray[i1] = tickGroupArray[i1 - 1] + pm_2 * tickArray[i1];
-                }
-            }
-            trackXArray = new byte[arrayLength];
-            for (int i1 = 0; i1 < arrayLength; i1++) {
-                if (handValue == trackArray[i1] && tickArray[i1] >= 20) {
-                    trackXArray[i1] = 85;
-                } else {
-                    trackXArray[i1] = trackArray[i1];
-                }
-            }
-            pianoPlay.generateMusicStart(tickGroupArray, trackXArray, noteArray, volumeArray, arrayLength);
         }
         lastPosition = 0;
         int i2 = 0;
@@ -608,7 +571,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     try {
                         jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        jSONObject.put("T", 2);
+                        jSONObject.put("T", 3);
                         long x = pianoPlay.times * serialID;
                         long time = jpapplication.getServerTime();
                         long crypt = (time >>> 12 | time << 52) ^ x;
@@ -712,22 +675,16 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (jpapplication.getIfLoadlongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
+                if (jpapplication.getIfLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
                     f4813n = currentPlayNote.noteValue;
                     f4713V = false;
                 }
-                if (jpapplication.getCompatibleMode()) {
-                    if (currentPlayNote.compatibleMode(canvas) < 0) {
+                if (gameType > 0) {
+                    if (currentPlayNote.mo3107b(canvas) < 0) {
                         break;
                     }
-                } else {
-                    if (gameType > 0) {
-                        if (currentPlayNote.mo3107b(canvas) < 0) {
-                            break;
-                        }
-                    } else if (currentPlayNote.mo3108c(canvas) < 0) {
-                        break;
-                    }
+                } else if (currentPlayNote.mo3108c(canvas) < 0) {
+                    break;
                 }
             } else {
                 tempNotesArray.add(currentPlayNote);
@@ -836,15 +793,11 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (jpapplication.getIfLoadlongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
+                if (jpapplication.getIfLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
                     f4813n = currentPlayNote.noteValue;
                     f4713V = false;
                 }
-                if (jpapplication.getCompatibleMode()) {
-                    currentPlayNote.mo3105a(canvas);
-                } else {
-                    currentPlayNote.noCompatibleMode(canvas);
-                }
+                currentPlayNote.noCompatibleMode(canvas);
             } else {
                 tempNotesArray.add(currentPlayNote);
             }

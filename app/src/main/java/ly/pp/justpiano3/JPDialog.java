@@ -9,10 +9,14 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public final class JPDialog {
-    EditText editText;
+    private EditText editText;
+    private RadioGroup radioGroup;
+    private View inflate;
     private Context context;
     private OnClickListener listener2;
     private String title;
@@ -20,7 +24,6 @@ public final class JPDialog {
     private String positiveText;
     private String negativeText;
     private View view;
-    private boolean visible;
     private boolean cancelable = true;
     private OnClickListener listener;
 
@@ -49,9 +52,11 @@ public final class JPDialog {
     }
 
     final JDialog createJDialog() {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (inflate == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        }
         JDialog jDialog = new JDialog(context);
-        View inflate = layoutInflater.inflate(R.layout.mydialog, null);
         jDialog.addContentView(inflate, new LayoutParams(-1, -2));
         ((TextView) inflate.findViewById(R.id.title)).setText(title);
         if (positiveText != null) {
@@ -80,10 +85,6 @@ public final class JPDialog {
         jDialog.setCanceledOnTouchOutside(false);
         jDialog.setCancelable(cancelable);
         cancelable = true;
-        if (visible) {
-            editText = (inflate.findViewById(R.id.Etext));
-            (inflate.findViewById(R.id.Etext)).setVisibility(View.VISIBLE);
-        }
         return jDialog;
     }
 
@@ -92,8 +93,39 @@ public final class JPDialog {
         return this;
     }
 
-    final void setEditAndMessageVisable() {
-        visible = true;
+    public void setVisibleEditText(boolean visibleEditText) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        if (visibleEditText) {
+            editText = (inflate.findViewById(R.id.Etext));
+            editText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setVisibleRadioGroup(boolean visibleRadioGroup) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        if (visibleRadioGroup) {
+            radioGroup = (inflate.findViewById(R.id.Rgroup));
+            radioGroup.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void addRadioButton(RadioButton radioButton) {
+        radioGroup.addView(radioButton);
+    }
+
+    public int getRadioGroupCheckedId() {
+        int id = radioGroup.getCheckedRadioButtonId();
+        if (id == -1) {
+            return id;
+        }
+        View v = inflate.findViewById(id);
+        return (int) v.getTag();
+    }
+
+    public String getEditTextString() {
+        return editText.getText().toString();
     }
 
     public final JPDialog setSecondButton(String str, OnClickListener onClickListener) {
@@ -103,12 +135,12 @@ public final class JPDialog {
     }
 
     public final void showDialog() {
-        try{
+        try {
             JDialog dia = createJDialog();
             if (!dia.isShowing()) {
                 dia.show();
             }
-        }catch (Exception ignore){
+        } catch (Exception ignore) {
         }
     }
 

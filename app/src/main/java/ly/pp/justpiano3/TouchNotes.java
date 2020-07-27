@@ -33,12 +33,12 @@ final class TouchNotes implements OnTouchListener {
                         playView.judgeAndPlaySound(touchNoteNum);
                         moveNoteNum = touchNoteNum;
                     }
-                    if (Math.abs(y - lastY) < 2){
+                    if (Math.abs(y - lastY) < 2) {
                         tapCounts++;
                     } else {
                         tapCounts = 0;
                     }
-                    if (tapCounts > 64){
+                    if (tapCounts > 100) {
                         playView.pianoPlay.finish();
                     }
                     lastY = y;

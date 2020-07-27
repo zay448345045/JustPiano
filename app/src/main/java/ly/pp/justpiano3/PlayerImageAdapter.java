@@ -186,7 +186,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             imageView.getLocationOnScreen(iArr);
             a.showAtLocation(imageView, 51, iArr[0] + imageView.getWidth(), iArr[1]);
         });
-        try{
+        try {
             if (string4.equals("O")) {
                 imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
                 return view;
@@ -194,7 +194,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_close.png")));
                 return view;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         TextView textView2 = view.findViewById(R.id.ol_ready_text);

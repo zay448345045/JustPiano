@@ -49,8 +49,9 @@
                 android:id="@+id/RelativeLayout01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_above="@id/ol_dress_ok"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_marginBottom="20dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -87,6 +88,24 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/gold_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/app_size"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignBottom="@id/gold_num"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/gold_num"
+                android:src="@drawable/gold" />
+
+            <TextView
                 android:id="@+id/app_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,6 +113,8 @@
                 android:layout_centerHorizontal="true"
                 android:text="更换服装"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
         </RelativeLayout>
 
         <RelativeLayout

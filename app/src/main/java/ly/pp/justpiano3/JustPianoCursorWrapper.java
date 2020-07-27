@@ -40,7 +40,6 @@ public final class JustPianoCursorWrapper extends CursorWrapper {
                 }
             } else {
                 while (!f5947a.isAfterLast()) {
-
                     C1312mj c1312mj = new C1312mj();
                     c1312mj.num = cursor.getFloat(columnIndexOrThrow);
                     c1312mj.f5956b = i;
@@ -49,10 +48,10 @@ public final class JustPianoCursorWrapper extends CursorWrapper {
                     i++;
                 }
                 if (z) {
-                    Comparator<C1312mj> f5950d = (o1, o2) -> Float.compare(o1.num, o2.num);
+                    Comparator<C1312mj> f5950d = (o1, o2) -> Double.compare(o1.num, o2.num);
                     Collections.sort(f5948b, f5950d);
                 } else {
-                    Comparator<C1312mj> f5951e = (o1, o2) -> Float.compare(o2.num, o1.num);
+                    Comparator<C1312mj> f5951e = (o1, o2) -> Double.compare(o2.num, o1.num);
                     Collections.sort(f5948b, f5951e);
                 }
             }

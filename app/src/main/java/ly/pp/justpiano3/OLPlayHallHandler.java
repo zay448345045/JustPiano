@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -23,15 +25,15 @@ import java.util.Date;
 import java.util.Locale;
 
 final class OLPlayHallHandler extends Handler {
-    private WeakReference weakreference;
+    private WeakReference<Activity> weakReference;
 
     OLPlayHallHandler(OLPlayHall ol) {
-        weakreference = new WeakReference<>(ol);
+        weakReference = new WeakReference<>(ol);
     }
 
     @Override
     public final void handleMessage(Message message) {
-        OLPlayHall olPlayHall = (OLPlayHall) weakreference.get();
+        OLPlayHall olPlayHall = (OLPlayHall) weakReference.get();
         switch (message.what) {
             case 1:
                 post(() -> {
@@ -149,7 +151,7 @@ final class OLPlayHallHandler extends Handler {
                                 jpdialog.setTitle("好友请求");
                                 jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
                                 jpdialog.setFirstButton("同意", new AddFriendsClick4(string, olPlayHall));
-                                jpdialog.setSecondButton("", new RefuseFriendsClick2(string, olPlayHall));
+                                jpdialog.setSecondButton("拒绝", new RefuseFriendsClick2(string, olPlayHall));
                                 jpdialog.showDialog();
                             }
                             return;
@@ -250,12 +252,8 @@ final class OLPlayHallHandler extends Handler {
             case 11:
                 post(() -> {
                     Bundle data15 = message.getData();
-                    data15.getInt("type");
                     int i = data15.getInt("result");
-                    String string = data15.getString("info");
-                    String string2 = data15.getString("songBytes");
-                    int id = data15.getInt("songsID");
-                    int hand = data15.getInt("hand");
+                    String[] msg = data15.getString("info").split("\n");
                     String str = "提示";
                     String str2 = null;
                     switch (i) {
@@ -267,22 +265,32 @@ final class OLPlayHallHandler extends Handler {
                             break;
                     }
                     JPDialog jpdialog = new JPDialog(olPlayHall);
+                    jpdialog.setVisibleRadioGroup(true);
                     jpdialog.setTitle(str);
-                    jpdialog.setMessage(string);
+                    jpdialog.setMessage(msg[0]);
+                    for (int j = 1; j < msg.length; j++) {
+                        RadioButton radioButton = new RadioButton(olPlayHall);
+                        radioButton.setText(msg[j]);
+                        radioButton.setTag(j - 1);
+                        jpdialog.addRadioButton(radioButton);
+                    }
                     jpdialog.setFirstButton(str2, (dialog, which) -> {
-                        dialog.dismiss();
-                        if (i == 1) {
-                            olPlayHall.jpapplication.stopMusic();
-                            Intent intent12 = new Intent(olPlayHall, PianoPlay.class);
-                            intent12.putExtra("head", 3);
-                            intent12.putExtra("songBytes", string2);
-                            intent12.putExtra("times", id);
-                            intent12.putExtra("hand", hand);
-                            intent12.putExtra("name", "");
-                            intent12.putExtra("bundle", olPlayHall.f4381N);
-                            intent12.putExtra("bundleHall", olPlayHall.f4381N);
-                            olPlayHall.startActivity(intent12);
-                            olPlayHall.finish();
+                        int checkedId = jpdialog.getRadioGroupCheckedId();
+                        if (checkedId == -1) {
+                            Toast.makeText(olPlayHall, "请选择一首考级曲", Toast.LENGTH_SHORT).show();
+                        } else {
+                            dialog.dismiss();
+                            if (i == 1) {
+                                JSONObject jsonObject = new JSONObject();
+                                try {
+                                    jsonObject.put("T", 1);
+                                    jsonObject.put("S", checkedId);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                olPlayHall.jpprogressBar.show();
+                                olPlayHall.sendMsg((byte) 40, (byte) 0, (byte) 0, jsonObject.toString());
+                            }
                         }
                     });
                     if (i == 1) {
@@ -296,6 +304,21 @@ final class OLPlayHallHandler extends Handler {
                 return;
             case 12:
                 post(() -> olPlayHall.mo2827a(message.getData()));
+                return;
+            case 13:
+                post(() -> {
+                    Bundle data15 = message.getData();
+                    Intent intent12 = new Intent(olPlayHall, PianoPlay.class);
+                    intent12.putExtra("head", 3);
+                    intent12.putExtra("songBytes", data15.getString("songBytes"));
+                    intent12.putExtra("times", data15.getInt("songsID"));
+                    intent12.putExtra("hand", data15.getInt("hand"));
+                    intent12.putExtra("name", "");
+                    intent12.putExtra("bundle", olPlayHall.f4381N);
+                    intent12.putExtra("bundleHall", olPlayHall.f4381N);
+                    olPlayHall.startActivity(intent12);
+                    olPlayHall.finish();
+                });
                 return;
             case 21:
                 post(() -> {

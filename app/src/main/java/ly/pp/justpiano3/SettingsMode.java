@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import nl.bravobit.ffmpeg.FFmpeg;
 
 public class SettingsMode extends PreferenceActivity {
     private JPApplication jpApplication;
@@ -19,11 +17,7 @@ public class SettingsMode extends PreferenceActivity {
     @Override
     public void onBackPressed() {
         jpApplication.loadSettings(0);
-        if (!FFmpeg.getInstance(this).isSupported() && jpApplication.getCompatibleMode()) {
-            Toast.makeText(this, "您的设备不支持新机兼容模式，请关闭此项!", Toast.LENGTH_SHORT).show();
-        } else {
-            finish();
-        }
+        finish();
     }
 
     @Override

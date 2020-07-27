@@ -1,6 +1,6 @@
 package ly.pp.justpiano3;
 
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class ChallengeHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     ChallengeHandler(OLChallenge challenge) {
         weakReference = new WeakReference<>(challenge);
@@ -68,7 +68,6 @@ final class ChallengeHandler extends Handler {
                         jpdialog.setFirstButton(str2, (dialog, which) -> {
                             dialog.dismiss();
                             if (i == 1) {
-                                challenge.jpapplication.stopMusic();
                                 Intent intent = new Intent(challenge, PianoPlay.class);
                                 intent.putExtra("head", 4);
                                 intent.putExtra("songBytes", string2);

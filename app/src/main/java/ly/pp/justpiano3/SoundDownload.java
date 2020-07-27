@@ -171,6 +171,8 @@ public class SoundDownload extends Activity implements Callback {
             }
             GZIP.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str), file.toString());
             edit.apply();
+            JPApplication.teardownAudioStreamNative();
+            JPApplication.unloadWavAssetsNative();
             for (i = 108; i >= 24; i--) {
                 JPApplication.preloadSounds(i);
             }

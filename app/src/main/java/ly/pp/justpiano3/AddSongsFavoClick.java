@@ -8,11 +8,11 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 final class AddSongsFavoClick implements OnClickListener {
-    private String songsPath;
-    private String songsName;
     private final LocalSongsAdapter localSongsAdapter;
     private final Cursor cursor;
     private final Context context;
+    private String songsPath;
+    private String songsName;
 
     AddSongsFavoClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, Context context) {
         this.localSongsAdapter = localSongsAdapter;

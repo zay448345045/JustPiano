@@ -15,11 +15,6 @@
             android:key="down_speed"
             android:summary="设置音块的滑落速度，会影响弹奏难度，可根据个人习惯进行调整"
             android:title="音块速率" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="compatible_mode"
-            android:summary="此模式缓解近年来新设备(尤其Android 10)的弹奏卡顿，如果开启后您的旧设备弹奏时有不适感，推荐关闭此模式!"
-            android:title="新设备兼容模式" />
         <ListPreference
             android:defaultValue="1"
             android:dialogTitle="音块大小"
@@ -29,7 +24,7 @@
             android:summary="设置音块大小，可根据个人习惯进行调整"
             android:title="音块大小" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="note_dismiss"
             android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
             android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"

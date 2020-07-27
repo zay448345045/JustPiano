@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,7 +101,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (prizeNum != -1) {
             int prizeType = prizeNum / 100;
             dp.luckyStart(prizeType);
-            if (prizeType == 0){
+            if (prizeType == 0) {
                 color.setVisibility(View.VISIBLE);
                 int kuang = prizeNum + 7;
                 if (prizeNum > 17) {

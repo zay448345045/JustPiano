@@ -27,7 +27,7 @@ final class ChangeDeclarationClick implements OnClickListener {
         String valueOf = String.valueOf(f5458b.getText());
         JSONObject jSONObject = new JSONObject();
         try {
-            if (valueOf.isEmpty() || valueOf.equals("\'")) {
+            if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
             } else if (valueOf.length() > 300) {
                 Toast.makeText(family, "确定在三百字之内!", Toast.LENGTH_SHORT).show();

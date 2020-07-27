@@ -157,7 +157,7 @@ public class ConnectionService extends Service implements Runnable {
                         if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
                             writeBuffer.clear();
                             try {
-                                String str = "20200323";
+                                String str = "20200724";
                                 writeBuffer = JsonHandle.m3947a(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
@@ -165,7 +165,7 @@ public class ConnectionService extends Service implements Runnable {
                                 ThreadPoolUtils.execute(new Thread(() -> {
                                     try {
                                         while (online) {
-                                            Thread.sleep(5000);
+                                            Thread.sleep(6000);
                                             writeData((byte) 41, (byte) 0, (byte) 0, "", null);
                                         }
                                     } catch (InterruptedException e) {

@@ -59,7 +59,6 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
             Toast.makeText(showSongsInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
             return;
         }
-        showSongsInfo.get().jpapplication.stopMusic();
         OLMelodySelect.f4294d = f5878a;
         Intent intent = new Intent();
         intent.putExtra("head", 1);

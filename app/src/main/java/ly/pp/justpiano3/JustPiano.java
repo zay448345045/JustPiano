@@ -17,6 +17,7 @@ import android.util.DisplayMetrics;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 
 public class JustPiano extends Activity implements Callback, Runnable {
@@ -35,13 +36,14 @@ public class JustPiano extends Activity implements Callback, Runnable {
 
     private void m3587a(SQLiteDatabase sQLiteDatabase) {
         String string;
-        HashMap<String, String> hashMap = new HashMap<>();
+        //键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
+        Map<String, String> pmPathMap = new HashMap<>();
         ReadPm readpm = new ReadPm(null);
         Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path"}, null, null, null, null, "_id desc");
         while (query.moveToNext()) {
             string = query.getString(query.getColumnIndex("path"));
-            if (string.length() <= 7 || string.charAt(7) != '/') {
-                hashMap.put(string, string);
+            if (string.length() > 8 && string.charAt(7) == '/') {
+                pmPathMap.put(string.substring(9), string);
             }
         }
         try {
@@ -60,11 +62,17 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                 float j = readpm.getLeftNandu();
                                 int l = readpm.getSongTime();
                                 songCount++;
-                                if (hashMap.containsKey(string)) {
+                                if (pmPathMap.containsKey(aList3.substring(1))) {
                                     info = "更新曲目:" + h + "..." + songCount + "";
+                                    contentvalues.put("name", h);
+                                    contentvalues.put("item", Consts.items[i + 1]);
+                                    contentvalues.put("path", string);
+                                    contentvalues.put("diff", g);
+                                    contentvalues.put("Ldiff", j);
+                                    contentvalues.put("length", l);
                                     contentvalues.put("isnew", 0);
                                     contentvalues.put("online", 1);
-                                    sQLiteDatabase.update("jp_data", contentvalues, "path = '" + hashMap.get(string) + "'", null);
+                                    sQLiteDatabase.update("jp_data", contentvalues, "path = '" + pmPathMap.get(aList3.substring(1)) + "'", null);
                                     contentvalues.clear();
                                 } else {
                                     info = "加入曲目" + h + "..." + songCount + "";
@@ -211,7 +219,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
         sqliteDataBase = testSQL.getWritableDatabase();
         try {
             Cursor query = sqliteDataBase.query("jp_data", null, null, null, null, null, null);
-            if (query != null && (query.getCount() == 0) || updateSQL) {
+            if ((query != null && (query.getCount() == 0)) || updateSQL) {
                 loading = "";
                 m3587a(sqliteDataBase);
             }
@@ -221,7 +229,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
         } catch (Exception e5) {
             System.exit(-1);
         }
-        JPApplication.createSounds();
         for (int i = 108; i >= 24; i--) {
             JPApplication.preloadSounds(i);
             progress++;

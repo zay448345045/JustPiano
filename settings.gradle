@@ -1,1 +1,1 @@
-include ':app', 'android-ffmpeg'
+include ':app'

@@ -36,5 +36,14 @@ public interface Consts extends BaseColumns {
             R.drawable.v7_name, R.drawable.v8_name, R.drawable.v9_name, R.drawable.v10_name, R.drawable.v11_name, R.drawable.v12_name,
             R.drawable.v13_name, R.drawable.v14_name, R.drawable.v15_name, R.drawable.v16_name, R.drawable.v17_name, R.drawable.v18_name,
             R.drawable.v19_name, R.drawable.v20_name, R.drawable.v21_name, R.drawable.v22_name, R.drawable.v23_name, R.drawable.v24_name};
-
+    int[] fHair = new int[]{10, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 15, 15, 15, 15, 15, 15, 25, 25, 20, 20, 25, 25, 15, 25, 25, 25, 20, 20, 20, 25, 25, 25, 25, 25, 25};
+    int[] mHair = new int[]{10, 10, 10, 10, 15, 15, 15, 15, 10, 10, 10, 15, 15, 20, 20, 20, 20, 15, 15, 15, 20, 25};
+    int[] fJacket = new int[]{10, 10, 10, 15, 15, 15, 15, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 10, 10, 10, 10, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 15, 15, 20, 30, 25, 25, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 50, 55, 55, 50, 55, 55, 50, 55, 50, 50, 50, 50};
+    int[] mJacket = new int[]{10, 10, 10, 15, 15, 15, 15, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 10, 10, 10, 15, 15, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 20, 10, 20, 30, 55, 55, 55, 55, 50};
+    int[] fTrousers = new int[]{10, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15};
+    int[] mTrousers = new int[]{10, 10, 10, 10, 10, 10, 15, 15, 15, 25, 10, 10, 15, 15, 15, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20};
+    int[] fShoes = new int[]{10, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15};
+    int[] mShoes = new int[]{15, 15, 15, 15, 15, 15, 15, 15, 10, 10, 10, 10, 10, 10, 10, 15};
 }

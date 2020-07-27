@@ -3,8 +3,6 @@ package ly.pp.justpiano3;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import static ly.pp.justpiano3.PlaySongs.GROUP;
-
 final class PlayNote {
     boolean hideNote;
     boolean unPassed;
@@ -99,31 +97,6 @@ final class PlayNote {
         }
     }
 
-    final void mo3105a(Canvas canvas) {  //欣赏模式
-        posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
-        if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
-            if (newNote) {
-                jpapplication.drawFire(playView, canvas, noteValue % 12);
-                if (playView.offset % GROUP == 0 && jpapplication.getOpenChord()) {
-                    jpapplication.playMusic();
-                    if (playView.offset + (GROUP << 1) < playView.arrayLength) {
-                        String[] commands = jpapplication.makeFFmpegCmd(playView.tickGroupArray,
-                                playView.trackXArray, playView.noteArray, playView.volumeArray,
-                                playView.offset + (GROUP << 1),
-                                Math.min(playView.arrayLength, playView.offset + 3 * GROUP),
-                                (jpapplication.mpIndex + 1) % 3);
-                        jpapplication.ffmpegPlayTask(commands, (jpapplication.mpIndex + 1) % 3);
-                    }
-                }
-                playView.offset++;
-                newNote = false;
-            }
-        }
-        if (canvas != null && trackValue == handValue) {
-            canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
-        }
-    }
-
     final float getHalfWidth() {
         return halfWidth;
     }
@@ -162,36 +135,6 @@ final class PlayNote {
             }
             if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
                 playView.jpapplication.stopSongs(playNote);
-            }
-        }
-        if (jpapplication.getAutoPlay()) {
-            if (canvas != null && trackValue == handValue && !hideNote) {
-                canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
-            }
-        } else if (canvas != null && trackValue == handValue) {
-            canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
-        }
-        return posiAdd15AddAnim;
-    }
-
-    final float compatibleMode(Canvas canvas) {
-        posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
-        if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
-            if (newNote) {
-                if (playView.offset % GROUP == 0 && jpapplication.getOpenChord()) {
-                    jpapplication.playMusic();
-                    if (playView.offset + (GROUP << 1) < playView.arrayLength) {
-                        String[] commands = jpapplication.makeFFmpegCmd(playView.tickGroupArray,
-                                playView.trackXArray, playView.noteArray, playView.volumeArray,
-                                playView.offset + (GROUP << 1),
-                                Math.min(playView.arrayLength, playView.offset + 3 * GROUP),
-                                (jpapplication.mpIndex + 1) % 3);
-                        jpapplication.ffmpegPlayTask(commands, (jpapplication.mpIndex + 1) % 3);
-                    }
-                }
-                playView.offset++;
-                newNote = false;
-                return posiAdd15AddAnim;
             }
         }
         if (jpapplication.getAutoPlay()) {

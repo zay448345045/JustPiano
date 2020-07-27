@@ -14,7 +14,7 @@ public class MockitoTest {
     User user;
 
     @Test
-    public void testIsNotNull(){
+    public void testIsNotNull() {
         assertNotNull(user);
     }
 }

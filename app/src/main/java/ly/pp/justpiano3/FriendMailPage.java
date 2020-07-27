@@ -107,7 +107,7 @@ public class FriendMailPage extends Activity implements Callback {
                     case "":
                         m3505a(str, jpApplication.getAccountName(), 1, 0);
                         return;
-                    case "\'":
+                    case "'":
                         m3505a(str, jpApplication.getAccountName(), 3, 0);
                         break;
                     default:

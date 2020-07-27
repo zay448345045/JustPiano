@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,25 +15,6 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
     public JPApplication jpapplication;
     OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
-    String f4293s;
-
-    final void mo2803a(String str, String str2, int i) {
-        if (str != null && str2 != null && !str.isEmpty() && !str2.isEmpty()) {
-            JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle(str);
-            jpdialog.setMessage(str2);
-            if (i <= 0) {
-                jpdialog.setSecondButton("确定", new DialogDismissClick());
-            } else {
-                jpdialog.setFirstButton(i == 1 ? "获取" : "升级", (dialog, which) -> {
-                    dialog.dismiss();
-                    new OLMainModeTask(context).execute(jpapplication.getVersion(), "kuang", jpapplication.getAccountName());
-                });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-            }
-            jpdialog.showDialog();
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -53,11 +35,16 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             case R.id.ol_ance_b:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("提示");
-                jpdialog.setMessage("新官网正在制作中，网站包含在线曲库曲谱上传、家族族徽上传、用户问题反馈、新版软件下载等功能");
-                jpdialog.setSecondButton("确定", new DialogDismissClick());
+                jpdialog.setMessage("官网访问方式：在浏览器中输入网址justpiano.atalar.com或输入网址111.67.204.158\n" +
+                        "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
+                jpdialog.setFirstButton("访问官网", (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                    intent1.setData(Uri.parse("http://111.67.204.158"));
+                    startActivity(intent1);
+                });
+                jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.showDialog();
-                //f4293s = "score";
-                //new OLMainModeTask(this).execute(jpapplication.getVersion(), "score", jpapplication.getAccountName());
                 return;
             case R.id.ol_songs_b:
                 intent.setClass(this, OLSongsPage.class);
@@ -78,8 +65,8 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 testSQL.close();
                 writableDatabase.close();
                 String str = "";
-                if (count < 5218) {
-                    str = "您载入的曲谱数量为:" + count + "。本版本曲谱数量为:5218。曲库不完整。无法进行在线对战。请在设置中的应用程序选项找到极品钢琴，清除程序数据，再重新打开游戏。或者您也可以卸载后重新安装本程序。载入曲谱时请勿中断或后台本软件!";
+                if (count != 5517) {
+                    str = "您载入的曲谱数量为:" + count + "。本版本曲谱数量为:5517。曲库不完整。无法进行在线对战。请在设置中的应用程序选项找到极品钢琴，清除程序数据，再重新打开游戏。或者您也可以卸载后重新安装本程序。载入曲谱时请勿中断或后台本软件!";
                     i = 1;
                 } else {
                     if (jpapplication.getIsBindService()) {

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class OLPlayHallRoomHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     OLPlayHallRoomHandler(OLPlayHallRoom olPlayHallRoom) {
         weakReference = new WeakReference<>(olPlayHallRoom);
@@ -249,7 +250,7 @@ final class OLPlayHallRoomHandler extends Handler {
                         jpdialog.setTitle("创建家族");
                         jpdialog.setMessage(string2);
                         if (b > 0) {
-                            jpdialog.setEditAndMessageVisable();
+                            jpdialog.setVisibleEditText(true);
                             jpdialog.setFirstButton("创建家族", new CreateFamily(jpdialog, olPlayHallRoom));
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {

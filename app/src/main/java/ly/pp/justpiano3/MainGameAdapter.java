@@ -251,11 +251,11 @@ public final class MainGameAdapter extends BaseAdapter {
                             textView3.setText(string4 + " 请求加你为好友");
                             button.setText("同意");
                             break;
-                        case "\'":
+                        case "'":
                             textView3.setText(string4 + " 请求与你解除搭档关系");
                             button.setText("解除");
                             break;
-                        case "\'\'":
+                        case "''":
                             textView3.setText(string4 + " 请求加入您所在的家族，是否批准?");
                             button.setText("批准");
                             break;

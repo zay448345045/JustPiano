@@ -19,13 +19,6 @@ public final class DownNotes extends Thread {
                 try {
                     if (jpapplication.getGameMode() != 2 || pianoPlay.playView.isTouchRightNote) {
                         jpapplication.downNote();
-                        if (isStop) {
-                            isStop = false;
-                            jpapplication.resumeMusic();
-                        }
-                    } else {
-                        isStop = true;
-                        jpapplication.pauseMusic();
                     }
                     DownNotes.sleep(sleepTime);
                 } catch (Exception e) {

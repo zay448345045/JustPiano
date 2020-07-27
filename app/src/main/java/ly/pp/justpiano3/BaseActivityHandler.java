@@ -1,12 +1,13 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
 
 final class BaseActivityHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     BaseActivityHandler(BaseActivity baseActivity) {
         weakReference = new WeakReference<>(baseActivity);

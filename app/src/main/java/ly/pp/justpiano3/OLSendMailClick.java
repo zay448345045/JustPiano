@@ -24,10 +24,10 @@ final class OLSendMailClick implements OnClickListener {
             case "":
                 olPlayHallRoom.addFriends(to);
                 return;
-            case "\'":
+            case "'":
                 olPlayHallRoom.deleteCp(true);
                 return;
-            case "\'\'":
+            case "''":
                 olPlayHallRoom.letInFamily(to);
                 break;
         }

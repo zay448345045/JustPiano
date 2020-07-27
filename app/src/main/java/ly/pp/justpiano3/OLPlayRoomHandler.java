@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 final class OLPlayRoomHandler extends Handler {
-    private WeakReference weakReference;
+    private WeakReference<Activity> weakReference;
 
     OLPlayRoomHandler(OLPlayRoom olPlayRoom) {
         weakReference = new WeakReference<>(olPlayRoom);
@@ -52,9 +53,9 @@ final class OLPlayRoomHandler extends Handler {
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
                                 try {
                                     if (olPlayRoom.getMode() == 0) {
-                                        if (diao > 0){
+                                        if (diao > 0) {
                                             olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "+" + diao);
-                                        } else if (diao < 0){
+                                        } else if (diao < 0) {
                                             olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "-" + diao);
                                         } else {
                                             olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "0" + diao);
@@ -146,7 +147,6 @@ final class OLPlayRoomHandler extends Handler {
                                 }
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
                                 if (olPlayRoom.playSongs != null) {
-                                    olPlayRoom.jpapplication.stopMusic();
                                     olPlayRoom.playSongs.isPlayingSongs = false;
                                     olPlayRoom.playSongs = null;
                                 }
@@ -162,7 +162,6 @@ final class OLPlayRoomHandler extends Handler {
                 case 5:
                     post(() -> {
                         if (olPlayRoom.playSongs != null) {
-                            olPlayRoom.jpapplication.stopMusic();
                             olPlayRoom.playSongs.isPlayingSongs = false;
                             olPlayRoom.playSongs = null;
                         }
@@ -213,7 +212,6 @@ final class OLPlayRoomHandler extends Handler {
                 case 8:
                     post(() -> {
                         if (olPlayRoom.playSongs != null) {
-                            olPlayRoom.jpapplication.stopMusic();
                             olPlayRoom.playSongs.isPlayingSongs = false;
                             olPlayRoom.playSongs = null;
                         }
