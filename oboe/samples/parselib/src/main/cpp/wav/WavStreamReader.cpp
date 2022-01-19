@@ -123,6 +123,7 @@ namespace parselib {
 
         int numChans = mFmtChunk->mNumChannels;
         int buffOffset = 0;
+        bool excludeStartMute = true;
 
         // TODO - Manage other input formats
         if (mFmtChunk->mSampleSize == 16) {
@@ -138,7 +139,11 @@ namespace parselib {
 
                 // convert
                 for (int offset = 0; offset < numFramesRead * numChans; offset++) {
-                    buff[buffOffset++] = (float) readBuff[offset] / (float) 0x7FFF;
+                    short dataResult = readBuff[offset];
+                    if (!excludeStartMute || std::abs(dataResult) > 2) {
+                        excludeStartMute = false;
+                        buff[buffOffset++] = (float) dataResult / (float) 0x7FFF;
+                    }
                 }
 
                 if (numFramesRead < framesThisRead) {

@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,17 +22,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javazoom.jl.converter.Converter;
 
 public final class JPApplication extends Application {
     public static String kitiName = "";
@@ -73,7 +70,7 @@ public final class JPApplication extends Application {
     private String accountName = "";
     private String password = "";
     private String nowSongsName = "";
-    private String server = "111.67.204.158";
+    private String server = "120.25.100.169";
     private boolean keyboardPerfer;
     private ServiceConnection serviceconnection = new JPServiceConnection(this);
     private int widthPixels;
@@ -101,62 +98,27 @@ public final class JPApplication extends Application {
 
     public static void preloadSounds(int i) {
         try {
-            FileInputStream dataStream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
-            int dataLen = dataStream.available();
-            byte[] dataBytes = new byte[dataLen];
-            dataStream.read(dataBytes, 0, dataLen);
-            loadWavAssetNative(dataBytes, i, 0);
+            loadWavInputStreamByIndex(i);
         } catch (Exception e1) {
             try {
-                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".wav");
-                FileInputStream dataStream = assetFD.createInputStream();
-                int dataLen = (int) assetFD.getLength();
-                byte[] dataBytes = new byte[dataLen];
-                dataStream.read(dataBytes, 0, dataLen);
-                loadWavAssetNative(dataBytes, i, 0);
+                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");
+                Converter converter = new Converter();
+                converter.convert(assetFD.createInputStream(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav", null, null);
+                loadWavInputStreamByIndex(i);
                 assetFD.close();
-                copySound("sound/" + i + ".wav", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
         }
     }
 
-    public static void copySound(String assetName, String targetName) throws IOException {
-        File targetFile;
-        InputStream inputStream = null;
-        FileOutputStream outputStream = null;
-        try {
-            AssetManager assets = context.getAssets();
-            targetFile = new File(targetName);
-            if (!targetFile.getParentFile().exists()) {
-                targetFile.getParentFile().mkdirs();
-            }
-            if (!targetFile.exists()) {
-                targetFile.createNewFile();
-            }
-            inputStream = assets.open(assetName);
-            outputStream = new FileOutputStream(targetFile, false);
-            copy(inputStream, outputStream);
-        } finally {
-            if (outputStream != null) {
-                outputStream.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        }
-    }
-
-    private static void copy(InputStream from, OutputStream to) throws IOException {
-        byte[] buf = new byte[2048];
-        while (true) {
-            int r = from.read(buf);
-            if (r == -1) {
-                break;
-            }
-            to.write(buf, 0, r);
-        }
+    private static void loadWavInputStreamByIndex(int index) throws IOException {
+        FileInputStream dataStream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Sounds/" + index + ".wav");
+        int dataLen = dataStream.available();
+        byte[] dataBytes = new byte[dataLen];
+        dataStream.read(dataBytes, 0, dataLen);
+        loadWavAssetNative(dataBytes, index, 0);
+        dataStream.close();
     }
 
     public static void reLoadOriginalSounds() {
@@ -165,15 +127,12 @@ public final class JPApplication extends Application {
         edit.apply();
         for (int i = 108; i >= 24; i--) {
             try {
-                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".wav");
-                FileInputStream dataStream = assetFD.createInputStream();
-                int dataLen = (int) assetFD.getLength();
-                byte[] dataBytes = new byte[dataLen];
-                dataStream.read(dataBytes, 0, dataLen);
-                loadWavAssetNative(dataBytes, i, 0);
+                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");
+                Converter converter = new Converter();
+                converter.convert(assetFD.createInputStream(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav", null, null);
+                loadWavInputStreamByIndex(i);
                 assetFD.close();
-                copySound("sound/" + i + ".wav", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
-            } catch (IOException ignored) {
+            } catch (Exception ignored) {
             }
         }
     }

@@ -95,7 +95,7 @@ public class MainMode extends Activity implements OnClickListener {
                 jpdialog.setFirstButton("访问官网", (dialog, which) -> {
                     dialog.dismiss();
                     Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("http://111.67.204.158"));
+                    intent1.setData(Uri.parse("https://i.justpiano.fun"));
                     startActivity(intent1);
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());

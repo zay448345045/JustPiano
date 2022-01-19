@@ -163,7 +163,7 @@ public class Login extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
-        jpapplication.setServer(s.getString("ip", "111.67.204.158"));
+        jpapplication.setServer(s.getString("ip", "120.25.100.169"));
         sharedPreferences = getSharedPreferences("account_list", 0);
         setPackageAndVersion();
         JPStack.create();

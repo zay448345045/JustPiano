@@ -35,12 +35,12 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             case R.id.ol_ance_b:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("提示");
-                jpdialog.setMessage("官网访问方式：在浏览器中输入网址justpiano.atalar.com或输入网址111.67.204.158\n" +
+                jpdialog.setMessage("官网访问方式：在浏览器中输入网址https://i.justpiano.fun\n" +
                         "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
                 jpdialog.setFirstButton("访问官网", (dialog, which) -> {
                     dialog.dismiss();
                     Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("http://111.67.204.158"));
+                    intent1.setData(Uri.parse("https://i.justpiano.fun"));
                     startActivity(intent1);
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());

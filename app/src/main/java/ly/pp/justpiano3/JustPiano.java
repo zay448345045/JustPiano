@@ -229,6 +229,10 @@ public class JustPiano extends Activity implements Callback, Runnable {
         } catch (Exception e5) {
             System.exit(-1);
         }
+        File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         for (int i = 108; i >= 24; i--) {
             JPApplication.preloadSounds(i);
             progress++;

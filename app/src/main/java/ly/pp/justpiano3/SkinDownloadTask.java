@@ -22,7 +22,7 @@ public final class SkinDownloadTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... strArr) {
         try {
             skinDownload.get().getLocalSkinList();
-            HttpPost httpPost = new HttpPost("http://111.67.204.158:8910/JustPianoServer/server/GetSkinList");
+            HttpPost httpPost = new HttpPost("http://" + skinDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSkinList");
             DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
             defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
             defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);

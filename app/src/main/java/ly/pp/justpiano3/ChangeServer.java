@@ -26,18 +26,18 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.sfyserv:
+            case R.id.server1:
                 SharedPreferences.Editor edit2 = sharedPreferences.edit();
-                edit2.putString("ip", "111.67.204.158");
+                edit2.putString("ip", "120.25.100.169");
                 edit2.apply();
-                jpapplication.setServer("111.67.204.158");
+                jpapplication.setServer("120.25.100.169");
                 Intent intent = new Intent();
                 intent.putExtra("no_auto", false);
                 intent.setClass(this, Login.class);
                 startActivity(intent);
                 finish();
                 return;
-            case R.id.ouneiserv:
+            case R.id.server2:
                 edit2 = sharedPreferences.edit();
                 edit2.putString("ip", "124.76.172.41");
                 edit2.commit();
@@ -48,19 +48,13 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
                 startActivity(intent);
                 finish();
                 return;
-            case R.id.guanfangserv:
-                JPDialog jpDialog = new JPDialog(this);
-                jpDialog.setTitle("抱歉");
-                jpDialog.setMessage("此版本及后续版本将不再提供对官方服的访问支持!");
-                jpDialog.setFirstButton("确定", new DialogDismissClick());
-                jpDialog.showDialog();
-                return;
             case R.id.ip_confirm:
                 edit2 = sharedPreferences.edit();
-                edit2.putString("ip", et.getText().toString());
-                edit2.putString("ipText", et.getText().toString());
+                String ip = et.getText().toString().trim();
+                edit2.putString("ip", ip);
+                edit2.putString("ipText", ip);
                 edit2.commit();
-                jpapplication.setServer(et.getText().toString());
+                jpapplication.setServer(ip);
                 intent = new Intent();
                 intent.putExtra("no_auto", false);
                 intent.setClass(this, Login.class);
@@ -78,12 +72,10 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.changeserver);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        Button f4189o = findViewById(R.id.sfyserv);
+        Button f4189o = findViewById(R.id.server1);
         f4189o.setOnClickListener(this);
-        Button f4192r = findViewById(R.id.ouneiserv);
+        Button f4192r = findViewById(R.id.server2);
         f4192r.setOnClickListener(this);
-        Button f4193r = findViewById(R.id.guanfangserv);
-        f4193r.setOnClickListener(this);
         et = findViewById(R.id.server_ip);
         et.setText(sharedPreferences.getString("ipText", ""));
         Button confirm = findViewById(R.id.ip_confirm);

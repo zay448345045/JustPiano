@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#10c6ffe9"
-            android:text="新冠"
+            android:text="冠军"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 

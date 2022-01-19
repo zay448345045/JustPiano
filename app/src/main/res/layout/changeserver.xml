@@ -35,37 +35,25 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/sfyserv"
+                android:id="@+id/server1"
                 android:layout_width="250dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/selector_ol_orange"
-                android:text="新服务器1"
+                android:text="服务器1"
                 android:textColor="@color/white1"
                 android:textSize="22sp" />
 
             <Button
-                android:id="@+id/ouneiserv"
+                android:id="@+id/server2"
                 android:layout_width="250dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/selector_ol_blue"
-                android:text="新服务器2"
+                android:text="服务器2"
                 android:textColor="@color/white1"
                 android:textSize="22sp" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/guanfangserv"
-            android:layout_width="500dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_ol_button_login"
-            android:text="旧版官方服务器(部分功能受限)"
-            android:textColor="@color/white1"
-            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/linearLayout8"

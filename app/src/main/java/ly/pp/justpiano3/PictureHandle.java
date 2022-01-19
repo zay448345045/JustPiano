@@ -39,10 +39,10 @@ public final class PictureHandle {
                     url = new URL("http://" + jpApplication.getServer() + ":8910/file/Image/" + str);
                     break;
                 case 2:
-                    url = new URL("http://111.67.204.158:8910/JustPianoServer/server/PicSkin" + str);
+                    url = new URL("http://" + jpApplication.getServer() + ":8910/JustPianoServer/server/PicSkin" + str);
                     break;
                 case 3:
-                    url = new URL("http://111.67.204.158:8910/JustPianoServer/server/PicSound" + str);
+                    url = new URL("http://" + jpApplication.getServer() + ":8910/JustPianoServer/server/PicSound" + str);
                     break;
                 default:
                     url = null;

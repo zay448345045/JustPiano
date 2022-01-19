@@ -20,7 +20,7 @@ public final class SoundDownloadCntPre extends Thread {
     @Override
     public final void run() {
         try {
-            HttpPost httpPost = new HttpPost("http://111.67.204.158:8910/JustPianoServer/server/DownloadSound");
+            HttpPost httpPost = new HttpPost("http://" + soundDownload.jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSound");
             List<BasicNameValuePair> arrayList = new ArrayList<>();
             arrayList.add(new BasicNameValuePair("version", soundDownload.jpapplication.getVersion()));
             arrayList.add(new BasicNameValuePair("path", fileName));

@@ -64,7 +64,7 @@ public final class SoundDownloadAdapter extends BaseAdapter {
                 String string3 = jSONObject.getString("A");
                 int i2 = jSONObject.getInt("S");
                 imageView.setImageResource(R.drawable.icon);
-                imageLoader.bindBitmap(soundDownload.picUrl + string, imageView);
+                imageLoader.bindBitmap("http://" + soundDownload.jpapplication.getServer() + ":8910/JustPianoServer/server/PicSound" + string, imageView);
                 scrollText.setText(string2);
                 textView.setText("by:" + string3);
                 textView3.setText(i2 + "KB");

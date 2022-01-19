@@ -32,7 +32,6 @@ import java.util.List;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SkinDownload extends Activity implements Callback {
-    public String picUrl = "http://111.67.204.158:8910/JustPianoServer/server/PicSkin";
     public JPApplication jpapplication;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
@@ -68,7 +67,7 @@ public class SkinDownload extends Activity implements Callback {
         }
         InputStream in = null;
         try {
-            URL url = new URL("http://111.67.204.158:8910/JustPianoServer/server/Skin" + str);
+            URL url = new URL("http://" + skinDownload.jpapplication.getServer() + ":8910/JustPianoServer/server/Skin" + str);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
