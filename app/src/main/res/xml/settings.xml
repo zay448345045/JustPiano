@@ -30,7 +30,7 @@
             android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
             android:title="击中音块消失" />
         <ListPreference
-            android:defaultValue="8"
+            android:defaultValue="4"
             android:dialogTitle="音块下落帧率"
             android:entries="@array/anim_entries"
             android:entryValues="@array/anim_value"

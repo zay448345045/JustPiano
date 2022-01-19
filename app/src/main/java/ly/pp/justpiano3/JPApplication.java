@@ -98,6 +98,8 @@ public final class JPApplication extends Application {
 
     public static void preloadSounds(int i) {
         try {
+            Converter converter = new Converter();
+            converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             loadWavInputStreamByIndex(i);
         } catch (Exception e1) {
             try {
@@ -145,7 +147,7 @@ public final class JPApplication extends Application {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("down_speed", "6");
-        editor.putString("anim_frame", "8");
+        editor.putString("anim_frame", "4");
         editor.putBoolean("note_dismiss", false);
         editor.putString("note_size", "1");
         editor.putString("b_s_vol", "1.0");
@@ -455,7 +457,7 @@ public final class JPApplication extends Application {
         }
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true);
         chordVolume = Float.parseFloat(sharedPreferences.getString("b_s_vol", "1.0"));
-        animFrame = Integer.parseInt(sharedPreferences.getString("anim_frame", "8"));
+        animFrame = Integer.parseInt(sharedPreferences.getString("anim_frame", "4"));
         keyboardPerfer = sharedPreferences.getBoolean("keyboard_perfer", true);
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true);
         showLine = sharedPreferences.getBoolean("show_line", true);

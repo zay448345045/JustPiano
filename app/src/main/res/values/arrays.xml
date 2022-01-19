@@ -14,11 +14,13 @@
         <item>1.5</item>
     </string-array>
     <string-array name="anim_entries">
+        <item>极高</item>
         <item>高</item>
         <item>中</item>
         <item>低</item>
     </string-array>
     <string-array name="anim_value">
+        <item>2</item>
         <item>4</item>
         <item>8</item>
         <item>12</item>
