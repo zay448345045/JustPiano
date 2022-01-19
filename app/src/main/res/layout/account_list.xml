@@ -6,10 +6,17 @@
     android:baselineAligned="false"
     android:gravity="center">
 
-    <ListView
-        android:id="@+id/account_list"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_weight="1"
-        android:background="@color/translent" />
+        <LinearLayout
+            android:background="@color/brown"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ListView
+                android:id="@+id/account_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:divider="@null" />
+        </LinearLayout>
+
 </LinearLayout>

@@ -28,37 +28,35 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String str = "";
         if (!showTopInfo.get().f4988d.isEmpty()) {
-            do {
-                HttpPost httpPost = new HttpPost("http://" + showTopInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetTopListByKeywords");
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("head", String.valueOf(showTopInfo.get().head)));
-                arrayList.add(new BasicNameValuePair("version", showTopInfo.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("keywords", showTopInfo.get().f4988d));
-                arrayList.add(new BasicNameValuePair("page", String.valueOf(showTopInfo.get().f4996l)));
-                arrayList.add(new BasicNameValuePair("P", showTopInfo.get().f4999o));
-                arrayList.add(new BasicNameValuePair("K", JPApplication.kitiName));
-                arrayList.add(new BasicNameValuePair("N", showTopInfo.get().jpapplication.getAccountName()));
-                if (showTopInfo.get().head == 5) {
-                    arrayList.add(new BasicNameValuePair("X", String.valueOf(JPApplication.sharedpreferences.getInt("local_x", 0))));
-                    arrayList.add(new BasicNameValuePair("Y", String.valueOf(JPApplication.sharedpreferences.getInt("local_y", 0))));
+            HttpPost httpPost = new HttpPost("http://" + showTopInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetTopListByKeywords");
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("head", String.valueOf(showTopInfo.get().head)));
+            arrayList.add(new BasicNameValuePair("version", showTopInfo.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("keywords", showTopInfo.get().f4988d));
+            arrayList.add(new BasicNameValuePair("page", String.valueOf(showTopInfo.get().f4996l)));
+            arrayList.add(new BasicNameValuePair("P", showTopInfo.get().f4999o));
+            arrayList.add(new BasicNameValuePair("K", JPApplication.kitiName));
+            arrayList.add(new BasicNameValuePair("N", showTopInfo.get().jpapplication.getAccountName()));
+            if (showTopInfo.get().head == 5) {
+                arrayList.add(new BasicNameValuePair("X", String.valueOf(JPApplication.sharedpreferences.getInt("local_x", 0))));
+                arrayList.add(new BasicNameValuePair("Y", String.valueOf(JPApplication.sharedpreferences.getInt("local_y", 0))));
+            }
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
+            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
+            try {
+                HttpResponse execute = defaultHttpClient.execute(httpPost);
+                if (execute.getStatusLine().getStatusCode() == 200) {
+                    str = EntityUtils.toString(execute.getEntity());
                 }
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-                defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-                defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-                try {
-                    HttpResponse execute = defaultHttpClient.execute(httpPost);
-                    if (execute.getStatusLine().getStatusCode() == 200) {
-                        str = EntityUtils.toString(execute.getEntity());
-                    }
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                }
-            } while (!str.endsWith("\"}"));
+            } catch (Exception e3) {
+                e3.printStackTrace();
+            }
         }
         return str;
     }

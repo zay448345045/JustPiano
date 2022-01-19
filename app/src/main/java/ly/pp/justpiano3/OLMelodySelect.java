@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class OLMelodySelect extends Activity implements Callback, OnClickListener {
-    static byte[] f4294d = null;
+    static byte[] songBytes = null;
     static String songID;
     public JPApplication jpapplication;
-    double f4300E;
-    int f4301F;
+    double degree;
+    int topScore;
     Button pageButton;
     int f4303H;
     int f4305J = 1;
@@ -39,7 +39,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     String f4315b = "";
     int f4316c;
     String f4317e = "";
-    String f4318f = "";
+    String songName = "";
     JPProgressBar jpprogressBar;
     int f4322k;
     LayoutInflater layoutInflater1;
@@ -263,7 +263,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
 
     @Override
     protected void onResume() {
-        f4294d = null;
+        songBytes = null;
         super.onResume();
     }
 

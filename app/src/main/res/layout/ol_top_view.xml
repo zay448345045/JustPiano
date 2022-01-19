@@ -31,7 +31,7 @@
         android:layout_toEndOf="@+id/user_face"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:text="玩家"
+        android:text="用户"
         android:textColor="@color/white1"
         android:textSize="21sp" />
 

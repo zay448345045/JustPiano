@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,8 +79,8 @@ public final class PianoPlay extends BaseActivity {
     private String recordWavPath;
     private int roomMode = 0;
     private LayoutParams layoutparams;
-    private float localRNandu;
-    private float localLNandu;
+    private double localRNandu;
+    private double localLNandu;
     private int localSongsTime;
     private int playKind;
 
@@ -176,7 +177,7 @@ public final class PianoPlay extends BaseActivity {
         l_nandu = findViewById(R.id.l_nandu);
         time_mid = findViewById(R.id.time_mid);
         f4597P = findViewById(R.id.m_score);
-        f4597P.setText("最高记录:" + score);
+        f4597P.setText("最高纪录:" + score);
         startPlayButton = findViewById(R.id.p_start);
         songName.setText(songsName);
         switch (i) {
@@ -328,19 +329,19 @@ public final class PianoPlay extends BaseActivity {
             case 0:    //本地模式
                 String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                localRNandu = extras.getFloat("nandu");
-                localLNandu = extras.getFloat("leftnandu");
+                localRNandu = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+                localLNandu = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                 localSongsTime = extras.getInt("songstime");
                 score = extras.getInt("score");
                 isRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
                 jPApplication = jpapplication;
                 str = songsPath;
-                playView = new PlayView(jPApplication, this, str, this, nandu, score, playKind, hand, 30, 0);
+                playView = new PlayView(jPApplication, this, str, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
                 break;
             case 1:    //在线曲库
-                songsName = extras.getString("songName").trim();
-                nandu = extras.getDouble("degree");
+                songsName = extras.getString("songName");
+                nandu = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
                 jPApplication = jpapplication;
@@ -375,7 +376,7 @@ public final class PianoPlay extends BaseActivity {
                 gradeListView.setCacheColorHint(0);
                 jPApplication = jpapplication;
                 str = songsPath;
-                playView = new PlayView(jPApplication, this, str, this, nandu, score, playKind, hand, 30, diao);
+                playView = new PlayView(jPApplication, this, str, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战

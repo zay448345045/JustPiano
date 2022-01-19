@@ -248,7 +248,7 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
             case R.id.user_face:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("抱歉");
-                jpdialog.setMessage("玩家自制版服务器空间有限，暂不支持上传头像");
+                jpdialog.setMessage("用户自制版服务器空间有限，暂不支持上传头像");
                 jpdialog.setFirstButton("确定", new DialogDismissClick());
                 //jpdialog.setSecondButton("打开图库", new C1330na(this));
                 try {

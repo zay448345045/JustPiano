@@ -18,7 +18,7 @@ import java.util.List;
 
 public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
-    private byte[] f5878a = null;
+    private byte[] songBytes = null;
     private String str = "";
 
     ShowSongsInfoPlayTask(ShowSongsInfo showSongsInfo) {
@@ -47,22 +47,22 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
                     e2.printStackTrace();
                 }
             } while (!str.endsWith("\"}"));
-            f5878a = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
+            songBytes = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
         }
         return null;
     }
 
     @Override
     protected final void onPostExecute(String str) {
-        if (f5878a == null || f5878a.length <= 3) {
+        if (songBytes == null || songBytes.length <= 3) {
             showSongsInfo.get().jpprogressBar.dismiss();
             Toast.makeText(showSongsInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
             return;
         }
-        OLMelodySelect.f4294d = f5878a;
+        OLMelodySelect.songBytes = songBytes;
         Intent intent = new Intent();
         intent.putExtra("head", 1);
-        intent.putExtra("songBytes", f5878a);
+        intent.putExtra("songBytes", songBytes);
         intent.putExtra("songName", showSongsInfo.get().songName);
         intent.putExtra("songID", showSongsInfo.get().songID);
         intent.putExtra("topScore", showSongsInfo.get().score);

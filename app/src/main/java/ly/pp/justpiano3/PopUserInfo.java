@@ -51,7 +51,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
             popUserInfo.f4834h.setText(jSONObject.getInt("age") + "岁");
             String obj = jSONObject.get("msg").toString();
             if (obj.isEmpty()) {
-                obj = "该玩家暂未设置个性签名";
+                obj = "该用户暂未设置个性签名";
             }
             popUserInfo.f4832f.setText(obj);
         } catch (Exception e2) {

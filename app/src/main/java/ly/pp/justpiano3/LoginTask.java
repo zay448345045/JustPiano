@@ -42,7 +42,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             arrayList.add(new BasicNameValuePair("versionCode", String.valueOf(login.versionNum)));
             arrayList.add(new BasicNameValuePair("username", login.accountX));
             arrayList.add(new BasicNameValuePair("password", login.password));
-            arrayList.add(new BasicNameValuePair("local", "4.34"));
+            arrayList.add(new BasicNameValuePair("local", login.jpapplication.getVersion()));
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
                 DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
@@ -80,8 +80,6 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                 title = jSONObject.getString("title");
                 login.jpapplication.f4073g = jSONObject.getString("T1");
                 login.jpapplication.f4074h = jSONObject.getString("M1");
-                login.jpapplication.f4075i = jSONObject.getString("T2");
-                login.jpapplication.f4076j = jSONObject.getString("M2");
             } catch (JSONException e1) {
                 e1.printStackTrace();
                 login.jpprogressBar.dismiss();

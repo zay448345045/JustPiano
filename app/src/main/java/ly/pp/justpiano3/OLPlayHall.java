@@ -127,8 +127,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
             }
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("玩家名称:" + b.getString("U")
-                    + "\n玩家等级:Lv." + lv
+            textView.setText("用户名称:" + b.getString("U")
+                    + "\n用户等级:Lv." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
                     + "\n考级进度:Cl." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
@@ -182,7 +182,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
         listView.setBackgroundColor(-16777216);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle("房间玩家信息").loadInflate(inflate).setFirstButton("进入房间", new DialogInterface.OnClickListener() {
+        new JPDialog(this).setTitle("房间用户信息").loadInflate(inflate).setFirstButton("进入房间", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -450,7 +450,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         tabHost.addTab(newTabSpec);
         newTabSpec = tabHost.newTabSpec("tab3");
         newTabSpec.setContent(R.id.players_tab);
-        newTabSpec.setIndicator("玩家");
+        newTabSpec.setIndicator("用户");
         tabHost.addTab(newTabSpec);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

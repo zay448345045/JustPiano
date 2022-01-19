@@ -76,7 +76,7 @@ public class ConnectionService extends Service implements Runnable {
             case (byte) 33:    //保存服装
             case (byte) 34:    //查看好友或搭档
             case (byte) 35:    //发送私信
-            case (byte) 36:    //大厅查看玩家列表
+            case (byte) 36:    //大厅查看用户列表
             case (byte) 37:    //找Ta及显示对话框
             case (byte) 40:    //等级考试
             case (byte) 41:    //疑似心跳包的东西
@@ -99,7 +99,7 @@ public class ConnectionService extends Service implements Runnable {
                 break;
             case (byte) 8:    //退出房间
             case (byte) 21:    //加载房间内人物数据
-            case (byte) 23:    //联网对战载入玩家
+            case (byte) 23:    //联网对战载入用户
             case (byte) 24:    //开始游戏
             case (byte) 30:    //退出大厅
                 writeBuffer = JsonHandle.m3945a(b, b2, b3, "");

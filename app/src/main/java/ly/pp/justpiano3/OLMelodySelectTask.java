@@ -29,33 +29,31 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String string = "";
         if (!olMelodySelect.get().f4317e.isEmpty()) {
-            do {
-                HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByType");
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("page", String.valueOf(olMelodySelect.get().f4303H)));
-                arrayList.add(new BasicNameValuePair("type", olMelodySelect.get().f4317e));
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-                    defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-                    defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-                    HttpResponse execute = defaultHttpClient.execute(httpPost);
-                    if (execute.getStatusLine().getStatusCode() == 200) {
-                        try {
-                            str = EntityUtils.toString(execute.getEntity());
-                        } catch (Exception e3) {
-                            e3.printStackTrace();
-                        }
+            HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByType");
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("page", String.valueOf(olMelodySelect.get().f4303H)));
+            arrayList.add(new BasicNameValuePair("type", olMelodySelect.get().f4317e));
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+                defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
+                defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
+                HttpResponse execute = defaultHttpClient.execute(httpPost);
+                if (execute.getStatusLine().getStatusCode() == 200) {
+                    try {
+                        str = EntityUtils.toString(execute.getEntity());
+                    } catch (Exception e3) {
+                        e3.printStackTrace();
                     }
-                } catch (Exception e5) {
-                    e5.printStackTrace();
                 }
-            } while (!str.endsWith("\"}"));
+            } catch (Exception e5) {
+                e5.printStackTrace();
+            }
             JSONObject jSONObject;
             try {
                 jSONObject = new JSONObject(str);

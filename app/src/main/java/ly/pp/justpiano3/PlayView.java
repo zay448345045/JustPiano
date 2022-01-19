@@ -96,6 +96,8 @@ public final class PlayView extends SurfaceView implements Callback {
     private List<ShowTouchNotesLevel> touchNotesList = new ArrayList<>();
     private ShowScoreAndLevels showScoreAndLevels;
     private double nandu;
+    private double leftNandu;
+    private int songsTime;
     private int screenHeight;
     private String songsPath;
     private Rect f4769bA;
@@ -137,7 +139,7 @@ public final class PlayView extends SurfaceView implements Callback {
         super(context);
     }
 
-    PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d, int i, int kind, int i3, int i4, int diao) {
+    PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int diao) {
         super(context);
         jpapplication = jPApplication;
         this.pianoPlay = pianoPlay;
@@ -145,8 +147,10 @@ public final class PlayView extends SurfaceView implements Callback {
         gameType = kind;
         uploadTime = i4;
         songsPath = str;
-        nandu = d;
+        nandu = d1;
+        leftNandu = d2;
         score = i;
+        songsTime = i5;
         loadParams();
         try {
             loadPm(context, str, diao);
@@ -628,6 +632,9 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("songID", songID);
                     intent.putExtra("path", songsPath);
                     intent.putExtra("nandu", nandu);
+                    intent.putExtra("leftnandu", leftNandu);
+                    intent.putExtra("songstime", songsTime);
+                    intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
                     pianoPlay.startActivityForResult(intent, size2);
                     break;

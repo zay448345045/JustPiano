@@ -173,7 +173,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         songsListView = findViewById(R.id.ol_search_list);
         TextView f4956k = findViewById(R.id.title_bar);
         if (f4958m == 6) {
-            f4956k.setText("查找玩家:");
+            f4956k.setText("查找用户:");
         }
     }
 

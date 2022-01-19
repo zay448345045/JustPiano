@@ -45,8 +45,6 @@ public final class JPApplication extends Application {
     String f4072f = "";
     String f4073g = "";
     String f4074h = "";
-    String f4075i;
-    String f4076j;
     boolean changeNotesColor = true;
     private ConnectionService connectionService;
     private int whiteKeyHeight;

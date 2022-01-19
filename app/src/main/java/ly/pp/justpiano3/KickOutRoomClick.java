@@ -25,7 +25,7 @@ final class KickOutRoomClick implements OnClickListener {
             byte[] bArr = new byte[]{user.getPosition()};
             if (olPlayRoom.playerKind.equals("H") && playerImageAdapter.connectionService != null) {
                 if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
-                    Toast.makeText(olPlayRoom, "玩家当前状态不能被移出!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(olPlayRoom, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                 } else {
                     playerImageAdapter.connectionService.writeData((byte) 9, playerImageAdapter.roomID, olPlayRoom.hallID0, user.getPlayerName(), bArr);
                 }
