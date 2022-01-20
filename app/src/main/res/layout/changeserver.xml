@@ -40,9 +40,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/selector_ol_orange"
-                android:text="服务器1"
+                android:text="极品一服\n(120.25.100.169)"
                 android:textColor="@color/white1"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/server2"
@@ -50,9 +50,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/selector_ol_blue"
-                android:text="服务器2"
+                android:text="极品二服\n(120.24.196.200)"
                 android:textColor="@color/white1"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout

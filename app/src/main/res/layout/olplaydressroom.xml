@@ -159,6 +159,7 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentBottom="true"
+                                android:verticalSpacing="10dp"
                                 android:listSelector="@color/translent"
                                 android:numColumns="6" />
                         </RelativeLayout>
@@ -175,6 +176,7 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentBottom="true"
+                                android:verticalSpacing="10dp"
                                 android:listSelector="@color/translent"
                                 android:numColumns="6" />
                         </RelativeLayout>
@@ -191,6 +193,7 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentBottom="true"
+                                android:verticalSpacing="10dp"
                                 android:listSelector="@color/translent"
                                 android:numColumns="6" />
                         </RelativeLayout>
@@ -207,6 +210,7 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentBottom="true"
+                                android:verticalSpacing="10dp"
                                 android:listSelector="@color/translent"
                                 android:numColumns="6" />
                         </RelativeLayout>

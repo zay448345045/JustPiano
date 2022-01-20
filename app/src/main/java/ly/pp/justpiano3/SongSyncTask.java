@@ -91,7 +91,6 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected final void onPostExecute(String str) {
-        olMainMode.get().jpprogressBar.dismiss();
         olMainMode.get().loginOnline();
     }
 

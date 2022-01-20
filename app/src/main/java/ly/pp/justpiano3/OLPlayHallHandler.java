@@ -277,7 +277,7 @@ final class OLPlayHallHandler extends Handler {
                         radioButton.setText(msg[j]);
                         radioButton.setTextSize(14);
                         radioButton.setTag(j - 1);
-                        radioButton.setHeight(50);
+                        radioButton.setHeight(65);
                         jpdialog.addRadioButton(radioButton);
                     }
                     jpdialog.setFirstButton(str2, (dialog, which) -> {
