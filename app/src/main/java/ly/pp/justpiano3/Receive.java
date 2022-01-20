@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 final class Receive {
 
-    static void m3976a(String str) {
+    static void receive(String str) {
         try {
             JSONObject jSONObject = new JSONObject(str);
             int i = jSONObject.getInt("H");

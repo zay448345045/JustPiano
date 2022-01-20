@@ -57,7 +57,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     Map<Byte, Room> roomTitleMap = new HashMap<>();
     List<Bundle> msgList = new ArrayList<>();
     ListView f4395k;
-    List<Bundle> f4396l = new ArrayList<>();
+    List<Bundle> userInHallList = new ArrayList<>();
     List<Bundle> f4399o = new ArrayList<>();
     Handler showTimeHandler;
     int pageNum = 0;
@@ -478,7 +478,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         roomTitleMap.clear();
         msgList.clear();
         f4373F.clear();
-        f4396l.clear();
+        userInHallList.clear();
         super.onDestroy();
     }
 }

@@ -144,7 +144,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void run() {
         try {
-            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8908);
+            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8911);
             selector = Selector.open();
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);
@@ -157,7 +157,7 @@ public class ConnectionService extends Service implements Runnable {
                         if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
                             writeBuffer.clear();
                             try {
-                                String str = "20200724";
+                                String str = "20220201";
                                 writeBuffer = JsonHandle.m3947a(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
@@ -182,8 +182,8 @@ public class ConnectionService extends Service implements Runnable {
                             if (read > 0) {
                                 readBuffer.flip();
                                 while (readBuffer.hasRemaining()) {
-                                    if (bodyLen == -1) {// 还没有读出包头，先读出包头
-                                        if (readBuffer.remaining() >= 4) {// 可以读出包头
+                                    if (bodyLen == -1) {  // 还没有读出包头，先读出包头
+                                        if (readBuffer.remaining() >= 4) {  // 可以读出包头
                                             byte[] headByte = new byte[4];
                                             readBuffer.get(headByte);
                                             bodyLen = byteArrayToInt(headByte);
@@ -193,11 +193,11 @@ public class ConnectionService extends Service implements Runnable {
                                         } else {
                                             break;
                                         }
-                                    } else {// 已经读出包头
+                                    } else {  // 已经读出包头
                                         int count = new String(readBuffer.array()).trim().getBytes().length;
                                         count = Math.min(count, read);
                                         count = cache ? count : count - 4;
-                                        if (count >= bodyLen) {// 大于等于一个包，否则缓存
+                                        if (count >= bodyLen) {  // 大于等于一个包，否则缓存
                                             String str;
                                             if (cache) {
                                                 cache = false;
@@ -220,7 +220,7 @@ public class ConnectionService extends Service implements Runnable {
                                                 outLine();
                                                 return;
                                             }
-                                            Receive.m3976a(str);  //传回数据
+                                            Receive.receive(str);  // 传回数据
                                         } else {
                                             cache = true;
                                             byte[] temp = new byte[count];

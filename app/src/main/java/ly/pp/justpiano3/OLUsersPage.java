@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,12 +50,17 @@ public class OLUsersPage extends Activity implements OnClickListener {
                 finish();
                 return;
             case R.id.ol_local_b:
-                Toast.makeText(this, "数据备份功能正在施工中，敬请期待!", Toast.LENGTH_SHORT).show();
-//                intent.setClass(this, ShowTopInfo.class);
-//                intent.putExtra("head", 5);
-//                intent.putExtra("keywords", "F");
-//                startActivity(intent);
-//                finish();
+                JPDialog jpdialog = new JPDialog(this);
+                jpdialog.setTitle("数据导入导出");
+                jpdialog.setMessage("数据导入导出数据导入导出数据导入导出数据导入导出数据导入导出数据导入导出数据导入导出");
+                jpdialog.setFirstButton("执行", (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                    intent1.setData(Uri.parse("https://i.justpiano.fun"));
+                    startActivity(intent1);
+                });
+                jpdialog.setSecondButton("取消", new DialogDismissClick());
+                jpdialog.showDialog();
                 return;
             default:
         }

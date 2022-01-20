@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +17,7 @@ import androidx.core.content.ContextCompat;
 
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;
+    public JPApplication jpApplication;
     private JPProgressBar jpprogressBar;
 
     @Override
@@ -89,14 +89,22 @@ public class MainMode extends Activity implements OnClickListener {
                 startActivity(intent);
                 return;
             case R.id.feed_back:
+                View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
+                TextView textView = inflate.findViewById(R.id.text_1);
+                TextView textViewTitle = inflate.findViewById(R.id.title_1);
+                TextView messageView = inflate.findViewById(R.id.message_view);
+                inflate.findViewById(R.id.message_view).setVisibility(View.VISIBLE);
+                messageView.setText("问题将直接反馈至开发者，请认真填写，感谢您的支持和宝贵意见");
+                textViewTitle.setText("称呼:");
+                TextView textView2 = inflate.findViewById(R.id.text_2);
+                TextView textView2Title = inflate.findViewById(R.id.title_2);
+                textView2Title.setText("内容:");
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("反馈");
-                jpdialog.setMessage("反馈问题请使用极品钢琴账号登录官网，打开官网问题反馈页面进行意见反馈");
-                jpdialog.setFirstButton("访问官网", (dialog, which) -> {
+                jpdialog.loadInflate(inflate);
+                jpdialog.setFirstButton("提交", (dialog, which) -> {
                     dialog.dismiss();
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("https://i.justpiano.fun"));
-                    startActivity(intent1);
+                    new FeedbackTask(this, textView.getText().toString(), textView2.getText().toString()).execute();
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.showDialog();
@@ -108,7 +116,7 @@ public class MainMode extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         jpApplication.loadSettings(0);
         pressAgain = false;
         setContentView(R.layout.main_mode);

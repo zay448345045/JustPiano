@@ -10,9 +10,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -129,7 +127,7 @@ final class OLPlayHallHandler extends Handler {
                 return;
             case 7:
                 post(() -> {
-                    olPlayHall.f4396l.clear();
+                    olPlayHall.userInHallList.clear();
                     Bundle data13 = message.getData();
                     int size = data13.size();
                     if (size < 20) {
@@ -137,9 +135,9 @@ final class OLPlayHallHandler extends Handler {
                     }
                     if (size >= 0) {
                         for (int i = 0; i < size; i++) {
-                            olPlayHall.f4396l.add(data13.getBundle(String.valueOf(i)));
+                            olPlayHall.userInHallList.add(data13.getBundle(String.valueOf(i)));
                         }
-                        olPlayHall.mo2829a(olPlayHall.f4395k, olPlayHall.f4396l, 3, true);
+                        olPlayHall.mo2829a(olPlayHall.f4395k, olPlayHall.userInHallList, 3, true);
                     }
                 });
                 return;
@@ -275,9 +273,9 @@ final class OLPlayHallHandler extends Handler {
                     for (int j = 1; j < msg.length; j++) {
                         RadioButton radioButton = new RadioButton(olPlayHall);
                         radioButton.setText(msg[j]);
-                        radioButton.setTextSize(14);
+                        radioButton.setTextSize(13);
                         radioButton.setTag(j - 1);
-                        radioButton.setHeight(65);
+                        radioButton.setHeight(80);
                         jpdialog.addRadioButton(radioButton);
                     }
                     jpdialog.setFirstButton(str2, (dialog, which) -> {

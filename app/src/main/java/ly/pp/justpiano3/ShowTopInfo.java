@@ -163,7 +163,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
                 f4992h.setText("-" + f4999o + "个人等级榜-");
                 break;
             case 5:
-                f4992h.setText("-备份-");
+                f4992h.setText("-导出-");
                 f4994j.setVisibility(View.GONE);
                 f4995k.setVisibility(View.GONE);
                 f4993i.setVisibility(View.GONE);

@@ -166,7 +166,6 @@ final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.playSongs = null;
                         }
                         String str1 = message.getData().getString("S");
-                        int i = message.getData().getInt("T");
                         if (!olPlayRoom.isOnStart) {
                             olPlayRoom.jpapplication.getConnectionService().writeData((byte) 8, olPlayRoom.roomID0, olPlayRoom.hallID0, olPlayRoom.roomTitleString, null);
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
@@ -187,7 +186,6 @@ final class OLPlayRoomHandler extends Handler {
                                 intent2.putExtra("path", str1);
                                 intent2.putExtra("name", str);
                                 intent2.putExtra("diao", olPlayRoom.getdiao());
-                                intent2.putExtra("uploadTimes", i);
                                 intent2.putExtra("roomMode", olPlayRoom.roomMode);
                                 intent2.putExtra("hand", olPlayRoom.currentHand);
                                 intent2.putExtra("bundle", olPlayRoom.bundle0);

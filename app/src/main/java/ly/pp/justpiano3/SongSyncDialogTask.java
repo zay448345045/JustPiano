@@ -77,9 +77,8 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             if (i != 0) {
                 jpdialog.showDialog();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Toast.makeText(olMainMode.get(), "网络连接失败，无法检查曲库同步", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
         }
     }
 

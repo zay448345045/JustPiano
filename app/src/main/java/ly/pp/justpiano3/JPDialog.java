@@ -77,7 +77,7 @@ public final class JPDialog {
         }
         if (message != null) {
             ((TextView) inflate.findViewById(R.id.message)).setText(message);
-        } else if (view != null) {
+        } if (view != null) {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
             ((LinearLayout) inflate.findViewById(R.id.content)).addView(view, new LayoutParams(-2, -2));
         }

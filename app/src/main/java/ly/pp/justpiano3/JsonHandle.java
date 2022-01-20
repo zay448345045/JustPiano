@@ -135,7 +135,6 @@ final class JsonHandle {
                 try {
                     JSONObject jSONObject4 = new JSONObject(str);
                     bundle2.putString("S", jSONObject4.getString("S"));
-                    bundle2.putInt("T", jSONObject4.getInt("T"));
                     bundle2.putInt("D", jSONObject4.getInt("D"));
                     message.setData(bundle2);
                     JPStack.create();
@@ -311,8 +310,8 @@ final class JsonHandle {
                     bundle.putString("U", jSONObject2.getString("U"));
                     bundle.putString("M", "推荐歌曲:");
                     bundle.putString("I", jSONObject2.getString("I"));
-                    bundle.putInt("D", jSONObject2.getInt("D"));
-                    bundle.putInt("T", jSONObject2.getInt("T"));
+                    bundle.putInt("D", 0);
+                    bundle.putInt("T", 0);
                     message.setData(bundle);
                     JPStack.create();
                     if (JPStack.top() instanceof OLPlayRoom) {
@@ -777,7 +776,6 @@ final class JsonHandle {
                             jSONObject = jSONArray.getJSONObject(i);
                             bundle2.putString("U", jSONObject.getString("U"));
                             bundle2.putString("S", jSONObject.getString("S"));
-                            bundle2.putInt("V", jSONObject.getInt("V"));
                             bundle2.putInt("LV", jSONObject.getInt("LV"));
                             bundle2.putInt("R", jSONObject.getInt("R"));
                             bundle.putBundle(String.valueOf(i), bundle2);
