@@ -95,7 +95,8 @@ public class SoundDownload extends Activity implements Callback {
                     }
                 }
                 in.close();
-                byte[] array = GZIP.ZIPToArrayAddHandle(new String(output.toByteArray(), UTF_8), soundDownload.handler, soundDownload.progress);
+                // byte[] array = GZIP.ZIPToArrayAddHandle(new String(output.toByteArray(), UTF_8), soundDownload.handler, soundDownload.progress);
+                byte[] array = output.toByteArray();
                 output.close();
                 soundDownload.outputStream.write(array, 0, array.length);
                 soundDownload.outputStream.close();

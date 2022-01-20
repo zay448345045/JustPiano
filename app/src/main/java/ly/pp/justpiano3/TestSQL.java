@@ -10,6 +10,7 @@ import java.io.File;
 public final class TestSQL extends SQLiteOpenHelper {
 
     TestSQL(Context context, String str) {
+        //4.4版本的数据库版本号为41
         //4.34版本的数据库版本号为40
         super(context, str, null, 40);
     }

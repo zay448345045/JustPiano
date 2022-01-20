@@ -37,15 +37,12 @@ public final class PlayView extends SurfaceView implements Callback {
     SurfaceHolder surfaceholder;
     PianoPlay pianoPlay;
     PlayNote currentPlayNote;
-    int offset;
     int screenWidth;
     JPApplication jpapplication;
     boolean isTouchRightNote = true;
     Bitmap keyboardImage;
     Bitmap nullImage;
-    int[] tickGroupArray;
     byte[] noteArray;
-    byte[] trackXArray;
     byte[] volumeArray;
     int arrayLength;
     Bitmap backgroundImage;

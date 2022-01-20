@@ -10,7 +10,9 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -265,18 +267,22 @@ final class OLPlayHallHandler extends Handler {
                             break;
                     }
                     JPDialog jpdialog = new JPDialog(olPlayHall);
-                    jpdialog.setVisibleRadioGroup(true);
+                    if (msg.length > 1) {
+                        jpdialog.setVisibleRadioGroup(true);
+                    }
                     jpdialog.setTitle(str);
                     jpdialog.setMessage(msg[0]);
                     for (int j = 1; j < msg.length; j++) {
                         RadioButton radioButton = new RadioButton(olPlayHall);
                         radioButton.setText(msg[j]);
+                        radioButton.setTextSize(14);
                         radioButton.setTag(j - 1);
+                        radioButton.setHeight(50);
                         jpdialog.addRadioButton(radioButton);
                     }
                     jpdialog.setFirstButton(str2, (dialog, which) -> {
                         int checkedId = jpdialog.getRadioGroupCheckedId();
-                        if (checkedId == -1) {
+                        if (checkedId == -1 && msg.length > 1) {
                             Toast.makeText(olPlayHall, "请选择一首考级曲", Toast.LENGTH_SHORT).show();
                         } else {
                             dialog.dismiss();

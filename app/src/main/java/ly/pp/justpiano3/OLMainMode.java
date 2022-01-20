@@ -11,9 +11,23 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
     public JPApplication jpapplication;
+    public OutputStream outputStream;
     OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
 
     @Override
@@ -56,41 +70,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                int i;
-                TestSQL testSQL = new TestSQL(this, "data");
-                SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
-                Cursor query = writableDatabase.query("jp_data", new String[]{"online"}, "online=1", null, null, null, null);
-                int count = query.getCount();
-                query.close();
-                testSQL.close();
-                writableDatabase.close();
-                String str = "";
-                if (count != 5517) {
-                    str = "您载入的曲谱数量为:" + count + "。本版本曲谱数量为:5517。曲库不完整。无法进行在线对战。请在设置中的应用程序选项找到极品钢琴，清除程序数据，再重新打开游戏。或者您也可以卸载后重新安装本程序。载入曲谱时请勿中断或后台本软件!";
-                    i = 1;
-                } else {
-                    if (jpapplication.getIsBindService()) {
-                        jpprogressBar.show();
-                        try {
-                            jpapplication.unbindService(jpapplication.mo2696L());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
-                    } else {
-                        jpprogressBar.show();
-                        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
-                    }
-                    i = 0;
-                }
-                jpdialog = new JPDialog(context);
-                jpdialog.setTitle("检查曲库");
-                jpdialog.setMessage(str);
-                jpdialog.setFirstButton("确定", new DialogDismissClick());
-                if (i != 0) {
-                    jpdialog.showDialog();
-                    return;
-                }
+                new SongSyncDialogTask(this, getMaxSongIdFromDatabase()).execute();
                 return;
             case R.id.ol_top_b:
                 intent.setClass(this, OLTopUser.class);
@@ -168,5 +148,37 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
+    }
+
+    public void loginOnline() {
+        if (jpapplication.getIsBindService()) {
+            jpprogressBar.show();
+            try {
+                jpapplication.unbindService(jpapplication.mo2696L());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
+        } else {
+            jpprogressBar.show();
+            jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
+        }
+    }
+
+    public String getMaxSongIdFromDatabase() {
+        TestSQL testSQL = new TestSQL(this, "data");
+        SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
+        Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
+        int maxSongId = 0;
+        while (query.moveToNext()) {
+            String path = query.getString(query.getColumnIndex("path"));
+            if (path.length() > 8 && path.charAt(7) == '/') {
+                maxSongId = Math.max(maxSongId, Integer.parseInt(path.substring(9, 15)));
+            }
+        }
+        query.close();
+        testSQL.close();
+        writableDatabase.close();
+        return String.valueOf(maxSongId);
     }
 }

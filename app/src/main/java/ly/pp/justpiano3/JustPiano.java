@@ -39,9 +39,12 @@ public class JustPiano extends Activity implements Callback, Runnable {
         //键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
         Map<String, String> pmPathMap = new HashMap<>();
         ReadPm readpm = new ReadPm(null);
+        // 下面的字段是删除标记，更新和插入的曲谱会得到更新，然后把未更新也未插入的（就是新版没有这个pm）的曲子删掉，也就是在客户端曲子删库用
+        int originalPmVersion = 0;
         Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path"}, null, null, null, null, "_id desc");
         while (query.moveToNext()) {
             string = query.getString(query.getColumnIndex("path"));
+            originalPmVersion = query.getInt(query.getColumnIndex("count"));
             if (string.length() > 8 && string.charAt(7) == '/') {
                 pmPathMap.put(string.substring(9), string);
             }
@@ -55,7 +58,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     if (list3 != null) {
                         for (String aList3 : list3) {
                             string = "songs/" + list[i] + "/" + aList3;
-                            readpm.mo3452a(this, string);
+                            readpm.loadWithSongPath(this, string);
                             String h = readpm.getSongName();
                             if (h != null) {
                                 float g = readpm.getNandu();
@@ -72,6 +75,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                     contentvalues.put("length", l);
                                     contentvalues.put("isnew", 0);
                                     contentvalues.put("online", 1);
+                                    contentvalues.put("count", originalPmVersion + 1);
                                     sQLiteDatabase.update("jp_data", contentvalues, "path = '" + pmPathMap.get(aList3.substring(1)) + "'", null);
                                     contentvalues.clear();
                                 } else {
@@ -85,7 +89,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                     contentvalues.put("player", "");
                                     contentvalues.put("score", 0);
                                     contentvalues.put("date", 0);
-                                    contentvalues.put("count", 0);
+                                    contentvalues.put("count", originalPmVersion + 1);
                                     contentvalues.put("diff", g);
                                     contentvalues.put("online", 1);
                                     contentvalues.put("Ldiff", j);
@@ -103,10 +107,11 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 }
                 sQLiteDatabase.setTransactionSuccessful();
                 sQLiteDatabase.endTransaction();
+                // 删除未检测到pm的曲谱
+                sQLiteDatabase.delete("jp_data", "count=" + originalPmVersion, null);
                 info = "";
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         query.close();
@@ -230,6 +235,10 @@ public class JustPiano extends Activity implements Callback, Runnable {
             System.exit(-1);
         }
         File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        file = new File(getFilesDir().getAbsolutePath() + "/Songs");
         if (!file.exists()) {
             file.mkdirs();
         }

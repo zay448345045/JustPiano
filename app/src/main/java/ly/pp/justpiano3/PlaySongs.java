@@ -5,17 +5,14 @@ import android.os.Bundle;
 import android.os.Message;
 
 public final class PlaySongs {
-    static final int GROUP = 24;
     public JPApplication jpapplication;
     boolean isPlayingSongs;
     private MelodySelect melodyselect;
     private OLPlayRoom olPlayRoom;
     private int position;
-    private int offset;
     private int pm_2;
     private byte[] tickArray;
     private byte[] noteArray;
-    private int[] tickGroupArray;
     private byte[] volumeArray;
 
     PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
@@ -32,14 +29,6 @@ public final class PlaySongs {
             pm_2 += 256;
         }
         isPlayingSongs = true;
-        tickGroupArray = new int[arrayLength];
-        for (int i1 = 1; i1 < arrayLength; i1++) {
-            if (i1 % GROUP == 0) {
-                tickGroupArray[i1] = pm_2 * readpm.getTickArray()[i1];
-            } else {
-                tickGroupArray[i1] = tickGroupArray[i1 - 1] + pm_2 * readpm.getTickArray()[i1];
-            }
-        }
         this.olPlayRoom = olPlayRoom;
         if (diao != 0) {
             for (int k = 0; k < arrayLength; k++) {
@@ -55,7 +44,7 @@ public final class PlaySongs {
                             break;
                         }
                         try {
-                            Thread.sleep(tickArray[j] * pm_2);
+                            Thread.sleep((long) tickArray[j] * pm_2);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

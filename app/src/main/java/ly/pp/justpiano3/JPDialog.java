@@ -116,12 +116,16 @@ public final class JPDialog {
     }
 
     public int getRadioGroupCheckedId() {
-        int id = radioGroup.getCheckedRadioButtonId();
-        if (id == -1) {
-            return id;
+        if (radioGroup != null) {
+            int id = radioGroup.getCheckedRadioButtonId();
+            if (id == -1) {
+                return id;
+            }
+            View v = inflate.findViewById(id);
+            return (int) v.getTag();
+        } else {
+            return -1;
         }
-        View v = inflate.findViewById(id);
-        return (int) v.getTag();
     }
 
     public String getEditTextString() {

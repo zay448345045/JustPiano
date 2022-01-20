@@ -622,10 +622,6 @@ public final class JPApplication extends Application {
     }
 
     public final int playSound(int note, float volume) {
-//        float f2 = volume > 1 ? (chordVolume * volume) / 100 : volume;
-//        int i2 = soundsIdMap.get(note);
-//        return i2 == 0 ? 0 : sp.play(i2, f2, f2, 1, 0, 1);
-        //setGain(note, volume);
         if (note >= 24 && note <= 108) {
             trigger(108 - note);
             return note;

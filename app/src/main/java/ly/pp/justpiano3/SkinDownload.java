@@ -96,7 +96,8 @@ public class SkinDownload extends Activity implements Callback {
                     }
                 }
                 in.close();
-                byte[] array = GZIP.ZIPToArrayAddHandle(new String(output.toByteArray(), UTF_8), skinDownload.handler, skinDownload.progress);
+                // byte[] array = GZIP.ZIPToArrayAddHandle(new String(output.toByteArray(), UTF_8), skinDownload.handler, skinDownload.progress);
+                byte[] array = output.toByteArray();
                 output.close();
                 skinDownload.outputStream.write(array, 0, array.length);
                 skinDownload.outputStream.close();
