@@ -10,7 +10,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 final class PianoPlayHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     PianoPlayHandler(PianoPlay pianoPlay) {
         weakReference = new WeakReference<>(pianoPlay);

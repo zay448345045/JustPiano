@@ -8,7 +8,7 @@ import java.util.Locale;
 final class SongsComparator implements Comparator<HashMap> {
     private final OLMelodySelect olMelodySelect;
     private final int f5334c;
-    private Comparator comparator = Collator.getInstance(Locale.CHINA);
+    private final Comparator comparator = Collator.getInstance(Locale.CHINA);
 
     SongsComparator(OLMelodySelect oLMelodySelect, int i) {
         olMelodySelect = oLMelodySelect;

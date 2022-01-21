@@ -19,7 +19,7 @@ import java.io.FileDescriptor;
  */
 public class ImageResizer {
     private static final String TAG = "ImageResizer";
-    private Context context;
+    private final Context context;
 
     /**
      * 构造方法 用于初始化上下文

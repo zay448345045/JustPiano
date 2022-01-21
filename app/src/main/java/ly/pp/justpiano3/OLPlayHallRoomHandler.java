@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class OLPlayHallRoomHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     OLPlayHallRoomHandler(OLPlayHallRoom olPlayHallRoom) {
         weakReference = new WeakReference<>(olPlayHallRoom);

@@ -1,6 +1,5 @@
 package ly.pp.justpiano3;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -10,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -54,7 +52,6 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected final void onPostExecute(String str) {
-        olMainMode.get().jpprogressBar.dismiss();
         try {
             int i;
             String message = null;
@@ -62,6 +59,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             if (jsonObject.getInt("C") > 0) {
                 message = "您有《" + jsonObject.getString("F") + "》等" + jsonObject.getInt("C") + "首在线曲库最新曲谱需同步至本地曲库，同步后方可进入对战。是否现在同步曲谱?";
                 i = 1;
+                olMainMode.get().jpprogressBar.dismiss();
             } else {
                 olMainMode.get().loginOnline();
                 i = 0;
@@ -79,6 +77,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             }
         } catch (Exception e) {
             Toast.makeText(olMainMode.get(), "网络连接失败，无法检查曲库同步", Toast.LENGTH_SHORT).show();
+            olMainMode.get().jpprogressBar.dismiss();
         }
     }
 

@@ -13,8 +13,8 @@ import java.util.List;
 
 public final class RoomTitleAdapter extends BaseAdapter {
     private List<Bundle> list;
-    private LayoutInflater layoutInflater;
-    private OLPlayHall olPlayHall;
+    private final LayoutInflater layoutInflater;
+    private final OLPlayHall olPlayHall;
 
     RoomTitleAdapter(List<Bundle> list, LayoutInflater layoutInflater, OLPlayHall olPlayHall) {
         this.list = list;

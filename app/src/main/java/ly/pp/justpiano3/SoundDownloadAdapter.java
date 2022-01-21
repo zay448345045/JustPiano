@@ -12,8 +12,8 @@ import org.json.JSONObject;
 
 public final class SoundDownloadAdapter extends BaseAdapter {
     final SoundDownload soundDownload;
-    private JSONArray jsonArray;
-    private ImageLoader imageLoader;
+    private final JSONArray jsonArray;
+    private final ImageLoader imageLoader;
 
     SoundDownloadAdapter(SoundDownload soundDownload, JSONArray jSONArray) {
         this.soundDownload = soundDownload;

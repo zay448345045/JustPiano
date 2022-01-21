@@ -32,7 +32,7 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
             HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByType");
             List<BasicNameValuePair> arrayList = new ArrayList<>();
             arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("page", String.valueOf(olMelodySelect.get().f4303H)));
+            arrayList.add(new BasicNameValuePair("page", String.valueOf(olMelodySelect.get().index)));
             arrayList.add(new BasicNameValuePair("type", olMelodySelect.get().f4317e));
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
@@ -58,8 +58,8 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
             try {
                 jSONObject = new JSONObject(str);
                 string = GZIP.ZIPTo(jSONObject.getString("L"));
-                if (olMelodySelect.get().f4303H == 0) {
-                    olMelodySelect.get().f4305J = jSONObject.getInt("P");
+                if (olMelodySelect.get().index == 0) {
+                    olMelodySelect.get().pageNum = jSONObject.getInt("P");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -71,8 +71,8 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     @Override
     protected final void onPostExecute(String str) {
         if (str.length() > 4) {
-            olMelodySelect.get().m3643a(olMelodySelect.get().f4305J);
-            olMelodySelect.get().olMelodySelectAdapter.notifyDataSetChanged();
+            olMelodySelect.get().m3643a(olMelodySelect.get().pageNum);
+            olMelodySelect.get().popupWindowSelectAdapter.notifyDataSetChanged();
             olMelodySelect.get().mo2809a(str);
             olMelodySelect.get().mo2808a(olMelodySelect.get().f4327p, olMelodySelect.get().f4316c, olMelodySelect.get().f4322k);
             olMelodySelect.get().f4327p.setCacheColorHint(0);

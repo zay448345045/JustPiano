@@ -7,12 +7,12 @@ import android.view.View.OnClickListener;
 
 final class LocalSongsStartPlayClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;
-    private String path;
-    private String name;
-    private double nandu;
-    private double leftnandu;
-    private int songstime;
-    private int score;
+    private final String path;
+    private final String name;
+    private final double nandu;
+    private final double leftnandu;
+    private final int songstime;
+    private final int score;
 
     LocalSongsStartPlayClick(LocalSongsAdapter LocalSongsAdapter, Cursor cursor) {
         localSongsAdapter = LocalSongsAdapter;

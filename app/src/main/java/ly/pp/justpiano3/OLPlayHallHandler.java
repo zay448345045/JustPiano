@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 
 final class OLPlayHallHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     OLPlayHallHandler(OLPlayHall ol) {
         weakReference = new WeakReference<>(ol);
@@ -202,7 +202,7 @@ final class OLPlayHallHandler extends Handler {
                         string2 = "确定";
                         if (i2 == 1 && b2 == olPlayHall.hallID && b2 > (byte) 0) {
                             jpdialog.setMessage(string);
-                            jpdialog.setFirstButton("一起游戏", (dialog, which) -> {
+                            jpdialog.setFirstButton("进入房间", (dialog, which) -> {
                                 dialog.dismiss();
                                 olPlayHall.jpapplication.setIsShowDialog(false);
                                 if (i == 0) {

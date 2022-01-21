@@ -24,9 +24,9 @@ import java.util.List;
 public final class PlayerImageAdapter extends BaseAdapter {
     byte roomID;
     ConnectionService connectionService;
-    private OLPlayRoom olPlayRoom;
-    private List<Bundle> playerList;
-    private LayoutInflater layoutInflater;
+    private final OLPlayRoom olPlayRoom;
+    private final List<Bundle> playerList;
+    private final LayoutInflater layoutInflater;
 
     PlayerImageAdapter(List<Bundle> list, OLPlayRoom olPlayRoom) {
         layoutInflater = olPlayRoom.getLayoutInflater();

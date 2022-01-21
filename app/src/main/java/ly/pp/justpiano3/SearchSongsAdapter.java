@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class SearchSongsAdapter extends BaseAdapter {
     final SearchSongs searchSongs;
-    private List<HashMap> songsList;
+    private final List<HashMap> songsList;
 
     SearchSongsAdapter(SearchSongs searchSongs, int i, List<HashMap> list) {
         this.searchSongs = searchSongs;
@@ -56,13 +56,17 @@ public final class SearchSongsAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_items)).setText(songsList.get(i).get("items").toString());
         TextView textView = view.findViewById(R.id.ol_topuser);
         String str = songsList.get(i).get("topUser").toString();
-        textView.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.putExtra("head", 1);
-            intent.putExtra("userKitiName", str);
-            intent.setClass(searchSongs, PopUserInfo.class);
-            searchSongs.startActivity(intent);
-        });
+        if (!str.equals("(暂无冠军)")) {
+            textView.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.putExtra("head", 1);
+                intent.putExtra("userKitiName", str);
+                intent.setClass(searchSongs, PopUserInfo.class);
+                searchSongs.startActivity(intent);
+            });
+        } else {
+            textView.setOnClickListener(null);
+        }
         textView.setText(str);
         ((TextView) view.findViewById(R.id.ol_topscore)).setText("高分:" + songsList.get(i).get("topScore"));
         ((TextView) view.findViewById(R.id.ol_playcount)).setText("播放量:" + songsList.get(i).get("playCount"));

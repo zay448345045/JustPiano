@@ -15,11 +15,11 @@ final class PlayNote {
     int noteDiv12;
     int handValue;
     private int playNote;
-    private PlayView playView;
-    private JPApplication jpapplication;
-    private float halfWidth;
+    private final PlayView playView;
+    private final JPApplication jpapplication;
+    private final float halfWidth;
     private boolean newNote = true;
-    private int posiAdd15;
+    private final int posiAdd15;
 
     PlayNote(JPApplication jPApplication, PlayView playView, int i, int i2, int f, int f2, int i3, boolean z, int i4) {
         handValue = i4;

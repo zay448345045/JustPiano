@@ -17,7 +17,7 @@ import java.util.List;
 public final class FamilyAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;
     private List<HashMap> list;
-    private LayoutInflater li;
+    private final LayoutInflater li;
 
     FamilyAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
         this.list = list;

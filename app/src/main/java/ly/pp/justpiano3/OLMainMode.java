@@ -11,18 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
-
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
@@ -70,7 +59,8 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                new SongSyncDialogTask(this, getMaxSongIdFromDatabase()).execute();
+                TestSQL testSQL = new TestSQL(this, "data");
+                new SongSyncDialogTask(this, getMaxSongIdFromDatabase(testSQL)).execute();
                 return;
             case R.id.ol_top_b:
                 intent.setClass(this, OLTopUser.class);
@@ -78,15 +68,22 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case R.id.ol_users_b:
-                intent.setClass(this, OLUsersPage.class);
+                intent.putExtra("head", 0);
+                intent.setClass(this, UsersInfo.class);
                 startActivity(intent);
                 finish();
+//                intent.setClass(this, OLUsersPage.class);
+//                startActivity(intent);
+//                finish();
                 return;
             case R.id.ol_bindmail_b:
                 Toast.makeText(this, "此版本不支持绑定邮箱!", Toast.LENGTH_SHORT).show();
                 return;
-            case R.id.ol_zhuanyi_b:
-                Toast.makeText(this, "极品钢琴2服务器已失效!", Toast.LENGTH_SHORT).show();
+            case R.id.ol_finduser_b:
+                intent.putExtra("head", 6);
+                intent.setClass(this, SearchSongs.class);
+                startActivity(intent);
+                finish();
                 return;
             default:
         }
@@ -116,7 +113,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         f4289o.setVisibility(View.VISIBLE);
         Button f4290p = findViewById(R.id.ol_bindmail_b);
         f4290p.setOnClickListener(this);
-        Button f4291q = findViewById(R.id.ol_zhuanyi_b);
+        Button f4291q = findViewById(R.id.ol_finduser_b);
         f4291q.setOnClickListener(this);
         try {
             if (jpapplication.getConnectionService() != null) {
@@ -151,8 +148,9 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     }
 
     public void loginOnline() {
+        jpprogressBar.show();
         if (jpapplication.getIsBindService()) {
-            jpprogressBar.show();
+
             try {
                 jpapplication.unbindService(jpapplication.mo2696L());
             } catch (Exception e) {
@@ -160,13 +158,11 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             }
             jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
         } else {
-            jpprogressBar.show();
             jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
         }
     }
 
-    public String getMaxSongIdFromDatabase() {
-        TestSQL testSQL = new TestSQL(this, "data");
+    public static String getMaxSongIdFromDatabase(TestSQL testSQL) {
         SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
         Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
         int maxSongId = 0;

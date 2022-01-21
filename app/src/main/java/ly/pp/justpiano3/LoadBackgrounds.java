@@ -7,21 +7,21 @@ import android.graphics.RectF;
 import android.view.SurfaceHolder;
 
 public final class LoadBackgrounds extends Thread {
-    private PlayView playView;
-    private SurfaceHolder surfaceholder;
+    private final PlayView playView;
+    private final SurfaceHolder surfaceholder;
     private Canvas canvas;
-    private float widthDiv120;
-    private float longKeyboardHeight;
+    private final float widthDiv120;
+    private final float longKeyboardHeight;
     private float f6021g;
     private float f6022h;
-    private Paint f6023i;
-    private Paint f6024j;
-    private Paint f6025k;
-    private JPApplication jpapplication;
-    private Rect f6028n;
-    private Rect f6029o;
-    private Rect backgroundRect;
-    private PianoPlay pianoPlay;
+    private final Paint f6023i;
+    private final Paint f6024j;
+    private final Paint f6025k;
+    private final JPApplication jpapplication;
+    private final Rect f6028n;
+    private final Rect f6029o;
+    private final Rect backgroundRect;
+    private final PianoPlay pianoPlay;
 
     LoadBackgrounds(JPApplication jPApplication, PlayView playView, PianoPlay pianoPlay) {
         jpapplication = jPApplication;

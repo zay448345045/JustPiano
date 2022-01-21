@@ -10,9 +10,9 @@ import android.widget.TextView;
 import java.util.List;
 
 public final class FinishScoreAdapter extends BaseAdapter {
-    private List<Bundle> list;
-    private LayoutInflater li;
-    private int type;
+    private final List<Bundle> list;
+    private final LayoutInflater li;
+    private final int type;
 
     FinishScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
         this.list = list;

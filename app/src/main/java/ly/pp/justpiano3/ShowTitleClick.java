@@ -15,11 +15,11 @@ final class ShowTitleClick implements OnClickListener {
         if (olMelodySelect.f4330s) {
             olMelodySelect.f4328q.setVisibility(View.GONE);
             olMelodySelect.f4330s = false;
-            olMelodySelect.f4336y.setText(" 显示标题 ");
+            olMelodySelect.showTitleButton.setText(" 显示标题 ");
             return;
         }
         olMelodySelect.f4328q.setVisibility(View.VISIBLE);
         olMelodySelect.f4330s = true;
-        olMelodySelect.f4336y.setText(" 隐藏标题 ");
+        olMelodySelect.showTitleButton.setText(" 隐藏标题 ");
     }
 }

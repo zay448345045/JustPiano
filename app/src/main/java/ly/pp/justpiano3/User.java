@@ -14,11 +14,11 @@ public class User implements Serializable {
     private int score = 0;
     private int combo;
     private int kuang;
-    private int level;
+    private final int level;
     private int trousers;
     private int jacket;
     private int hair;
-    private int clevel;
+    private final int clevel;
     private int hand = 0;
     private int cpKind = 0;
     private int shoes = 0;

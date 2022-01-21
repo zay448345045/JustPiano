@@ -1,8 +1,5 @@
 package ly.pp.justpiano3;
 
-import android.os.Handler;
-import android.os.Message;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -12,7 +13,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,19 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
-    private final WeakReference<OLMainMode> olMainMode;
-    private String maxSongId = "";
+    private final WeakReference<Activity> activity;
+    private final String maxSongId;
+    private int count = 0;
 
-    SongSyncTask(OLMainMode olMainMode, String maxSongId) {
-        this.olMainMode = new WeakReference<>(olMainMode);
+    SongSyncTask(Activity activity, String maxSongId) {
+        this.activity = new WeakReference<>(activity);
         this.maxSongId = maxSongId;
     }
 
     @Override
     protected String doInBackground(String... objects) {
-        HttpPost httpPost = new HttpPost("http://" + olMainMode.get().jpapplication.getServer() + ":8910/JustPianoServer/server/SongSync");
+        HttpPost httpPost = new HttpPost("http://" + ((JPApplication) activity.get().getApplication()).getServer() + ":8910/JustPianoServer/server/SongSync");
         List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("version", olMainMode.get().jpapplication.getVersion()));
+        arrayList.add(new BasicNameValuePair("version", ((JPApplication) activity.get().getApplication()).getVersion()));
         arrayList.add(new BasicNameValuePair("maxSongId", maxSongId));
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
@@ -48,13 +49,13 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
             HttpResponse execute = defaultHttpClient.execute(httpPost);
             if (execute.getStatusLine().getStatusCode() == 200) {
                 byte[] bytes = EntityUtils.toByteArray(execute.getEntity());
-                File zipFile = new File(olMainMode.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
+                File zipFile = new File(activity.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
                 FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
                 fileOutputStream.write(bytes, 0, bytes.length);
                 fileOutputStream.close();
                 List<File> files = GZIP.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
-                TestSQL testSQL = new TestSQL(olMainMode.get(), "data");
+                TestSQL testSQL = new TestSQL(activity.get(), "data");
                 SQLiteDatabase sqliteDataBase = testSQL.getWritableDatabase();
                 sqliteDataBase.beginTransaction();
                 for (File file : files) {
@@ -79,6 +80,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                     contentvalues.put("length", readpm.getSongTime());
                     contentvalues.put("Lscore", 0);
                     sqliteDataBase.insertOrThrow("jp_data", null, contentvalues);
+                    count++;
                 }
                 sqliteDataBase.setTransactionSuccessful();
                 sqliteDataBase.endTransaction();
@@ -91,13 +93,31 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected final void onPostExecute(String str) {
-        olMainMode.get().loginOnline();
+        if (activity.get() instanceof OLMainMode) {
+            ((OLMainMode) activity.get()).loginOnline();
+        } else if (activity.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) activity.get();
+            melodySelect.jpprogressBar.dismiss();
+            JPDialog jpdialog = new JPDialog(melodySelect);
+            jpdialog.setTitle("在线曲库同步");
+            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
+            jpdialog.setSecondButton("确定", new DialogDismissClick());
+            jpdialog.showDialog();
+        }
     }
 
     @Override
     protected final void onPreExecute() {
-        Toast.makeText(olMainMode.get(), "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
-        olMainMode.get().jpprogressBar.setCancelable(false);
-        olMainMode.get().jpprogressBar.show();
+        if (activity.get() instanceof OLMainMode) {
+            OLMainMode olMainMode = (OLMainMode) activity.get();
+            Toast.makeText(olMainMode, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
+            olMainMode.jpprogressBar.setCancelable(false);
+            olMainMode.jpprogressBar.show();
+        } else if (activity.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) activity.get();
+            Toast.makeText(melodySelect, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
+            melodySelect.jpprogressBar.setCancelable(false);
+            melodySelect.jpprogressBar.show();
+        }
     }
 }

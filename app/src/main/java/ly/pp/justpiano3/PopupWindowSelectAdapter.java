@@ -12,15 +12,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public final class OLMelodySelectAdapter extends BaseAdapter {
+public final class PopupWindowSelectAdapter extends BaseAdapter {
     Handler handler;
-    private List<String> list;
-    private Activity activity;
+    private final List<String> list;
+    private final Activity activity;
+    private final int messageWhat;
 
-    OLMelodySelectAdapter(Activity activity, Handler handler, List<String> arrayList) {
+    PopupWindowSelectAdapter(Activity activity, Handler handler, List<String> arrayList, int messageWhat) {
         this.activity = activity;
         this.handler = handler;
         list = arrayList;
+        this.messageWhat = messageWhat;
     }
 
     @Override
@@ -40,21 +42,21 @@ public final class OLMelodySelectAdapter extends BaseAdapter {
 
     @Override
     public final View getView(int i, View view, ViewGroup viewGroup) {
-        TextView f6012a;
+        TextView textView;
         if (view == null) {
             view = LayoutInflater.from(activity).inflate(R.layout.page_list, null);
-            f6012a = view.findViewById(R.id.page_item);
-            view.setTag(f6012a);
+            textView = view.findViewById(R.id.page_item);
+            view.setTag(textView);
         } else {
-            f6012a = (TextView) view.getTag();
+            textView = (TextView) view.getTag();
         }
-        f6012a.setText(list.get(i));
-        f6012a.setOnClickListener(v -> {
+        textView.setText(list.get(i));
+        textView.setOnClickListener(v -> {
             Message message = new Message();
             Bundle bundle = new Bundle();
             bundle.putInt("selIndex", i);
             message.setData(bundle);
-            message.what = 1;
+            message.what = messageWhat;
             handler.sendMessage(message);
         });
         return view;

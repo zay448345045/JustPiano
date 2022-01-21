@@ -10,7 +10,7 @@ import org.json.JSONObject;
 final class CreateFamily implements OnClickListener {
 
     private final OLPlayHallRoom olPlayHallRoom;
-    private JPDialog jpDialog;
+    private final JPDialog jpDialog;
 
     CreateFamily(JPDialog jpDialog, OLPlayHallRoom olPlayHallRoom) {
         this.olPlayHallRoom = olPlayHallRoom;

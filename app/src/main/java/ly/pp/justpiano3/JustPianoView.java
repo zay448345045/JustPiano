@@ -15,15 +15,15 @@ import java.io.IOException;
 
 public class JustPianoView extends View {
     JPApplication jpapplication;
-    private RectF f4112d;
-    private RectF f4113e;
+    private final RectF f4112d;
+    private final RectF f4113e;
     private Bitmap f4114f;
     private Bitmap logo;
     private Bitmap f4117i;
     private Bitmap f4118j;
     private String f4119k = "";
     private String f4120l = "";
-    private Paint f4121m;
+    private final Paint f4121m;
     private int f4122n = 0;
 
     public JustPianoView(Context context, JPApplication jPApplication) {

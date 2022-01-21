@@ -191,12 +191,12 @@
                 android:layout_weight="0.1" />
 
             <ImageView
-                android:id="@+id/setting_fast"
+                android:id="@+id/menu_list_fast"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="0.3"
-
-                android:src="@drawable/setting" />
+                android:layout_gravity="center"
+                android:src="@drawable/list_icon" />
 
             <View
                 android:layout_width="wrap_content"

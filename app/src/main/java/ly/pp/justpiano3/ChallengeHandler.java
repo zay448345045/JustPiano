@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class ChallengeHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     ChallengeHandler(OLChallenge challenge) {
         weakReference = new WeakReference<>(challenge);

@@ -47,7 +47,6 @@
                 android:id="@+id/show_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/umeng_common_gradient_orange"
                 android:gravity="fill"
                 android:text=" 隐藏标题 "
                 android:textColor="@color/white1"

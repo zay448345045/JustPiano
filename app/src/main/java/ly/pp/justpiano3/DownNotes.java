@@ -1,10 +1,10 @@
 package ly.pp.justpiano3;
 
 public final class DownNotes extends Thread {
-    private JPApplication jpapplication;
-    private int sleepTime;
+    private final JPApplication jpapplication;
+    private final int sleepTime;
     private boolean isStop;
-    private PianoPlay pianoPlay;
+    private final PianoPlay pianoPlay;
 
     DownNotes(JPApplication jPApplication, int downSpeed, PianoPlay pianoPlay) {
         jpapplication = jPApplication;

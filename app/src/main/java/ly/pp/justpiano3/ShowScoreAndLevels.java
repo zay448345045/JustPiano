@@ -5,8 +5,8 @@ import java.util.List;
 public final class ShowScoreAndLevels extends Thread {
     int levelScore;
     int comboScore;
-    private List<ShowTouchNotesLevel> showTouchNotesLevelList;
-    private PianoPlay pianoPlay;
+    private final List<ShowTouchNotesLevel> showTouchNotesLevelList;
+    private final PianoPlay pianoPlay;
 
     ShowScoreAndLevels(List<ShowTouchNotesLevel> arrayList, PianoPlay pianoPlay) {
         showTouchNotesLevelList = arrayList;

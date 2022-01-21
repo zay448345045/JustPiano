@@ -7,13 +7,13 @@ import android.os.Message;
 public final class PlaySongs {
     public JPApplication jpapplication;
     boolean isPlayingSongs;
-    private MelodySelect melodyselect;
-    private OLPlayRoom olPlayRoom;
-    private int position;
+    private final MelodySelect melodyselect;
+    private final OLPlayRoom olPlayRoom;
+    private final int position;
     private int pm_2;
-    private byte[] tickArray;
-    private byte[] noteArray;
-    private byte[] volumeArray;
+    private final byte[] tickArray;
+    private final byte[] noteArray;
+    private final byte[] volumeArray;
 
     PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
         jpapplication = jPApplication;

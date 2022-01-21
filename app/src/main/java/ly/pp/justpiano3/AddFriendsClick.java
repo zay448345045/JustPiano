@@ -9,7 +9,7 @@ import org.json.JSONObject;
 final class AddFriendsClick implements OnClickListener {
     private OLPlayRoom olPlayRoom = null;
     private OLPlayHall olPlayHall = null;
-    private String name;
+    private final String name;
 
     AddFriendsClick(OLPlayRoom olPlayRoom, String name) {
         this.olPlayRoom = olPlayRoom;

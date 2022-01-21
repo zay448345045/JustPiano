@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 public final class JPProgressBar extends ProgressDialog {
 
-    private boolean f5781a;
+    private final boolean f5781a;
     private JPApplication jpApplication;
     private ConnectionService connectionService;
 

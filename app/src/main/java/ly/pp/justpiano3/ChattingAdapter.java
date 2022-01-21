@@ -13,8 +13,8 @@ import java.util.List;
 
 public final class ChattingAdapter extends BaseAdapter {
     Activity activity;
-    private List<Bundle> msgList;
-    private LayoutInflater layoutInflater;
+    private final List<Bundle> msgList;
+    private final LayoutInflater layoutInflater;
 
     ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater) {
         msgList = list;

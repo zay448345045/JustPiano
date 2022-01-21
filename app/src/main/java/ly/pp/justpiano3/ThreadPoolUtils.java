@@ -16,10 +16,10 @@ public class ThreadPoolUtils {
     //额外线程空状态生存时间
     private static final int KEEP_ALIVE_TIME = 10000;
     //阻塞队列。当核心线程都被占用，且阻塞队列已满的情况下，才会开启额外线程。
-    private static BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(10);
+    private static final BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(10);
 
     //线程工厂
-    private static ThreadFactory threadFactory = new ThreadFactory() {
+    private static final ThreadFactory threadFactory = new ThreadFactory() {
         private final AtomicInteger integer = new AtomicInteger();
 
         @Override
@@ -29,7 +29,7 @@ public class ThreadPoolUtils {
     };
 
     //线程池
-    private static ThreadPoolExecutor threadPool;
+    private static final ThreadPoolExecutor threadPool;
 
     static {
         threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, workQueue, threadFactory);

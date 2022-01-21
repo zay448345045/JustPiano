@@ -13,8 +13,8 @@ public final class ExpressAdapter extends BaseAdapter {
     byte f6036e;
     byte f6037f;
     byte f6038g;
-    private Context context;
-    private Integer[] f6033b;
+    private final Context context;
+    private final Integer[] f6033b;
 
     ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, byte b, byte b2, byte b3) {
         this.context = context;

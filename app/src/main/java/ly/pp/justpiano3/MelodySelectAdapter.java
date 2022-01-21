@@ -12,7 +12,7 @@ import android.widget.TextView;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class MelodySelectAdapter extends CursorAdapter {
-    private MelodySelect melodySelect;
+    private final MelodySelect melodySelect;
 
     MelodySelectAdapter(Context context, Cursor cursor, MelodySelect melodySelect) {
         super(context, cursor, true);

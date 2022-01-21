@@ -87,7 +87,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private TextView searchText;
     private ImageView express;
     private LayoutInflater layoutInflater;
-    private List<Bundle> playerList = new ArrayList<>();
+    private final List<Bundle> playerList = new ArrayList<>();
     private PopupWindow expressWindow = null;
     private PopupWindow moreSongs = null;
     private PopupWindow groupModeGroup = null;

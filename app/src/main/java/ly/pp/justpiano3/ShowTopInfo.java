@@ -40,7 +40,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     PictureHandle f5001q;
     Handler handler;
     private TextView f4993i;
-    private int f4998n = 20;
+    private final int f4998n = 20;
     private Bitmap f5003s = null;
 
     public Bitmap m3874a(Context context) {

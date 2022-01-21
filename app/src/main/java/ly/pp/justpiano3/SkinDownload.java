@@ -29,8 +29,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class SkinDownload extends Activity implements Callback {
     public JPApplication jpapplication;
     public JPProgressBar jpProgressBar;

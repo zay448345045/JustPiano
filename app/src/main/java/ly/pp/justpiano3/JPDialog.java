@@ -17,7 +17,7 @@ public final class JPDialog {
     private EditText editText;
     private RadioGroup radioGroup;
     private View inflate;
-    private Context context;
+    private final Context context;
     private OnClickListener listener2;
     private String title;
     private String message;
@@ -77,7 +77,8 @@ public final class JPDialog {
         }
         if (message != null) {
             ((TextView) inflate.findViewById(R.id.message)).setText(message);
-        } if (view != null) {
+        }
+        if (view != null) {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
             ((LinearLayout) inflate.findViewById(R.id.content)).addView(view, new LayoutParams(-2, -2));
         }

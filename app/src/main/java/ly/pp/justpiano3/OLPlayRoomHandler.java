@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 final class OLPlayRoomHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     OLPlayRoomHandler(OLPlayRoom olPlayRoom) {
         weakReference = new WeakReference<>(olPlayRoom);
@@ -54,11 +54,11 @@ final class OLPlayRoomHandler extends Handler {
                                 try {
                                     if (olPlayRoom.getMode() == 0) {
                                         if (diao > 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "+" + diao);
+                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
                                         } else if (diao < 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "-" + diao);
+                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "-" + diao);
                                         } else {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "0" + diao);
+                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
                                         }
                                     }
                                     olPlayRoom.playSongs = new PlaySongs(olPlayRoom.jpapplication, str1, null, olPlayRoom, 0, olPlayRoom.getdiao());

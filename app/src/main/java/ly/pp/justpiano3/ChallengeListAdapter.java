@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class ChallengeListAdapter extends BaseAdapter {
-    private List<HashMap> list;
-    private LayoutInflater li;
+    private final List<HashMap> list;
+    private final LayoutInflater li;
 
     ChallengeListAdapter(List<HashMap> list, LayoutInflater layoutInflater) {
         this.list = list;

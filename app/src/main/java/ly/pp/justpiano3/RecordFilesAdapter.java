@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class RecordFilesAdapter extends BaseAdapter {
     private List<HashMap> list;
-    private RecordFiles recordfiles;
+    private final RecordFiles recordfiles;
 
     RecordFilesAdapter(List<HashMap> list, RecordFiles rs) {
         this.list = list;

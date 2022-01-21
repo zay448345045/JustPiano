@@ -11,10 +11,10 @@ import android.widget.TextView;
 import java.util.List;
 
 public final class DressAdapter extends BaseAdapter {
-    private List<Bitmap> list;
-    private LayoutInflater layoutInflater;
-    private OLPlayDressRoom olPlayDressRoom;
-    private int type;  //1,2,3,4表示头发、衣服、裤子、鞋子
+    private final List<Bitmap> list;
+    private final LayoutInflater layoutInflater;
+    private final OLPlayDressRoom olPlayDressRoom;
+    private final int type;  //1,2,3,4表示头发、衣服、裤子、鞋子
 
     DressAdapter(List<Bitmap> arrayList, OLPlayDressRoom oLPlayDressRoom, int type) {
         this.olPlayDressRoom = oLPlayDressRoom;

@@ -26,7 +26,7 @@ public class FriendMailPage extends Activity implements Callback {
     public String f4024f = "F";
     public FriendMailPageAdapter f4025g;
     private SharedPreferences sharedPreferences = null;
-    private Editor f4028j = null;
+    private final Editor f4028j = null;
 
     static void m3506a(FriendMailPage friendMailPage, ListView listView, String str) {
         int i = 0;

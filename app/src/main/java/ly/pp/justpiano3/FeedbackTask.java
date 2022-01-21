@@ -1,7 +1,5 @@
 package ly.pp.justpiano3;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -12,9 +10,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -22,8 +17,8 @@ import java.util.List;
 
 public final class FeedbackTask extends AsyncTask<String, Void, String> {
     private final WeakReference<MainMode> mainMode;
-    private String userName;
-    private String message;
+    private final String userName;
+    private final String message;
 
     FeedbackTask(MainMode mainMode, String userName, String message) {
         this.mainMode = new WeakReference<>(mainMode);

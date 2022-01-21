@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class OLShopItemsAdapter extends BaseAdapter {
-    private List<HashMap> list;
+    private final List<HashMap> list;
     //    private JPApplication jpApplication;
-    private LayoutInflater li;
-    private OLShop shop;
+    private final LayoutInflater li;
+    private final OLShop shop;
 
     OLShopItemsAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLShop olShop) {
 //        this.jpApplication = jpApplication;

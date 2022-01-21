@@ -22,8 +22,8 @@ public final class MainGameAdapter extends BaseAdapter {
     Activity activity;
     ConnectionService connectionService;
     private List<Bundle> list;
-    private JPApplication jpapplication;
-    private int type;
+    private final JPApplication jpapplication;
+    private final int type;
 
     public MainGameAdapter(List<Bundle> list, JPApplication jPApplication, int i, Activity act) {
         this.list = list;

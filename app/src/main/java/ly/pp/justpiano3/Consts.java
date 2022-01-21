@@ -7,6 +7,7 @@ public interface Consts extends BaseColumns {
     //String[] f5601e = new String[]{"极尽琴乐", "极品钢琴", "琴心联语", "以琴会友", "高山流水", "剑胆琴心", "钢琴新手", "新增曲谱"};
     String[] nameCL = new String[]{"", "巧遇钢琴", "黑白之梦", "钢琴学徒", "小有成就", "肖练超技", "名动一时", "顶尖琴手", "梦圆指尖", "名不虚传", "名列神迹", "琴键狂魔", "超神存在"};
     String[] sortNames = new String[]{"名称升序", "名称降序", "最新曲目", "近期弹奏", "难度升序", "难度降序", "得分升序", "得分降序", "时长升序", "时长降序"};
+    String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "数据导出", "录音文件"};
     String[] sortSyntax = new String[]{"name asc", "name desc", "isnew desc", "date desc", "diff asc", "diff desc", "score asc", "score desc", "length asc", "length desc"};
     String[] noteSpeed = new String[]{"神快", "神快", "超快", "很快", "快", "中", "中"};
     String[] hand = new String[]{"右手", "左手"};

@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class ChatFilesAdapter extends BaseAdapter {
     private List<HashMap> list;
-    private ChatFiles chatfiles;
+    private final ChatFiles chatfiles;
 
     ChatFilesAdapter(List<HashMap> list, ChatFiles cs) {
         this.list = list;

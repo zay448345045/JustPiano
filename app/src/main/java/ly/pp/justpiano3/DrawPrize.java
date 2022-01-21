@@ -15,17 +15,17 @@ import android.view.SurfaceView;
 
 public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
-    private SurfaceHolder mHolder;
+    private final SurfaceHolder mHolder;
     private Canvas mCanvas;
     private boolean isRunning;
     /**
      * 盘块的奖项
      */
-    private String[] mStrs = new String[]{"框框", "经验", "祝福", "考级", "挑战", "音符"};
+    private final String[] mStrs = new String[]{"框框", "经验", "祝福", "考级", "挑战", "音符"};
     /**
      * 盘块的图片
      */
-    private int[] mImgs = new int[]{R.drawable.head, R.drawable.exp, R.drawable.favor, R.drawable.nailface, R.drawable.listen_play, R.drawable.gold};
+    private final int[] mImgs = new int[]{R.drawable.head, R.drawable.exp, R.drawable.favor, R.drawable.nailface, R.drawable.listen_play, R.drawable.gold};
     /**
      * 与图片对应的bitmap数组
      */
@@ -33,9 +33,9 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
     /**
      * 盘块的颜色
      */
-    private int[] mColors = new int[]{0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01
+    private final int[] mColors = new int[]{0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01
     };
-    private int mItemCount = mColors.length;
+    private final int mItemCount = mColors.length;
     /**
      * 绘制盘块的画笔
      */
@@ -59,7 +59,7 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
     /**
      * 文字大小
      */
-    private float mTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
+    private final float mTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
 
     /**
      * 滚动的速度

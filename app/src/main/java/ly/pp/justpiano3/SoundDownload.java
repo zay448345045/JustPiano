@@ -28,8 +28,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class SoundDownload extends Activity implements Callback {
     public JPApplication jpapplication;
     JPProgressBar jpProgressBar;

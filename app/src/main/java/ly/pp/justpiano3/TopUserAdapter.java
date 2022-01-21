@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class TopUserAdapter extends BaseAdapter {
     final ShowTopInfo showTopInfo;
-    private List<HashMap> peopleList;
+    private final List<HashMap> peopleList;
 
     TopUserAdapter(ShowTopInfo showTopInfo, int i, List<HashMap> list) {
         this.showTopInfo = showTopInfo;

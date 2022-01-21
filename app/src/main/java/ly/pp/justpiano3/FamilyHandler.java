@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class FamilyHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     FamilyHandler(OLFamily family) {
         weakReference = new WeakReference<>(family);

@@ -10,8 +10,8 @@ final class PlaySongsClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;
     private final View view;
     private final Context context;
-    private String songsPath;
-    private String songsName;
+    private final String songsPath;
+    private final String songsName;
 
     PlaySongsClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, View view, Context ct) {
         this.localSongsAdapter = localSongsAdapter;

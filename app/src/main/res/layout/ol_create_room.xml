@@ -9,7 +9,6 @@
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/spinne_l"
         android:gravity="center"
         android:orientation="vertical">
 

@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
-    private List<HashMap> list;
-    private JPApplication jpApplication;
-    private LayoutInflater li;
-    private OLFamily family;
+    private final List<HashMap> list;
+    private final JPApplication jpApplication;
+    private final LayoutInflater li;
+    private final OLFamily family;
 
     FamilyPeopleAdapter(List<HashMap> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.jpApplication = jpApplication;

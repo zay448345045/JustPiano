@@ -19,9 +19,9 @@ public class ConnectionService extends Service implements Runnable {
     private ByteBuffer writeBuffer = ByteBuffer.allocateDirect(50 * 1024);
     private Selector selector = null;
     private SelectionKey selectionKey = null;
-    private JPBinder jpBinder = new JPBinder(this);
-    private ByteBuffer readBuffer = ByteBuffer.allocateDirect(50 * 1024);
-    private ByteBuffer cacheBuffer = ByteBuffer.allocateDirect(100 * 1024);
+    private final JPBinder jpBinder = new JPBinder(this);
+    private final ByteBuffer readBuffer = ByteBuffer.allocateDirect(50 * 1024);
+    private final ByteBuffer cacheBuffer = ByteBuffer.allocateDirect(100 * 1024);
     private int bodyLen = -1;
     private boolean cache = false;  //是否有缓存
     private boolean online = true;
@@ -85,7 +85,7 @@ public class ConnectionService extends Service implements Runnable {
             case (byte) 45:    //送祝福
                 writeBuffer = JsonHandle.m3945a(b, b2, b3, str);
                 break;
-            case (byte) 3:    //开始游戏
+            case (byte) 3:    //开始弹奏
             case (byte) 4:    //准备和取消准备
             case (byte) 5:    //弹奏成绩
             case (byte) 12:    //大厅聊天
@@ -100,7 +100,7 @@ public class ConnectionService extends Service implements Runnable {
             case (byte) 8:    //退出房间
             case (byte) 21:    //加载房间内人物数据
             case (byte) 23:    //联网对战载入用户
-            case (byte) 24:    //开始游戏
+            case (byte) 24:    //开始弹奏
             case (byte) 30:    //退出大厅
                 writeBuffer = JsonHandle.m3945a(b, b2, b3, "");
                 break;

@@ -64,13 +64,13 @@ public final class JPApplication extends Application {
     private boolean noteDismiss = true;
     private int playSongsMode;
     private float noteSize = 1;
-    private Map<Byte, User> hashMap = new HashMap<>();
+    private final Map<Byte, User> hashMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
     private String nowSongsName = "";
     private String server = "120.25.100.169";
     private boolean keyboardPerfer;
-    private ServiceConnection serviceconnection = new JPServiceConnection(this);
+    private final ServiceConnection serviceconnection = new JPServiceConnection(this);
     private int widthPixels;
     private int heightPixels;
     private int animPosition;
@@ -190,7 +190,7 @@ public final class JPApplication extends Application {
     }
 
     public final void setGameMode(int i) {
-        gameMode = i;  //0为正常游戏模式 1为自由模式 2为练习模式 3为欣赏模式
+        gameMode = i;  //0为普通模式 1为自由模式 2为练习模式 3为欣赏模式
     }
 
     public final List<Rect> getKeyRectArray() {

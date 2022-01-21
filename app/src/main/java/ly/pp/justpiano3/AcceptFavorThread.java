@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class AcceptFavorThread extends Thread {
-    private String type;
-    private String songID;
-    private String userName;
-    private JPApplication jpapplication;
+    private final String type;
+    private final String songID;
+    private final String userName;
+    private final JPApplication jpapplication;
 
     AcceptFavorThread(Activity activity, String l, String str, String str2) {
         jpapplication = (JPApplication) activity.getApplication();

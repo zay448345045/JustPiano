@@ -137,9 +137,9 @@ public class MainMode extends Activity implements OnClickListener {
         f4206f.setOnClickListener(this);
         TextView f4208h = findViewById(R.id.piano_help);
         f4208h.setOnClickListener(this);
-        TextView f4211k = (Button) findViewById(R.id.listen);
+        TextView f4211k = findViewById(R.id.listen);
         f4211k.setOnClickListener(this);
-        f4211k = (Button) findViewById(R.id.feed_back);
+        f4211k = findViewById(R.id.feed_back);
         f4211k.setOnClickListener(this);
         jpprogressBar = new JPProgressBar(this);
         if (jpApplication.title != null && jpApplication.f4072f != null && !jpApplication.title.isEmpty() && !jpApplication.f4072f.isEmpty()) {

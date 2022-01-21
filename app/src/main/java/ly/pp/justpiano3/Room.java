@@ -6,8 +6,8 @@ final class Room {
     private String roonName;
     private int fcount;
     private int mcount;
-    private int isPlaying;
-    private int[] people;
+    private final int isPlaying;
+    private final int[] people;
     private boolean peopleFull;
     private int isPassword;
     private int roomKuang;

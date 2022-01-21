@@ -7,7 +7,7 @@ import android.os.Message;
 import java.lang.ref.WeakReference;
 
 final class BaseActivityHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     BaseActivityHandler(BaseActivity baseActivity) {
         weakReference = new WeakReference<>(baseActivity);

@@ -26,7 +26,6 @@ public class RecordFiles extends Activity {
     private List<HashMap> f4917b = null;
     private ListView f4919d;
     private TextView f4921f;
-    private int[] f4923h = new int[]{R.drawable.umeng_socialize_share_music, R.drawable.umeng_socialize_share_music, R.drawable.umeng_socialize_share_music};
     private RecordFilesAdapter recordFilesAdapter;
 
     private void m3824a(File file) {
@@ -45,7 +44,7 @@ public class RecordFiles extends Activity {
         while (i < j) {
             HashMap hashMap = new HashMap();
             if (f4924i[i].isFile() && f4924i[i].getName().endsWith(".wav")) {
-                hashMap.put("image", f4923h[0]);
+                hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
                 hashMap.put("time", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINESE).format(new Date(f4924i[i].lastModified())));

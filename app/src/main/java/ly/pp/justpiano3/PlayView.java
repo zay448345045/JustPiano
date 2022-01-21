@@ -89,8 +89,8 @@ public final class PlayView extends SurfaceView implements Callback {
     private int greatNum;
     private int badNum;
     private int missNum;
-    private List<PlayNote> notesList = new CopyOnWriteArrayList<>();
-    private List<ShowTouchNotesLevel> touchNotesList = new ArrayList<>();
+    private final List<PlayNote> notesList = new CopyOnWriteArrayList<>();
+    private final List<ShowTouchNotesLevel> touchNotesList = new ArrayList<>();
     private ShowScoreAndLevels showScoreAndLevels;
     private double nandu;
     private double leftNandu;
@@ -107,10 +107,10 @@ public final class PlayView extends SurfaceView implements Callback {
     private List<Byte> uploadTouchStatusList;
     private byte[] uploadTimeArray;
     private int uploadNoteIndex;
-    private List<PlayNote> tempNotesArray = new ArrayList<>();
+    private final List<PlayNote> tempNotesArray = new ArrayList<>();
     private float halfHeightSub10;
     private int notesDownSpeed = 6;
-    private List<Integer> f4788bm = new ArrayList<>();
+    private final List<Integer> f4788bm = new ArrayList<>();
     private int handValue;
     private byte[] tickArray;
     private byte[] trackArray;
@@ -119,7 +119,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private PlayNote ln;
     private int noteCounts;
     private Rect f4801bz;
-    private Paint line = new Paint();
+    private final Paint line = new Paint();
     private float widthDiv8;
     private float width2Div8;
     private float width4Div8;

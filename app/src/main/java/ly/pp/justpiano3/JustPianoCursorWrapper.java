@@ -10,10 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public final class JustPianoCursorWrapper extends CursorWrapper {
-    private Cursor f5947a;
-    private List<C1312mj> f5948b = new ArrayList<>();
+    private final Cursor f5947a;
+    private final List<C1312mj> f5948b = new ArrayList<>();
     private int f5949c = 0;
-    private Comparator f5952f = Collator.getInstance(java.util.Locale.CHINESE);
+    private final Comparator f5952f = Collator.getInstance(java.util.Locale.CHINESE);
 
     JustPianoCursorWrapper(Cursor cursor, String str, boolean z) {
         super(cursor);
