@@ -48,7 +48,7 @@ int32_t FixedBlockReader::readFromStorage(uint8_t *buffer, int32_t numBytes) {
 int32_t FixedBlockReader::read(uint8_t *buffer, int32_t numBytes) {
     int32_t bytesRead;
     int32_t bytesLeft = numBytes;
-    while (bytesLeft > 0) {
+    while(bytesLeft > 0) {
         if (mPosition < mValid) {
             // Use up bytes currently in storage.
             bytesRead = readFromStorage(buffer, bytesLeft);

@@ -28,7 +28,7 @@ namespace iolib {
     public:
         virtual ~DataSource() {};
 
-        virtual void mixAudio(float *outBuff, int numChannels, int numFrames) = 0;
+        virtual void mixAudio(float *outBuff, int numChannels, int numFrames, int32_t& curFrameIndex) = 0;
     };
 
 }

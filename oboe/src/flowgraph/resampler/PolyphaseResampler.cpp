@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <cassert>
 #include <math.h>
 #include "IntegerRatio.h"
 #include "PolyphaseResampler.h"
@@ -21,7 +22,8 @@
 using namespace resampler;
 
 PolyphaseResampler::PolyphaseResampler(const MultiChannelResampler::Builder &builder)
-        : MultiChannelResampler(builder) {
+        : MultiChannelResampler(builder)
+        {
     assert((getNumTaps() % 4) == 0); // Required for loop unrolling.
 
     int32_t inputRate = builder.getInputRate();
@@ -38,13 +40,11 @@ void PolyphaseResampler::readFrame(float *frame) {
     // Clear accumulator for mixing.
     std::fill(mSingleFrame.begin(), mSingleFrame.end(), 0.0);
 
-//    printf("PolyphaseResampler: mCoefficientCursor = %4d\n", mCoefficientCursor);
     // Multiply input times windowed sinc function.
     float *coefficients = &mCoefficients[mCoefficientCursor];
     float *xFrame = &mX[mCursor * getChannelCount()];
     for (int i = 0; i < mNumTaps; i++) {
         float coefficient = *coefficients++;
-//        printf("PolyphaseResampler: coeff = %10.6f, xFrame[0] = %10.6f\n", coefficient, xFrame[0]);
         for (int channel = 0; channel < getChannelCount(); channel++) {
             mSingleFrame[channel] += *xFrame++ * coefficient;
         }

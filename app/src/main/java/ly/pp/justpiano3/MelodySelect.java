@@ -148,10 +148,18 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 Intent intent = new Intent();
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
+                        if (playSongs != null) {
+                            playSongs.isPlayingSongs = false;
+                            playSongs = null;
+                        }
                         intent.setClass(this, SettingsMode.class);
                         startActivity(intent);
                         break;
                     case 1:  // 曲库同步
+                        if (playSongs != null) {
+                            playSongs.isPlayingSongs = false;
+                            playSongs = null;
+                        }
                         new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(testSQL)).execute();
                         break;
                     case 2:  // 数据导出
@@ -163,26 +171,26 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         radioButton.setText("选择本机存储位置进行曲库数据导出");
                         radioButton.setTextSize(13);
                         radioButton.setTag(1);
-                        radioButton.setHeight(80);
+                        radioButton.setHeight(85);
                         jpdialog.addRadioButton(radioButton);
                         radioButton = new RadioButton(this);
                         radioButton.setText("选择导出后的文件进行曲库数据导入");
                         radioButton.setTextSize(13);
                         radioButton.setTag(2);
-                        radioButton.setHeight(80);
+                        radioButton.setHeight(85);
                         jpdialog.addRadioButton(radioButton);
                         jpdialog.setFirstButton("执行", (dialog, which) -> {
                             switch (jpdialog.getRadioGroupCheckedId()) {
                                 case 1:
                                     dialog.dismiss();
-                                    SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
-                                    Cursor query = writableDatabase.query("jp_data", new String[]{"path", "isfavo", "score", "Lscore"},null, null, null, null, null);
-                                    while (query.moveToNext()) {
-                                        String path = query.getString(query.getColumnIndex("path"));
-                                        int isfavo = query.getInt(query.getColumnIndex("isfavo"));
-                                        int score = query.getInt(query.getColumnIndex("score"));
-                                        int lScore = query.getInt(query.getColumnIndex("Lscore"));
-                                    }
+//                                    SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
+//                                    Cursor query = writableDatabase.query("jp_data", new String[]{"path", "isfavo", "score", "Lscore"},null, null, null, null, null);
+//                                    while (query.moveToNext()) {
+//                                        String path = query.getString(query.getColumnIndex("path"));
+//                                        int isfavo = query.getInt(query.getColumnIndex("isfavo"));
+//                                        int score = query.getInt(query.getColumnIndex("score"));
+//                                        int lScore = query.getInt(query.getColumnIndex("Lscore"));
+//                                    }
                                     Toast.makeText(this, "曲库数据导出执行成功，文件已保存", Toast.LENGTH_SHORT).show();
                                     break;
                                 case 2:
@@ -198,6 +206,10 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         jpdialog.showDialog();
                         break;
                     case 3:  // 录音文件
+                        if (playSongs != null) {
+                            playSongs.isPlayingSongs = false;
+                            playSongs = null;
+                        }
                         intent.setClass(this, RecordFiles.class);
                         startActivity(intent);
                         break;

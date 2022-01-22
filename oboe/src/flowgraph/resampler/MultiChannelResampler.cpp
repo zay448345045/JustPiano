@@ -28,8 +28,11 @@
 using namespace resampler;
 
 MultiChannelResampler::MultiChannelResampler(const MultiChannelResampler::Builder &builder)
-        : mNumTaps(builder.getNumTaps()), mX(builder.getChannelCount() * builder.getNumTaps() * 2),
-          mSingleFrame(builder.getChannelCount()), mChannelCount(builder.getChannelCount()) {
+        : mNumTaps(builder.getNumTaps())
+        , mX(builder.getChannelCount() * builder.getNumTaps() * 2)
+        , mSingleFrame(builder.getChannelCount())
+        , mChannelCount(builder.getChannelCount())
+        {
     // Reduce sample rates to the smallest ratio.
     // For example 44100/48000 would become 147/160.
     IntegerRatio ratio(builder.getInputRate(), builder.getOutputRate());
@@ -123,18 +126,18 @@ float MultiChannelResampler::sinc(float radians) {
 // Generate coefficients in the order they will be used by readFrame().
 // This is more complicated but readFrame() is called repeatedly and should be optimized.
 void MultiChannelResampler::generateCoefficients(int32_t inputRate,
-                                                 int32_t outputRate,
-                                                 int32_t numRows,
-                                                 double phaseIncrement,
-                                                 float normalizedCutoff) {
+                                              int32_t outputRate,
+                                              int32_t numRows,
+                                              double phaseIncrement,
+                                              float normalizedCutoff) {
     mCoefficients.resize(getNumTaps() * numRows);
     int coefficientIndex = 0;
     double phase = 0.0; // ranges from 0.0 to 1.0, fraction between samples
     // Stretch the sinc function for low pass filtering.
     const float cutoffScaler = normalizedCutoff *
-                               ((outputRate < inputRate)
-                                ? ((float) outputRate / inputRate)
-                                : ((float) inputRate / outputRate));
+            ((outputRate < inputRate)
+             ? ((float)outputRate / inputRate)
+             : ((float)inputRate / outputRate));
     const int numTapsHalf = getNumTaps() / 2; // numTaps must be even.
     const float numTapsHalfInverse = 1.0f / numTapsHalf;
     for (int i = 0; i < numRows; i++) {

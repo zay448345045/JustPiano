@@ -21,9 +21,7 @@ class Trace {
 
 public:
     static void beginSection(const char *format, ...);
-
     static void endSection();
-
     static void initialize();
 
 private:

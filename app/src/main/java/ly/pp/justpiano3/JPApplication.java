@@ -138,7 +138,7 @@ public final class JPApplication extends Application {
     }
 
     public static void confirmLoadSounds() {
-        setupAudioStreamNative(2, 44100);
+        setupAudioStreamNative(4, 44100);
     }
 
     public static void initSettings() {

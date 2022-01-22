@@ -23,7 +23,7 @@ constexpr float kPercentageOfCallbackToUse = 0.8;
 
 using namespace oboe;
 
-StabilizedCallback::StabilizedCallback(AudioStreamCallback *callback) : mCallback(callback) {
+StabilizedCallback::StabilizedCallback(AudioStreamCallback *callback) : mCallback(callback){
     Trace::initialize();
 }
 
@@ -40,7 +40,7 @@ StabilizedCallback::onAudioReady(AudioStream *oboeStream, void *audioData, int32
 
     int64_t startTimeNanos = AudioClock::getNanoseconds();
 
-    if (mFrameCount == 0) {
+    if (mFrameCount == 0){
         mEpochTimeNanos = startTimeNanos;
     }
 
@@ -53,7 +53,7 @@ StabilizedCallback::onAudioReady(AudioStream *oboeStream, void *audioData, int32
     int64_t idealStartTimeNanos = (mFrameCount * kNanosPerSecond) / oboeStream->getSampleRate();
     int64_t lateStartNanos = durationSinceEpochNanos - idealStartTimeNanos;
 
-    if (lateStartNanos < 0) {
+    if (lateStartNanos < 0){
         // This was an early start which indicates that our previous epoch was a late callback.
         // Update our epoch to this more accurate time.
         mEpochTimeNanos = startTimeNanos;
@@ -90,11 +90,11 @@ void StabilizedCallback::generateLoad(int64_t durationNanos) {
     // the CPU for a fixed amount of time (specified by kLoadGenerationStepSizeNanos).
     // After each step the opsPerStep value is re-calculated based on the actual time taken to
     // execute those operations.
-    auto opsPerStep = (int) (mOpsPerNano * kLoadGenerationStepSizeNanos);
+    auto opsPerStep = (int)(mOpsPerNano * kLoadGenerationStepSizeNanos);
     int64_t stepDurationNanos = 0;
     int64_t previousTimeNanos = 0;
 
-    while (currentTimeNanos <= deadlineTimeNanos) {
+    while (currentTimeNanos <= deadlineTimeNanos){
 
         for (int i = 0; i < opsPerStep; i++) cpu_relax();
 
@@ -106,8 +106,7 @@ void StabilizedCallback::generateLoad(int64_t durationNanos) {
         // @see https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
         static const float kFilterCoefficient = 0.1;
         auto measuredOpsPerNano = (double) opsPerStep / stepDurationNanos;
-        mOpsPerNano =
-                kFilterCoefficient * measuredOpsPerNano + (1.0 - kFilterCoefficient) * mOpsPerNano;
+        mOpsPerNano = kFilterCoefficient * measuredOpsPerNano + (1.0 - kFilterCoefficient) * mOpsPerNano;
         opsPerStep = (int) (mOpsPerNano * kLoadGenerationStepSizeNanos);
     }
 }

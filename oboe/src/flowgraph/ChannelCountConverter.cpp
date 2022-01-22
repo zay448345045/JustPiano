@@ -23,10 +23,11 @@ using namespace FLOWGRAPH_OUTER_NAMESPACE::flowgraph;
 ChannelCountConverter::ChannelCountConverter(
         int32_t inputChannelCount,
         int32_t outputChannelCount)
-        : input(*this, inputChannelCount), output(*this, outputChannelCount) {
+        : input(*this, inputChannelCount)
+        , output(*this, outputChannelCount) {
 }
 
-ChannelCountConverter::~ChannelCountConverter() {}
+ChannelCountConverter::~ChannelCountConverter() = default;
 
 int32_t ChannelCountConverter::onProcess(int32_t numFrames) {
     const float *inputBuffer = input.getBuffer();
@@ -41,7 +42,7 @@ int32_t ChannelCountConverter::onProcess(int32_t numFrames) {
             // Discard if we run out of outputs.
             outputBuffer[outputChannel] = inputBuffer[inputChannel];
             inputChannel = (inputChannel == inputChannelCount)
-                           ? 0 : inputChannel + 1;
+                    ? 0 : inputChannel + 1;
         }
         inputBuffer += inputChannelCount;
         outputBuffer += outputChannelCount;

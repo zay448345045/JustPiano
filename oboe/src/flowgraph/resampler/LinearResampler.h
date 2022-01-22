@@ -27,18 +27,18 @@ namespace resampler {
 /**
  * Simple resampler that uses bi-linear interpolation.
  */
-    class LinearResampler : public MultiChannelResampler {
-    public:
-        LinearResampler(const MultiChannelResampler::Builder &builder);
+class LinearResampler : public MultiChannelResampler {
+public:
+    LinearResampler(const MultiChannelResampler::Builder &builder);
 
-        void writeFrame(const float *frame) override;
+    void writeFrame(const float *frame) override;
 
-        void readFrame(float *frame) override;
+    void readFrame(float *frame) override;
 
-    private:
-        std::unique_ptr<float[]> mPreviousFrame;
-        std::unique_ptr<float[]> mCurrentFrame;
-    };
+private:
+    std::unique_ptr<float[]> mPreviousFrame;
+    std::unique_ptr<float[]> mCurrentFrame;
+};
 
 } // namespace resampler
 #endif //OBOE_LINEAR_RESAMPLER_H

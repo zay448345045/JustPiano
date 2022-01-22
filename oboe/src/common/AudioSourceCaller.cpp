@@ -20,15 +20,15 @@ using namespace oboe;
 using namespace flowgraph;
 
 int32_t AudioSourceCaller::onProcessFixedBlock(uint8_t *buffer, int32_t numBytes) {
-    oboe::AudioStreamCallback *callback = mStream->getCallback();
+    AudioStreamDataCallback *callback = mStream->getDataCallback();
     int32_t result = 0;
     int32_t numFrames = numBytes / mStream->getBytesPerFrame();
     if (callback != nullptr) {
         DataCallbackResult callbackResult = callback->onAudioReady(mStream, buffer, numFrames);
         // onAudioReady() does not return the number of bytes processed so we have to assume all.
         result = (callbackResult == DataCallbackResult::Continue)
-                 ? numBytes
-                 : -1;
+                ? numBytes
+                : -1;
     } else {
         auto readResult = mStream->read(buffer, numFrames, mTimeoutNanos);
         if (!readResult) return (int32_t) readResult.error();

@@ -21,14 +21,16 @@
 FixedBlockAdapter::~FixedBlockAdapter() {
 }
 
-int32_t FixedBlockAdapter::open(int32_t bytesPerFixedBlock) {
+int32_t FixedBlockAdapter::open(int32_t bytesPerFixedBlock)
+{
     mSize = bytesPerFixedBlock;
     mStorage = std::make_unique<uint8_t[]>(bytesPerFixedBlock);
     mPosition = 0;
     return 0;
 }
 
-int32_t FixedBlockAdapter::close() {
+int32_t FixedBlockAdapter::close()
+{
     mStorage.reset(nullptr);
     mSize = 0;
     mPosition = 0;

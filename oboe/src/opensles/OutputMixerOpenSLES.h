@@ -29,32 +29,29 @@ namespace oboe {
  * INTERNAL USE ONLY
  */
 
-    class OutputMixerOpenSL {
-    public:
-        static OutputMixerOpenSL &getInstance();
+class OutputMixerOpenSL {
+public:
+    static OutputMixerOpenSL &getInstance();
 
-        SLresult open();
+    SLresult open();
 
-        void close();
+    void close();
 
-        SLresult createAudioPlayer(SLObjectItf *objectItf,
-                                   SLDataSource *audioSource);
+    SLresult createAudioPlayer(SLObjectItf *objectItf,
+                               SLDataSource *audioSource);
 
-    private:
-        // Make this a safe Singleton
-        OutputMixerOpenSL() = default;
+private:
+    // Make this a safe Singleton
+    OutputMixerOpenSL()= default;
+    ~OutputMixerOpenSL()= default;
+    OutputMixerOpenSL(const OutputMixerOpenSL&)= delete;
+    OutputMixerOpenSL& operator=(const OutputMixerOpenSL&)= delete;
 
-        ~OutputMixerOpenSL() = default;
+    std::mutex            mLock;
+    int32_t               mOpenCount = 0;
 
-        OutputMixerOpenSL(const OutputMixerOpenSL &) = delete;
-
-        OutputMixerOpenSL &operator=(const OutputMixerOpenSL &) = delete;
-
-        std::mutex mLock;
-        int32_t mOpenCount = 0;
-
-        SLObjectItf mOutputMixObject = nullptr;
-    };
+    SLObjectItf           mOutputMixObject = nullptr;
+};
 
 } // namespace oboe
 

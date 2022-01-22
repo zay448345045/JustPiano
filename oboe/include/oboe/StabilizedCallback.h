@@ -22,36 +22,36 @@
 
 namespace oboe {
 
-    class StabilizedCallback : public AudioStreamCallback {
+class StabilizedCallback : public AudioStreamCallback {
 
-    public:
-        explicit StabilizedCallback(AudioStreamCallback *callback);
+public:
+    explicit StabilizedCallback(AudioStreamCallback *callback);
 
-        DataCallbackResult
-        onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override;
+    DataCallbackResult
+    onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override;
 
-        void onErrorBeforeClose(AudioStream *oboeStream, Result error) override {
-            return mCallback->onErrorBeforeClose(oboeStream, error);
-        }
+    void onErrorBeforeClose(AudioStream *oboeStream, Result error) override {
+        return mCallback->onErrorBeforeClose(oboeStream, error);
+    }
 
-        void onErrorAfterClose(AudioStream *oboeStream, Result error) override {
+    void onErrorAfterClose(AudioStream *oboeStream, Result error) override {
 
-            // Reset all fields now that the stream has been closed
-            mFrameCount = 0;
-            mEpochTimeNanos = 0;
-            mOpsPerNano = 1;
-            return mCallback->onErrorAfterClose(oboeStream, error);
-        }
+        // Reset all fields now that the stream has been closed
+        mFrameCount = 0;
+        mEpochTimeNanos = 0;
+        mOpsPerNano = 1;
+        return mCallback->onErrorAfterClose(oboeStream, error);
+    }
 
-    private:
+private:
 
-        AudioStreamCallback *mCallback = nullptr;
-        int64_t mFrameCount = 0;
-        int64_t mEpochTimeNanos = 0;
-        double mOpsPerNano = 1;
+    AudioStreamCallback *mCallback = nullptr;
+    int64_t mFrameCount = 0;
+    int64_t mEpochTimeNanos = 0;
+    double  mOpsPerNano = 1;
 
-        void generateLoad(int64_t durationNanos);
-    };
+    void generateLoad(int64_t durationNanos);
+};
 
 /**
  * cpu_relax is an architecture specific method of telling the CPU that you don't want it to
@@ -61,7 +61,7 @@ namespace oboe {
 #define cpu_relax() asm volatile("rep; nop" ::: "memory");
 
 #elif defined(__arm__) || defined(__mips__)
-#define cpu_relax() asm volatile("":::"memory")
+    #define cpu_relax() asm volatile("":::"memory")
 
 #elif defined(__aarch64__)
 #define cpu_relax() asm volatile("yield" ::: "memory")

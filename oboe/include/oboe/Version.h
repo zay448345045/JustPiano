@@ -34,10 +34,10 @@
 #define OBOE_VERSION_MAJOR 1
 
 // Type: 8-bit unsigned int. Min value: 0 Max value: 255. See below for description.
-#define OBOE_VERSION_MINOR 4
+#define OBOE_VERSION_MINOR 6
 
 // Type: 16-bit unsigned int. Min value: 0 Max value: 65535. See below for description.
-#define OBOE_VERSION_PATCH 3
+#define OBOE_VERSION_PATCH 2
 
 #define OBOE_STRINGIFY(x) #x
 #define OBOE_TOSTRING(x) OBOE_STRINGIFY(x)
@@ -53,40 +53,40 @@
 
 namespace oboe {
 
-    const char *getVersionText();
+const char * getVersionText();
 
 /**
  * Oboe versioning object
  */
-    struct Version {
-        /**
-         * This is incremented when we make breaking API changes. Based loosely on https://semver.org/.
-         */
-        static constexpr uint8_t Major = OBOE_VERSION_MAJOR;
+struct Version {
+    /**
+     * This is incremented when we make breaking API changes. Based loosely on https://semver.org/.
+     */
+    static constexpr uint8_t Major = OBOE_VERSION_MAJOR;
 
-        /**
-         * This is incremented when we add backwards compatible functionality. Or set to zero when MAJOR is
-         * incremented.
-         */
-        static constexpr uint8_t Minor = OBOE_VERSION_MINOR;
+    /**
+     * This is incremented when we add backwards compatible functionality. Or set to zero when MAJOR is
+     * incremented.
+     */
+    static constexpr uint8_t Minor = OBOE_VERSION_MINOR;
 
-        /**
-         * This is incremented when we make backwards compatible bug fixes. Or set to zero when MINOR is
-         * incremented.
-         */
-        static constexpr uint16_t Patch = OBOE_VERSION_PATCH;
+    /**
+     * This is incremented when we make backwards compatible bug fixes. Or set to zero when MINOR is
+     * incremented.
+     */
+    static constexpr uint16_t Patch = OBOE_VERSION_PATCH;
 
-        /**
-         * Version string in the form MAJOR.MINOR.PATCH.
-         */
-        static constexpr const char *Text = OBOE_VERSION_TEXT;
+    /**
+     * Version string in the form MAJOR.MINOR.PATCH.
+     */
+    static constexpr const char * Text = OBOE_VERSION_TEXT;
 
-        /**
-         * Integer representation of the current Oboe library version. This will always increase when the
-         * version number changes so can be compared using integer comparison.
-         */
-        static constexpr uint32_t Number = OBOE_VERSION_NUMBER;
-    };
+    /**
+     * Integer representation of the current Oboe library version. This will always increase when the
+     * version number changes so can be compared using integer comparison.
+     */
+    static constexpr uint32_t Number = OBOE_VERSION_NUMBER;
+};
 
 } // namespace oboe
 #endif //OBOE_VERSIONINFO_H

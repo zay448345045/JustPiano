@@ -23,23 +23,23 @@
 #include "FlowGraphNode.h"
 
 namespace FLOWGRAPH_OUTER_NAMESPACE {
-    namespace flowgraph {
+namespace flowgraph {
 
 /**
  * AudioSource that reads a block of pre-defined 24-bit packed integer data.
  */
-        class SourceI24 : public FlowGraphSourceBuffered {
-        public:
-            explicit SourceI24(int32_t channelCount);
+class SourceI24 : public FlowGraphSourceBuffered {
+public:
+    explicit SourceI24(int32_t channelCount);
 
-            int32_t onProcess(int32_t numFrames) override;
+    int32_t onProcess(int32_t numFrames) override;
 
-            const char *getName() override {
-                return "SourceI24";
-            }
-        };
+    const char *getName() override {
+        return "SourceI24";
+    }
+};
 
-    } /* namespace flowgraph */
+} /* namespace flowgraph */
 } /* namespace FLOWGRAPH_OUTER_NAMESPACE */
 
 #endif //FLOWGRAPH_SOURCE_I24_H

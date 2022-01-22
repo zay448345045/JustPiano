@@ -17,7 +17,6 @@
 #ifndef OBOE_DEFINITIONS_H
 #define OBOE_DEFINITIONS_H
 
-
 #include <cstdint>
 #include <type_traits>
 
@@ -35,22 +34,22 @@ namespace oboe {
     /**
      * The number of nanoseconds in a microsecond. 1,000.
      */
-    constexpr int64_t kNanosPerMicrosecond = 1000;
+    constexpr int64_t kNanosPerMicrosecond =    1000;
 
     /**
      * The number of nanoseconds in a millisecond. 1,000,000.
      */
-    constexpr int64_t kNanosPerMillisecond = kNanosPerMicrosecond * 1000;
+    constexpr int64_t kNanosPerMillisecond =    kNanosPerMicrosecond * 1000;
 
     /**
      * The number of milliseconds in a second. 1,000.
      */
-    constexpr int64_t kMillisPerSecond = 1000;
+    constexpr int64_t kMillisPerSecond =        1000;
 
     /**
      * The number of nanoseconds in a second. 1,000,000,000.
      */
-    constexpr int64_t kNanosPerSecond = kNanosPerMillisecond * kMillisPerSecond;
+    constexpr int64_t kNanosPerSecond =         kNanosPerMillisecond * kMillisPerSecond;
 
     /**
      * The state of the audio stream.
@@ -108,9 +107,36 @@ namespace oboe {
         I16 = 1, // AAUDIO_FORMAT_PCM_I16,
 
         /**
-         * Single precision floating points.
+         * Single precision floating point.
+         *
+         * This is the recommended format for most applications.
+         * But note that the use of Float may prevent the opening of
+         * a low-latency input path on OpenSL ES or Legacy AAudio streams.
          */
         Float = 2, // AAUDIO_FORMAT_PCM_FLOAT,
+
+        /**
+         * Signed 24-bit integers, packed into 3 bytes.
+         *
+         * Note that the use of this format does not guarantee that
+         * the full precision will be provided.  The underlying device may
+         * be using I16 format.
+         *
+         * Added in API 31 (S).
+         */
+        I24 = 3, // AAUDIO_FORMAT_PCM_I24_PACKED
+
+        /**
+         * Signed 32-bit integers.
+         *
+         * Note that the use of this format does not guarantee that
+         * the full precision will be provided.  The underlying device may
+         * be using I16 format.
+         *
+         * Added in API 31 (S).
+         */
+        I32 = 4, // AAUDIO_FORMAT_PCM_I32
+
     };
 
     /**
@@ -158,7 +184,7 @@ namespace oboe {
         Reserved8,
         Reserved9,
         Reserved10,
-        ErrorClosed,
+        ErrorClosed = -869,
     };
 
     /**
@@ -264,7 +290,7 @@ namespace oboe {
         /**
          * Use this for streaming media, music performance, video, podcasts, etcetera.
          */
-        Media = 1, // AAUDIO_USAGE_MEDIA
+        Media =  1, // AAUDIO_USAGE_MEDIA
 
         /**
          * Use this for voice over IP, telephony, etcetera.
@@ -402,7 +428,7 @@ namespace oboe {
          * and played back for live performance (e.g karaoke).
          * The capture path will minimize latency and coupling with playback path.
          */
-        VoicePerformance = 10, // AAUDIO_INPUT_PRESET_VOICE_PERFORMANCE
+         VoicePerformance = 10, // AAUDIO_INPUT_PRESET_VOICE_PERFORMANCE
 
     };
 
@@ -417,7 +443,7 @@ namespace oboe {
          * Effects cannot be used with this stream.
          * Default.
          */
-        None = -1, // AAUDIO_SESSION_ID_NONE
+         None = -1, // AAUDIO_SESSION_ID_NONE
 
         /**
          * Allocate a session ID that can be used to attach and control
@@ -426,7 +452,7 @@ namespace oboe {
          *
          * Note that this matches the value of AudioManager.AUDIO_SESSION_ID_GENERATE.
          */
-        Allocate = 0, // AAUDIO_SESSION_ID_ALLOCATE
+         Allocate = 0, // AAUDIO_SESSION_ID_ALLOCATE
     };
 
     /**
@@ -440,20 +466,20 @@ namespace oboe {
      *
      */
     enum ChannelCount : int32_t {
-        /**
-         * Audio channel count definition, use Mono or Stereo
-         */
-        Unspecified = kUnspecified,
+      /**
+       * Audio channel count definition, use Mono or Stereo
+       */
+      Unspecified = kUnspecified,
 
-        /**
-         * Use this for mono audio
-         */
-        Mono = 1,
+      /**
+       * Use this for mono audio
+       */
+      Mono = 1,
 
-        /**
-         * Use this for stereo audio.
-         */
-        Stereo = 2,
+      /**
+       * Use this for stereo audio.
+       */
+      Stereo = 2,
     };
 
     /**

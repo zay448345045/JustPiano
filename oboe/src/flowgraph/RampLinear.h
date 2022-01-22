@@ -24,7 +24,7 @@
 #include "FlowGraphNode.h"
 
 namespace FLOWGRAPH_OUTER_NAMESPACE {
-    namespace flowgraph {
+namespace flowgraph {
 
 /**
  * When the target is modified then the output will ramp smoothly
@@ -34,65 +34,65 @@ namespace FLOWGRAPH_OUTER_NAMESPACE {
  * The target may be updated while a ramp is in progress, which will trigger
  * a new ramp from the current value.
  */
-        class RampLinear : public FlowGraphFilter {
-        public:
-            explicit RampLinear(int32_t channelCount);
+class RampLinear : public FlowGraphFilter {
+public:
+    explicit RampLinear(int32_t channelCount);
 
-            virtual ~RampLinear() = default;
+    virtual ~RampLinear() = default;
 
-            int32_t onProcess(int32_t numFrames) override;
+    int32_t onProcess(int32_t numFrames) override;
 
-            /**
-             * This is used for the next ramp.
-             * Calling this does not affect a ramp that is in progress.
-             */
-            void setLengthInFrames(int32_t frames);
+    /**
+     * This is used for the next ramp.
+     * Calling this does not affect a ramp that is in progress.
+     */
+    void setLengthInFrames(int32_t frames);
 
-            int32_t getLengthInFrames() const {
-                return mLengthInFrames;
-            }
+    int32_t getLengthInFrames() const {
+        return mLengthInFrames;
+    }
 
-            /**
-             * This may be safely called by another thread.
-             * @param target
-             */
-            void setTarget(float target);
+    /**
+     * This may be safely called by another thread.
+     * @param target
+     */
+    void setTarget(float target);
 
-            float getTarget() const {
-                return mTarget.load();
-            }
+    float getTarget() const {
+        return mTarget.load();
+    }
 
-            /**
-             * Force the nextSegment to start from this level.
-             *
-             * WARNING: this can cause a discontinuity if called while the ramp is being used.
-             * Only call this when setting the initial ramp.
-             *
-             * @param level
-             */
-            void forceCurrent(float level) {
-                mLevelFrom = level;
-                mLevelTo = level;
-            }
+    /**
+     * Force the nextSegment to start from this level.
+     *
+     * WARNING: this can cause a discontinuity if called while the ramp is being used.
+     * Only call this when setting the initial ramp.
+     *
+     * @param level
+     */
+    void forceCurrent(float level) {
+        mLevelFrom = level;
+        mLevelTo = level;
+    }
 
-            const char *getName() override {
-                return "RampLinear";
-            }
+    const char *getName() override {
+        return "RampLinear";
+    }
 
-        private:
+private:
 
-            float interpolateCurrent();
+    float interpolateCurrent();
 
-            std::atomic<float> mTarget;
+    std::atomic<float>  mTarget;
 
-            int32_t mLengthInFrames = 48000.0f / 100.0f; // 10 msec at 48000 Hz;
-            int32_t mRemaining = 0;
-            float mScaler = 0.0f;
-            float mLevelFrom = 0.0f;
-            float mLevelTo = 0.0f;
-        };
+    int32_t             mLengthInFrames  = 48000.0f / 100.0f ; // 10 msec at 48000 Hz;
+    int32_t             mRemaining       = 0;
+    float               mScaler          = 0.0f;
+    float               mLevelFrom       = 0.0f;
+    float               mLevelTo         = 0.0f;
+};
 
-    } /* namespace flowgraph */
+} /* namespace flowgraph */
 } /* namespace FLOWGRAPH_OUTER_NAMESPACE */
 
 #endif //FLOWGRAPH_RAMP_LINEAR_H

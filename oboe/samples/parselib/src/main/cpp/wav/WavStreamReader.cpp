@@ -140,7 +140,7 @@ namespace parselib {
                 // convert
                 for (int offset = 0; offset < numFramesRead * numChans; offset++) {
                     short dataResult = readBuff[offset];
-                    if (!excludeStartMute || std::abs(dataResult) > 2) {
+                    if (!excludeStartMute || std::abs(dataResult) > 0) {
                         excludeStartMute = false;
                         buff[buffOffset++] = (float) dataResult / (float) 0x7FFF;
                     }

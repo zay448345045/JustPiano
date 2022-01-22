@@ -16,15 +16,15 @@
 
 #include <stdint.h>
 
-#include "FifoControllerBase.h"
 #include "FifoController.h"
 
 namespace oboe {
 
-    FifoController::FifoController(uint32_t numFrames)
-            : FifoControllerBase(numFrames) {
-        setReadCounter(0);
-        setWriteCounter(0);
-    }
+FifoController::FifoController(uint32_t numFrames)
+        : FifoControllerBase(numFrames)
+{
+    setReadCounter(0);
+    setWriteCounter(0);
+}
 
 } // namespace oboe

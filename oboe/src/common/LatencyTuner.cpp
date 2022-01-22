@@ -23,7 +23,8 @@ LatencyTuner::LatencyTuner(AudioStream &stream)
 }
 
 LatencyTuner::LatencyTuner(oboe::AudioStream &stream, int32_t maximumBufferSize)
-        : mStream(stream), mMaxBufferSize(maximumBufferSize) {
+        : mStream(stream)
+        , mMaxBufferSize(maximumBufferSize) {
     int32_t burstSize = stream.getFramesPerBurst();
     setMinimumBufferSize(kDefaultNumBursts * burstSize);
     setBufferSizeIncrement(burstSize);
@@ -63,6 +64,9 @@ Result LatencyTuner::tune() {
                 // or was from stream->getBufferCapacityInFrames())
                 if (requestedBufferSize > mMaxBufferSize) requestedBufferSize = mMaxBufferSize;
 
+                // Note that this will not allocate more memory. It simply determines
+                // how much of the existing buffer capacity will be used. The size will be
+                // clipped to the bufferCapacity by AAudio.
                 auto setBufferResult = mStream.setBufferSizeInFrames(requestedBufferSize);
                 if (setBufferResult != Result::OK) {
                     result = setBufferResult;

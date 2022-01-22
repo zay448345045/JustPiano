@@ -28,23 +28,21 @@ namespace oboe {
 /**
  * AudioSource that uses callback to get more data.
  */
-    class SourceI16Caller : public AudioSourceCaller {
-    public:
-        SourceI16Caller(int32_t channelCount, int32_t framesPerCallback)
-                : AudioSourceCaller(channelCount, framesPerCallback, sizeof(int16_t)) {
-            mConversionBuffer = std::make_unique<int16_t[]>(
-                    channelCount * output.getFramesPerBuffer());
-        }
+class SourceI16Caller : public AudioSourceCaller {
+public:
+    SourceI16Caller(int32_t channelCount, int32_t framesPerCallback)
+    : AudioSourceCaller(channelCount, framesPerCallback, sizeof(int16_t)) {
+        mConversionBuffer = std::make_unique<int16_t[]>(channelCount * output.getFramesPerBuffer());
+    }
 
-        int32_t onProcess(int32_t numFrames) override;
+    int32_t onProcess(int32_t numFrames) override;
 
-        const char *getName() override {
-            return "SourceI16Caller";
-        }
-
-    private:
-        std::unique_ptr<int16_t[]> mConversionBuffer;
-    };
+    const char *getName() override {
+        return "SourceI16Caller";
+    }
+private:
+    std::unique_ptr<int16_t[]>  mConversionBuffer;
+};
 
 }
 #endif //OBOE_SOURCE_I16_CALLER_H

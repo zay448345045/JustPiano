@@ -51,8 +51,21 @@ namespace iolib {
 
         // OneShotSampleSource* sources = mSampleSources.get();
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
-            if (mSampleSources[index]->isPlaying()) {
-                mSampleSources[index]->mixAudio((float *) audioData, mChannelCount, numFrames);
+            SampleSource* sampleSource = mSampleSources[index];
+            int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
+            int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
+            int count = 0;
+            for(int32_t i = 0; i < queueSize; i++) {
+                int32_t curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                sampleSource->mixAudio((float *) audioData, mChannelCount, numFrames, curFrameIndex);
+                if (curFrameIndex >= numSampleFrames) {
+                    count++;
+                }
+                sampleSource->pushCurFrameIndexQueue(curFrameIndex);
+                sampleSource->popCurFrameIndexQueue();
+            }
+            while(count--) {
+                sampleSource->popCurFrameIndexQueue();
             }
         }
 

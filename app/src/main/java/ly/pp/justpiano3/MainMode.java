@@ -71,7 +71,6 @@ public class MainMode extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, RecordFiles.class);
                 startActivity(intent);
-                finish();
                 return;
             case R.id.piano_help:
                 intent.setClass(this, PianoHelper.class);
@@ -82,7 +81,6 @@ public class MainMode extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, ChatFiles.class);
                 startActivity(intent);
-                finish();
                 return;
             case R.id.settings:
                 intent.setClass(this, SettingsMode.class);

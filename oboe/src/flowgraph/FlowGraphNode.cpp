@@ -63,10 +63,11 @@ void FlowGraphNode::reset() {
 
 /***************************************************************************/
 FlowGraphPortFloat::FlowGraphPortFloat(FlowGraphNode &parent,
-                                       int32_t samplesPerFrame,
-                                       int32_t framesPerBuffer)
-        : FlowGraphPort(parent, samplesPerFrame), mFramesPerBuffer(framesPerBuffer),
-          mBuffer(nullptr) {
+                               int32_t samplesPerFrame,
+                               int32_t framesPerBuffer)
+        : FlowGraphPort(parent, samplesPerFrame)
+        , mFramesPerBuffer(framesPerBuffer)
+        , mBuffer(nullptr) {
     size_t numFloats = static_cast<size_t>(framesPerBuffer * getSamplesPerFrame());
     mBuffer = std::make_unique<float[]>(numFloats);
 }
@@ -93,10 +94,9 @@ void FlowGraphPortFloatOutput::disconnect(FlowGraphPortFloatInput *port) {
 /***************************************************************************/
 int32_t FlowGraphPortFloatInput::pullData(int64_t callCount, int32_t numFrames) {
     return (mConnected == nullptr)
-           ? std::min(getFramesPerBuffer(), numFrames)
-           : mConnected->pullData(callCount, numFrames);
+            ? std::min(getFramesPerBuffer(), numFrames)
+            : mConnected->pullData(callCount, numFrames);
 }
-
 void FlowGraphPortFloatInput::pullReset() {
     if (mConnected != nullptr) mConnected->pullReset();
 }

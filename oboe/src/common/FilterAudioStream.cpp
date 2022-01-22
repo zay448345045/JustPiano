@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include "OboeDebug.h"
 #include "FilterAudioStream.h"
 
 using namespace oboe;
@@ -44,10 +45,10 @@ Result FilterAudioStream::configureFlowGraph() {
     mFlowGraph = std::make_unique<DataConversionFlowGraph>();
     bool isOutput = getDirection() == Direction::Output;
 
-    AudioStream *sourceStream = isOutput ? this : mChildStream.get();
-    AudioStream *sinkStream = isOutput ? mChildStream.get() : this;
+    AudioStream *sourceStream =  isOutput ? this : mChildStream.get();
+    AudioStream *sinkStream =  isOutput ? mChildStream.get() : this;
 
-    mRateScaler = ((double) sourceStream->getSampleRate()) / sinkStream->getSampleRate();
+    mRateScaler = ((double) getSampleRate()) / mChildStream->getSampleRate();
 
     return mFlowGraph->configure(sourceStream, sinkStream);
 }
@@ -56,14 +57,14 @@ Result FilterAudioStream::configureFlowGraph() {
 // Then read (pull) the data from the flowgraph and write it to the
 // child stream.
 ResultWithValue<int32_t> FilterAudioStream::write(const void *buffer,
-                                                  int32_t numFrames,
-                                                  int64_t timeoutNanoseconds) {
+                               int32_t numFrames,
+                               int64_t timeoutNanoseconds) {
     int32_t framesWritten = 0;
     mFlowGraph->setSource(buffer, numFrames);
     while (true) {
         int32_t numRead = mFlowGraph->read(mBlockingBuffer.get(),
-                                           getFramesPerBurst(),
-                                           timeoutNanoseconds);
+                getFramesPerBurst(),
+                timeoutNanoseconds);
         if (numRead < 0) {
             return ResultWithValue<int32_t>::createBasedOnSign(numRead);
         }
@@ -84,9 +85,22 @@ ResultWithValue<int32_t> FilterAudioStream::write(const void *buffer,
 // Read (pull) the data we want from the sink end of the flowgraph.
 // The necessary data will be read from the child stream using a flowgraph callback.
 ResultWithValue<int32_t> FilterAudioStream::read(void *buffer,
-                                                 int32_t numFrames,
-                                                 int64_t timeoutNanoseconds) {
+                                                  int32_t numFrames,
+                                                  int64_t timeoutNanoseconds) {
     int32_t framesRead = mFlowGraph->read(buffer, numFrames, timeoutNanoseconds);
     return ResultWithValue<int32_t>::createBasedOnSign(framesRead);
 }
 
+DataCallbackResult FilterAudioStream::onAudioReady(AudioStream *oboeStream,
+                                void *audioData,
+                                int32_t numFrames) {
+    int32_t framesProcessed;
+    if (oboeStream->getDirection() == Direction::Output) {
+        framesProcessed = mFlowGraph->read(audioData, numFrames, 0 /* timeout */);
+    } else {
+        framesProcessed = mFlowGraph->write(audioData, numFrames);
+    }
+    return (framesProcessed < numFrames)
+           ? DataCallbackResult::Stop
+           : mFlowGraph->getDataCallbackResult();
+}

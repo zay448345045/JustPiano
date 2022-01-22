@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <cassert>
 #include "PolyphaseResamplerStereo.h"
 
 using namespace resampler;
@@ -33,7 +34,7 @@ void PolyphaseResamplerStereo::writeFrame(const float *frame) {
     float *dest = &mX[mCursor * STEREO];
     const int offset = mNumTaps * STEREO;
     // Write each channel twice so we avoid having to wrap when running the FIR.
-    const float left = frame[0];
+    const float left =  frame[0];
     const float right = frame[1];
     // Put ordered writes together.
     dest[0] = left;

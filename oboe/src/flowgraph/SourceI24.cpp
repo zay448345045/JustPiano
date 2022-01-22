@@ -46,7 +46,7 @@ int32_t SourceI24::onProcess(int32_t numFrames) {
 #if FLOWGRAPH_ANDROID_INTERNAL
     memcpy_to_float_from_p24(floatData, byteData, numSamples);
 #else
-    static const float scale = 1. / (float) (1UL << 31);
+    static const float scale = 1. / (float)(1UL << 31);
     for (int i = 0; i < numSamples; i++) {
         // Assemble the data assuming Little Endian format.
         int32_t pad = byteData[2];

@@ -30,40 +30,36 @@ namespace oboe {
  * INTERNAL USE ONLY
  */
 
-    class AudioInputStreamOpenSLES : public AudioStreamOpenSLES {
-    public:
-        AudioInputStreamOpenSLES();
+class AudioInputStreamOpenSLES : public AudioStreamOpenSLES {
+public:
+    AudioInputStreamOpenSLES();
+    explicit AudioInputStreamOpenSLES(const AudioStreamBuilder &builder);
 
-        explicit AudioInputStreamOpenSLES(const AudioStreamBuilder &builder);
+    virtual ~AudioInputStreamOpenSLES();
 
-        virtual ~AudioInputStreamOpenSLES();
+    Result open() override;
+    Result close() override;
 
-        Result open() override;
+    Result requestStart() override;
+    Result requestPause() override;
+    Result requestFlush() override;
+    Result requestStop() override;
 
-        Result close() override;
+protected:
+    Result requestStop_l();
 
-        Result requestStart() override;
+    Result updateServiceFrameCounter() override;
 
-        Result requestPause() override;
+    void updateFramesWritten() override;
 
-        Result requestFlush() override;
+private:
 
-        Result requestStop() override;
+    SLuint32 channelCountToChannelMask(int chanCount) const;
 
-    protected:
+    Result setRecordState_l(SLuint32 newState);
 
-        Result updateServiceFrameCounter() override;
-
-        void updateFramesWritten() override;
-
-    private:
-
-        SLuint32 channelCountToChannelMask(int chanCount) const;
-
-        Result setRecordState_l(SLuint32 newState);
-
-        SLRecordItf mRecordInterface = nullptr;
-    };
+    SLRecordItf mRecordInterface = nullptr;
+};
 
 } // namespace oboe
 

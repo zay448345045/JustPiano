@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -84,6 +85,8 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 }
                 sqliteDataBase.setTransactionSuccessful();
                 sqliteDataBase.endTransaction();
+                sqliteDataBase.close();
+                testSQL.close();
             }
         } catch (Exception e3) {
             e3.printStackTrace();
@@ -100,8 +103,13 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
             melodySelect.jpprogressBar.dismiss();
             JPDialog jpdialog = new JPDialog(melodySelect);
             jpdialog.setTitle("在线曲库同步");
-            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
-            jpdialog.setSecondButton("确定", new DialogDismissClick());
+            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首，请重新进入本地曲库查看");
+            jpdialog.setSecondButton("确定", ((dialogInterface, i) -> {
+                Intent intent = new Intent();
+                intent.setClass(melodySelect, MainMode.class);
+                melodySelect.startActivity(intent);
+                melodySelect.finish();
+            }));
             jpdialog.showDialog();
         }
     }

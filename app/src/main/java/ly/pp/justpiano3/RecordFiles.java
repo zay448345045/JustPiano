@@ -90,9 +90,6 @@ public class RecordFiles extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, MainMode.class);
-        startActivity(intent);
         finish();
     }
 

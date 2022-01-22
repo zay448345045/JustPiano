@@ -23,17 +23,17 @@
 
 namespace resampler {
 
-    class SincResamplerStereo : public SincResampler {
-    public:
-        explicit SincResamplerStereo(const MultiChannelResampler::Builder &builder);
+class SincResamplerStereo : public SincResampler {
+public:
+    explicit SincResamplerStereo(const MultiChannelResampler::Builder &builder);
 
-        virtual ~SincResamplerStereo() = default;
+    virtual ~SincResamplerStereo() = default;
 
-        void writeFrame(const float *frame) override;
+    void writeFrame(const float *frame) override;
 
-        void readFrame(float *frame) override;
+    void readFrame(float *frame) override;
 
-    };
+};
 
 }
 #endif //OBOE_SINC_RESAMPLER_STEREO_H

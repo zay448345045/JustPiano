@@ -25,59 +25,59 @@
 
 namespace oboe {
 
-    class AudioStreamCallback;
-
-    class AudioStream;
+class AudioStreamCallback;
+class AudioStream;
 
 /**
  * For output streams that use a callback, call the application for more data.
  * For input streams that do not use a callback, read from the stream.
  */
-    class AudioSourceCaller : public flowgraph::FlowGraphSource, public FixedBlockProcessor {
-    public:
-        AudioSourceCaller(int32_t channelCount, int32_t framesPerCallback, int32_t bytesPerSample)
-                : FlowGraphSource(channelCount), mBlockReader(*this) {
-            mBlockReader.open(channelCount * framesPerCallback * bytesPerSample);
-        }
+class AudioSourceCaller : public flowgraph::FlowGraphSource, public FixedBlockProcessor {
+public:
+    AudioSourceCaller(int32_t channelCount, int32_t framesPerCallback, int32_t bytesPerSample)
+            : FlowGraphSource(channelCount)
+            , mBlockReader(*this) {
+        mBlockReader.open(channelCount * framesPerCallback * bytesPerSample);
+    }
 
-        /**
-         * Set the stream to use as a source of data.
-         * @param stream
-         */
-        void setStream(oboe::AudioStream *stream) {
-            mStream = stream;
-        }
+    /**
+     * Set the stream to use as a source of data.
+     * @param stream
+     */
+    void setStream(oboe::AudioStream *stream) {
+        mStream = stream;
+    }
 
-        oboe::AudioStream *getStream() {
-            return mStream;
-        }
+    oboe::AudioStream *getStream() {
+        return mStream;
+    }
 
-        /**
-         * Timeout value to use when calling audioStream->read().
-         * @param timeoutNanos Zero for no timeout or time in nanoseconds.
-         */
-        void setTimeoutNanos(int64_t timeoutNanos) {
-            mTimeoutNanos = timeoutNanos;
-        }
+    /**
+     * Timeout value to use when calling audioStream->read().
+     * @param timeoutNanos Zero for no timeout or time in nanoseconds.
+     */
+    void setTimeoutNanos(int64_t timeoutNanos) {
+        mTimeoutNanos = timeoutNanos;
+    }
 
-        int64_t getTimeoutNanos() const {
-            return mTimeoutNanos;
-        }
+    int64_t getTimeoutNanos() const {
+        return mTimeoutNanos;
+    }
 
-        /**
-         * Called internally for block size adaptation.
-         * @param buffer
-         * @param numBytes
-         * @return
-         */
-        int32_t onProcessFixedBlock(uint8_t *buffer, int32_t numBytes) override;
+    /**
+     * Called internally for block size adaptation.
+     * @param buffer
+     * @param numBytes
+     * @return
+     */
+    int32_t onProcessFixedBlock(uint8_t *buffer, int32_t numBytes) override;
 
-    protected:
-        oboe::AudioStream *mStream = nullptr;
-        int64_t mTimeoutNanos = 0;
+protected:
+    oboe::AudioStream         *mStream = nullptr;
+    int64_t                    mTimeoutNanos = 0;
 
-        FixedBlockReader mBlockReader;
-    };
+    FixedBlockReader           mBlockReader;
+};
 
 }
 #endif //OBOE_AUDIO_SOURCE_CALLER_H

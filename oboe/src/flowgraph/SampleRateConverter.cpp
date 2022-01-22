@@ -19,16 +19,24 @@
 using namespace FLOWGRAPH_OUTER_NAMESPACE::flowgraph;
 using namespace resampler;
 
-SampleRateConverter::SampleRateConverter(int32_t channelCount, MultiChannelResampler &resampler)
-        : FlowGraphFilter(channelCount), mResampler(resampler) {
+SampleRateConverter::SampleRateConverter(int32_t channelCount,
+                                         MultiChannelResampler &resampler)
+        : FlowGraphFilter(channelCount)
+        , mResampler(resampler) {
     setDataPulledAutomatically(false);
+}
+
+void SampleRateConverter::reset() {
+    FlowGraphNode::reset();
+    mInputCursor = kInitialCallCount;
 }
 
 // Return true if there is a sample available.
 bool SampleRateConverter::isInputAvailable() {
+    // If we have consumed all of the input data then go out and get some more.
     if (mInputCursor >= mNumValidInputFrames) {
-        mNumValidInputFrames = input.pullData(mInputFramePosition, input.getFramesPerBuffer());
-        mInputFramePosition += mNumValidInputFrames;
+        mInputCallCount++;
+        mNumValidInputFrames = input.pullData(mInputCallCount, input.getFramesPerBuffer());
         mInputCursor = 0;
     }
     return (mInputCursor < mNumValidInputFrames);
@@ -45,7 +53,7 @@ int32_t SampleRateConverter::onProcess(int32_t numFrames) {
     int framesLeft = numFrames;
     while (framesLeft > 0) {
         // Gather input samples as needed.
-        if (mResampler.isWriteNeeded()) {
+        if(mResampler.isWriteNeeded()) {
             if (isInputAvailable()) {
                 const float *frame = getNextInputFrame();
                 mResampler.writeNextFrame(frame);

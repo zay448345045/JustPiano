@@ -1,11 +1,19 @@
 # Sample Rate Converter
 
 This folder contains a sample rate converter, or "resampler".
-It is part of [Oboe](https://github.com/google/oboe) but has no dependencies on Oboe.
-So the contents of this folder can be used outside of Oboe.
 
 The converter is based on a sinc function that has been windowed by a hyperbolic cosine.
 We found this had fewer artifacts than the more traditional Kaiser window.
+
+## Building the Resampler
+
+It is part of [Oboe](https://github.com/google/oboe) but has no dependencies on Oboe.
+So the contents of this folder can be used outside of Oboe.
+
+To build it for use outside of Oboe:
+
+1. Copy the "resampler" folder to a folder in your project that is in the include path.
+2. Add all of the \*.cpp files in the resampler folder to your project IDE or Makefile.
 
 ## Creating a Resampler
 
@@ -20,7 +28,7 @@ Only do this once, when you open your stream. Then use the sample resampler to p
             2, // channel count
             44100, // input sampleRate
             48000, // output sampleRate
-            MultiChannelResampler::Medium); // conversion quality
+            MultiChannelResampler::Quality::Medium); // conversion quality
 
 Possible values for quality include { Fastest, Low, Medium, High, Best }.
 Higher quality levels will sound better but consume more CPU because they have more taps in the filter.
@@ -29,11 +37,11 @@ Higher quality levels will sound better but consume more CPU because they have m
 
 Note that the number of output frames generated for a given number of input frames can vary.
 
-For example, suppose you are converting from 44100 Hz to 48000 Hz and using an input buffer with 940 frames. If you calculate the number of output frames you get:
+For example, suppose you are converting from 44100 Hz to 48000 Hz and using an input buffer with 960 frames. If you calculate the number of output frames you get:
 
-    940 * 48000 * 44100 = 1023.1292517...
-    
-You cannot generate a fractional number of frames. So the resampler will sometimes generate 1023 frames and sometimes 1024 frames. On average it will generate 1023.1292517 frames. The resampler stores the fraction internally and keeps track of when to consume or generate a frame.
+    960 * 48000 * 44100 = 1044.897959...
+
+You cannot generate a fractional number of frames. So the resampler will sometimes generate 1044 frames and sometimes 1045 frames. On average it will generate 1044.897959 frames. The resampler stores the fraction internally and keeps track of when to consume or generate a frame.
 
 You can either use a fixed number of input frames or a fixed number of output frames. The other frame count will vary.
 

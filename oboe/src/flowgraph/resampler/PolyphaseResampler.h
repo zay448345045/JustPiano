@@ -25,26 +25,26 @@
 
 namespace resampler {
 /**
- * Resample that is optimized for a reduced ratio of sample rates.
- * All of the coefficients for eacxh possible phase value are precalculated.
+ * Resampler that is optimized for a reduced ratio of sample rates.
+ * All of the coefficients for each possible phase value are pre-calculated.
  */
-    class PolyphaseResampler : public MultiChannelResampler {
-    public:
-        /**
-         *
-         * @param builder containing lots of parameters
-         */
-        explicit PolyphaseResampler(const MultiChannelResampler::Builder &builder);
+class PolyphaseResampler : public MultiChannelResampler {
+public:
+    /**
+     *
+     * @param builder containing lots of parameters
+     */
+    explicit PolyphaseResampler(const MultiChannelResampler::Builder &builder);
 
-        virtual ~PolyphaseResampler() = default;
+    virtual ~PolyphaseResampler() = default;
 
-        void readFrame(float *frame) override;
+    void readFrame(float *frame) override;
 
-    protected:
+protected:
 
-        int32_t mCoefficientCursor = 0;
+    int32_t                mCoefficientCursor = 0;
 
-    };
+};
 
 }
 

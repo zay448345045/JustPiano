@@ -60,7 +60,9 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     return;
                 }
                 TestSQL testSQL = new TestSQL(this, "data");
-                new SongSyncDialogTask(this, getMaxSongIdFromDatabase(testSQL)).execute();
+                String maxSongIdFromDatabase = getMaxSongIdFromDatabase(testSQL);
+                testSQL.close();
+                new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
                 return;
             case R.id.ol_top_b:
                 intent.setClass(this, OLTopUser.class);
@@ -173,7 +175,6 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             }
         }
         query.close();
-        testSQL.close();
         writableDatabase.close();
         return String.valueOf(maxSongId);
     }

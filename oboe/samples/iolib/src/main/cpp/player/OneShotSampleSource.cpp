@@ -22,10 +22,10 @@
 
 namespace iolib {
 
-    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames) {
+    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, int32_t& curFrameIndex) {
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
-        int32_t numWriteFrames = mIsPlaying
-                                 ? std::min(numFrames, numSampleFrames - mCurFrameIndex)
+        int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
+                                 ? std::min(numFrames, numSampleFrames - curFrameIndex)
                                  : 0;
 
         if (numWriteFrames != 0) {
@@ -35,20 +35,34 @@ namespace iolib {
             const float *data = mSampleBuffer->getSampleData();
             if (numChannels == 1) {
                 // MONO output
+                // stop to use, because it can clipping wave.
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[frameIndex] += data[mCurFrameIndex++] * mGain;
+                    outBuff[frameIndex] += data[curFrameIndex++] * mGain;
                 }
             } else if (numChannels == 2) {
                 // STEREO output
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += data[mCurFrameIndex] * mLeftGain;
-                    outBuff[dstSampleIndex++] += data[mCurFrameIndex++] * mRightGain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex] * mLeftGain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex++] * mRightGain;
                 }
-            }
-
-            if (mCurFrameIndex >= numSampleFrames) {
-                mIsPlaying = false;
+            } else if (numChannels == 3) {
+                int dstSampleIndex = 0;
+                float gain = mGain / 3;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
+                    outBuff[dstSampleIndex++] += data[curFrameIndex] * gain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex] * gain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex++] * gain;
+                }
+            } else if (numChannels == 4) {
+                int dstSampleIndex = 0;
+                float gain = mGain / 4;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
+                    outBuff[dstSampleIndex++] += data[curFrameIndex] * gain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex] * gain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex] * gain;
+                    outBuff[dstSampleIndex++] += data[curFrameIndex++] * gain;
+                }
             }
         }
 
