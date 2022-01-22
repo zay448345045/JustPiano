@@ -37,7 +37,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
     JPProgressBar jpprogressBar;
     double f4953h;
     int f4954i;
-    int f4958m = 0;
+    int headType = 0;
     PictureHandle pictureHandle;
     Handler searchSongsHandler;
     private TextView keywords;
@@ -131,7 +131,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
     public void onBackPressed() {
         jpprogressBar.dismiss();
         Intent intent = new Intent();
-        switch (f4958m) {
+        switch (headType) {
             case 0:
                 intent.setClass(this, OLSongsPage.class);
                 break;
@@ -139,7 +139,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
                 intent.setClass(this, OLMelodySelect.class);
                 break;
             case 6:
-                intent.setClass(this, OLUsersPage.class);
+                intent.setClass(this, OLMainMode.class);
                 break;
         }
         startActivity(intent);
@@ -162,7 +162,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
-        f4958m = getIntent().getExtras().getInt("head");
+        headType = getIntent().getExtras().getInt("head");
         setContentView(R.layout.searchsongs);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutinflater = LayoutInflater.from(this);
@@ -172,7 +172,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         jpprogressBar = new JPProgressBar(this);
         songsListView = findViewById(R.id.ol_search_list);
         TextView f4956k = findViewById(R.id.title_bar);
-        if (f4958m == 6) {
+        if (headType == 6) {
             f4956k.setText("查找用户:");
         }
     }

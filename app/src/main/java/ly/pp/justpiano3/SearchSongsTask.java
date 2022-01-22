@@ -29,7 +29,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
         if (!searchSongs.get().f4948c.isEmpty()) {
             String str;
             String str2;
-            if (searchSongs.get().f4958m == 6) {
+            if (searchSongs.get().headType == 6) {
                 str = "GetTopListByKeywords";
                 str2 = "6";
             } else {
@@ -69,10 +69,10 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     @Override
     protected final void onPostExecute(String str) {
         if (str.length() > 3) {
-            if (searchSongs.get().f4958m < 2) {
+            if (searchSongs.get().headType < 2) {
                 searchSongs.get().mo2963a(str, searchSongs.get().songsListView);
                 searchSongs.get().songsListView.setCacheColorHint(0x00000000);
-            } else if (searchSongs.get().f4958m == 6) {
+            } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
                         searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().m3841b(GZIP.ZIPTo(new JSONObject(str).getString("L")))));

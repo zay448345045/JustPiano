@@ -74,9 +74,6 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 intent.setClass(this, UsersInfo.class);
                 startActivity(intent);
                 finish();
-//                intent.setClass(this, OLUsersPage.class);
-//                startActivity(intent);
-//                finish();
                 return;
             case R.id.ol_bindmail_b:
                 Toast.makeText(this, "此版本不支持绑定邮箱!", Toast.LENGTH_SHORT).show();

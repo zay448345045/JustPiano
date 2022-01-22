@@ -18,10 +18,10 @@ final class AddFriendsClick2 implements OnClickListener {
         JSONObject jSONObject = new JSONObject();
         try {
             jSONObject.put("H", 0);
-            jSONObject.put("T", popUserInfo.f4829c);
+            jSONObject.put("T", popUserInfo.kitiName);
             jSONObject.put("F", popUserInfo.jpapplication.getAccountName());
             jSONObject.put("M", "");
-            if (!popUserInfo.f4829c.isEmpty() && !popUserInfo.jpapplication.getAccountName().isEmpty()) {
+            if (!popUserInfo.kitiName.isEmpty() && !popUserInfo.jpapplication.getAccountName().isEmpty()) {
                 popUserInfo.f4830d = jSONObject.toString();
                 new PopUserInfoTask(popUserInfo).execute();
             }

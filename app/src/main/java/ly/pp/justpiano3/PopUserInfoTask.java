@@ -25,13 +25,13 @@ final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... objects) {
         String str = "";
-        if (!popUserInfo.get().f4829c.isEmpty()) {
+        if (!popUserInfo.get().kitiName.isEmpty()) {
             HttpPost httpPost = new HttpPost("http://" + popUserInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m);
             List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("head", String.valueOf(popUserInfo.get().f4828b)));
+            arrayList.add(new BasicNameValuePair("head", String.valueOf(popUserInfo.get().headType)));
             arrayList.add(new BasicNameValuePair("version", popUserInfo.get().jpapplication.getVersion()));
             arrayList.add(new BasicNameValuePair("keywords", popUserInfo.get().f4830d));
-            arrayList.add(new BasicNameValuePair("userName", popUserInfo.get().f4829c));
+            arrayList.add(new BasicNameValuePair("userName", popUserInfo.get().kitiName));
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
@@ -54,7 +54,7 @@ final class PopUserInfoTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected final void onPostExecute(String str) {
-        if (popUserInfo.get().f4828b != 1) {
+        if (popUserInfo.get().headType != 1) {
             popUserInfo.get().jpprogressBar.cancel();
             Toast.makeText(popUserInfo.get(), "发送成功!", Toast.LENGTH_SHORT).show();
         } else if (str.length() > 3) {

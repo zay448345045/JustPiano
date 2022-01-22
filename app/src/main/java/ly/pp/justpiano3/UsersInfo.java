@@ -237,7 +237,7 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
             jpprogressBar.dismiss();
         }
         Intent intent = new Intent();
-        intent.setClass(this, OLUsersPage.class);
+        intent.setClass(this, OLMainMode.class);
         startActivity(intent);
         finish();
     }

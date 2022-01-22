@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -122,19 +123,24 @@ public final class JPApplication extends Application {
     }
 
     public static void reLoadOriginalSounds() {
+        File dir = new File(context.getFilesDir(), "Sounds");
+        if (dir.isDirectory()) {
+            File[] listFiles = dir.listFiles();
+            if (listFiles != null && listFiles.length > 0) {
+                for (File delete : listFiles) {
+                    delete.delete();
+                }
+            }
+        }
+        teardownAudioStreamNative();
+        unloadWavAssetsNative();
+        for (int i = 108; i >= 24; i--) {
+            preloadSounds(i);
+        }
+        confirmLoadSounds();
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();
-        for (int i = 108; i >= 24; i--) {
-            try {
-                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");
-                Converter converter = new Converter();
-                converter.convert(assetFD.createInputStream(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav", null, null);
-                loadWavInputStreamByIndex(i);
-                assetFD.close();
-            } catch (Exception ignored) {
-            }
-        }
     }
 
     public static void confirmLoadSounds() {

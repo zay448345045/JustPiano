@@ -14,25 +14,27 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public class PopUserInfo extends Activity implements Callback, OnClickListener {
     JPProgressBar jpprogressBar;
-    int f4828b = 0;
-    String f4829c = "";
+    int headType = 0;
+    String kitiName = "";
     String f4830d = "P";
     JPApplication jpapplication;
     String f4839m = "";
-    private TextView f4831e;
-    private TextView f4832f;
-    private TextView f4833g;
-    private TextView f4834h;
-    private ImageView f4835i;
-    private PictureHandle f4837k;
+    private TextView userKitiName;
+    private TextView userPSign;
+    private TextView userSex;
+    private TextView userAge;
+    private ImageView userFace;
+    private PictureHandle pictureHandle;
     private Handler handler;
 
     static void m3823a(PopUserInfo popUserInfo, String str) {
         JSONObject jSONObject;
         popUserInfo.handler = new Handler(popUserInfo);
-        popUserInfo.f4837k = new PictureHandle(popUserInfo.handler, 1);
+        popUserInfo.pictureHandle = new PictureHandle(popUserInfo.handler, 1);
         try {
             jSONObject = new JSONObject(str);
         } catch (JSONException e) {
@@ -40,20 +42,22 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
             jSONObject = null;
         }
         try {
-            popUserInfo.f4831e.setText(popUserInfo.f4829c);
-            if (jSONObject.getString("sex").equals("m")) {
-                popUserInfo.f4833g.setText("男");
+            popUserInfo.userKitiName.setText(popUserInfo.kitiName);
+            if (jSONObject.getString("sx").equals("m")) {
+                popUserInfo.userSex.setText("男");
             } else {
-                popUserInfo.f4833g.setText("女");
+                popUserInfo.userSex.setText("女");
             }
-            popUserInfo.f4835i.setTag(jSONObject.getString("faceID"));
-            popUserInfo.f4837k.mo3027a(popUserInfo.jpapplication, popUserInfo.f4835i, null);
-            popUserInfo.f4834h.setText(jSONObject.getInt("age") + "岁");
-            String obj = jSONObject.get("msg").toString();
+//            popUserInfo.userFace.setTag(jSONObject.getString("faceID"));
+            popUserInfo.pictureHandle.mo3027a(popUserInfo.jpapplication, popUserInfo.userFace, null);
+            int age = jSONObject.getInt("age");
+            Calendar cal = Calendar.getInstance();
+            popUserInfo.userAge.setText((cal.get(Calendar.YEAR) - age) + "岁");
+            String obj = jSONObject.get("ms").toString();
             if (obj.isEmpty()) {
                 obj = "该用户暂未设置个性签名";
             }
-            popUserInfo.f4832f.setText(obj);
+            popUserInfo.userPSign.setText(obj);
         } catch (Exception e2) {
             e2.printStackTrace();
         }
@@ -68,11 +72,11 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_friend:
-                if (!f4829c.equals(JPApplication.kitiName)) {
-                    f4828b = 2;
+                if (!kitiName.equals(JPApplication.kitiName)) {
+                    headType = 2;
                     JPDialog jpdialog = new JPDialog(this);
                     jpdialog.setTitle("好友请求");
-                    jpdialog.setMessage("添加[" + f4829c + "]为好友,确定吗?");
+                    jpdialog.setMessage("添加[" + kitiName + "]为好友,确定吗?");
                     jpdialog.setFirstButton("确定", new AddFriendsClick2(this));
                     jpdialog.setSecondButton("取消", new DialogDismissClick());
                     jpdialog.showDialog();
@@ -80,9 +84,9 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                 }
                 return;
             case R.id.send_mail:
-                if (!f4829c.equals(JPApplication.kitiName)) {
-                    f4828b = 2;
-                    String str = f4829c;
+                if (!kitiName.equals(JPApplication.kitiName)) {
+                    headType = 2;
+                    String str = kitiName;
                     String P = jpapplication.getAccountName();
                     View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                     TextView textView = inflate.findViewById(R.id.text_1);
@@ -104,22 +108,22 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
         super.onCreate(bundle);
         setContentView(R.layout.popuserinfo);
         jpapplication = (JPApplication) getApplication();
-        f4831e = findViewById(R.id.user_kitiname);
-        f4833g = findViewById(R.id.user_sex);
-        f4832f = findViewById(R.id.user_msg);
-        f4835i = findViewById(R.id.user_face);
-        f4834h = findViewById(R.id.user_age);
+        userKitiName = findViewById(R.id.user_kitiname);
+        userSex = findViewById(R.id.user_sex);
+        userPSign = findViewById(R.id.user_msg);
+        userFace = findViewById(R.id.user_face);
+        userAge = findViewById(R.id.user_age);
         Button f4840n = findViewById(R.id.add_friend);
         f4840n.setOnClickListener(this);
         Button f4841o = findViewById(R.id.send_mail);
         f4841o.setOnClickListener(this);
         Bundle extras = getIntent().getExtras();
-        f4828b = extras.getInt("head");
-        if (f4828b == 2) {
-            f4828b = 1;
+        headType = extras.getInt("head");
+        if (headType == 2) {
+            headType = 1;
             f4840n.setVisibility(View.INVISIBLE);
         }
-        f4829c = extras.getString("userKitiName");
+        kitiName = extras.getString("userKitiName");
         jpprogressBar = new JPProgressBar(this);
         f4839m = "GetUserInfo";
         new PopUserInfoTask(this).execute();
