@@ -60,7 +60,6 @@
             android:layout_alignTop="@+id/user_face"
             android:layout_toStartOf="@+id/user_sex"
             android:background="@drawable/filled_box"
-            android:text="32岁"
             android:singleLine="true"
             android:textColor="@color/white1" />
 

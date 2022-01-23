@@ -30,7 +30,7 @@ public class ChatFiles extends Activity {
 
     private void m3824a(File file) {
         File[] f4924i = file.listFiles();
-        f4921f.setText("聊天记录存储目录为:SD卡\\justpiano\\Chats");
+        f4921f.setText("聊天记录存储目录为:SD卡\\JustPiano\\Chats");
         f4921f.setTextSize(20);
         f4917b = new ArrayList<>();
         int i = 0;

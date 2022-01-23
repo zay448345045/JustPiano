@@ -506,7 +506,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
         jpApplication = (JPApplication) getApplication();
-        sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), 0);
+        sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
         editor = sharedPreferences.edit();
         jpApplication.loadSettings(1);
         setContentView(R.layout.olplayhallroom);

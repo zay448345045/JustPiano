@@ -43,13 +43,14 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
         }
         try {
             popUserInfo.userKitiName.setText(popUserInfo.kitiName);
-            if (jSONObject.getString("sx").equals("m")) {
+            String sex = jSONObject.getString("sx");
+            if (sex.equals("m")) {
                 popUserInfo.userSex.setText("男");
-            } else {
+            } else if (sex.equals("f")) {
                 popUserInfo.userSex.setText("女");
             }
 //            popUserInfo.userFace.setTag(jSONObject.getString("faceID"));
-            popUserInfo.pictureHandle.mo3027a(popUserInfo.jpapplication, popUserInfo.userFace, null);
+//            popUserInfo.pictureHandle.mo3027a(popUserInfo.jpapplication, popUserInfo.userFace, null);
             int age = jSONObject.getInt("age");
             Calendar cal = Calendar.getInstance();
             popUserInfo.userAge.setText((cal.get(Calendar.YEAR) - age) + "岁");

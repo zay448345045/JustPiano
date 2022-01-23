@@ -62,8 +62,8 @@
     <color name="c8">#ffff0066</color>
     <color name="c9">#ffff00cc</color>
     <color name="c10">#ffff00ff</color>
-    <color name="c11">#ff02028A</color>
-    <color name="c12">#ff000000</color>
+    <color name="c11">#ff000000</color>
+    <color name="c12">#ff02028A</color>
     <color name="umeng_fb_color_btn_pressed">#ff1495f7</color>
     <color name="umeng_fb_color_btn_normal">#ff333333</color>
     <color name="umeng_socialize_comments_bg">#fff4f4f4</color>

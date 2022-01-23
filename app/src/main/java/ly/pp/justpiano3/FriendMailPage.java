@@ -165,7 +165,7 @@ public class FriendMailPage extends Activity implements Callback {
             f4026h.setText("-好友列表-");
         } else if (f4024f.endsWith("M")) {
             f4026h.setText("-邮件列表-");
-            sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), 0);
+            sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
             //f4028j = sharedPreferences.edit();
         }
         f4023e = new JPProgressBar(this);

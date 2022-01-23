@@ -487,7 +487,7 @@ public final class PianoPlay extends BaseActivity {
     final void mo2908c() {
         if (f4611ag) {
             isRecord = false;
-            Toast.makeText(this, "录音完毕...，录音文件储存为SD卡中的Justpiano/Record/" + songsName + ".wav", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "录音完毕，录音文件储存为SD卡\\Justpiano\\Record\\" + songsName + ".wav", Toast.LENGTH_SHORT).show();
             if (audiorecord != null && f4611ag) {
                 f4611ag = false;
                 audiorecord.stop();

@@ -203,7 +203,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_face"
             android:layout_alignEnd="@+id/user_face"
-            android:text="(点击头像设置)" />
+            android:text="" />
+<!--            android:text="(点击头像设置)"-->
+
 
         <ImageView
             android:id="@+id/user_face"

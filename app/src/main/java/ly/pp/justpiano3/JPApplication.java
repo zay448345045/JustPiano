@@ -518,7 +518,7 @@ public final class JPApplication extends Application {
             StrictMode.setVmPolicy(builder.build());
         }
         context = getApplicationContext();
-        sharedpreferences = getSharedPreferences(getSharedPreferences("account_list", 0).getString("accountList", "account"), 0);
+        sharedpreferences = getSharedPreferences("account_list", MODE_PRIVATE);
     }
 
     @Override

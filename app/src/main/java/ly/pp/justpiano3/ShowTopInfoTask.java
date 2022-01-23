@@ -37,10 +37,6 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
             arrayList.add(new BasicNameValuePair("P", showTopInfo.get().f4999o));
             arrayList.add(new BasicNameValuePair("K", JPApplication.kitiName));
             arrayList.add(new BasicNameValuePair("N", showTopInfo.get().jpapplication.getAccountName()));
-            if (showTopInfo.get().head == 5) {
-                arrayList.add(new BasicNameValuePair("X", String.valueOf(JPApplication.sharedpreferences.getInt("local_x", 0))));
-                arrayList.add(new BasicNameValuePair("Y", String.valueOf(JPApplication.sharedpreferences.getInt("local_y", 0))));
-            }
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
             } catch (UnsupportedEncodingException e) {

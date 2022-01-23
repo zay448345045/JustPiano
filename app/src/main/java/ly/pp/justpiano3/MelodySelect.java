@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -29,6 +30,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -165,37 +167,53 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                     case 2:  // 数据导出
                         JPDialog jpdialog = new JPDialog(this);
                         jpdialog.setTitle("数据导入导出");
-                        jpdialog.setMessage("此功能可将收藏夹、弹奏分数等本地曲库相关数据进行导入导出，请妥善保管导出后的文件。导入文件后将清除当前本地曲谱分数及收藏数据，请谨慎操作");
+                        jpdialog.setMessage("此功能可将本地收藏夹、弹奏分数数据进行导入导出，导出路径为SD卡\\JustPiano\\local_data.db。导入文件后将清除当前本地曲谱分数及收藏数据，请谨慎操作");
                         jpdialog.setVisibleRadioGroup(true);
                         RadioButton radioButton = new RadioButton(this);
-                        radioButton.setText("选择本机存储位置进行曲库数据导出");
+                        radioButton.setText("APP本地收藏夹、弹奏分数数据导出至SD卡\\JustPiano\\local_data.db");
                         radioButton.setTextSize(13);
                         radioButton.setTag(1);
-                        radioButton.setHeight(85);
+                        radioButton.setHeight(90);
                         jpdialog.addRadioButton(radioButton);
                         radioButton = new RadioButton(this);
-                        radioButton.setText("选择导出后的文件进行曲库数据导入");
+                        radioButton.setText("导入SD卡\\JustPiano\\local_data.db中的数据至APP(导入后将清除当前数据)");
                         radioButton.setTextSize(13);
                         radioButton.setTag(2);
-                        radioButton.setHeight(85);
+                        radioButton.setHeight(90);
                         jpdialog.addRadioButton(radioButton);
                         jpdialog.setFirstButton("执行", (dialog, which) -> {
+                            File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/local_data.db");
                             switch (jpdialog.getRadioGroupCheckedId()) {
                                 case 1:
                                     dialog.dismiss();
-//                                    SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
-//                                    Cursor query = writableDatabase.query("jp_data", new String[]{"path", "isfavo", "score", "Lscore"},null, null, null, null, null);
-//                                    while (query.moveToNext()) {
-//                                        String path = query.getString(query.getColumnIndex("path"));
-//                                        int isfavo = query.getInt(query.getColumnIndex("isfavo"));
-//                                        int score = query.getInt(query.getColumnIndex("score"));
-//                                        int lScore = query.getInt(query.getColumnIndex("Lscore"));
-//                                    }
-                                    Toast.makeText(this, "曲库数据导出执行成功，文件已保存", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        if (!file.exists()) {
+                                            file.createNewFile();
+                                        }
+                                        SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
+                                        Cursor query = writableDatabase.query("jp_data", new String[]{"path", "isfavo", "score", "Lscore"}, null, null, null, null, null);
+                                        while (query.moveToNext()) {
+                                            String path = query.getString(query.getColumnIndex("path"));
+                                            int isfavo = query.getInt(query.getColumnIndex("isfavo"));
+                                            int score = query.getInt(query.getColumnIndex("score"));
+                                            int lScore = query.getInt(query.getColumnIndex("Lscore"));
+                                        }
+                                        Toast.makeText(this, "曲库数据导出执行成功，文件已保存", Toast.LENGTH_SHORT).show();
+                                    } catch (Exception e) {
+                                        Toast.makeText(this, "执行失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                     break;
                                 case 2:
                                     dialog.dismiss();
-                                    Toast.makeText(this, "曲库数据导入执行成功", Toast.LENGTH_SHORT).show();
+                                    if (file.exists()) {
+                                        try {
+                                            Toast.makeText(this, "曲库数据导入执行成功", Toast.LENGTH_SHORT).show();
+                                        } catch (Exception e) {
+                                            Toast.makeText(this, "执行失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(this, "文件不存在，请确认SD卡\\JustPiano\\local_data.db存在", Toast.LENGTH_LONG).show();
+                                    }
                                     break;
                                 default:
                                     Toast.makeText(this, "请选择一种操作", Toast.LENGTH_SHORT).show();
@@ -419,7 +437,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sharedPreferences = getSharedPreferences("set", 0);
+        sharedPreferences = getSharedPreferences("set", MODE_PRIVATE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     }

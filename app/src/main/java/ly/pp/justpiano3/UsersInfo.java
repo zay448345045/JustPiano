@@ -245,18 +245,18 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.user_face:
-                JPDialog jpdialog = new JPDialog(this);
-                jpdialog.setTitle("抱歉");
-                jpdialog.setMessage("用户自制版服务器空间有限，暂不支持上传头像");
-                jpdialog.setFirstButton("确定", new DialogDismissClick());
-                //jpdialog.setSecondButton("打开图库", new C1330na(this));
-                try {
-                    jpdialog.showDialog();
-                    return;
-                } catch (Exception e) {
-                    return;
-                }
+//            case R.id.user_face:
+//                JPDialog jpdialog = new JPDialog(this);
+//                jpdialog.setTitle("抱歉");
+//                jpdialog.setMessage("用户自制版服务器空间有限，暂不支持上传头像");
+//                jpdialog.setFirstButton("确定", new DialogDismissClick());
+//                jpdialog.setSecondButton("打开图库", new C1330na(this));
+//                try {
+//                    jpdialog.showDialog();
+//                    return;
+//                } catch (Exception e) {
+//                    return;
+//                }
             case R.id.password_button:
                 View inflate = getLayoutInflater().inflate(R.layout.password_change, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.original_password);

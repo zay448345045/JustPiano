@@ -804,12 +804,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.room_title:
                 if (playerKind.equals("G")) {
-                    Toast.makeText(this, "非房主不能修改房名或密码!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "非房主不能修改房名!", Toast.LENGTH_SHORT).show();
                 } else {
                     View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                     EditText text1 = inflate.findViewById(R.id.text_1);
                     EditText text2 = inflate.findViewById(R.id.text_2);
-                    new JPDialog(this).setTitle("修改房名或密码").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                    new JPDialog(this).setTitle("修改房名").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
                 }
                 return;
             case R.id.ol_songlist_b:
