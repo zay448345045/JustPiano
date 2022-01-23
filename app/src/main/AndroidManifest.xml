@@ -19,6 +19,7 @@
 
     <application
         android:name="ly.pp.justpiano3.JPApplication"
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:icon="@drawable/icon"

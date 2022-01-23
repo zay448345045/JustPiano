@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,7 +73,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     private int f4244U;
     private ListView songListView;
     private LocalSongsAdapter songListAdapter;
-    private TestSQL testSQL;
+    public TestSQL testSQL;
     private int score;
     private final List<String> sortNamesList = new ArrayList<>();
 
@@ -147,21 +148,17 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 break;
             case 2:
                 menuPopupwindow.dismiss();
+                if (playSongs != null) {
+                    playSongs.isPlayingSongs = false;
+                    playSongs = null;
+                }
                 Intent intent = new Intent();
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
-                        if (playSongs != null) {
-                            playSongs.isPlayingSongs = false;
-                            playSongs = null;
-                        }
                         intent.setClass(this, SettingsMode.class);
                         startActivity(intent);
                         break;
                     case 1:  // 曲库同步
-                        if (playSongs != null) {
-                            playSongs.isPlayingSongs = false;
-                            playSongs = null;
-                        }
                         new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(testSQL)).execute();
                         break;
                     case 2:  // 数据导出
@@ -174,6 +171,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         radioButton.setTextSize(13);
                         radioButton.setTag(1);
                         radioButton.setHeight(90);
+                        radioButton.setChecked(true);
                         jpdialog.addRadioButton(radioButton);
                         radioButton = new RadioButton(this);
                         radioButton.setText("导入SD卡\\JustPiano\\local_data.db中的数据至APP(导入后将清除当前数据)");
@@ -182,52 +180,13 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         radioButton.setHeight(90);
                         jpdialog.addRadioButton(radioButton);
                         jpdialog.setFirstButton("执行", (dialog, which) -> {
-                            File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/local_data.db");
-                            switch (jpdialog.getRadioGroupCheckedId()) {
-                                case 1:
-                                    dialog.dismiss();
-                                    try {
-                                        if (!file.exists()) {
-                                            file.createNewFile();
-                                        }
-                                        SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
-                                        Cursor query = writableDatabase.query("jp_data", new String[]{"path", "isfavo", "score", "Lscore"}, null, null, null, null, null);
-                                        while (query.moveToNext()) {
-                                            String path = query.getString(query.getColumnIndex("path"));
-                                            int isfavo = query.getInt(query.getColumnIndex("isfavo"));
-                                            int score = query.getInt(query.getColumnIndex("score"));
-                                            int lScore = query.getInt(query.getColumnIndex("Lscore"));
-                                        }
-                                        Toast.makeText(this, "曲库数据导出执行成功，文件已保存", Toast.LENGTH_SHORT).show();
-                                    } catch (Exception e) {
-                                        Toast.makeText(this, "执行失败" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                    break;
-                                case 2:
-                                    dialog.dismiss();
-                                    if (file.exists()) {
-                                        try {
-                                            Toast.makeText(this, "曲库数据导入执行成功", Toast.LENGTH_SHORT).show();
-                                        } catch (Exception e) {
-                                            Toast.makeText(this, "执行失败" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(this, "文件不存在，请确认SD卡\\JustPiano\\local_data.db存在", Toast.LENGTH_LONG).show();
-                                    }
-                                    break;
-                                default:
-                                    Toast.makeText(this, "请选择一种操作", Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
+                            dialog.dismiss();
+                            new LocalDataImportExportTask(this, jpdialog.getRadioGroupCheckedId()).execute();
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
                         jpdialog.showDialog();
                         break;
                     case 3:  // 录音文件
-                        if (playSongs != null) {
-                            playSongs.isPlayingSongs = false;
-                            playSongs = null;
-                        }
                         intent.setClass(this, RecordFiles.class);
                         startActivity(intent);
                         break;
