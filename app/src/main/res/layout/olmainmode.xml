@@ -13,7 +13,7 @@
         android:id="@+id/app_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="在线模式"
+        android:text="联网模式"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white1" />
 

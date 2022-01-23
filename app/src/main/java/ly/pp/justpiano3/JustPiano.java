@@ -34,14 +34,14 @@ public class JustPiano extends Activity implements Callback, Runnable {
     private int progress;
     private String loading = "";
 
-    private void m3587a(SQLiteDatabase sQLiteDatabase) {
+    private void updateSql(SQLiteDatabase sQLiteDatabase) {
         String string;
-        //键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
+        // 键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
         Map<String, String> pmPathMap = new HashMap<>();
         ReadPm readpm = new ReadPm(null);
         // 下面的字段是删除标记，更新和插入的曲谱会得到更新，然后把未更新也未插入的（就是新版没有这个pm）的曲子删掉，也就是在客户端曲子删库用
         int originalPmVersion = 0;
-        Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path"}, null, null, null, null, "_id desc");
+        Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path", "count"}, null, null, null, null, "_id desc");
         while (query.moveToNext()) {
             string = query.getString(query.getColumnIndex("path"));
             originalPmVersion = query.getInt(query.getColumnIndex("count"));
@@ -226,7 +226,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
             Cursor query = sqliteDataBase.query("jp_data", null, null, null, null, null, null);
             if ((query != null && (query.getCount() == 0)) || updateSQL) {
                 loading = "";
-                m3587a(sqliteDataBase);
+                updateSql(sqliteDataBase);
             }
             if (query != null) {
                 query.close();

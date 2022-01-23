@@ -1,17 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
-
-    repositories {
-        maven { url 'http://repo1.maven.org/maven2' }
-    }
 
     defaultConfig {
         applicationId "ly.pp.justpiano3"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 46
         versionName "4.34"
 
@@ -35,7 +31,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -60,7 +56,7 @@ android {
         targetCompatibility = 1.8
     }
 
-    buildToolsVersion = '29.0.3'
+    buildToolsVersion = '30.0.2'
 }
 
 dependencies {

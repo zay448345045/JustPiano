@@ -9,10 +9,14 @@ import java.io.File;
 
 public final class TestSQL extends SQLiteOpenHelper {
 
+    /**
+     * 4.4版本的数据库版本号为41
+     */
+    public static final int DATABASE_VERSION = 41;
+
     TestSQL(Context context, String str) {
-        //4.4版本的数据库版本号为41
         //4.34版本的数据库版本号为40
-        super(context, str, null, 40);
+        super(context, str, null, DATABASE_VERSION);
     }
 
     @Override
@@ -28,7 +32,8 @@ public final class TestSQL extends SQLiteOpenHelper {
             sQLiteDatabase.execSQL("DROP TABLE IF EXISTS jp_data;");
             sQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS jp_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,item TEXT NOT NULL,path TEXT NOT NULL,isnew INTEGER,ishot INTEGER,isfavo INTEGER,player TEXT,score INTEGER,date LONG,count INTEGER,diff FLOAT DEFAULT 0,online INTEGER,Ldiff FLOAT DEFAULT 0,length INTEGER DEFAULT 0,Lscore INTEGER);");
         }
-        if (sQLiteDatabase.getVersion() >= 38 && sQLiteDatabase.getVersion() < 40) {
+        // 重点：想在启动入口更新数据库，一定要触发下面的updateSQL为true
+        if (sQLiteDatabase.getVersion() >= 38 && sQLiteDatabase.getVersion() < DATABASE_VERSION) {
             JustPiano.updateSQL = true;
         }
         if (sQLiteDatabase.getVersion() < 40) {
@@ -48,6 +53,6 @@ public final class TestSQL extends SQLiteOpenHelper {
                 }
             }
         }
-        sQLiteDatabase.setVersion(40);
+        sQLiteDatabase.setVersion(DATABASE_VERSION);
     }
 }
