@@ -170,14 +170,13 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         radioButton.setText("APP本地收藏夹、弹奏分数数据导出至SD卡\\JustPiano\\local_data.db");
                         radioButton.setTextSize(13);
                         radioButton.setTag(1);
-                        radioButton.setHeight(90);
-                        radioButton.setChecked(true);
+                        radioButton.setHeight(100);
                         jpdialog.addRadioButton(radioButton);
                         radioButton = new RadioButton(this);
                         radioButton.setText("导入SD卡\\JustPiano\\local_data.db中的数据至APP(导入后将清除当前数据)");
                         radioButton.setTextSize(13);
                         radioButton.setTag(2);
-                        radioButton.setHeight(90);
+                        radioButton.setHeight(100);
                         jpdialog.addRadioButton(radioButton);
                         jpdialog.setFirstButton("执行", (dialog, which) -> {
                             dialog.dismiss();
