@@ -30,14 +30,14 @@ public class SkinListPreference extends DialogPreference {
 
     private void m3906a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-        List<File> f5023c = SkinAndSoundFileHandle.getLocalSkinList(str);
-        int size = f5023c.size();
+        List<File> localSkinList = SkinAndSoundFileHandle.getLocalSkinList(str);
+        int size = localSkinList.size();
         f5021a = new CharSequence[(size + 2)];
         f5022b = new CharSequence[(size + 2)];
         for (int i = 0; i < size; i++) {
-            str = f5023c.get(i).getName();
+            str = localSkinList.get(i).getName();
             f5021a[i] = str.subSequence(0, str.lastIndexOf('.'));
-            f5022b[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + f5023c.get(i).getName();
+            f5022b[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + localSkinList.get(i).getName();
         }
         f5021a[size] = "原生主题";
         f5022b[size] = "original";

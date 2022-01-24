@@ -97,10 +97,8 @@ public class RecordFiles extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         JPApplication jpApplication = (JPApplication) getApplication();
-        LayoutInflater f4922g = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout linearLayout = (LinearLayout) f4922g.inflate(R.layout.record_list, null);
         setContentView(R.layout.record_list);
-        jpApplication.setBackGround(this, "ground", linearLayout);
+        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);
         f4919d.setCacheColorHint(0);
         f4921f = findViewById(R.id.txt1);

@@ -47,7 +47,7 @@ public final class DressAdapter extends BaseAdapter {
         ((ImageView) view.findViewById(R.id.ol_dress_img)).setImageBitmap(list.get(i));
         switch (type) {
             case 0:
-                if (olPlayDressRoom.hairUnlock.contains(i)) {
+                if (olPlayDressRoom.hairUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
@@ -60,7 +60,7 @@ public final class DressAdapter extends BaseAdapter {
                 }
                 break;
             case 1:
-                if (olPlayDressRoom.jacketUnlock.contains(i)) {
+                if (olPlayDressRoom.jacketUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
@@ -73,7 +73,7 @@ public final class DressAdapter extends BaseAdapter {
                 }
                 break;
             case 2:
-                if (olPlayDressRoom.trousersUnlock.contains(i)) {
+                if (olPlayDressRoom.trousersUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
@@ -86,7 +86,7 @@ public final class DressAdapter extends BaseAdapter {
                 }
                 break;
             case 3:
-                if (olPlayDressRoom.shoesUnlock.contains(i)) {
+                if (olPlayDressRoom.shoesUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);

@@ -17,7 +17,7 @@ final class TrousersClick implements OnItemClickListener {
 
     @Override
     public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        if (olplaydressroom.trousersUnlock.contains(i)) {
+        if (olplaydressroom.trousersUnlock.contains(i) || i == 0) {
             if (i == olplaydressroom.trousersNow) {
                 olplaydressroom.trousersImage.setImageBitmap(olplaydressroom.none);
                 olplaydressroom.trousersNow = -1;
