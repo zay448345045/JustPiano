@@ -23,11 +23,11 @@ public class ConnectionService extends Service implements Runnable {
     private final ByteBuffer readBuffer = ByteBuffer.allocateDirect(50 * 1024);
     private final ByteBuffer cacheBuffer = ByteBuffer.allocateDirect(100 * 1024);
     private int bodyLen = -1;
-    private boolean cache = false;  //是否有缓存
+    private boolean cache = false;  // 是否有缓存
     private boolean online = true;
     private JPApplication jpapplication;
 
-    //字符数组转整数
+    // 字符数组转整数
     private static int byteArrayToInt(byte[] bytes) {
         if (bytes[0] != 94) {
             return -1;
@@ -35,7 +35,7 @@ public class ConnectionService extends Service implements Runnable {
         int value = 0;
         for (int i = 1; i < 4; i++) {
             int shift = (4 - 1 - i) * 8;
-            value += (bytes[i] & 0x000000FF) << shift;// 往高位游
+            value += (bytes[i] & 0x000000FF) << shift;
         }
         return value;
     }
@@ -158,7 +158,7 @@ public class ConnectionService extends Service implements Runnable {
                             writeBuffer.clear();
                             try {
                                 String str = "20220201";
-                                writeBuffer = JsonHandle.m3947a(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
+                                writeBuffer = JsonHandle.sendLogin(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
                                 selectionKey.interestOps(SelectionKey.OP_WRITE);

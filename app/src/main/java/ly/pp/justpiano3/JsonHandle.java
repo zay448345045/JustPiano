@@ -30,7 +30,7 @@ final class JsonHandle {
         return allocate;
     }
 
-    static ByteBuffer m3947a(String str, String str2, String str3, String str4, String str5) {
+    static ByteBuffer sendLogin(String str, String str2, String str3, String str4, String str5) {
         JSONObject jSONObject = new JSONObject();
         try {
             jSONObject.put("P", str3);
