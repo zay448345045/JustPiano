@@ -82,7 +82,7 @@ final class FamilyHandler extends Handler {
                         if (family.infoWindow != null && family.infoWindow.isShowing()) {
                             family.infoWindow.dismiss();
                         }
-                        if (info.equals("您所在的家族已解散!")) {
+                        if (info.equals("您所在的家族已解散")) {
                             try {
                                 JSONObject jSONObject = new JSONObject();
                                 jSONObject.put("K", 0);

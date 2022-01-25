@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
-    private final List<HashMap> list;
+    private final List<HashMap<String, String>> list;
     private final JPApplication jpApplication;
     private final LayoutInflater li;
     private final OLFamily family;
 
-    FamilyPeopleAdapter(List<HashMap> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
+    FamilyPeopleAdapter(List<HashMap<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.jpApplication = jpApplication;
         this.list = list;
         li = layoutInflater;
@@ -45,13 +45,13 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         if (view == null) {
             view = li.inflate(R.layout.ol_c_family_view, null);
         }
-        final String name = (String) list.get(i).get("N");
+        final String name = list.get(i).get("N");
         if (name == null) {
             return view;
         }
-        String contribution = (String) list.get(i).get("C");
-        String lv = (String) list.get(i).get("L");
-        if (!lv.isEmpty()) {
+        String contribution = list.get(i).get("C");
+        String lv = list.get(i).get("L");
+        if (lv != null && !lv.isEmpty()) {
             lv = "Lv." + lv;
         }
         TextView positionText = view.findViewById(R.id.ol_family_position);
@@ -69,7 +69,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         lvText.setText(lv);
         nameText.setText(name);
         contributionText.setText(contribution);
-        final String position = (String) list.get(i).get("P");
+        final String position = list.get(i).get("P");
         switch (position) {
             case "0":
                 positionText.setText("族长");

@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -80,7 +81,7 @@ public class SkinListPreference extends DialogPreference {
         m3906a();
         jpProgressBar = new JPProgressBar(context);
         LinearLayout f5028h = new LinearLayout(context);
-        f5028h.setLayoutParams(new LayoutParams(-1, -2));
+        f5028h.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         f5028h.setOrientation(LinearLayout.VERTICAL);
         f5028h.setMinimumWidth(400);
         f5028h.setPadding(20, 20, 20, 20);

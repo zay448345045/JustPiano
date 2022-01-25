@@ -1,45 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ol_family_people"
-    android:layout_width="match_parent"
+    android:id="@+id/ol_dailytime_layout"
+    android:layout_width="330dp"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_list_c"
     android:gravity="center"
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/ol_family_position"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="3dp"
-        android:layout_weight="1.4"
-        android:gravity="center"
-        android:textColor="@color/white1"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/ol_family_pic"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="3dp"
-        android:gravity="center"
-        android:src="@drawable/family" />
-
-    <TextView
-        android:id="@+id/ol_family_name"
+        android:id="@+id/ol_user_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
-        android:layout_weight="6"
+        android:layout_weight="5"
         android:gravity="start"
         android:textColor="@color/white1"
         android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/ol_family_count"
+        android:id="@+id/ol_online_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
@@ -50,7 +30,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/ol_family_contribution"
+        android:id="@+id/ol_dailytime_bonus"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
@@ -59,4 +39,14 @@
         android:textColor="@color/white1"
         android:textSize="14sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/ol_bonus_get"
+        android:layout_width="34dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="3dp"
+        android:textColor="@color/white1"
+        android:gravity="center"
+        android:textSize="10sp" />
+
 </LinearLayout>

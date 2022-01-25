@@ -363,6 +363,17 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 intent.putExtra("O", f4430T - 1);
                 startActivityForResult(intent, 0);
                 return;
+            case R.id.ol_bonus_button:
+                try {
+                    jSONObject = new JSONObject();
+                    jSONObject.put("K", 1);
+                    jpprogressBar.show();
+                    sendMsg((byte) 38, (byte) 0, jSONObject.toString());
+                    return;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
             case R.id.ol_shop_button:
                 if (lv < 0) {
                     Toast.makeText(this, "测试进入商城!", Toast.LENGTH_SHORT).show();
@@ -550,9 +561,10 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         tabHost.addTab(newTabSpec);
         userName = findViewById(R.id.ol_player_name);
         userName.setText("");
-        Button f4464o = findViewById(R.id.ol_dress_button);
-        f4464o.setText("换衣间");
-        f4464o.setOnClickListener(this);
+        Button dressChangeButton = findViewById(R.id.ol_dress_button);
+        dressChangeButton.setOnClickListener(this);
+        Button bonusButton = findViewById(R.id.ol_bonus_button);
+        bonusButton.setOnClickListener(this);
         /*Button olshop = findViewById(R.id.ol_shop_button);
         olshop.setText("商城");
         olshop.setOnClickListener(this);*/

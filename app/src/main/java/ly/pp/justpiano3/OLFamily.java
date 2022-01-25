@@ -42,7 +42,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     String myFamilyName;
     int listPosition;
     byte[] myFamilyPicArray;
-    List<HashMap> peopleList = new ArrayList<>();
+    List<HashMap<String, String>> peopleList = new ArrayList<>();
     ListView peopleListView;
     PopupWindow infoWindow;
     private LayoutInflater layoutinflater;
@@ -402,7 +402,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void mo2907b(ListView listView, List<HashMap> list) {
+    final void mo2907b(ListView listView, List<HashMap<String, String>> list) {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
     }
 

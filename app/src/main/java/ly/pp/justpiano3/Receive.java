@@ -147,6 +147,9 @@ final class Receive {
                         e2.printStackTrace();
                         return;
                     }
+                case 38:
+                    JsonHandle.daily(string);
+                    return;
                 case 40:
                     bundle = new Bundle();
                     message = new Message();

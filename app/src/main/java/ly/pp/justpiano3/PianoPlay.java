@@ -11,6 +11,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
@@ -316,9 +317,9 @@ public final class PianoPlay extends BaseActivity {
 
     public void m3794f() {
         f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
-        layoutparams2 = new LayoutParams(-2, -2);
+        layoutparams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutparams2.gravity = android.view.Gravity.CENTER;
-        layoutparams = new LayoutParams(-2, -2);
+        layoutparams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutparams.topMargin = 0;
         layoutparams.leftMargin = 0;
         Bundle extras = getIntent().getExtras();

@@ -1254,4 +1254,62 @@ final class JsonHandle {
             e.printStackTrace();
         }
     }
+
+    static void daily(String str) {
+        Message message = new Message();
+        JPStack.create();
+        try {
+            JSONObject jSONObject = new JSONObject(str);
+            switch (jSONObject.getInt("K")) {
+                case 0:
+                    break;
+                case 1:
+                    if (JPStack.top() instanceof OLPlayHallRoom) {
+                        JPStack.create();
+                        OLPlayHallRoom ophr = (OLPlayHallRoom) JPStack.top();
+                        JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
+                        assert ophr != null;
+                        message.what = 11;
+                        ophr.jpprogressBar.dismiss();
+                        Bundle bundle = new Bundle();
+                        int length = jSONArray.length();
+                        int i = 0;
+                        while (true) {
+                            int i2 = i;
+                            if (i2 >= length) {
+                                bundle.putString("M", jSONObject.getString("M"));
+                                bundle.putString("T", jSONObject.getString("T"));
+                                message.setData(bundle);
+                                ophr.olPlayHallRoomHandler.handleMessage(message);
+                                return;
+                            }
+                            Bundle bundle2 = new Bundle();
+                            JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
+                            bundle2.putString("N", jSONObject2.getString("N"));
+                            bundle2.putString("T", jSONObject2.getString("T"));
+                            bundle2.putString("B", jSONObject2.getString("B"));
+                            bundle2.putString("G", jSONObject2.getString("G"));
+                            bundle.putBundle(String.valueOf(i2), bundle2);
+                            i = i2 + 1;
+                        }
+                    }
+                case 2:
+                    if (JPStack.top() instanceof OLPlayHallRoom) {
+                        JPStack.create();
+                        OLPlayHallRoom ophr = (OLPlayHallRoom) JPStack.top();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("M", jSONObject.getString("M"));
+                        message.setData(bundle);
+                        message.what = 12;
+                        assert ophr != null;
+                        ophr.jpprogressBar.dismiss();
+                        ophr.olPlayHallRoomHandler.handleMessage(message);
+                        return;
+                    }
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

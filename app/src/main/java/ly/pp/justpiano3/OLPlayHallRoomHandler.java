@@ -6,6 +6,10 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -18,7 +22,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -286,6 +292,56 @@ final class OLPlayHallRoomHandler extends Handler {
                                 Toast.makeText(olPlayHallRoom, "家族名称已存在，请重试!", Toast.LENGTH_SHORT).show();
                                 break;
                         }
+                    });
+                    return;
+                case 11:
+                    post(() -> {
+                        List<HashMap> list = new ArrayList<>();
+                        Bundle data = message.getData();
+                        boolean disabled = true;
+                        int size = data.size() - 2;
+                        for (int i = 0; i < size; i++) {
+                            HashMap hashMap = new HashMap();
+                            String name = data.getBundle(String.valueOf(i)).getString("N");
+                            String bonusGet = data.getBundle(String.valueOf(i)).getString("G");
+                            hashMap.put("N", name);
+                            hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
+                            hashMap.put("B", data.getBundle(String.valueOf(i)).getString("B"));
+                            hashMap.put("G", bonusGet);
+                            if (JPApplication.kitiName.equals(name) && bonusGet.equals("0")) {
+                                disabled = false;
+                            }
+                            list.add(hashMap);
+                        }
+                        String todayOnlineTime = data.getString("T");
+                        String tomorrowExp = data.getString("M");
+                        View inflate = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
+                        ListView listView = inflate.findViewById(R.id.account_list);
+                        listView.setBackgroundResource(R.color.dack);
+                        TextView textView = inflate.findViewById(R.id.account_msg);
+                        textView.setVisibility(View.VISIBLE);
+                        textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得奖励：" + tomorrowExp + "\n以下为昨日在线时长排名：");
+                        JPDialog jpDialog = new JPDialog(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
+                                .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
+                                    try {
+                                        dialog.dismiss();
+                                        JSONObject jSONObject = new JSONObject();
+                                        jSONObject.put("K", 2);
+                                        olPlayHallRoom.jpprogressBar.show();
+                                        olPlayHallRoom.sendMsg((byte) 38, (byte) 0, jSONObject.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                        listView.setCacheColorHint(0);
+                        listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
+                        jpDialog.showDialog();
+                    });
+                    return;
+                case 12:
+                    post(() -> {
+                        String info = message.getData().getString("M");
+                        Toast.makeText(olPlayHallRoom, info, Toast.LENGTH_SHORT).show();
                     });
                     return;
                 case 21:
