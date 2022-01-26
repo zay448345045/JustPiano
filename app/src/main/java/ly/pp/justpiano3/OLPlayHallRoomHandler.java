@@ -318,6 +318,7 @@ final class OLPlayHallRoomHandler extends Handler {
                         View inflate = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
                         listView.setBackgroundResource(R.color.dack);
+                        listView.setSelector(R.color.translent);
                         TextView textView = inflate.findViewById(R.id.account_msg);
                         textView.setVisibility(View.VISIBLE);
                         textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得奖励：" + tomorrowExp + "\n以下为昨日在线时长排名：");

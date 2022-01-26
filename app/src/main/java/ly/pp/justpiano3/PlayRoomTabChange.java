@@ -41,14 +41,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                 }
                 break;
             case "tab4":
-                jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", 0);
-                    olPlayRoom.sendMsg((byte) 36, (byte) 0, olPlayRoom.hallID0, jSONObject.toString());
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                }
+                olPlayRoom.sendMsg((byte) 36, (byte) 0, olPlayRoom.hallID0, "");
                 break;
         }
     }

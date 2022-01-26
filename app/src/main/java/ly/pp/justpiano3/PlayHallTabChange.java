@@ -34,14 +34,7 @@ final class PlayHallTabChange implements OnTabChangeListener {
                 e.printStackTrace();
             }
         } else if (str.equals("tab3")) {
-            jSONObject = new JSONObject();
-            try {
-                jSONObject.put("T", "L");
-                jSONObject.put("B", 0);
-                olPlayHall.sendMsg((byte) 36, (byte) 0, olPlayHall.hallID, jSONObject.toString());
-            } catch (JSONException e2) {
-                e2.printStackTrace();
-            }
+            olPlayHall.sendMsg((byte) 36, (byte) 0, olPlayHall.hallID, "");
         }
     }
 }

@@ -49,7 +49,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                     writableDatabase.endTransaction();
                     result = "导入成功，更新" + count + "首曲谱数据";
                 } catch (Exception e) {
-                    result = "执行失败，请确认文件是否有效" + e.getMessage();
+                    result = ".setHeight(90)，请确认文件是否有效" + e.getMessage();
                 }
             } else {
                 result = "文件不存在，请确认SD卡\\JustPiano\\local_data.db存在";
@@ -77,7 +77,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                 result = "曲库数据导出执行成功，文件已保存";
             } catch (Exception e) {
                 e.printStackTrace();
-                result = "执行失败" + e.getMessage();
+                result = "执行失败 " + e.getMessage();
             }
         }
         return result;
