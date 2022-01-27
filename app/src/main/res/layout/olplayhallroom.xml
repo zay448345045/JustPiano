@@ -295,7 +295,7 @@
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/selector_ol_button"
                                 android:text="商城"
-                                android:enabled="false"
+                                android:visibility="gone"
                                 android:textColor="@color/white1"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -730,6 +730,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="120dp"
                 android:textColor="@color/white1"
+                android:background="@color/brown"
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>

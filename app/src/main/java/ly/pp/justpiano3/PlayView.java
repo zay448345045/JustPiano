@@ -289,7 +289,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
                         i3 = noteArray[i4] / 12;
                     }
-                    if (noteArray[i4] == 110 && volumeArray[i4] == 3) {
+                    if (noteArray[i4] == 110 + diao && volumeArray[i4] == 3) {
                         trackArray[i4] = 2;
                     }
                     ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
@@ -525,7 +525,8 @@ public final class PlayView extends SurfaceView implements Callback {
     final void judgeAndPlaySound(int i) {
         judgeTouchNote(i + noteMod12 * 12);
         if (i > -2) {
-            jpapplication.playSound(i + (noteMod12 + jpapplication.getBadu()) * 12, volume0 * 0.01f);
+//            jpapplication.playSound(i + (noteMod12 + jpapplication.getBadu()) * 12, volume0 * 0.01f);
+            jpapplication.playSound(i + (noteMod12 + jpapplication.getBadu()) * 12, volume0);
         }
     }
 
@@ -558,8 +559,9 @@ public final class PlayView extends SurfaceView implements Callback {
                         long x = pianoPlay.times * serialID;
                         long time = jpapplication.getServerTime();
                         long crypt = (time >>> 12 | time << 52) ^ x;
+                        jSONObject.put("K", 4);
                         jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 16, (byte) 0, "4" + jSONObject.toString(), null);
+                        pianoPlay.sendMsg((byte) 16, (byte) 0, jSONObject.toString(), null);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

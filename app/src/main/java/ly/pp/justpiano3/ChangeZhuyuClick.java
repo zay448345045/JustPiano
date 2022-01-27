@@ -73,7 +73,7 @@ final class ChangeZhuyuClick implements OnClickListener {
             } else if (f5459c == 1) {
                 jSONObject.put("T", 4);
                 jSONObject.put("M", valueOf);
-                olPlayHallRoom.coupleBless.setText("祝语:\n" + valueOf);
+                olPlayHallRoom.coupleBlessView.setText("祝语:\n" + valueOf);
                 olPlayHallRoom.cs.writeData((byte) 31, (byte) 0, (byte) 0, jSONObject.toString(), null);
             }
         } catch (JSONException e2) {

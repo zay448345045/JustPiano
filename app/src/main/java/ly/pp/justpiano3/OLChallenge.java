@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +41,13 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        sendMsg((byte) 16, (byte) 0, hallID, "0");
+        try {
+            JSONObject jSONObject = new JSONObject();
+            jSONObject.put("K", 0);
+            sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(this, OLPlayHall.class);
         intent.putExtra("hallName", hallName);
         intent.putExtra("hallID", hallID);
@@ -51,10 +60,22 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.startchallenge:
                 jpprogressBar.show();
-                sendMsg((byte) 16, (byte) 0, hallID, "2");
+                try {
+                    JSONObject jSONObject = new JSONObject();
+                    jSONObject.put("K", 2);
+                    sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 return;
             case R.id.drawPrize:
-                sendMsg((byte) 16, (byte) 0, hallID, "5");
+                try {
+                    JSONObject jSONObject = new JSONObject();
+                    jSONObject.put("K", 5);
+                    sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
@@ -75,7 +96,13 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.challenge);
         cs = jpapplication.getConnectionService();
-        sendMsg((byte) 16, (byte) 0, hallID, "1");
+        try {
+            JSONObject jSONObject = new JSONObject();
+            jSONObject.put("K", 1);
+            sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
@@ -101,14 +128,14 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (prizeNum != -1) {
             int prizeType = prizeNum / 100;
             dp.luckyStart(prizeType);
-            if (prizeType == 0) {
-                color.setVisibility(View.VISIBLE);
-                int kuang = prizeNum + 7;
-                if (prizeNum > 17) {
-                    kuang = 2 + (prizeNum - 18) * 5 / 82;
-                }
-                color.setBackgroundResource(Consts.kuang[kuang]);
-            }
+//            if (prizeType == 0) {
+//                color.setVisibility(View.VISIBLE);
+//                int kuang = prizeNum + 7;
+//                if (prizeNum > 17) {
+//                    kuang = 2 + (prizeNum - 18) * 5 / 82;
+//                }
+//                color.setBackgroundResource(Consts.kuang[kuang]);
+//            }
             try {
                 new JPDialog(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrize(this)).setSecondButton("放弃领取", new DialogDismissClick()).showDialog();
             } catch (Exception e) {

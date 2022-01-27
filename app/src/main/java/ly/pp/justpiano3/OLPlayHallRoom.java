@@ -33,26 +33,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-
 public final class OLPlayHallRoom extends BaseActivity implements OnClickListener {
     public int cl = 0;
     public int lv = 1;
     TabHost tabHost;
     TextView userName;
-    TextView mailCounts;
-    TextView userLevel;
-    TextView f4415E;
-    TextView f4416F;
-    TextView userExp;
+    TextView mailCountsView;
+    TextView userLevelView;
+    TextView userClassView;
+    TextView userClassNameView;
+    TextView userExpView;
     JPProgressBar jpprogressBar;
     SharedPreferences sharedPreferences = null;
     ImageView coupleView;
     ImageView familyView;
-    TextView f4438ab;
-    TextView f4441ae;
-    TextView f4442af;
-    TextView f4443ag;
-    TextView f4444ah;
+    TextView coupleNameView;
+    TextView coupleLvView;
+    TextView couplePointsView;
+    TextView coupleClView;
+    TextView coupleClNameView;
     TextView myFamilyPosition;
     TextView myFamilyName;
     TextView myFamilyContribution;
@@ -61,7 +60,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     byte[] myFamilyPicArray;
     int familyListPosition;
     String familyID = "0";
-    TextView coupleBless;
+    TextView coupleBlessView;
     List<Bundle> friendList = new ArrayList<>();
     ListView friendListView;
     List<HashMap> familyList = new ArrayList<>();
@@ -77,11 +76,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     List<Bundle> mailList = new ArrayList<>();
     ListView mailListView;
     ConnectionService cs;
-    private ImageView userMod;
-    private ImageView userTrousers;
-    private ImageView userJackets;
-    private ImageView userHair;
-    private ImageView userShoes;
+    private ImageView userModView;
+    private ImageView userTrousersView;
+    private ImageView userJacketsView;
+    private ImageView userHairView;
+    private ImageView userShoesView;
     private int f4427Q;
     private int f4428R;
     private int f4429S;
@@ -91,18 +90,18 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private MainGameAdapter f4434X = null;
     private MainGameAdapter f4435Y = null;
     private MainGameAdapter f4436Z = null;
-    private ImageView f4445ai;
-    private ImageView f4446aj;
-    private ImageView f4447ak;
-    private ImageView f4448al;
-    private ImageView f4449am;
+    private ImageView coupleModView;
+    private ImageView coupleTrousersView;
+    private ImageView coupleJacketView;
+    private ImageView coupleHairView;
+    private ImageView coupleShoesView;
     private String f4450an;
     private int f4451ao;
     private int f4452ap;
     private int f4453aq;
     private int f4454ar;
-    private TextView f4460k;
-    private ScrollText f4461l;
+    private TextView systemTextView;
+    private ScrollText broadCastTextView;
     private String f4462m = "";
     private String f4463n = "";
     private LayoutInflater layoutinflater;
@@ -168,10 +167,10 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         f4463n = bundle.getString("M");
         int i = bundle.getInt("C");
         int i2 = bundle.getInt("D");
-        f4460k.setText(f4462m);
-        f4460k.setTextColor(getResources().getColor(i));
-        f4461l.setText(f4463n);
-        f4460k.setTextColor(getResources().getColor(i2));
+        systemTextView.setText(f4462m);
+        systemTextView.setTextColor(getResources().getColor(i));
+        broadCastTextView.setText(f4463n);
+        systemTextView.setTextColor(getResources().getColor(i2));
     }
 
     final void mo2843a(ListView listView, List<Bundle> list) {
@@ -198,11 +197,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        userMod.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "m", 1));
-        userTrousers.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "t", f4427Q));
-        userJackets.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "j", f4428R));
-        userHair.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "h", f4429S));
-        userShoes.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "s", f4430T));
+        userModView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "m", 1));
+        userTrousersView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "t", f4427Q));
+        userJacketsView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "j", f4428R));
+        userHairView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "h", f4429S));
+        userShoesView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "s", f4430T));
     }
 
     final void sendMail(String str, int i) {
@@ -220,7 +219,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         } else if (i == 1) {
             str3 = "设置祝语";
             str2 = "修改";
-            textView.setText(coupleBless.getText().toString().substring(4));
+            textView.setText(coupleBlessView.getText().toString().substring(4));
         } else {
             return;
         }
@@ -251,11 +250,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        f4445ai.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "m", 1));
-        f4446aj.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "t", f4451ao));
-        f4447ak.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "j", f4452ap));
-        f4448al.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "h", f4453aq));
-        f4449am.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "s", f4454ar));
+        coupleModView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "m", 1));
+        coupleTrousersView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "t", f4451ao));
+        coupleJacketView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "j", f4452ap));
+        coupleHairView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "h", f4453aq));
+        coupleShoesView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "s", f4454ar));
     }
 
     final void mo2848c() {
@@ -323,11 +322,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
             f4428R = extras.getInt("J");
             f4429S = extras.getInt("H");
             f4430T = extras.getInt("O");
-            userMod.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "m", 1));
-            userTrousers.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "t", f4427Q));
-            userJackets.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "j", f4428R));
-            userHair.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "h", f4429S));
-            userShoes.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "s", f4430T));
+            userModView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "m", 1));
+            userTrousersView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "t", f4427Q));
+            userJacketsView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "j", f4428R));
+            userHairView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "h", f4429S));
+            userShoesView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "s", f4430T));
         }
     }
 
@@ -380,13 +379,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                     return;
                 }
                 intent.setClass(this, OLShop.class);
-//                intent.putExtra("T", f4427Q - 1);
-//                intent.putExtra("J", f4428R - 1);
-//                intent.putExtra("H", f4429S - 1);
-//                intent.putExtra("S", sex);
-//                intent.putExtra("Lv", lv);
-//                intent.putExtra("O", f4430T - 1);
-                startActivityForResult(intent, 0);
+                intent.putExtra("T", f4427Q - 1);
+                intent.putExtra("J", f4428R - 1);
+                intent.putExtra("H", f4429S - 1);
+                intent.putExtra("S", sex);
+                intent.putExtra("Lv", lv);
+                intent.putExtra("O", f4430T - 1);
+                startActivity(intent);
                 return;
             case R.id.create_family:
                 try {
@@ -565,35 +564,35 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         dressChangeButton.setOnClickListener(this);
         Button bonusButton = findViewById(R.id.ol_bonus_button);
         bonusButton.setOnClickListener(this);
-        /*Button olshop = findViewById(R.id.ol_shop_button);
-        olshop.setText("商城");
-        olshop.setOnClickListener(this);*/
-        userLevel = findViewById(R.id.ol_player_level);
-        userExp = findViewById(R.id.user_exp);
-        userLevel.setText("");
-        f4415E = findViewById(R.id.ol_player_class);
-        f4415E.setText("");
-        f4416F = findViewById(R.id.user_classname);
-        f4416F.setText("");
-        userExp.setText("");
-        mailCounts = findViewById(R.id.user_mailcount);
-        mailCounts.setText("");
-        userMod = findViewById(R.id.ol_player_mod);
-        userMod.setOnClickListener(this);
-        userTrousers = findViewById(R.id.ol_player_trousers);
-        userJackets = findViewById(R.id.ol_player_jacket);
-        userHair = findViewById(R.id.ol_player_hair);
-        userShoes = findViewById(R.id.ol_player_shoes);
-        f4461l = findViewById(R.id.broadCastText);
-        f4460k = findViewById(R.id.systemText);
+        Button shopView = findViewById(R.id.ol_shop_button);
+        shopView.setText("商城");
+        shopView.setOnClickListener(this);
+        userLevelView = findViewById(R.id.ol_player_level);
+        userExpView = findViewById(R.id.user_exp);
+        userLevelView.setText("");
+        userClassView = findViewById(R.id.ol_player_class);
+        userClassView.setText("");
+        userClassNameView = findViewById(R.id.user_classname);
+        userClassNameView.setText("");
+        userExpView.setText("");
+        mailCountsView = findViewById(R.id.user_mailcount);
+        mailCountsView.setText("");
+        userModView = findViewById(R.id.ol_player_mod);
+        userModView.setOnClickListener(this);
+        userTrousersView = findViewById(R.id.ol_player_trousers);
+        userJacketsView = findViewById(R.id.ol_player_jacket);
+        userHairView = findViewById(R.id.ol_player_hair);
+        userShoesView = findViewById(R.id.ol_player_shoes);
+        broadCastTextView = findViewById(R.id.broadCastText);
+        systemTextView = findViewById(R.id.systemText);
         myFamilyContribution = findViewById(R.id.ol_myfamily_contribution);
         myFamilyCount = findViewById(R.id.ol_myfamily_count);
         myFamilyName = findViewById(R.id.ol_myfamily_name);
         myFamilyPic = findViewById(R.id.ol_myfamily_pic);
         myFamilyPosition = findViewById(R.id.ol_myfamily_position);
-        f4460k.setText(f4462m);
-        f4461l.setText(f4463n);
-        f4461l.setMovementMethod(ScrollingMovementMethod.getInstance());
+        systemTextView.setText(f4462m);
+        broadCastTextView.setText(f4463n);
+        broadCastTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
         coupleView = findViewById(R.id.ol_player_couple);
         familyView = findViewById(R.id.ol_player_family);
         Button preButton = findViewById(R.id.pre_button);
@@ -614,33 +613,33 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         newTabSpec.setContent(R.id.family_tab);
         newTabSpec.setIndicator("家族");
         tabHost.addTab(newTabSpec);
-        f4438ab = findViewById(R.id.ol_couple_name);
-        f4438ab.setText("");
-        Button f4440ad = findViewById(R.id.ol_breakup_button);
-        f4440ad.setText("解除搭档");
-        Button f4439ac = findViewById(R.id.ol_setblessing_button);
-        f4439ac.setText("设置祝语");
-        f4439ac.setHint(new SpannableString("输入新祝语)"));
-        f4440ad.setOnClickListener(this);
-        f4439ac.setOnClickListener(this);
+        coupleNameView = findViewById(R.id.ol_couple_name);
+        coupleNameView.setText("");
+        Button breakUpCpButton = findViewById(R.id.ol_breakup_button);
+        breakUpCpButton.setText("解除搭档");
+        Button setBlessingButton = findViewById(R.id.ol_setblessing_button);
+        setBlessingButton.setText("设置祝语");
+        setBlessingButton.setHint(new SpannableString("输入新祝语)"));
+        breakUpCpButton.setOnClickListener(this);
+        setBlessingButton.setOnClickListener(this);
         Button createFamily = findViewById(R.id.create_family);
         createFamily.setOnClickListener(this);
         LinearLayout myFamilyButton = findViewById(R.id.ol_myfamily_button);
         myFamilyButton.setOnClickListener(this);
-        f4441ae = findViewById(R.id.ol_couple_level);
-        f4441ae.setText("");
-        f4442af = findViewById(R.id.couple_points);
-        f4443ag = findViewById(R.id.ol_couple_class);
-        f4443ag.setText("");
-        coupleBless = findViewById(R.id.ol_couple_blessing);
-        f4444ah = findViewById(R.id.couple_classname);
-        f4444ah.setText("");
-        f4445ai = findViewById(R.id.ol_couple_mod);
-        f4445ai.setOnClickListener(this);
-        f4446aj = findViewById(R.id.ol_couple_trousers);
-        f4447ak = findViewById(R.id.ol_couple_jacket);
-        f4448al = findViewById(R.id.ol_couple_hair);
-        f4449am = findViewById(R.id.ol_couple_shoes);
+        coupleLvView = findViewById(R.id.ol_couple_level);
+        coupleLvView.setText("");
+        couplePointsView = findViewById(R.id.couple_points);
+        coupleClView = findViewById(R.id.ol_couple_class);
+        coupleClView.setText("");
+        coupleBlessView = findViewById(R.id.ol_couple_blessing);
+        coupleClNameView = findViewById(R.id.couple_classname);
+        coupleClNameView.setText("");
+        coupleModView = findViewById(R.id.ol_couple_mod);
+        coupleModView.setOnClickListener(this);
+        coupleTrousersView = findViewById(R.id.ol_couple_trousers);
+        coupleJacketView = findViewById(R.id.ol_couple_jacket);
+        coupleHairView = findViewById(R.id.ol_couple_hair);
+        coupleShoesView = findViewById(R.id.ol_couple_shoes);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int childCount = tabHost.getTabWidget().getChildCount();

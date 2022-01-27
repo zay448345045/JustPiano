@@ -1,5 +1,8 @@
 package ly.pp.justpiano3;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class LocalSongData implements Serializable {
@@ -46,5 +49,24 @@ public class LocalSongData implements Serializable {
 
     public void setlScore(int lScore) {
         this.lScore = lScore;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.writeObject(path);
+        oos.writeObject(isfavo);
+        oos.writeObject(score);
+        oos.writeObject(lScore);
+        oos.writeObject(score * lScore ^ 2134);
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        path = (String) ois.readObject();
+        isfavo = (int) ois.readObject();
+        score = (int) ois.readObject();
+        lScore = (int) ois.readObject();
+        int sign = (int) ois.readObject();
+        if (sign != (score * lScore ^ 2134)) {
+            throw new IOException("Don't modify data");
+        }
     }
 }

@@ -576,12 +576,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.left_hand:
                 currentHand = 1;
                 setGroupOrHand(1, commonModeGroup);
-                groupButton.setText(Consts.hands[currentHand] + groupButton.getText().toString().substring(1));
+                groupButton.setText("左" + groupButton.getText().toString().substring(1));
                 return;
             case R.id.right_hand:
                 currentHand = 0;
                 setGroupOrHand(0, commonModeGroup);
-                groupButton.setText(Consts.hands[currentHand] + groupButton.getText().toString().substring(1));
+                groupButton.setText("右" + groupButton.getText().toString().substring(1));
                 return;
             case R.id.rand_0:
                 m3744a(2, 4);

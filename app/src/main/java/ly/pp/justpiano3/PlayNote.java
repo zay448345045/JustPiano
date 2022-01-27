@@ -129,7 +129,8 @@ final class PlayNote {
                     return posiAdd15AddAnim;
                 }
             } else if (newNote && trackValue != handValue && jpapplication.getOpenChord()) {
-                playNote = jpapplication.playSound(noteValue, (volumeValue * jpapplication.getChordVolume()) / 100.0f);
+//                playNote = jpapplication.playSound(noteValue, (volumeValue * jpapplication.getChordVolume()) / 100.0f);
+                playNote = jpapplication.playSound(noteValue, volumeValue);
                 newNote = false;
                 return posiAdd15AddAnim;
             }
@@ -155,7 +156,7 @@ final class PlayNote {
                 if (trackValue == handValue) {
                     jpapplication.drawFire(playView, canvas, noteValue % 12);
                 }
-                playNote = jpapplication.playSound(noteValue, s);
+                playNote = jpapplication.playSound(noteValue, volumeValue);
                 newNote = false;
             }
             if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {

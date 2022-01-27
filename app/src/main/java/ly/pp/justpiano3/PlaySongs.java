@@ -48,7 +48,8 @@ public final class PlaySongs {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        jpapplication.playSound(noteArray[j], volumeArray[j] * jpapplication.getChordVolume() / 100.0f);
+//                        jpapplication.playSound(noteArray[j], volumeArray[j] * jpapplication.getChordVolume() / 100.0f);
+                        jpapplication.playSound(noteArray[j], volumeArray[j]);
                         j++;
                     } else {
                         setNestSong();

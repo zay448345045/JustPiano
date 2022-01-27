@@ -337,7 +337,9 @@ public class ImageLoader {
         try {
             out = new BufferedOutputStream(outputStream, 8 * 1024);
             byte[] array = GZIP.ZIPToArray(response);
-            out.write(array);
+            if (array != null && array.length > 0) {
+                out.write(array);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();

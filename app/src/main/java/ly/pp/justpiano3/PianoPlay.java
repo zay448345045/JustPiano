@@ -259,7 +259,13 @@ public final class PianoPlay extends BaseActivity {
                 l_nandu.setVisibility(View.GONE);
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
-                sendMsg((byte) 16, (byte) 0, "3", null);
+                try {
+                    jSONObject = new JSONObject();
+                    jSONObject.put("K", 3);
+                    sendMsg((byte) 16, (byte) 0, jSONObject.toString(), null);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 return;
             default:
         }

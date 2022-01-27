@@ -36,7 +36,7 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
                 }
                 break;
             case "tab4":
-                olPlayHallRoom.mailCounts.setText("");
+                olPlayHallRoom.mailCountsView.setText("");
                 jSONObject = new JSONObject();
                 try {
                     jSONObject.put("T", "M");

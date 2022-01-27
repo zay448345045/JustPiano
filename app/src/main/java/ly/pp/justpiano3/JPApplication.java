@@ -144,7 +144,7 @@ public final class JPApplication extends Application {
     }
 
     public static void confirmLoadSounds() {
-        setupAudioStreamNative(2, 44100);
+        setupAudioStreamNative(4, 44100);
     }
 
     public static void initSettings() {
@@ -627,8 +627,8 @@ public final class JPApplication extends Application {
         this.isShowDialog = isShowDialog;
     }
 
-    public final int playSound(int note, float volume) {
-        if (note >= 24 && note <= 108) {
+    public final int playSound(int note, int volume) {
+        if (note >= 24 && note <= 108 && volume > 3) {
             trigger(108 - note);
             return note;
         }

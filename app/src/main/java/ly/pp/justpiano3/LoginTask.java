@@ -76,7 +76,6 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             try {
                 message = jSONObject.getString("msg");
                 login.kitiName = jSONObject.getString("ukn");
-                login.sex = jSONObject.getString("sex");
                 title = jSONObject.getString("title");
                 login.jpapplication.f4073g = jSONObject.getString("T1");
                 login.jpapplication.f4074h = jSONObject.getString("M1");

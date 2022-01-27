@@ -65,6 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
+            android:src="@drawable/back_arrow"
             android:background="@drawable/selector_ol_orange"/>
 
         <TextView
@@ -83,8 +84,8 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_ol_orange"
-            android:rotation="180" />
+            android:src="@drawable/for_arrow"
+            android:background="@drawable/selector_ol_orange" />
 
     </LinearLayout>
 

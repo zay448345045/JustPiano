@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,13 +50,13 @@ final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.mo2843a(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
                         olPlayHallRoom.userName.setText(data.getString("U"));//载入昵称
                         JPApplication.kitiName = data.getString("U");
-                        olPlayHallRoom.userExp.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
-                        olPlayHallRoom.userLevel.setText("LV." + data.getInt("LV"));
+                        olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
+                        olPlayHallRoom.userLevelView.setText("LV." + data.getInt("LV"));
                         i = data.getInt("CL");
-                        olPlayHallRoom.f4415E.setText("CL." + i);
-                        olPlayHallRoom.f4415E.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
-                        olPlayHallRoom.f4416F.setText(Consts.nameCL[i]);
-                        olPlayHallRoom.f4416F.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.userClassView.setText("CL." + i);
+                        olPlayHallRoom.userClassView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.userClassNameView.setText(Consts.nameCL[i]);
+                        olPlayHallRoom.userClassNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
                         olPlayHallRoom.cp = data.getInt("CP");
                         olPlayHallRoom.familyID = data.getString("I");
                         if (olPlayHallRoom.cp >= 0 && olPlayHallRoom.cp <= 3) {
@@ -83,7 +82,7 @@ final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.mo2844a(data.getString("DR"));
                         i = data.getInt("M");
                         if (i > 0) {
-                            olPlayHallRoom.mailCounts.setText(String.valueOf(i));
+                            olPlayHallRoom.mailCountsView.setText(String.valueOf(i));
                         }
                     });
                     return;
@@ -357,15 +356,15 @@ final class OLPlayHallRoomHandler extends Handler {
                 case 22:
                     post(() -> {
                         Bundle data = message.getData();
-                        olPlayHallRoom.coupleBless.setText(data.getString("IN"));
-                        olPlayHallRoom.f4438ab.setText(data.getString("U"));
-                        olPlayHallRoom.f4441ae.setText("LV." + data.getInt("LV"));
-                        olPlayHallRoom.f4442af.setText("祝福点数:" + data.getInt("CP"));
+                        olPlayHallRoom.coupleBlessView.setText(data.getString("IN"));
+                        olPlayHallRoom.coupleNameView.setText(data.getString("U"));
+                        olPlayHallRoom.coupleLvView.setText("LV." + data.getInt("LV"));
+                        olPlayHallRoom.couplePointsView.setText("祝福点数:" + data.getInt("CP"));
                         int i = data.getInt("CL");
-                        olPlayHallRoom.f4443ag.setText("CL." + i);
-                        olPlayHallRoom.f4443ag.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
-                        olPlayHallRoom.f4444ah.setText(Consts.nameCL[i]);
-                        olPlayHallRoom.f4444ah.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.coupleClView.setText("CL." + i);
+                        olPlayHallRoom.coupleClView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.coupleClNameView.setText(Consts.nameCL[i]);
+                        olPlayHallRoom.coupleClNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
                         olPlayHallRoom.mo2847b(data.getString("DR"));
                     });
                     return;
