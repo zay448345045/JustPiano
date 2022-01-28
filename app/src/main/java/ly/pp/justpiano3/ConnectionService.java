@@ -145,7 +145,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void run() {
         try {
-            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8911);
+            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8908);
             selector = Selector.open();
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);
@@ -158,7 +158,7 @@ public class ConnectionService extends Service implements Runnable {
                         if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
                             writeBuffer.clear();
                             try {
-                                String str = "20220201";
+                                String str = "20220128";
                                 writeBuffer = JsonHandle.sendLogin(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);

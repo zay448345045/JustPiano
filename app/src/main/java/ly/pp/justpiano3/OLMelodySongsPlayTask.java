@@ -46,25 +46,23 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     @Override
     protected String doInBackground(String... objects) {
         if (!OLMelodySelect.songID.isEmpty()) {
-            do {
-                HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("songID", OLMelodySelect.songID));
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("songID", OLMelodySelect.songID));
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                HttpResponse execute = new DefaultHttpClient().execute(httpPost);
+                if (execute.getStatusLine().getStatusCode() == 200) {
+                    str = EntityUtils.toString(execute.getEntity());
                 }
-                try {
-                    HttpResponse execute = new DefaultHttpClient().execute(httpPost);
-                    if (execute.getStatusLine().getStatusCode() == 200) {
-                        str = EntityUtils.toString(execute.getEntity());
-                    }
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
-            } while (!str.endsWith("\"}"));
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
             OLMelodySelect.songBytes = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
         }
         return null;
