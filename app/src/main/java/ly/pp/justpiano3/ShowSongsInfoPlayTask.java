@@ -45,7 +45,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
-            songBytes = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
+            songBytes = GZIP.ZIPToArray(str);
         }
         return null;
     }

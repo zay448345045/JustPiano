@@ -51,7 +51,7 @@ public final class SearchSongsPlayTask extends AsyncTask<Void, Void, Void> {
                     e4.printStackTrace();
                 }
             }
-            songBytes = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
+            songBytes = GZIP.ZIPToArray(str);
         }
         return null;
     }

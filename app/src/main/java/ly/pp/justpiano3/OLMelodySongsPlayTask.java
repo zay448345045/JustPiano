@@ -63,7 +63,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
-            OLMelodySelect.songBytes = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
+            OLMelodySelect.songBytes = GZIP.ZIPToArray(str);
         }
         return null;
     }
