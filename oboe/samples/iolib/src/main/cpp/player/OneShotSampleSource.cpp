@@ -45,8 +45,16 @@ namespace iolib {
                 // STEREO output
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += data[trueIndex] * (trueVolume >> 1) / 64;
-                    outBuff[dstSampleIndex++] += data[trueIndex++] * (trueVolume >> 1) / 64;
+                    outBuff[dstSampleIndex++] += data[trueIndex] * trueVolume / 128;
+                    outBuff[dstSampleIndex++] += data[trueIndex++] * trueVolume / 128;
+                }
+            } else if (numChannels == 4) {
+                int dstSampleIndex = 0;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
+                    outBuff[dstSampleIndex++] += data[trueIndex] * trueVolume / 256;
+                    outBuff[dstSampleIndex++] += data[trueIndex] * trueVolume / 256;
+                    outBuff[dstSampleIndex++] += data[trueIndex] * trueVolume / 256;
+                    outBuff[dstSampleIndex++] += data[trueIndex++] * trueVolume / 256;
                 }
             }
         }
