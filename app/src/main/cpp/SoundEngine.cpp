@@ -103,8 +103,8 @@ Java_ly_pp_justpiano3_JPApplication_unloadWavAssetsNative(JNIEnv *env, jclass) {
  * Native (JNI) implementation of DrumPlayer.trigger()
  */
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_JPApplication_trigger(JNIEnv *env, jclass, jint index) {
-    sDTPlayer.triggerDown(index);
+Java_ly_pp_justpiano3_JPApplication_trigger(JNIEnv *env, jclass, jint index, jint volume) {
+    sDTPlayer.triggerDown(index, volume);
 }
 
 /**

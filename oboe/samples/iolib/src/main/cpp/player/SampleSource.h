@@ -46,8 +46,8 @@ namespace iolib {
 
         virtual ~SampleSource() {}
 
-        void setPlayMode() {
-            mCurFrameIndexQueue.push(0);
+        void setPlayMode(int32_t volume) {
+            mCurFrameIndexQueue.push(std::make_pair(0, volume));
         }
 
         void setStopMode() {
@@ -84,12 +84,12 @@ namespace iolib {
             return mCurFrameIndexQueue.size();
         }
 
-        int32_t frontCurFrameIndexQueue() {
+        std::pair<int32_t, int32_t>& frontCurFrameIndexQueue() {
             return mCurFrameIndexQueue.front();
         }
 
-        void pushCurFrameIndexQueue(int32_t index) {
-            mCurFrameIndexQueue.push(index);
+        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t>& pair) {
+            mCurFrameIndexQueue.push(pair);
         }
 
         void popCurFrameIndexQueue() {
@@ -99,7 +99,7 @@ namespace iolib {
     protected:
         SampleBuffer *mSampleBuffer;
 
-        std::queue<int32_t> mCurFrameIndexQueue;
+        std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
 
         // Logical pan value
         float mPan;

@@ -56,9 +56,9 @@ namespace iolib {
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             int count = 0;
             for(int32_t i = 0; i < queueSize; i++) {
-                int32_t curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                std::pair<int32_t, int32_t> curFrameIndex = sampleSource->frontCurFrameIndexQueue();
                 sampleSource->mixAudio((float *) audioData, mChannelCount, numFrames, curFrameIndex);
-                if (curFrameIndex >= numSampleFrames) {
+                if (curFrameIndex.first >= numSampleFrames) {
                     count++;
                 }
                 sampleSource->pushCurFrameIndexQueue(curFrameIndex);
@@ -167,9 +167,9 @@ namespace iolib {
         mNumSampleBuffers = 0;
     }
 
-    void SimpleMultiPlayer::triggerDown(int32_t index) {
+    void SimpleMultiPlayer::triggerDown(int32_t index, int32_t volume) {
         if (index < mNumSampleBuffers) {
-            mSampleSources[index]->setPlayMode();
+            mSampleSources[index]->setPlayMode(volume);
         }
     }
 

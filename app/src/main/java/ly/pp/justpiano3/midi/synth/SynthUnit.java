@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef _PLAYER_AUDIOSOURCE_H_
-#define _PLAYER_AUDIOSOURCE_H_
+package ly.pp.justpiano3.midi.synth;
 
-#include <cstdint>
+public abstract class SynthUnit {
 
-namespace iolib {
+    private static final double CONCERT_A_PITCH = 69.0;
+    private static final double CONCERT_A_FREQUENCY = 440.0;
 
-/*
- * Defines an interface for audio data sources for the SimpleMultiPlayer class.
- */
-    class DataSource {
-    public:
-        virtual ~DataSource() {};
+    /**
+     * @param pitch
+     *            MIDI pitch in semitones
+     * @return frequency
+     */
+    public static double pitchToFrequency(double pitch) {
+        double semitones = pitch - CONCERT_A_PITCH;
+        return CONCERT_A_FREQUENCY * Math.pow(2.0, semitones / 12.0);
+    }
 
-        virtual void mixAudio(float *outBuff, int numChannels, int numFrames, std::pair<int32_t, int32_t>& curFrameIndex) = 0;
-    };
-
+    public abstract float render();
 }
-
-#endif //_PLAYER_AUDIOSOURCE_H_

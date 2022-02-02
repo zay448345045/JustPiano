@@ -89,9 +89,16 @@
             android:persistent="true"
             android:title="音源" />
         <SwitchPreference
+            android:defaultValue="false"
+            android:key="compatible_sound"
+            android:summary="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
+            android:summaryOff="兼容模式播放已关闭"
+            android:summaryOn="兼容模式播放已打开"
+            android:title="兼容模式播放" />
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/b_s_key"
-            android:summary="@string/b_s_open_1"
+            android:summary="是否打开和弦播放"
             android:summaryOff="@string/b_s_open_2"
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />

@@ -51,7 +51,7 @@ public final class JPApplication extends Application {
     private int whiteKeyHeight;
     private float f4034C;
     private float blackKeyWidth;
-    private float chordVolume = 1f;
+    private float chordVolume = 0.8f;
     private int notesDownSpeed = 6;
     private boolean isBindService;
     private int gameMode;
@@ -93,7 +93,7 @@ public final class JPApplication extends Application {
 
     public static native void unloadWavAssetsNative();
 
-    public static native void trigger(int var1);
+    public static native void trigger(int var1, int var2);
 
     public static void preloadSounds(int i) {
         try {
@@ -144,7 +144,10 @@ public final class JPApplication extends Application {
     }
 
     public static void confirmLoadSounds() {
-        setupAudioStreamNative(2, 44100);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", false);
+        Toast.makeText(context, String.valueOf(compatibleSound), Toast.LENGTH_SHORT).show();
+        setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
     }
 
     public static void initSettings() {
@@ -154,7 +157,7 @@ public final class JPApplication extends Application {
         editor.putString("anim_frame", "4");
         editor.putBoolean("note_dismiss", false);
         editor.putString("note_size", "1");
-        editor.putString("b_s_vol", "1.0");
+        editor.putString("b_s_vol", "0.8");
         editor.putString("temp_speed", "1.0");
         editor.putString("sound_list", "original");
         editor.apply();
@@ -460,7 +463,7 @@ public final class JPApplication extends Application {
                 break;
         }
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true);
-        chordVolume = Float.parseFloat(sharedPreferences.getString("b_s_vol", "1.0"));
+        chordVolume = Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8"));
         animFrame = Integer.parseInt(sharedPreferences.getString("anim_frame", "4"));
         keyboardPerfer = sharedPreferences.getBoolean("keyboard_perfer", true);
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true);
@@ -629,7 +632,7 @@ public final class JPApplication extends Application {
 
     public final int playSound(int note, int volume) {
         if (note >= 24 && note <= 108 && volume > 3) {
-            trigger(108 - note);
+            trigger(108 - note, volume);
             return note;
         }
         return 0;

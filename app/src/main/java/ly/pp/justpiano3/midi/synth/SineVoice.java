@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef _PLAYER_AUDIOSOURCE_H_
-#define _PLAYER_AUDIOSOURCE_H_
+package ly.pp.justpiano3.midi.synth;
 
-#include <cstdint>
-
-namespace iolib {
-
-/*
- * Defines an interface for audio data sources for the SimpleMultiPlayer class.
+/**
+ * Replace sawtooth with a sine wave.
  */
-    class DataSource {
-    public:
-        virtual ~DataSource() {};
-
-        virtual void mixAudio(float *outBuff, int numChannels, int numFrames, std::pair<int32_t, int32_t>& curFrameIndex) = 0;
-    };
-
+public class SineVoice extends SawVoice {
+    @Override
+    protected SawOscillator createOscillator() {
+        return new SineOscillator();
+    }
 }
-
-#endif //_PLAYER_AUDIOSOURCE_H_

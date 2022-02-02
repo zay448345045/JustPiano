@@ -26,12 +26,12 @@ final class KeyboardTouchListener implements OnTouchListener {
                 if (keyBoard.f4138a > 13) {
                     action = (keyBoard.f4138a - 14) + ((keyBoard.f4153p + keyBoard.jpapplication.getBadu()) * 12);
                     if (keyBoard.f4155r >= keyBoard.longKeyboardHeight) {
-                        keyBoard.jpapplication.playSound(action, 100);
+                        keyBoard.jpapplication.playSound(action, 64);
                     }
                 } else {
                     action = keyBoard.f4138a + ((keyBoard.f4152o + keyBoard.jpapplication.getBadu()) * 12);
                     if (keyBoard.f4155r >= keyBoard.longKeyboardHeight) {
-                        keyBoard.jpapplication.playSound(action, 100);
+                        keyBoard.jpapplication.playSound(action, 64);
                     }
                 }
                 keyBoard.f4149l = keyBoard.f4138a;
@@ -51,12 +51,12 @@ final class KeyboardTouchListener implements OnTouchListener {
                     if (keyBoard.f4138a > 13) {
                         action = (keyBoard.f4138a - 14) + ((keyBoard.f4153p + keyBoard.jpapplication.getBadu()) * 12);
                         if (y >= keyBoard.longKeyboardHeight) {
-                            keyBoard.jpapplication.playSound(action, 100);
+                            keyBoard.jpapplication.playSound(action, 64);
                         }
                     } else {
                         action = keyBoard.f4138a + ((keyBoard.f4152o + keyBoard.jpapplication.getBadu()) * 12);
                         if (y >= keyBoard.longKeyboardHeight) {
-                            keyBoard.jpapplication.playSound(action, 100);
+                            keyBoard.jpapplication.playSound(action, 64);
                         }
                     }
                     keyBoard.f4149l = keyBoard.f4138a;

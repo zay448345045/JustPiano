@@ -31,7 +31,7 @@
     <string name="draw_speed">滑落速度(影响歌曲节奏)</string>
     <string name="back_sound">和弦音量(突出弹奏声音)</string>
     <string name="song_speed">歌曲速度调节：</string>
-    <string name="b_s_sum">减小和弦音量,突出主弦.</string>
+    <string name="b_s_sum">减小和弦音量,突出主旋律</string>
     <string name="b_s_open">打开和弦</string>
     <string name="b_s_open_1">和弦已打开</string>
     <string name="b_s_open_2">和弦已关闭</string>
