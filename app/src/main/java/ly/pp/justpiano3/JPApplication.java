@@ -146,7 +146,6 @@ public final class JPApplication extends Application {
     public static void confirmLoadSounds() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", false);
-        Toast.makeText(context, String.valueOf(compatibleSound), Toast.LENGTH_SHORT).show();
         setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
     }
 
