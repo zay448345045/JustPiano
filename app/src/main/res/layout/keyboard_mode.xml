@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/keyboard1_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/keyboard1_count_down"
+                android:text="—"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard1_move_left"
+                android:text="←"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard1_move_right"
+                android:text="→"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard1_count_up"
+                android:text="＋"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/keyboard_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="键盘模式"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/white1"
+                android:textStyle="bold">
+            </TextView>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/keyboard2_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/keyboard2_count_down"
+                android:text="—"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_ol_button"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard2_move_left"
+                android:text="←"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_ol_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard2_move_right"
+                android:text="→"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_ol_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard2_count_up"
+                android:text="＋"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_ol_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_orange_button"
+        android:layout_weight="1">
+
+        <ly.pp.justpiano3.KeyboardModeView
+            app:keyNum="7"
+            app:keyOffset="60"
+            android:id="@+id/keyboard1_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ly.pp.justpiano3.KeyboardModeView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_ol_button"
+        android:layout_weight="1">
+
+        <ly.pp.justpiano3.KeyboardModeView
+            app:keyNum="7"
+            app:keyOffset="60"
+            android:id="@+id/keyboard2_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ly.pp.justpiano3.KeyboardModeView>
+    </LinearLayout>
+
+</LinearLayout>

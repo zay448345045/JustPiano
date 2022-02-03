@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import javazoom.jl.converter.Converter;
 
 public final class JPApplication extends Application {
@@ -515,18 +516,10 @@ public final class JPApplication extends Application {
         super.onCreate();
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());
-        }
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         context = getApplicationContext();
         sharedpreferences = getSharedPreferences("account_list", MODE_PRIVATE);
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        context = null;
     }
 
     public int getAnimFrame() {
@@ -617,8 +610,8 @@ public final class JPApplication extends Application {
         return server;
     }
 
-    public void setServer(String ser) {
-        server = ser;
+    public void setServer(String server) {
+        this.server = server;
     }
 
     public final boolean getIsShowDialog() {
@@ -638,7 +631,7 @@ public final class JPApplication extends Application {
     }
 
     public final void stopSongs(int i) {
-        //sp.stop(i);
+        // nothing
     }
 
     private static class CrashHandler implements Thread.UncaughtExceptionHandler {
@@ -648,7 +641,7 @@ public final class JPApplication extends Application {
         }
 
         @Override
-        public void uncaughtException(Thread t, Throwable e) {
+        public void uncaughtException(@NonNull Thread t, Throwable e) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(baos));
             final String errorLog = baos.toString();
@@ -658,7 +651,6 @@ public final class JPApplication extends Application {
             String str = errorLog.substring(0, 26);
             if (str.equals("java.lang.OutOfMemoryError")) {
                 new Thread() {
-
                     @Override
                     public void run() {
                         Looper.prepare();
@@ -668,7 +660,6 @@ public final class JPApplication extends Application {
                 }.start();
             } else {
                 new Thread() {
-
                     @Override
                     public void run() {
                         Looper.prepare();

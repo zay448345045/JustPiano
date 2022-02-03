@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KeyboardModeView">
+        <attr name="keyNum" format="integer"/>
+        <attr name="keyOffset" format="integer"/>
+        <attr name="noteOnColor" format="color|reference"/>
+    </declare-styleable>
+</resources>
