@@ -175,6 +175,9 @@ public class MainMode extends Activity implements OnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
             }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
+            }
         }
     }
 }

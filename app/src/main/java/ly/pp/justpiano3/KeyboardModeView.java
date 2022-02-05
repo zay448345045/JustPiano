@@ -251,13 +251,15 @@ public class KeyboardModeView extends View {
 
     private void onFingerDown(int id, float x, float y) {
         int pitch = -1;
+        int volume = -1;
         if (y < blackKeyHeight) {
             pitch = xyToBlackPitch(x, y);
+            volume = (int) (y / blackKeyHeight * MAX_VOLUME);
         }
         if (pitch < 0) {
             pitch = xToWhitePitch(x);
+            volume = (int) (y / viewHeight * MAX_VOLUME);
         }
-        int volume = (int) (y / viewHeight * MAX_VOLUME);
         fireKeyDown(pitch, volume);
         mFingerMap.put(id, pitch);
     }
@@ -266,13 +268,15 @@ public class KeyboardModeView extends View {
         Integer previousPitch = mFingerMap.get(id);
         if (previousPitch != null) {
             int pitch = -1;
+            int volume = -1;
             if (y < blackKeyHeight) {
                 pitch = xyToBlackPitch(x, y);
+                volume = (int) (y / blackKeyHeight * MAX_VOLUME);
             }
             if (pitch < 0) {
                 pitch = xToWhitePitch(x);
+                volume = (int) (y / viewHeight * MAX_VOLUME);
             }
-            int volume = (int) (y / viewHeight * MAX_VOLUME);
             // Did we change to a new key.
             if (pitch >= 0 && pitch != previousPitch) {
 //                boolean mLegato = true;
