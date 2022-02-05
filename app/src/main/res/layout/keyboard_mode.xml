@@ -27,7 +27,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_orange_button"
+                android:background="@drawable/selector_ol_button"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -40,7 +40,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_orange_button"
+                android:background="@drawable/selector_ol_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -52,7 +52,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_orange_button"
+                android:background="@drawable/selector_ol_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -64,7 +64,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_orange_button"
+                android:background="@drawable/selector_ol_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -104,7 +104,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_ol_button"
+                android:background="@drawable/selector_orange_button"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -117,7 +117,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_ol_button"
+                android:background="@drawable/selector_orange_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -129,7 +129,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_ol_button"
+                android:background="@drawable/selector_orange_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -141,7 +141,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white1"
-                android:background="@drawable/selector_ol_button"
+                android:background="@drawable/selector_orange_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -153,12 +153,12 @@
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/selector_orange_button"
+        android:background="@drawable/selector_ol_button"
         android:layout_weight="1">
 
         <ly.pp.justpiano3.KeyboardModeView
-            app:keyNum="7"
-            app:keyOffset="60"
+            app:whiteKeyNum="8"
+            app:whiteKeyOffset="21"
             android:id="@+id/keyboard1_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -169,12 +169,12 @@
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/selector_ol_button"
+        android:background="@drawable/selector_orange_button"
         android:layout_weight="1">
 
         <ly.pp.justpiano3.KeyboardModeView
-            app:keyNum="7"
-            app:keyOffset="60"
+            app:whiteKeyNum="8"
+            app:whiteKeyOffset="14"
             android:id="@+id/keyboard2_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

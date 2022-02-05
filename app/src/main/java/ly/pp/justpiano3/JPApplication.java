@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -14,7 +15,12 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.midi.MidiDeviceInfo;
+import android.media.midi.MidiManager;
+import android.media.midi.MidiOutputPort;
+import android.media.midi.MidiReceiver;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -35,6 +41,7 @@ import androidx.annotation.NonNull;
 import javazoom.jl.converter.Converter;
 
 public final class JPApplication extends Application {
+
     public static String kitiName = "";
     static SharedPreferences sharedpreferences;
     private static Context context;
@@ -50,7 +57,7 @@ public final class JPApplication extends Application {
     boolean changeNotesColor = true;
     private ConnectionService connectionService;
     private int whiteKeyHeight;
-    private float f4034C;
+    private float blackKeyHeight;
     private float blackKeyWidth;
     private float chordVolume = 0.8f;
     private int notesDownSpeed = 6;
@@ -83,6 +90,8 @@ public final class JPApplication extends Application {
     private float halfHeightSub10;
     private float whiteKeyHeightAdd90;
     private int roughLine;
+    private MidiManager mMidiManager;
+    MidiOutputPort midiOutputPort;
 
     public long serverTimeInterval;
 
@@ -205,16 +214,16 @@ public final class JPApplication extends Application {
     public final List<Rect> getKeyRectArray() {
         List<Rect> arrayList = new ArrayList<>();
         arrayList.add(new Rect(0, whiteKeyHeight, (int) widthDiv8, heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 + blackKeyWidth), (int) (whiteKeyHeight + f4034C + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
         arrayList.add(new Rect((int) widthDiv8, whiteKeyHeight, (int) (widthDiv8 * 2), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 2 + blackKeyWidth), (int) (whiteKeyHeight + f4034C + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 2 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
         arrayList.add(new Rect((int) (widthDiv8 * 2), whiteKeyHeight, (int) (widthDiv8 * 3), heightPixels));
         arrayList.add(new Rect((int) (widthDiv8 * 3), whiteKeyHeight, (int) (widthDiv8 * 4), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 4 + blackKeyWidth), (int) (whiteKeyHeight + f4034C + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 4 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
         arrayList.add(new Rect((int) (widthDiv8 * 4), whiteKeyHeight, (int) (widthDiv8 * 5), heightPixels));
-        arrayList.add(new Rect((int) ((widthDiv8 * 5) - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 5 + blackKeyWidth), (int) (whiteKeyHeight + f4034C + 5)));
+        arrayList.add(new Rect((int) ((widthDiv8 * 5) - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 5 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
         arrayList.add(new Rect((int) (widthDiv8 * 5), whiteKeyHeight, (int) (widthDiv8 * 6), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 6 + blackKeyWidth), (int) (whiteKeyHeight + f4034C + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 6 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
         arrayList.add(new Rect((int) (widthDiv8 * 6), whiteKeyHeight, (int) (widthDiv8 * 7), heightPixels));
         arrayList.add(new Rect((int) (widthDiv8 * 7), whiteKeyHeight, (int) (widthDiv8 * 8), heightPixels));
         return arrayList;
@@ -438,8 +447,8 @@ public final class JPApplication extends Application {
         animPosition += animFrame;
     }
 
-    public final void mo2724e(float f) {
-        f4034C = f;
+    public final void setBlackKeyHeight(float f) {
+        blackKeyHeight = f;
     }
 
     public void setServerTimeInterval(long serverTime) {
@@ -520,7 +529,37 @@ public final class JPApplication extends Application {
         StrictMode.setVmPolicy(builder.build());
         context = getApplicationContext();
         sharedpreferences = getSharedPreferences("account_list", MODE_PRIVATE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                mMidiManager = (MidiManager) getSystemService(MIDI_SERVICE);
+                mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
+                    @Override
+                    public void onDeviceAdded(MidiDeviceInfo info) {
+                        mMidiManager.openDevice(info, device -> {
+                            if (device == null) {
+                                Toast.makeText(context, "MIDI设备连接失败", Toast.LENGTH_SHORT).show();
+                            } else {
+                                MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
+                                for (MidiDeviceInfo.PortInfo port : ports) {
+                                    if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                                        midiOutputPort = device.openOutputPort(port.getPortNumber());
+                                    }
+                                }
+                                Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
+                            }
+                        }, new Handler(Looper.getMainLooper()));
+                    }
+
+                    @Override
+                    public void onDeviceRemoved(MidiDeviceInfo info) {
+                        Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
+                        midiOutputPort = null;
+                    }
+                }, new Handler(Looper.getMainLooper()));
+            }
+        }
     }
+
 
     public int getAnimFrame() {
         return animFrame;
@@ -578,8 +617,8 @@ public final class JPApplication extends Application {
         whiteKeyHeight = f;
     }
 
-    public final float mo2749x() {
-        return f4034C;
+    public final float getBlackKeyHeight() {
+        return blackKeyHeight;
     }
 
     public final float getBlackKeyWidth() {

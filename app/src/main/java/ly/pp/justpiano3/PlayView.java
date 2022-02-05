@@ -240,7 +240,7 @@ public final class PlayView extends SurfaceView implements Callback {
         jpapplication.setWidthDiv8(jpapplication.getWidthPixels() / 8f);
         jpapplication.setWhiteKeyHeight((int) (jpapplication.getHeightPixels() * 0.49));
         jpapplication.setHalfHeightSub20(jpapplication.getWhiteKeyHeight() - 20);
-        jpapplication.mo2724e(jpapplication.getHeightPixels() / 3.4f);
+        jpapplication.setBlackKeyHeight(jpapplication.getHeightPixels() / 3.4f);
         jpapplication.setBlackKeyWidth(jpapplication.getWidthPixels() * 0.0413f);
         jpapplication.setHalfHeightSub10(jpapplication.getHeightPixels() * 0.5f - 10);
         jpapplication.setWhiteKeyHeightAdd90(jpapplication.getWhiteKeyHeight() + 90f);
@@ -471,7 +471,7 @@ public final class PlayView extends SurfaceView implements Callback {
 
     final int eventPositionToTouchNoteNum(float f, float f2) {
         int i = 1;
-        float w = jpapplication.getWhiteKeyHeight() + jpapplication.mo2749x();
+        float w = jpapplication.getWhiteKeyHeight() + jpapplication.getBlackKeyHeight();
         if (f2 >= jpapplication.getWhiteKeyHeight()) {
             if (f2 <= w) {
                 if (Math.abs(widthDiv8 - f) < jpapplication.getBlackKeyWidth()) {

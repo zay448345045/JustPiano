@@ -2,101 +2,98 @@ package ly.pp.justpiano3;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.RectF;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * View that displays a traditional piano style keyboard. Finger presses are reported to a
- * MusicKeyListener. Keys that pressed are highlighted. Running a finger along the top of the
- * keyboard will only hit black keys. Running a finger along the bottom of the keyboard will only
- * hit white keys.
- */
 public class KeyboardModeView extends View {
-    // Adjust proportions of the keys.
-    private static final int WHITE_KEY_GAP = 10;
-    private static final int PITCH_MIDDLE_C = 60;
     private static final int NOTES_PER_OCTAVE = 12;
+    private static final int WHITE_NOTES_PER_OCTAVE = 7;
+    private static final int BLACK_NOTES_PER_OCTAVE = 5;
+    private static final int DEFAULT_WHITE_KEY_NUM = 8;
+    private static final int DEFAULT_WHITE_KEY_OFFSET = 21;
+    private static final int MAX_WHITE_KEY_RIGHT_VALUE = 49;
+    private static final int MIN_WHITE_KEY_NUM = 7;
+    private static final int MAX_VOLUME = 127;
+
+    private static final float BLACK_KEY_HEIGHT_FACTOR = 0.57f;
+    private static final float BLACK_KEY_WIDTH_FACTOR = 0.607f;
+
+    private static final int WHITE_KEY_OFFSET_0_MIDI_PITCH = 24;
+
     private static final int[] WHITE_KEY_OFFSETS = {
             0, 2, 4, 5, 7, 9, 11
     };
-    private static final float BLACK_KEY_HEIGHT_FACTOR = 0.60f;
-    private static final float BLACK_KEY_WIDTH_FACTOR = 0.6f;
-    private static final float BLACK_KEY_OFFSET_FACTOR = 0.18f;
 
-    private static final int[] BLACK_KEY_HORIZONTAL_OFFSETS = {
-            -1, 1, -1, 0, 1
-    };
-    private static final boolean[] NOTE_IN_OCTAVE_IS_BLACK = {
-            false, true,
-            false, true,
-            false, false, true,
-            false, true,
-            false, true,
-            false
+    private static final int[] BLACK_KEY_OFFSETS = {
+            1, 3, 6, 8, 10
     };
 
-    // These COMPLEMENTS are used to fix a problem with the alignment of the keys.
-    // If mLowestPitch starts from the beginning of some octave then there is no problem.
-    // But if it's not, then the BLACK_KEY_HORIZONTAL_OFFSETS[blackKeyIndex % 5] would give
-    // us the wrong result. So, the "left complement" in this case is the number of black keys we
-    // should add to the blackKeyIndex to fill the left space down to the beginning of the octave.
-    private static final int[] WHITE_KEY_LEFT_COMPLEMENTS = {
-            0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6
-    };
-    private static final int[] BLACK_KEY_LEFT_COMPLEMENTS = {
-            0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5
+    // -1为黑键、0为left、1为middle、2为right
+    private static final int[] KEY_IMAGE_TYPE = {
+            2, -1, 1, -1, 0, 2, -1, 1, -1, 1, -1, 0
     };
 
-    // Preferences
-    private int keyNum = (2 * NOTES_PER_OCTAVE) + 1;
-    private int mNumWhiteKeys = 15;
+    // midi音高转白键或黑键索引
+    private static final int[] PITCH_TO_KEY_INDEX_IN_OCTAVE = {
+            0, 0, 1, 1, 2, 3, 2, 4, 3, 5, 4, 6
+    };
 
     // Geometry.
-    private float mWidth;
-    private float mHeight;
-    private float mWhiteKeyWidth;
-    private float mBlackKeyWidth;
-    // Y position of bottom of black keys.
-    private float mBlackBottom;
-    private Rect[] mBlackKeyRectangles;
+    private float viewWidth;
+    private float viewHeight;
+    private float whiteKeyWidth;
+    private float blackKeyHeight;
 
-    // Keyboard state
-    private final boolean[] mNotesOnByPitch = new boolean[128];
+    private RectF[] keyboardImageRectArray;
+    // 当前页面中显示的所在八度完整区域内的rect和是否按下的boolean标记
+    private RectF[] whiteKeyRectArray;
+    private RectF[] blackKeyRectArray;
+    private boolean[] notesOnArray;
 
     // Appearance
-    private Paint mShadowPaint;
-    private Paint mBlackOnKeyPaint;
-    private Paint mBlackOffKeyPaint;
-    private Paint mWhiteOnKeyPaint;
-    private Paint mWhiteOffKeyPaint;
-    private final boolean mLegato = true;
+    private Paint noteOnPaint;
 
-    private final HashMap<Integer, Integer> mFingerMap = new HashMap<>();
+    private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
     private final List<MusicKeyListener> mListeners = new ArrayList<>();
 
-    private int keyOffset;
+    private int whiteKeyNum;
+    private int whiteKeyOffset;
     private int noteOnColor;
+
+    private final Bitmap keyboardImage;
+    private final Bitmap whiteKeyRightImage;
+    private final Bitmap whiteKeyMiddleImage;
+    private final Bitmap whiteKeyLeftImage;
+    private final Bitmap blackKeyImage;
 
     /**
      * Implement this to receive keyboard events.
      */
     public interface MusicKeyListener {
-        /**
-         * This will be called when a key is pressed.
-         */
-        void onKeyDown(int keyIndex);
 
         /**
          * This will be called when a key is pressed.
+         */
+        void onKeyDown(int keyIndex, int volume);
+
+        /**
+         * This will be called when a key stop to press.
          */
         void onKeyUp(int keyIndex);
     }
@@ -112,6 +109,13 @@ public class KeyboardModeView extends View {
     public KeyboardModeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         handleCustomAttrs(context, attrs);
+        Bitmap keyBoardHd = loadImage(context, "key_board_hd");
+        assert keyBoardHd != null;
+        keyboardImage = cropKeyboardBitmap(keyBoardHd);
+        whiteKeyRightImage = loadImage(context, "white_r");
+        whiteKeyMiddleImage = loadImage(context, "white_m");
+        whiteKeyLeftImage = loadImage(context, "white_l");
+        blackKeyImage = loadImage(context, "black");
     }
 
     private void handleCustomAttrs(Context context, AttributeSet attrs) {
@@ -119,111 +123,84 @@ public class KeyboardModeView extends View {
             return;
         }
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardModeView);
-        keyNum = typedArray.getInteger(R.styleable.KeyboardModeView_keyNum, 7);
-        keyOffset = typedArray.getInteger(R.styleable.KeyboardModeView_keyOffset, 60);
-        noteOnColor = typedArray.getColor(R.styleable.KeyboardModeView_noteOnColor, R.drawable.none);
+        whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM);
+        whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET);
+        noteOnColor = typedArray.getColor(R.styleable.KeyboardModeView_noteOnColor, 0xffffffff);
         typedArray.recycle();
-
-        mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mShadowPaint.setStyle(Paint.Style.FILL);
-        mShadowPaint.setColor(0xFF707070);
-
-        mBlackOnKeyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBlackOnKeyPaint.setStyle(Paint.Style.FILL);
-        mBlackOnKeyPaint.setColor(0xFF2020E0);
-
-        mBlackOffKeyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBlackOffKeyPaint.setStyle(Paint.Style.FILL);
-        mBlackOffKeyPaint.setColor(0xFF202020);
-
-        mWhiteOnKeyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mWhiteOnKeyPaint.setStyle(Paint.Style.FILL);
-        mWhiteOnKeyPaint.setColor(0xFF6060F0);
-
-        mWhiteOffKeyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mWhiteOffKeyPaint.setStyle(Paint.Style.FILL);
-        mWhiteOffKeyPaint.setColor(0xFFF0F0F0);
+        noteOnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        noteOnPaint.setColorFilter(new PorterDuffColorFilter(noteOnColor, PorterDuff.Mode.MULTIPLY));
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mWidth = w;
-        mHeight = h;
+        viewWidth = w;
+        viewHeight = h;
+        blackKeyHeight = BLACK_KEY_HEIGHT_FACTOR * viewHeight;
         makeDraw();
     }
 
     private void makeDraw() {
-        mNumWhiteKeys = 0;
-        // Count white keys.
-        for (int i = 0; i < keyNum; i++) {
-            int pitch = keyOffset + i;
-            if (!isPitchBlack(pitch)) {
-                mNumWhiteKeys++;
-            }
+        whiteKeyWidth = viewWidth / whiteKeyNum;
+        float blackKeyWidth = whiteKeyWidth * BLACK_KEY_WIDTH_FACTOR;
+        int octaveWhiteKeyOffset = whiteKeyOffset % WHITE_NOTES_PER_OCTAVE;
+        float left = -octaveWhiteKeyOffset * whiteKeyWidth;
+        float right = (WHITE_NOTES_PER_OCTAVE - octaveWhiteKeyOffset) * whiteKeyWidth;
+        float width = right - left;
+        List<RectF> keyboardRectList = new ArrayList<>();
+        List<RectF> whiteKeyRectList = new ArrayList<>();
+        List<RectF> blackKeyRectList = new ArrayList<>();
+        int octave = 0;
+        while (left < viewWidth) {
+            octave++;
+            keyboardRectList.add(new RectF(left, 0, right, viewHeight));
+            float blackKeyLeft1 = left + blackKeyWidth * 1.15f;
+            blackKeyRectList.add(new RectF(blackKeyLeft1, 0, blackKeyLeft1 + blackKeyWidth, blackKeyHeight));
+            float blackKeyLeft2 = left + blackKeyWidth * 2.8f;
+            blackKeyRectList.add(new RectF(blackKeyLeft2, 0, blackKeyLeft2 + blackKeyWidth, blackKeyHeight));
+            float blackKeyLeft3 = left + blackKeyWidth * 6.09f;
+            blackKeyRectList.add(new RectF(blackKeyLeft3, 0, blackKeyLeft3 + blackKeyWidth, blackKeyHeight));
+            float blackKeyLeft4 = left + blackKeyWidth * 7.74f;
+            blackKeyRectList.add(new RectF(blackKeyLeft4, 0, blackKeyLeft4 + blackKeyWidth, blackKeyHeight));
+            float blackKeyLeft5 = left + blackKeyWidth * 9.39f;
+            blackKeyRectList.add(new RectF(blackKeyLeft5, 0, blackKeyLeft5 + blackKeyWidth, blackKeyHeight));
+            left += width;
+            right += width;
         }
-
-        mWhiteKeyWidth = mWidth / mNumWhiteKeys;
-        mBlackKeyWidth = mWhiteKeyWidth * BLACK_KEY_WIDTH_FACTOR;
-        mBlackBottom = mHeight * BLACK_KEY_HEIGHT_FACTOR;
-
-        makeBlackRectangles();
-    }
-
-    private void makeBlackRectangles() {
-        int top = 0;
-        List<Rect> rectangles = new ArrayList<>();
-
-        int whiteKeyIndex = 0;
-        int blackKeyIndex = 0;
-        for (int i = 0; i < keyNum; i++) {
-            float x = mWhiteKeyWidth * whiteKeyIndex;
-            int pitch = keyOffset + i;
-            if (isPitchBlack(pitch)) {
-                int leftCompl = BLACK_KEY_LEFT_COMPLEMENTS[keyOffset % 12];
-                float offset = BLACK_KEY_OFFSET_FACTOR
-                        * BLACK_KEY_HORIZONTAL_OFFSETS[(blackKeyIndex + leftCompl) % 5];
-                float left = x - mBlackKeyWidth * (0.55f - offset);
-                left += WHITE_KEY_GAP / 2f;
-                float right = left + mBlackKeyWidth;
-                Rect rect = new Rect(Math.round(left), top, Math.round(right), Math.round(mBlackBottom));
-                rectangles.add(rect);
-                blackKeyIndex++;
-            } else {
-                whiteKeyIndex++;
-            }
+        for (float i = -octaveWhiteKeyOffset * whiteKeyWidth; i < right; i += whiteKeyWidth) {
+            whiteKeyRectList.add(new RectF(i, 0, i + whiteKeyWidth, viewHeight));
         }
-        mBlackKeyRectangles = rectangles.toArray(new Rect[0]);
+        keyboardImageRectArray = keyboardRectList.toArray(new RectF[0]);
+        whiteKeyRectArray = whiteKeyRectList.toArray(new RectF[0]);
+        blackKeyRectArray = blackKeyRectList.toArray(new RectF[0]);
+        notesOnArray = new boolean[octave * NOTES_PER_OCTAVE];
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int whiteKeyIndex = 0;
-        canvas.drawRect(0, 0, mWidth, mHeight, mShadowPaint);
-        // Draw white keys first.
-        for (int i = 0; i < keyNum; i++) {
-            int pitch = keyOffset + i;
-            int note = pitch % NOTES_PER_OCTAVE;
-            if (!NOTE_IN_OCTAVE_IS_BLACK[note]) {
-                float x = (mWhiteKeyWidth * whiteKeyIndex) + (WHITE_KEY_GAP / 2);
-                Paint paint = mNotesOnByPitch[pitch] ? mWhiteOnKeyPaint
-                        : mWhiteOffKeyPaint;
-                canvas.drawRect(x, 0, x + mWhiteKeyWidth - WHITE_KEY_GAP, mHeight,
-                        paint);
-                whiteKeyIndex++;
-            }
+        for (RectF rectF : keyboardImageRectArray) {
+            canvas.drawBitmap(keyboardImage, null, rectF, null);
         }
-        // Then draw black keys over the white keys.
-        int blackKeyIndex = 0;
-        for (int i = 0; i < keyNum; i++) {
-            int pitch = keyOffset + i;
-            int note = pitch % NOTES_PER_OCTAVE;
-            if (NOTE_IN_OCTAVE_IS_BLACK[note]) {
-                Rect r = mBlackKeyRectangles[blackKeyIndex];
-                Paint paint = mNotesOnByPitch[pitch] ? mBlackOnKeyPaint
-                        : mBlackOffKeyPaint;
-                canvas.drawRect(r, paint);
-                blackKeyIndex++;
+        for (int i = 0; i < notesOnArray.length; i++) {
+            if (notesOnArray[i]) {
+                int octaveI = i / NOTES_PER_OCTAVE;
+                int noteI = i % NOTES_PER_OCTAVE;
+                switch (KEY_IMAGE_TYPE[noteI]) {
+                    case -1:
+                        canvas.drawBitmap(blackKeyImage, null, blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE], noteOnPaint);
+                        break;
+                    case 0:
+                        canvas.drawBitmap(whiteKeyLeftImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                        break;
+                    case 1:
+                        canvas.drawBitmap(whiteKeyMiddleImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                        break;
+                    case 2:
+                        canvas.drawBitmap(whiteKeyRightImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -241,12 +218,10 @@ public class KeyboardModeView extends View {
         // Some devices can return negative x or y, which can cause an array exception.
         x = Math.max(x, 0.0f);
         y = Math.max(y, 0.0f);
-        boolean handled = false;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 onFingerDown(id, x, y);
-                handled = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 int pointerCount = event.getPointerCount();
@@ -258,29 +233,32 @@ public class KeyboardModeView extends View {
                     y = Math.max(y, 0.0f);
                     onFingerMove(id, x, y);
                 }
-                handled = true;
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 onFingerUp(id, x, y);
-                handled = true;
                 break;
             case MotionEvent.ACTION_CANCEL:
                 onAllFingersUp();
-                handled = true;
                 break;
             default:
                 break;
         }
-
         // Must return true or we do not get the ACTION_MOVE and
         // ACTION_UP events.
         return true;
     }
 
     private void onFingerDown(int id, float x, float y) {
-        int pitch = xyToPitch(x, y);
-        fireKeyDown(pitch);
+        int pitch = -1;
+        if (y < blackKeyHeight) {
+            pitch = xyToBlackPitch(x, y);
+        }
+        if (pitch < 0) {
+            pitch = xToWhitePitch(x);
+        }
+        int volume = (int) (y / viewHeight * MAX_VOLUME);
+        fireKeyDown(pitch, volume);
         mFingerMap.put(id, pitch);
     }
 
@@ -288,21 +266,25 @@ public class KeyboardModeView extends View {
         Integer previousPitch = mFingerMap.get(id);
         if (previousPitch != null) {
             int pitch = -1;
-            if (y < mBlackBottom) {
-                // Only hit black keys if above line.
+            if (y < blackKeyHeight) {
                 pitch = xyToBlackPitch(x, y);
-            } else {
+            }
+            if (pitch < 0) {
                 pitch = xToWhitePitch(x);
             }
+            int volume = (int) (y / viewHeight * MAX_VOLUME);
             // Did we change to a new key.
-            if ((pitch >= 0) && (pitch != previousPitch)) {
-                if (mLegato) {
-                    fireKeyDown(pitch);
-                    fireKeyUp(previousPitch);
-                } else {
-                    fireKeyUp(previousPitch);
-                    fireKeyDown(pitch);
-                }
+            if (pitch >= 0 && pitch != previousPitch) {
+//                boolean mLegato = true;
+//                if (mLegato) {
+//                    fireKeyDown(pitch, volume);
+//                    fireKeyUp(previousPitch);
+//                } else {
+//                    fireKeyUp(previousPitch);
+//                    fireKeyDown(pitch, volume);
+//                }
+                fireKeyDown(pitch, volume);
+                fireKeyUp(previousPitch);
                 mFingerMap.put(id, pitch);
             }
         }
@@ -314,7 +296,13 @@ public class KeyboardModeView extends View {
             fireKeyUp(previousPitch);
             mFingerMap.remove(id);
         } else {
-            int pitch = xyToPitch(x, y);
+            int pitch = -1;
+            if (y < blackKeyHeight) {
+                pitch = xyToBlackPitch(x, y);
+            }
+            if (pitch < 0) {
+                pitch = xToWhitePitch(x);
+            }
             fireKeyUp(pitch);
         }
     }
@@ -327,94 +315,78 @@ public class KeyboardModeView extends View {
         mFingerMap.clear();
     }
 
-    private void fireKeyDown(int pitch) {
+    public void fireKeyDown(int pitch, int volume) {
         for (MusicKeyListener listener : mListeners) {
-            listener.onKeyDown(pitch);
+            listener.onKeyDown(pitch, volume);
         }
-        mNotesOnByPitch[pitch] = true;
+        int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
+        if (pitchInScreen < 0 || pitchInScreen > notesOnArray.length) {
+            return;
+        }
+        notesOnArray[pitchInScreen] = true;
         invalidate();
     }
 
-    private void fireKeyUp(int pitch) {
+    public void fireKeyUp(int pitch) {
         for (MusicKeyListener listener : mListeners) {
             listener.onKeyUp(pitch);
         }
-        mNotesOnByPitch[pitch] = false;
+        int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
+        if (pitchInScreen < 0 || pitchInScreen > notesOnArray.length) {
+            return;
+        }
+        notesOnArray[pitchInScreen] = false;
         invalidate();
-    }
-
-    private int xyToPitch(float x, float y) {
-        int pitch = -1;
-        if (y < mBlackBottom) {
-            pitch = xyToBlackPitch(x, y);
-        }
-        if (pitch < 0) {
-            pitch = xToWhitePitch(x);
-        }
-        return pitch;
-    }
-
-    private boolean isPitchBlack(int pitch) {
-        int note = pitch % NOTES_PER_OCTAVE;
-        return NOTE_IN_OCTAVE_IS_BLACK[note];
     }
 
     // Convert x to MIDI pitch. Ignores black keys.
     private int xToWhitePitch(float x) {
-        int leftCompl = WHITE_KEY_LEFT_COMPLEMENTS[keyOffset % 12];
-        int octave2 = keyOffset / 12 - 1;
-        int whiteKeyIndex = (int) (x / mWhiteKeyWidth) + leftCompl;
-        int octave = (whiteKeyIndex) / WHITE_KEY_OFFSETS.length;
-        int indexInOctave = whiteKeyIndex - (octave * WHITE_KEY_OFFSETS.length);
-        int pitch = 12 * (octave2 + octave + 1) + WHITE_KEY_OFFSETS[indexInOctave];
-        return pitch;
+        int whiteKeyOffsetInScreen = (int) ((x / whiteKeyWidth + whiteKeyOffset));
+        int octaveWhiteKeyOffset = whiteKeyOffsetInScreen % WHITE_NOTES_PER_OCTAVE;
+        return WHITE_KEY_OFFSET_0_MIDI_PITCH + WHITE_KEY_OFFSETS[octaveWhiteKeyOffset]
+                + whiteKeyOffsetInScreen / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
     }
 
     // Convert x to MIDI pitch. Ignores white keys.
     private int xyToBlackPitch(float x, float y) {
-        int result = -1;
-        int blackKeyIndex = 0;
-        for (int i = 0; i < keyNum; i++) {
-            int pitch = keyOffset + i;
-            if (isPitchBlack(pitch)) {
-                Rect rect = mBlackKeyRectangles[blackKeyIndex];
-                if (rect.contains((int) x, (int) y)) {
-                    result = pitch;
-                    break;
-                }
-                blackKeyIndex++;
+        for (int i = 0; i < blackKeyRectArray.length; i++) {
+            if (blackKeyRectArray[i].contains(x, y)) {
+                return WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSETS[i % BLACK_NOTES_PER_OCTAVE]
+                        + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE;
             }
         }
-        return result;
+        return -1;
     }
 
     public void addMusicKeyListener(MusicKeyListener musicKeyListener) {
         mListeners.add(musicKeyListener);
     }
 
-    public void removeMusicKeyListener(MusicKeyListener musicKeyListener) {
-        mListeners.remove(musicKeyListener);
+    public int getWhiteKeyNum() {
+        return whiteKeyNum;
     }
 
-    public int getKeyNum() {
-        return keyNum;
-    }
-
-    public void setKeyNum(int keyNum) {
-        this.keyNum = keyNum;
+    public void setWhiteKeyNum(int whiteKeyNum) {
+        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE) {
+            return;
+        }
+        if (whiteKeyNum + whiteKeyOffset > MAX_WHITE_KEY_RIGHT_VALUE) {
+            whiteKeyOffset = MAX_WHITE_KEY_RIGHT_VALUE - whiteKeyNum;
+        }
+        this.whiteKeyNum = whiteKeyNum;
         makeDraw();
         postInvalidate();
     }
 
-    public int getKeyOffset() {
-        return keyOffset;
+    public int getWhiteKeyOffset() {
+        return whiteKeyOffset;
     }
 
-    public void setKeyOffset(int keyOffset) {
-        if (isPitchBlack(keyOffset)) {
-            keyOffset--; // force to pre white key
+    public void setWhiteKeyOffset(int whiteKeyOffset) {
+        if (whiteKeyOffset < 0 || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE) {
+            return;
         }
-        this.keyOffset = keyOffset;
+        this.whiteKeyOffset = whiteKeyOffset;
         makeDraw();
         postInvalidate();
     }
@@ -425,6 +397,44 @@ public class KeyboardModeView extends View {
 
     public void setNoteOnColor(int noteOnColor) {
         this.noteOnColor = noteOnColor;
+        noteOnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        noteOnPaint.setColorFilter(new PorterDuffColorFilter(noteOnColor, PorterDuff.Mode.MULTIPLY));
         postInvalidate();
+    }
+
+    /**
+     * 裁剪键盘
+     *
+     * @param bitmap 原图
+     * @return 裁剪后的图像
+     */
+    private Bitmap cropKeyboardBitmap(Bitmap bitmap) {
+        float whiteKeyNum7Div8Factor = 0.875f;
+        int newWidth = (int) (bitmap.getWidth() * whiteKeyNum7Div8Factor);
+        return Bitmap.createBitmap(bitmap, 0, 0, newWidth, bitmap.getHeight(), null, false);
+    }
+
+    public final Bitmap loadImage(Context context, String str) {
+        Bitmap bitmap = null;
+        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
+            try {
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+            } catch (Exception e) {
+                try {
+                    return BitmapFactory.decodeStream(getResources().getAssets().open("drawable/" + str + ".png"));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        if (bitmap != null) {
+            return bitmap;
+        }
+        try {
+            return BitmapFactory.decodeStream(getResources().getAssets().open("drawable/" + str + ".png"));
+        } catch (IOException e2) {
+            e2.printStackTrace();
+            return null;
+        }
     }
 }

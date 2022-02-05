@@ -2,7 +2,9 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
+import android.media.midi.MidiReceiver;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,8 +13,8 @@ public class KeyBoard extends Activity implements View.OnClickListener {
 
     KeyboardModeView keyboardMode1View;
     KeyboardModeView keyboardMode2View;
+    MidiFramer midiFramer;
     JPApplication jpapplication;
-    Bitmap keyboardImage;
 
     @Override
     public void onBackPressed() {
@@ -26,29 +28,28 @@ public class KeyBoard extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.keyboard1_count_down:
-                // TODO not right
-                keyboardMode1View.setKeyNum(keyboardMode1View.getKeyNum() - 1);
+                keyboardMode1View.setWhiteKeyNum(keyboardMode1View.getWhiteKeyNum() - 1);
                 break;
             case R.id.keyboard2_count_down:
-                keyboardMode2View.setKeyNum(keyboardMode2View.getKeyNum() - 1);
+                keyboardMode2View.setWhiteKeyNum(keyboardMode2View.getWhiteKeyNum() - 1);
                 break;
             case R.id.keyboard1_count_up:
-                keyboardMode1View.setKeyNum(keyboardMode1View.getKeyNum() + 1);
+                keyboardMode1View.setWhiteKeyNum(keyboardMode1View.getWhiteKeyNum() + 1);
                 break;
             case R.id.keyboard2_count_up:
-                keyboardMode2View.setKeyNum(keyboardMode2View.getKeyNum() + 1);
+                keyboardMode2View.setWhiteKeyNum(keyboardMode2View.getWhiteKeyNum() + 1);
                 break;
             case R.id.keyboard1_move_left:
-                keyboardMode1View.setKeyOffset(keyboardMode1View.getKeyOffset() - 1);
+                keyboardMode1View.setWhiteKeyOffset(keyboardMode1View.getWhiteKeyOffset() - 1);
                 break;
             case R.id.keyboard2_move_left:
-                keyboardMode2View.setKeyOffset(keyboardMode2View.getKeyOffset() - 1);
+                keyboardMode2View.setWhiteKeyOffset(keyboardMode2View.getWhiteKeyOffset() - 1);
                 break;
             case R.id.keyboard1_move_right:
-                keyboardMode1View.setKeyOffset(keyboardMode1View.getKeyOffset() + 1);
+                keyboardMode1View.setWhiteKeyOffset(keyboardMode1View.getWhiteKeyOffset() + 1);
                 break;
             case R.id.keyboard2_move_right:
-                keyboardMode2View.setKeyOffset(keyboardMode2View.getKeyOffset() + 1);
+                keyboardMode2View.setWhiteKeyOffset(keyboardMode2View.getWhiteKeyOffset() + 1);
                 break;
             default:
                 break;
@@ -60,12 +61,11 @@ public class KeyBoard extends Activity implements View.OnClickListener {
         super.onCreate(bundle);
         setContentView(R.layout.keyboard_mode);
         jpapplication = (JPApplication) getApplication();
-        keyboardImage = jpapplication.loadImage("key_board_hd");
         keyboardMode1View = findViewById(R.id.keyboard1_view);
         keyboardMode1View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int keyIndex) {
-                jpapplication.playSound(keyIndex, 64);
+            public void onKeyDown(int keyIndex, int volume) {
+                jpapplication.playSound(keyIndex, volume);
             }
 
             @Override
@@ -76,8 +76,8 @@ public class KeyBoard extends Activity implements View.OnClickListener {
         keyboardMode2View = findViewById(R.id.keyboard2_view);
         keyboardMode2View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int keyIndex) {
-                jpapplication.playSound(keyIndex, 64);
+            public void onKeyDown(int keyIndex, int volume) {
+                jpapplication.playSound(keyIndex, volume);
             }
 
             @Override
@@ -101,5 +101,23 @@ public class KeyBoard extends Activity implements View.OnClickListener {
         keyboard1MoveRight.setOnClickListener(this);
         Button keyboard2MoveRight = findViewById(R.id.keyboard2_move_right);
         keyboard2MoveRight.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (jpapplication.midiOutputPort != null) {
+                    jpapplication.midiOutputPort.connect(new MidiFramer(new MidiReceiver() {
+                        @Override
+                        public void onSend(byte[] data, int offset, int count, long timestamp) {
+                            byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
+                            if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
+                                keyboardMode1View.fireKeyDown(data[1], data[2]);
+                            } else if (command == MidiConstants.STATUS_NOTE_OFF
+                                    || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
+                                keyboardMode1View.fireKeyUp(data[1]);
+                            }
+                        }
+                    }));
+                }
+            }
+        }
     }
 }

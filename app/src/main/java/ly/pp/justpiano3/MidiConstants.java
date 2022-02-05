@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ly.pp.justpiano3.midi;
+package ly.pp.justpiano3;
 
 /**
  * MIDI related constants and static methods.
@@ -57,6 +57,8 @@ public class MidiConstants {
     /** Number of bytes in a message Fn from F0 to FF */
     public final static int SYSTEM_BYTE_LENGTHS[] = { 1, 2, 3, 2, 1, 1, 1, 1, 1,
             1, 1, 1, 1, 1, 1, 1 };
+
+    public final static int MAX_CHANNELS = 16;
 
     /**
      * MIDI messages, except for SysEx, are 1,2 or 3 bytes long.

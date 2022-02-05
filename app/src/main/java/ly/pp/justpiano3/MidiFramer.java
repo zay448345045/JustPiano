@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package ly.pp.justpiano3.midi;
+package ly.pp.justpiano3;
 
 import android.media.midi.MidiReceiver;
+import android.os.Build;
 
 import java.io.IOException;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Convert stream of arbitrary MIDI bytes into discrete messages.
@@ -29,6 +32,7 @@ import java.io.IOException;
  *
  * Resolves Running Status and interleaved System Real-Time messages.
  */
+@RequiresApi(api = Build.VERSION_CODES.M)
 public class MidiFramer extends MidiReceiver {
     private MidiReceiver mReceiver;
     private byte[] mBuffer = new byte[3];
