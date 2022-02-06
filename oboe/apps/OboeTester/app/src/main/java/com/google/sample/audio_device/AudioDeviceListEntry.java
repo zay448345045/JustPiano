@@ -76,7 +76,7 @@ public class AudioDeviceListEntry {
      *                      GET_DEVICES_INPUTS.
      * @return A list of AudioDeviceListEntry objects
      */
-    @TargetApi(23)
+    @TargetApi(Build.VERSION_CODES.M)
     static List<AudioDeviceListEntry> createListFrom(AudioDeviceInfo[] devices, int directionType){
 
         List<AudioDeviceListEntry> listEntries = new Vector<>();

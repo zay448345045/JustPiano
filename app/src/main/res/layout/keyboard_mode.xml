@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/keyboard1_layout"
+            android:id="@+id/linearLayout8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -92,7 +92,7 @@
 
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/keyboard2_layout"
+            android:id="@+id/linearLayout9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -150,35 +150,44 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
+        android:id="@+id/keyboard_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/selector_ol_button"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ly.pp.justpiano3.KeyboardModeView
-            app:whiteKeyNum="8"
-            app:whiteKeyOffset="21"
-            android:id="@+id/keyboard1_view"
+        <LinearLayout
+            android:id="@+id/keyboard1_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ly.pp.justpiano3.KeyboardModeView>
-    </LinearLayout>
+            android:layout_height="0dp"
+            android:background="@drawable/selector_ol_button"
+            android:layout_weight="1">
 
-    <LinearLayout
-        android:id="@+id/linearLayout6"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/selector_orange_button"
-        android:layout_weight="1">
+            <ly.pp.justpiano3.KeyboardModeView
+                app:whiteKeyNum="8"
+                app:whiteKeyOffset="21"
+                android:id="@+id/keyboard1_view"
+                android:keepScreenOn="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ly.pp.justpiano3.KeyboardModeView>
+        </LinearLayout>
 
-        <ly.pp.justpiano3.KeyboardModeView
-            app:whiteKeyNum="8"
-            app:whiteKeyOffset="14"
-            android:id="@+id/keyboard2_view"
+        <LinearLayout
+            android:id="@+id/keyboard2_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ly.pp.justpiano3.KeyboardModeView>
+            android:layout_height="0dp"
+            android:background="@drawable/selector_orange_button"
+            android:layout_weight="1">
+
+            <ly.pp.justpiano3.KeyboardModeView
+                app:whiteKeyNum="8"
+                app:whiteKeyOffset="14"
+                android:id="@+id/keyboard2_view"
+                android:keepScreenOn="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ly.pp.justpiano3.KeyboardModeView>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

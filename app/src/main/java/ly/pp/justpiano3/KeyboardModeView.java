@@ -1,5 +1,8 @@
 package ly.pp.justpiano3;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -64,6 +67,7 @@ public class KeyboardModeView extends View {
     private RectF[] whiteKeyRectArray;
     private RectF[] blackKeyRectArray;
     private boolean[] notesOnArray;
+    private boolean cancelled;
 
     // Appearance
     private Paint noteOnPaint;
@@ -125,10 +129,11 @@ public class KeyboardModeView extends View {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardModeView);
         whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM);
         whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET);
-        noteOnColor = typedArray.getColor(R.styleable.KeyboardModeView_noteOnColor, 0xffffffff);
+        noteOnColor = typedArray.getColor(R.styleable.KeyboardModeView_noteOnColor, 0);
         typedArray.recycle();
         noteOnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        noteOnPaint.setColorFilter(new PorterDuffColorFilter(noteOnColor, PorterDuff.Mode.MULTIPLY));
+        int color = context.getResources().getColor(Consts.kuangColor[noteOnColor]);
+        noteOnPaint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
     }
 
     @Override
@@ -149,6 +154,8 @@ public class KeyboardModeView extends View {
         List<RectF> keyboardRectList = new ArrayList<>();
         List<RectF> whiteKeyRectList = new ArrayList<>();
         List<RectF> blackKeyRectList = new ArrayList<>();
+        // 先加一个左侧看不见的八度的，防止动画穿帮
+        keyboardRectList.add(new RectF(left - width, 0, right - width, viewHeight));
         int octave = 0;
         while (left < viewWidth) {
             octave++;
@@ -166,6 +173,8 @@ public class KeyboardModeView extends View {
             left += width;
             right += width;
         }
+        // 再加一个右侧看不见的八度的，防止动画穿帮
+        keyboardRectList.add(new RectF(left, 0, right, viewHeight));
         for (float i = -octaveWhiteKeyOffset * whiteKeyWidth; i < right; i += whiteKeyWidth) {
             whiteKeyRectList.add(new RectF(i, 0, i + whiteKeyWidth, viewHeight));
         }
@@ -181,25 +190,27 @@ public class KeyboardModeView extends View {
         for (RectF rectF : keyboardImageRectArray) {
             canvas.drawBitmap(keyboardImage, null, rectF, null);
         }
-        for (int i = 0; i < notesOnArray.length; i++) {
-            if (notesOnArray[i]) {
-                int octaveI = i / NOTES_PER_OCTAVE;
-                int noteI = i % NOTES_PER_OCTAVE;
-                switch (KEY_IMAGE_TYPE[noteI]) {
-                    case -1:
-                        canvas.drawBitmap(blackKeyImage, null, blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE], noteOnPaint);
-                        break;
-                    case 0:
-                        canvas.drawBitmap(whiteKeyLeftImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
-                        break;
-                    case 1:
-                        canvas.drawBitmap(whiteKeyMiddleImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
-                        break;
-                    case 2:
-                        canvas.drawBitmap(whiteKeyRightImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
-                        break;
-                    default:
-                        break;
+        if (!cancelled) {
+            for (int i = 0; i < notesOnArray.length; i++) {
+                if (notesOnArray[i]) {
+                    int octaveI = i / NOTES_PER_OCTAVE;
+                    int noteI = i % NOTES_PER_OCTAVE;
+                    switch (KEY_IMAGE_TYPE[noteI]) {
+                        case -1:
+                            canvas.drawBitmap(blackKeyImage, null, blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE], noteOnPaint);
+                            break;
+                        case 0:
+                            canvas.drawBitmap(whiteKeyLeftImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                            break;
+                        case 1:
+                            canvas.drawBitmap(whiteKeyMiddleImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                            break;
+                        case 2:
+                            canvas.drawBitmap(whiteKeyRightImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -244,8 +255,6 @@ public class KeyboardModeView extends View {
             default:
                 break;
         }
-        // Must return true or we do not get the ACTION_MOVE and
-        // ACTION_UP events.
         return true;
     }
 
@@ -320,27 +329,31 @@ public class KeyboardModeView extends View {
     }
 
     public void fireKeyDown(int pitch, int volume) {
-        for (MusicKeyListener listener : mListeners) {
-            listener.onKeyDown(pitch, volume);
+        if (!cancelled) {
+            for (MusicKeyListener listener : mListeners) {
+                listener.onKeyDown(pitch, volume);
+            }
+            int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
+            if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
+                return;
+            }
+            notesOnArray[pitchInScreen] = true;
+            invalidate();
         }
-        int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
-        if (pitchInScreen < 0 || pitchInScreen > notesOnArray.length) {
-            return;
-        }
-        notesOnArray[pitchInScreen] = true;
-        invalidate();
     }
 
     public void fireKeyUp(int pitch) {
-        for (MusicKeyListener listener : mListeners) {
-            listener.onKeyUp(pitch);
+        if (!cancelled) {
+            for (MusicKeyListener listener : mListeners) {
+                listener.onKeyUp(pitch);
+            }
+            int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
+            if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
+                return;
+            }
+            notesOnArray[pitchInScreen] = false;
+            invalidate();
         }
-        int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
-        if (pitchInScreen < 0 || pitchInScreen > notesOnArray.length) {
-            return;
-        }
-        notesOnArray[pitchInScreen] = false;
-        invalidate();
     }
 
     // Convert x to MIDI pitch. Ignores black keys.
@@ -370,29 +383,94 @@ public class KeyboardModeView extends View {
         return whiteKeyNum;
     }
 
-    public void setWhiteKeyNum(int whiteKeyNum) {
-        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE) {
+    public void setWhiteKeyNum(int whiteKeyNum, int animInterval) {
+        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || cancelled) {
             return;
         }
+        ValueAnimator anim = ValueAnimator.ofFloat(1, (float) this.whiteKeyNum / whiteKeyNum);
+        boolean rightAnim = false;
         if (whiteKeyNum + whiteKeyOffset > MAX_WHITE_KEY_RIGHT_VALUE) {
             whiteKeyOffset = MAX_WHITE_KEY_RIGHT_VALUE - whiteKeyNum;
+            rightAnim = true;
         }
         this.whiteKeyNum = whiteKeyNum;
-        makeDraw();
-        postInvalidate();
+        anim.setDuration(animInterval);
+        cancelled = true;
+        float[] oriLeft = new float[keyboardImageRectArray.length];
+        float[] oriRight = new float[keyboardImageRectArray.length];
+        for (int i = 0; i < keyboardImageRectArray.length; i++) {
+            oriLeft[i] = keyboardImageRectArray[i].left;
+            oriRight[i] = keyboardImageRectArray[i].right;
+        }
+        boolean finalRightAnim = rightAnim;
+        anim.addUpdateListener(animation -> {
+            float currentValue = (float) animation.getAnimatedValue();
+            for (int i = 0; i < keyboardImageRectArray.length; i++) {
+                keyboardImageRectArray[i].left = finalRightAnim ? (oriLeft[i] - viewWidth) * currentValue + viewWidth: oriLeft[i] * currentValue;
+                keyboardImageRectArray[i].right = finalRightAnim ? (oriRight[i] - viewWidth) * currentValue + viewWidth : oriRight[i] * currentValue;
+            }
+            postInvalidate();
+        });
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                cancelled = false;
+                makeDraw();
+                postInvalidate();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                cancelled = false;
+                makeDraw();
+                postInvalidate();
+            }
+        });
+        anim.start();
     }
 
     public int getWhiteKeyOffset() {
         return whiteKeyOffset;
     }
 
-    public void setWhiteKeyOffset(int whiteKeyOffset) {
-        if (whiteKeyOffset < 0 || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE) {
+    public void setWhiteKeyOffset(int whiteKeyOffset, int animInterval) {
+        if (whiteKeyOffset < 0 || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || cancelled) {
             return;
         }
+        ValueAnimator anim = ValueAnimator.ofFloat(0f, (this.whiteKeyOffset - whiteKeyOffset) * whiteKeyWidth);
         this.whiteKeyOffset = whiteKeyOffset;
-        makeDraw();
-        postInvalidate();
+        anim.setDuration(animInterval);
+        cancelled = true;
+        float[] oriLeft = new float[keyboardImageRectArray.length];
+        float[] oriRight = new float[keyboardImageRectArray.length];
+        for (int i = 0; i < keyboardImageRectArray.length; i++) {
+            oriLeft[i] = keyboardImageRectArray[i].left;
+            oriRight[i] = keyboardImageRectArray[i].right;
+        }
+        anim.addUpdateListener(animation -> {
+            float currentValue = (float) animation.getAnimatedValue();
+            for (int i = 0; i < keyboardImageRectArray.length; i++) {
+                keyboardImageRectArray[i].left = oriLeft[i] + currentValue;
+                keyboardImageRectArray[i].right = oriRight[i] + currentValue;
+            }
+            postInvalidate();
+        });
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                cancelled = false;
+                makeDraw();
+                postInvalidate();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                cancelled = false;
+                makeDraw();
+                postInvalidate();
+            }
+        });
+        anim.start();
     }
 
     public int getNoteOnColor() {

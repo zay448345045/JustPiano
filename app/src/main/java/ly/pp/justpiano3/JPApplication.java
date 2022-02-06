@@ -18,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
 import android.media.midi.MidiOutputPort;
-import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,6 +41,7 @@ import javazoom.jl.converter.Converter;
 
 public final class JPApplication extends Application {
 
+    private List<MidiConnectStart> midiConnectStartList;
     public static String kitiName = "";
     static SharedPreferences sharedpreferences;
     private static Context context;
@@ -531,6 +531,7 @@ public final class JPApplication extends Application {
         sharedpreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                midiConnectStartList = new ArrayList<>();
                 mMidiManager = (MidiManager) getSystemService(MIDI_SERVICE);
                 mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
                     @Override
@@ -543,6 +544,9 @@ public final class JPApplication extends Application {
                                 for (MidiDeviceInfo.PortInfo port : ports) {
                                     if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
                                         midiOutputPort = device.openOutputPort(port.getPortNumber());
+                                        for (MidiConnectStart midiConnectStart : midiConnectStartList) {
+                                            midiConnectStart.onMidiConnectionStart();
+                                        }
                                     }
                                 }
                                 Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
@@ -560,6 +564,13 @@ public final class JPApplication extends Application {
         }
     }
 
+    public void addMidiConnectionStart(MidiConnectStart midiConnectStart) {
+        midiConnectStartList.add(midiConnectStart);
+    }
+
+    public void removeMidiConnectionStart(MidiConnectStart midiConnectStart) {
+        midiConnectStartList.remove(midiConnectStart);
+    }
 
     public int getAnimFrame() {
         return animFrame;

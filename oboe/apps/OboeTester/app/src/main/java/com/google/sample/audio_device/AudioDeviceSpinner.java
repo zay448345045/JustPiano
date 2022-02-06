@@ -89,13 +89,13 @@ public class AudioDeviceSpinner extends Spinner {
 
     }
 
-    @TargetApi(23)
+    @TargetApi(Build.VERSION_CODES.M)
     public void setDirectionType(int directionType){
         this.mDirectionType = directionType;
         setupAudioDeviceCallback();
     }
 
-    @TargetApi(23)
+    @TargetApi(Build.VERSION_CODES.M)
     private void setupAudioDeviceCallback(){
 
         // Note that we will immediately receive a call to onDevicesAdded with the list of

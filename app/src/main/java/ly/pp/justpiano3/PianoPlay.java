@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.midi.MidiReceiver;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-public final class PianoPlay extends BaseActivity {
+public final class PianoPlay extends BaseActivity implements MidiConnectStart {
     private static final int f4579ab = 44100;
     private static int f4609ae = 0;
     public byte hallID;
@@ -68,6 +70,7 @@ public final class PianoPlay extends BaseActivity {
     double nandu;
     int score;
     JPApplication jpapplication;
+    MidiReceiver midiFramer;
     View finishView;
     private View f4592K;
     private LayoutParams layoutparams2;
@@ -637,6 +640,15 @@ public final class PianoPlay extends BaseActivity {
         if (isRecord) {
             mo2908c();
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (jpapplication.midiOutputPort != null) {
+                    jpapplication.midiOutputPort.disconnect(midiFramer);
+                    midiFramer = null;
+                    jpapplication.removeMidiConnectionStart(this);
+                }
+            }
+        }
         super.onDestroy();
     }
 
@@ -731,6 +743,44 @@ public final class PianoPlay extends BaseActivity {
             isPlayingStart = false;
             f4620k = false;
             finish();
+        }
+    }
+
+    @Override
+    public void onMidiConnectionStart() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (jpapplication.midiOutputPort != null && midiFramer == null) {
+                    midiFramer = new MidiFramer(new MidiReceiver() {
+                        @Override
+                        public void onSend(byte[] data, int offset, int count, long timestamp) {
+                            byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
+                            int touchNoteNum = data[1] % 12;
+                            if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
+                                if (playView.currentPlayNote != null) {
+                                    playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+                                }
+                                keyboardview.touchNoteSet.put(touchNoteNum, 0);
+                                playView.midiJudgeAndPlaySound(touchNoteNum);
+                                updateKeyboardPrefer();
+                            } else if (command == MidiConstants.STATUS_NOTE_OFF
+                                    || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
+                                keyboardview.touchNoteSet.remove(touchNoteNum);
+                                updateKeyboardPrefer();
+                            }
+                        }
+                    });
+                    jpapplication.midiOutputPort.connect(midiFramer);
+                }
+            }
+        }
+    }
+
+    public void updateKeyboardPrefer() {
+        if (jpapplication.hasKeyboardPerfer()) {
+            Message obtainMessage = pianoPlayHandler.obtainMessage();
+            obtainMessage.what = 4;
+            pianoPlayHandler.handleMessage(obtainMessage);
         }
     }
 }
