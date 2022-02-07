@@ -39,6 +39,9 @@ public final class MainGameAdapter extends BaseAdapter {
         } else if (act instanceof OLPlayHallRoom) {
             JPStack.create();
             activity = JPStack.top();
+        } else if (act instanceof OLPlayKeyboardRoom) {
+            JPStack.create();
+            activity = JPStack.top();
         }
     }
 
@@ -180,6 +183,13 @@ public final class MainGameAdapter extends BaseAdapter {
                                 bundle.putString("U", string2);
                                 ((OLPlayRoom) activity).olPlayRoomHandler.handleMessage(obtainMessage);
                                 return;
+                            } else if (activity instanceof OLPlayKeyboardRoom) {
+                                obtainMessage = ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.obtainMessage();
+                                obtainMessage.what = 12;
+                                obtainMessage.setData(bundle);
+                                bundle.putString("U", string2);
+                                ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
+                                return;
                             } else {
                                 return;
                             }
@@ -195,6 +205,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHallRoom) activity).sendMail(string2, 0);
                     } else if (activity instanceof OLPlayRoom) {
                         ((OLPlayRoom) activity).mo2865b(string2);
+                    } else if (activity instanceof OLPlayKeyboardRoom) {
+                        ((OLPlayKeyboardRoom) activity).mo2865b(string2);
                     }
                 });
                 view.findViewById(R.id.ol_friend_dele).setOnClickListener(v -> {
@@ -218,6 +230,12 @@ public final class MainGameAdapter extends BaseAdapter {
                         obtainMessage.arg1 = i;
                         obtainMessage.getData().putString("F", string2);
                         ((OLPlayRoom) activity).olPlayRoomHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayKeyboardRoom) {
+                        obtainMessage = ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.obtainMessage();
+                        obtainMessage.what = 16;
+                        obtainMessage.arg1 = i;
+                        obtainMessage.getData().putString("F", string2);
+                        ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                     }
                 });
                 break;
@@ -331,6 +349,12 @@ public final class MainGameAdapter extends BaseAdapter {
                         obtainMessage.setData(bundle);
                         bundle.putString("U", string7);
                         ((OLPlayRoom) activity).olPlayRoomHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayKeyboardRoom) {
+                        obtainMessage = ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.obtainMessage();
+                        obtainMessage.what = 12;
+                        obtainMessage.setData(bundle);
+                        bundle.putString("U", string7);
+                        ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                     }
                 });
                 textView = view.findViewById(R.id.ol_friend_game);
@@ -347,7 +371,7 @@ public final class MainGameAdapter extends BaseAdapter {
                             e.printStackTrace();
                         }
                     });
-                } else if (activity instanceof OLPlayRoom) {
+                } else if (activity instanceof OLPlayRoom || activity instanceof OLPlayKeyboardRoom) {
                     textView.setText("邀请");
                     textView.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);

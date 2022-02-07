@@ -24,6 +24,8 @@ public final class ChattingAdapter extends BaseAdapter {
             activity = JPStack.top();
         } else if (JPStack.top() instanceof OLPlayHall) {
             activity = JPStack.top();
+        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+            activity = JPStack.top();
         }
     }
 
@@ -77,7 +79,7 @@ public final class ChattingAdapter extends BaseAdapter {
                 textView.setText("[公]" + string);
                 textView2 = inflate.findViewById(R.id.ol_user_mao);
                 TextView textView3 = inflate.findViewById(R.id.ol_msg_text);
-                if (JPStack.top() instanceof OLPlayRoom) {
+                if (JPStack.top() instanceof OLPlayRoom || JPStack.top() instanceof OLPlayKeyboardRoom) {
                     switch (id) {
                         case 1:
                             textView.setTextColor(0xffFFFACD);
@@ -267,6 +269,10 @@ public final class ChattingAdapter extends BaseAdapter {
                 } else if (activity instanceof OLPlayHall) {
                     if (string != null) {
                         ((OLPlayHall) activity).mo2832b(string);
+                    }
+                } else if (activity instanceof OLPlayKeyboardRoom) {
+                    if (string != null) {
+                        ((OLPlayKeyboardRoom) activity).mo2867c(string);
                     }
                 }
             });

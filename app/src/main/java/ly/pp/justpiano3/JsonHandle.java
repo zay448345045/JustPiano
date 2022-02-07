@@ -44,7 +44,7 @@ final class JsonHandle {
         return JsonHandle.m3945a((byte) 10, (byte) 0, (byte) 0, jSONObject.toString());
     }
 
-    static void m3948a(byte b, String str) {
+    static void m3948a(String str) {
         int i = 0;
         Message message = new Message();
         try {
@@ -57,27 +57,25 @@ final class JsonHandle {
                 Bundle bundle = new Bundle();
                 Bundle bundle2;
                 User User2;
-                if (b == (byte) 25) {
-                    int i2 = jSONObject.getInt("S");
-                    int i3 = jSONObject.getInt("T");
-                    if (i2 < 0) {
-                        User.setOpenPosition();
-                        User.setPlayerName("");
-                    } else {
-                        User.setScore(i2);
-                        User.setCombo(i3);
-                    }
-                    for (byte ba = 1; ba <= 6; ba++) {
-                        User2 = (User) pianoPlay.userMap.get(ba);
-                        if (!User2.getPlayerName().isEmpty()) {
-                            bundle2 = new Bundle();
-                            bundle2.putString("G", String.valueOf(User2.getHand()));
-                            bundle2.putString("U", User2.getPlayerName());
-                            bundle2.putString("M", User2.getScore());
-                            bundle2.putString("T", User2.getCombo() + "");
-                            bundle.putBundle(String.valueOf(i), bundle2);
-                            i++;
-                        }
+                int i2 = jSONObject.getInt("S");
+                int i3 = jSONObject.getInt("T");
+                if (i2 < 0) {
+                    User.setOpenPosition();
+                    User.setPlayerName("");
+                } else {
+                    User.setScore(i2);
+                    User.setCombo(i3);
+                }
+                for (byte ba = 1; ba <= 6; ba++) {
+                    User2 = (User) pianoPlay.userMap.get(ba);
+                    if (!User2.getPlayerName().isEmpty()) {
+                        bundle2 = new Bundle();
+                        bundle2.putString("G", String.valueOf(User2.getHand()));
+                        bundle2.putString("U", User2.getPlayerName());
+                        bundle2.putString("M", User2.getScore());
+                        bundle2.putString("T", User2.getCombo() + "");
+                        bundle.putBundle(String.valueOf(i), bundle2);
+                        i++;
                     }
                 }
                 message.what = 2;
@@ -124,6 +122,9 @@ final class JsonHandle {
                         ((OLFamily) JPStack.top()).familyHandler.handleMessage(message);
                     } else if (JPStack.top() instanceof OLPlayHall) {
                         ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
+                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                        JPStack.create();
+                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -141,6 +142,10 @@ final class JsonHandle {
                     if (JPStack.top() instanceof OLPlayRoom) {
                         JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
+                        return;
+                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                        JPStack.create();
+                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
                     return;
@@ -190,6 +195,9 @@ final class JsonHandle {
                     JPStack.create();
                     ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                     return;
+                } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                    JPStack.create();
+                    ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
                 return;
             case 13:
@@ -208,6 +216,10 @@ final class JsonHandle {
                         JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
+                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                        JPStack.create();
+                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
+                        return;
                     }
                     return;
                 } catch (JSONException e22) {
@@ -224,6 +236,10 @@ final class JsonHandle {
                     if (JPStack.top() instanceof OLPlayRoom) {
                         JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
+                        return;
+                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                        JPStack.create();
+                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
                     return;
@@ -243,6 +259,10 @@ final class JsonHandle {
                     if (JPStack.top() instanceof OLPlayRoom) {
                         JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
+                        return;
+                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                        JPStack.create();
+                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
                 } catch (Exception e) {
@@ -318,6 +338,10 @@ final class JsonHandle {
                         JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
+                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                        JPStack.create();
+                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
+                        return;
                     }
                     return;
                 } catch (JSONException e) {
@@ -337,6 +361,11 @@ final class JsonHandle {
                                 handler = ((OLPlayRoom) JPStack.top()).olPlayRoomHandler;
                                 message.what = 9;
                                 break;
+                            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                JPStack.create();
+                                handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
+                                message.what = 9;
+                                break;
                             }
                             return;
                         case 1:
@@ -344,6 +373,11 @@ final class JsonHandle {
                             if (JPStack.top() instanceof OLPlayHall) {
                                 JPStack.create();
                                 handler = ((OLPlayHall) JPStack.top()).olPlayHallHandler;
+                                message.what = 8;
+                                break;
+                            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                JPStack.create();
+                                handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 8;
                                 break;
                             }
@@ -405,6 +439,11 @@ final class JsonHandle {
                                 handler = ((OLPlayRoom) JPStack.top()).olPlayRoomHandler;
                                 message.what = 14;
                                 break;
+                            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                JPStack.create();
+                                handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
+                                message.what = 14;
+                                break;
                             }
                             return;
                         case 1:
@@ -414,6 +453,11 @@ final class JsonHandle {
                                 handler = ((OLPlayHall) JPStack.top()).olPlayHallHandler;
                                 message.what = 9;
                                 break;
+                            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                JPStack.create();
+                                handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
+                                message.what = 9;
+                                break;
                             }
                             return;
                         case 2:
@@ -421,6 +465,11 @@ final class JsonHandle {
                             if (JPStack.top() instanceof OLPlayHallRoom) {
                                 JPStack.create();
                                 handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
+                                message.what = 5;
+                                break;
+                            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                JPStack.create();
+                                handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 5;
                                 break;
                             }
@@ -451,6 +500,11 @@ final class JsonHandle {
                     message.setData(bundle);
                     JPStack.create();
                     ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
+                } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                    bundle.putString("MSG", str);
+                    message.setData(bundle);
+                    JPStack.create();
+                    ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
             default:
         }
@@ -710,6 +764,12 @@ final class JsonHandle {
                                         JPStack.create();
                                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                                         return;
+                                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                        message.what = 11;
+                                        message.setData(bundle);
+                                        JPStack.create();
+                                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
+                                        return;
                                     }
                                     return;
                                 default:
@@ -800,6 +860,10 @@ final class JsonHandle {
                             if (JPStack.top() instanceof OLPlayRoom) {
                                 JPStack.create();
                                 ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
+                                return;
+                            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                JPStack.create();
+                                ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                                 return;
                             }
                             return;
@@ -954,6 +1018,57 @@ final class JsonHandle {
                         return;
                     }
                 }
+            } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                User user;
+                JPStack.create();
+                OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
+                int i = 0;
+                while (true) {
+                    int i2 = i;
+                    if (i2 >= length) {
+                        break;
+                    }
+                    JSONObject jSONObject = jSONArray.getJSONObject(i2);
+                    user = jSONObject.getString("N").isEmpty() ?
+                            new User((byte) jSONObject.getInt("P"), jSONObject.getString("N"), null, jSONObject.getString("S"), jSONObject.getString("R"), jSONObject.getString("H"), jSONObject.getInt("L"), jSONObject.getInt("V"), jSONObject.getInt("C"), jSONObject.getInt("G"), jSONObject.getInt("O"), jSONObject.getString("I"))
+                            : new User((byte) jSONObject.getInt("P"), jSONObject.getString("N"), jSONObject.getJSONObject("F"), jSONObject.getString("S"), jSONObject.getString("R"), jSONObject.getString("H"), jSONObject.getInt("L"), jSONObject.getInt("V"), jSONObject.getInt("C"), jSONObject.getInt("G"), jSONObject.getInt("O"), jSONObject.getString("I"));
+                    olPlayKeyboardRoom.putJPhashMap(user.getPosition(), user);
+                    i = i2 + 1;
+                }
+                Bundle bundle = new Bundle();
+                Iterator it = olPlayKeyboardRoom.jpapplication.getHashmap().values().iterator();
+                i = 0;
+                while (true) {
+                    int i3 = i;
+                    if (it.hasNext()) {
+                        user = (User) it.next();
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putByte("PI", user.getPosition());
+                        bundle2.putString("N", user.getPlayerName());
+                        bundle2.putString("S", user.getSex());
+                        bundle2.putString("IR", user.getStatus());
+                        bundle2.putString("IH", user.getIsHost());
+                        bundle2.putInt("IV", user.getKuang());
+                        bundle2.putInt("LV", user.getLevel());
+                        bundle2.putInt("TR", user.getTrousers());
+                        bundle2.putInt("JA", user.getJacket());
+                        bundle2.putInt("HA", user.getHair());
+                        bundle2.putInt("SH", user.getShoes());
+                        bundle2.putInt("CL", user.getCLevel());
+                        bundle2.putInt("GR", user.getHand());
+                        bundle2.putInt("CP", user.getCpKind());
+                        bundle2.putString("I", user.getFamilyID());
+                        bundle.putBundle(String.valueOf(i3), bundle2);
+                        i = i3 + 1;
+                    } else {
+                        bundle.putString("SI", "");
+                        bundle.putInt("diao", 0);
+                        bundle.putString("MSG", "");
+                        message.setData(bundle);
+                        olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
+                        return;
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1007,6 +1122,74 @@ final class JsonHandle {
                     bundle.putBundle(String.valueOf(i2), bundle2);
                     i = i2 + 1;
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+            JPStack.create();
+            OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
+            try {
+                JSONObject jSONObject = new JSONObject(str);
+                JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("P")));
+                Message message = new Message();
+                message.what = 1;
+                Bundle bundle = new Bundle();
+                int length = jSONArray.length();
+                int i = 0;
+                while (true) {
+                    int i2 = i;
+                    if (i2 >= length) {
+                        bundle.putString("SI", jSONObject.getString("S"));
+                        bundle.putInt("diao", jSONObject.getInt("D"));
+                        bundle.putString("MSG", jSONObject.getString("MSG"));
+                        message.setData(bundle);
+                        olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
+                        return;
+                    }
+                    Bundle bundle2 = new Bundle();
+                    JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
+                    User user = jSONObject2.getString("N").isEmpty() ?
+                            new User((byte) jSONObject2.getInt("P"), jSONObject2.getString("N"), null, jSONObject2.getString("S"), jSONObject2.getString("R"), jSONObject2.getString("H"), jSONObject2.getInt("L"), jSONObject2.getInt("V"), jSONObject2.getInt("C"), jSONObject2.getInt("G"), jSONObject2.getInt("O"), jSONObject2.getString("I"))
+                            : new User((byte) jSONObject2.getInt("P"), jSONObject2.getString("N"), jSONObject2.getJSONObject("F"), jSONObject2.getString("S"), jSONObject2.getString("R"), jSONObject2.getString("H"), jSONObject2.getInt("L"), jSONObject2.getInt("V"), jSONObject2.getInt("C"), jSONObject2.getInt("G"), jSONObject2.getInt("O"), jSONObject2.getString("I"));
+                    olPlayKeyboardRoom.putJPhashMap(user.getPosition(), user);
+                    bundle2.putByte("PI", user.getPosition());
+                    bundle2.putString("N", user.getPlayerName());
+                    bundle2.putString("S", user.getSex());
+                    bundle2.putString("IR", user.getStatus());
+                    bundle2.putString("IH", user.getIsHost());
+                    bundle2.putInt("IV", user.getKuang());
+                    bundle2.putInt("LV", user.getLevel());
+                    bundle2.putInt("TR", user.getTrousers());
+                    bundle2.putInt("JA", user.getJacket());
+                    bundle2.putInt("HA", user.getHair());
+                    bundle2.putInt("SH", user.getShoes());
+                    bundle2.putInt("CL", user.getCLevel());
+                    bundle2.putInt("GR", user.getHand());
+                    bundle2.putInt("CP", user.getCpKind());
+                    bundle2.putString("I", user.getFamilyID());
+                    bundle.putBundle(String.valueOf(i2), bundle2);
+                    i = i2 + 1;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static void keyboardNotes(String str) {
+        JPStack.create();
+        if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+            JPStack.create();
+            OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
+            try {
+                JSONObject jSONObject = new JSONObject(str);
+                byte[] keyboardNotes = GZIP.ZIPToArray(jSONObject.getString("N"));
+                Bundle bundle = new Bundle();
+                bundle.putByteArray("NOTES", keyboardNotes);
+                Message message = new Message();
+                message.what = 5;
+                message.setData(bundle);
+                olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

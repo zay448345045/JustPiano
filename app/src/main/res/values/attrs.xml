@@ -3,6 +3,5 @@
     <declare-styleable name="KeyboardModeView">
         <attr name="whiteKeyNum" format="integer"/>
         <attr name="whiteKeyOffset" format="integer"/>
-        <attr name="noteOnColor" format="integer"/>
     </declare-styleable>
 </resources>

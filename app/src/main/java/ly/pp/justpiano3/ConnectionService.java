@@ -107,6 +107,7 @@ public class ConnectionService extends Service implements Runnable {
                 break;
             case (byte) 9:    //被踢出房间
             case (byte) 25:    //弹奏逐个音符状态的数据包上传
+            case (byte) 39:    // 键盘模式传输弹奏音符
             case (byte) 42:    //打开/关闭空位
                 writeBuffer = JsonHandle.m3946a(b, b2, b3, bArr);
                 break;
@@ -163,7 +164,7 @@ public class ConnectionService extends Service implements Runnable {
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
                                 selectionKey.interestOps(SelectionKey.OP_WRITE);
-                                ThreadPoolUtils.execute(new Thread(() -> {
+                                ThreadPoolUtils.execute(() -> {
                                     try {
                                         while (online) {
                                             Thread.sleep(6000);
@@ -172,7 +173,7 @@ public class ConnectionService extends Service implements Runnable {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                }));
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

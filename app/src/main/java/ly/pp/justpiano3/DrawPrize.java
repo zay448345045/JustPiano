@@ -126,8 +126,7 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
             mImgBitmap[i] = BitmapFactory.decodeResource(getResources(), mImgs[i]);
         }
         isRunning = true;
-        Thread t = new Thread(this);
-        t.start();
+        ThreadPoolUtils.execute(this);
     }
 
     @Override

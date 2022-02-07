@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-public final class PianoPlay extends BaseActivity implements MidiConnectStart {
+public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
     private static final int f4579ab = 44100;
     private static int f4609ae = 0;
     public byte hallID;
@@ -472,11 +472,11 @@ public final class PianoPlay extends BaseActivity implements MidiConnectStart {
             try {
                 audiorecord.startRecording();
                 f4611ag = true;
-                new Thread(() -> {
+                ThreadPoolUtils.execute(() -> {
                     if (m3792e()) {
                         PianoPlay.m3786a(recordRawPath, recordWavPath);
                     }
-                }).start();
+                });
                 Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(this, "录音出错...请在系统应用设置内将极品钢琴的录音权限打开!", Toast.LENGTH_SHORT).show();
@@ -643,8 +643,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectStart {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (jpapplication.midiOutputPort != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
-                    midiFramer = null;
+                    if (midiFramer != null) {
+                        jpapplication.midiOutputPort.disconnect(midiFramer);
+                        midiFramer = null;
+                    }
                     jpapplication.removeMidiConnectionStart(this);
                 }
             }
@@ -747,32 +749,53 @@ public final class PianoPlay extends BaseActivity implements MidiConnectStart {
     }
 
     @Override
-    public void onMidiConnectionStart() {
+    public void onMidiConnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
-                    midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-                            int touchNoteNum = data[1] % 12;
-                            if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-                                if (playView.currentPlayNote != null) {
-                                    playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
-                                }
-                                keyboardview.touchNoteSet.put(touchNoteNum, 0);
-                                playView.midiJudgeAndPlaySound(touchNoteNum);
-                                updateKeyboardPrefer();
-                            } else if (command == MidiConstants.STATUS_NOTE_OFF
-                                    || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-                                keyboardview.touchNoteSet.remove(touchNoteNum);
-                                updateKeyboardPrefer();
+                if (jpapplication.midiOutputPort != null) {
+                    if (midiFramer == null) {
+                        midiFramer = new MidiFramer(new MidiReceiver() {
+                            @Override
+                            public void onSend(byte[] data, int offset, int count, long timestamp) {
+                                midiConnectHandle(data);
                             }
-                        }
-                    });
+                        });
+                    }
                     jpapplication.midiOutputPort.connect(midiFramer);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onMidiDisconnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (midiFramer != null) {
+                    jpapplication.midiOutputPort.disconnect(midiFramer);
+                    midiFramer = null;
+                }
+            }
+        }
+    }
+
+    public void midiConnectHandle(byte[] data) {
+        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
+        int touchNoteNum = data[1] % 12;
+        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
+            if (playView.currentPlayNote != null) {
+                playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+            }
+            int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
+            keyboardview.touchNoteSet.put(trueNote, 0);
+            updateKeyboardPrefer();
+        } else if (command == MidiConstants.STATUS_NOTE_OFF
+                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
+            if (touchNoteNum == 0) {
+                keyboardview.touchNoteSet.remove(12);
+            }
+            keyboardview.touchNoteSet.remove(touchNoteNum);
+            updateKeyboardPrefer();
         }
     }
 

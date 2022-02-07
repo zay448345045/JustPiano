@@ -84,8 +84,11 @@ public final class RoomTitleAdapter extends BaseAdapter {
             case 2:
                 string = "双人";
                 break;
+            case 3:
+                string = "键盘";
+                break;
         }
-        if (i4 >= 0 && i4 < 3) {
+        if (i4 >= 0 && i4 <= 3) {
             textView.setBackgroundResource(Consts.groupModeColor[i4]);
         }
         textView.setText(string);

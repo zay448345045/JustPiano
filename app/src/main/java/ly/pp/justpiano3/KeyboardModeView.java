@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
@@ -67,10 +65,8 @@ public class KeyboardModeView extends View {
     private RectF[] whiteKeyRectArray;
     private RectF[] blackKeyRectArray;
     private boolean[] notesOnArray;
+    private Paint[] notesOnPaintArray;
     private boolean cancelled;
-
-    // Appearance
-    private Paint noteOnPaint;
 
     private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
@@ -78,7 +74,6 @@ public class KeyboardModeView extends View {
 
     private int whiteKeyNum;
     private int whiteKeyOffset;
-    private int noteOnColor;
 
     private final Bitmap keyboardImage;
     private final Bitmap whiteKeyRightImage;
@@ -94,12 +89,12 @@ public class KeyboardModeView extends View {
         /**
          * This will be called when a key is pressed.
          */
-        void onKeyDown(int keyIndex, int volume);
+        void onKeyDown(int pitch, int volume);
 
         /**
          * This will be called when a key stop to press.
          */
-        void onKeyUp(int keyIndex);
+        void onKeyUp(int pitch);
     }
 
     public KeyboardModeView(Context context) {
@@ -129,11 +124,7 @@ public class KeyboardModeView extends View {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardModeView);
         whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM);
         whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET);
-        noteOnColor = typedArray.getColor(R.styleable.KeyboardModeView_noteOnColor, 0);
         typedArray.recycle();
-        noteOnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        int color = context.getResources().getColor(Consts.kuangColor[noteOnColor]);
-        noteOnPaint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
     }
 
     @Override
@@ -182,6 +173,10 @@ public class KeyboardModeView extends View {
         whiteKeyRectArray = whiteKeyRectList.toArray(new RectF[0]);
         blackKeyRectArray = blackKeyRectList.toArray(new RectF[0]);
         notesOnArray = new boolean[octave * NOTES_PER_OCTAVE];
+        notesOnPaintArray = new Paint[octave * NOTES_PER_OCTAVE];
+        for (int i = 0; i < notesOnPaintArray.length; i++) {
+            notesOnPaintArray[i] = new Paint(Paint.ANTI_ALIAS_FLAG);
+        }
     }
 
     @Override
@@ -197,16 +192,16 @@ public class KeyboardModeView extends View {
                     int noteI = i % NOTES_PER_OCTAVE;
                     switch (KEY_IMAGE_TYPE[noteI]) {
                         case -1:
-                            canvas.drawBitmap(blackKeyImage, null, blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE], noteOnPaint);
+                            canvas.drawBitmap(blackKeyImage, null, blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
                         case 0:
-                            canvas.drawBitmap(whiteKeyLeftImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                            canvas.drawBitmap(whiteKeyLeftImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
                         case 1:
-                            canvas.drawBitmap(whiteKeyMiddleImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                            canvas.drawBitmap(whiteKeyMiddleImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
                         case 2:
-                            canvas.drawBitmap(whiteKeyRightImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], noteOnPaint);
+                            canvas.drawBitmap(whiteKeyRightImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
                         default:
                             break;
@@ -269,7 +264,7 @@ public class KeyboardModeView extends View {
             pitch = xToWhitePitch(x);
             volume = (int) (y / viewHeight * MAX_VOLUME);
         }
-        fireKeyDown(pitch, volume);
+        fireKeyDown(pitch, volume, -1);
         mFingerMap.put(id, pitch);
     }
 
@@ -288,15 +283,7 @@ public class KeyboardModeView extends View {
             }
             // Did we change to a new key.
             if (pitch >= 0 && pitch != previousPitch) {
-//                boolean mLegato = true;
-//                if (mLegato) {
-//                    fireKeyDown(pitch, volume);
-//                    fireKeyUp(previousPitch);
-//                } else {
-//                    fireKeyUp(previousPitch);
-//                    fireKeyDown(pitch, volume);
-//                }
-                fireKeyDown(pitch, volume);
+                fireKeyDown(pitch, volume, -1);
                 fireKeyUp(previousPitch);
                 mFingerMap.put(id, pitch);
             }
@@ -328,7 +315,7 @@ public class KeyboardModeView extends View {
         mFingerMap.clear();
     }
 
-    public void fireKeyDown(int pitch, int volume) {
+    public void fireKeyDown(int pitch, int volume, int kuangColorIndex) {
         if (!cancelled) {
             for (MusicKeyListener listener : mListeners) {
                 listener.onKeyDown(pitch, volume);
@@ -338,6 +325,9 @@ public class KeyboardModeView extends View {
                 return;
             }
             notesOnArray[pitchInScreen] = true;
+            if (kuangColorIndex != -1) {
+                notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilter[kuangColorIndex]);
+            }
             invalidate();
         }
     }
@@ -394,6 +384,9 @@ public class KeyboardModeView extends View {
             rightAnim = true;
         }
         this.whiteKeyNum = whiteKeyNum;
+        if (animInterval == 0) {
+            return;
+        }
         anim.setDuration(animInterval);
         cancelled = true;
         float[] oriLeft = new float[keyboardImageRectArray.length];
@@ -406,7 +399,7 @@ public class KeyboardModeView extends View {
         anim.addUpdateListener(animation -> {
             float currentValue = (float) animation.getAnimatedValue();
             for (int i = 0; i < keyboardImageRectArray.length; i++) {
-                keyboardImageRectArray[i].left = finalRightAnim ? (oriLeft[i] - viewWidth) * currentValue + viewWidth: oriLeft[i] * currentValue;
+                keyboardImageRectArray[i].left = finalRightAnim ? (oriLeft[i] - viewWidth) * currentValue + viewWidth : oriLeft[i] * currentValue;
                 keyboardImageRectArray[i].right = finalRightAnim ? (oriRight[i] - viewWidth) * currentValue + viewWidth : oriRight[i] * currentValue;
             }
             postInvalidate();
@@ -439,6 +432,9 @@ public class KeyboardModeView extends View {
         }
         ValueAnimator anim = ValueAnimator.ofFloat(0f, (this.whiteKeyOffset - whiteKeyOffset) * whiteKeyWidth);
         this.whiteKeyOffset = whiteKeyOffset;
+        if (animInterval == 0) {
+            return;
+        }
         anim.setDuration(animInterval);
         cancelled = true;
         float[] oriLeft = new float[keyboardImageRectArray.length];
@@ -471,17 +467,6 @@ public class KeyboardModeView extends View {
             }
         });
         anim.start();
-    }
-
-    public int getNoteOnColor() {
-        return noteOnColor;
-    }
-
-    public void setNoteOnColor(int noteOnColor) {
-        this.noteOnColor = noteOnColor;
-        noteOnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        noteOnPaint.setColorFilter(new PorterDuffColorFilter(noteOnColor, PorterDuff.Mode.MULTIPLY));
-        postInvalidate();
     }
 
     /**

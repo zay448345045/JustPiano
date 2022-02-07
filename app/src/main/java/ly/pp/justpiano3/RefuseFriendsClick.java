@@ -8,24 +8,39 @@ import org.json.JSONObject;
 
 final class RefuseFriendsClick implements OnClickListener {
     private final String f5587b;
-    private final OLPlayRoom olPlayRoom;
+    private final OLPlayRoomInterface olPlayRoomInterface;
 
-    RefuseFriendsClick(String str, OLPlayRoom olPlayRoom) {
+    RefuseFriendsClick(String str, OLPlayRoomInterface olPlayRoomInterface) {
         f5587b = str;
-        this.olPlayRoom = olPlayRoom;
+        this.olPlayRoomInterface = olPlayRoomInterface;
     }
 
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("T", 1);
-            jSONObject.put("I", 1);
-            jSONObject.put("F", f5587b);
-            olPlayRoom.sendMsg((byte) 31, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
-            dialogInterface.dismiss();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (olPlayRoomInterface instanceof OLPlayRoom) {
+            OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
+            JSONObject jSONObject = new JSONObject();
+            try {
+                jSONObject.put("T", 1);
+                jSONObject.put("I", 1);
+                jSONObject.put("F", f5587b);
+                olPlayRoom.sendMsg((byte) 31, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
+                dialogInterface.dismiss();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
+            OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
+            JSONObject jSONObject = new JSONObject();
+            try {
+                jSONObject.put("T", 1);
+                jSONObject.put("I", 1);
+                jSONObject.put("F", f5587b);
+                olPlayKeyboardRoom.sendMsg((byte) 31, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
+                dialogInterface.dismiss();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

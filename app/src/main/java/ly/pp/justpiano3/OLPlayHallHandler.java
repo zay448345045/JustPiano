@@ -75,11 +75,17 @@ final class OLPlayHallHandler extends Handler {
                 });
                 return;
             case 2:
-                Intent intent = new Intent(olPlayHall, OLPlayRoom.class);
                 Bundle data = message.getData();
-                data.putBundle("bundle", olPlayHall.f4381N);
-                intent.putExtras(data);
                 olPlayHall.jpapplication.setNowSongsName("");
+                data.putBundle("bundle", olPlayHall.f4381N);
+                int mode = data.getInt("mode");
+                Intent intent;
+                if (mode == 3) {
+                    intent = new Intent(olPlayHall, OLPlayKeyboardRoom.class);
+                } else {
+                    intent = new Intent(olPlayHall, OLPlayRoom.class);
+                }
+                intent.putExtras(data);
                 olPlayHall.startActivity(intent);
                 olPlayHall.finish();
                 return;

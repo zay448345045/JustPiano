@@ -35,7 +35,7 @@ public final class PlaySongs {
                 noteArray[k] += diao;
             }
         }
-        new Thread(() -> {
+        ThreadPoolUtils.execute(() -> {
             int j = 0;
             while (j >= 0) {
                 try {
@@ -58,7 +58,7 @@ public final class PlaySongs {
                     e2.printStackTrace();
                 }
             }
-        }).start();
+        });
     }
 
     private void setNestSong() {

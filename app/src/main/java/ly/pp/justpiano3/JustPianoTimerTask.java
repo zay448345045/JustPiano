@@ -23,7 +23,7 @@ final class JustPianoTimerTask extends TimerTask {
             Message obtainMessage = f5113b.handler.obtainMessage();
             obtainMessage.what = 0;
             f5113b.handler.sendMessage(obtainMessage);
-            new Thread(f5113b).start();
+            ThreadPoolUtils.execute(f5113b);
             return;
         }
         f5112a--;

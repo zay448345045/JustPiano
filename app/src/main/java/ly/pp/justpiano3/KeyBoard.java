@@ -2,12 +2,14 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.RequiresApi;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectStart {
+public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener {
 
     KeyboardModeView keyboardMode1View;
     KeyboardModeView keyboardMode2View;
@@ -29,6 +31,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     JPApplication jpapplication;
     MidiReceiver midiFramer;
     ScheduledExecutorService scheduledExecutor;
+    SharedPreferences sharedPreferences;
     // 用于记录上次的移动
     private boolean reSize;
     // 记录目前是否在走动画，不能重复走
@@ -49,28 +52,27 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         super.onCreate(bundle);
         setContentView(R.layout.keyboard_mode);
         jpapplication = (JPApplication) getApplication();
-
         keyboardMode1View = findViewById(R.id.keyboard1_view);
         keyboardMode1View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int keyIndex, int volume) {
-                jpapplication.playSound(keyIndex, volume);
+            public void onKeyDown(int pitch, int volume) {
+                jpapplication.playSound(pitch, volume);
             }
 
             @Override
-            public void onKeyUp(int keyIndex) {
+            public void onKeyUp(int pitch) {
 
             }
         });
         keyboardMode2View = findViewById(R.id.keyboard2_view);
         keyboardMode2View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int keyIndex, int volume) {
-                jpapplication.playSound(keyIndex, volume);
+            public void onKeyDown(int pitch, int volume) {
+                jpapplication.playSound(pitch, volume);
             }
 
             @Override
-            public void onKeyUp(int keyIndex) {
+            public void onKeyUp(int pitch) {
 
             }
         });
@@ -94,24 +96,32 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboard1MoveRight.setOnTouchListener(this);
         Button keyboard2MoveRight = findViewById(R.id.keyboard2_move_right);
         keyboard2MoveRight.setOnTouchListener(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int keyboard1WhiteKeyNum = sharedPreferences.getInt("keyboard1_white_key_num", 8);
+        int keyboard2WhiteKeyNum = sharedPreferences.getInt("keyboard2_white_key_num", 8);
+        int keyboard1WhiteKeyOffset = sharedPreferences.getInt("keyboard1_white_key_offset", 21);
+        int keyboard2WhiteKeyOffset = sharedPreferences.getInt("keyboard2_white_key_offset", 14);
+        float keyboardWeight = sharedPreferences.getFloat("keyboard_weight", 0.5f);
+        keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+        keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, 0);
+        keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+        keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, 0);
+        keyboard1Layout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
+        keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                jpapplication.addMidiConnectionStart(this);
                 if (jpapplication.midiOutputPort != null && midiFramer == null) {
                     midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-                            if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-                                keyboardMode1View.fireKeyDown(data[1], data[2]);
-                            } else if (command == MidiConstants.STATUS_NOTE_OFF
-                                    || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-                                keyboardMode1View.fireKeyUp(data[1]);
-                            }
+                            midiConnectHandle(data);
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
                 }
+                jpapplication.addMidiConnectionListener(this);
             }
         }
     }
@@ -121,8 +131,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (jpapplication.midiOutputPort != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
-                    midiFramer = null;
+                    if (midiFramer != null) {
+                        jpapplication.midiOutputPort.disconnect(midiFramer);
+                        midiFramer = null;
+                    }
                     jpapplication.removeMidiConnectionStart(this);
                 }
             }
@@ -158,6 +170,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) keyboard1Layout.getLayoutParams();
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putFloat("keyboard_weight", layoutParams.weight);
+                    edit.apply();
                     reSize = false;
                     break;
                 default:
@@ -204,30 +220,55 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         @Override
         public boolean handleMessage(Message msg) {
             int viewId = msg.what;
+            SharedPreferences.Editor edit = sharedPreferences.edit();
             switch (viewId) {
                 case R.id.keyboard1_count_down:
-                    keyboardMode1View.setWhiteKeyNum(keyboardMode1View.getWhiteKeyNum() - 1, interval);
+                    int keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() - 1;
+                    edit.putInt("keyboard1_white_key_num", keyboard1WhiteKeyNum);
+                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard2_count_down:
-                    keyboardMode2View.setWhiteKeyNum(keyboardMode2View.getWhiteKeyNum() - 1, interval);
+                    int keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() - 1;
+                    edit.putInt("keyboard2_white_key_num", keyboard2WhiteKeyNum);
+                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard1_count_up:
-                    keyboardMode1View.setWhiteKeyNum(keyboardMode1View.getWhiteKeyNum() + 1, interval);
+                    keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() + 1;
+                    edit.putInt("keyboard1_white_key_num", keyboard1WhiteKeyNum);
+                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard2_count_up:
-                    keyboardMode2View.setWhiteKeyNum(keyboardMode2View.getWhiteKeyNum() + 1, interval);
+                    keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() + 1;
+                    edit.putInt("keyboard2_white_key_num", keyboard2WhiteKeyNum);
+                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard1_move_left:
-                    keyboardMode1View.setWhiteKeyOffset(keyboardMode1View.getWhiteKeyOffset() - 1, interval);
+                    int keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() - 1;
+                    edit.putInt("keyboard1_white_key_offset", keyboard1WhiteKeyOffset);
+                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard2_move_left:
-                    keyboardMode2View.setWhiteKeyOffset(keyboardMode2View.getWhiteKeyOffset() - 1, interval);
+                    int keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() - 1;
+                    edit.putInt("keyboard2_white_key_offset", keyboard2WhiteKeyOffset);
+                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard1_move_right:
-                    keyboardMode1View.setWhiteKeyOffset(keyboardMode1View.getWhiteKeyOffset() + 1, interval);
+                    keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() + 1;
+                    edit.putInt("keyboard1_white_key_offset", keyboard1WhiteKeyOffset);
+                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, interval);
+                    edit.apply();
                     break;
                 case R.id.keyboard2_move_right:
-                    keyboardMode2View.setWhiteKeyOffset(keyboardMode2View.getWhiteKeyOffset() + 1, interval);
+                    keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() + 1;
+                    edit.putInt("keyboard2_white_key_offset", keyboard2WhiteKeyOffset);
+                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, interval);
+                    edit.apply();
                     break;
                 default:
                     break;
@@ -237,25 +278,41 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     });
 
     @Override
-    public void onMidiConnectionStart() {
+    public void onMidiConnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (jpapplication.midiOutputPort != null && midiFramer == null) {
                     midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-                            if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-                                keyboardMode1View.fireKeyDown(data[1], data[2]);
-                            } else if (command == MidiConstants.STATUS_NOTE_OFF
-                                    || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-                                keyboardMode1View.fireKeyUp(data[1]);
-                            }
+                            midiConnectHandle(data);
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onMidiDisconnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (midiFramer != null) {
+                    jpapplication.midiOutputPort.disconnect(midiFramer);
+                    midiFramer = null;
+                }
+            }
+        }
+    }
+
+    public void midiConnectHandle(byte[] data) {
+        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
+        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
+            keyboardMode1View.fireKeyDown(data[1], data[2], -1);
+        } else if (command == MidiConstants.STATUS_NOTE_OFF
+                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
+            keyboardMode1View.fireKeyUp(data[1]);
         }
     }
 }

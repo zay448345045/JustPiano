@@ -41,7 +41,7 @@ import javazoom.jl.converter.Converter;
 
 public final class JPApplication extends Application {
 
-    private List<MidiConnectStart> midiConnectStartList;
+    private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
     static SharedPreferences sharedpreferences;
     private static Context context;
@@ -531,7 +531,7 @@ public final class JPApplication extends Application {
         sharedpreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                midiConnectStartList = new ArrayList<>();
+                midiConnectionListeners = new ArrayList<>();
                 mMidiManager = (MidiManager) getSystemService(MIDI_SERVICE);
                 mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
                     @Override
@@ -544,8 +544,8 @@ public final class JPApplication extends Application {
                                 for (MidiDeviceInfo.PortInfo port : ports) {
                                     if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
                                         midiOutputPort = device.openOutputPort(port.getPortNumber());
-                                        for (MidiConnectStart midiConnectStart : midiConnectStartList) {
-                                            midiConnectStart.onMidiConnectionStart();
+                                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                                            midiConnectionListener.onMidiConnect();
                                         }
                                     }
                                 }
@@ -557,19 +557,28 @@ public final class JPApplication extends Application {
                     @Override
                     public void onDeviceRemoved(MidiDeviceInfo info) {
                         Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
-                        midiOutputPort = null;
+                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                            midiConnectionListener.onMidiDisconnect();
+                        }
+                        try {
+                            midiOutputPort.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            midiOutputPort = null;
+                        }
                     }
                 }, new Handler(Looper.getMainLooper()));
             }
         }
     }
 
-    public void addMidiConnectionStart(MidiConnectStart midiConnectStart) {
-        midiConnectStartList.add(midiConnectStart);
+    public void addMidiConnectionListener(MidiConnectionListener midiConnectionListener) {
+        midiConnectionListeners.add(midiConnectionListener);
     }
 
-    public void removeMidiConnectionStart(MidiConnectStart midiConnectStart) {
-        midiConnectStartList.remove(midiConnectStart);
+    public void removeMidiConnectionStart(MidiConnectionListener midiConnectionListener) {
+        midiConnectionListeners.remove(midiConnectionListener);
     }
 
     public int getAnimFrame() {

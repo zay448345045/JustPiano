@@ -529,20 +529,17 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         friendListView.setCacheColorHint(0);
         familyListView = findViewById(R.id.ol_family_list);
         familyListView.setCacheColorHint(0);
-        familyListView.setLoadListener(() -> new Thread() {
-            @Override
-            public void run() {
-                familyPageNum++;
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("K", 2);
-                    jSONObject.put("B", familyPageNum);
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                }
-                sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+        familyListView.setLoadListener(() -> ThreadPoolUtils.execute(() -> {
+            familyPageNum++;
+            JSONObject jSONObject = new JSONObject();
+            try {
+                jSONObject.put("K", 2);
+                jSONObject.put("B", familyPageNum);
+            } catch (JSONException e2) {
+                e2.printStackTrace();
             }
-        }.start());
+            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+        }));
         mailListView = findViewById(R.id.ol_mail_list);
         mailListView.setCacheColorHint(0);
         friendList.clear();

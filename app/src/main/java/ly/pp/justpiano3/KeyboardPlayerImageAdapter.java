@@ -22,31 +22,31 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-public final class PlayerImageAdapter extends BaseAdapter {
+public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     byte roomID;
     ConnectionService connectionService;
-    private final OLPlayRoom olPlayRoom;
+    private final OLPlayKeyboardRoom olPlayKeyboardRoom;
     private final List<Bundle> playerList;
     private final LayoutInflater layoutInflater;
 
-    PlayerImageAdapter(List<Bundle> list, OLPlayRoom olPlayRoom) {
-        layoutInflater = olPlayRoom.getLayoutInflater();
-        roomID = olPlayRoom.roomID0;
+    KeyboardPlayerImageAdapter(List<Bundle> list, OLPlayKeyboardRoom olPlayKeyboardRoom) {
+        layoutInflater = olPlayKeyboardRoom.getLayoutInflater();
+        roomID = olPlayKeyboardRoom.roomID0;
         playerList = list;
-        this.olPlayRoom = olPlayRoom;
-        connectionService = olPlayRoom.jpapplication.getConnectionService();
+        this.olPlayKeyboardRoom = olPlayKeyboardRoom;
+        connectionService = olPlayKeyboardRoom.jpapplication.getConnectionService();
     }
 
     private PopupWindow m4034a(User user) {
-        PopupWindow popupWindow = new PopupWindow(olPlayRoom);
-        View inflate = LayoutInflater.from(olPlayRoom).inflate(R.layout.ol_buttonlist_view, null);
+        PopupWindow popupWindow = new PopupWindow(olPlayKeyboardRoom);
+        View inflate = LayoutInflater.from(olPlayKeyboardRoom).inflate(R.layout.ol_buttonlist_view, null);
         Button button = inflate.findViewById(R.id.ol_showinfo_b);
         Button button2 = inflate.findViewById(R.id.ol_chat_b);
         Button button3 = inflate.findViewById(R.id.ol_kickout_b);
         Button button4 = inflate.findViewById(R.id.ol_closepos_b);
         Button button5 = inflate.findViewById(R.id.ol_couple_b);
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(olPlayRoom.getResources().getDrawable(R.drawable.filled_box));
+        popupWindow.setBackgroundDrawable(olPlayKeyboardRoom.getResources().getDrawable(R.drawable.filled_box));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
@@ -65,7 +65,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                             try {
                                 jSONObject.put("C", user.getPosition());
                                 jSONObject.put("T", 4);
-                                connectionService.writeData((byte) 45, roomID, olPlayRoom.hallID0, jSONObject.toString(), null);
+                                connectionService.writeData((byte) 45, roomID, olPlayKeyboardRoom.hallID0, jSONObject.toString(), null);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -80,15 +80,15 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         Bundle bundle = new Bundle();
-                        Message obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
+                        Message obtainMessage = olPlayKeyboardRoom.olPlayKeyboardRoomHandler.obtainMessage();
                         obtainMessage.what = 12;
                         obtainMessage.setData(bundle);
                         bundle.putString("U", user.getPlayerName());
-                        olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
+                        olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                     }
                 });
             }
-            if (!olPlayRoom.playerKind.equals("H")) {
+            if (!olPlayKeyboardRoom.playerKind.equals("H")) {
                 button3.setVisibility(View.GONE);
                 button4.setVisibility(View.GONE);
             } else if (user.getIsHost().equals("C")) {
@@ -98,8 +98,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         byte[] bArr = new byte[]{user.getPosition(), (byte) 2};
-                        if (olPlayRoom.playerKind.equals("H") && connectionService != null) {
-                            connectionService.writeData((byte) 42, roomID, olPlayRoom.hallID0, String.valueOf(user.getPosition()), bArr);
+                        if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
+                            connectionService.writeData((byte) 42, roomID, olPlayKeyboardRoom.hallID0, String.valueOf(user.getPosition()), bArr);
                         }
                     }
                 });
@@ -110,8 +110,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         byte[] bArr = new byte[]{user.getPosition(), (byte) 1};
-                        if (olPlayRoom.playerKind.equals("H") && connectionService != null) {
-                            connectionService.writeData((byte) 42, roomID, olPlayRoom.hallID0, user.getPlayerName(), bArr);
+                        if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
+                            connectionService.writeData((byte) 42, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
                         }
                     }
                 });
@@ -121,11 +121,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         byte[] bArr = new byte[]{user.getPosition()};
-                        if (olPlayRoom.playerKind.equals("H") && connectionService != null) {
+                        if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
                             if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
-                                Toast.makeText(olPlayRoom, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(olPlayKeyboardRoom, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                             } else {
-                                connectionService.writeData((byte) 9, roomID, olPlayRoom.hallID0, user.getPlayerName(), bArr);
+                                connectionService.writeData((byte) 9, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
                             }
                         }
                     }
@@ -142,7 +142,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                             try {
                                 jSONObject.put("C", user.getPosition());
                                 jSONObject.put("T", 4);
-                                connectionService.writeData((byte) 45, roomID, olPlayRoom.hallID0, jSONObject.toString(), null);
+                                connectionService.writeData((byte) 45, roomID, olPlayKeyboardRoom.hallID0, jSONObject.toString(), null);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -166,7 +166,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                         JSONObject jSONObject = new JSONObject();
                         try {
                             jSONObject.put("C", user.getPosition());
-                            connectionService.writeData((byte) 2, roomID, olPlayRoom.hallID0, jSONObject.toString(), null);
+                            connectionService.writeData((byte) 2, roomID, olPlayKeyboardRoom.hallID0, jSONObject.toString(), null);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -195,11 +195,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
     @Override
     public final View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.ol_player_view, null);
+            view = layoutInflater.inflate(R.layout.ol_keyboard_player_view, null);
         } else if (viewGroup.getChildCount() != i || i >= playerList.size()) {
             return view;
         }
-        TextView textView;
         String string = playerList.get(i).getString("N");
         String string2 = playerList.get(i).getString("S");
         String str = string2.equals("f") ? "f" : "m";
@@ -210,17 +209,17 @@ public final class PlayerImageAdapter extends BaseAdapter {
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
         imageView.setOnClickListener(v -> {
-            PopupWindow a = m4034a(olPlayRoom.jpapplication.getHashmap().get(b));
+            PopupWindow a = m4034a(olPlayKeyboardRoom.jpapplication.getHashmap().get(b));
             int[] iArr = new int[2];
             imageView.getLocationOnScreen(iArr);
             a.showAtLocation(imageView, 51, iArr[0] + imageView.getWidth(), iArr[1]);
         });
         try {
             if (string4.equals("O")) {
-                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
                 return view;
             } else if (string4.equals("C")) {
-                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_close.png")));
+                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_close.png")));
                 return view;
             }
         } catch (Exception e) {
@@ -236,38 +235,16 @@ public final class PlayerImageAdapter extends BaseAdapter {
         int i3 = playerList.get(i).getInt("LV");
         int i4 = playerList.get(i).getInt("CL");
         if (JPApplication.kitiName.equals(string)) {
-            olPlayRoom.lv = i3;
-            olPlayRoom.cl = i4;
-            olPlayRoom.playerKind = string4;
-            switch (olPlayRoom.getMode()) {
-                case 2:
-                    olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;
-                    break;
-                case 1:
-                    olPlayRoom.currentHand = 0;
-                    break;
-                case 0:
-                    olPlayRoom.currentHand = playerList.get(i).getInt("GR");
-                    break;
-            }
-            olPlayRoom.user = olPlayRoom.jpapplication.getHashmap().get(b);
-            if (olPlayRoom.playerKind.equals("H")) {
-                olPlayRoom.playButton.setText("开始");
-                olPlayRoom.playButton.setTextSize(20);
-            } else if (string3.equals("R")) {
-                olPlayRoom.playButton.setText("取消准备");
-                olPlayRoom.playButton.setTextSize(14);
-            } else {
-                olPlayRoom.playButton.setText("准备");
-                olPlayRoom.playButton.setTextSize(20);
-            }
+            olPlayKeyboardRoom.lv = i3;
+            olPlayKeyboardRoom.cl = i4;
+            olPlayKeyboardRoom.playerKind = string4;
         }
         int i5 = playerList.get(i).getInt("CP");
         if (i5 >= 0 && i5 <= 3) {
             imageView6.setImageResource(Consts.couples[i5]);
         }
         if (!familyID.equals("0")) {
-            File file = new File(olPlayRoom.getFilesDir(), familyID + ".jpg");
+            File file = new File(olPlayKeyboardRoom.getFilesDir(), familyID + ".jpg");
             if (file.exists()) {
                 try {
                     int length = (int) file.length();
@@ -287,28 +264,18 @@ public final class PlayerImageAdapter extends BaseAdapter {
         if (!string4.equals("H")) {
             if ("R".equals(string3)) {
                 textView2.setText("准备");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
             }
         } else {
             textView2.setText("房主");
-            textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.exit));
+            textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.exit));
         }
-        switch (string3) {
-            case "P":
-                textView2.setText("弹奏中");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
-                break;
-            case "F":
-                textView2.setText("查看成绩");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
-                break;
-            case "B":
-                textView2.setText("后台");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
-                break;
+        if ("B".equals(string3)) {
+            textView2.setText("后台");
+            textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.green_y));
         }
         try {
             int i6 = playerList.get(i).getInt("TR") - 1;
@@ -317,50 +284,35 @@ public final class PlayerImageAdapter extends BaseAdapter {
             int i9 = playerList.get(i).getInt("SH") - 1;
             textView3.setText("LV." + i3);
             textView4.setText("CL." + i4);
-            textView4.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
+            textView4.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[i4]));
             textView5.setText(Consts.nameCL[i4]);
-            textView5.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
-            imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_m0.png")));
+            textView5.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[i4]));
+            imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_m0.png")));
             if (i6 < 0) {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_t" + i6 + ".png")));
+                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_t" + i6 + ".png")));
             }
             if (i7 < 0) {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_j" + i7 + ".png")));
+                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_j" + i7 + ".png")));
             }
             if (i9 < 0) {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_s" + i9 + ".png")));
+                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_s" + i9 + ".png")));
             }
             if (i8 < 0) {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_h" + i8 + ".png")));
+                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_h" + i8 + ".png")));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(string);
-        textView = view.findViewById(R.id.ol_player_hand);
-        switch (olPlayRoom.getMode()) {
-            case 0:
-                textView.setBackgroundResource(Consts.groupModeColor[0]);
-                textView.setText(Consts.hand[(playerList.get(i).getInt("GR") + 12) % 2]);
-                break;
-            case 1:
-                textView.setText(Consts.groups[(playerList.get(i).getInt("GR")) - 1]);
-                textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
-                break;
-            case 2:
-                textView.setText(Consts.hand[(playerList.get(i).getInt("GR") % 2)]);
-                textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR") - 1) / 2]);
-                break;
-        }
         if (i2 == 0) {
             textView2.setBackgroundResource(R.drawable.back_puased);
         } else {

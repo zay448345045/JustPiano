@@ -390,10 +390,12 @@ public final class PlayView extends SurfaceView implements Callback {
         uploadTouchStatusList = new ArrayList<>();
     }
 
-    private void judgeTouchNote(int i, boolean isMidi) {
+    private int judgeTouchNote(int i, boolean isMidi) {
         int i2;
         int i3;
-        if (i == noteRightValue || (isMidi && i + 12 == noteRightValue)) {
+        boolean midiFlag = isMidi && i + 12 == noteRightValue;
+        int returnNoteValue = midiFlag ? 12 : i % 12;
+        if (i == noteRightValue || midiFlag) {
             int i4;
             isTouchRightNote = true;
             double abs;
@@ -462,11 +464,12 @@ public final class PlayView extends SurfaceView implements Callback {
             uploadTimeArray[uploadNoteIndex] = b;
             if (uploadNoteIndex < uploadTime - 1) {
                 uploadNoteIndex++;
-                return;
+                return returnNoteValue;
             }
             pianoPlay.sendMsg((byte) 25, pianoPlay.hallID, "", uploadTimeArray);
             uploadNoteIndex = 0;
         }
+        return returnNoteValue;
     }
 
     final int eventPositionToTouchNoteNum(float f, float f2) {
@@ -529,9 +532,10 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    final void midiJudgeAndPlaySound(int i) {
-        judgeTouchNote(i + noteMod12 * 12, true);
-        jpapplication.playSound(i + (noteMod12 + jpapplication.getBadu()) * 12, volume0);
+    final int midiJudgeAndPlaySound(int i) {
+        int trueNote = judgeTouchNote(i + noteMod12 * 12, true);
+        jpapplication.playSound(trueNote + (noteMod12 + jpapplication.getBadu()) * 12, volume0);
+        return trueNote;
     }
 
     final void mo2929a(Canvas canvas) {

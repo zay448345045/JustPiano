@@ -160,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/selector_ol_button"
-            android:layout_weight="1">
+            android:layout_weight="0.5">
 
             <ly.pp.justpiano3.KeyboardModeView
                 app:whiteKeyNum="8"
@@ -177,7 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/selector_orange_button"
-            android:layout_weight="1">
+            android:layout_weight="0.5">
 
             <ly.pp.justpiano3.KeyboardModeView
                 app:whiteKeyNum="8"

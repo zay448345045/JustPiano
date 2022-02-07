@@ -18,28 +18,15 @@ final class TouchNotes implements OnTouchListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (playView.pianoPlay.jpapplication.midiOutputPort != null && playView.pianoPlay.midiFramer == null) {
-                    playView.pianoPlay.jpapplication.addMidiConnectionStart(playView.pianoPlay);
                     playView.pianoPlay.midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-                            int touchNoteNum = data[1] % 12;
-                            if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-                                if (playView.currentPlayNote != null) {
-                                    playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
-                                }
-                                playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
-                                playView.midiJudgeAndPlaySound(touchNoteNum);
-                                playView.pianoPlay.updateKeyboardPrefer();
-                            } else if (command == MidiConstants.STATUS_NOTE_OFF
-                                    || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-                                playView.pianoPlay.keyboardview.touchNoteSet.remove(touchNoteNum);
-                                playView.pianoPlay.updateKeyboardPrefer();
-                            }
+                            playView.pianoPlay.midiConnectHandle(data);
                         }
                     });
                     playView.pianoPlay.jpapplication.midiOutputPort.connect(playView.pianoPlay.midiFramer);
                 }
+                playView.pianoPlay.jpapplication.addMidiConnectionListener(playView.pianoPlay);
             }
         }
     }

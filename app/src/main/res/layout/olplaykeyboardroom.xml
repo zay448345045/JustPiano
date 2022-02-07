@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/ground"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/ads"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/top_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ly.pp.justpiano3.ScrollText
+            android:id="@+id/broadCastText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/systemText"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="2"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="异议以"
+            android:textColor="@color/settings"
+            android:textColorHighlight="@color/blue_d"
+            android:textColorHint="@color/blue_d"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/systemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/broadCastText"
+            android:text="多少多少"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/a"
+            android:text="哈哈哈"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/online"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/player_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="5dp">
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout1"
+            android:layout_width="304dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar"
+            android:orientation="vertical">
+
+            <GridView
+                android:id="@+id/ol_player_grid"
+                android:layout_width="304dp"
+                android:layout_height="151dp"
+                android:layout_below="@+id/room_title"
+                android:layout_alignParentEnd="true"
+                android:listSelector="@color/translent"
+                android:numColumns="3" />
+
+            <TextView
+                android:id="@+id/room_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/ol_player_grid"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/selector_list_c"
+                android:keepScreenOn="true"
+                android:singleLine="true"
+                android:text="房间名称"
+                android:textColor="@color/roomtext"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/ol_player_grid"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/room_title"
+                android:background="@drawable/selector_list_c"
+                android:gravity="end"
+                android:keepScreenOn="true"
+                android:textColor="#f9f3b8"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/keyboard_resize"
+                android:text="↕"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_ol_button"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard_count_down"
+                android:text="—"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/keyboard_resize"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard_move_left"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/keyboard_count_down"
+                android:background="@drawable/selector_orange_button"
+                android:text="←"
+                android:textColor="@color/white1"
+                android:textSize="18sp"
+                android:textStyle="bold">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard_move_right"
+                android:text="→"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/keyboard_move_left"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content">
+            </Button>
+
+            <Button
+                android:id="@+id/keyboard_count_up"
+                android:text="＋"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white1"
+                android:background="@drawable/selector_orange_button"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/keyboard_move_right"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content">
+            </Button>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@id/RelativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar"
+            android:orientation="vertical">
+
+            <TabHost
+                android:id="@+id/tabhost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@id/RelativeLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TabWidget
+                        android:id="@android:id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@color/back"
+                        android:tabStripEnabled="false" />
+
+                    <FrameLayout
+                        android:id="@android:id/tabcontent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@android:id/tabs"
+                        android:layout_alignParentStart="true">
+
+                        <RelativeLayout
+                            android:id="@+id/friend_tab"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <ListView
+                                android:id="@+id/ol_friend_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_above="@+id/RelativeLayout01"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true" />
+
+                            <RelativeLayout
+                                android:id="@+id/RelativeLayout01"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentBottom="true">
+
+                                <Button
+                                    android:id="@+id/pre_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentTop="true"
+                                    android:background="@drawable/selector_orange_button"
+                                    android:text="上一页"
+                                    android:textColor="@color/white1"
+                                    android:textSize="18sp" />
+
+                                <Button
+                                    android:id="@+id/online_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@drawable/selector_orange_button"
+                                    android:text="显示在线"
+                                    android:textColor="@color/white1"
+                                    android:textSize="18sp" />
+
+                                <Button
+                                    android:id="@+id/next_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_alignParentEnd="true"
+                                    android:background="@drawable/selector_orange_button"
+                                    android:text="下一页"
+                                    android:textColor="@color/white1"
+                                    android:textSize="18sp" />
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/msg_tab"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="top|center_vertical|center_horizontal|center"
+                            android:orientation="vertical">
+
+                            <ListView
+                                android:id="@+id/ol_msg_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="225dp"
+                                android:layout_above="@+id/ol_express_b"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:background="@color/yellow_l"
+                                android:cacheColorHint="#00ffffff"
+                                android:divider="@drawable/divider"
+                                android:listSelector="@color/translent" />
+
+                            <ImageView
+                                android:id="@+id/ol_express_b"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignTop="@+id/ol_send_text"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/selector_ol_button"
+                                android:src="@drawable/b17" />
+
+                            <ImageView
+                                android:id="@+id/ol_changecolor"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignTop="@+id/ol_send_text"
+                                android:layout_alignParentBottom="true"
+                                android:layout_toEndOf="@id/ol_express_b"
+                                android:background="@drawable/selector_ol_button"
+                                android:src="@drawable/changecolor" />
+
+                            <EditText
+                                android:id="@+id/ol_send_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignTop="@+id/ol_send_b"
+                                android:layout_alignParentBottom="true"
+                                android:layout_toStartOf="@+id/ol_send_b"
+                                android:layout_toEndOf="@id/ol_changecolor"
+                                android:background="@color/back"
+                                android:ems="10"
+                                android:imeOptions="actionDone"
+                                android:scrollHorizontally="true"
+                                android:singleLine="true"
+                                android:textColor="@color/white1"
+                                android:textSize="14sp" />
+
+                            <Button
+                                android:id="@+id/ol_send_b"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/selector_ol_button"
+                                android:text="发送"
+                                android:textColor="@color/white1"
+                                android:textSize="20sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/players_tab"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ListView
+                                android:id="@+id/ol_player_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </TabHost>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/keyboard_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3">
+
+        <ly.pp.justpiano3.KeyboardModeView
+            app:whiteKeyNum="15"
+            app:whiteKeyOffset="14"
+            android:id="@+id/keyboard_view"
+            android:keepScreenOn="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ly.pp.justpiano3.KeyboardModeView>
+    </LinearLayout>
+</LinearLayout>

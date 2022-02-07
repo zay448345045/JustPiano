@@ -40,6 +40,9 @@ final class CreateRoomClick implements OnClickListener {
                     case R.id.couple:
                         i2 = 2;
                         break;
+                    case R.id.keyboard:
+                        i2 = 3;
+                        break;
                 }
                 JSONObject jSONObject = new JSONObject();
                 try {

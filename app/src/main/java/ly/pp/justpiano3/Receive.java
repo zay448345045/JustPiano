@@ -111,8 +111,7 @@ final class Receive {
                     JsonHandle.m3955c(string);
                     return;
                 case 25:
-                case 39:
-                    JsonHandle.m3948a((byte) i, string);
+                    JsonHandle.m3948a(string);
                     return;
                 case 28:
                 case 33:
@@ -149,6 +148,9 @@ final class Receive {
                     }
                 case 38:
                     JsonHandle.daily(string);
+                    return;
+                case 39:
+                    JsonHandle.keyboardNotes(string);
                     return;
                 case 40:
                     bundle = new Bundle();

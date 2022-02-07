@@ -1,5 +1,7 @@
 package ly.pp.justpiano3;
 
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.provider.BaseColumns;
 
 public interface Consts extends BaseColumns {
@@ -32,15 +34,41 @@ public interface Consts extends BaseColumns {
             R.drawable.filled_v13, R.drawable.filled_v14, R.drawable.filled_v15, R.drawable.filled_v16, R.drawable.filled_v17, R.drawable.filled_v18,
             R.drawable.filled_v19, R.drawable.filled_v20, R.drawable.filled_v21, R.drawable.filled_v22, R.drawable.filled_v23, R.drawable.filled_v24,
             R.drawable.filled_v25, R.drawable.filled_v26, R.drawable.filled_v27};
-    int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name};
+    int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v7_name};
     int[] kuang = new int[]{R.drawable.title_bar, R.drawable.v1_name, R.drawable.v2_name, R.drawable.v3_name, R.drawable.v4_name, R.drawable.v5_name, R.drawable.v6_name,
             R.drawable.v7_name, R.drawable.v8_name, R.drawable.v9_name, R.drawable.v10_name, R.drawable.v11_name, R.drawable.v12_name,
             R.drawable.v13_name, R.drawable.v14_name, R.drawable.v15_name, R.drawable.v16_name, R.drawable.v17_name, R.drawable.v18_name,
             R.drawable.v19_name, R.drawable.v20_name, R.drawable.v21_name, R.drawable.v22_name, R.drawable.v23_name, R.drawable.v24_name,
             R.drawable.v25_name, R.drawable.v26_name, R.drawable.v27_name};
-    int[] kuangColor = new int[]{R.color.white1, R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5, R.color.v6,
-            R.color.v7, R.color.v8, R.color.v9, R.color.v10, R.color.v11, R.color.v12, R.color.v13, R.color.v14, R.color.v15,
-            R.color.v16, R.color.v17, R.color.v18, R.color.v19, R.color.v20, R.color.v21, R.color.v22, R.color.v23, R.color.v24, R.color.v5, R.color.v8, R.color.v24};
+    PorterDuffColorFilter[] kuangColorFilter = new PorterDuffColorFilter[]{
+            new PorterDuffColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffffcc00, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff6600, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff3333, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff0066, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff00cc, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff00ff, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff330000, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff00cc00, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff66ff, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff0000cc, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff000033, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff72ff00, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff66FFFF, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff009999, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff333399, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff9933CC, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff777777, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff9999FF, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffD3A29E, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff888ABA, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff475A95, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff996666, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff999900, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xffff00cc, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff00cc00, PorterDuff.Mode.MULTIPLY),
+            new PorterDuffColorFilter(0xff999900, PorterDuff.Mode.MULTIPLY)};
     int[] fHair = new int[]{10, 10, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 15, 15, 15, 15, 15, 15, 25,
             25, 20, 20, 25, 25, 15, 25, 25, 25, 20, 20, 20, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25};
     int[] mHair = new int[]{10, 10, 10, 10, 15, 15, 15, 15, 10, 10, 10, 15, 15, 20, 20, 20, 20, 15, 15, 15, 20, 25, 20, 20, 25, 25, 25, 25, 25};
