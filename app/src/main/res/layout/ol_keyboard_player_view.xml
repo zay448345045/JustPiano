@@ -73,6 +73,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/keyboard_mute"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
@@ -93,7 +94,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_gravity="top"
-                    android:progress="100"
+                    android:progress="0"
+                    android:max="12"
                     android:progressDrawable="@drawable/midi_note_progress">
                 </ProgressBar>
 
@@ -114,11 +116,12 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/midi_keyboard_on"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
-                android:background="@color/white1"
+                android:background="@color/v8"
                 android:src="@drawable/midi_usb">
             </ImageView>
 

@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -319,6 +320,18 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             textView2.setBackgroundResource(Consts.kuang[i2]);
         }
         imageView.setBackgroundResource(Consts.filledKuang[i2]);
+        ImageView keyboardMute = view.findViewById(R.id.keyboard_mute);
+        keyboardMute.setBackgroundResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.color.black : R.color.brown);
+        keyboardMute.setOnClickListener(v -> {
+            olPlayKeyboardRoom.olKeyboardStates[i].setMuted(!olPlayKeyboardRoom.olKeyboardStates[i].isMuted());
+            v.setBackgroundResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.color.black : R.color.brown);
+        });
+        ImageView keyboardrOn = view.findViewById(R.id.midi_keyboard_on);
+        keyboardrOn.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
+        ProgressBar speedProgressBar = view.findViewById(R.id.midi_note_progress);
+        TextView speed = view.findViewById(R.id.midi_note_speed);
+        speedProgressBar.setProgress(olPlayKeyboardRoom.olKeyboardStates[i].getSpeed());
+        speed.setText((olPlayKeyboardRoom.olKeyboardStates[i].getSpeed() << 2) + "B/s");
         return view;
     }
 }

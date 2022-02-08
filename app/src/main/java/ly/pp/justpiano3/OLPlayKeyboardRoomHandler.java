@@ -93,21 +93,25 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
                         int notesSpeed = ((notes.length - 1) >> 2) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL * 1000;
-                        // TODO 将算出的上面两个值写进展示层
-                        ThreadPoolUtils.execute(() -> {
-                            for (int i = 1; i < notes.length; i += 3) {
-                                try {
-                                    Thread.sleep(notes[i] << 2);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                        olPlayKeyboardRoom.olKeyboardStates[roomPosition].setMidiKeyboardOn(midiKeyboardOn);
+                        olPlayKeyboardRoom.olKeyboardStates[roomPosition].setSpeed(notesSpeed);
+                        ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPosition].isMuted()) {
+                            ThreadPoolUtils.execute(() -> {
+                                for (int i = 1; i < notes.length; i += 3) {
+                                    try {
+                                        Thread.sleep(notes[i] << 2);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (notes[i + 2] > 0) {
+                                        olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[i + 1], notes[i + 2], user.getKuang());
+                                    } else {
+                                        olPlayKeyboardRoom.keyboardView.fireKeyUp(notes[i + 1]);
+                                    }
                                 }
-                                if (notes[i + 2] > 0) {
-                                    olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[i + 1], notes[i + 2], user.getKuang());
-                                } else {
-                                    olPlayKeyboardRoom.keyboardView.fireKeyUp(notes[i + 1]);
-                                }
-                            }
-                        });
+                            });
+                        }
                     });
                     return;
                 case 8:

@@ -53,6 +53,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public int cl;
     public byte roomPosition;
     public int kuang;
+    public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[4];
     public Handler handler;
     protected byte hallID0;
     MidiReceiver midiFramer;
@@ -358,7 +359,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 Bundle data = message.getData();
                 int notesSpeed = data.getInt("SPEED");
                 boolean midiKeyboardOn = data.getBoolean("MIDI_ON");
-                // TODO 此处还要设置自己的参数到展示层
+                olKeyboardStates[roomPosition].setMidiKeyboardOn(midiKeyboardOn);
+                olKeyboardStates[roomPosition].setSpeed(notesSpeed);
+                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
@@ -642,6 +645,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         keyboardMoveRight.setOnTouchListener(this);
         Button keyboardResize = findViewById(R.id.keyboard_resize);
         keyboardResize.setOnTouchListener(this);
+        for (int i = 0; i < olKeyboardStates.length; i++) {
+            olKeyboardStates[i] = new OLKeyboardState();
+        }
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
@@ -861,13 +867,21 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
                 long scheduleTimeNow = System.currentTimeMillis();
+                int size = notesQueue.size();
+                Message msg = new Message();
+                msg.what = 4;
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("MIDI_ON", midiFramer != null);
+                bundle.putInt("SPEED", size / NOTES_SEND_INTERVAL * 1000);
+                msg.setData(bundle);
+                handler.sendMessage(msg);
                 // 未检测到这段间隔有弹奏音符，直接返回并记录此次定时任务执行时间点
-                if (notesQueue.isEmpty()) {
+                if (size == 0) {
                     lastNoteScheduleTime = scheduleTimeNow;
                     return;
                 }
                 long timeLast = lastNoteScheduleTime;
-                int size = notesQueue.size();
+
                 byte[] notes = new byte[size * 3 + 1];
                 notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPosition);
                 int i = 1;
@@ -883,13 +897,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 sendMsg((byte) 39, roomID0, hallID0, GZIP.arrayToZIP(notes));
                 lastNoteScheduleTime = scheduleTimeNow;
-                Message msg = new Message();
-                msg.what = 4;
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("MIDI_ON", midiFramer != null);
-                bundle.putInt("SPEED", size / NOTES_SEND_INTERVAL * 1000);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
             }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
