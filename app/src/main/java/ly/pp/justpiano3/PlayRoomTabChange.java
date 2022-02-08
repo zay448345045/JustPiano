@@ -74,7 +74,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                         olPlayKeyboardRoom.msgListView.setSelection(olPlayKeyboardRoom.msgListView.getAdapter().getCount() - 1);
                     }
                     break;
-                case "tab4":
+                case "tab3":
                     olPlayKeyboardRoom.sendMsg((byte) 36, (byte) 0, olPlayKeyboardRoom.hallID0, "");
                     break;
             }

@@ -285,9 +285,10 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                             JSONObject jSONObject = new JSONObject(message.getData().getString("MSG"));
                             int i = jSONObject.getInt("T");
                             int i2 = jSONObject.getInt("CT");
+                            byte b = (byte) jSONObject.getInt("CI");
                             String string = jSONObject.getString("C");
                             if (i != 0) {
-                                olPlayKeyboardRoom.mo2860a(i, string, i2);
+                                olPlayKeyboardRoom.mo2860a(i, string, i2, b);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

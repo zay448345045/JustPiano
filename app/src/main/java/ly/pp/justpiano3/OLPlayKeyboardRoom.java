@@ -262,7 +262,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         jpapplication.getHashmap().put(b, User);
     }
 
-    protected final void mo2860a(int i, String str, int i2) {
+    protected final void mo2860a(int i, String str, int i2, byte b) {
         String str5 = "情意绵绵的情侣";
         switch (i2) {
             case 0:
@@ -279,6 +279,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
         if (i == 4) {
             showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
+        } else if (i == 5) {
+            JPDialog jpdialog = new JPDialog(this);
+            jpdialog.setCancelableFalse();
+            jpdialog.setTitle("提示").setMessage(str).setFirstButton("确定", new DialogDismissClick()).setSecondButton("取消", new DialogDismissClick()).showDialog();
         }
     }
 
@@ -631,7 +635,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         newTabSpec.setContent(R.id.msg_tab);
         newTabSpec.setIndicator("聊天");
         roomTabs.addTab(newTabSpec);
-        newTabSpec = roomTabs.newTabSpec("tab4");
+        newTabSpec = roomTabs.newTabSpec("tab3");
         newTabSpec.setContent(R.id.players_tab);
         newTabSpec.setIndicator("邀请");
         roomTabs.addTab(newTabSpec);
@@ -809,6 +813,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
                     reSize = true;
+                    view.setPressed(true);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float weight = event.getRawY() / (playerLayout.getHeight() + keyboardLayout.getHeight());
@@ -822,6 +827,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     reSize = false;
+                    view.setPressed(false);
                     break;
                 default:
                     break;
@@ -841,7 +847,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
         return true;
     }
-
 
     private void updateAddOrSubtract(int viewId) {
         final int vid = viewId;
@@ -900,9 +905,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                             break;
                         }
                         // 记录并发问题：到下面i++时触发越界，可见队列size已经在并发环境下变化，必须在里面再判断一次size
-                         notes[i++] = (byte) ((olNote.getAbsoluteTime() - timeLast) >> 2);
-                         notes[i++] = (byte) olNote.getPitch();
-                         notes[i++] = (byte) olNote.getVolume();
+                        notes[i++] = (byte) ((olNote.getAbsoluteTime() - timeLast) >> 2);
+                        notes[i++] = (byte) olNote.getPitch();
+                        notes[i++] = (byte) olNote.getVolume();
                         timeLast = olNote.getAbsoluteTime();
                     }
                     JSONObject jsonObject = new JSONObject();

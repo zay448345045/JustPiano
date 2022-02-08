@@ -256,12 +256,6 @@
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
-        <activity
-            android:name="ly.pp.justpiano3.OLShop"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
 
         <service
             android:name="ly.pp.justpiano3.ConnectionService"

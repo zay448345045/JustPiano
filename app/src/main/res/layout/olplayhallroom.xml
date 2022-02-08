@@ -287,17 +287,6 @@
                                 android:text="在线奖励"
                                 android:textColor="@color/white1"
                                 android:textSize="18sp" />
-
-                            <Button
-                                android:id="@+id/ol_shop_button"
-                                android:layout_width="100dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:background="@drawable/selector_ol_button"
-                                android:text="商城"
-                                android:visibility="gone"
-                                android:textColor="@color/white1"
-                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout

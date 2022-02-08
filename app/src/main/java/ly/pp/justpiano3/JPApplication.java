@@ -556,12 +556,16 @@ public final class JPApplication extends Application {
 
                     @Override
                     public void onDeviceRemoved(MidiDeviceInfo info) {
-                        Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
                         for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
                             midiConnectionListener.onMidiDisconnect();
                         }
                         try {
-                            midiOutputPort.close();
+                            if (midiOutputPort != null) {
+                                midiOutputPort.close();
+                                Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         } finally {

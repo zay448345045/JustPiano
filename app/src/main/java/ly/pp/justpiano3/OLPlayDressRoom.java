@@ -39,6 +39,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     GridView jacketGridView;
     GridView trousersGridView;
     GridView shoesGridView;
+    GridView shopGridView;
     List<Bitmap> hairArray = new ArrayList<>();
     List<Bitmap> jacketArray = new ArrayList<>();
     List<Bitmap> trousersArray = new ArrayList<>();
@@ -178,13 +179,27 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         newTabSpec.setContent(R.id.shoes_tab);
         newTabSpec.setIndicator("鞋子");
         tabhost.addTab(newTabSpec);
+        newTabSpec = tabhost.newTabSpec("tab5");
+        newTabSpec.setContent(R.id.shop_tab);
+        newTabSpec.setIndicator("物品");
+        tabhost.addTab(newTabSpec);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             tabhost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 512;
             ((TextView) tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(0xffffffff);
         }
-        tabhost.setOnTabChangedListener(new PlayDressRoomTabChange(this));
+        tabhost.setOnTabChangedListener((str) -> {
+            int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
+            int childCount = tabhost.getTabWidget().getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                if (intValue == i) {
+                    tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_orange);
+                } else {
+                    tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
+                }
+            }
+        });
         tabhost.setCurrentTab(1);
         ImageView dressMod = findViewById(R.id.ol_dress_mod);
         trousersImage = findViewById(R.id.ol_dress_trousers);
@@ -234,6 +249,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         jacketGridView = findViewById(R.id.ol_jacket_grid);
         trousersGridView = findViewById(R.id.ol_trousers_grid);
         shoesGridView = findViewById(R.id.ol_shoes_grid);
+        shopGridView = findViewById(R.id.ol_shop_grid);
         setDressAdapter(hairGridView, hairArray, 0);
         setDressAdapter(jacketGridView, jacketArray, 1);
         setDressAdapter(trousersGridView, trousersArray, 2);
@@ -263,6 +279,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             shoesImage.setImageBitmap(shoesArray.get(shoesNow));
         }
         shoesGridView.setOnItemClickListener(new ShoesClick(this));
+        shopGridView.setOnItemClickListener(new ShopClick(this));
         try {
             JSONObject jSONObject = new JSONObject();
             jSONObject.put("T", "L");
