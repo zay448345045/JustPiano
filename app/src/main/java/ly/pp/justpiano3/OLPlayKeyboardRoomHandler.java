@@ -92,26 +92,38 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                             return;
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
-                        int notesSpeed = ((notes.length - 1) >> 2) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL * 1000;
-                        olPlayKeyboardRoom.olKeyboardStates[roomPosition].setMidiKeyboardOn(midiKeyboardOn);
-                        olPlayKeyboardRoom.olKeyboardStates[roomPosition].setSpeed(notesSpeed);
-                        ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
-                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPosition].isMuted()) {
-                            ThreadPoolUtils.execute(() -> {
-                                for (int i = 1; i < notes.length; i += 3) {
+                        int notesSpeed = ((notes.length - 1) << 8) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL;
+                        olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].setMidiKeyboardOn(midiKeyboardOn);
+                        olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].setSpeed(notesSpeed);
+                        ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                        ThreadPoolUtils.execute(() -> {
+                            for (int i = 1; i < notes.length; i += 3) {
+                                int intervalTime = (notes[i] << 2);
+                                if (intervalTime > 0) {
                                     try {
-                                        Thread.sleep(notes[i] << 2);
+                                        Thread.sleep(intervalTime);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    if (notes[i + 2] > 0) {
-                                        olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[i + 1], notes[i + 2], user.getKuang());
-                                    } else {
-                                        olPlayKeyboardRoom.keyboardView.fireKeyUp(notes[i + 1]);
-                                    }
                                 }
+                                int finalI = i;
+                                olPlayKeyboardRoom.runOnUiThread(() -> {
+                                    // 此处fireKeyDown的最后一个参数必须为false，否则就会循环发送导致卡死
+                                    if (notes[finalI + 2] > 0) {
+                                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].isMuted()) {
+                                            olPlayKeyboardRoom.jpapplication.playSound(notes[finalI + 1], notes[finalI + 2]);
+                                        }
+                                        olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[finalI + 1], notes[finalI + 2], user.getKuang(), false);
+                                    } else {
+                                        olPlayKeyboardRoom.keyboardView.fireKeyUp(notes[finalI + 1], false);
+                                    }
+                                });
+                            }
+                            olPlayKeyboardRoom.runOnUiThread(() -> {
+                                olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].setSpeed(0);
+                                ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
                             });
-                        }
+                        });
                     });
                     return;
                 case 8:

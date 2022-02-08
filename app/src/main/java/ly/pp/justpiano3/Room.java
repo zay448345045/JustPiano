@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 final class Room {
 
+    private int peopleCapacity = 6;
     private byte roomID;
     private String roonName;
     private int fcount;
@@ -14,16 +15,8 @@ final class Room {
     private int roomMode;
 
     Room(byte b, String str, int i, int i2, int i3, int i4, int i5, int i6, int i7) {
-        roomID = (byte) 0;
-        roonName = "";
-        fcount = 0;
-        mcount = 0;
-        people = new int[6];
         peopleFull = false;
         int totalPeople;
-        isPassword = 0;
-        roomKuang = 0;
-        roomMode = 0;
         roomID = b;
         roonName = str;
         mcount = i2;
@@ -31,8 +24,13 @@ final class Room {
         isPlaying = i3;
         isPassword = i4;
         roomMode = i7;
+        if (roomMode == 3) {
+            // 键盘模式修改房间人数总量
+            peopleCapacity = 3;
+        }
+        people = new int[peopleCapacity];
         totalPeople = (i + i2) + i6;
-        if (totalPeople == 6) {
+        if (totalPeople == peopleCapacity) {
             peopleFull = true;
         }
         for (int i8 = 0; i8 < i; i8++) {
@@ -42,11 +40,11 @@ final class Room {
             people[i] = 0;
             i++;
         }
-        for (int i8 = 6 - i6; i8 < 6; i8++) {
+        for (int i8 = peopleCapacity - i6; i8 < peopleCapacity; i8++) {
             people[i8] = 3;
         }
         if (!peopleFull) {
-            for (int i8 = totalPeople - i6; i8 < 6 - i6; i8++) {
+            for (int i8 = totalPeople - i6; i8 < peopleCapacity - i6; i8++) {
                 people[i8] = 2;
             }
         }

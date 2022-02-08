@@ -79,6 +79,7 @@ public class ConnectionService extends Service implements Runnable {
             case (byte) 36:    //大厅查看用户列表
             case (byte) 37:    //找Ta及显示对话框
             case (byte) 38:    //每日奖励
+            case (byte) 39:    // 键盘模式传输弹奏音符
             case (byte) 40:    //等级考试
             case (byte) 41:    //疑似心跳包的东西
             case (byte) 43:    //显示房间内成员信息
@@ -107,7 +108,6 @@ public class ConnectionService extends Service implements Runnable {
                 break;
             case (byte) 9:    //被踢出房间
             case (byte) 25:    //弹奏逐个音符状态的数据包上传
-            case (byte) 39:    // 键盘模式传输弹奏音符
             case (byte) 42:    //打开/关闭空位
                 writeBuffer = JsonHandle.m3946a(b, b2, b3, bArr);
                 break;

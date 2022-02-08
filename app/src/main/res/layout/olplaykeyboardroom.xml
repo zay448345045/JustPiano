@@ -78,8 +78,17 @@
             <GridView
                 android:id="@+id/ol_player_grid"
                 android:layout_width="304dp"
-                android:layout_height="151dp"
+                android:layout_height="121dp"
                 android:layout_below="@+id/room_title"
+                android:layout_alignParentEnd="true"
+                android:listSelector="@color/translent"
+                android:numColumns="3" />
+
+            <GridView
+                android:id="@+id/ol_keyboard_state"
+                android:layout_width="304dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/ol_player_grid"
                 android:layout_alignParentEnd="true"
                 android:listSelector="@color/translent"
                 android:numColumns="3" />

@@ -53,7 +53,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public int cl;
     public byte roomPosition;
     public int kuang;
-    public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[4];
+    public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[3];
     public Handler handler;
     protected byte hallID0;
     MidiReceiver midiFramer;
@@ -67,6 +67,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     List<Bundle> msgList = new ArrayList<>();
     int maxListValue = 100;
     GridView playerGrid;
+    GridView keyboardStatusGrid;
     List<Bundle> invitePlayerList = new ArrayList<>();
     TabHost roomTabs;
     boolean isOnStart = true;
@@ -299,6 +300,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("PI"), o2.getByte("PI")));
             }
             gridView.setAdapter(new KeyboardPlayerImageAdapter(list, this));
+            keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(this));
             // 加载完成，确认用户已经进入房间内，开始记录弹奏
             openNotesSchedule();
         }
@@ -359,9 +361,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 Bundle data = message.getData();
                 int notesSpeed = data.getInt("SPEED");
                 boolean midiKeyboardOn = data.getBoolean("MIDI_ON");
-                olKeyboardStates[roomPosition].setMidiKeyboardOn(midiKeyboardOn);
-                olKeyboardStates[roomPosition].setSpeed(notesSpeed);
-                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                olKeyboardStates[roomPosition - 1].setMidiKeyboardOn(midiKeyboardOn);
+                olKeyboardStates[roomPosition - 1].setSpeed(notesSpeed);
+                ((KeyboardPlayerStatusAdapter) (keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
@@ -562,6 +564,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         roomTitle.setOnClickListener(this);
         playerGrid = findViewById(R.id.ol_player_grid);
         playerGrid.setCacheColorHint(0);
+        keyboardStatusGrid = findViewById(R.id.ol_keyboard_state);
+        keyboardStatusGrid.setCacheColorHint(0);
         playerList.clear();
         Button f4483H = findViewById(R.id.ol_send_b);
         f4483H.setOnClickListener(this);
@@ -653,7 +657,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             @Override
             public void onKeyDown(int pitch, int volume) {
                 notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
-                jpapplication.playSound(pitch, volume);
+                if (!olKeyboardStates[roomPosition - 1].isMuted()) {
+                    jpapplication.playSound(pitch, volume);
+                }
             }
 
             @Override
@@ -788,10 +794,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(data[1], data[2], kuang);
+            keyboardView.fireKeyDown(data[1], data[2], kuang, true);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardView.fireKeyUp(data[1]);
+            keyboardView.fireKeyUp(data[1], true);
         }
     }
 
@@ -862,41 +868,51 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
+        keyboardView.setNoteOnColor(kuang);
         if (noteScheduledExecutor == null) {
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
-                long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
                 Message msg = new Message();
-                msg.what = 4;
                 Bundle bundle = new Bundle();
+                msg.what = 4;
                 bundle.putBoolean("MIDI_ON", midiFramer != null);
-                bundle.putInt("SPEED", size / NOTES_SEND_INTERVAL * 1000);
+                bundle.putInt("SPEED", (size << 10) / NOTES_SEND_INTERVAL);
                 msg.setData(bundle);
                 handler.sendMessage(msg);
+                long scheduleTimeNow = System.currentTimeMillis();
                 // 未检测到这段间隔有弹奏音符，直接返回并记录此次定时任务执行时间点
                 if (size == 0) {
                     lastNoteScheduleTime = scheduleTimeNow;
                     return;
                 }
-                long timeLast = lastNoteScheduleTime;
-
-                byte[] notes = new byte[size * 3 + 1];
-                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPosition);
-                int i = 1;
-                while (!notesQueue.isEmpty()) {
-                    OLNote olNote = notesQueue.poll();
-                    if (olNote == null) {
-                        continue;
+                try {
+                    long timeLast = lastNoteScheduleTime;
+                    byte[] notes = new byte[size * 3 + 1];
+                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPosition);
+                    int i = 1;
+                    int pollIndex = size;
+                    while (pollIndex > 0) {
+                        OLNote olNote = notesQueue.poll();
+                        pollIndex--;
+                        if (olNote == null) {
+                            break;
+                        }
+                        // 记录并发问题：到下面i++时触发越界，可见队列size已经在并发环境下变化，必须在里面再判断一次size
+                         notes[i++] = (byte) ((olNote.getAbsoluteTime() - timeLast) >> 2);
+                         notes[i++] = (byte) olNote.getPitch();
+                         notes[i++] = (byte) olNote.getVolume();
+                        timeLast = olNote.getAbsoluteTime();
                     }
-                    notes[i++] = (byte) ((olNote.getAbsoluteTime() - timeLast) >> 2);
-                    notes[i++] = (byte) olNote.getPitch();
-                    notes[i++] = (byte) olNote.getVolume();
-                    timeLast = olNote.getAbsoluteTime();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("N", GZIP.arrayToZIP(notes));
+                    sendMsg((byte) 39, roomID0, hallID0, jsonObject.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    lastNoteScheduleTime = scheduleTimeNow;
                 }
-                sendMsg((byte) 39, roomID0, hallID0, GZIP.arrayToZIP(notes));
-                lastNoteScheduleTime = scheduleTimeNow;
             }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }

@@ -43,10 +43,13 @@ public final class PlaySongs {
                         if (!isPlayingSongs) {
                             break;
                         }
-                        try {
-                            Thread.sleep((long) tickArray[j] * pm_2);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        long intervalTime = (long) tickArray[j] * pm_2;
+                        if (intervalTime > 0) {
+                            try {
+                                Thread.sleep(intervalTime);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         jpapplication.playSound(noteArray[j], volumeArray[j]);
                         j++;

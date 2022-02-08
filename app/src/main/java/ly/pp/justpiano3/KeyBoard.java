@@ -309,10 +309,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardMode1View.fireKeyDown(data[1], data[2], -1);
+            keyboardMode1View.fireKeyDown(data[1], data[2], -1, true);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardMode1View.fireKeyUp(data[1]);
+            keyboardMode1View.fireKeyUp(data[1], true);
         }
     }
 }

@@ -402,6 +402,7 @@ final class JsonHandle {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
             case 32:
                 message.what = 1;
                 message.arg1 = 1;
@@ -426,6 +427,7 @@ final class JsonHandle {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
             case 37:
                 try {
                     jSONObject3 = new JSONObject(str);
@@ -492,6 +494,7 @@ final class JsonHandle {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
             case 45:
                 message.what = 22;
                 JPStack.create();
@@ -506,7 +509,9 @@ final class JsonHandle {
                     JPStack.create();
                     ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
+                break;
             default:
+                break;
         }
     }
 
@@ -1182,15 +1187,14 @@ final class JsonHandle {
             JPStack.create();
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
             try {
-                JSONObject jSONObject = new JSONObject(str);
-                byte[] keyboardNotes = GZIP.ZIPToArray(jSONObject.getString("N"));
+                byte[] keyboardNotes = GZIP.ZIPToArray(str);
                 Bundle bundle = new Bundle();
                 bundle.putByteArray("NOTES", keyboardNotes);
                 Message message = new Message();
                 message.what = 5;
                 message.setData(bundle);
                 olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
