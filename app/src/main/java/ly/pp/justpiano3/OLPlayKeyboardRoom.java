@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -527,7 +528,21 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     new JPDialog(this).setTitle("修改房名").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
                 }
                 return;
+            case R.id.keyboard_setting:
+                Intent intent = new Intent();
+                intent.setClass(this, SettingsMode.class);
+                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                return;
             default:
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+            keyboardView.changeImage(this);
         }
     }
 
@@ -653,6 +668,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         keyboardMoveRight.setOnTouchListener(this);
         Button keyboardResize = findViewById(R.id.keyboard_resize);
         keyboardResize.setOnTouchListener(this);
+        ImageView keyboardSetting = findViewById(R.id.keyboard_setting);
+        keyboardSetting.setOnClickListener(this);
         for (int i = 0; i < olKeyboardStates.length; i++) {
             olKeyboardStates[i] = new OLKeyboardState();
         }
@@ -798,10 +815,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(data[1], data[2], kuang, true);
+            keyboardView.fireKeyDown(data[1] + jpapplication.getMidiKeyboardTune(), data[2], kuang, true);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardView.fireKeyUp(data[1], true);
+            keyboardView.fireKeyUp(data[1] + jpapplication.getMidiKeyboardTune(), true);
         }
     }
 

@@ -45,6 +45,7 @@ public final class JPApplication extends Application {
     public static String kitiName = "";
     static SharedPreferences sharedpreferences;
     private static Context context;
+    public static int SETTING_MODE_CODE = 122;
 
     static {
         System.loadLibrary("soundengine");
@@ -64,6 +65,7 @@ public final class JPApplication extends Application {
     private boolean isBindService;
     private int gameMode;
     private int badu;
+    private int midiKeyboardTune;
     private boolean isOpenChord = true;
     private boolean showTouchNotesLevel = true;
     private boolean autoPlay = true;
@@ -480,6 +482,7 @@ public final class JPApplication extends Application {
         loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false);
         roughLine = Integer.parseInt(sharedPreferences.getString("rough_line", "1"));
         badu = Integer.parseInt(sharedPreferences.getString("badu", "0"));
+        midiKeyboardTune = Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0"));
         notesDownSpeed = Integer.parseInt(sharedPreferences.getString("down_speed", "6"));
         noteSize = Float.parseFloat(sharedPreferences.getString("note_size", "1"));
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false);
@@ -595,6 +598,14 @@ public final class JPApplication extends Application {
 
     public final int getBadu() {
         return badu;
+    }
+
+    public int getMidiKeyboardTune() {
+        return midiKeyboardTune;
+    }
+
+    public void setMidiKeyboardTune(int midiKeyboardTune) {
+        this.midiKeyboardTune = midiKeyboardTune;
     }
 
     public final int getPlaySongsMode() {

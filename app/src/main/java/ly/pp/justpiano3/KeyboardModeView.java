@@ -76,11 +76,11 @@ public class KeyboardModeView extends View {
     private int whiteKeyOffset;
     private int noteOnColor = -1;
 
-    private final Bitmap keyboardImage;
-    private final Bitmap whiteKeyRightImage;
-    private final Bitmap whiteKeyMiddleImage;
-    private final Bitmap whiteKeyLeftImage;
-    private final Bitmap blackKeyImage;
+    private Bitmap keyboardImage;
+    private Bitmap whiteKeyRightImage;
+    private Bitmap whiteKeyMiddleImage;
+    private Bitmap whiteKeyLeftImage;
+    private Bitmap blackKeyImage;
 
     /**
      * Implement this to receive keyboard events.
@@ -134,6 +134,17 @@ public class KeyboardModeView extends View {
         viewHeight = h;
         blackKeyHeight = BLACK_KEY_HEIGHT_FACTOR * viewHeight;
         makeDraw();
+    }
+
+    public void changeImage(Context context) {
+        Bitmap keyBoardHd = loadImage(context, "key_board_hd");
+        assert keyBoardHd != null;
+        keyboardImage = cropKeyboardBitmap(keyBoardHd);
+        whiteKeyRightImage = loadImage(context, "white_r");
+        whiteKeyMiddleImage = loadImage(context, "white_m");
+        whiteKeyLeftImage = loadImage(context, "white_l");
+        blackKeyImage = loadImage(context, "black");
+        postInvalidate();
     }
 
     private void makeDraw() {

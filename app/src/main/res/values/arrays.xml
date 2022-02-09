@@ -53,6 +53,21 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+    <string-array name="midi_keyboard_tune">
+        <item>-6</item>
+        <item>-5</item>
+        <item>-4</item>
+        <item>-3</item>
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
     <string-array name="temp_e">
         <item>0.5</item>
         <item>0.6</item>

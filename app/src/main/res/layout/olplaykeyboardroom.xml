@@ -122,35 +122,35 @@
 
             <Button
                 android:id="@+id/keyboard_resize"
-                android:text="↕"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/white1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/selector_ol_button"
                 android:gravity="center"
-                android:layout_alignParentBottom="true"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content">
+                android:text="↕"
+                android:textColor="@color/white1"
+                android:textSize="18sp"
+                android:textStyle="bold">
             </Button>
 
             <Button
                 android:id="@+id/keyboard_count_down"
-                android:text="—"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/white1"
-                android:background="@drawable/selector_orange_button"
-                android:gravity="center"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_resize"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content">
+                android:background="@drawable/selector_orange_button"
+                android:gravity="center"
+                android:text="—"
+                android:textColor="@color/white1"
+                android:textSize="18sp"
+                android:textStyle="bold">
             </Button>
 
             <Button
                 android:id="@+id/keyboard_move_left"
                 android:layout_width="40dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_count_down"
                 android:background="@drawable/selector_orange_button"
@@ -170,21 +170,31 @@
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_move_left"
                 android:layout_width="40dp"
-                android:layout_height="wrap_content">
+                android:layout_height="40dp">
             </Button>
 
             <Button
                 android:id="@+id/keyboard_count_up"
-                android:text="＋"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/white1"
-                android:background="@drawable/selector_orange_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_move_right"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content">
+                android:background="@drawable/selector_orange_button"
+                android:text="＋"
+                android:textColor="@color/white1"
+                android:textSize="18sp"
+                android:textStyle="bold">
             </Button>
+
+            <ImageView
+                android:id="@+id/keyboard_setting"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/keyboard_count_up"
+                android:background="@drawable/selector_orange_button"
+                android:src="@drawable/setting">
+            </ImageView>
 
         </RelativeLayout>
 

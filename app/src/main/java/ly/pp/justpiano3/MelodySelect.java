@@ -156,7 +156,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
                         intent.setClass(this, SettingsMode.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                         break;
                     case 1:  // 曲库同步
                         new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(testSQL)).execute();
@@ -213,6 +213,14 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 break;
         }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        }
     }
 
     @Override

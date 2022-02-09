@@ -89,7 +89,7 @@ public class MainMode extends Activity implements OnClickListener {
                 return;
             case R.id.settings:
                 intent.setClass(this, SettingsMode.class);
-                startActivity(intent);
+                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 return;
             case R.id.feed_back:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
@@ -116,6 +116,14 @@ public class MainMode extends Activity implements OnClickListener {
                 jpdialog.showDialog();
                 return;
             default:
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+            jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
 
