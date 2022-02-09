@@ -127,6 +127,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                                 Toast.makeText(olPlayKeyboardRoom, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                             } else {
                                 connectionService.writeData((byte) 9, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
+                                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
+                                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setSpeed(0);
+                                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(false);
+                                ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
                             }
                         }
                     }

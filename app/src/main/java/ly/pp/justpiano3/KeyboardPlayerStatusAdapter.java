@@ -63,7 +63,7 @@ public final class KeyboardPlayerStatusAdapter extends BaseAdapter {
         TextView speed = view.findViewById(R.id.midi_note_speed);
         int speedValue = olPlayKeyboardRoom.olKeyboardStates[i].getSpeed();
         speedProgressBar.setProgress(speedValue);
-        speed.setText(String.format("%.2f", speedValue / 32f) + "kb/s");
+        speed.setText(String.format("%.2f", speedValue / 24f) + "kb/s");
         return view;
     }
 }

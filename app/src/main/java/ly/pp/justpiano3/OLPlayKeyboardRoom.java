@@ -52,7 +52,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public static final int NOTES_SEND_INTERVAL = 400;
     public int lv;
     public int cl;
-    public byte roomPosition;
+    // 当前用户楼号-1
+    public byte roomPositionSub1 = -1;
     public int kuang;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[3];
     public Handler handler;
@@ -293,10 +294,22 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             int size = bundle.size() - 3;
             for (int i = 0; i < size; i++) {
                 Bundle bundle1 = bundle.getBundle(String.valueOf(i));
-                if (bundle1.getString("N").equals(jpapplication.getKitiName())) {
+                String name = bundle1.getString("N");
+                int positionSub1 = bundle1.getByte("PI") - 1;
+                if (positionSub1 < olKeyboardStates.length) {
+                    boolean hasUser = !name.isEmpty();
+                    olKeyboardStates[positionSub1].setHasUser(hasUser);
+                    if (!hasUser) {
+                        olKeyboardStates[positionSub1].setMidiKeyboardOn(false);
+                        olKeyboardStates[positionSub1].setSpeed(0);
+                        olKeyboardStates[positionSub1].setMuted(false);
+                    }
+                }
+                if (name.equals(jpapplication.getKitiName())) {
                     // 存储当前用户楼号，用于发弹奏音符
-                    roomPosition = bundle1.getByte("PI");
+                    roomPositionSub1 = (byte) positionSub1;
                     kuang = bundle1.getInt("IV");
+                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiFramer != null);
                 }
                 playerList.add(bundle1);
             }
@@ -363,12 +376,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 break;
             case 4:
-                Bundle data = message.getData();
-                int notesSpeed = data.getInt("SPEED");
-                boolean midiKeyboardOn = data.getBoolean("MIDI_ON");
-                olKeyboardStates[roomPosition - 1].setMidiKeyboardOn(midiKeyboardOn);
-                olKeyboardStates[roomPosition - 1].setSpeed(notesSpeed);
-                ((KeyboardPlayerStatusAdapter) (keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                if (roomPositionSub1 != -1) {
+                    Bundle data = message.getData();
+                    int notesSpeed = data.getInt("SPEED");
+                    boolean midiKeyboardOn = data.getBoolean("MIDI_ON");
+                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
+                    olKeyboardStates[roomPositionSub1].setSpeed(notesSpeed);
+                    ((KeyboardPlayerStatusAdapter) (keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                }
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
@@ -677,15 +692,19 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         keyboardView.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
-                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
-                if (!olKeyboardStates[roomPosition - 1].isMuted()) {
+                if (hasAnotherUser()) {
+                    notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
+                }
+                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
                     jpapplication.playSound(pitch, volume);
                 }
             }
 
             @Override
             public void onKeyUp(int pitch) {
-                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+                if (hasAnotherUser()) {
+                    notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+                }
             }
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -795,6 +814,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
+                    sendMidiNoteMessage(true, 0);
                 }
             }
         }
@@ -807,9 +827,20 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 if (midiFramer != null) {
                     jpapplication.midiOutputPort.disconnect(midiFramer);
                     midiFramer = null;
+                    sendMidiNoteMessage(false, 0);
                 }
             }
         }
+    }
+
+    public void sendMidiNoteMessage(boolean midiKeyboardOn, int speed) {
+        Message msg = new Message();
+        Bundle msgBundle = new Bundle();
+        msg.what = 4;
+        msgBundle.putBoolean("MIDI_ON", midiKeyboardOn);
+        msgBundle.putInt("SPEED", speed);
+        msg.setData(msgBundle);
+        handler.sendMessage(msg);
     }
 
     public void midiConnectHandle(byte[] data) {
@@ -886,7 +917,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     }
 
     private void openNotesSchedule() {
-        if (roomPosition == 0) {
+        if (roomPositionSub1 == -1) {
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
@@ -895,16 +926,17 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
-                int size = notesQueue.size();
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                msg.what = 4;
-                bundle.putBoolean("MIDI_ON", midiFramer != null);
-                bundle.putInt("SPEED", (size << 10) / NOTES_SEND_INTERVAL);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
+                // 时间戳和size尽量严格放在一起
                 long scheduleTimeNow = System.currentTimeMillis();
-                // 未检测到这段间隔有弹奏音符，直接返回并记录此次定时任务执行时间点
+                int size = notesQueue.size();
+                // 房间里没有其他人，停止发任何消息，清空弹奏队列（因为可能刚刚变为房间没人的状态，队列可能有遗留
+                if (!hasAnotherUser()) {
+                    notesQueue.clear();
+                    lastNoteScheduleTime = scheduleTimeNow;
+                    return;
+                }
+                sendMidiNoteMessage(midiFramer != null, (size << 10) / NOTES_SEND_INTERVAL);
+                // 未检测到这段间隔有弹奏音符，或者房间里没有其他人，就不发消息给服务器，直接返回并记录此次定时任务执行时间点
                 if (size == 0) {
                     lastNoteScheduleTime = scheduleTimeNow;
                     return;
@@ -912,9 +944,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 try {
                     long timeLast = lastNoteScheduleTime;
                     byte[] notes = new byte[size * 3 + 1];
-                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPosition);
+                    // 字节数组开头，存入是否开启midi键盘和楼号
+                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
                     int i = 1;
                     int pollIndex = size;
+                    // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
                     while (pollIndex > 0) {
                         OLNote olNote = notesQueue.poll();
                         pollIndex--;
@@ -925,6 +959,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         notes[i++] = (byte) ((olNote.getAbsoluteTime() - timeLast) >> 2);
                         notes[i++] = (byte) olNote.getPitch();
                         notes[i++] = (byte) olNote.getVolume();
+                        // 切换时间点
                         timeLast = olNote.getAbsoluteTime();
                     }
                     JSONObject jsonObject = new JSONObject();
@@ -937,6 +972,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
             }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private boolean hasAnotherUser() {
+        for (int i = 0; i < olKeyboardStates.length; i++) {
+            if (i != (roomPositionSub1) && olKeyboardStates[i].isHasUser()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void stopNotesSchedule() {

@@ -20,6 +20,11 @@ class OLKeyboardState {
      */
     private boolean midiKeyboardOn;
 
+    /**
+     * 此位置是否有人
+     */
+    private boolean hasUser;
+
     public boolean isMuted() {
         return muted;
     }
@@ -42,5 +47,13 @@ class OLKeyboardState {
 
     public void setMidiKeyboardOn(boolean midiKeyboardOn) {
         this.midiKeyboardOn = midiKeyboardOn;
+    }
+
+    public boolean isHasUser() {
+        return hasUser;
+    }
+
+    public void setHasUser(boolean hasUser) {
+        this.hasUser = hasUser;
     }
 }

@@ -86,15 +86,15 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                 case 5:
                     post(() -> {
                         byte[] notes = message.getData().getByteArray("NOTES");
-                        byte roomPosition = (byte) (notes[0] & 0xF);
-                        User user = olPlayKeyboardRoom.jpapplication.getHashmap().get(roomPosition);
+                        int roomPositionSub1 = (byte) (notes[0] & 0xF);
+                        User user = olPlayKeyboardRoom.jpapplication.getHashmap().get((byte) (roomPositionSub1 + 1));
                         if (user == null) {
                             return;
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
-                        int notesSpeed = ((notes.length - 1) << 8) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL;
-                        olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].setMidiKeyboardOn(midiKeyboardOn);
-                        olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].setSpeed(notesSpeed);
+                        int notesSpeed = ((notes.length / 3) << 10) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL;
+                        olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
+                        olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setSpeed(notesSpeed);
                         ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
                         ThreadPoolUtils.execute(() -> {
                             for (int i = 1; i < notes.length; i += 3) {
@@ -110,7 +110,7 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                 olPlayKeyboardRoom.runOnUiThread(() -> {
                                     // 此处fireKeyDown的最后一个参数必须为false，否则就会循环发送导致卡死
                                     if (notes[finalI + 2] > 0) {
-                                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].isMuted()) {
+                                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
                                             olPlayKeyboardRoom.jpapplication.playSound(notes[finalI + 1], notes[finalI + 2]);
                                         }
                                         olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[finalI + 1], notes[finalI + 2], user.getKuang(), false);
@@ -120,7 +120,7 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                 });
                             }
                             olPlayKeyboardRoom.runOnUiThread(() -> {
-                                olPlayKeyboardRoom.olKeyboardStates[roomPosition - 1].setSpeed(0);
+                                olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setSpeed(0);
                                 ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
                             });
                         });
