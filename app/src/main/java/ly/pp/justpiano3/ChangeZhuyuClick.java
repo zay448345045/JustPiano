@@ -41,7 +41,7 @@ final class ChangeZhuyuClick implements OnClickListener {
             } else if (f5459c == 0 && !f5460d.isEmpty()) {
                 jSONObject.put("T", f5460d);
                 jSONObject.put("M", valueOf);
-                olPlayHallRoom.cs.writeData((byte) 35, (byte) 0, (byte) 0, jSONObject.toString(), null);
+                olPlayHallRoom.connectionService.writeData((byte) 35, (byte) 0, (byte) 0, jSONObject.toString(), null);
                 olPlayHallRoom.mailList.clear();
                 String format = SimpleDateFormat.getDateInstance(2, Locale.CHINESE).format(new Date());
                 Bundle bundle = new Bundle();
@@ -74,7 +74,7 @@ final class ChangeZhuyuClick implements OnClickListener {
                 jSONObject.put("T", 4);
                 jSONObject.put("M", valueOf);
                 olPlayHallRoom.coupleBlessView.setText("祝语:\n" + valueOf);
-                olPlayHallRoom.cs.writeData((byte) 31, (byte) 0, (byte) 0, jSONObject.toString(), null);
+                olPlayHallRoom.connectionService.writeData((byte) 31, (byte) 0, (byte) 0, jSONObject.toString(), null);
             }
         } catch (JSONException e2) {
             e2.printStackTrace();

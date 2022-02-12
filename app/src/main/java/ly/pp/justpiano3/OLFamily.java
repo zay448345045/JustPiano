@@ -123,6 +123,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
@@ -141,6 +142,11 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
+            }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
             }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));

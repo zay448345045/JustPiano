@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -76,7 +77,7 @@ public class SoundListPreference extends DialogPreference {
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         m3922a();
-        jpProgressBar = new JPProgressBar(context);
+        jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
         LinearLayout f5052g = new LinearLayout(context);
         f5052g.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         f5052g.setOrientation(LinearLayout.VERTICAL);

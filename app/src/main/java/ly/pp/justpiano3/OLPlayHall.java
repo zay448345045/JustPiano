@@ -101,6 +101,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
@@ -119,6 +120,11 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
+            }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
             }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
@@ -388,7 +394,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         layoutImflater1 = LayoutInflater.from(this);
         layoutImflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.loadSettings(1);
+        jpapplication.loadSettings(true);
         setContentView(R.layout.olplayhall);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;

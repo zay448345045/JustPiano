@@ -107,6 +107,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     private int colorNum = 99;
     private TimeUpdateThread timeUpdateThread;
     private ImageView changeColorButton = null;
+    private boolean recordStart;
 
     public OLPlayKeyboardRoom() {
         canNotNextPage = false;
@@ -135,11 +136,13 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             ImageView imageView2 = inflate.findViewById(R.id.ol_player_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_player_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_player_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_player_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_player_shoes);
             ImageView imageView6 = inflate.findViewById(R.id.ol_couple_mod);
             ImageView imageView7 = inflate.findViewById(R.id.ol_couple_trousers);
             ImageView imageView8 = inflate.findViewById(R.id.ol_couple_jacket);
             ImageView imageView9 = inflate.findViewById(R.id.ol_couple_hair);
+            ImageView imageView9e = inflate.findViewById(R.id.ol_couple_eye);
             ImageView imageView10 = inflate.findViewById(R.id.ol_couple_shoes);
             TextView textView8 = inflate.findViewById(R.id.couple_bless);
             TextView textView9 = inflate.findViewById(R.id.couple_pionts);
@@ -171,6 +174,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
             }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
+            }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -192,6 +200,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             } else {
                 imageView9.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_h" + (User2.getHair() - 1) + ".png")));
             }
+            if (User2.getEye() <= 0) {
+                imageView9e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView9e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_h" + (User2.getEye() - 1) + ".png")));
+            }
             if (User2.getShoes() <= 0) {
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -211,6 +224,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
@@ -229,6 +243,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
+            }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
             }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
@@ -297,12 +316,12 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 String name = bundle1.getString("N");
                 int positionSub1 = bundle1.getByte("PI") - 1;
                 if (positionSub1 < olKeyboardStates.length) {
-                    boolean hasUser = !name.isEmpty();
+                    // 判定位置是否有人，忽略琴娘和
+                    boolean hasUser = !name.isEmpty() && !name.equals("琴娘");
                     olKeyboardStates[positionSub1].setHasUser(hasUser);
                     if (!hasUser) {
                         olKeyboardStates[positionSub1].setMidiKeyboardOn(false);
                         olKeyboardStates[positionSub1].setSpeed(0);
-                        olKeyboardStates[positionSub1].setMuted(false);
                     }
                 }
                 if (name.equals(jpapplication.getKitiName())) {
@@ -387,19 +406,19 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, interval);
+                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
                 break;
             case R.id.keyboard_count_up:
                 keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() + 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, interval);
+                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
                 break;
             case R.id.keyboard_move_left:
                 int keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() - 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, interval);
+                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
                 break;
             case R.id.keyboard_move_right:
                 keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() + 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, interval);
+                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
                 break;
             default:
                 break;
@@ -548,6 +567,35 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 intent.setClass(this, SettingsMode.class);
                 startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 return;
+            case R.id.keyboard_record:
+                JPDialog jpdialog = new JPDialog(this);
+                jpdialog.setTitle("敬请期待");
+                jpdialog.setMessage("当前版本暂不支持录音功能，后续版本将支持内录琴键音频(无环境杂音)到文件");
+                jpdialog.setFirstButton("确定", new DialogDismissClick());
+                jpdialog.showDialog();
+//                try {
+//                    Button recordButton = (Button) view;
+//                    if (!recordStart) {
+//                        JPDialog jpdialog = new JPDialog(this);
+//                        jpdialog.setTitle("提示");
+//                        jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
+//                        jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
+//                            dialogInterface.dismiss();
+//                            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
+//                            recordButton.setText("■");
+//                            recordButton.setTextColor(getResources().getColor(R.color.dack));
+//                            recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
+//                        });
+//                        jpdialog.setSecondButton("取消", new DialogDismissClick());
+//                        jpdialog.showDialog();
+//                    } else {
+//                        recordButton.setText("●");
+//                        recordButton.setTextColor(getResources().getColor(R.color.v3));
+//                        recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
+//                    }
+//                } catch (Exception ignored) {
+//                }
+                return;
             default:
         }
     }
@@ -685,6 +733,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         keyboardResize.setOnTouchListener(this);
         ImageView keyboardSetting = findViewById(R.id.keyboard_setting);
         keyboardSetting.setOnClickListener(this);
+        Button keyboardRecord = findViewById(R.id.keyboard_record);
+        keyboardRecord.setOnClickListener(this);
         for (int i = 0; i < olKeyboardStates.length; i++) {
             olKeyboardStates[i] = new OLKeyboardState();
         }
@@ -696,7 +746,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
                 }
                 if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                    jpapplication.playSound(pitch, volume);
+                    jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
                 }
             }
 
@@ -845,11 +895,21 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
+        int pitch = data[1] + jpapplication.getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(data[1] + jpapplication.getMidiKeyboardTune(), data[2], kuang, true);
+            keyboardView.fireKeyDown(pitch, data[2], kuang, false);
+            if (hasAnotherUser()) {
+                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, data[2]));
+            }
+            if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                jpapplication.playSound(pitch, data[2]);
+            }
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardView.fireKeyUp(data[1] + jpapplication.getMidiKeyboardTune(), true);
+            keyboardView.fireKeyUp(pitch, false);
+            if (hasAnotherUser()) {
+                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+            }
         }
     }
 
@@ -865,7 +925,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float weight = event.getRawY() / (playerLayout.getHeight() + keyboardLayout.getHeight());
-                    if (reSize && weight > 0.5f && weight < 0.8f) {
+                    if (reSize && weight > 0.65f && weight < 0.85f) {
                         playerLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, weight));
                         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(

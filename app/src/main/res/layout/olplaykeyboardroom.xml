@@ -64,7 +64,7 @@
         android:id="@+id/player_layout"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.75"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="5dp">
 
@@ -122,7 +122,7 @@
 
             <Button
                 android:id="@+id/keyboard_resize"
-                android:layout_width="40dp"
+                android:layout_width="43dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/selector_ol_button"
@@ -135,7 +135,7 @@
 
             <Button
                 android:id="@+id/keyboard_count_down"
-                android:layout_width="40dp"
+                android:layout_width="43dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_resize"
@@ -144,12 +144,11 @@
                 android:text="—"
                 android:textColor="@color/white1"
                 android:textSize="18sp"
-                android:textStyle="bold">
-            </Button>
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/keyboard_move_left"
-                android:layout_width="40dp"
+                android:layout_width="43dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_count_down"
@@ -169,13 +168,13 @@
                 android:background="@drawable/selector_orange_button"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_move_left"
-                android:layout_width="40dp"
+                android:layout_width="43dp"
                 android:layout_height="40dp">
             </Button>
 
             <Button
                 android:id="@+id/keyboard_count_up"
-                android:layout_width="40dp"
+                android:layout_width="43dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_move_right"
@@ -184,17 +183,30 @@
                 android:textColor="@color/white1"
                 android:textSize="18sp"
                 android:textStyle="bold">
+
             </Button>
 
             <ImageView
                 android:id="@+id/keyboard_setting"
-                android:layout_width="40dp"
+                android:layout_width="43dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/keyboard_count_up"
                 android:background="@drawable/selector_orange_button"
-                android:src="@drawable/setting">
-            </ImageView>
+                android:src="@drawable/setting"/>
+
+            <Button
+                android:id="@+id/keyboard_record"
+                android:layout_width="43dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/keyboard_setting"
+                android:background="@drawable/selector_ol_button"
+                android:src="@drawable/setting"
+                android:text="●"
+                android:textColor="@color/v3"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -378,7 +390,7 @@
         android:id="@+id/keyboard_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3">
+        android:layout_weight="0.25">
 
         <ly.pp.justpiano3.KeyboardModeView
             app:whiteKeyNum="15"

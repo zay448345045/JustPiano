@@ -15,7 +15,6 @@ public final class TestSQL extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 42;
 
     TestSQL(Context context, String str) {
-        //4.34版本的数据库版本号为40
         super(context, str, null, DATABASE_VERSION);
     }
 

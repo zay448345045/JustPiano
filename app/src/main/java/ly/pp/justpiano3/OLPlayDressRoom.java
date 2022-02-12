@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,27 +35,35 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     ImageView trousersImage;
     ImageView jacketImage;
     ImageView hairImage;
+    ImageView eyeImage;
     ImageView shoesImage;
     TextView goldNum;
     GridView hairGridView;
+    GridView eyeGridView;
     GridView jacketGridView;
     GridView trousersGridView;
     GridView shoesGridView;
-    GridView shopGridView;
+    ListView shopListView;
+    List<ShopProduct> shopProductList = new ArrayList<>();
     List<Bitmap> hairArray = new ArrayList<>();
+    List<Bitmap> eyeArray = new ArrayList<>();
     List<Bitmap> jacketArray = new ArrayList<>();
     List<Bitmap> trousersArray = new ArrayList<>();
     List<Bitmap> shoesArray = new ArrayList<>();
     List<Integer> hairUnlock = new ArrayList<>();
+    List<Integer> eyeUnlock = new ArrayList<>();
     List<Integer> jacketUnlock = new ArrayList<>();
     List<Integer> trousersUnlock = new ArrayList<>();
     List<Integer> shoesUnlock = new ArrayList<>();
+    JPProgressBar jpprogressBar;
     int hairNow = -1;
+    int eyeNow = -1;
     int level = 0;
     int jacketNow = -1;
     int trousersNow = -1;
     int shoesNow = -1;
     int hairNum = 0;
+    int eyeNum = 0;
     int jacketNum = 0;
     private Bitmap body;
     private int trousersNum = 0;
@@ -80,16 +90,19 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                     list = hairUnlock;
                     break;
                 case 1:
-                    list = jacketUnlock;
+                    list = eyeUnlock;
                     break;
                 case 2:
-                    list = trousersUnlock;
+                    list = jacketUnlock;
                     break;
                 case 3:
+                    list = trousersUnlock;
+                    break;
+                case 4:
                     list = shoesUnlock;
                     break;
             }
-            list.add((int) bytes[i + 1]);
+            list.add((int) bytes[i + 1] - Byte.MIN_VALUE);
         }
     }
 
@@ -101,18 +114,16 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                 try {
                     jSONObject.put("T", "D");
                     jSONObject.put("TR", trousersNow + 1);
-                    String str = "JA";
-                    int i = jacketNow + 1;
-                    jSONObject.put(str, i);
+                    jSONObject.put("JA", jacketNow + 1);
                     jSONObject.put("HA", hairNow + 1);
+                    jSONObject.put("EY", eyeNow + 1);
                     jSONObject.put("SH", shoesNow + 1);
                     sendMsg((byte) 33, (byte) 0, (byte) 0, jSONObject.toString());
                     Intent intent = new Intent(this, OLPlayHallRoom.class);
                     intent.putExtra("T", trousersNow + 1);
-                    str = "J";
-                    i = jacketNow + 1;
-                    intent.putExtra(str, i);
+                    intent.putExtra("J", jacketNow + 1);
                     intent.putExtra("H", hairNow + 1);
+                    intent.putExtra("E", eyeNow + 1);
                     intent.putExtra("O", shoesNow + 1);
                     intent.putExtra("S", sex);
                     setResult(-1, intent);
@@ -133,11 +144,13 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         activityNum = 2;
         JPStack.create();
         JPStack.push(this);
+        jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
         JPApplication jpApplication = (JPApplication) getApplication();
         connectionservice = jpApplication.getConnectionService();
         Bundle extras = getIntent().getExtras();
         hairNow = extras.getInt("H");
+        eyeNow = extras.getInt("E");
         jacketNow = extras.getInt("J");
         trousersNow = extras.getInt("T");
         level = extras.getInt("Lv");
@@ -145,17 +158,18 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         sex = extras.getString("S");
         if (sex.equals("f")) {
             hairNum = Consts.fHair.length;
+            eyeNum = Consts.fEye.length;
             trousersNum = Consts.fTrousers.length;
             jacketNum = Consts.fJacket.length;
             shoesNum = Consts.fShoes.length;
         } else {
             hairNum = Consts.mHair.length;
+            eyeNum = Consts.mEye.length;
             trousersNum = Consts.mTrousers.length;
             jacketNum = Consts.mJacket.length;
             shoesNum = Consts.mShoes.length;
         }
         setContentView(R.layout.olplaydressroom);
-
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
         Button dressOK = findViewById(R.id.ol_dress_ok);
         Button dressCancel = findViewById(R.id.ol_dress_cancel);
@@ -168,28 +182,32 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         newTabSpec.setIndicator("头发");
         tabhost.addTab(newTabSpec);
         newTabSpec = tabhost.newTabSpec("tab2");
+        newTabSpec.setContent(R.id.eye_tab);
+        newTabSpec.setIndicator("眼睛");
+        tabhost.addTab(newTabSpec);
+        newTabSpec = tabhost.newTabSpec("tab3");
         newTabSpec.setContent(R.id.jacket_tab);
         newTabSpec.setIndicator("上衣");
         tabhost.addTab(newTabSpec);
-        newTabSpec = tabhost.newTabSpec("tab3");
+        newTabSpec = tabhost.newTabSpec("tab4");
         newTabSpec.setContent(R.id.trousers_tab);
         newTabSpec.setIndicator("下衣");
         tabhost.addTab(newTabSpec);
-        newTabSpec = tabhost.newTabSpec("tab4");
+        newTabSpec = tabhost.newTabSpec("tab5");
         newTabSpec.setContent(R.id.shoes_tab);
         newTabSpec.setIndicator("鞋子");
         tabhost.addTab(newTabSpec);
-        newTabSpec = tabhost.newTabSpec("tab5");
+        newTabSpec = tabhost.newTabSpec("tab6");
         newTabSpec.setContent(R.id.shop_tab);
-        newTabSpec.setIndicator("物品");
+        newTabSpec.setIndicator("商品");
         tabhost.addTab(newTabSpec);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             tabhost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 512;
             ((TextView) tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(0xffffffff);
         }
-        tabhost.setOnTabChangedListener((str) -> {
+        tabhost.setOnTabChangedListener(str -> {
             int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
             int childCount = tabhost.getTabWidget().getChildCount();
             for (int i = 0; i < childCount; i++) {
@@ -199,12 +217,24 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                     tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
                 }
             }
+            // 商品标签
+            if (intValue == childCount - 1) {
+                jpprogressBar.show();
+                JSONObject jSONObject = new JSONObject();
+                try {
+                    jSONObject.put("K", 1);
+                } catch (JSONException e2) {
+                    e2.printStackTrace();
+                }
+                sendMsg((byte) 26, (byte) 0, (byte) 0, jSONObject.toString());
+            }
         });
-        tabhost.setCurrentTab(1);
+        tabhost.setCurrentTab(2);
         ImageView dressMod = findViewById(R.id.ol_dress_mod);
         trousersImage = findViewById(R.id.ol_dress_trousers);
         jacketImage = findViewById(R.id.ol_dress_jacket);
         hairImage = findViewById(R.id.ol_dress_hair);
+        eyeImage = findViewById(R.id.ol_dress_eye);
         shoesImage = findViewById(R.id.ol_dress_shoes);
         goldNum = findViewById(R.id.gold_num);
         try {
@@ -222,6 +252,13 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                 i2++;
             } catch (IOException e2) {
                 e2.printStackTrace();
+            }
+        }
+        for (i2 = 0; i2 < eyeNum; i2++) {
+            try {
+                eyeArray.add(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_e" + i2 + ".png")));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         for (i2 = 0; i2 < jacketNum; i2++) {
@@ -246,22 +283,30 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             }
         }
         hairGridView = findViewById(R.id.ol_hair_grid);
+        eyeGridView = findViewById(R.id.ol_eye_grid);
         jacketGridView = findViewById(R.id.ol_jacket_grid);
         trousersGridView = findViewById(R.id.ol_trousers_grid);
         shoesGridView = findViewById(R.id.ol_shoes_grid);
-        shopGridView = findViewById(R.id.ol_shop_grid);
+        shopListView = findViewById(R.id.ol_shop_list);
         setDressAdapter(hairGridView, hairArray, 0);
-        setDressAdapter(jacketGridView, jacketArray, 1);
-        setDressAdapter(trousersGridView, trousersArray, 2);
-        setDressAdapter(shoesGridView, shoesArray, 3);
+        setDressAdapter(eyeGridView, eyeArray, 1);
+        setDressAdapter(jacketGridView, jacketArray, 2);
+        setDressAdapter(trousersGridView, trousersArray, 3);
+        setDressAdapter(shoesGridView, shoesArray, 4);
+        shopListView.setAdapter(new ShopAdapter(this));
         if (hairNow < 0) {
             hairImage.setImageBitmap(none);
         } else {
             hairImage.setImageBitmap(hairArray.get(hairNow));
         }
         hairGridView.setOnItemClickListener(new HairClick(this));
-        i2 = jacketNow;
-        if (i2 < 0) {
+        if (eyeNow < 0) {
+            eyeImage.setImageBitmap(none);
+        } else {
+            eyeImage.setImageBitmap(eyeArray.get(eyeNow));
+        }
+        eyeGridView.setOnItemClickListener(new EyeClick(this));
+        if (jacketNow < 0) {
             jacketImage.setImageBitmap(none);
         } else {
             jacketImage.setImageBitmap(jacketArray.get(jacketNow));
@@ -279,7 +324,6 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             shoesImage.setImageBitmap(shoesArray.get(shoesNow));
         }
         shoesGridView.setOnItemClickListener(new ShoesClick(this));
-        shopGridView.setOnItemClickListener(new ShopClick(this));
         try {
             JSONObject jSONObject = new JSONObject();
             jSONObject.put("T", "L");
@@ -297,6 +341,10 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             hairArray.get(i).recycle();
         }
         hairArray.clear();
+        for (i = 0; i < eyeNum; i++) {
+            eyeArray.get(i).recycle();
+        }
+        eyeArray.clear();
         for (i = 0; i < jacketNum; i++) {
             jacketArray.get(i).recycle();
         }
@@ -314,5 +362,18 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
+    }
+
+    public int getDrawableById(String drawable, Class<?> c) {
+        if (drawable == null || drawable.isEmpty()) {
+            return 0;
+        }
+        try {
+            Field idField = c.getDeclaredField(drawable);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

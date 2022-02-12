@@ -42,6 +42,11 @@
                 android:layout_height="200dp" />
 
             <ImageView
+                android:id="@+id/ol_user_eye"
+                android:layout_width="100dp"
+                android:layout_height="200dp" />
+
+            <ImageView
                 android:id="@+id/ol_user_jacket"
                 android:layout_width="100dp"
                 android:layout_height="200dp" />

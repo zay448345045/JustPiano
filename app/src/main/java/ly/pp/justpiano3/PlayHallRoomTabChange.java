@@ -55,7 +55,7 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
                 olPlayHallRoom.sendMsg((byte) 34, (byte) 0, jSONObject.toString());
                 break;
             case "tab5":
-                if (olPlayHallRoom.familyPageNum == 0 && olPlayHallRoom.familyList.size() == 0) {
+                if (olPlayHallRoom.familyPageNum == 0 && olPlayHallRoom.familyList.isEmpty()) {
                     jSONObject = new JSONObject();
                     try {
                         jSONObject.put("K", 2);

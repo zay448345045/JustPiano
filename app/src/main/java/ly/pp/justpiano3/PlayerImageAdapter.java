@@ -231,6 +231,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
         ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
         ImageView imageView5 = view.findViewById(R.id.ol_player_hair);
+        ImageView imageView5e = view.findViewById(R.id.ol_player_eye);
         ImageView imageView6 = view.findViewById(R.id.ol_player_couple);
         ImageView imageView7 = view.findViewById(R.id.ol_player_family);
         int i3 = playerList.get(i).getInt("LV");
@@ -314,6 +315,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             int i6 = playerList.get(i).getInt("TR") - 1;
             int i7 = playerList.get(i).getInt("JA") - 1;
             int i8 = playerList.get(i).getInt("HA") - 1;
+            int i8e = playerList.get(i).getInt("EY") - 1;
             int i9 = playerList.get(i).getInt("SH") - 1;
             textView3.setText("LV." + i3);
             textView4.setText("CL." + i4);
@@ -340,6 +342,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_h" + i8 + ".png")));
+            }
+            if (i8e < 0) {
+                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_e" + i8e + ".png")));
             }
         } catch (Exception e) {
             e.printStackTrace();

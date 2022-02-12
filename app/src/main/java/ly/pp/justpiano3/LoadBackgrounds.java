@@ -34,7 +34,7 @@ public final class LoadBackgrounds extends Thread {
         f6023i.setStrokeWidth(2.0f);
         f6023i.setStyle(Paint.Style.STROKE);
         f6024j = new Paint();
-        f6024j.setColor(-16711936);
+        f6024j.setColor(0xff00ff00);
         f6025k = new Paint();
         f6025k.setARGB(255, 255, 125, 25);
         f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) jPApplication.getHalfHeightSub20());

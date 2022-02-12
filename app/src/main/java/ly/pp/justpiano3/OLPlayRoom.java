@@ -160,11 +160,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             ImageView imageView2 = inflate.findViewById(R.id.ol_player_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_player_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_player_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_player_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_player_shoes);
             ImageView imageView6 = inflate.findViewById(R.id.ol_couple_mod);
             ImageView imageView7 = inflate.findViewById(R.id.ol_couple_trousers);
             ImageView imageView8 = inflate.findViewById(R.id.ol_couple_jacket);
             ImageView imageView9 = inflate.findViewById(R.id.ol_couple_hair);
+            ImageView imageView9e = inflate.findViewById(R.id.ol_couple_eye);
             ImageView imageView10 = inflate.findViewById(R.id.ol_couple_shoes);
             TextView textView8 = inflate.findViewById(R.id.couple_bless);
             TextView textView9 = inflate.findViewById(R.id.couple_pionts);
@@ -196,6 +198,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
             }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
+            }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -217,6 +224,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             } else {
                 imageView9.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_h" + (User2.getHair() - 1) + ".png")));
             }
+            if (User2.getEye() <= 0) {
+                imageView9e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView9e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_h" + (User2.getEye() - 1) + ".png")));
+            }
             if (User2.getShoes() <= 0) {
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -236,6 +248,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
@@ -254,6 +267,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
+            }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
             }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));

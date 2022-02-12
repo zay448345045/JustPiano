@@ -526,15 +526,17 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     final void judgeAndPlaySound(int i) {
-        judgeTouchNote(i + noteMod12 * 12, false);
+        int noteOctaveOffset = noteMod12 * 12;
+        judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
-            jpapplication.playSound(i + (noteMod12 + jpapplication.getBadu()) * 12, volume0);
+            jpapplication.playSound(i + noteOctaveOffset, volume0);
         }
     }
 
     final int midiJudgeAndPlaySound(int i) {
-        int trueNote = judgeTouchNote(i + noteMod12 * 12, true);
-        jpapplication.playSound(trueNote + (noteMod12 + jpapplication.getBadu()) * 12, volume0);
+        int noteOctaveOffset = noteMod12 * 12;
+        int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
+        jpapplication.playSound(trueNote + noteOctaveOffset, volume0);
         return trueNote;
     }
 
@@ -613,7 +615,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     break;
                 default:
-                    if (pianoPlay.isRecord) {
+                    if (pianoPlay.isOpenRecord) {
                         message = new Message();
                         message.what = 22;
                         pianoPlay.pianoPlayHandler.handleMessage(message);
@@ -859,7 +861,7 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        if (pianoPlay.f4619j) {
+        if (pianoPlay.isBack) {
             if (downNotes != null) {
                 while (downNotes.isAlive()) {
                     pianoPlay.isPlayingStart = false;

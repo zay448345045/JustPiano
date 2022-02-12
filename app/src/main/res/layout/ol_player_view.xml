@@ -38,6 +38,11 @@
             android:layout_height="100dp" />
 
         <ImageView
+            android:id="@+id/ol_player_eye"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+        <ImageView
             android:id="@+id/ol_player_jacket"
             android:layout_width="100dp"
             android:layout_height="100dp" />

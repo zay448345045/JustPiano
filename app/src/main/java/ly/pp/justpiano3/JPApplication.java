@@ -64,8 +64,9 @@ public final class JPApplication extends Application {
     private int notesDownSpeed = 6;
     private boolean isBindService;
     private int gameMode;
-    private int badu;
     private int midiKeyboardTune;
+    private int keyboardSoundTune;
+    private boolean keyboardAnim;
     private boolean isOpenChord = true;
     private boolean showTouchNotesLevel = true;
     private boolean autoPlay = true;
@@ -461,17 +462,14 @@ public final class JPApplication extends Application {
         return serverTimeInterval + System.currentTimeMillis();
     }
 
-    public final void loadSettings(int i) {
+    public final void loadSettings(boolean online) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        switch (i) {
-            case 0:
-                autoPlay = sharedPreferences.getBoolean("auto_play", true);
-                tempSpeed = Float.parseFloat(sharedPreferences.getString("temp_speed", "1.0"));
-                break;
-            case 1:
-                tempSpeed = 1;
-                autoPlay = true;
-                break;
+        if (online) {
+            tempSpeed = 1;
+            autoPlay = true;
+        } else {
+            autoPlay = sharedPreferences.getBoolean("auto_play", true);
+            tempSpeed = Float.parseFloat(sharedPreferences.getString("temp_speed", "1.0"));
         }
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true);
         chordVolume = Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8"));
@@ -481,8 +479,9 @@ public final class JPApplication extends Application {
         showLine = sharedPreferences.getBoolean("show_line", true);
         loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false);
         roughLine = Integer.parseInt(sharedPreferences.getString("rough_line", "1"));
-        badu = Integer.parseInt(sharedPreferences.getString("badu", "0"));
         midiKeyboardTune = Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0"));
+        keyboardSoundTune = Integer.parseInt(sharedPreferences.getString("keyboard_sound_tune", "0"));
+        keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true);
         notesDownSpeed = Integer.parseInt(sharedPreferences.getString("down_speed", "6"));
         noteSize = Float.parseFloat(sharedPreferences.getString("note_size", "1"));
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false);
@@ -596,9 +595,6 @@ public final class JPApplication extends Application {
         return showTouchNotesLevel;
     }
 
-    public final int getBadu() {
-        return badu;
-    }
 
     public int getMidiKeyboardTune() {
         return midiKeyboardTune;
@@ -606,6 +602,22 @@ public final class JPApplication extends Application {
 
     public void setMidiKeyboardTune(int midiKeyboardTune) {
         this.midiKeyboardTune = midiKeyboardTune;
+    }
+
+    public int getKeyboardSoundTune() {
+        return keyboardSoundTune;
+    }
+
+    public void setKeyboardSoundTune(int keyboardSoundTune) {
+        this.keyboardSoundTune = keyboardSoundTune;
+    }
+
+    public boolean isKeyboardAnim() {
+        return keyboardAnim;
+    }
+
+    public void setKeyboardAnim(boolean keyboardAnim) {
+        this.keyboardAnim = keyboardAnim;
     }
 
     public final int getPlaySongsMode() {

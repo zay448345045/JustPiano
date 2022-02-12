@@ -39,20 +39,6 @@
         <item>4</item>
         <item>6</item>
     </string-array>
-    <string-array name="badu">
-        <item>低两个八度</item>
-        <item>低一个八度</item>
-        <item>默认</item>
-        <item>高一个八度</item>
-        <item>高两个八度</item>
-    </string-array>
-    <string-array name="badu_value">
-        <item>-2</item>
-        <item>-1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
     <string-array name="midi_keyboard_tune">
         <item>-6</item>
         <item>-5</item>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/settings_name">
-    <PreferenceCategory android:title="音块与界面">
+    <PreferenceCategory android:title="弹奏音块与界面">
         <ly.pp.justpiano3.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
@@ -99,7 +99,6 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="compatible_sound"
-            android:summary=""
             android:summaryOff="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
             android:summaryOn="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
             android:title="兼容模式播放" />
@@ -119,21 +118,29 @@
             android:key="b_s_vol"
             android:summary="@string/b_s_vol_sum"
             android:title="@string/b_s_vol_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="键盘模式">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyboard_anim"
+            android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
+            android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
+            android:title="启用键盘移动缩放动画" />
         <ListPreference
             android:defaultValue="0"
-            android:dialogTitle="八度调整"
-            android:entries="@array/badu"
-            android:entryValues="@array/badu_value"
-            android:key="badu"
-            android:summary="调整曲谱的整体音高(除非特别需求，一般情况下无需修改)"
-            android:title="八度调整" />
+            android:dialogTitle="触屏点击声音移调"
+            android:entries="@array/midi_keyboard_tune"
+            android:entryValues="@array/midi_keyboard_tune"
+            android:key="keyboard_sound_tune"
+            android:summary="调整键盘模式触屏点击按键播放的声音移调"
+            android:title="触屏点击声音移调" />
         <ListPreference
             android:defaultValue="0"
             android:dialogTitle="MIDI键盘移调"
             android:entries="@array/midi_keyboard_tune"
             android:entryValues="@array/midi_keyboard_tune"
             android:key="midi_keyboard_tune"
-            android:summary="接入MIDI键盘时调整MIDI键盘移调(仅键盘模式有效)"
+            android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
             android:title="MIDI键盘移调" />
     </PreferenceCategory>
     <PreferenceCategory android:title="其他功能">

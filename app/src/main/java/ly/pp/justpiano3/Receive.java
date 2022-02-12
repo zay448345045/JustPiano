@@ -113,6 +113,9 @@ final class Receive {
                 case 25:
                     JsonHandle.m3948a(string);
                     return;
+                case 26:
+                    JsonHandle.shop(string);
+                    return;
                 case 28:
                 case 33:
                 case 34:

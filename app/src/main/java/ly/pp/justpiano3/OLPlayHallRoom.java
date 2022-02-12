@@ -75,17 +75,19 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     List<Bundle> hallList = new ArrayList<>();
     List<Bundle> mailList = new ArrayList<>();
     ListView mailListView;
-    ConnectionService cs;
+    ConnectionService connectionService;
     private ImageView userModView;
     private ImageView userTrousersView;
     private ImageView userJacketsView;
     private ImageView userHairView;
+    private ImageView userEyeView;
     private ImageView userShoesView;
-    private int f4427Q;
-    private int f4428R;
-    private int f4429S;
-    private int f4430T;
-    private String sex = "f";
+    private int userTrousersIndex;
+    private int userJacketIndex;
+    private int userHairIndex;
+    private int userEyeIndex;
+    private int userShoesIndex;
+    private String userSex = "f";
     private Editor editor = null;
     private MainGameAdapter f4434X = null;
     private MainGameAdapter f4435Y = null;
@@ -94,19 +96,21 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private ImageView coupleTrousersView;
     private ImageView coupleJacketView;
     private ImageView coupleHairView;
+    private ImageView coupleEyeView;
     private ImageView coupleShoesView;
-    private String f4450an;
-    private int f4451ao;
-    private int f4452ap;
-    private int f4453aq;
-    private int f4454ar;
+    private String coupleSex;
+    private int coupleTrousersIndex;
+    private int coupleJacketIndex;
+    private int coupleHairIndex;
+    private int coupleEyeIndex;
+    private int coupleShoesIndex;
     private TextView systemTextView;
     private ScrollText broadCastTextView;
     private String f4462m = "";
     private String f4463n = "";
     private LayoutInflater layoutinflater;
 
-    private static Bitmap m3706a(Context context, String str, String str2, int i) {
+    private static Bitmap setDress(Context context, String str, String str2, int i) {
         int i2 = i - 1;
         if (i2 >= 0) {
             try {
@@ -123,8 +127,8 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     final void sendMsg(byte b, byte b2, String str) {
-        if (cs != null) {
-            cs.writeData(b, (byte) 0, b2, str, null);
+        if (connectionService != null) {
+            connectionService.writeData(b, (byte) 0, b2, str, null);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -189,19 +193,21 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     final void mo2844a(String str) {
         try {
             JSONObject jSONObject = new JSONObject(str);
-            sex = jSONObject.getString("S");
-            f4427Q = jSONObject.getInt("T");
-            f4428R = jSONObject.getInt("J");
-            f4429S = jSONObject.getInt("H");
-            f4430T = jSONObject.getInt("O");
+            userSex = jSONObject.getString("S");
+            userTrousersIndex = jSONObject.getInt("T");
+            userJacketIndex = jSONObject.getInt("J");
+            userHairIndex = jSONObject.getInt("H");
+            userEyeIndex = jSONObject.getInt("E");
+            userShoesIndex = jSONObject.getInt("O");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        userModView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "m", 1));
-        userTrousersView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "t", f4427Q));
-        userJacketsView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "j", f4428R));
-        userHairView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "h", f4429S));
-        userShoesView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "s", f4430T));
+        userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
+        userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
+        userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
+        userHairView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "h", userHairIndex));
+        userEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "e", userEyeIndex));
+        userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
     }
 
     final void sendMail(String str, int i) {
@@ -242,19 +248,21 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     final void mo2847b(String str) {
         try {
             JSONObject jSONObject = new JSONObject(str);
-            f4450an = jSONObject.getString("S");
-            f4451ao = jSONObject.getInt("T");
-            f4452ap = jSONObject.getInt("J");
-            f4453aq = jSONObject.getInt("H");
-            f4454ar = jSONObject.getInt("O");
+            coupleSex = jSONObject.getString("S");
+            coupleTrousersIndex = jSONObject.getInt("T");
+            coupleJacketIndex = jSONObject.getInt("J");
+            coupleHairIndex = jSONObject.getInt("H");
+            coupleEyeIndex = jSONObject.getInt("E");
+            coupleShoesIndex = jSONObject.getInt("O");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        coupleModView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "m", 1));
-        coupleTrousersView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "t", f4451ao));
-        coupleJacketView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "j", f4452ap));
-        coupleHairView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "h", f4453aq));
-        coupleShoesView.setImageBitmap(OLPlayHallRoom.m3706a(this, f4450an, "s", f4454ar));
+        coupleModView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "m", 1));
+        coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", coupleTrousersIndex));
+        coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", coupleJacketIndex));
+        coupleHairView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "h", coupleHairIndex));
+        coupleEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "e", coupleEyeIndex));
+        coupleShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "s", coupleShoesIndex));
     }
 
     final void mo2848c() {
@@ -317,16 +325,18 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         super.onActivityResult(i, i2, intent);
         if (i2 == -1) {
             Bundle extras = intent.getExtras();
-            sex = extras.getString("S");
-            f4427Q = extras.getInt("T");
-            f4428R = extras.getInt("J");
-            f4429S = extras.getInt("H");
-            f4430T = extras.getInt("O");
-            userModView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "m", 1));
-            userTrousersView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "t", f4427Q));
-            userJacketsView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "j", f4428R));
-            userHairView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "h", f4429S));
-            userShoesView.setImageBitmap(OLPlayHallRoom.m3706a(this, sex, "s", f4430T));
+            userSex = extras.getString("S");
+            userTrousersIndex = extras.getInt("T");
+            userJacketIndex = extras.getInt("J");
+            userHairIndex = extras.getInt("H");
+            userEyeIndex = extras.getInt("E");
+            userShoesIndex = extras.getInt("O");
+            userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
+            userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
+            userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
+            userHairView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "h", userHairIndex));
+            userEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "e", userEyeIndex));
+            userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
         }
     }
 
@@ -354,12 +364,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                     return;
                 }
                 intent.setClass(this, OLPlayDressRoom.class);
-                intent.putExtra("T", f4427Q - 1);
-                intent.putExtra("J", f4428R - 1);
-                intent.putExtra("H", f4429S - 1);
-                intent.putExtra("S", sex);
+                intent.putExtra("T", userTrousersIndex - 1);
+                intent.putExtra("J", userJacketIndex - 1);
+                intent.putExtra("H", userHairIndex - 1);
+                intent.putExtra("E", userEyeIndex - 1);
+                intent.putExtra("S", userSex);
                 intent.putExtra("Lv", lv);
-                intent.putExtra("O", f4430T - 1);
+                intent.putExtra("O", userShoesIndex - 1);
                 startActivityForResult(intent, 0);
                 return;
             case R.id.ol_bonus_button:
@@ -504,7 +515,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        jpApplication.loadSettings(1);
+        jpApplication.loadSettings(true);
         setContentView(R.layout.olplayhallroom);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(0);
@@ -530,7 +541,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         mailListView.setCacheColorHint(0);
         friendList.clear();
         familyList.clear();
-        cs = jpApplication.getConnectionService();
+        connectionService = jpApplication.getConnectionService();
         tabHost = findViewById(R.id.tabhost);
         tabHost.setup();
         TabSpec newTabSpec = tabHost.newTabSpec("tab1");
@@ -562,6 +573,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         userTrousersView = findViewById(R.id.ol_player_trousers);
         userJacketsView = findViewById(R.id.ol_player_jacket);
         userHairView = findViewById(R.id.ol_player_hair);
+        userEyeView = findViewById(R.id.ol_player_eye);
         userShoesView = findViewById(R.id.ol_player_shoes);
         broadCastTextView = findViewById(R.id.broadCastText);
         systemTextView = findViewById(R.id.systemText);
@@ -619,6 +631,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         coupleTrousersView = findViewById(R.id.ol_couple_trousers);
         coupleJacketView = findViewById(R.id.ol_couple_jacket);
         coupleHairView = findViewById(R.id.ol_couple_hair);
+        coupleEyeView = findViewById(R.id.ol_couple_eye);
         coupleShoesView = findViewById(R.id.ol_couple_shoes);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -634,6 +647,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 Toast.makeText(this, "您的账号重复登录……", Toast.LENGTH_SHORT).show();
                 break;
             case 16:
+                // 从家族中心返回，则去加载家族
                 Bundle b = getIntent().getExtras();
                 familyPageNum = b.getInt("pageNum");
                 familyListPosition = b.getInt("position");

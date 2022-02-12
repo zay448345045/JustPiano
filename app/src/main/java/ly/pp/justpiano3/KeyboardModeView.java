@@ -401,6 +401,8 @@ public class KeyboardModeView extends View {
         }
         this.whiteKeyNum = whiteKeyNum;
         if (animInterval == 0) {
+            makeDraw();
+            postInvalidate();
             return;
         }
         anim.setDuration(animInterval);
@@ -457,6 +459,8 @@ public class KeyboardModeView extends View {
         ValueAnimator anim = ValueAnimator.ofFloat(0f, (this.whiteKeyOffset - whiteKeyOffset) * whiteKeyWidth);
         this.whiteKeyOffset = whiteKeyOffset;
         if (animInterval == 0) {
+            makeDraw();
+            postInvalidate();
             return;
         }
         anim.setDuration(animInterval);

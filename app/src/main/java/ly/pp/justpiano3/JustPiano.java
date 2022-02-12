@@ -18,13 +18,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
 
 public class JustPiano extends Activity implements Callback, Runnable {
     public static boolean updateSQL = false;
     Handler handler;
-    private boolean f4094d;
-    private boolean f4096f;
+    private boolean isPause;
+    private boolean loadFinish;
     private int songCount;
     private TestSQL testSQL;
     private SQLiteDatabase sqliteDataBase;
@@ -35,6 +34,16 @@ public class JustPiano extends Activity implements Callback, Runnable {
     private String loading = "";
 
     private void updateSql(SQLiteDatabase sQLiteDatabase) {
+        // 删除上个版本曲谱同步下来的所有文件
+        File syncDir = new File(getFilesDir().getAbsolutePath(), "Songs");
+        if (syncDir.exists()) {
+            File[] files = syncDir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+        }
         String string;
         // 键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
         Map<String, String> pmPathMap = new HashMap<>();
@@ -124,8 +133,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 justpianoview.mo2761a(progress, info, loading);
                 break;
             case 1:
-                f4096f = true;
-                if (!f4094d) {
+                loadFinish = true;
+                if (!isPause) {
                     Intent intent = new Intent();
                     intent.setClass(this, MainMode.class);
                     startActivity(intent);
@@ -154,8 +163,10 @@ public class JustPiano extends Activity implements Callback, Runnable {
         justpianoview = new JustPianoView(this, jpapplication);
         setContentView(justpianoview);
         contentvalues = new ContentValues();
-        Timer timer = new Timer();
-        timer.schedule(new JustPianoTimerTask(this, timer), 0, 1000);
+        Message obtainMessage = handler.obtainMessage();
+        obtainMessage.what = 0;
+        handler.sendMessage(obtainMessage);
+        ThreadPoolUtils.execute(this);
     }
 
     @Override
@@ -181,21 +192,21 @@ public class JustPiano extends Activity implements Callback, Runnable {
     @Override
     public void onPause() {
         super.onPause();
-        if (!f4096f) {
-            f4094d = true;
+        if (!loadFinish) {
+            isPause = true;
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (f4094d && f4096f) {
+        if (isPause && loadFinish) {
             Intent intent = new Intent();
             intent.setClass(this, MainMode.class);
             startActivity(intent);
             finish();
         } else {
-            f4094d = false;
+            isPause = false;
         }
     }
 
@@ -206,6 +217,14 @@ public class JustPiano extends Activity implements Callback, Runnable {
 
     @Override
     public void run() {
+        File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        file = new File(getFilesDir().getAbsolutePath() + "/Songs");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         Message obtainMessage;
         FileOutputStream fileOutputStream;
         try {
@@ -234,14 +253,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
         } catch (Exception e5) {
             System.exit(-1);
         }
-        File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        file = new File(getFilesDir().getAbsolutePath() + "/Songs");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
         for (int i = 108; i >= 24; i--) {
             JPApplication.preloadSounds(i);
             progress++;
@@ -251,12 +262,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
             handler.sendMessage(obtainMessage2);
         }
         JPApplication.confirmLoadSounds();
-        loading = "载入界面资源...";
-        progress = 99;
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);
-        info = "载入完成.";
-        progress = 100;
     }
 }

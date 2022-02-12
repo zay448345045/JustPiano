@@ -94,7 +94,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         activityNum = 0;
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
-        jpapplication.loadSettings(1);
+        jpapplication.loadSettings(true);
         setContentView(R.layout.olmainmode);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;

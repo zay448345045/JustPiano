@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="40dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -70,6 +70,18 @@
                 android:layout_weight="1">
             </Button>
 
+            <Button
+                android:id="@+id/keyboard_record"
+                android:text="●"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/v3"
+                android:background="@drawable/selector_ol_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </Button>
+
         </LinearLayout>
 
         <LinearLayout
@@ -77,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="0.6">
 
             <TextView
                 android:id="@+id/keyboard_text"
@@ -97,6 +109,15 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/keyboard_setting"
+                android:src="@drawable/setting"
+                android:background="@drawable/selector_orange_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </ImageView>
 
             <Button
                 android:id="@+id/keyboard2_count_down"

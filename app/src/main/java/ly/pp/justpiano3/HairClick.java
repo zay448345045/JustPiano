@@ -33,7 +33,7 @@ final class HairClick implements OnItemClickListener {
                 JSONObject jSONObject = new JSONObject();
                 try {
                     jSONObject.put("T", "B");
-                    olPlayDressRoom.sendMsg((byte) 33, (byte) 0, (byte) i, jSONObject.toString());
+                    olPlayDressRoom.sendMsg((byte) 33, (byte) 0, (byte) (i + Byte.MIN_VALUE), jSONObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

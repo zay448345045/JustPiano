@@ -14,7 +14,7 @@ public final class DressAdapter extends BaseAdapter {
     private final List<Bitmap> list;
     private final LayoutInflater layoutInflater;
     private final OLPlayDressRoom olPlayDressRoom;
-    private final int type;  //1,2,3,4表示头发、衣服、裤子、鞋子
+    private final int type;  // 0,1,2,3,4表示头发、眼睛，衣服、裤子、鞋子
 
     DressAdapter(List<Bitmap> arrayList, OLPlayDressRoom oLPlayDressRoom, int type) {
         this.olPlayDressRoom = oLPlayDressRoom;
@@ -43,7 +43,6 @@ public final class DressAdapter extends BaseAdapter {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.ol_dres_view, null);
         }
-        view.setKeepScreenOn(true);
         ((ImageView) view.findViewById(R.id.ol_dress_img)).setImageBitmap(list.get(i));
         switch (type) {
             case 0:
@@ -60,6 +59,19 @@ public final class DressAdapter extends BaseAdapter {
                 }
                 break;
             case 1:
+                if (olPlayDressRoom.eyeUnlock.contains(i) || i == 0) {
+                    view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
+                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
+                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
+                } else {
+                    ((TextView) view.findViewById(R.id.ol_dress_price)).setText(olPlayDressRoom.sex.equals("f")
+                            ? String.valueOf(Consts.fEye[i]) : String.valueOf(Consts.mEye[i]));
+                    view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                }
+                break;
+            case 2:
                 if (olPlayDressRoom.jacketUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -72,7 +84,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                 }
                 break;
-            case 2:
+            case 3:
                 if (olPlayDressRoom.trousersUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -85,7 +97,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                 }
                 break;
-            case 3:
+            case 4:
                 if (olPlayDressRoom.shoesUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);

@@ -3,11 +3,13 @@ package ly.pp.justpiano3;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -131,10 +133,16 @@ public class MainMode extends Activity implements OnClickListener {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         jpApplication = (JPApplication) getApplication();
-        jpApplication.loadSettings(0);
+        jpApplication.loadSettings(false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean newHelp = sharedPreferences.getBoolean("new_help", true);
+        if (newHelp) {
+            findViewById(R.id.new_help).setVisibility(View.VISIBLE);
+            sharedPreferences.edit().putBoolean("new_help", false).apply();
+        }
         TextView f4202b = findViewById(R.id.local_game);
         f4202b.setOnClickListener(this);
         TextView f4203c = findViewById(R.id.online_game);

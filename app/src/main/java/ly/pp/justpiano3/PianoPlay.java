@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.midi.MidiReceiver;
@@ -38,15 +39,15 @@ import java.util.Map;
 import java.util.Timer;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
-    private static final int f4579ab = 44100;
-    private static int f4609ae = 0;
+    public static final int sampleRate = 44100;
+    private static int recordBufferSize = 0;
     public byte hallID;
     public TextView l_nandu;
     public TextView time_mid;
     HorizontalListView horizontalListView;
     TextView showHideGrade;
     Map userMap = null;
-    boolean isRecord;
+    boolean isOpenRecord;
     PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     View f4591J;
     int times;
@@ -62,7 +63,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     boolean isShowingSongsInfo;
     Bundle roomBundle;
     boolean isPlayingStart;
-    boolean f4619j;
+    boolean isBack;
     boolean f4620k;
     JPProgressBar jpprogressbar;
     ImageButton startPlayButton;
@@ -77,8 +78,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     private ConnectionService connectionService;
     private ProgressBar progressbar;
     private Bundle hallBundle;
-    private AudioRecord audiorecord;
-    private boolean f4611ag;
+    private AudioRecord audioRecord;
+    private boolean recordStart;
     private String recordRawPath;
     private String recordWavPath;
     private int roomMode = 0;
@@ -88,12 +89,12 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     private int localSongsTime;
     private int playKind;
 
-    static void m3786a(String str, String str2) {
+    static void pcmToWav(String str, String str2) {
         FileNotFoundException e2;
         FileInputStream fileInputStream;
-        long j = f4579ab;
-        long j2 = f4579ab * 4;
-        byte[] bArr = new byte[f4609ae];
+        long j = sampleRate;
+        long j2 = sampleRate * 4;
+        byte[] bArr = new byte[recordBufferSize];
         FileInputStream fileInputStream2;
         FileOutputStream fileOutputStream;
         try {
@@ -278,9 +279,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         try {
             recordRawPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/buf.raw";
             recordWavPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + str + ".wav";
-            f4609ae = AudioRecord.getMinBufferSize(f4579ab, 12, 2);
-            int f4608aa = 1;
-            audiorecord = new AudioRecord(f4608aa, f4579ab, 12, 2, f4609ae);
+            recordBufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+            audioRecord = new AudioRecord(1, sampleRate, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, recordBufferSize);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -288,9 +288,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
     }
 
-    public boolean m3792e() {
+    public boolean saveRecordPcm() {
         FileOutputStream fileOutputStream;
-        byte[] bArr = new byte[f4609ae];
+        byte[] bArr = new byte[recordBufferSize];
         boolean z = true;
         try {
             File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Record");
@@ -302,13 +302,13 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             fileOutputStream = new FileOutputStream(file2);
         } catch (Exception e) {
             e.printStackTrace();
-            f4611ag = false;
+            recordStart = false;
             Toast.makeText(this, "无效的储存路径,请检查SD卡是否插入!", Toast.LENGTH_SHORT).show();
             z = false;
             fileOutputStream = null;
         }
-        while (f4611ag) {
-            if (-3 != audiorecord.read(bArr, 0, f4609ae)) {
+        while (recordStart) {
+            if (-3 != audioRecord.read(bArr, 0, recordBufferSize)) {
                 try {
                     fileOutputStream.write(bArr);
                 } catch (Exception e2) {
@@ -343,7 +343,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 localLNandu = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                 localSongsTime = extras.getInt("songstime");
                 score = extras.getInt("score");
-                isRecord = extras.getBoolean("isrecord");
+                isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
                 jPApplication = jpapplication;
                 str = songsPath;
@@ -409,9 +409,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 playView = new PlayView(jPApplication, this, songBytes.getBytes(), this, nandu, score, playKind, hand, "");
                 break;
         }
-        if (isRecord) {
-            isRecord = recordReady(songsName);
-            if (!isRecord) {
+        if (isOpenRecord) {
+            isOpenRecord = recordReady(songsName);
+            if (!isOpenRecord) {
                 Toast.makeText(this, "初始化录音失败，无法录音!请检查内存卡剩余容量!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -427,7 +427,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         jpapplication.setHeightPixels(displayMetrics.heightPixels);
         jpapplication.setWidthPixels(displayMetrics.widthPixels);
-        jpapplication.loadSettings(1);
+        jpapplication.loadSettings(true);
         JPApplication.teardownAudioStreamNative();
         JPApplication.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
@@ -468,20 +468,20 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             obtainMessage.arg1 = 0;
             pianoPlayHandler.handleMessage(obtainMessage);
         }
-        if (isRecord && !f4611ag) {
+        if (isOpenRecord && !recordStart) {
             try {
-                audiorecord.startRecording();
-                f4611ag = true;
+                audioRecord.startRecording();
+                recordStart = true;
                 ThreadPoolUtils.execute(() -> {
-                    if (m3792e()) {
-                        PianoPlay.m3786a(recordRawPath, recordWavPath);
+                    if (saveRecordPcm()) {
+                        PianoPlay.pcmToWav(recordRawPath, recordWavPath);
                     }
                 });
                 Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(this, "录音出错...请在系统应用设置内将极品钢琴的录音权限打开!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
-                f4611ag = false;
+                recordStart = false;
             }
         }
     }
@@ -494,18 +494,18 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         listView.setAdapter(new FinishScoreAdapter(m3783a(list, str), layoutinflater, roomMode));
     }
 
-    final void mo2908c() {
-        if (f4611ag) {
-            isRecord = false;
+    final void recordFinish() {
+        if (recordStart) {
+            isOpenRecord = false;
             Toast.makeText(this, "录音完毕，录音文件储存为SD卡\\Justpiano\\Record\\" + songsName + ".wav", Toast.LENGTH_SHORT).show();
-            if (audiorecord != null && f4611ag) {
-                f4611ag = false;
-                audiorecord.stop();
+            if (audioRecord != null && recordStart) {
+                recordStart = false;
+                audioRecord.stop();
             }
         }
-        if (audiorecord != null) {
-            audiorecord.release();
-            audiorecord = null;
+        if (audioRecord != null) {
+            audioRecord.release();
+            audioRecord = null;
         }
     }
 
@@ -533,7 +533,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     f4591J.setVisibility(View.GONE);
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
-                    f4619j = true;
+                    isBack = true;
                     finish();
                 }
                 return;
@@ -548,7 +548,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     f4591J.setVisibility(View.GONE);
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
-                    f4619j = true;
+                    isBack = true;
                     finish();
                 }
                 return;
@@ -559,7 +559,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
-                    f4619j = true;
+                    isBack = true;
                     dialog.dismiss();
                     finish();
                 });
@@ -574,7 +574,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
-                    f4619j = true;
+                    isBack = true;
                     dialog.dismiss();
                     finish();
                 });
@@ -589,7 +589,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
-                    f4619j = true;
+                    isBack = true;
                     dialog.dismiss();
                     finish();
                 });
@@ -610,7 +610,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         checkAnJian();
         layoutinflater = LayoutInflater.from(this);
         isShowingSongsInfo = false;
-        f4619j = false;
+        isBack = false;
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         if (jpapplication.getHeightPixels() == 0) {
             jpprogressbar = new JPProgressBar(this);
@@ -637,8 +637,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     protected void onDestroy() {
         JPStack.create();
         JPStack.pop(this);
-        if (isRecord) {
-            mo2908c();
+        if (isOpenRecord) {
+            recordFinish();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
@@ -679,7 +679,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                         playView.startFirstNoteTouching = false;
                     }
                     isPlayingStart = false;
-                    f4619j = true;
+                    isBack = true;
                     sendMsg((byte) 8, (byte) 0, "", null);
                     if (!f3995a) {
                         intent = new Intent(this, OLPlayHall.class);
@@ -698,7 +698,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     playView.startFirstNoteTouching = false;
                 }
                 isPlayingStart = false;
-                f4619j = true;
+                isBack = true;
                 if (!f3995a) {
                     intent = new Intent(this, OLPlayHall.class);
                     bundle.putString("hallName", hallBundle.getString("hallName"));
@@ -714,7 +714,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     playView.startFirstNoteTouching = false;
                 }
                 isPlayingStart = false;
-                f4619j = true;
+                isBack = true;
                 if (!f3995a) {
                     intent = new Intent(this, OLChallenge.class);
                     bundle.putString("hallName", hallBundle.getString("hallName"));
@@ -730,9 +730,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
 
     @Override
     protected void onResume() {
-        if (f4619j) {
+        if (isBack) {
             finish();
-            f4619j = false;
+            isBack = false;
         }
         super.onResume();
     }
@@ -740,8 +740,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     @Override
     protected void onStop() {
         super.onStop();
-        if (f4619j) {
-            f4619j = false;
+        if (isBack) {
+            isBack = false;
             isPlayingStart = false;
             f4620k = false;
             finish();

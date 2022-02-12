@@ -21,10 +21,10 @@ public class JustPianoView extends View {
     private Bitmap logo;
     private Bitmap f4117i;
     private Bitmap f4118j;
-    private String f4119k = "";
-    private String f4120l = "";
+    private String loading = "";
+    private String info = "";
     private final Paint f4121m;
-    private int f4122n = 0;
+    private int progress = 0;
 
     public JustPianoView(Context context, JPApplication jPApplication) {
         super(context);
@@ -62,9 +62,9 @@ public class JustPianoView extends View {
     }
 
     public final void mo2761a(int i, String str, String str2) {
-        f4122n = i;
-        f4120l = str;
-        f4119k = str2;
+        progress = i;
+        info = str;
+        loading = str2;
         invalidate();
     }
 
@@ -77,11 +77,11 @@ public class JustPianoView extends View {
         float f4123o = 20;
         f4121m.setTextSize(f4123o);
         f4121m.setTypeface(Typeface.DEFAULT_BOLD);
-        int I = (jpapplication.getWidthPixels() * f4122n) / 100;
+        int I = (jpapplication.getWidthPixels() * progress) / 85;
         canvas.drawBitmap(f4114f, null, f4112d, null);
         canvas.drawBitmap(logo, null, f4112d, null);
         canvas.drawBitmap(f4118j, null, f4113e, null);
         canvas.drawBitmap(f4117i, null, new Rect(I - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - f4117i.getHeight(), I, jpapplication.getHeightPixels()), null);
-        canvas.drawText(f4119k + f4120l, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - f4117i.getHeight()), f4121m);
+        canvas.drawText(loading + info, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - f4117i.getHeight()), f4121m);
     }
 }

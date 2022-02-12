@@ -18,6 +18,7 @@ public class User implements Serializable {
     private int trousers;
     private int jacket;
     private int hair;
+    private int eye;
     private final int clevel;
     private int hand = 0;
     private int cpKind = 0;
@@ -54,6 +55,7 @@ public class User implements Serializable {
                 trousers = jSONObject.getInt("T");
                 jacket = jSONObject.getInt("J");
                 hair = jSONObject.getInt("H");
+                eye = jSONObject.getInt("E");
                 shoes = jSONObject.getInt("O");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -121,6 +123,14 @@ public class User implements Serializable {
         return hair;
     }
 
+    public int getEye() {
+        return eye;
+    }
+
+    public void setEye(int eye) {
+        this.eye = eye;
+    }
+
     final int getCLevel() {
         return clevel;
     }
@@ -151,28 +161,5 @@ public class User implements Serializable {
 
     final void setFamilyID(String familyID) {
         this.familyID = familyID;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "playerName='" + playerName + '\'' +
-                ", sex='" + sex + '\'' +
-                ", status='" + status + '\'' +
-                ", ishost='" + ishost + '\'' +
-                ", position=" + position +
-                ", score=" + score +
-                ", combo=" + combo +
-                ", kuang=" + kuang +
-                ", level=" + level +
-                ", trousers=" + trousers +
-                ", jacket=" + jacket +
-                ", hair=" + hair +
-                ", clevel=" + clevel +
-                ", hand=" + hand +
-                ", cpKind=" + cpKind +
-                ", shoes=" + shoes +
-                ", familyID='" + familyID + '\'' +
-                '}';
     }
 }

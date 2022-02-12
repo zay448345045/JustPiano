@@ -1,10 +1,12 @@
 package ly.pp.justpiano3;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
@@ -38,6 +40,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MelodySelect extends Activity implements Callback, TextWatcher, OnClickListener {
     public Handler handler;
@@ -309,9 +314,9 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             setContentView(linearLayout);
             linearLayout.setOnTouchListener((v, event) -> {
                 if (null != getCurrentFocus()) {
-                    InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    if (mInputMethodManager != null) {
-                        return mInputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    if (inputMethodManager != null) {
+                        return inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     }
                 }
                 return false;
@@ -335,7 +340,18 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             if (f4244U == 10) {
                 isRecord.setVisibility(View.GONE);
             } else {
-                isRecord.setOnCheckedChangeListener(new RecordCheckChange(this));
+                isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
+                        mo2785a("该功能需要root，一部分未root过的机型开启录音后可能会引起强制关闭。录制成功后，将保存到SD卡下面的Justpiano/Record文件夹下。为减少环境杂音，可以尝试按住MIC孔", 0);
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+                        }
+                    } else if (isChecked) {
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+                        }
+                    }
+                });
             }
             isFollowPlay = findViewById(R.id.check_play);
             if (f4244U == 10) {

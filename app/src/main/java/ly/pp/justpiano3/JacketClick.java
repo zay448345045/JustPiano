@@ -34,7 +34,7 @@ final class JacketClick implements OnItemClickListener {
                 JSONObject jSONObject = new JSONObject();
                 try {
                     jSONObject.put("T", "B");
-                    olplaydressroom.sendMsg((byte) 33, (byte) 1, (byte) i, jSONObject.toString());
+                    olplaydressroom.sendMsg((byte) 33, (byte) 2, (byte) (i + Byte.MIN_VALUE), jSONObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

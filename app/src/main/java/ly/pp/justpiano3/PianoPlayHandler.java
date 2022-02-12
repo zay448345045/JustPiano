@@ -159,7 +159,7 @@ final class PianoPlayHandler extends Handler {
                 });
                 return;
             case 22:
-                post(pianoPlay::mo2908c);
+                post(pianoPlay::recordFinish);
                 return;
             default:
         }

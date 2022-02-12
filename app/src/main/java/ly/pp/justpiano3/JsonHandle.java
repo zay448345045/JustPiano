@@ -699,12 +699,12 @@ final class JsonHandle {
                             break;
                         case 1:  //进入换衣间加载音符和解锁情况
                             bundle5.putString("G", jSONObject3.getString("G"));
-                            bundle5.putString("U", jSONObject3.getString("U"));
+                            bundle5.putByteArray("U", GZIP.ZIPToArray(jSONObject3.getString("U")));
                             break;
                         case 2:  //购买服装
                             bundle5.putString("I", jSONObject3.getString("I"));
                             bundle5.putString("G", jSONObject3.getString("G"));
-                            bundle5.putString("U", jSONObject3.getString("U"));
+                            bundle5.putByteArray("U", GZIP.ZIPToArray(jSONObject3.getString("U")));
                             break;
                     }
                     message.setData(bundle5);
@@ -1118,6 +1118,7 @@ final class JsonHandle {
                     bundle2.putInt("LV", user.getLevel());
                     bundle2.putInt("TR", user.getTrousers());
                     bundle2.putInt("JA", user.getJacket());
+                    bundle2.putInt("EY", user.getEye());
                     bundle2.putInt("HA", user.getHair());
                     bundle2.putInt("SH", user.getShoes());
                     bundle2.putInt("CL", user.getCLevel());
@@ -1166,6 +1167,7 @@ final class JsonHandle {
                     bundle2.putInt("LV", user.getLevel());
                     bundle2.putInt("TR", user.getTrousers());
                     bundle2.putInt("JA", user.getJacket());
+                    bundle2.putInt("EY", user.getEye());
                     bundle2.putInt("HA", user.getHair());
                     bundle2.putInt("SH", user.getShoes());
                     bundle2.putInt("CL", user.getCLevel());
@@ -1433,6 +1435,63 @@ final class JsonHandle {
                         message.what = 8;
                         assert family != null;
                         family.familyHandler.handleMessage(message);
+                        return;
+                    }
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void shop(String str) {
+        Message message = new Message();
+        JPStack.create();
+        try {
+            JSONObject jSONObject = new JSONObject(str);
+            switch (jSONObject.getInt("K")) {
+                case 1:  // 加载商品
+                    if (JPStack.top() instanceof OLPlayDressRoom) {
+                        JPStack.create();
+                        OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
+                        JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
+                        assert olPlayDressRoom != null;
+                        message.what = 3;
+                        olPlayDressRoom.jpprogressBar.dismiss();
+                        Bundle bundle = new Bundle();
+                        int length = jSONArray.length();
+                        int i = 0;
+                        while (true) {
+                            int i2 = i;
+                            if (i2 >= length) {
+                                bundle.putString("G", jSONObject.getString("G"));
+                                message.setData(bundle);
+                                olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
+                                return;
+                            }
+                            Bundle bundle2 = new Bundle();
+                            JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
+                            bundle2.putString("N", jSONObject2.getString("N"));
+                            bundle2.putString("D", jSONObject2.getString("D"));
+                            bundle2.putInt("G", jSONObject2.getInt("G"));
+                            bundle2.putString("P", jSONObject2.getString("P"));
+                            bundle2.putInt("I", jSONObject2.getInt("I"));
+                            bundle.putBundle(String.valueOf(i2), bundle2);
+                            i = i2 + 1;
+                        }
+                    }
+                    break;
+                case 2:  // 购买商品
+                    if (JPStack.top() instanceof OLPlayDressRoom) {
+                        JPStack.create();
+                        OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("I", jSONObject.getString("I"));
+                        bundle.putString("G", jSONObject.getString("G"));
+                        message.setData(bundle);
+                        message.what = 4;
+                        assert olPlayDressRoom != null;
+                        olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
                         return;
                     }
                     break;

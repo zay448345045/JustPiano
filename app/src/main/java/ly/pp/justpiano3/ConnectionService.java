@@ -69,6 +69,7 @@ public class ConnectionService extends Service implements Runnable {
             case (byte) 16:    //挑战模式
             case (byte) 18:   //家族系列
             case (byte) 19:    //加载大厅房间
+            case (byte) 26:    //商店
             case (byte) 28:    //刚进入对战加载大厅和人物数据
             case (byte) 29:    //进入大厅
             case (byte) 31:    //解除搭档
@@ -146,7 +147,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void run() {
         try {
-            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8908);
+            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8911);
             selector = Selector.open();
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);
@@ -159,7 +160,7 @@ public class ConnectionService extends Service implements Runnable {
                         if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
                             writeBuffer.clear();
                             try {
-                                String str = "20220128";
+                                String str = "20220212";
                                 writeBuffer = JsonHandle.sendLogin(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
