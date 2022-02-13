@@ -8,6 +8,7 @@ import android.media.midi.MidiReceiver;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -568,33 +569,36 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 return;
             case R.id.keyboard_record:
-                JPDialog jpdialog = new JPDialog(this);
-                jpdialog.setTitle("敬请期待");
-                jpdialog.setMessage("当前版本暂不支持录音功能，后续版本将支持内录琴键音频(无环境杂音)到文件");
-                jpdialog.setFirstButton("确定", new DialogDismissClick());
-                jpdialog.showDialog();
-//                try {
-//                    Button recordButton = (Button) view;
-//                    if (!recordStart) {
-//                        JPDialog jpdialog = new JPDialog(this);
-//                        jpdialog.setTitle("提示");
-//                        jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
-//                        jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
-//                            dialogInterface.dismiss();
-//                            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
-//                            recordButton.setText("■");
-//                            recordButton.setTextColor(getResources().getColor(R.color.dack));
-//                            recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
-//                        });
-//                        jpdialog.setSecondButton("取消", new DialogDismissClick());
-//                        jpdialog.showDialog();
-//                    } else {
-//                        recordButton.setText("●");
-//                        recordButton.setTextColor(getResources().getColor(R.color.v3));
-//                        recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
-//                    }
-//                } catch (Exception ignored) {
-//                }
+                try {
+                    Button recordButton = (Button) view;
+                    if (!recordStart) {
+                        JPDialog jpdialog = new JPDialog(this);
+                        jpdialog.setTitle("提示");
+                        jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
+                        jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
+                            dialogInterface.dismiss();
+                            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss录音", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String path = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + date + ".wav";
+                            JPApplication.setRecordFilePath(path);
+                            JPApplication.setRecord(true);
+                            recordStart = true;
+                            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
+                            recordButton.setText("■");
+                            recordButton.setTextColor(getResources().getColor(R.color.dack));
+                            recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
+                        });
+                        jpdialog.setSecondButton("取消", new DialogDismissClick());
+                        jpdialog.showDialog();
+                    } else {
+                        recordButton.setText("●");
+                        recordButton.setTextColor(getResources().getColor(R.color.v3));
+                        recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
+                        JPApplication.setRecord(false);
+                        recordStart = false;
+                        Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception ignored) {
+                }
                 return;
             default:
         }

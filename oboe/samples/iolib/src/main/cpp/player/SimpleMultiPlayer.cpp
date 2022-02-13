@@ -20,6 +20,8 @@
 #include <stream/MemInputStream.h>
 #include <wav/WavStreamReader.h>
 
+#include <utility>
+
 // local includes
 #include "OneShotSampleSource.h"
 #include "SimpleMultiPlayer.h"
@@ -67,6 +69,10 @@ namespace iolib {
             while(count--) {
                 sampleSource->popCurFrameIndexQueue();
             }
+        }
+
+        if (record) {
+            mRecordingIO->write((float *)audioData, numFrames);
         }
 
         return DataCallbackResult::Continue;
@@ -132,7 +138,6 @@ namespace iolib {
     void SimpleMultiPlayer::setupAudioStream(int32_t channelCount, int32_t sampleRate) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "setupAudioStream()");
         mChannelCount = channelCount;
-        mSampleRate = sampleRate;
         mSampleRate = sampleRate;
 
         openStream();
@@ -201,4 +206,17 @@ namespace iolib {
         return mSampleSources[index]->getGain();
     }
 
+    void SimpleMultiPlayer::setRecord(bool r) {
+        if (r) {
+            mRecordingIO->reserveRecordingBuffer();
+        } else {
+            mRecordingIO->clearRecordingBuffer();
+            mRecordingIO->resetProperties();
+        }
+        record = r;
+    }
+
+    void SimpleMultiPlayer::setRecordFilePath(std::string s) {
+        mRecordingIO->setRecordingFilePath(std::move(s));
+    }
 }

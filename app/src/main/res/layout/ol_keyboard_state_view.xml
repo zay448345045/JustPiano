@@ -73,7 +73,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:background="@color/v8"
                     android:src="@drawable/midi_usb"
                     android:visibility="visible">
                 </ImageView>

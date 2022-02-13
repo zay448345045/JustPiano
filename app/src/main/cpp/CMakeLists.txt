@@ -26,13 +26,21 @@ set(IOLIB_DIR ../../../../oboe/samples/iolib)
 
 # Set the path to the Oboe library directory
 set(OBOE_DIR ../../../../oboe)
-#message("OBOE_DIR = " + ${OBOE_DIR})
+
+set(LIB_SND_FILE_DIR ../../../../libsndfile)
 
 add_subdirectory(${OBOE_DIR} ./oboe-bin)
+
+### ADD LIBSNDFILE LIBRARY
+
+add_subdirectory(${LIB_SND_FILE_DIR} ./sndfile)
+
+include_directories(taskqueue)
 
 # include folders
 include_directories(
         ${OBOE_DIR}/include
+        ${LIB_SND_FILE_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
@@ -47,6 +55,8 @@ include_directories(
 # App specific sources
 set(APP_SOURCES
         SoundEngine.cpp
+        RecordingIO.cpp
+        utils/Utils.h
         )
 
 # Build the drumthumper (native) library
@@ -68,6 +78,7 @@ target_link_libraries( # Specifies the target library.
 
         oboe
 
+        sndfile
         # Links the target library to the log library
         # included in the NDK.
         log)

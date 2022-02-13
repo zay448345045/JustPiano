@@ -3,9 +3,7 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.media.AudioFormat;
 import android.media.AudioManager;
-import android.media.AudioRecord;
 import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,10 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +34,6 @@ import java.util.Map;
 import java.util.Timer;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
-    public static final int sampleRate = 44100;
-    private static int recordBufferSize = 0;
     public byte hallID;
     public TextView l_nandu;
     public TextView time_mid;
@@ -78,9 +71,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     private ConnectionService connectionService;
     private ProgressBar progressbar;
     private Bundle hallBundle;
-    private AudioRecord audioRecord;
     private boolean recordStart;
-    private String recordRawPath;
     private String recordWavPath;
     private int roomMode = 0;
     private LayoutParams layoutparams;
@@ -88,71 +79,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     private double localLNandu;
     private int localSongsTime;
     private int playKind;
-
-    static void pcmToWav(String str, String str2) {
-        FileNotFoundException e2;
-        FileInputStream fileInputStream;
-        long j = sampleRate;
-        long j2 = sampleRate * 4;
-        byte[] bArr = new byte[recordBufferSize];
-        FileInputStream fileInputStream2;
-        FileOutputStream fileOutputStream;
-        try {
-            fileInputStream2 = new FileInputStream(str);
-            try {
-                fileOutputStream = new FileOutputStream(str2);
-                try {
-                    long size = 36 + fileInputStream2.getChannel().size();
-                    fileOutputStream.write(new byte[]{(byte) 82, (byte) 73, (byte) 70, (byte) 70,
-                            (byte) ((int) (255 & size)), (byte) ((int) ((size >> 8) & 255)),
-                            (byte) ((int) ((size >> 16) & 255)), (byte) ((int) ((size >> 24) & 255)),
-                            (byte) 87, (byte) 65, (byte) 86, (byte) 69, (byte) 102, (byte) 109, (byte) 116,
-                            (byte) 32, (byte) 16, (byte) 0, (byte) 0, (byte) 0, (byte) 1, (byte) 0, (byte) 2,
-                            (byte) 0, (byte) ((int) (255 & j)), (byte) ((int) ((j >> 8) & 255)),
-                            (byte) ((int) ((j >> 16) & 255)), (byte) ((int) ((j >> 24) & 255)),
-                            (byte) ((int) (255 & j2)), (byte) ((int) ((j2 >> 8) & 255)),
-                            (byte) ((int) ((j2 >> 16) & 255)), (byte) ((int) ((j2 >> 24) & 255)),
-                            (byte) 4, (byte) 0, (byte) 16, (byte) 0, (byte) 100, (byte) 97, (byte) 116,
-                            (byte) 97, (byte) ((int) (255 & (fileInputStream2.getChannel().size() + 36))),
-                            (byte) ((int) (((fileInputStream2.getChannel().size() + 36) >> 8) & 255)),
-                            (byte) ((int) (((fileInputStream2.getChannel().size() + 36) >> 16) & 255)),
-                            (byte) ((int) ((fileInputStream2.getChannel().size() >> 24) & 255))}, 0, 44);
-                    while (fileInputStream2.read(bArr) != -1) {
-                        fileOutputStream.write(bArr);
-                    }
-                    try {
-                        fileInputStream2.close();
-                        fileOutputStream.close();
-                    } catch (IOException e3) {
-                        e3.printStackTrace();
-                    }
-                } catch (FileNotFoundException ignored) {
-                }
-            } catch (FileNotFoundException e6) {
-                e2 = e6;
-                fileInputStream = fileInputStream2;
-                try {
-                    e2.printStackTrace();
-                    try {
-                        fileInputStream.close();
-                    } catch (IOException e32) {
-                        e32.printStackTrace();
-                    }
-                } catch (Throwable th2) {
-                    fileInputStream2 = fileInputStream;
-                    try {
-                        fileInputStream2.close();
-                    } catch (IOException e7) {
-                        e7.printStackTrace();
-                    }
-                }
-            } catch (Throwable th4) {
-                fileInputStream2.close();
-            }
-        } catch (IOException e9) {
-            e9.printStackTrace();
-        }
-    }
 
     private List<Bundle> m3783a(List<Bundle> list, String str) {
         if (list != null && !list.isEmpty()) {
@@ -275,55 +201,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
     }
 
-    private boolean recordReady(String str) {
-        try {
-            recordRawPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/buf.raw";
-            recordWavPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + str + ".wav";
-            recordBufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
-            audioRecord = new AudioRecord(1, sampleRate, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, recordBufferSize);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean saveRecordPcm() {
-        FileOutputStream fileOutputStream;
-        byte[] bArr = new byte[recordBufferSize];
-        boolean z = true;
-        try {
-            File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Record");
-            file.mkdirs();
-            File file2 = new File(file, "buf.raw");
-            if (file2.exists()) {
-                file2.delete();
-            }
-            fileOutputStream = new FileOutputStream(file2);
-        } catch (Exception e) {
-            e.printStackTrace();
-            recordStart = false;
-            Toast.makeText(this, "无效的储存路径,请检查SD卡是否插入!", Toast.LENGTH_SHORT).show();
-            z = false;
-            fileOutputStream = null;
-        }
-        while (recordStart) {
-            if (-3 != audioRecord.read(bArr, 0, recordBufferSize)) {
-                try {
-                    fileOutputStream.write(bArr);
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
-            }
-        }
-        try {
-            fileOutputStream.close();
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
-        return z;
-    }
-
     public void m3794f() {
         f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
         layoutparams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -333,7 +210,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         layoutparams.leftMargin = 0;
         Bundle extras = getIntent().getExtras();
         playKind = extras.getInt("head");
-        JPApplication jPApplication;
         String str;
         switch (playKind) {
             case 0:    //本地模式
@@ -345,18 +221,16 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 score = extras.getInt("score");
                 isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
-                jPApplication = jpapplication;
                 str = songsPath;
-                playView = new PlayView(jPApplication, this, str, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
+                playView = new PlayView(jpapplication, this, str, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
                 break;
             case 1:    //在线曲库
                 songsName = extras.getString("songName");
                 nandu = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
-                jPApplication = jpapplication;
                 byte[] byteArray = extras.getByteArray("songBytes");
-                playView = new PlayView(jPApplication, this, byteArray, this, nandu, score, 1, 0, songId);
+                playView = new PlayView(jpapplication, this, byteArray, this, nandu, score, 1, 0, songId);
                 break;
             case 2:    //房间对战
                 connectionService = jpapplication.getConnectionService();
@@ -384,9 +258,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(0);
-                jPApplication = jpapplication;
                 str = songsPath;
-                playView = new PlayView(jPApplication, this, str, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
+                playView = new PlayView(jpapplication, this, str, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
@@ -405,15 +278,11 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 showHideGrade.setText("");
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
-                jPApplication = jpapplication;
-                playView = new PlayView(jPApplication, this, songBytes.getBytes(), this, nandu, score, playKind, hand, "");
+                playView = new PlayView(jpapplication, this, songBytes.getBytes(), this, nandu, score, playKind, hand, "");
                 break;
         }
         if (isOpenRecord) {
-            isOpenRecord = recordReady(songsName);
-            if (!isOpenRecord) {
-                Toast.makeText(this, "初始化录音失败，无法录音!请检查内存卡剩余容量!", Toast.LENGTH_SHORT).show();
-            }
+            recordWavPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + songsName + ".wav";
         }
         setContentView(playView);
         keyboardview = new KeyBoardView(this, playView);
@@ -469,20 +338,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             pianoPlayHandler.handleMessage(obtainMessage);
         }
         if (isOpenRecord && !recordStart) {
-            try {
-                audioRecord.startRecording();
-                recordStart = true;
-                ThreadPoolUtils.execute(() -> {
-                    if (saveRecordPcm()) {
-                        PianoPlay.pcmToWav(recordRawPath, recordWavPath);
-                    }
-                });
-                Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(this, "录音出错...请在系统应用设置内将极品钢琴的录音权限打开!", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-                recordStart = false;
-            }
+            recordStart = true;
+            JPApplication.setRecordFilePath(recordWavPath);
+            JPApplication.setRecord(true);
+            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -497,15 +356,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     final void recordFinish() {
         if (recordStart) {
             isOpenRecord = false;
-            Toast.makeText(this, "录音完毕，录音文件储存为SD卡\\Justpiano\\Record\\" + songsName + ".wav", Toast.LENGTH_SHORT).show();
-            if (audioRecord != null && recordStart) {
-                recordStart = false;
-                audioRecord.stop();
-            }
-        }
-        if (audioRecord != null) {
-            audioRecord.release();
-            audioRecord = null;
+            JPApplication.setRecord(false);
+            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+            recordStart = false;
         }
     }
 

@@ -108,6 +108,10 @@ public final class JPApplication extends Application {
 
     public static native void trigger(int var1, int var2);
 
+    public static native void setRecord(boolean record);
+
+    public static native void setRecordFilePath(String recordFilePath);
+
     public static void preloadSounds(int i) {
         try {
             Converter converter = new Converter();
