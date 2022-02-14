@@ -139,7 +139,7 @@ namespace iolib {
         __android_log_print(ANDROID_LOG_INFO, TAG, "setupAudioStream()");
         mChannelCount = channelCount;
         mSampleRate = sampleRate;
-
+        mRecordingIO->init(mSampleRate, mChannelCount);
         openStream();
     }
 
@@ -208,15 +208,14 @@ namespace iolib {
 
     void SimpleMultiPlayer::setRecord(bool r) {
         if (r) {
-            mRecordingIO->reserveRecordingBuffer();
+            mRecordingIO->reserveRecordingBuffer(mSampleRate);
         } else {
             mRecordingIO->clearRecordingBuffer();
-            mRecordingIO->resetProperties();
         }
         record = r;
     }
 
-    void SimpleMultiPlayer::setRecordFilePath(std::string s) {
-        mRecordingIO->setRecordingFilePath(std::move(s));
+    void SimpleMultiPlayer::setRecordFilePath(const std::string& s) {
+        mRecordingIO->setRecordingFilePath(s);
     }
 }

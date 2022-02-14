@@ -817,6 +817,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             }
         }
         stopNotesSchedule();
+        if (recordStart) {
+            JPApplication.setRecord(false);
+            recordStart = false;
+            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+        }
         super.onDestroy();
     }
 

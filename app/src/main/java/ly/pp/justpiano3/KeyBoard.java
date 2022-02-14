@@ -1,12 +1,9 @@
 package ly.pp.justpiano3;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -31,8 +26,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
@@ -156,6 +149,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                     jpapplication.removeMidiConnectionStart(this);
                 }
             }
+        }
+        if (recordStart) {
+            JPApplication.setRecord(false);
+            recordStart = false;
+            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
     }

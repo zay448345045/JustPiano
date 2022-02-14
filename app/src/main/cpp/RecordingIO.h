@@ -24,6 +24,9 @@ public:
     ~RecordingIO() {
         taskQueue->stop_queue();
     }
+
+    void init(int32_t sampleRate, int32_t channelCount);
+
     int32_t write(const float *sourceData, int32_t numSamples);
 
     void flush_buffer();
@@ -32,9 +35,7 @@ public:
         mRecordingFilePath = move(recordingFilePath);
     }
 
-    void resetProperties();
-
-    void reserveRecordingBuffer();
+    void reserveRecordingBuffer(int reserve);
 
     void clearRecordingBuffer();
 
@@ -43,13 +44,15 @@ private:
 
     string mRecordingFilePath;
 
+    int32_t mSampleRate;
+    int32_t mChannelCount;
+
     shared_ptr<SndfileHandle> mRecordingFile {nullptr};
 
     vector<float> mData;
-    int kMaxSamples = oboe::DefaultStreamValues::SampleRate * oboe::ChannelCount::Mono;
-    float* mBuff = new float[kMaxSamples]{0};
+    float* mBuff;
 
-    static void flush_to_file(float* data, int32_t length, const string& recordingFilePath, shared_ptr<SndfileHandle>& recordingFile);
+    static void flush_to_file(float* data, int32_t length, int32_t sampleRate, const string& recordingFilePath, shared_ptr<SndfileHandle>& recordingFile);
 
     static mutex flushMtx;
     static condition_variable flushed;

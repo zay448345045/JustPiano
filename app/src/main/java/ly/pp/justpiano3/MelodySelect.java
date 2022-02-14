@@ -342,14 +342,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                        mo2785a("该功能需要root，一部分未root过的机型开启录音后可能会引起强制关闭。录制成功后，将保存到SD卡下面的Justpiano/Record文件夹下。为减少环境杂音，可以尝试按住MIC孔", 0);
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        }
-                    } else if (isChecked) {
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        }
+                        mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
                     }
                 });
             }
@@ -359,7 +352,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isFollowPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("play_dialog", true)) {
-                        mo2785a("选择后软件将从当前播放的曲目开始依次播放试听。", 1);
+                        mo2785a("选择后软件将从当前播放的曲目开始依次播放试听", 1);
                     }
                 });
             }
@@ -369,7 +362,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
-                        mo2785a("选择后您将弹奏曲谱的和弦，软件将自动播放主旋律。", 2);
+                        mo2785a("选择后您将弹奏曲谱的和弦，软件将自动播放主旋律", 2);
                     }
                 });
             }
