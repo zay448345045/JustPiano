@@ -147,7 +147,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void run() {
         try {
-            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8911);
+            InetSocketAddress socketAddr = new InetSocketAddress(jpapplication.getServer(), 8908);
             selector = Selector.open();
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);

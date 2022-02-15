@@ -24,8 +24,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -365,6 +363,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     @Override
     protected void onActivityResult(int i, int i2, Intent intent) {
         if (i2 == -1) {
+            if (isOpenRecord) {
+                recordFinish();
+            }
             finish();
             super.onActivityResult(i, i2, intent);
         }
@@ -534,7 +535,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     isPlayingStart = false;
                     isBack = true;
                     sendMsg((byte) 8, (byte) 0, "", null);
-                    if (!f3995a) {
+                    if (!isOutLine) {
                         intent = new Intent(this, OLPlayHall.class);
                         bundle.putString("hallName", hallBundle.getString("hallName"));
                         bundle.putByte("hallID", hallBundle.getByte("hallID"));
@@ -552,7 +553,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 }
                 isPlayingStart = false;
                 isBack = true;
-                if (!f3995a) {
+                if (!isOutLine) {
                     intent = new Intent(this, OLPlayHall.class);
                     bundle.putString("hallName", hallBundle.getString("hallName"));
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));
@@ -568,7 +569,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 }
                 isPlayingStart = false;
                 isBack = true;
-                if (!f3995a) {
+                if (!isOutLine) {
                     intent = new Intent(this, OLChallenge.class);
                     bundle.putString("hallName", hallBundle.getString("hallName"));
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));

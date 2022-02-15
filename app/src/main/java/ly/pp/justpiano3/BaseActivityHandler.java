@@ -18,7 +18,7 @@ final class BaseActivityHandler extends Handler {
         final BaseActivity baseActivity = (BaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {
-                baseActivity.f3995a = true;
+                baseActivity.isOutLine = true;
                 baseActivity.outLine();
             });
         }

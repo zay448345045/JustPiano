@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 public class BaseActivity extends Activity {
-    boolean f3995a = false;
+    boolean isOutLine = false;
     int activityNum = 0;
     JPProgressBar jpprogressBar;
     String versionStr;

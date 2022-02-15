@@ -362,7 +362,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
-                        mo2785a("选择后您将弹奏曲谱的和弦，软件将自动播放主旋律", 2);
+                        mo2785a("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 2);
                     }
                 });
             }

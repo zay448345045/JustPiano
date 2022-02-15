@@ -615,11 +615,6 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     break;
                 default:
-                    if (pianoPlay.isOpenRecord) {
-                        message = new Message();
-                        message.what = 22;
-                        pianoPlay.pianoPlayHandler.handleMessage(message);
-                    }
                     Intent intent = new Intent();
                     intent.setClass(pianoPlay, PlayFinish.class);
                     intent.putExtra("head", gameType);

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.sql.Date;
 
 public class PlayFinish extends Activity implements OnClickListener {
-    private static int head;
+    private int head;
     public JPApplication jpapplication;
     String scoreArray = "";
     JPProgressBar jpprogressBar;

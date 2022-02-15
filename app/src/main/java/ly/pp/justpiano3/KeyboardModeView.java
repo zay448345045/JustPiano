@@ -331,7 +331,7 @@ public class KeyboardModeView extends View {
         if (!cancelled) {
             if (trigListener) {
                 for (MusicKeyListener listener : mListeners) {
-                    listener.onKeyDown(pitch, volume);
+                    listener.onKeyDown(pitch, Math.min(volume, MAX_VOLUME));
                 }
             }
             int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;

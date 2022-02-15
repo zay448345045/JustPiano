@@ -69,9 +69,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     int page;
     User user;
     byte roomID0;
-    String roomTitleString;
+    String roomName;
     JPApplication jpapplication = null;
-    TextView roomTitle;
+    TextView roomNameView;
     String playerKind = "";
     Button groupButton;
     Button playButton;
@@ -815,7 +815,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.room_title:
                 if (playerKind.equals("G")) {
-                    Toast.makeText(this, "非房主不能修改房名!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
                 } else {
                     View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                     EditText text1 = inflate.findViewById(R.id.text_1);
@@ -966,17 +966,17 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         connectionService = jpapplication.getConnectionService();
         setContentView(R.layout.olplayroom);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        roomTitle = findViewById(R.id.room_title);
+        roomNameView = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");
         hallID0 = bundle2.getByte("hallID");
         hallName = bundle2.getString("hallName");
         roomID0 = bundle0.getByte("ID");
-        roomTitleString = bundle0.getString("R");
+        roomName = bundle0.getString("R");
         roomMode = bundle0.getInt("mode");
         playerKind = bundle0.getString("isHost");
-        roomTitle.setText("[" + roomID0 + "]" + roomTitleString);
-        roomTitle.setOnClickListener(this);
+        roomNameView.setText("[" + roomID0 + "]" + roomName);
+        roomNameView.setOnClickListener(this);
         playerGrid = findViewById(R.id.ol_player_grid);
         playerGrid.setCacheColorHint(0);
         playerList.clear();
@@ -1178,6 +1178,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
 
     @Override
     protected void onDestroy() {
+        if (playSongs != null) {
+            playSongs.isPlayingSongs = false;
+            playSongs = null;
+        }
         timeUpdateRunning = false;
         try {
             timeUpdateThread.interrupt();

@@ -555,7 +555,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.room_title:
                 if (playerKind.equals("G")) {
-                    Toast.makeText(this, "非房主不能修改房名!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
                 } else {
                     View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                     EditText text1 = inflate.findViewById(R.id.text_1);

@@ -167,7 +167,7 @@ final class OLPlayRoomHandler extends Handler {
                         }
                         String str1 = message.getData().getString("S");
                         if (!olPlayRoom.isOnStart) {
-                            olPlayRoom.jpapplication.getConnectionService().writeData((byte) 8, olPlayRoom.roomID0, olPlayRoom.hallID0, olPlayRoom.roomTitleString, null);
+                            olPlayRoom.jpapplication.getConnectionService().writeData((byte) 8, olPlayRoom.roomID0, olPlayRoom.hallID0, null, null);
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);
@@ -271,7 +271,9 @@ final class OLPlayRoomHandler extends Handler {
                 case 10:
                     post(() -> {
                         String name = message.getData().getString("R");
-                        olPlayRoom.roomTitle.setText("[" + olPlayRoom.roomID0 + "]" + name);
+                        olPlayRoom.bundle0.putString("R", name);
+                        olPlayRoom.roomName = name;
+                        olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomID0 + "]" + olPlayRoom.roomName);
                     });
                     return;
                 case 11:
