@@ -50,7 +50,7 @@ private:
     shared_ptr<SndfileHandle> mRecordingFile {nullptr};
 
     vector<float> mData;
-    float* mBuff;
+    float* mBuff{};
 
     static void flush_to_file(float* data, int32_t length, int32_t sampleRate, const string& recordingFilePath, shared_ptr<SndfileHandle>& recordingFile);
 
