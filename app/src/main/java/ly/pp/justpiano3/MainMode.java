@@ -80,6 +80,8 @@ public class MainMode extends Activity implements OnClickListener {
                 startActivity(intent);
                 return;
             case R.id.piano_help:
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                sharedPreferences.edit().putBoolean("new_help", false).apply();
                 intent.setClass(this, PianoHelper.class);
                 startActivity(intent);
                 finish();
@@ -141,7 +143,6 @@ public class MainMode extends Activity implements OnClickListener {
         boolean newHelp = sharedPreferences.getBoolean("new_help", true);
         if (newHelp) {
             findViewById(R.id.new_help).setVisibility(View.VISIBLE);
-            sharedPreferences.edit().putBoolean("new_help", false).apply();
         }
         TextView f4202b = findViewById(R.id.local_game);
         f4202b.setOnClickListener(this);

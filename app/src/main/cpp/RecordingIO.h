@@ -5,7 +5,7 @@
 #ifndef FAST_MIXER_RECORDINGIO_H
 #define FAST_MIXER_RECORDINGIO_H
 
-#include "taskqueue/TaskQueue.h"
+#include "taskqueue/ThreadPool.h"
 #include "oboe/Definitions.h"
 
 #ifndef MODULE_NAME
@@ -20,9 +20,7 @@ public:
 
     RecordingIO();
 
-    ~RecordingIO() {
-        taskQueue->stop_queue();
-    }
+    ~RecordingIO() {}
 
     void init(int32_t sampleRate, int32_t channelCount);
 
@@ -41,7 +39,7 @@ public:
     void clearRecordingBuffer();
 
 private:
-    TaskQueue *taskQueue;
+    ThreadPool pool;
 
     char* mRecordingFilePath{};
 

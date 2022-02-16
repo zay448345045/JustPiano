@@ -81,8 +81,8 @@ public final class JPApplication extends Application {
     private String password = "";
     private String nowSongsName = "";
     private String server = "120.25.100.169";
-    private boolean keyboardPerfer;
-    private final ServiceConnection serviceconnection = new JPServiceConnection(this);
+    private boolean keyboardPrefer;
+    private final ServiceConnection serviceConnection = new JPServiceConnection(this);
     private int widthPixels;
     private int heightPixels;
     private int animPosition;
@@ -253,7 +253,7 @@ public final class JPApplication extends Application {
     }
 
     public final boolean hasKeyboardPerfer() {
-        return keyboardPerfer;
+        return keyboardPrefer;
     }
 
     public final String getVersion() {
@@ -267,7 +267,7 @@ public final class JPApplication extends Application {
     }
 
     public final ServiceConnection mo2696L() {
-        return serviceconnection;
+        return serviceConnection;
     }
 
     public final ConnectionService getConnectionService() {
@@ -478,7 +478,7 @@ public final class JPApplication extends Application {
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true);
         chordVolume = Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8"));
         animFrame = Integer.parseInt(sharedPreferences.getString("anim_frame", "4"));
-        keyboardPerfer = sharedPreferences.getBoolean("keyboard_perfer", true);
+        keyboardPrefer = sharedPreferences.getBoolean("keyboard_perfer", true);
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true);
         showLine = sharedPreferences.getBoolean("show_line", true);
         loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false);

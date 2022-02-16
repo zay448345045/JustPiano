@@ -22,6 +22,7 @@
 
 -keep class javazoom.jl.decoder.JavaLayerUtils{*;}
 
+-keepattributes Signature
 -keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {
 static final long serialVersionUID;
@@ -32,3 +33,7 @@ private void readObject(java.io.ObjectInputStream);
 java.lang.Object writeReplace();
 java.lang.Object readResolve();
 }
+-keep class **.R$* {
+ *;
+}
+-keepattributes InnerClasses

@@ -16,7 +16,7 @@ public interface Consts extends BaseColumns {
     String[] groups = new String[]{"蓝队", "黄队", "红队"};
     String[] coupleType = new String[]{"情侣证书", "基友证书", "百合证书"};
     String[] sqlColumns = new String[]{"_id", "name", "item", "path", "diff", "isfavo", "length", "Ldiff"};
-    int[] helpPic = new int[]{R.drawable.help0, R.drawable.help1, R.drawable.help2};
+    int[] helpPic = new int[]{R.drawable.help0, R.drawable.help1, R.drawable.help2, R.drawable.help3};
     Integer[] expressions = new Integer[]{R.drawable.b0, R.drawable.b1, R.drawable.b2, R.drawable.b3, R.drawable.b4, R.drawable.b5, R.drawable.b6, R.drawable.b7, R.drawable.b8, R.drawable.b9, R.drawable.b10,
             R.drawable.b11, R.drawable.b12, R.drawable.b13, R.drawable.b14, R.drawable.b15, R.drawable.b16, R.drawable.b17, R.drawable.b18, R.drawable.b19, R.drawable.b20,
             R.drawable.b21, R.drawable.b22, R.drawable.b23, R.drawable.b24, R.drawable.b25, R.drawable.b26, R.drawable.b27, R.drawable.b28, R.drawable.b29, R.drawable.b30,

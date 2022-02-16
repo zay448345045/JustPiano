@@ -22,9 +22,7 @@ bool RecordingIO::check_if_flush_completed() {
     return ongoing_flush_completed;
 }
 
-RecordingIO::RecordingIO() : mSampleRate(0), mChannelCount(0), mRecordingFile(-1) {
-    taskQueue = new TaskQueue();
-}
+RecordingIO::RecordingIO() : pool(5), mSampleRate(0), mChannelCount(0), mRecordingFile(-1) {}
 
 void RecordingIO::reserveRecordingBuffer(int reserve) {
     mData.reserve(reserve);
@@ -32,7 +30,6 @@ void RecordingIO::reserveRecordingBuffer(int reserve) {
 
 void RecordingIO::clearRecordingBuffer() {
     mData.resize(0);
-    taskQueue->clear_queue();
     if (mRecordingFile != -1) {
         int file_size = lseek(mRecordingFile, 0L, SEEK_END);
         lseek(mRecordingFile, 0L, SEEK_SET);
@@ -95,7 +92,7 @@ void RecordingIO::flush_buffer() {
         ongoing_flush_completed = false;
         int numItems = mData.size();
         copy(mData.begin(), mData.begin() + numItems, mBuff);
-        taskQueue->enqueue([&]() {
+        pool.enqueue([&]() {
             flush_to_file(mBuff, numItems, mSampleRate, mRecordingFilePath, mRecordingFile);
         });
         mData.clear();
