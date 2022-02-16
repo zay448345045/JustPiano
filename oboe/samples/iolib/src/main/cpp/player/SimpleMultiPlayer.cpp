@@ -72,7 +72,7 @@ namespace iolib {
         }
 
         if (record) {
-            mRecordingIO->write((float *)audioData, numFrames);
+            mRecordingIO->write_buffer((float *)audioData, numFrames);
         }
 
         return DataCallbackResult::Continue;
@@ -215,7 +215,7 @@ namespace iolib {
         record = r;
     }
 
-    void SimpleMultiPlayer::setRecordFilePath(const std::string& s) {
+    void SimpleMultiPlayer::setRecordFilePath(char* s) {
         mRecordingIO->setRecordingFilePath(s);
     }
 }

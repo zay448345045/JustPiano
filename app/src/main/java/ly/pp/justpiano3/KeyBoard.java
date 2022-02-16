@@ -362,7 +362,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss录音", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
-                            String path = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + date + ".wav";
+                            String path = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + date + ".raw";
                             JPApplication.setRecordFilePath(path);
                             JPApplication.setRecord(true);
                             recordStart = true;

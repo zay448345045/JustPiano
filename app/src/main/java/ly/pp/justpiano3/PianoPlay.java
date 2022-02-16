@@ -24,6 +24,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -280,7 +284,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 break;
         }
         if (isOpenRecord) {
-            recordWavPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + songsName + ".wav";
+            recordWavPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + songsName + ".raw";
         }
         setContentView(playView);
         keyboardview = new KeyBoardView(this, playView);
@@ -658,6 +662,71 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);
+        }
+    }
+
+    static void pcmToWav(String str, String str2) {
+        FileNotFoundException e2;
+        FileInputStream fileInputStream;
+        long j = 44100;
+        long j2 = 44100 * 4;
+        byte[] bArr = new byte[1024];
+        FileInputStream fileInputStream2;
+        FileOutputStream fileOutputStream;
+        try {
+            fileInputStream2 = new FileInputStream(str);
+            try {
+                fileOutputStream = new FileOutputStream(str2);
+                try {
+                    long size = 36 + fileInputStream2.getChannel().size();
+                    fileOutputStream.write(new byte[]{(byte) 82, (byte) 73, (byte) 70, (byte) 70,
+                            (byte) ((int) (255 & size)), (byte) ((int) ((size >> 8) & 255)),
+                            (byte) ((int) ((size >> 16) & 255)), (byte) ((int) ((size >> 24) & 255)),
+                            (byte) 87, (byte) 65, (byte) 86, (byte) 69, (byte) 102, (byte) 109, (byte) 116,
+                            (byte) 32, (byte) 16, (byte) 0, (byte) 0, (byte) 0, (byte) 1, (byte) 0, (byte) 2,
+                            (byte) 0, (byte) ((int) (255 & j)), (byte) ((int) ((j >> 8) & 255)),
+                            (byte) ((int) ((j >> 16) & 255)), (byte) ((int) ((j >> 24) & 255)),
+                            (byte) ((int) (255 & j2)), (byte) ((int) ((j2 >> 8) & 255)),
+                            (byte) ((int) ((j2 >> 16) & 255)), (byte) ((int) ((j2 >> 24) & 255)),
+                            (byte) 4, (byte) 0, (byte) 16, (byte) 0, (byte) 100, (byte) 97, (byte) 116,
+                            (byte) 97, (byte) ((int) (255 & (fileInputStream2.getChannel().size() + 36))),
+                            (byte) ((int) (((fileInputStream2.getChannel().size() + 36) >> 8) & 255)),
+                            (byte) ((int) (((fileInputStream2.getChannel().size() + 36) >> 16) & 255)),
+                            (byte) ((int) ((fileInputStream2.getChannel().size() >> 24) & 255))}, 0, 44);
+                    while (fileInputStream2.read(bArr) != -1) {
+                        fileOutputStream.write(bArr);
+                    }
+                    try {
+                        fileInputStream2.close();
+                        fileOutputStream.close();
+                    } catch (IOException e3) {
+                        e3.printStackTrace();
+                    }
+                } catch (FileNotFoundException ignored) {
+                }
+            } catch (FileNotFoundException e6) {
+                e2 = e6;
+                fileInputStream = fileInputStream2;
+                try {
+                    e2.printStackTrace();
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException e32) {
+                        e32.printStackTrace();
+                    }
+                } catch (Throwable th2) {
+                    fileInputStream2 = fileInputStream;
+                    try {
+                        fileInputStream2.close();
+                    } catch (IOException e7) {
+                        e7.printStackTrace();
+                    }
+                }
+            } catch (Throwable th4) {
+                fileInputStream2.close();
+            }
+        } catch (IOException e9) {
+            e9.printStackTrace();
         }
     }
 }

@@ -87,7 +87,7 @@ namespace iolib {
 
         void setRecord(bool r);
 
-        void setRecordFilePath(const std::string& s);
+        void setRecordFilePath(char* s);
 
     private:
         // Oboe Audio Stream
