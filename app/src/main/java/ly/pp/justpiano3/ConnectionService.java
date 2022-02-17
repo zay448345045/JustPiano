@@ -160,8 +160,8 @@ public class ConnectionService extends Service implements Runnable {
                         if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
                             writeBuffer.clear();
                             try {
-                                String str = "20220212";
-                                writeBuffer = JsonHandle.sendLogin(jpapplication.getAccountName(), JPApplication.kitiName, "ly.pp.justpiano", str, jpapplication.getPassword());
+                                String str = "20220218";
+                                writeBuffer = JsonHandle.sendLogin(jpapplication.getAccountName(), JPApplication.kitiName, getPackageName(), str, jpapplication.getPassword());
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
                                 selectionKey.interestOps(SelectionKey.OP_WRITE);

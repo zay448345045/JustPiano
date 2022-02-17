@@ -26,7 +26,6 @@ public class Login extends BaseActivity implements OnClickListener {
     public String password;
     String kitiName = "";
     String accountX = "";
-    String sex = "";
     TextView accountTextView;
     TextView passwordTextView;
     JPProgressBar jpprogressBar;
@@ -126,7 +125,7 @@ public class Login extends BaseActivity implements OnClickListener {
                 try {
                     if (!string.isEmpty()) {
                         JSONObject jSONObject = new JSONObject(string);
-                        Iterator keys = jSONObject.keys();
+                        Iterator<String> keys = jSONObject.keys();
                         while (keys.hasNext()) {
                             string = (String) keys.next();
                             arrayList.add(string);

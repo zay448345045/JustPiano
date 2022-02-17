@@ -8,8 +8,8 @@ android {
         applicationId "ly.pp.justpiano3"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 46
-        versionName "4.4"
+        versionCode 47
+        versionName "4.5"
 
         externalNativeBuild {
             cmake {

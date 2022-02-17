@@ -15,49 +15,45 @@ import java.io.IOException;
 
 public class JustPianoView extends View {
     JPApplication jpapplication;
-    private final RectF f4112d;
-    private final RectF f4113e;
-    private Bitmap f4114f;
-    private Bitmap logo;
-    private Bitmap f4117i;
-    private Bitmap f4118j;
+    private final RectF allScreenRect;
+    private final RectF progressBarRect;
+    private Bitmap logoBitmap;
+    private Bitmap progressBarBitmap;
+    private Bitmap progressBarBaseBitmap;
     private String loading = "";
     private String info = "";
-    private final Paint f4121m;
+    private final Paint paint;
     private int progress = 0;
 
     public JustPianoView(Context context, JPApplication jPApplication) {
         super(context);
-        float f4109a = (float) jPApplication.getWidthPixels();
-        float f4110b = (float) jPApplication.getHeightPixels();
+        float widthPixels = (float) jPApplication.getWidthPixels();
+        float heightPixels = (float) jPApplication.getHeightPixels();
         jpapplication = jPApplication;
-        f4112d = new RectF(0, 0, f4109a, f4110b);
-        f4114f = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
+        allScreenRect = new RectF(0, 0, widthPixels, heightPixels);
         try {
-            logo = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
-            f4117i = jPApplication.loadImage("progress_bar");
-            f4118j = jPApplication.loadImage("progress_bar_base");
+            logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
+            progressBarBitmap = jPApplication.loadImage("progress_bar");
+            progressBarBaseBitmap = jPApplication.loadImage("progress_bar_base");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        f4113e = new RectF(0, f4110b - ((float) f4117i.getHeight()), (float) jPApplication.getWidthPixels(), f4110b);
-        f4121m = new Paint();
+        progressBarRect = new RectF(0, heightPixels - ((float) progressBarBitmap.getHeight()), (float) jPApplication.getWidthPixels(), heightPixels);
+        paint = new Paint();
     }
 
     public final void mo2760a() {
-        f4114f.recycle();
-        f4114f = null;
-        if (logo != null) {
-            logo.recycle();
-            logo = null;
+        if (logoBitmap != null) {
+            logoBitmap.recycle();
+            logoBitmap = null;
         }
-        if (f4117i != null) {
-            f4117i.recycle();
-            f4117i = null;
+        if (progressBarBitmap != null) {
+            progressBarBitmap.recycle();
+            progressBarBitmap = null;
         }
-        if (f4118j != null) {
-            f4118j.recycle();
-            f4118j = null;
+        if (progressBarBaseBitmap != null) {
+            progressBarBaseBitmap.recycle();
+            progressBarBaseBitmap = null;
         }
     }
 
@@ -71,17 +67,15 @@ public class JustPianoView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        f4121m.setARGB(255, 12, 160, 251);
-        f4121m.setTextAlign(Align.RIGHT);
-        f4121m.setAntiAlias(true);
-        float f4123o = 20;
-        f4121m.setTextSize(f4123o);
-        f4121m.setTypeface(Typeface.DEFAULT_BOLD);
-        int I = (jpapplication.getWidthPixels() * progress) / 85;
-        canvas.drawBitmap(f4114f, null, f4112d, null);
-        canvas.drawBitmap(logo, null, f4112d, null);
-        canvas.drawBitmap(f4118j, null, f4113e, null);
-        canvas.drawBitmap(f4117i, null, new Rect(I - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - f4117i.getHeight(), I, jpapplication.getHeightPixels()), null);
-        canvas.drawText(loading + info, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - f4117i.getHeight()), f4121m);
+        paint.setARGB(255, 255, 0, 0);
+        paint.setTextAlign(Align.RIGHT);
+        paint.setAntiAlias(true);
+        paint.setTextSize(20);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        int progressOne = (jpapplication.getWidthPixels() * progress) / 85;
+        canvas.drawBitmap(logoBitmap, null, allScreenRect, null);
+        canvas.drawBitmap(progressBarBaseBitmap, null, progressBarRect, null);
+        canvas.drawBitmap(progressBarBitmap, null, new Rect(progressOne - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - progressBarBitmap.getHeight(), progressOne, jpapplication.getHeightPixels()), null);
+        canvas.drawText(loading + info, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - progressBarBitmap.getHeight()), paint);
     }
 }
