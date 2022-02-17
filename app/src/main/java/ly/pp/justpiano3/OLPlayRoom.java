@@ -94,7 +94,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private PopupWindow coupleModeGroup = null;
     private PopupWindow changeclr = null;
     private PopupWindow playSongsMode = null;
-    private OLRoomSongsAdapter f4503ab;
+    private OLRoomSongsAdapter olRoomSongsAdapter;
     private TestSQL testSQL;
     private Cursor cursor;
     private TextView timeTextView;
@@ -302,8 +302,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
         sqlWhere = "item = '" + Consts.items[i + 1] + "' OR item = '" + Consts.items[i + 2] + "'" + str;
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        f4503ab.changeCursor(cursor);
-        f4503ab.notifyDataSetChanged();
+        olRoomSongsAdapter.changeCursor(cursor);
+        olRoomSongsAdapter.notifyDataSetChanged();
         moreSongs.dismiss();
     }
 
@@ -315,8 +315,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
         sqlWhere = "item = '" + Consts.items[i + 1] + "'" + str;
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        f4503ab.changeCursor(cursor);
-        f4503ab.notifyDataSetChanged();
+        olRoomSongsAdapter.changeCursor(cursor);
+        olRoomSongsAdapter.notifyDataSetChanged();
         moreSongs.dismiss();
     }
 
@@ -328,16 +328,16 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
         sqlWhere = "item = '" + Consts.items[i + 1] + "' OR item = '" + Consts.items[j + 1] + "'" + str;
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        f4503ab.changeCursor(cursor);
-        f4503ab.notifyDataSetChanged();
+        olRoomSongsAdapter.changeCursor(cursor);
+        olRoomSongsAdapter.notifyDataSetChanged();
         moreSongs.dismiss();
     }
 
     public void m3756h() {
         if (!sqlWhere.isEmpty()) {
             cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-            f4503ab.changeCursor(cursor);
-            f4503ab.notifyDataSetChanged();
+            olRoomSongsAdapter.changeCursor(cursor);
+            olRoomSongsAdapter.notifyDataSetChanged();
         }
     }
 
@@ -418,7 +418,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public final void mo2862a() {
         int posi = msgListView.getFirstVisiblePosition();
         msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-        msgListView.setSelection(posi + 2);
+        if (posi >= 0) {
+            msgListView.setSelection(posi + 2);
+        }
     }
 
     public final void mo2863a(ListView listView, List<Bundle> list, int i) {
@@ -429,7 +431,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public final String[] mo2864a(String str) {
-        Throwable th;
         Cursor cursor = null;
         String[] strArr = new String[2];
         Cursor query;
@@ -448,10 +449,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return strArr;
             } catch (Throwable th2) {
                 cursor = query;
-                th = th2;
-                throw th;
+                throw th2;
             }
-        } catch (Exception ignored) {
         } catch (Throwable th3) {
             if (cursor != null) {
                 cursor.close();
@@ -553,8 +552,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 sqlWhere = "isfavo = 1" + str;
                 cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-                f4503ab.changeCursor(cursor);
-                f4503ab.notifyDataSetChanged();
+                olRoomSongsAdapter.changeCursor(cursor);
+                olRoomSongsAdapter.notifyDataSetChanged();
                 moreSongs.dismiss();
                 return;
             case R.id.couple_1:
@@ -643,16 +642,16 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf + "%'" + (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
                 int count = cursor.getCount();
                 if (valueOf.isEmpty()) {
-                    f4503ab.changeCursor(cursor);
-                    f4503ab.notifyDataSetChanged();
+                    olRoomSongsAdapter.changeCursor(cursor);
+                    olRoomSongsAdapter.notifyDataSetChanged();
                     return;
                 } else if (cursor.getCount() == 0) {
                     Toast.makeText(this, "未搜索到与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Toast.makeText(this, "搜索到" + count + "首与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                    f4503ab.changeCursor(cursor);
-                    f4503ab.notifyDataSetChanged();
+                    olRoomSongsAdapter.changeCursor(cursor);
+                    olRoomSongsAdapter.notifyDataSetChanged();
                     return;
                 }
             case R.id.pre_button:
@@ -1022,14 +1021,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         testSQL = new TestSQL(this, "data");
         sqlitedatabase = testSQL.getWritableDatabase();
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, online_1, null, null, null, null);
-        f4503ab = new OLRoomSongsAdapter(this, this, cursor);
+        olRoomSongsAdapter = new OLRoomSongsAdapter(this, this, cursor);
         songNameText = findViewById(R.id.ol_songlist_b);
         if (!jpapplication.getNowSongsName().isEmpty()) {
             songNameText.setText(mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
         songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
         songNameText.setOnClickListener(this);
-        songsList.setAdapter(f4503ab);
+        songsList.setAdapter(olRoomSongsAdapter);
         sendMsg((byte) 21, roomID0, hallID0, "");
         msgList.clear();
         PopupWindow popupWindow = new PopupWindow(this);
@@ -1193,8 +1192,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         friendPlayerList.clear();
         JPStack.create();
         JPStack.pop(this);
-        if (f4503ab != null && f4503ab.getCursor() != null) {
-            f4503ab.getCursor().close();
+        if (olRoomSongsAdapter != null && olRoomSongsAdapter.getCursor() != null) {
+            olRoomSongsAdapter.getCursor().close();
         }
         if (cursor != null) {
             cursor.close();

@@ -38,8 +38,7 @@
             android:gravity="start"
             android:text="商品简介"
             android:textColor="@color/white1"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="122"
+                android:text="100"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
@@ -80,9 +79,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_ol_button"
-            android:text="购买"
+            android:background="@drawable/selector_ol_button_login"
+            android:text="立即购买"
             android:textColor="@color/white1"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

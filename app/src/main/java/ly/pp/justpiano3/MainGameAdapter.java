@@ -94,10 +94,16 @@ public final class MainGameAdapter extends BaseAdapter {
                 byte b = list.get(i).getByte("I");
                 i2 = list.get(i).getInt("PN");
                 i3 = list.get(i).getInt("TN");
+                View hallNameView = view.findViewById(R.id.ol_hall_name);
+                if ((float)i2 / i3 >= 0.8f) {
+                    hallNameView.setBackgroundResource(Consts.kuang[3]);
+                } else {
+                    hallNameView.setBackgroundResource(Consts.kuang[0]);
+                }
                 if (i2 < i3) {
                     z = false;
                 }
-                ((TextView) view.findViewById(R.id.ol_hall_name)).setText(string);
+                ((TextView) hallNameView).setText(string);
                 ((TextView) view.findViewById(R.id.ol_hall_pnums)).setText(i2 + "/" + i3);
                 textView = view.findViewById(R.id.ol_getin_text);
                 if (z) {

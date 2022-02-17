@@ -67,7 +67,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     FamilyListView familyListView;
     int familyPageNum;
     int cp;
-    boolean f4467r = false;
+    boolean pageIsEnd = false;
     OLPlayHallRoomHandler olPlayHallRoomHandler = new OLPlayHallRoomHandler(this);
     int pageNum = 0;
     JPApplication jpApplication;
@@ -106,8 +106,8 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private int coupleShoesIndex;
     private TextView systemTextView;
     private ScrollText broadCastTextView;
-    private String f4462m = "";
-    private String f4463n = "";
+    private String systemText = "";
+    private String broadCastText = "";
     private LayoutInflater layoutinflater;
 
     private static Bitmap setDress(Context context, String str, String str2, int i) {
@@ -167,13 +167,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     final void mo2842a(Bundle bundle) {
-        f4462m = bundle.getString("U");
-        f4463n = bundle.getString("M");
+        systemText = bundle.getString("U");
+        broadCastText = bundle.getString("M");
         int i = bundle.getInt("C");
         int i2 = bundle.getInt("D");
-        systemTextView.setText(f4462m);
+        systemTextView.setText(systemText);
         systemTextView.setTextColor(getResources().getColor(i));
-        broadCastTextView.setText(f4463n);
+        broadCastTextView.setText(broadCastText);
         systemTextView.setTextColor(getResources().getColor(i2));
     }
 
@@ -421,7 +421,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                     return;
                 }
             case R.id.next_button:
-                if (!f4467r) {
+                if (!pageIsEnd) {
                     pageNum += 20;
                     if (pageNum >= 0) {
                         try {
@@ -582,8 +582,8 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         myFamilyName = findViewById(R.id.ol_myfamily_name);
         myFamilyPic = findViewById(R.id.ol_myfamily_pic);
         myFamilyPosition = findViewById(R.id.ol_myfamily_position);
-        systemTextView.setText(f4462m);
-        broadCastTextView.setText(f4463n);
+        systemTextView.setText(systemText);
+        broadCastTextView.setText(broadCastText);
         broadCastTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
         coupleView = findViewById(R.id.ol_player_couple);
         familyView = findViewById(R.id.ol_player_family);

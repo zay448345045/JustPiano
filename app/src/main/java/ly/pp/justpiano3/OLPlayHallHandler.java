@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -77,7 +78,7 @@ final class OLPlayHallHandler extends Handler {
             case 2:
                 Bundle data = message.getData();
                 olPlayHall.jpapplication.setNowSongsName("");
-                data.putBundle("bundle", olPlayHall.f4381N);
+                data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
                 Intent intent;
                 if (mode == 3) {
@@ -91,13 +92,13 @@ final class OLPlayHallHandler extends Handler {
                 return;
             case 3:
                 post(() -> {
-                    olPlayHall.f4373F.clear();
+                    olPlayHall.roomList.clear();
                     Bundle data1 = message.getData();
                     int size = data1.size();
                     for (int i = 0; i < size; i++) {
-                        olPlayHall.f4373F.add(data1.getBundle(String.valueOf(i)));
+                        olPlayHall.roomList.add(data1.getBundle(String.valueOf(i)));
                     }
-                    olPlayHall.mo2831b(olPlayHall.f4371D, olPlayHall.f4373F);
+                    olPlayHall.mo2831b(olPlayHall.roomListView, olPlayHall.roomList);
                 });
                 return;
             case 4:
@@ -105,16 +106,16 @@ final class OLPlayHallHandler extends Handler {
                 return;
             case 5:
                 post(() -> {
-                    olPlayHall.f4399o.clear();
+                    olPlayHall.friendList.clear();
                     Bundle data16 = message.getData();
                     int size = data16.size();
                     if (size >= 0) {
                         for (int i = 0; i < size; i++) {
-                            olPlayHall.f4399o.add(data16.getBundle(String.valueOf(i)));
+                            olPlayHall.friendList.add(data16.getBundle(String.valueOf(i)));
                         }
-                        olPlayHall.mo2829a(olPlayHall.f4382O, olPlayHall.f4399o, 1, true);
+                        olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                     }
-                    olPlayHall.f4388U = size < 20;
+                    olPlayHall.pageIsEnd = size < 20;
                 });
                 return;
             case 6:
@@ -122,9 +123,9 @@ final class OLPlayHallHandler extends Handler {
                     olPlayHall.tabHost.setCurrentTab(1);
                     String string = message.getData().getString("U");
                     if (!string.equals(JPApplication.kitiName)) {
-                        olPlayHall.f4379L = "@" + string + ":";
-                        olPlayHall.f4408x.setText(olPlayHall.f4379L);
-                        CharSequence text = olPlayHall.f4408x.getText();
+                        olPlayHall.sendTo = "@" + string + ":";
+                        olPlayHall.sendTextView.setText(olPlayHall.sendTo);
+                        CharSequence text = olPlayHall.sendTextView.getText();
                         if (text instanceof Spannable) {
                             Selection.setSelection((Spannable) text, text.length());
                         }
@@ -136,14 +137,11 @@ final class OLPlayHallHandler extends Handler {
                     olPlayHall.userInHallList.clear();
                     Bundle data13 = message.getData();
                     int size = data13.size();
-                    if (size < 20) {
-                        olPlayHall.f4402r = true;
-                    }
                     if (size >= 0) {
                         for (int i = 0; i < size; i++) {
                             olPlayHall.userInHallList.add(data13.getBundle(String.valueOf(i)));
                         }
-                        olPlayHall.mo2829a(olPlayHall.f4395k, olPlayHall.userInHallList, 3, true);
+                        olPlayHall.mo2829a(olPlayHall.userInHallListView, olPlayHall.userInHallList, 3, true);
                     }
                 });
                 return;
@@ -156,8 +154,31 @@ final class OLPlayHallHandler extends Handler {
                                 JPDialog jpdialog = new JPDialog(olPlayHall);
                                 jpdialog.setTitle("好友请求");
                                 jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
-                                jpdialog.setFirstButton("同意", new AddFriendsClick4(string, olPlayHall));
-                                jpdialog.setSecondButton("拒绝", new RefuseFriendsClick2(string, olPlayHall));
+                                String finalString = string;
+                                jpdialog.setFirstButton("同意", (dialog, which) -> {
+                                    dialog.dismiss();
+                                    JSONObject jSONObject = new JSONObject();
+                                    try {
+                                        jSONObject.put("T", 1);
+                                        jSONObject.put("I", 0);
+                                        jSONObject.put("F", finalString);
+                                        olPlayHall.sendMsg((byte) 31, (byte) 0, olPlayHall.hallID, jSONObject.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                                jpdialog.setSecondButton("拒绝", (dialog, which) -> {
+                                    dialog.dismiss();
+                                    JSONObject jSONObject = new JSONObject();
+                                    try {
+                                        jSONObject.put("T", 1);
+                                        jSONObject.put("I", 1);
+                                        jSONObject.put("F", finalString);
+                                        olPlayHall.sendMsg((byte) 31, (byte) 0, olPlayHall.hallID, jSONObject.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
                                 jpdialog.showDialog();
                             }
                             return;
@@ -247,9 +268,9 @@ final class OLPlayHallHandler extends Handler {
                     try {
                         jSONObject.put("F", data12.getString("F"));
                         jSONObject.put("T", 2);
-                        olPlayHall.f4399o.remove(message.arg1);
+                        olPlayHall.friendList.remove(message.arg1);
                         olPlayHall.sendMsg((byte) 31, (byte) 0, (byte) 0, jSONObject.toString());
-                        olPlayHall.mo2829a(olPlayHall.f4382O, olPlayHall.f4399o, 1, true);
+                        olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -324,8 +345,8 @@ final class OLPlayHallHandler extends Handler {
                     intent12.putExtra("times", data15.getInt("songsID"));
                     intent12.putExtra("hand", data15.getInt("hand"));
                     intent12.putExtra("name", "");
-                    intent12.putExtra("bundle", olPlayHall.f4381N);
-                    intent12.putExtra("bundleHall", olPlayHall.f4381N);
+                    intent12.putExtra("bundle", olPlayHall.hallInfoBundle);
+                    intent12.putExtra("bundleHall", olPlayHall.hallInfoBundle);
                     olPlayHall.startActivity(intent12);
                     olPlayHall.finish();
                 });

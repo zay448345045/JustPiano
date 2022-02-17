@@ -32,7 +32,7 @@ final class SendMessageClick2 implements OnClickListener {
                 jSONObject.put("T", str);
                 jSONObject.put("M", valueOf);
                 if (!str.isEmpty()) {
-                    olPlayHall.cs.writeData((byte) 35, (byte) 0, (byte) 0, jSONObject.toString(), null);
+                    olPlayHall.connectionService.writeData((byte) 35, (byte) 0, (byte) 0, jSONObject.toString(), null);
                 }
                 dialogInterface.dismiss();
             }

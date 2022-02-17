@@ -185,7 +185,7 @@
                 android:layout_marginTop="10dp"
                 android:ems="30"
                 android:gravity="top"
-                android:text="抱歉，当前客户端不支持家族族徽的上传，可联系开发者上传或等待日后的版本更新!"
+                android:text="抱歉，当前版本不支持家族族徽上传，上传族徽请登录官网!"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />
 

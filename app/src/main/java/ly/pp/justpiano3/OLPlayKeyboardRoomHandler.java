@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -151,8 +152,31 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                     JPDialog jpdialog = new JPDialog(olPlayKeyboardRoom);
                                     jpdialog.setTitle("好友请求");
                                     jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
-                                    jpdialog.setFirstButton("同意", new AddFriendsClick3(string, olPlayKeyboardRoom));
-                                    jpdialog.setSecondButton("拒绝", new RefuseFriendsClick(string, olPlayKeyboardRoom));
+                                    String finalString = string;
+                                    jpdialog.setFirstButton("同意", (dialog, which) -> {
+                                        JSONObject jSONObject = new JSONObject();
+                                        try {
+                                            jSONObject.put("T", 1);
+                                            jSONObject.put("I", 0);
+                                            jSONObject.put("F", finalString);
+                                            olPlayKeyboardRoom.sendMsg((byte) 31, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
+                                            dialog.dismiss();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                                    jpdialog.setSecondButton("拒绝", (dialog, which) -> {
+                                        JSONObject jSONObject = new JSONObject();
+                                        try {
+                                            jSONObject.put("T", 1);
+                                            jSONObject.put("I", 1);
+                                            jSONObject.put("F", finalString);
+                                            olPlayKeyboardRoom.sendMsg((byte) 31, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
+                                            dialog.dismiss();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
                                     jpdialog.showDialog();
                                 }
                                 return;

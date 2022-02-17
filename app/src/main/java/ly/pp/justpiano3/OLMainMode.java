@@ -149,7 +149,6 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     public void loginOnline() {
         jpprogressBar.show();
         if (jpapplication.getIsBindService()) {
-
             try {
                 jpapplication.unbindService(jpapplication.mo2696L());
             } catch (Exception e) {

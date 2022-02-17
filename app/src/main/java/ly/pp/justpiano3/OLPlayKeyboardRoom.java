@@ -347,7 +347,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public final void mo2862a() {
         int posi = msgListView.getFirstVisiblePosition();
         msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-        msgListView.setSelection(posi + 2);
+        if (posi >= 0) {
+            msgListView.setSelection(posi + 2);
+        }
     }
 
     public final void mo2863a(ListView listView, List<Bundle> list, int i) {

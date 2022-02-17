@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -78,7 +79,22 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                     JPDialog jpdialog = new JPDialog(this);
                     jpdialog.setTitle("好友请求");
                     jpdialog.setMessage("添加[" + kitiName + "]为好友,确定吗?");
-                    jpdialog.setFirstButton("确定", new AddFriendsClick2(this));
+                    jpdialog.setFirstButton("确定", (dialog, which) -> {
+                        JSONObject jSONObject = new JSONObject();
+                        try {
+                            jSONObject.put("H", 0);
+                            jSONObject.put("T", kitiName);
+                            jSONObject.put("F", jpapplication.getAccountName());
+                            jSONObject.put("M", "");
+                            if (!kitiName.isEmpty() && !jpapplication.getAccountName().isEmpty()) {
+                                f4830d = jSONObject.toString();
+                                new PopUserInfoTask(this).execute();
+                            }
+                            dialog.dismiss();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
                     jpdialog.setSecondButton("取消", new DialogDismissClick());
                     jpdialog.showDialog();
                     return;

@@ -257,7 +257,7 @@ public final class JPApplication extends Application {
     }
 
     public final String getVersion() {
-        String str = "4.3";
+        String str = "";
         try {
             return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {

@@ -59,7 +59,7 @@ public final class RoomTitleAdapter extends BaseAdapter {
         TextView textView = view.findViewById(R.id.ol_room_name);
         textView.setText(string);
         textView.setBackgroundResource(Consts.kuang[i2]);
-        textView.setOnClickListener(v -> olPlayHall.mo2823a(b));
+        textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(b));
         Button button = view.findViewById(R.id.ol_getin_button);
         if (i3 == 1) {
             button.setText("弹奏中");

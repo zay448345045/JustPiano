@@ -1,6 +1,5 @@
 package ly.pp.justpiano3;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -40,50 +39,49 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class OLPlayHall extends BaseActivity implements Callback, OnClickListener {
-    public ConnectionService cs;
+    public ConnectionService connectionService;
     public String hallName = "";
     public byte hallID = (byte) 0;
     public JPApplication jpapplication;
     JPProgressBar jpprogressBar;
     ListView msgListView;
-    ListView f4371D;
-    List<Bundle> f4373F = new ArrayList<>();
+    ListView roomListView;
+    List<Bundle> roomList = new ArrayList<>();
     TabHost tabHost;
-    String f4379L = "";
-    Bundle f4381N;
-    ListView f4382O;
-    boolean f4385R;
-    boolean f4388U = false;
+    String sendTo = "";
+    Bundle hallInfoBundle;
+    ListView friendListView;
+    boolean isTimeShowing;
+    boolean pageIsEnd = false;
     Map<Byte, Room> roomTitleMap = new HashMap<>();
     List<Bundle> msgList = new ArrayList<>();
-    ListView f4395k;
+    ListView userInHallListView;
     List<Bundle> userInHallList = new ArrayList<>();
-    List<Bundle> f4399o = new ArrayList<>();
+    List<Bundle> friendList = new ArrayList<>();
     Handler showTimeHandler;
     int pageNum = 0;
-    boolean f4402r = false;
     OLPlayHallHandler olPlayHallHandler = new OLPlayHallHandler(this);
-    TextView f4408x;
+    TextView sendTextView;
     private ImageView imageView;
     private LayoutInflater layoutImflater1;
     private LayoutInflater layoutImflater2;
     private PopupWindow popupWindow = null;
     private ShowTimeThread showTimeThread;
-    private TextView f4409y;
+    private TextView timeTextView;
 
-    final void mo2823a(byte b) {
+    final void loadInRoomUserInfo(byte b) {
         JSONObject jSONObject = new JSONObject();
         try {
             jSONObject.put("ID", b);
-            cs.writeData((byte) 43, (byte) 0, (byte) 0, jSONObject.toString(), null);
+            connectionService.writeData((byte) 43, (byte) 0, (byte) 0, jSONObject.toString(), null);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public final void sendMsg(byte b, byte b2, byte b3, String str) {
-        if (cs != null) {
-            cs.writeData(b, b2, b3, str, null);
+        if (connectionService != null) {
+            connectionService.writeData(b, b2, b3, str, null);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -188,19 +186,18 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
         listView.setBackgroundColor(-16777216);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle("房间用户信息").loadInflate(inflate).setFirstButton("进入房间", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mo2826a(bundle.getInt("P"), (byte) i2);
-            }
+        new JPDialog(this).setTitle("房间用户信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+            dialog.dismiss();
+            mo2826a(bundle.getInt("P"), (byte) i2);
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     final void mo2828a(ListView listView, List<Bundle> list) {
         int posi = listView.getFirstVisiblePosition();
         listView.setAdapter(new ChattingAdapter(list, layoutImflater1));
-        listView.setSelection(posi + 2);
+        if (posi >= 0) {
+            listView.setSelection(posi + 2);
+        }
     }
 
     final void mo2829a(ListView listView, List<Bundle> list, int i, boolean z) {
@@ -235,11 +232,11 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     }
 
     final void mo2832b(String str) {
-        f4379L = "@" + str + ":";
+        sendTo = "@" + str + ":";
         if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
-            f4408x.setText(f4379L);
+            sendTextView.setText(sendTo);
         }
-        CharSequence text = f4408x.getText();
+        CharSequence text = sendTextView.getText();
         if (text instanceof Spannable) {
             Selection.setSelection((Spannable) text, text.length());
         }
@@ -249,8 +246,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     public boolean handleMessage(Message message) {
         if (message.what == 3) {
             CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
-            if (f4409y != null) {
-                f4409y.setText(format);
+            if (timeTextView != null) {
+                timeTextView.setText(format);
             }
         }
         return false;
@@ -334,7 +331,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                     return;
                 }
             case R.id.next_button:
-                if (!f4388U) {
+                if (!pageIsEnd) {
                     pageNum += 20;
                     if (pageNum >= 0) {
                         try {
@@ -351,27 +348,27 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.ol_send_b:
-                String valueOf = String.valueOf(f4408x.getText());
+                String valueOf = String.valueOf(sendTextView.getText());
                 JSONObject jSONObject2 = new JSONObject();
                 try {
-                    if (!valueOf.startsWith(f4379L) || valueOf.length() <= f4379L.length()) {
+                    if (!valueOf.startsWith(sendTo) || valueOf.length() <= sendTo.length()) {
                         jSONObject2.put("@", "");
                         jSONObject2.put("M", valueOf);
                     } else {
-                        jSONObject2.put("@", f4379L);
-                        valueOf = valueOf.substring(f4379L.length());
+                        jSONObject2.put("@", sendTo);
+                        valueOf = valueOf.substring(sendTo.length());
                         jSONObject2.put("M", valueOf);
                     }
-                    f4408x.setText("");
-                    f4379L = "";
+                    sendTextView.setText("");
+                    sendTo = "";
                     if (!valueOf.isEmpty()) {
                         sendMsg((byte) 12, (byte) 0, hallID, jSONObject2.toString());
                     }
                 } catch (JSONException e2222) {
                     e2222.printStackTrace();
                 }
-                f4408x.setText("");
-                f4379L = "";
+                sendTextView.setText("");
+                sendTo = "";
                 return;
             case R.id.ol_express_b:
                 popupWindow.showAtLocation(imageView, Gravity.CENTER, 0, 0);
@@ -388,9 +385,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         roomTitleMap.clear();
-        f4381N = getIntent().getExtras();
-        hallName = f4381N.getString("hallName");
-        hallID = f4381N.getByte("hallID");
+        hallInfoBundle = getIntent().getExtras();
+        hallName = hallInfoBundle.getString("hallName");
+        hallID = hallInfoBundle.getByte("hallID");
         layoutImflater1 = LayoutInflater.from(this);
         layoutImflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
@@ -405,11 +402,11 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         f4406v.setOnClickListener(this);
         Button f4407w = findViewById(R.id.ol_testroom_b);
         f4407w.setOnClickListener(this);
-        f4408x = findViewById(R.id.ol_send_text);
+        sendTextView = findViewById(R.id.ol_send_text);
         TextView f4410z = findViewById(R.id.ol_playhall_tittle);
         f4410z.setText(hallName);
         showTimeHandler = new Handler(this);
-        f4409y = findViewById(R.id.time_text);
+        timeTextView = findViewById(R.id.time_text);
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
         Button f4389V = findViewById(R.id.pre_button);
@@ -421,22 +418,22 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         f4390W.setOnClickListener(this);
         f4391X.setOnClickListener(this);
         msgList.clear();
-        f4371D = findViewById(R.id.ol_room_list);
-        f4371D.setCacheColorHint(0);
-        f4395k = findViewById(R.id.ol_player_list);
-        f4395k.setCacheColorHint(0);
+        roomListView = findViewById(R.id.ol_room_list);
+        roomListView.setCacheColorHint(0);
+        userInHallListView = findViewById(R.id.ol_player_list);
+        userInHallListView.setCacheColorHint(0);
         imageView = findViewById(R.id.ol_express_b);
         imageView.setOnClickListener(this);
-        f4382O = findViewById(R.id.ol_friend_list);
-        f4382O.setCacheColorHint(0);
+        friendListView = findViewById(R.id.ol_friend_list);
+        friendListView.setCacheColorHint(0);
         ScrollText f4384Q = findViewById(R.id.broadCastText);
         f4384Q.setMovementMethod(ScrollingMovementMethod.getInstance());
-        f4373F.clear();
-        cs = jpapplication.getConnectionService();
+        roomList.clear();
+        connectionService = jpapplication.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, cs, Consts.expressions, popupWindow, (byte) 12, (byte) 0, hallID));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, (byte) 12, (byte) 0, hallID));
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_bar));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -467,14 +464,14 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         tabHost.setOnTabChangedListener(new PlayHallTabChange(this));
         tabHost.setCurrentTab(1);
         sendMsg((byte) 19, (byte) 0, hallID, "");
-        f4385R = true;
+        isTimeShowing = true;
         showTimeThread = new ShowTimeThread(this);
         showTimeThread.start();
     }
 
     @Override
     protected void onDestroy() {
-        f4385R = false;
+        isTimeShowing = false;
         try {
             showTimeThread.interrupt();
         } catch (Exception ignored) {
@@ -483,7 +480,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         JPStack.pop(this);
         roomTitleMap.clear();
         msgList.clear();
-        f4373F.clear();
+        roomList.clear();
         userInHallList.clear();
         super.onDestroy();
     }

@@ -52,6 +52,7 @@ public final class TestSQL extends SQLiteOpenHelper {
                 }
             }
         }
-        sQLiteDatabase.setVersion(DATABASE_VERSION);
+        // Math.max用来防止版本回退出错
+        sQLiteDatabase.setVersion(Math.max(sQLiteDatabase.getVersion(), DATABASE_VERSION));
     }
 }

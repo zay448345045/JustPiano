@@ -18,8 +18,8 @@ final class ShowTimeThread extends Thread {
                 olPlayHall.showTimeHandler.sendMessage(message);
                 Thread.sleep(60000);
             } catch (Exception e) {
-                olPlayHall.f4385R = false;
+                olPlayHall.isTimeShowing = false;
             }
-        } while (olPlayHall.f4385R);
+        } while (olPlayHall.isTimeShowing);
     }
 }

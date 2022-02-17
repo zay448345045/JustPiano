@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ final class OLPlayHallRoomHandler extends Handler {
                             olPlayHallRoom.hallList.add(bundle.getBundle(String.valueOf(i)));
                         }
                         olPlayHallRoom.mo2843a(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
-                        olPlayHallRoom.userName.setText(data.getString("U"));//载入昵称
+                        olPlayHallRoom.userName.setText(data.getString("U"));  // 载入昵称
                         JPApplication.kitiName = data.getString("U");
                         olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
                         olPlayHallRoom.userLevelView.setText("LV." + data.getInt("LV"));
@@ -163,7 +164,7 @@ final class OLPlayHallRoomHandler extends Handler {
                             }
                             olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                         }
-                        olPlayHallRoom.f4467r = size < 20;
+                        olPlayHallRoom.pageIsEnd = size < 20;
                     });
                     return;
                 case 4:
@@ -213,7 +214,10 @@ final class OLPlayHallRoomHandler extends Handler {
                         jpdialog.setTitle(string);
                         if (b > 0) {
                             jpdialog.setMessage(string2);
-                            jpdialog.setFirstButton("进入Ta所在大厅", new GoIntoItsHall(b, olPlayHallRoom));
+                            jpdialog.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
+                                dialog.dismiss();
+                                olPlayHallRoom.sendMsg((byte) 29, b, "");
+                            });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
                             jpdialog.setMessage(string2);
@@ -256,7 +260,24 @@ final class OLPlayHallRoomHandler extends Handler {
                         jpdialog.setMessage(string2);
                         if (b > 0) {
                             jpdialog.setVisibleEditText(true);
-                            jpdialog.setFirstButton("创建家族", new CreateFamily(jpdialog, olPlayHallRoom));
+                            jpdialog.setFirstButton("创建家族", (dialog, which) -> {
+                                String name = jpdialog.getEditTextString();
+                                if (name.isEmpty()) {
+                                    Toast.makeText(olPlayHallRoom, "家族名称不能为空!", Toast.LENGTH_SHORT).show();
+                                } else if (name.length() > 8) {
+                                    Toast.makeText(olPlayHallRoom, "家族名称只能在八个字以下!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    try {
+                                        dialog.dismiss();
+                                        JSONObject jSONObject = new JSONObject();
+                                        jSONObject.put("K", 4);
+                                        jSONObject.put("N", name);
+                                        olPlayHallRoom.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
                             jpdialog.setFirstButton("确定", new DialogDismissClick());
