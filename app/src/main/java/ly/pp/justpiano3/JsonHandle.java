@@ -1006,6 +1006,7 @@ final class JsonHandle {
                         bundle2.putInt("LV", user.getLevel());
                         bundle2.putInt("TR", user.getTrousers());
                         bundle2.putInt("JA", user.getJacket());
+                        bundle2.putInt("EY", user.getEye());
                         bundle2.putInt("HA", user.getHair());
                         bundle2.putInt("SH", user.getShoes());
                         bundle2.putInt("CL", user.getCLevel());
@@ -1057,6 +1058,7 @@ final class JsonHandle {
                         bundle2.putInt("LV", user.getLevel());
                         bundle2.putInt("TR", user.getTrousers());
                         bundle2.putInt("JA", user.getJacket());
+                        bundle2.putInt("EY", user.getEye());
                         bundle2.putInt("HA", user.getHair());
                         bundle2.putInt("SH", user.getShoes());
                         bundle2.putInt("CL", user.getCLevel());
