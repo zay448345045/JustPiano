@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -45,6 +46,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     // 琴键动画间隔
     private int interval = 320;
     private boolean recordStart;
+    private String recordFilePath;
+    private String recordFileName;
 
     @Override
     public void onBackPressed() {
@@ -153,7 +156,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         if (recordStart) {
             JPApplication.setRecord(false);
             recordStart = false;
-            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+            File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
+            File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
+            JPApplication.moveFile(srcFile, desFile);
+            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
     }
@@ -353,6 +359,14 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 break;
             case R.id.keyboard_record:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    JPDialog jpdialog = new JPDialog(this);
+                    jpdialog.setTitle("提示");
+                    jpdialog.setMessage("抱歉，Android 11及以上版本暂不支持录音功能");
+                    jpdialog.setFirstButton("确定", new DialogDismissClick());
+                    jpdialog.showDialog();
+                    return;
+                }
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
@@ -362,8 +376,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss录音", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
-                            String path = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + date + ".raw";
-                            JPApplication.setRecordFilePath(path);
+                            recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
+                            recordFileName = date + ".wav";
+                            JPApplication.setRecordFilePath(recordFilePath);
                             JPApplication.setRecord(true);
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
@@ -379,7 +394,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
                         JPApplication.setRecord(false);
                         recordStart = false;
-                        Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+                        File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
+                        File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
+                        JPApplication.moveFile(srcFile, desFile);
+                        Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception ignored) {
                 }

@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -198,6 +200,22 @@ public class MainMode extends Activity implements OnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
             }
+        }
+        try {
+            File file1 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
+            File file2 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
+            File file3 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records");
+            if (!file1.exists()) {
+                file1.mkdirs();
+            }
+            if (!file2.exists()) {
+                file2.mkdirs();
+            }
+            if (!file3.exists()) {
+                file3.mkdirs();
+            }
+        } catch (Exception e4) {
+            e4.printStackTrace();
         }
     }
 }

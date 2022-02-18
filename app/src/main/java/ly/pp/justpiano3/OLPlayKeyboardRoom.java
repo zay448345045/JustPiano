@@ -36,6 +36,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,6 +110,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     private TimeUpdateThread timeUpdateThread;
     private ImageView changeColorButton = null;
     private boolean recordStart;
+    private String recordFilePath;
+    private String recordFileName;
 
     public OLPlayKeyboardRoom() {
         canNotNextPage = false;
@@ -571,6 +574,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 return;
             case R.id.keyboard_record:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    JPDialog jpdialog = new JPDialog(this);
+                    jpdialog.setTitle("提示");
+                    jpdialog.setMessage("抱歉，Android 11及以上版本暂不支持录音功能");
+                    jpdialog.setFirstButton("确定", new DialogDismissClick());
+                    jpdialog.showDialog();
+                    return;
+                }
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
@@ -580,8 +591,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss录音", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
-                            String path = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + date + ".raw";
-                            JPApplication.setRecordFilePath(path);
+                            recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
+                            recordFileName = date + ".wav";
+                            JPApplication.setRecordFilePath(recordFilePath);
                             JPApplication.setRecord(true);
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
@@ -597,7 +609,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
                         JPApplication.setRecord(false);
                         recordStart = false;
-                        Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+                        File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
+                        File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
+                        JPApplication.moveFile(srcFile, desFile);
+                        Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception ignored) {
                 }
@@ -822,7 +837,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         if (recordStart) {
             JPApplication.setRecord(false);
             recordStart = false;
-            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+            File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
+            File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
+            JPApplication.moveFile(srcFile, desFile);
+            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
     }

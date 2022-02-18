@@ -24,6 +24,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -284,7 +285,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 break;
         }
         if (isOpenRecord) {
-            recordWavPath = Environment.getExternalStorageDirectory() + "/JustPiano/Record/" + songsName + ".raw";
+            recordWavPath = getFilesDir().getAbsolutePath() + "/Records/" + songsName + ".raw";
         }
         setContentView(playView);
         keyboardview = new KeyBoardView(this, playView);
@@ -359,7 +360,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         if (recordStart) {
             isOpenRecord = false;
             JPApplication.setRecord(false);
-            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Record中", Toast.LENGTH_SHORT).show();
+            File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
+            File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
+            JPApplication.moveFile(srcFile, desFile);
+            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
             recordStart = false;
         }
     }

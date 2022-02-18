@@ -139,6 +139,21 @@ public final class JPApplication extends Application {
         dataStream.close();
     }
 
+    /**
+     * 移动文件到新文件的位置
+     *
+     * @param src 源文件对象
+     * @param des 目标文件对象
+     */
+    public static void moveFile(File src, File des) {
+        if (des.exists()) {
+            des.delete();
+        }
+        if (src.exists()) {
+            src.renameTo(des);
+        }
+    }
+
     public static void reLoadOriginalSounds() {
         File dir = new File(context.getFilesDir(), "Sounds");
         if (dir.isDirectory()) {

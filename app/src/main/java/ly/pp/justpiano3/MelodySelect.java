@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -341,6 +342,14 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 isRecord.setVisibility(View.GONE);
             } else {
                 isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        JPDialog jpdialog = new JPDialog(this);
+                        jpdialog.setTitle("提示");
+                        jpdialog.setMessage("抱歉，Android 11及以上版本暂不支持录音功能");
+                        jpdialog.setFirstButton("确定", new DialogDismissClick());
+                        jpdialog.showDialog();
+                        return;
+                    }
                     if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
                         mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
                     }

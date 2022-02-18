@@ -225,16 +225,23 @@ public class JustPiano extends Activity implements Callback, Runnable {
         if (!file.exists()) {
             file.mkdirs();
         }
+        file = new File(getFilesDir().getAbsolutePath() + "/Records");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         Message obtainMessage;
-        FileOutputStream fileOutputStream;
         try {
             File file1 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
             File file2 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-            if (file1.mkdirs() && file2.mkdirs()) {
-                fileOutputStream = new FileOutputStream(new File(file1, "看我.txt"));
-                fileOutputStream.write(".ps格式皮肤文件请直接放入此文件夹中".getBytes());
-                fileOutputStream = new FileOutputStream(new File(file2, "看我.txt"));
-                fileOutputStream.write(".ss格式音源文件请直接放入此文件夹中".getBytes());
+            File file3 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records");
+            if (!file1.exists()) {
+                file1.mkdirs();
+            }
+            if (!file2.exists()) {
+                file2.mkdirs();
+            }
+            if (!file3.exists()) {
+                file3.mkdirs();
             }
         } catch (Exception e4) {
             e4.printStackTrace();

@@ -102,6 +102,6 @@ public class RecordFiles extends Activity {
         f4919d = findViewById(R.id.listFile);
         f4919d.setCacheColorHint(0);
         f4921f = findViewById(R.id.txt1);
-        m3824a(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Record/"));
+        m3824a(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/"));
     }
 }
