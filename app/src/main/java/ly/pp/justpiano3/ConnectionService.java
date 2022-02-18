@@ -135,8 +135,8 @@ public class ConnectionService extends Service implements Runnable {
     public void onCreate() {
         super.onCreate();
         jpapplication = (JPApplication) getApplication();
-        // 这里不要用线程池，容易被杀
-        new Thread(this).start();
+        // 包装Thread，更防止被杀
+        ThreadPoolUtils.execute(this);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class ConnectionService extends Service implements Runnable {
                                 writeBuffer.flip();
                                 selectionKey.attach(writeBuffer);
                                 selectionKey.interestOps(SelectionKey.OP_WRITE);
-                                new Thread(() -> {
+                                ThreadPoolUtils.execute(new Thread(() -> {
                                     try {
                                         while (online) {
                                             Thread.sleep(6000);
@@ -175,7 +175,7 @@ public class ConnectionService extends Service implements Runnable {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                }).start();
+                                }));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
