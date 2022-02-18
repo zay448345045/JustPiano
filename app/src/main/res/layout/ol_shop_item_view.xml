@@ -7,15 +7,16 @@
 
     <ImageView
         android:id="@+id/ol_shop_item_pic"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
         android:gravity="center"
         android:padding="1dp"
         android:src="@drawable/family" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="5"
         android:orientation="vertical">
 
@@ -27,7 +28,7 @@
             android:gravity="start"
             android:text="商品名称"
             android:textColor="@color/white1"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -38,20 +39,21 @@
             android:gravity="start"
             android:text="商品简介"
             android:textColor="@color/white1"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.6"
         android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <TextView
@@ -59,16 +61,18 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="100"
                 android:textColor="@color/white1"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/icon_coin"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:layout_weight="1"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:src="@drawable/gold" />
 
@@ -76,12 +80,15 @@
 
         <Button
             android:id="@+id/ol_shop_item_buy"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:background="@drawable/selector_ol_button_login"
-            android:text="立即购买"
+            android:text="购买"
             android:textColor="@color/white1"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>
