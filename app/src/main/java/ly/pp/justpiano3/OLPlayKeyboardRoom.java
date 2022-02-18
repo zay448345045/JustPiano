@@ -407,7 +407,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     boolean midiKeyboardOn = data.getBoolean("MIDI_ON");
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
                     olKeyboardStates[roomPositionSub1].setSpeed(notesSpeed);
-                    ((KeyboardPlayerStatusAdapter) (keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                    if (keyboardStatusGrid.getAdapter() != null) {
+                        ((KeyboardPlayerStatusAdapter) (keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                    } else {
+                        keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(this));
+                    }
                 }
                 break;
             case R.id.keyboard_count_down:

@@ -83,26 +83,28 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     }
 
     public final void parseUnlockByteArray(byte[] bytes) {
-        for (int i = 0; i < bytes.length; i += 2) {
-            List<Integer> list = null;
-            switch (bytes[i]) {
-                case 0:
-                    list = hairUnlock;
-                    break;
-                case 1:
-                    list = eyeUnlock;
-                    break;
-                case 2:
-                    list = jacketUnlock;
-                    break;
-                case 3:
-                    list = trousersUnlock;
-                    break;
-                case 4:
-                    list = shoesUnlock;
-                    break;
+        if (bytes != null) {
+            for (int i = 0; i < bytes.length; i += 2) {
+                List<Integer> list = null;
+                switch (bytes[i]) {
+                    case 0:
+                        list = hairUnlock;
+                        break;
+                    case 1:
+                        list = eyeUnlock;
+                        break;
+                    case 2:
+                        list = jacketUnlock;
+                        break;
+                    case 3:
+                        list = trousersUnlock;
+                        break;
+                    case 4:
+                        list = shoesUnlock;
+                        break;
+                }
+                list.add((int) bytes[i + 1] - Byte.MIN_VALUE);
             }
-            list.add((int) bytes[i + 1] - Byte.MIN_VALUE);
         }
     }
 

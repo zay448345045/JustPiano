@@ -129,7 +129,11 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                                 connectionService.writeData((byte) 9, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
                                 olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
                                 olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setSpeed(0);
-                                ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                                if (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter() != null) {
+                                    ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                                } else {
+                                    olPlayKeyboardRoom.keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(olPlayKeyboardRoom));
+                                }
                             }
                         }
                     }

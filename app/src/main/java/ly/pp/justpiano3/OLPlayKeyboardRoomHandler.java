@@ -96,7 +96,11 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                         int notesSpeed = ((notes.length / 3) << 10) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL;
                         olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
                         olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setSpeed(notesSpeed);
-                        ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                        if (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter() != null) {
+                            ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                        } else {
+                            olPlayKeyboardRoom.keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(olPlayKeyboardRoom));
+                        }
                         ThreadPoolUtils.execute(() -> {
                             for (int i = 1; i < notes.length; i += 3) {
                                 int intervalTime = (notes[i] << 2);
@@ -122,7 +126,11 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                             }
                             olPlayKeyboardRoom.runOnUiThread(() -> {
                                 olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setSpeed(0);
-                                ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                                if (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter() != null) {
+                                    ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
+                                } else {
+                                    olPlayKeyboardRoom.keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(olPlayKeyboardRoom));
+                                }
                             });
                         });
                     });
