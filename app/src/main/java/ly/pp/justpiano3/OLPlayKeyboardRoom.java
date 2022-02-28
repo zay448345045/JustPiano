@@ -770,7 +770,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 if (hasAnotherUser()) {
                     notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
                 }
-                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                if (roomPositionSub1 >= 0 && !olKeyboardStates[roomPositionSub1].isMuted()) {
                     jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
                 }
             }
@@ -934,7 +934,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             if (hasAnotherUser()) {
                 notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, data[2]));
             }
-            if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+            if (roomPositionSub1 >= 0 && !olKeyboardStates[roomPositionSub1].isMuted()) {
                 jpapplication.playSound(pitch, data[2]);
             }
         } else if (command == MidiConstants.STATUS_NOTE_OFF
