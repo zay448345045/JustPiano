@@ -14,14 +14,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-final class ChangeZhuyuClick implements OnClickListener {
+final class ChangeBlessingClick implements OnClickListener {
 
     private final OLPlayHallRoom olPlayHallRoom;
     private final TextView f5458b;
     private final int f5459c;
     private final String f5460d;
 
-    ChangeZhuyuClick(OLPlayHallRoom olPlayHallRoom, TextView textView, int i, String str) {
+    ChangeBlessingClick(OLPlayHallRoom olPlayHallRoom, TextView textView, int i, String str) {
         this.olPlayHallRoom = olPlayHallRoom;
         f5458b = textView;
         f5459c = i;
@@ -36,8 +36,8 @@ final class ChangeZhuyuClick implements OnClickListener {
         try {
             if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(olPlayHallRoom, "请输入内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 300) {
-                Toast.makeText(olPlayHallRoom, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+            } else if (valueOf.length() > 500) {
+                Toast.makeText(olPlayHallRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else if (f5459c == 0 && !f5460d.isEmpty()) {
                 jSONObject.put("T", f5460d);
                 jSONObject.put("M", valueOf);

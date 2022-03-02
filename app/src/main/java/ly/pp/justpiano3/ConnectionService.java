@@ -135,7 +135,6 @@ public class ConnectionService extends Service implements Runnable {
     public void onCreate() {
         super.onCreate();
         jpapplication = (JPApplication) getApplication();
-        // 包装Thread，更防止被杀
         ThreadPoolUtils.execute(this);
     }
 

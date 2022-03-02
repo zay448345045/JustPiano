@@ -229,7 +229,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         } else {
             return;
         }
-        new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeZhuyuClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     final void mo2846b(ListView listView, List<Bundle> list) {
@@ -611,7 +611,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         breakUpCpButton.setText("解除搭档");
         Button setBlessingButton = findViewById(R.id.ol_setblessing_button);
         setBlessingButton.setText("设置祝语");
-        setBlessingButton.setHint(new SpannableString("输入新祝语)"));
+        setBlessingButton.setHint(new SpannableString("输入新祝语"));
         breakUpCpButton.setOnClickListener(this);
         setBlessingButton.setOnClickListener(this);
         Button createFamily = findViewById(R.id.create_family);
