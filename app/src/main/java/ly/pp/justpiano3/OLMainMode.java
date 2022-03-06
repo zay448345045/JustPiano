@@ -35,7 +35,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     public void onClick(View view) {
         Intent intent = new Intent();
         switch (view.getId()) {
-            case R.id.ol_ance_b:
+            case R.id.ol_web_b:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("提示");
                 jpdialog.setMessage("官网访问方式：在浏览器中输入网址https://i.justpiano.fun\n" +
@@ -99,32 +99,32 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(0);
-        Button f4285k = findViewById(R.id.ol_top_b);
-        f4285k.setOnClickListener(this);
-        Button f4286l = findViewById(R.id.ol_users_b);
-        f4286l.setOnClickListener(this);
-        Button f4288n = findViewById(R.id.ol_playhall_b);
-        f4288n.setOnClickListener(this);
-        Button f4287m = findViewById(R.id.ol_songs_b);
-        f4287m.setOnClickListener(this);
-        Button f4289o = findViewById(R.id.ol_ance_b);
-        f4289o.setOnClickListener(this);
-        f4289o.setVisibility(View.VISIBLE);
-        Button f4290p = findViewById(R.id.ol_bindmail_b);
-        f4290p.setOnClickListener(this);
-        Button f4291q = findViewById(R.id.ol_finduser_b);
-        f4291q.setOnClickListener(this);
+        Button topButton = findViewById(R.id.ol_top_b);
+        topButton.setOnClickListener(this);
+        Button userButton = findViewById(R.id.ol_users_b);
+        userButton.setOnClickListener(this);
+        Button hallButton = findViewById(R.id.ol_playhall_b);
+        hallButton.setOnClickListener(this);
+        Button songButton = findViewById(R.id.ol_songs_b);
+        songButton.setOnClickListener(this);
+        Button webButton = findViewById(R.id.ol_web_b);
+        webButton.setOnClickListener(this);
+        webButton.setVisibility(View.VISIBLE);
+        Button mailButton = findViewById(R.id.ol_bindmail_b);
+        mailButton.setOnClickListener(this);
+        Button findUserButton = findViewById(R.id.ol_finduser_b);
+        findUserButton.setOnClickListener(this);
         try {
             if (jpapplication.getConnectionService() != null) {
                 jpapplication.getConnectionService().outLine();
             }
             if (jpapplication.getIsBindService()) {
-                jpapplication.unbindService(jpapplication.mo2696L());
+                jpapplication.unbindService(jpapplication.getServiceConnection());
+                jpapplication.setIsBindService(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JPStack.create();
         JPStack.push(this);
         if (jpapplication.f4073g != null && jpapplication.f4074h != null && !jpapplication.f4073g.isEmpty() && !jpapplication.f4074h.isEmpty()) {
             JPDialog jpdialog = new JPDialog(this);
@@ -141,7 +141,6 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }
@@ -150,14 +149,13 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         jpprogressBar.show();
         if (jpapplication.getIsBindService()) {
             try {
-                jpapplication.unbindService(jpapplication.mo2696L());
+                jpapplication.unbindService(jpapplication.getServiceConnection());
+                jpapplication.setIsBindService(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
-        } else {
-            jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
         }
+        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
     }
 
     public static String getMaxSongIdFromDatabase(TestSQL testSQL) {

@@ -18,28 +18,34 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
     private final SurfaceHolder mHolder;
     private Canvas mCanvas;
     private boolean isRunning;
+
     /**
      * 盘块的奖项
      */
     private final String[] mStrs = new String[]{"框框", "经验", "祝福", "考级", "挑战", "音符"};
+
     /**
      * 盘块的图片
      */
     private final int[] mImgs = new int[]{R.drawable.head, R.drawable.exp, R.drawable.favor, R.drawable.nailface, R.drawable.listen_play, R.drawable.gold};
+
     /**
      * 与图片对应的bitmap数组
      */
     private Bitmap[] mImgBitmap;
+
     /**
      * 盘块的颜色
      */
-    private final int[] mColors = new int[]{0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01
-    };
+    private final int[] mColors = new int[]{0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01, 0XFFFFC300, 0XFFF17E01};
+
     private final int mItemCount = mColors.length;
+
     /**
      * 绘制盘块的画笔
      */
     private Paint mArcPaint;
+
     /**
      * 绘制文本的画笔
      */
@@ -51,6 +57,7 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
      * 2、两个类型提供的方法也不是完全一致
      */
     private RectF mRange = new RectF();
+
     /**
      * 整个盘块的直径
      */
@@ -65,15 +72,18 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
      * 滚动的速度
      */
     private double mSpeed = 0;
+
     /**
      * 可能有两个线程操作
      * 保证线程间变量的可见性
      */
     private volatile float mStartAngle = 0;
+
     /**
      * 转盘的中心位置
      */
     private int mCenter;
+
     /**
      * 这里我们的padding直接以paddingLeft为准
      */
@@ -87,10 +97,10 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
         super(context, attrs);
         mHolder = getHolder();
         mHolder.addCallback(this);
-        //获得焦点
+        // 获得焦点
         setFocusable(true);
         setFocusableInTouchMode(true);
-        //设置常亮
+        // 设置常亮
         setKeepScreenOn(true);
     }
 
@@ -99,28 +109,28 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = Math.min(getMeasuredWidth(), getMeasuredHeight());
         mPadding = getPaddingLeft();
-        //直径
+        // 直径
         mRadius = width - mPadding * 2;
-        //中心点
+        // 中心点
         mCenter = width / 2;
         setMeasuredDimension(width, width);
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        //初始化绘制盘块的画笔
+        // 初始化绘制盘块的画笔
         mArcPaint = new Paint();
-        //防止边缘的锯齿
+        // 防止边缘的锯齿
         mArcPaint.setAntiAlias(true);
-        //设置递色
+        // 设置递色
         mArcPaint.setDither(true);
-        //初始化绘制文本的画笔
+        // 初始化绘制文本的画笔
         mTextPaint = new Paint();
         mTextPaint.setColor(0xff000000);
         mTextPaint.setTextSize(mTextSize);
-        //初始化盘块绘制的范围
+        // 初始化盘块绘制的范围
         mRange = new RectF(mPadding, mPadding, mPadding + mRadius, mPadding + mRadius);
-        //初始化图片
+        // 初始化图片
         mImgBitmap = new Bitmap[mItemCount];
         for (int i = 0; i < mImgBitmap.length; i++) {
             mImgBitmap[i] = BitmapFactory.decodeResource(getResources(), mImgs[i]);
@@ -140,7 +150,7 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
 
     @Override
     public void run() {
-        //不断进行绘制
+        // 不断进行绘制
         while (isRunning) {
             long start = System.currentTimeMillis();
             draw();
@@ -160,22 +170,22 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
             mCanvas = mHolder.lockCanvas();
             if (mCanvas != null) {
                 mCanvas.drawColor(0xff000000);
-                //绘制盘块
+                // 绘制盘块
                 float tmpAngle = mStartAngle;
                 float sweepAngle = 360f / mItemCount;
                 for (int i = 0; i < mItemCount; i++) {
                     mArcPaint.setColor(mColors[i]);
-                    //绘制盘块
-                    //绘制圆弧
-                    //第一个参数:绘制区域
-                    //第二个参数:起始角度
-                    //第三个参数:每个盘块角度
-                    //第三个参数(useCenter):要不要使用中间原点
-                    //第四个参数:画笔
+                    // 绘制盘块
+                    // 绘制圆弧
+                    // 第一个参数:绘制区域
+                    // 第二个参数:起始角度
+                    // 第三个参数:每个盘块角度
+                    // 第三个参数(useCenter):要不要使用中间原点
+                    // 第四个参数:画笔
                     mCanvas.drawArc(mRange, tmpAngle, sweepAngle, true, mArcPaint);
-                    //绘制文本
+                    // 绘制文本
                     drawText(tmpAngle, sweepAngle, mStrs[i]);
-                    //绘制Icon
+                    // 绘制Icon
                     drawIcon(tmpAngle, mImgBitmap[i]);
                     tmpAngle += sweepAngle;
                 }
@@ -199,16 +209,16 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
      * @param index 停下来的位置
      */
     public void luckyStart(int index) {
-        //计算每一项的角度
+        // 计算每一项的角度
         float angle = 360f / mItemCount;
-        //计算每一项中奖范围(当前index)
-        //1->150~210
-        //0->210~270
+        // 计算每一项中奖范围(当前index)
+        // 1->150~210
+        // 0->210~270
         float from = 270 - (index + 1) * angle;
         float end = from + angle;
-        //设置停下来需要旋转的距离
+        // 设置停下来需要旋转的距离
         float targetFrom = 4 * 360 + from;
-        //每次旋转的角度不同
+        // 每次旋转的角度不同
         float targetEnd = 4 * 360 + end;
         /*
          *   v1 -> 0 每次 - 1
@@ -238,14 +248,14 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
      * @param bitmap
      */
     private void drawIcon(float tmpAngle, Bitmap bitmap) {
-        //设置图片的宽度为直径1/8
+        // 设置图片的宽度为直径1/8
         int imgWidth = mRadius / 8;
-        //PI / 180 -> 一度
-        //angle弧度值
+        // PI / 180 -> 一度
+        // angle弧度值
         float angle = (float) ((tmpAngle + 360 / mItemCount / 2) * Math.PI / 180);
         int x = (int) (mCenter + mRadius / 2 / 2 * Math.cos(angle));
         int y = (int) (mCenter + mRadius / 2 / 2 * Math.sin(angle));
-        //确定图片位置
+        // 确定图片位置
         Rect rect = new Rect(x - imgWidth / 2, y - imgWidth / 2, x + imgWidth, y + imgWidth / 2);
         mCanvas.drawBitmap(bitmap, null, rect, null);
     }
@@ -261,11 +271,11 @@ public class DrawPrize extends SurfaceView implements SurfaceHolder.Callback, Ru
         Path path = new Path();
         path.addArc(mRange, tmpAngle, sweepAngle);
         float textWidth = mTextPaint.measureText(mStr);
-        //水平偏移量 mRadius是直径
+        // 水平偏移量 mRadius是直径
         int hOffset = (int) (mRadius * Math.PI / mItemCount / 2 - textWidth / 2);
-        //垂直偏移量
+        // 垂直偏移量
         int vOffset = mRadius / 2 / 6;
-        //第三个参数:水平偏移量,第四个参数:垂直偏移量
+        // 第三个参数:水平偏移量,第四个参数:垂直偏移量
         mCanvas.drawTextOnPath(mStr, path, hOffset, vOffset, mTextPaint);
     }
 }

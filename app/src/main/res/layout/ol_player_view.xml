@@ -33,12 +33,12 @@
             android:layout_height="100dp" />
 
         <ImageView
-            android:id="@+id/ol_player_hair"
+            android:id="@+id/ol_player_eye"
             android:layout_width="100dp"
             android:layout_height="100dp" />
 
         <ImageView
-            android:id="@+id/ol_player_eye"
+            android:id="@+id/ol_player_hair"
             android:layout_width="100dp"
             android:layout_height="100dp" />
 
@@ -59,6 +59,7 @@
             android:layout_marginEnd="0dp"
             android:background="@drawable/back_puased"
             android:gravity="center"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/white1"
             android:textSize="12sp" />

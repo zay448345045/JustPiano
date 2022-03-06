@@ -11,11 +11,6 @@ class OLKeyboardState {
     private boolean muted;
 
     /**
-     * 弹奏音符量速度
-     */
-    private int speed;
-
-    /**
      * midi键盘是否打开
      */
     private boolean midiKeyboardOn;
@@ -31,14 +26,6 @@ class OLKeyboardState {
 
     public void setMuted(boolean muted) {
         this.muted = muted;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public boolean isMidiKeyboardOn() {

@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class javazoom.jl.decoder.JavaLayerUtils{*;}
+-keep class io.netty.**{*;}
 
 -keepattributes Signature
 -keepnames class * implements java.io.Serializable

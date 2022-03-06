@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.media.midi.MidiManager;
 import android.media.midi.MidiOutputPort;
 import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -82,7 +84,18 @@ public final class JPApplication extends Application {
     private String nowSongsName = "";
     private String server = "120.25.100.169";
     private boolean keyboardPrefer;
-    private final ServiceConnection serviceConnection = new JPServiceConnection(this);
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            setConnectionService(((ConnectionService.JPBinder) service).getConnectionService());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            setConnectionService(null);
+        }
+    };
     private int widthPixels;
     private int heightPixels;
     private int animPosition;
@@ -281,7 +294,16 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final ServiceConnection mo2696L() {
+    public final int getVersionCode() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public final ServiceConnection getServiceConnection() {
         return serviceConnection;
     }
 
@@ -739,7 +761,7 @@ public final class JPApplication extends Application {
         // nothing
     }
 
-    private static class CrashHandler implements Thread.UncaughtExceptionHandler {
+    private class CrashHandler implements Thread.UncaughtExceptionHandler {
 
         void init() {
             Thread.setDefaultUncaughtExceptionHandler(this);
@@ -747,32 +769,27 @@ public final class JPApplication extends Application {
 
         @Override
         public void uncaughtException(@NonNull Thread t, Throwable e) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(baos));
-            final String errorLog = baos.toString();
-            ClipboardManager myClipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);  //瀹炰緥鍖栧壀鍒囨澘鏈嶅姟
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(byteArrayOutputStream));
+            final String errorLog = byteArrayOutputStream.toString();
+            ClipboardManager myClipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
             ClipData myClip = ClipData.newPlainText("errorLog", errorLog);
             myClipboard.setPrimaryClip(myClip);
-            String str = errorLog.substring(0, 26);
-            if (str.equals("java.lang.OutOfMemoryError")) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        Toast.makeText(context, "内存溢出", Toast.LENGTH_LONG).show();
-                        Looper.loop();
-                    }
-                }.start();
-            } else {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        Toast.makeText(context, "很抱歉，极品钢琴出现异常，错误信息已自动复制，可联系开发者粘贴错误信息!", Toast.LENGTH_LONG).show();
-                        Looper.loop();
-                    }
-                }.start();
+            if (connectionService != null) {
+                connectionService.outLine();
             }
+            if (isBindService) {
+                unbindService(serviceConnection);
+                setIsBindService(false);
+            }
+            new Thread() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    Toast.makeText(context, "很抱歉，极品钢琴出现异常，错误信息已复制，可粘贴至主界面问题反馈并发送", Toast.LENGTH_LONG).show();
+                    Looper.loop();
+                }
+            }.start();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e1) {
@@ -780,6 +797,18 @@ public final class JPApplication extends Application {
             }
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(-1);
+        }
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        if (connectionService != null) {
+            connectionService.outLine();
+        }
+        if (isBindService) {
+            unbindService(serviceConnection);
+            setIsBindService(false);
         }
     }
 }

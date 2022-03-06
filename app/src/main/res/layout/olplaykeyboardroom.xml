@@ -78,17 +78,10 @@
             <GridView
                 android:id="@+id/ol_player_grid"
                 android:layout_width="304dp"
-                android:layout_height="121dp"
+                android:scrollbars="none"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/keyboard_buttons"
                 android:layout_below="@+id/room_title"
-                android:layout_alignParentEnd="true"
-                android:listSelector="@color/translent"
-                android:numColumns="3" />
-
-            <GridView
-                android:id="@+id/ol_keyboard_state"
-                android:layout_width="304dp"
-                android:layout_height="30dp"
-                android:layout_below="@+id/ol_player_grid"
                 android:layout_alignParentEnd="true"
                 android:listSelector="@color/translent"
                 android:numColumns="3" />
@@ -121,6 +114,7 @@
                 android:textSize="12sp" />
 
             <LinearLayout
+                android:id="@+id/keyboard_buttons"
                 android:layout_width="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_height="45dp">

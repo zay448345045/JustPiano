@@ -84,7 +84,6 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         activityNum = 6;
         challengeHandler = new ChallengeHandler(this);
-        JPStack.create();
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
@@ -166,7 +165,6 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }

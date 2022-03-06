@@ -381,7 +381,6 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         activityNum = 3;
-        JPStack.create();
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         roomTitleMap.clear();
@@ -476,7 +475,6 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
             showTimeThread.interrupt();
         } catch (Exception ignored) {
         }
-        JPStack.create();
         JPStack.pop(this);
         roomTitleMap.clear();
         msgList.clear();

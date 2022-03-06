@@ -25,7 +25,7 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/ol_ance_b"
+            android:id="@+id/ol_web_b"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"

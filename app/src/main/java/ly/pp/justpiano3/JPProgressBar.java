@@ -10,18 +10,18 @@ import android.widget.ImageView;
 
 public final class JPProgressBar extends ProgressDialog {
 
-    private final boolean f5781a;
+    private final boolean cancelWillOutline;
     private JPApplication jpApplication;
     private ConnectionService connectionService;
 
     public JPProgressBar(Context context) {
         super(context);
-        f5781a = false;
+        cancelWillOutline = false;
     }
 
     public JPProgressBar(Context context, JPApplication jPApplication) {
         super(context);
-        f5781a = true;
+        cancelWillOutline = true;
         jpApplication = jPApplication;
         connectionService = jPApplication.getConnectionService();
     }
@@ -29,13 +29,14 @@ public final class JPProgressBar extends ProgressDialog {
     @Override
     public final void onBackPressed() {
         super.onBackPressed();
-        if (f5781a) {
+        if (cancelWillOutline) {
             try {
                 if (connectionService != null) {
                     connectionService.outLine();
                 }
                 if (jpApplication.getIsBindService()) {
-                    jpApplication.unbindService(jpApplication.mo2696L());
+                    jpApplication.unbindService(jpApplication.getServiceConnection());
+                    jpApplication.setIsBindService(false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

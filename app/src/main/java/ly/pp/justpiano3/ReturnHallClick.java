@@ -33,7 +33,7 @@ final class ReturnHallClick implements OnClickListener {
             olPlayRoom.finish();
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
-            olPlayKeyboardRoom.sendMsg((byte) 8, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, olPlayKeyboardRoom.roomTitleString);
+            olPlayKeyboardRoom.sendMsg((byte) 8, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, null);
             Intent intent = new Intent(olPlayKeyboardRoom, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", olPlayKeyboardRoom.hallName);

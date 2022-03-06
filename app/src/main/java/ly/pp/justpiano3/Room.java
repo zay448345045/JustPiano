@@ -24,10 +24,6 @@ final class Room {
         isPlaying = i3;
         isPassword = i4;
         roomMode = i7;
-        if (roomMode == 3) {
-            // 键盘模式修改房间人数总量
-            peopleCapacity = 3;
-        }
         people = new int[peopleCapacity];
         totalPeople = (i + i2) + i6;
         if (totalPeople == peopleCapacity) {

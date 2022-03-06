@@ -19,7 +19,6 @@ public final class ChattingAdapter extends BaseAdapter {
     ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater) {
         msgList = list;
         this.layoutInflater = layoutInflater;
-        JPStack.create();
         if (JPStack.top() instanceof OLPlayRoom) {
             activity = JPStack.top();
         } else if (JPStack.top() instanceof OLPlayHall) {

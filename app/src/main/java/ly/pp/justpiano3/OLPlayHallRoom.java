@@ -89,9 +89,9 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private int userShoesIndex;
     private String userSex = "f";
     private Editor editor = null;
-    private MainGameAdapter f4434X = null;
-    private MainGameAdapter f4435Y = null;
-    private MainGameAdapter f4436Z = null;
+    private MainGameAdapter mailListAdapter = null;
+    private MainGameAdapter hallListAdapter = null;
+    private MainGameAdapter userListAdapter = null;
     private ImageView coupleModView;
     private ImageView coupleTrousersView;
     private ImageView coupleJacketView;
@@ -146,8 +146,8 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
 
     final void mo2840a(int i) {
         mailList.remove(i);
-        f4434X.updateList(mailList);
-        f4434X.notifyDataSetChanged();
+        mailListAdapter.updateList(mailList);
+        mailListAdapter.notifyDataSetChanged();
         mo2848c();
     }
 
@@ -181,13 +181,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("I"), o2.getByte("I")));
         }
-        if (f4435Y == null) {
-            f4435Y = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 0, this);
-            listView.setAdapter(f4435Y);
+        if (hallListAdapter == null) {
+            hallListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 0, this);
+            listView.setAdapter(hallListAdapter);
             return;
         }
-        f4435Y.updateList(list);
-        f4435Y.notifyDataSetChanged();
+        hallListAdapter.updateList(list);
+        hallListAdapter.notifyDataSetChanged();
     }
 
     final void mo2844a(String str) {
@@ -236,13 +236,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
-        if (f4436Z == null) {
-            f4436Z = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 1, this);
-            listView.setAdapter(f4436Z);
+        if (userListAdapter == null) {
+            userListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 1, this);
+            listView.setAdapter(userListAdapter);
             return;
         }
-        f4436Z.updateList(list);
-        f4436Z.notifyDataSetChanged();
+        userListAdapter.updateList(list);
+        userListAdapter.notifyDataSetChanged();
     }
 
     final void mo2847b(String str) {
@@ -286,13 +286,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     final void mo2849c(ListView listView, List<Bundle> list) {
-        if (f4434X == null) {
-            f4434X = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 2, this);
-            listView.setAdapter(f4434X);
+        if (mailListAdapter == null) {
+            mailListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 2, this);
+            listView.setAdapter(mailListAdapter);
             return;
         }
-        f4434X.updateList(list);
-        f4434X.notifyDataSetChanged();
+        mailListAdapter.updateList(list);
+        mailListAdapter.notifyDataSetChanged();
     }
 
     final void addFriends(String str) {
@@ -343,7 +343,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     @Override
     public void onBackPressed() {
         try {
-            JPStack.create();
             JPStack.clear();
         } catch (Exception e) {
             e.printStackTrace();
@@ -508,7 +507,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         activityNum = 1;
-        JPStack.create();
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
@@ -680,7 +678,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         friendList.clear();
         familyList.clear();
         mailList.clear();
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }

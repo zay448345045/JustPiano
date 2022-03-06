@@ -25,10 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -497,7 +493,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         if (isOpenRecord) {
             recordFinish();

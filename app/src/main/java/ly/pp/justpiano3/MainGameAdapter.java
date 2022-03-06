@@ -31,16 +31,12 @@ public final class MainGameAdapter extends BaseAdapter {
         connectionService = jPApplication.getConnectionService();
         type = i;
         if (act instanceof OLPlayHall) {
-            JPStack.create();
             activity = JPStack.top();
         } else if (act instanceof OLPlayRoom) {
-            JPStack.create();
             activity = JPStack.top();
         } else if (act instanceof OLPlayHallRoom) {
-            JPStack.create();
             activity = JPStack.top();
         } else if (act instanceof OLPlayKeyboardRoom) {
-            JPStack.create();
             activity = JPStack.top();
         }
     }

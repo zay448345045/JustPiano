@@ -41,9 +41,7 @@ final class Receive {
                     JsonHandle.m3951a(string, "G");
                     return;
                 case 10:
-                    JPStack.create();
                     if (JPStack.top() instanceof OLMainMode) {
-                        JPStack.create();
                         OLMainMode oLMainMode = (OLMainMode) JPStack.top();
                         Message message2 = new Message();
                         switch (string) {
@@ -67,9 +65,7 @@ final class Receive {
                     }
                     return;
                 case 12:
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayHall) {
-                        JPStack.create();
                         olPlayHall = (OLPlayHall) JPStack.top();
                         try {
                             JSONObject jSONObject2 = new JSONObject(string);
@@ -138,9 +134,7 @@ final class Receive {
                         message = new Message();
                         message.what = 1;
                         message.setData(bundle);
-                        JPStack.create();
                         if (JPStack.top() instanceof OLPlayHallRoom) {
-                            JPStack.create();
                             ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                             return;
                         }
@@ -163,9 +157,7 @@ final class Receive {
                         PianoPlay pianoPlay;
                         switch (jSONObject3.getInt("T")) {
                             case 0:
-                                JPStack.create();
                                 if (JPStack.top() instanceof OLPlayHall) {
-                                    JPStack.create();
                                     olPlayHall = (OLPlayHall) JPStack.top();
                                     assert olPlayHall != null;
                                     olPlayHall.jpprogressBar.dismiss();
@@ -178,9 +170,7 @@ final class Receive {
                                 }
                                 return;
                             case 1:
-                                JPStack.create();
                                 if (JPStack.top() instanceof OLPlayHall) {
-                                    JPStack.create();
                                     olPlayHall = (OLPlayHall) JPStack.top();
                                     assert olPlayHall != null;
                                     olPlayHall.jpprogressBar.dismiss();
@@ -194,9 +184,7 @@ final class Receive {
                                 }
                                 return;
                             case 2:
-                                JPStack.create();
                                 if (JPStack.top() instanceof PianoPlay) {
-                                    JPStack.create();
                                     pianoPlay = (PianoPlay) JPStack.top();
                                     message.setData(bundle);
                                     message.what = 5;
@@ -206,9 +194,7 @@ final class Receive {
                                 }
                                 return;
                             case 3:
-                                JPStack.create();
                                 if (JPStack.top() instanceof PianoPlay) {
-                                    JPStack.create();
                                     pianoPlay = (PianoPlay) JPStack.top();
                                     bundle.putInt("R", jSONObject3.getInt("R"));
                                     bundle.putInt("G", jSONObject3.getInt("G"));

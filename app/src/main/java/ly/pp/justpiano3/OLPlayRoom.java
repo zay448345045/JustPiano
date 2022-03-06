@@ -956,7 +956,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         activityNum = 4;
-        JPStack.create();
         JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         layoutInflater = LayoutInflater.from(this);
@@ -1190,7 +1189,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         playerList.clear();
         invitePlayerList.clear();
         friendPlayerList.clear();
-        JPStack.create();
         JPStack.pop(this);
         if (olRoomSongsAdapter != null && olRoomSongsAdapter.getCursor() != null) {
             olRoomSongsAdapter.getCursor().close();

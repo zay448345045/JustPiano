@@ -49,7 +49,7 @@ final class CreateRoomClick implements OnClickListener {
                     jSONObject.put("N", roomName);
                     jSONObject.put("P", password);
                     jSONObject.put("M", i2);
-                    olPlayHall.sendMsg((byte) 6, (byte) 0, olPlayHall.hallID, jSONObject.toString());
+                    olPlayHall.sendMsg((byte) 6, olPlayHall.hallID, (byte) 0, jSONObject.toString());
                     jSONObject.toString();
                     dialogInterface.dismiss();
                 } catch (JSONException e) {

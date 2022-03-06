@@ -296,7 +296,6 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         activityNum = 7;
         familyHandler = new FamilyHandler(this);
-        JPStack.create();
         JPStack.push(this);
         Bundle b = getIntent().getExtras();
         familyID = b.getString("familyID");
@@ -605,7 +604,6 @@ public class OLFamily extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }

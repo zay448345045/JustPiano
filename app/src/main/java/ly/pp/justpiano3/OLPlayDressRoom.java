@@ -144,7 +144,6 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         context = this;
         super.onCreate(bundle);
         activityNum = 2;
-        JPStack.create();
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
@@ -361,7 +360,6 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         }
         shoesArray.clear();
         body.recycle();
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }

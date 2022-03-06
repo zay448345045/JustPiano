@@ -8,49 +8,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 final class JsonHandle {
-    static ByteBuffer m3945a(byte b, byte b2, byte b3, String str) {
-        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-        byte[] obj = new byte[]{b, b2, b3};
-        byte[] obj2 = new byte[(3 + bytes.length)];
-        System.arraycopy(obj, 0, obj2, 0, 3);
-        System.arraycopy(bytes, 0, obj2, 3, bytes.length);
-        return ByteBuffer.wrap(obj2);
-    }
-
-    static ByteBuffer m3946a(byte b, byte b2, byte b3, byte[] bArr) {
-        byte[] bArr2 = new byte[]{b, b2, b3};
-        ByteBuffer allocate = ByteBuffer.allocateDirect(bArr.length + bArr2.length);
-        allocate.put(bArr2);
-        allocate.put(bArr);
-        return allocate;
-    }
-
-    static ByteBuffer sendLogin(String str, String str2, String str3, String str4, String str5) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("P", str3);
-            jSONObject.put("V", str4);
-            jSONObject.put("N", str);
-            jSONObject.put("K", str2);
-            jSONObject.put("C", str5);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return JsonHandle.m3945a((byte) 10, (byte) 0, (byte) 0, jSONObject.toString());
-    }
 
     static void m3948a(String str) {
         int i = 0;
         Message message = new Message();
         try {
-            JPStack.create();
             if (JPStack.top() instanceof PianoPlay) {
-                JPStack.create();
                 PianoPlay pianoPlay = (PianoPlay) JPStack.top();
                 JSONObject jSONObject = new JSONObject(str);
                 User User = (User) pianoPlay.userMap.get((byte) jSONObject.getInt("I"));
@@ -116,14 +83,12 @@ final class JsonHandle {
                     bundle.putString("DR", jSONObject2.getString("DR"));
                     message.setData(bundle);
                     if (JPStack.top() instanceof OLPlayRoom) {
-                        JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                     } else if (JPStack.top() instanceof OLFamily) {
                         ((OLFamily) JPStack.top()).familyHandler.handleMessage(message);
                     } else if (JPStack.top() instanceof OLPlayHall) {
                         ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        JPStack.create();
                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                     }
                 } catch (JSONException e) {
@@ -138,13 +103,10 @@ final class JsonHandle {
                     bundle2.putString("S", jSONObject4.getString("S"));
                     bundle2.putInt("D", jSONObject4.getInt("D"));
                     message.setData(bundle2);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayRoom) {
-                        JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        JPStack.create();
                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
@@ -177,9 +139,7 @@ final class JsonHandle {
                         i2++;
                     }
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof PianoPlay) {
-                        JPStack.create();
                         ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                         return;
                     }
@@ -190,13 +150,10 @@ final class JsonHandle {
                 }
             case 9:
                 message.what = 8;
-                JPStack.create();
                 if (JPStack.top() instanceof OLPlayRoom) {
-                    JPStack.create();
                     ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                     return;
                 } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                    JPStack.create();
                     ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
                 return;
@@ -211,13 +168,10 @@ final class JsonHandle {
                         bundle.putInt("V", jSONObject2.getInt("V"));
                     }
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayRoom) {
-                        JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        JPStack.create();
                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
@@ -232,13 +186,10 @@ final class JsonHandle {
                     message.what = 10;
                     bundle.putString("R", jSONObject2.getString("R"));
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayRoom) {
-                        JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        JPStack.create();
                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
@@ -255,13 +206,10 @@ final class JsonHandle {
                     bundle2.putString("song_path", jSONObject3.getString("S").replace("\\/", "/"));
                     bundle2.putInt("diao", jSONObject3.getInt("D"));
                     message.setData(bundle2);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayRoom) {
-                        JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        JPStack.create();
                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
@@ -272,9 +220,7 @@ final class JsonHandle {
             case 17:
                 try {
                     jSONObject3 = new JSONObject(str);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
                         if (handler != null) {
                             message.what = 6;
@@ -312,9 +258,7 @@ final class JsonHandle {
                         i2++;
                     }
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof PianoPlay) {
-                        JPStack.create();
                         ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                         return;
                     }
@@ -333,13 +277,10 @@ final class JsonHandle {
                     bundle.putInt("D", 0);
                     bundle.putInt("T", 0);
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayRoom) {
-                        JPStack.create();
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                         return;
                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        JPStack.create();
                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                         return;
                     }
@@ -355,28 +296,22 @@ final class JsonHandle {
                     handler = null;
                     switch (jSONObject3.getInt("S")) {
                         case 0:
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayRoom) JPStack.top()).olPlayRoomHandler;
                                 message.what = 9;
                                 break;
                             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 9;
                                 break;
                             }
                             return;
                         case 1:
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayHall) {
-                                JPStack.create();
                                 handler = ((OLPlayHall) JPStack.top()).olPlayHallHandler;
                                 message.what = 8;
                                 break;
                             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 8;
                                 break;
@@ -419,9 +354,7 @@ final class JsonHandle {
                         i2++;
                     }
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof PianoPlay) {
-                        JPStack.create();
                         ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                     }
                 } catch (JSONException e) {
@@ -435,42 +368,33 @@ final class JsonHandle {
                     handler = null;
                     switch (jSONObject3.getInt("S")) {
                         case 0:
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayRoom) JPStack.top()).olPlayRoomHandler;
                                 message.what = 14;
                                 break;
                             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 14;
                                 break;
                             }
                             return;
                         case 1:
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayHall) {
-                                JPStack.create();
                                 handler = ((OLPlayHall) JPStack.top()).olPlayHallHandler;
                                 message.what = 9;
                                 break;
                             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 9;
                                 break;
                             }
                             return;
                         case 2:
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayHallRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
                                 message.what = 5;
                                 break;
                             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                JPStack.create();
                                 handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                                 message.what = 5;
                                 break;
@@ -497,16 +421,13 @@ final class JsonHandle {
                 break;
             case 45:
                 message.what = 22;
-                JPStack.create();
                 if (JPStack.top() instanceof OLPlayRoom) {
                     bundle.putString("MSG", str);
                     message.setData(bundle);
-                    JPStack.create();
                     ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                 } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
                     bundle.putString("MSG", str);
                     message.setData(bundle);
-                    JPStack.create();
                     ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
                 break;
@@ -529,9 +450,7 @@ final class JsonHandle {
                     JSONObject jSONObject = jSONArray.getJSONObject(i);
                     Bundle bundle2 = new Bundle();
                     Room room = new Room((byte) jSONObject.getInt("I"), jSONObject.getString("N"), jSONObject.getInt("F"), jSONObject.getInt("M"), jSONObject.getInt("S"), jSONObject.getInt("P"), jSONObject.getInt("V"), jSONObject.getInt("C"), jSONObject.getInt("D"));
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayHall) {
-                        JPStack.create();
                         olPlayHall = (OLPlayHall) JPStack.top();
                         olPlayHall.mo2825a(room.getRoomID(), room);
                         bundle2.putByte("I", room.getRoomID());
@@ -557,9 +476,7 @@ final class JsonHandle {
     }
 
     static void m3951a(String str, String str2) {
-        JPStack.create();
         if (JPStack.top() instanceof OLPlayHall) {
-            JPStack.create();
             OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
             try {
                 JSONObject jSONObject = new JSONObject(str);
@@ -618,22 +535,6 @@ final class JsonHandle {
         }
     }
 
-    static ByteBuffer m3952b(byte b, byte b2, byte b3, String str) {
-        switch (b) {
-            case (byte) 3:
-            case (byte) 4:
-            case (byte) 5:
-            case (byte) 12:
-            case (byte) 13:
-            case (byte) 14:
-            case (byte) 15:
-            case (byte) 25:
-                return JsonHandle.m3945a(b, b2, b3, str);
-            default:
-                return null;
-        }
-    }
-
     static void m3953b(byte b, String str) {
         int i = 0;
         Message message = new Message();
@@ -676,9 +577,7 @@ final class JsonHandle {
                     bundle.putString("DR", jSONObject3.getString("DR"));
                     bundle.putInt("CP", jSONObject3.getInt("CP"));
                     message.setData(bundle);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                         return;
                     }
@@ -708,9 +607,7 @@ final class JsonHandle {
                             break;
                     }
                     message.setData(bundle5);
-                    JPStack.create();
                     if (JPStack.top() instanceof OLPlayDressRoom) {
-                        JPStack.create();
                         ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
                     }
                 } catch (JSONException e2) {
@@ -744,9 +641,7 @@ final class JsonHandle {
                                     message.what = 3;
                                     new Bundle().putBundle("L", bundle);
                                     message.setData(bundle);
-                                    JPStack.create();
                                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                                        JPStack.create();
                                         ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                                         return;
                                     }
@@ -754,25 +649,20 @@ final class JsonHandle {
                                 case 1:
                                     message.what = 5;
                                     message.setData(bundle);
-                                    JPStack.create();
                                     if (JPStack.top() instanceof OLPlayHall) {
-                                        JPStack.create();
                                         ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
                                         return;
                                     }
                                     return;
                                 case 2:
-                                    JPStack.create();
                                     if (JPStack.top() instanceof OLPlayRoom) {
                                         message.what = 11;
                                         message.setData(bundle);
-                                        JPStack.create();
                                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                                         return;
                                     } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
                                         message.what = 11;
                                         message.setData(bundle);
-                                        JPStack.create();
                                         ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                                         return;
                                     }
@@ -797,9 +687,7 @@ final class JsonHandle {
                             }
                             message.what = 4;
                             message.setData(bundle);
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayHallRoom) {
-                                JPStack.create();
                                 ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                                 return;
                             }
@@ -814,9 +702,7 @@ final class JsonHandle {
                             bundle.putInt("CP", jSONObject2.getInt("P"));
                             message.what = 22;
                             message.setData(bundle);
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayHallRoom) {
-                                JPStack.create();
                                 ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                                 return;
                             }
@@ -851,9 +737,7 @@ final class JsonHandle {
                         case 0:
                             message.what = 7;
                             message.setData(bundle);
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayHall) {
-                                JPStack.create();
                                 ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
                                 return;
                             }
@@ -861,13 +745,10 @@ final class JsonHandle {
                         case 1:
                             message.what = 15;
                             message.setData(bundle);
-                            JPStack.create();
                             if (JPStack.top() instanceof OLPlayRoom) {
-                                JPStack.create();
                                 ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                                 return;
                             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                JPStack.create();
                                 ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                                 return;
                             }
@@ -887,12 +768,10 @@ final class JsonHandle {
         Bundle bundle = new Bundle();
         Message message = new Message();
         try {
-            JPStack.create();
             if (JPStack.top() instanceof OLPlayHall) {
                 JSONObject jSONObject = new JSONObject(str);
                 JSONArray jSONArray = jSONObject.getJSONArray("L");
                 int i = jSONObject.getInt("R");
-                JPStack.create();
                 OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
                 Bundle bundle2 = new Bundle();
                 for (int i2 = 0; i2 < jSONArray.length(); i2++) {
@@ -923,9 +802,7 @@ final class JsonHandle {
         Message message = new Message();
         message.what = 3;
         try {
-            JPStack.create();
             if (JPStack.top() instanceof OLPlayHall) {
-                JPStack.create();
                 OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
                 assert olPlayHall != null;
                 JSONObject jSONObject = new JSONObject(str);
@@ -971,10 +848,8 @@ final class JsonHandle {
             message.what = 1;
             JSONArray jSONArray = new JSONArray(str);
             int length = jSONArray.length();
-            JPStack.create();
             if (JPStack.top() instanceof OLPlayRoom) {
                 User user;
-                JPStack.create();
                 OLPlayRoom olPlayRoom = (OLPlayRoom) JPStack.top();
                 int i = 0;
                 while (true) {
@@ -1026,7 +901,6 @@ final class JsonHandle {
                 }
             } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
                 User user;
-                JPStack.create();
                 OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
                 int i = 0;
                 while (true) {
@@ -1083,9 +957,7 @@ final class JsonHandle {
     }
 
     static void m3957e(String str) {
-        JPStack.create();
         if (JPStack.top() instanceof OLPlayRoom) {
-            JPStack.create();
             OLPlayRoom olPlayRoom = (OLPlayRoom) JPStack.top();
             try {
                 JSONObject jSONObject = new JSONObject(str);
@@ -1134,7 +1006,6 @@ final class JsonHandle {
                 e.printStackTrace();
             }
         } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-            JPStack.create();
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
             try {
                 JSONObject jSONObject = new JSONObject(str);
@@ -1186,12 +1057,10 @@ final class JsonHandle {
     }
 
     static void keyboardNotes(String str) {
-        JPStack.create();
         if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-            JPStack.create();
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
             try {
-                byte[] keyboardNotes = GZIP.ZIPToArray(str);
+                byte[] keyboardNotes = str.getBytes(StandardCharsets.ISO_8859_1);
                 Bundle bundle = new Bundle();
                 bundle.putByteArray("NOTES", keyboardNotes);
                 Message message = new Message();
@@ -1206,13 +1075,11 @@ final class JsonHandle {
 
     static void challenge(String str) {
         Message message = new Message();
-        JPStack.create();
         try {
             JSONObject jSONObject = new JSONObject(str);
             switch (jSONObject.getInt("K")) {
                 case 1:
                     if (JPStack.top() instanceof OLChallenge) {
-                        JPStack.create();
                         OLChallenge challenge = (OLChallenge) JPStack.top();
                         JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
                         message.what = 1;
@@ -1243,7 +1110,6 @@ final class JsonHandle {
                     break;
                 case 2:
                     if (JPStack.top() instanceof OLChallenge) {
-                        JPStack.create();
                         OLChallenge challenge = (OLChallenge) JPStack.top();
                         assert challenge != null;
                         challenge.jpprogressBar.dismiss();
@@ -1258,7 +1124,6 @@ final class JsonHandle {
                     break;
                 case 3:
                     if (JPStack.top() instanceof PianoPlay) {
-                        JPStack.create();
                         PianoPlay pianoPlay = (PianoPlay) JPStack.top();
                         message.setData(new Bundle());
                         message.what = 5;
@@ -1269,7 +1134,6 @@ final class JsonHandle {
                     break;
                 case 4:
                     if (JPStack.top() instanceof PianoPlay) {
-                        JPStack.create();
                         PianoPlay pianoPlay = (PianoPlay) JPStack.top();
                         Bundle bundle = new Bundle();
                         bundle.putString("I", jSONObject.getString("I"));
@@ -1282,7 +1146,6 @@ final class JsonHandle {
                     break;
                 case 5:
                     if (JPStack.top() instanceof OLChallenge) {
-                        JPStack.create();
                         OLChallenge challenge = (OLChallenge) JPStack.top();
                         message.what = 5;
                         Bundle bundle = new Bundle();
@@ -1299,7 +1162,6 @@ final class JsonHandle {
 
     static void family(String str) {
         Message message = new Message();
-        JPStack.create();
         try {
             JSONObject jSONObject = new JSONObject(str);
             switch (jSONObject.getInt("K")) {
@@ -1307,7 +1169,6 @@ final class JsonHandle {
                     break;
                 case 1:  //进入家族中心
                     if (JPStack.top() instanceof OLFamily) {
-                        JPStack.create();
                         OLFamily family = (OLFamily) JPStack.top();
                         JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
                         assert family != null;
@@ -1344,7 +1205,6 @@ final class JsonHandle {
                     break;
                 case 2:
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         OLPlayHallRoom ophr = (OLPlayHallRoom) JPStack.top();
                         JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
                         assert ophr != null;
@@ -1382,7 +1242,6 @@ final class JsonHandle {
                     break;
                 case 3:
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
                         Bundle bundle = new Bundle();
                         bundle.putString("I", jSONObject.getString("I"));
@@ -1396,7 +1255,6 @@ final class JsonHandle {
                     break;
                 case 4:
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
                         Bundle bundle = new Bundle();
                         bundle.putInt("R", jSONObject.getInt("R"));
@@ -1412,7 +1270,6 @@ final class JsonHandle {
                 case 7:
                 case 10:
                     if (JPStack.top() instanceof OLFamily) {
-                        JPStack.create();
                         OLFamily family = (OLFamily) JPStack.top();
                         Bundle bundle = new Bundle();
                         bundle.putString("I", jSONObject.getString("I"));
@@ -1425,7 +1282,6 @@ final class JsonHandle {
                     break;
                 case 8:
                     if (JPStack.top() instanceof OLFamily) {
-                        JPStack.create();
                         OLFamily family = (OLFamily) JPStack.top();
                         Bundle bundle = new Bundle();
                         try {
@@ -1448,13 +1304,11 @@ final class JsonHandle {
 
     static void shop(String str) {
         Message message = new Message();
-        JPStack.create();
         try {
             JSONObject jSONObject = new JSONObject(str);
             switch (jSONObject.getInt("K")) {
                 case 1:  // 加载商品
                     if (JPStack.top() instanceof OLPlayDressRoom) {
-                        JPStack.create();
                         OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
                         JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
                         assert olPlayDressRoom != null;
@@ -1485,7 +1339,6 @@ final class JsonHandle {
                     break;
                 case 2:  // 购买商品
                     if (JPStack.top() instanceof OLPlayDressRoom) {
-                        JPStack.create();
                         OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
                         Bundle bundle = new Bundle();
                         bundle.putString("I", jSONObject.getString("I"));
@@ -1505,7 +1358,6 @@ final class JsonHandle {
 
     static void daily(String str) {
         Message message = new Message();
-        JPStack.create();
         try {
             JSONObject jSONObject = new JSONObject(str);
             switch (jSONObject.getInt("K")) {
@@ -1513,7 +1365,6 @@ final class JsonHandle {
                     break;
                 case 1:
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         OLPlayHallRoom ophr = (OLPlayHallRoom) JPStack.top();
                         JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
                         assert ophr != null;
@@ -1543,7 +1394,6 @@ final class JsonHandle {
                     }
                 case 2:
                     if (JPStack.top() instanceof OLPlayHallRoom) {
-                        JPStack.create();
                         OLPlayHallRoom ophr = (OLPlayHallRoom) JPStack.top();
                         Bundle bundle = new Bundle();
                         bundle.putString("M", jSONObject.getString("M"));

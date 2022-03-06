@@ -46,6 +46,20 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         Button button3 = inflate.findViewById(R.id.ol_kickout_b);
         Button button4 = inflate.findViewById(R.id.ol_closepos_b);
         Button button5 = inflate.findViewById(R.id.ol_couple_b);
+        Button button6 = inflate.findViewById(R.id.ol_sound_b);
+        button6.setVisibility(View.VISIBLE);
+        if (olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted()) {
+            button6.setText("取消静音");
+        } else {
+            button6.setText("静音");
+        }
+        button6.setOnClickListener(v -> {
+            olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted());
+            notifyDataSetChanged();
+            if (popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
+        });
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(olPlayKeyboardRoom.getResources().getDrawable(R.drawable.filled_box));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -128,12 +142,6 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                             } else {
                                 connectionService.writeData((byte) 9, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
                                 olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
-                                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setSpeed(0);
-                                if (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter() != null) {
-                                    ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
-                                } else {
-                                    olPlayKeyboardRoom.keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(olPlayKeyboardRoom));
-                                }
                             }
                         }
                     }
@@ -203,7 +211,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     @Override
     public final View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.ol_player_view, null);
+            view = layoutInflater.inflate(R.layout.ol_keyboard_player_view, null);
         } else if (viewGroup.getChildCount() != i || i >= playerList.size()) {
             return view;
         }
@@ -222,6 +230,12 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             imageView.getLocationOnScreen(iArr);
             a.showAtLocation(imageView, 51, iArr[0] + imageView.getWidth(), iArr[1]);
         });
+        ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
+        if (olPlayKeyboardRoom.olKeyboardStates[i].isMuted()) {
+            imageView8.setImageResource(R.drawable.stop);
+        } else {
+            imageView8.setImageResource(R.drawable.null_pic);
+        }
         try {
             if (string4.equals("O")) {
                 imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
@@ -328,6 +342,12 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         }
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(string);
+        ImageView imageView1 = view.findViewById(R.id.ol_player_midi);
+        if (olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn()) {
+            imageView1.setVisibility(View.VISIBLE);
+        } else {
+            imageView1.setVisibility(View.INVISIBLE);
+        }
         if (i2 == 0) {
             textView2.setBackgroundResource(R.drawable.back_puased);
         } else {

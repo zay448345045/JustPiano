@@ -165,7 +165,6 @@ public class Login extends BaseActivity implements OnClickListener {
         jpapplication.setServer(s.getString("ip", "120.25.100.169"));
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         setPackageAndVersion();
-        JPStack.create();
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);

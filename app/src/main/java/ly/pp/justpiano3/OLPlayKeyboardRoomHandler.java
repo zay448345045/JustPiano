@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -93,17 +94,17 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                             return;
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
-                        int notesSpeed = ((notes.length / 3) << 10) / OLPlayKeyboardRoom.NOTES_SEND_INTERVAL;
-                        olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
-                        olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setSpeed(notesSpeed);
-                        if (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter() != null) {
-                            ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
-                        } else {
-                            olPlayKeyboardRoom.keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(olPlayKeyboardRoom));
+                        if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMidiKeyboardOn() != midiKeyboardOn) {
+                            olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
+                            if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
+                                ((KeyboardPlayerImageAdapter)(olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                            } else {
+                                olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
+                            }
                         }
                         ThreadPoolUtils.execute(() -> {
                             for (int i = 1; i < notes.length; i += 3) {
-                                int intervalTime = (notes[i] << 2);
+                                int intervalTime = notes[i];
                                 if (intervalTime > 0) {
                                     try {
                                         Thread.sleep(intervalTime);
@@ -111,27 +112,19 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                         e.printStackTrace();
                                     }
                                 }
+                                if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
+                                    olPlayKeyboardRoom.jpapplication.playSound(notes[i + 1], notes[i + 2]);
+                                }
                                 int finalI = i;
                                 olPlayKeyboardRoom.runOnUiThread(() -> {
                                     // 此处fireKeyDown的最后一个参数必须为false，否则就会循环发送导致卡死
                                     if (notes[finalI + 2] > 0) {
-                                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                            olPlayKeyboardRoom.jpapplication.playSound(notes[finalI + 1], notes[finalI + 2]);
-                                        }
                                         olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[finalI + 1], notes[finalI + 2], user.getKuang(), false);
                                     } else {
                                         olPlayKeyboardRoom.keyboardView.fireKeyUp(notes[finalI + 1], false);
                                     }
                                 });
                             }
-                            olPlayKeyboardRoom.runOnUiThread(() -> {
-                                olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setSpeed(0);
-                                if (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter() != null) {
-                                    ((KeyboardPlayerStatusAdapter) (olPlayKeyboardRoom.keyboardStatusGrid.getAdapter())).notifyDataSetChanged();
-                                } else {
-                                    olPlayKeyboardRoom.keyboardStatusGrid.setAdapter(new KeyboardPlayerStatusAdapter(olPlayKeyboardRoom));
-                                }
-                            });
                         });
                     });
                     return;
