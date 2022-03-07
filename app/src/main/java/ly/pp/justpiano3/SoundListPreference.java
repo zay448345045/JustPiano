@@ -29,6 +29,11 @@ public class SoundListPreference extends DialogPreference {
         this.context = context;
     }
 
+    public SoundListPreference(Context context) {
+        super(context, null);
+        this.context = context;
+    }
+
     private void m3922a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
         List<File> f5048c = SkinAndSoundFileHandle.getLocalSoundList(str);

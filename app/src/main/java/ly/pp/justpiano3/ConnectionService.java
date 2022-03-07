@@ -55,7 +55,7 @@ public class ConnectionService extends Service implements Runnable {
      */
     public static byte[] intToByteArray(int value) {
         byte[] result = new byte[4];
-        // 94为与安卓端商议好的定界符，确认协议是否有效
+        // 94为商议好的定界符，确认协议是否有效
         result[0] = (byte) 94;
         result[1] = (byte) ((value >> 16) & 0xFF);
         result[2] = (byte) ((value >> 8) & 0xFF);
@@ -78,6 +78,8 @@ public class ConnectionService extends Service implements Runnable {
         }
         if (mNetty.isConnected()) {
             mNetty.sendMessage(makeBytes(b, b2, b3, input));
+        } else {
+            outLineAndDialog();
         }
     }
 

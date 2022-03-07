@@ -28,9 +28,12 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -153,18 +156,31 @@ public final class JPApplication extends Application {
     }
 
     /**
-     * 移动文件到新文件的位置
+     * 移动文件到新文件的位置（拷贝流）
      *
      * @param src 源文件对象
      * @param des 目标文件对象
      */
-    public static void moveFile(File src, File des) {
+    public static boolean moveFile(File src, File des) {
+        if (!src.exists()) {
+            return false;
+        }
         if (des.exists()) {
             des.delete();
         }
-        if (src.exists()) {
-            src.renameTo(des);
+        try (BufferedInputStream reader = new BufferedInputStream(new FileInputStream(src)); BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(des))) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, length);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            src.delete();
         }
+        return true;
     }
 
     public static void reLoadOriginalSounds() {
@@ -190,7 +206,7 @@ public final class JPApplication extends Application {
 
     public static void confirmLoadSounds() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", false);
+        boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", true);
         setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
     }
 

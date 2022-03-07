@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
@@ -92,6 +94,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     KeyboardModeView keyboardView;
     ScheduledExecutorService scheduledExecutor;
     ScheduledExecutorService noteScheduledExecutor;
+    ImageView keyboardSetting;
     // 用于记录上次的移动
     private boolean reSize;
     // 记录目前是否在走动画，不能重复走
@@ -100,6 +103,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     private int interval = 320;
     boolean timeUpdateRunning;
     ListView msgListView;
+    PopupWindow keyboardSettingPopup = null;
     private ImageView express;
     private LayoutInflater layoutInflater;
     public final List<Bundle> playerList = new ArrayList<>();
@@ -557,19 +561,75 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 return;
             case R.id.keyboard_setting:
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                PopupWindow popupWindow2 = new PopupWindow(this);
+                View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_keyboard_setting_list, null);
+                popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+                popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+                popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                inflate2.findViewById(R.id.midi_down_tune).setOnClickListener(this);
+                inflate2.findViewById(R.id.midi_up_tune).setOnClickListener(this);
+                inflate2.findViewById(R.id.sound_down_tune).setOnClickListener(this);
+                inflate2.findViewById(R.id.sound_up_tune).setOnClickListener(this);
+                inflate2.findViewById(R.id.skin_setting).setOnClickListener(this);
+                inflate2.findViewById(R.id.sound_setting).setOnClickListener(this);
+                popupWindow2.setFocusable(true);
+                popupWindow2.setTouchable(true);
+                popupWindow2.setOutsideTouchable(true);
+                popupWindow2.setContentView(inflate2);
+                TextView midiTune = inflate2.findViewById(R.id.midi_tune);
+                midiTune.setText(String.valueOf(jpapplication.getMidiKeyboardTune()));
+                TextView soundTune = inflate2.findViewById(R.id.sound_tune);
+                soundTune.setText(String.valueOf(jpapplication.getKeyboardSoundTune()));
+                keyboardSettingPopup = popupWindow2;
+                popupWindow2.showAtLocation(keyboardSetting, Gravity.CENTER, 0, 0);
+                return;
+            case R.id.midi_down_tune:
+                if (jpapplication.getMidiKeyboardTune() > -6) {
+                    jpapplication.setMidiKeyboardTune(jpapplication.getKeyboardSoundTune() - 1);
+                }
+                if (keyboardSettingPopup != null) {
+                    keyboardSettingPopup.dismiss();
+                }
+                return;
+            case R.id.midi_up_tune:
+                if (jpapplication.getMidiKeyboardTune() < 6) {
+                    jpapplication.setMidiKeyboardTune(jpapplication.getKeyboardSoundTune() + 1);
+                }
+                if (keyboardSettingPopup != null) {
+                    keyboardSettingPopup.dismiss();
+                }
+                return;
+            case R.id.sound_down_tune:
+                if (jpapplication.getKeyboardSoundTune() > -6) {
+                    jpapplication.setKeyboardSoundTune(jpapplication.getKeyboardSoundTune() - 1);
+                }
+                if (keyboardSettingPopup != null) {
+                    keyboardSettingPopup.dismiss();
+                }
+                return;
+            case R.id.sound_up_tune:
+                if (jpapplication.getKeyboardSoundTune() < 6) {
+                    jpapplication.setKeyboardSoundTune(jpapplication.getKeyboardSoundTune() + 1);
+                }
+                if (keyboardSettingPopup != null) {
+                    keyboardSettingPopup.dismiss();
+                }
+                return;
+            case R.id.skin_setting:
+
+                if (keyboardSettingPopup != null) {
+                    keyboardSettingPopup.dismiss();
+                }
+                jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+                keyboardView.changeImage(this);
+                return;
+            case R.id.sound_setting:
+
+                if (keyboardSettingPopup != null) {
+                    keyboardSettingPopup.dismiss();
+                }
                 return;
             case R.id.keyboard_record:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    JPDialog jpdialog = new JPDialog(this);
-                    jpdialog.setTitle("提示");
-                    jpdialog.setMessage("抱歉，Android 11及以上版本暂不支持录音功能");
-                    jpdialog.setFirstButton("确定", new DialogDismissClick());
-                    jpdialog.showDialog();
-                    return;
-                }
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
@@ -578,9 +638,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
-                            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss录音", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String date = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
-                            recordFileName = date + ".wav";
+                            recordFileName = date + "录音.wav";
                             JPApplication.setRecordFilePath(recordFilePath);
                             JPApplication.setRecord(true);
                             recordStart = true;
@@ -606,15 +666,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 return;
             default:
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-            keyboardView.changeImage(this);
         }
     }
 
@@ -737,7 +788,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         keyboardMoveRight.setOnTouchListener(this);
         Button keyboardResize = findViewById(R.id.keyboard_resize);
         keyboardResize.setOnTouchListener(this);
-        ImageView keyboardSetting = findViewById(R.id.keyboard_setting);
+        keyboardSetting = findViewById(R.id.keyboard_setting);
         keyboardSetting.setOnClickListener(this);
         Button keyboardRecord = findViewById(R.id.keyboard_record);
         keyboardRecord.setOnClickListener(this);

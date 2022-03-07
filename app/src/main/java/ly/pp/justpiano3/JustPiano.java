@@ -230,22 +230,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
             file.mkdirs();
         }
         Message obtainMessage;
-        try {
-            File file1 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
-            File file2 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-            File file3 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records");
-            if (!file1.exists()) {
-                file1.mkdirs();
-            }
-            if (!file2.exists()) {
-                file2.mkdirs();
-            }
-            if (!file3.exists()) {
-                file3.mkdirs();
-            }
-        } catch (Exception e4) {
-            e4.printStackTrace();
-        }
         testSQL = new TestSQL(this, "data");
         sqliteDataBase = testSQL.getWritableDatabase();
         try {

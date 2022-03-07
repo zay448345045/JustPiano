@@ -45,11 +45,7 @@ public class SoundDownload extends Activity implements Callback {
 
     static void downloadSS(SoundDownload soundDownload, String str, String str2) {
         Message message = new Message();
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str2 + ".ss");
+        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str2 + ".ss");
         if (file.exists()) {
             Bundle bundle = new Bundle();
             bundle.putString("name", str2);
@@ -79,12 +75,11 @@ public class SoundDownload extends Activity implements Callback {
             Message message2;
             try {
                 soundDownload.outputStream = new FileOutputStream(file);
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
                 soundDownload.length = connection.getContentLength();
                 int n;
                 while (-1 != (n = in.read(buffer))) {
-                    output.write(buffer, 0, n);
+                    soundDownload.outputStream.write(buffer, 0, n);
                     soundDownload.progress += 4096;
                     message = new Message();
                     message.what = 1;
@@ -93,10 +88,6 @@ public class SoundDownload extends Activity implements Callback {
                     }
                 }
                 in.close();
-                // byte[] array = GZIP.ZIPToArrayAddHandle(new String(output.toByteArray(), UTF_8), soundDownload.handler, soundDownload.progress);
-                byte[] array = output.toByteArray();
-                output.close();
-                soundDownload.outputStream.write(array, 0, array.length);
                 soundDownload.outputStream.close();
                 message2 = new Message();
                 message2.what = 2;

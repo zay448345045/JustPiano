@@ -82,17 +82,17 @@ public class SkinListPreference extends DialogPreference {
     protected void onPrepareDialogBuilder(Builder builder) {
         m3906a();
         jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-        LinearLayout f5028h = new LinearLayout(context);
-        f5028h.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        f5028h.setOrientation(LinearLayout.VERTICAL);
-        f5028h.setMinimumWidth(400);
-        f5028h.setPadding(20, 20, 20, 20);
-        f5028h.setBackgroundColor(-1);
-        ListView f5027g = new ListView(context);
-        f5027g.setDivider(null);
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setMinimumWidth(400);
+        linearLayout.setPadding(20, 20, 20, 20);
+        linearLayout.setBackgroundColor(-1);
+        ListView skinListView = new ListView(context);
+        skinListView.setDivider(null);
         skinListAdapter = new SkinListAdapter(this, context, f5021a, f5022b);
-        f5027g.setAdapter(skinListAdapter);
-        f5028h.addView(f5027g);
-        builder.setView(f5028h);
+        skinListView.setAdapter(skinListAdapter);
+        linearLayout.addView(skinListView);
+        builder.setView(linearLayout);
     }
 }

@@ -1,16 +1,19 @@
 package ly.pp.justpiano3;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.midi.MidiReceiver;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -27,6 +31,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
@@ -359,14 +365,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 break;
             case R.id.keyboard_record:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    JPDialog jpdialog = new JPDialog(this);
-                    jpdialog.setTitle("提示");
-                    jpdialog.setMessage("抱歉，Android 11及以上版本暂不支持录音功能");
-                    jpdialog.setFirstButton("确定", new DialogDismissClick());
-                    jpdialog.showDialog();
-                    return;
-                }
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
@@ -375,9 +373,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
-                            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss录音", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String date = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
-                            recordFileName = date + ".wav";
+                            recordFileName = date + "录音.wav";
                             JPApplication.setRecordFilePath(recordFilePath);
                             JPApplication.setRecord(true);
                             recordStart = true;
@@ -399,7 +397,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         JPApplication.moveFile(srcFile, desFile);
                         Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 break;
             default:
