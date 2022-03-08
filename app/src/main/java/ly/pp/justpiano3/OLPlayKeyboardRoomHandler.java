@@ -1,7 +1,6 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -97,7 +95,7 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                         if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMidiKeyboardOn() != midiKeyboardOn) {
                             olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
                             if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
-                                ((KeyboardPlayerImageAdapter)(olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                                ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                             } else {
                                 olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
                             }

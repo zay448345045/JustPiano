@@ -593,14 +593,14 @@ final class JsonHandle {
                     message.what = type;
                     Bundle bundle5 = new Bundle();
                     switch (type) {
-                        case 0:  //保存服装
+                        case 0:  // 保存服装
                             bundle5.putString("I", jSONObject3.getString("I"));
                             break;
-                        case 1:  //进入换衣间加载音符和解锁情况
+                        case 1:  // 进入换衣间加载音符和解锁情况
                             bundle5.putString("G", jSONObject3.getString("G"));
                             bundle5.putByteArray("U", GZIP.ZIPToArray(jSONObject3.getString("U")));
                             break;
-                        case 2:  //购买服装
+                        case 2:  // 购买服装
                             bundle5.putString("I", jSONObject3.getString("I"));
                             bundle5.putString("G", jSONObject3.getString("G"));
                             bundle5.putByteArray("U", GZIP.ZIPToArray(jSONObject3.getString("U")));
@@ -1165,9 +1165,9 @@ final class JsonHandle {
         try {
             JSONObject jSONObject = new JSONObject(str);
             switch (jSONObject.getInt("K")) {
-                case 0:  //退出家族中心，请求界面切换至家族选项卡
+                case 0:  // 退出家族中心，请求界面切换至家族选项卡
                     break;
-                case 1:  //进入家族中心
+                case 1:  // 进入家族中心
                     if (JPStack.top() instanceof OLFamily) {
                         OLFamily family = (OLFamily) JPStack.top();
                         JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));

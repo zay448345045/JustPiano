@@ -327,11 +327,11 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public final void mo2906a(boolean hasTimer) {
         progressbar.setVisibility(View.GONE);
         Message obtainMessage = pianoPlayHandler.obtainMessage();
-        if (hasTimer) {  //联网模式发321倒计时器
+        if (hasTimer) {  // 联网模式发321倒计时器
             obtainMessage.what = 7;
             Timer timer = new Timer();
             timer.schedule(new StartPlayTimer(this, obtainMessage, timer), 0, 1000);
-        } else {  //本地模式直接开始
+        } else {  // 本地模式直接开始
             obtainMessage.what = 7;
             obtainMessage.arg1 = 0;
             pianoPlayHandler.handleMessage(obtainMessage);

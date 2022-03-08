@@ -25,17 +25,17 @@ import androidx.annotation.RequiresApi;
 
 /**
  * Convert stream of arbitrary MIDI bytes into discrete messages.
- *
+ * <p>
  * Parses the incoming bytes and then posts individual messages to the receiver
  * specified in the constructor. Short messages of 1-3 bytes will be complete.
  * System Exclusive messages may be posted in pieces.
- *
+ * <p>
  * Resolves Running Status and interleaved System Real-Time messages.
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class MidiFramer extends MidiReceiver {
-    private MidiReceiver mReceiver;
-    private byte[] mBuffer = new byte[3];
+    private final MidiReceiver mReceiver;
+    private final byte[] mBuffer = new byte[3];
     private int mCount;
     private byte mRunningStatus;
     private int mNeeded;
@@ -70,7 +70,7 @@ public class MidiFramer extends MidiReceiver {
                         // Log.i(TAG, "SysEx End");
                         if (mInSysEx) {
                             mReceiver.send(data, sysExStartOffset,
-                                offset - sysExStartOffset + 1, timestamp);
+                                    offset - sysExStartOffset + 1, timestamp);
                             mInSysEx = false;
                             sysExStartOffset = -1;
                         }

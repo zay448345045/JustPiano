@@ -1,7 +1,6 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -72,8 +71,8 @@ final class OLPlayRoomHandler extends Handler {
                         if (!str.isEmpty()) {
                             try {
                                 JSONObject jSONObject = new JSONObject(str);
-                                int i = jSONObject.getInt("T");//对话框类型
-                                int i2 = jSONObject.getInt("CT");//搭档类型
+                                int i = jSONObject.getInt("T");
+                                int i2 = jSONObject.getInt("CT");
                                 byte b = (byte) jSONObject.getInt("CI");
                                 String string = jSONObject.getString("C");
                                 if (!string.isEmpty()) {

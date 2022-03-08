@@ -67,6 +67,14 @@ public class ConnectionService extends Service implements Runnable {
         mNetty.disconnect();
     }
 
+    public final void writeData(byte[] bArr) {
+        if (mNetty.isConnected()) {
+            mNetty.sendMessage(bArr);
+        } else {
+            outLineAndDialog();
+        }
+    }
+
     public final void writeData(byte b, byte b2, byte b3, String str, byte[] bArr) {
         byte[] input;
         if (str != null && !str.isEmpty()) {

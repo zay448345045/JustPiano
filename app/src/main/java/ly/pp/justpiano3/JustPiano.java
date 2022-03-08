@@ -8,14 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.DisplayMetrics;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 

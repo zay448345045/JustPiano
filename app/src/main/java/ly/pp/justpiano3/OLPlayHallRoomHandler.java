@@ -1,7 +1,6 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;

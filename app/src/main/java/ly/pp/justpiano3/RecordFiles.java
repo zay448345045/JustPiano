@@ -2,13 +2,10 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;

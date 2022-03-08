@@ -3,7 +3,6 @@ package ly.pp.justpiano3;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Environment;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;

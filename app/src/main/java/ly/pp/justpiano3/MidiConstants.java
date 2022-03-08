@@ -51,12 +51,16 @@ public class MidiConstants {
     public static final byte STATUS_ACTIVE_SENSING = (byte) 0xFE;
     public static final byte STATUS_RESET = (byte) 0xFF;
 
-    /** Number of bytes in a message nc from 8c to Ec */
-    public final static int CHANNEL_BYTE_LENGTHS[] = { 3, 3, 3, 3, 2, 2, 3 };
+    /**
+     * Number of bytes in a message nc from 8c to Ec
+     */
+    public final static int[] CHANNEL_BYTE_LENGTHS = {3, 3, 3, 3, 2, 2, 3};
 
-    /** Number of bytes in a message Fn from F0 to FF */
-    public final static int SYSTEM_BYTE_LENGTHS[] = { 1, 2, 3, 2, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1 };
+    /**
+     * Number of bytes in a message Fn from F0 to FF
+     */
+    public final static int[] SYSTEM_BYTE_LENGTHS = {1, 2, 3, 2, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1};
 
     public final static int MAX_CHANNELS = 16;
 
@@ -64,6 +68,7 @@ public class MidiConstants {
      * MIDI messages, except for SysEx, are 1,2 or 3 bytes long.
      * You can tell how long a MIDI message is from the first status byte.
      * Do not call this for SysEx, which has variable length.
+     *
      * @param statusByte
      * @return number of bytes in a complete message, zero if data byte passed
      */
@@ -74,7 +79,7 @@ public class MidiConstants {
         if (statusInt >= 0xF0) {
             // System messages use low nibble for size.
             return SYSTEM_BYTE_LENGTHS[statusInt & 0x0F];
-        } else if(statusInt >= 0x80) {
+        } else if (statusInt >= 0x80) {
             // Channel voice messages use high nibble for size.
             return CHANNEL_BYTE_LENGTHS[(statusInt >> 4) - 8];
         } else {
@@ -89,7 +94,7 @@ public class MidiConstants {
      * @return true if the entire message is ActiveSensing commands
      */
     public static boolean isAllActiveSensing(byte[] msg, int offset,
-            int count) {
+                                             int count) {
         // Count bytes that are not active sensing.
         int goodBytes = 0;
         for (int i = 0; i < count; i++) {

@@ -1,8 +1,6 @@
 package ly.pp.justpiano3;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
@@ -12,7 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
-import android.os.Looper;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
@@ -616,7 +613,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 return;
             case R.id.skin_setting:
-
+                // TODO
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }

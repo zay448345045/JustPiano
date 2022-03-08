@@ -2,17 +2,17 @@ package ly.pp.justpiano3;
 
 final class Room {
 
-    private int peopleCapacity = 6;
-    private byte roomID;
-    private String roonName;
-    private int fcount;
-    private int mcount;
+    private final int peopleCapacity = 6;
+    private final byte roomID;
+    private final String roonName;
+    private final int fcount;
+    private final int mcount;
     private final int isPlaying;
     private final int[] people;
     private boolean peopleFull;
-    private int isPassword;
-    private int roomKuang;
-    private int roomMode;
+    private final int isPassword;
+    private final int roomKuang;
+    private final int roomMode;
 
     Room(byte b, String str, int i, int i2, int i3, int i4, int i5, int i6, int i7) {
         peopleFull = false;

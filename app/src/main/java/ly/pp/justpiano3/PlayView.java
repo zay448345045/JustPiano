@@ -367,7 +367,7 @@ public final class PlayView extends SurfaceView implements Callback {
         line.setStrokeWidth(3);
         screenWidth = jpapplication.getWidthPixels();
         screenHeight = jpapplication.getHeightPixels();
-        widthDiv8 = jpapplication.getWidthPixels() / 8f;//每个琴键宽度
+        widthDiv8 = jpapplication.getWidthPixels() / 8f;// 每个琴键宽度
         width2Div8 = jpapplication.getWidthPixels() / 4f;
         width4Div8 = jpapplication.getWidthPixels() / 2f;
         width5Div8 = jpapplication.getWidthPixels() / 1.6f;
