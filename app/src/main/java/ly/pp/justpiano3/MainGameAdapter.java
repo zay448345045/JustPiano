@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 public final class MainGameAdapter extends BaseAdapter {
     Activity activity;
     ConnectionService connectionService;
@@ -48,7 +50,7 @@ public final class MainGameAdapter extends BaseAdapter {
         inflate.findViewById(R.id.text_1).setVisibility(View.GONE);
         textView2.setVisibility(View.GONE);
         textView.setSingleLine(true);
-        new JPDialog(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new RoomPasswordClick(mainGameAdapter, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialog(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new HallPasswordClick(mainGameAdapter, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     final void updateList(List<Bundle> list) {
@@ -111,7 +113,9 @@ public final class MainGameAdapter extends BaseAdapter {
                     if (list.get(i).getInt("W") > 0) {
                         MainGameAdapter.m3978a(MainGameAdapter.this, b);
                     } else {
-                        connectionService.writeData((byte) 29, (byte) 0, b, "", null);
+                        OnlineRequest.EnterHall.Builder builder = OnlineRequest.EnterHall.newBuilder();
+                        builder.setHallId(b);
+                        connectionService.writeData(29, builder.build());
                     }
                 });
                 break;

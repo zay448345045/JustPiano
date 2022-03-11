@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class FamilyHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
@@ -83,26 +85,18 @@ final class FamilyHandler extends Handler {
                             family.infoWindow.dismiss();
                         }
                         if (info.equals("您所在的家族已解散")) {
-                            try {
-                                JSONObject jSONObject = new JSONObject();
-                                jSONObject.put("K", 0);
-                                family.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                            builder.setType(0);
+                            family.sendMsg(18, builder.build());
                             Intent intent = new Intent(family, OLPlayHallRoom.class);
                             intent.putExtra("HEAD", 16);
                             family.startActivity(intent);
                             family.finish();
                         } else {
-                            try {
-                                JSONObject jSONObject = new JSONObject();
-                                jSONObject.put("K", 1);
-                                jSONObject.put("I", family.familyID);
-                                family.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                            builder.setType(1);
+                            builder.setFamilyId(Integer.parseInt(family.familyID));
+                            family.sendMsg(18, builder.build());
                         }
                     });
                     return;

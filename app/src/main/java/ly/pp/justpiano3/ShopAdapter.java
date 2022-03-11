@@ -7,8 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public final class ShopAdapter extends BaseAdapter {
     private final OLPlayDressRoom olPlayDressRoom;
@@ -59,14 +58,10 @@ public final class ShopAdapter extends BaseAdapter {
             jpdialog.setFirstButton("购买", (dialog, which) -> {
                 dialog.dismiss();
                 olPlayDressRoom.jpprogressBar.show();
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("K", 2);
-                    jSONObject.put("I", shopProduct.getId());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                olPlayDressRoom.sendMsg((byte) 26, (byte) 0, (byte) 0, jSONObject.toString());
+                OnlineRequest.Shop.Builder builder = OnlineRequest.Shop.newBuilder();
+                builder.setType(2);
+                builder.setProductId(shopProduct.getId());
+                olPlayDressRoom.sendMsg(26, builder.build());
             });
             jpdialog.setSecondButton("取消", new DialogDismissClick());
             jpdialog.showDialog();

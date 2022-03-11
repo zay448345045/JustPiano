@@ -94,7 +94,7 @@ protobuf {
 
     // 默认路径为 build/generated/source/proto
     // 该目录下会按 buildType 生成 debug / release 目录
-    generatedFilesBaseDir = "$projectDir/src/main/java/"
+    generatedFilesBaseDir = "$projectDir/src/main/java"
 
     generateProtoTasks {
         all().each { task ->

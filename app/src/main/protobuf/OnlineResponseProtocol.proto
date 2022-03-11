@@ -1,0 +1,528 @@
+syntax = "proto3";
+
+package ly.pp.justpiano3.protobuf.response;
+
+option java_outer_classname = "OnlineResponse";
+
+// 服务器发送协议
+message Message {
+  reserved 1, 11, 41;
+  oneof response {
+    // 用户登录对战
+    Login login = 10;
+    // 大厅聊天
+    HallChat hall_chat = 12;
+    // 房间聊天
+    RoomChat room_chat = 13;
+    // 每日挑战
+    Challenge challenge = 16;
+    // 家族
+    Family family = 18;
+    // 进入大厅后加载房间列表
+    LoadRoomList load_room_list = 19;
+    // 大厅中加载变化房间列表
+    Room room_list_change = 22;
+    // 商店
+    Shop shop = 26;
+    // 主界面加载用户信息及大厅列表
+    LoadUser load_user = 28;
+    // 进入大厅
+    EnterHall enter_hall = 29;
+    // 退出大厅
+    QuitHall quit_hall = 30;
+    // 更换服装
+    ChangeClothes change_clothes = 33;
+    // 查看好友、私信和主界面查看搭档
+    LoadUserInfo load_user_info = 34;
+    // 大厅加载用户列表或房间加载邀请列表
+    LoadUserList load_user_list = 36;
+    // 等级考试
+    ClTest cl_test = 40;
+  }
+}
+
+// 用户登录
+message Login {
+  // 登录结果
+  string status = 1;
+  // 服务端时间
+  uint64 time = 2;
+}
+
+// 大厅聊天
+message HallChat {
+  // 私聊用户名称
+  string user_name = 1;
+  // 消息内容
+  string message = 2;
+  // 聊天种类（1公聊，2私聊，3系统消息，18全服广播）
+  uint32 type = 3;
+}
+
+// 房间聊天
+message RoomChat {
+  // 私聊用户名称
+  string user_name = 1;
+  // 消息内容
+  string message = 2;
+  // 聊天种类（1公聊，2私聊，3系统消息，18全服广播）
+  uint32 type = 3;
+  // 消息文字颜色
+  uint32 color = 4;
+}
+
+// 每日挑战
+message Challenge {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof challenge {
+    // 每日挑战返回排名信息和个人信息
+    ChallengeEnter challenge_enter = 2;
+    // 每日挑战返回曲目和对话框
+    ChallengeDialog challenge_dialog = 3;
+    // 每日挑战结束弹奏时返回结果
+    ChallengeFinish challenge_finish = 4;
+    // 每日挑战抽奖
+    ChallengePrize challenge_prize = 5;
+  }
+}
+
+// 每日挑战返回排名信息和个人信息
+message ChallengeEnter {
+  // 排名列表
+  repeated ChallengeUser user_score = 1;
+  // 当前用户今日排名
+  string position = 2;
+  // 当前用户昨日排名
+  string yesterday_position = 3;
+  // 当前用户今日挑战最高分数
+  uint32 score = 4;
+  // 当前用户今日剩余挑战次数
+  uint32 challenge_num = 5;
+}
+
+// 每日挑战返回曲目和对话框
+message ChallengeDialog {
+  // 是否可参与挑战
+  bool allowed = 1;
+  // 挑战曲pm文件二进制内容
+  optional string song_content = 2;
+  // 对话框显示消息
+  string message = 3;
+}
+
+// 每日挑战返回排名信息
+message ChallengeUser {
+  // 用户名称
+  string name = 1;
+  // 用户挑战最高分数
+  uint32 score = 2;
+  // 挑战参与时间
+  string time = 3;
+}
+
+// 每日挑战结束弹奏时返回结果
+message ChallengeFinish {
+  // 对话框显示消息
+  string message = 1;
+}
+
+// 每日挑战抽奖
+message ChallengePrize {
+  // 奖励种类（-1表示无奖励）
+  int32 prize_type = 1;
+  // 奖励名称
+  string prize_name = 2;
+}
+
+// 家族
+message Family {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof family {
+    // 进入家族中心
+    FamilyEnter family_enter = 2;
+    // 读取家族列表（未进入家族中心）
+    FamilyList family_list = 3;
+    // 家族对话框
+    FamilyDialog family_dialog = 4;
+    // 创建家族
+    FamilyCreate family_create = 5;
+  }
+}
+
+// 进入家族
+message FamilyEnter {
+  // 家族成员列表
+  repeated FamilyUser family_user = 1;
+  // 家族宣言
+  string declaration = 2;
+  // 家族创建时间
+  uint64 create_date = 3;
+  // 族长名称
+  string leader = 4;
+  // 家族名称
+  string name = 5;
+  // 当前用户职位
+  string position = 6;
+  // 家族贡献
+  uint32 contribution = 7;
+}
+
+// 家族成员用户
+message FamilyUser {
+  // 用户名称
+  string name = 1;
+  // 用户职位
+  uint32 position = 2;
+  // 用户等级
+  uint32 lv = 3;
+  // 用户性别
+  string gender = 4;
+  // 用户贡献
+  uint32 contribution = 5;
+  // 用户是否在线
+  bool online = 6;
+}
+
+// 读取家族列表（未进入家族中心）
+message FamilyList {
+  // 家族列表
+  repeated FamilyInfo family_info = 1;
+  // 当前用户所在家族名称
+  string name = 2;
+  // 当前用户所在家族排名
+  uint32 position = 3;
+  // 当前用户所在家族贡献
+  uint32 contribution = 4;
+  // 当前用户所在家族最大容量
+  uint32 capacity = 5;
+  // 当前用户所在家族当前成员总数
+  uint32 size = 6;
+  // 当前用户所在家族id
+  uint32 family_id = 7;
+  // 当前用户所在家族族徽图片
+  string picture = 8;
+}
+
+// 家族
+message FamilyInfo {
+  // 家族名称
+  string name = 1;
+  // 家族贡献
+  uint32 contribution = 2;
+  // 家族最大容量
+  uint32 capacity = 3;
+  // 家族当前成员总数
+  uint32 size = 4;
+  // 家族id
+  uint32 family_id = 5;
+  // 族徽图片
+  string picture = 6;
+}
+
+// 家族对话框
+message FamilyDialog {
+  // 是否可创建家族
+  optional bool allowed = 1;
+  // 对话框显示消息
+  optional string message = 2;
+}
+
+// 创建家族
+message FamilyCreate {
+  // 创建家族结果
+  uint32 result = 1;
+}
+
+// 进入大厅后加载房间列表
+message LoadRoomList {
+  // 房间列表
+  repeated Room room = 1;
+}
+
+// 房间
+message Room {
+  // 房间id
+  uint32 room_id = 1;
+  // 房间名称
+  string room_name = 2;
+  // 房名颜色
+  uint32 color = 3;
+  // 房间模式
+  uint32 room_mode = 4;
+  // 房间是否处于弹奏中状态
+  bool is_playing = 5;
+  // 房间是否有密码
+  bool is_encrypt = 6;
+  // 房间女生人数
+  uint32 female_num = 7;
+  // 房间男生人数
+  uint32 male_num = 8;
+  // 房间关闭空位人数
+  uint32 close_num = 9;
+}
+
+// 商店
+message Shop {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof shop {
+    // 商品列表
+    ShopProductShow shop_product_show = 2;
+    // 商店购买商品
+    ShopProductBuy shop_product_buy = 3;
+  }
+}
+
+// 商品列表
+message ShopProductShow {
+  // 商品列表
+  repeated ShopProduct product = 1;
+  // 当前用户音符数量
+  uint32 gold = 2;
+}
+
+// 商品
+message ShopProduct {
+  // 商品id
+  uint32 id = 1;
+  // 商品名称
+  string name = 2;
+  // 商品图片
+  string picture = 3;
+  // 商品价格
+  uint32 price = 4;
+  // 商品描述
+  string description = 5;
+}
+
+// 商店购买商品
+message ShopProductBuy {
+  // 剩余音符数量
+  uint32 gold = 1;
+  // 返回对话框消息
+  string message = 2;
+}
+
+// 主界面加载用户信息及大厅列表
+message LoadUser {
+  // 用户名称
+  string name = 1;
+  // 用户等级
+  uint32 lv = 2;
+  // 用户经验
+  uint32 exp = 3;
+  // 用户考级
+  uint32 cl = 4;
+  // 用户性别
+  string gender = 5;
+  // 用户家族id
+  uint32 family = 6;
+  // 用户服装
+  Clothes clothes = 7;
+  // 大厅列表
+  repeated Hall hall = 8;
+  // 用户当前等级升级所需经验
+  uint32 lv_up_need_exp = 9;
+  // 用户未读私信数量
+  uint32 message_num = 10;
+  // 用户搭档类型
+  uint32 couple_type = 11;
+}
+
+// 服装
+message Clothes {
+  // 头发编号
+  uint32 hair = 1;
+  // 眼镜编号
+  uint32 eye = 2;
+  // 衣服编号
+  uint32 jacket = 3;
+  // 裤子编号
+  uint32 trousers = 4;
+  // 鞋子编号
+  uint32 shoes = 5;
+}
+
+// 大厅
+message Hall {
+  // 大厅id
+  uint32 id = 1;
+  // 大厅名称
+  string name = 2;
+  // 大厅容量
+  uint32 capacity = 3;
+  // 大厅当前人数
+  uint32 size = 4;
+  // 大厅是否有密码
+  bool encrypt = 5;
+}
+
+// 进入大厅
+message EnterHall {
+  // 是否允许进入大厅
+  bool allowed = 1;
+  // 允许进入大厅时为大厅名称，禁止进入大厅时为显示的提示对话框标题
+  string name_or_title = 2;
+  // 允许进入大厅时为大厅id，禁止进入大厅时为显示的提示对话框内容
+  string hall_id_or_msg = 3;
+}
+
+// 退出大厅
+message QuitHall {
+
+}
+
+// 更换服装
+message ChangeClothes {
+  // 消息类型
+  uint32 type = 1;
+  // 消息
+  optional string message = 2;
+  // 音符个数
+  optional uint32 gold = 3;
+  // 服装解锁情况
+  optional string unlock = 4;
+  // 新购买解锁的服装分类编号
+  optional uint32 buy_clothes_type = 5;
+  // 新购买解锁的服装编号
+  optional uint32 buy_clothes_id = 6;
+}
+
+// 查看好友、私信和主界面查看搭档
+message LoadUserInfo {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof user_info {
+    // 查看好友
+    LoadUserFriend load_user_friend = 2;
+    // 查看私信
+    LoadUserMail load_user_mail = 3;
+    // 主界面查看搭档
+    LoadUserCouple load_user_couple = 4;
+  }
+}
+
+// 主界面查看搭档
+message LoadUserCouple {
+  // 搭档名称
+  string name = 1;
+  // 搭档服装
+  Clothes clothes = 2;
+  // 搭档祝福数
+  uint32 blessing = 3;
+  // 搭档祝语
+  string declaration = 4;
+  // 搭档性别
+  string gender = 5;
+  // 搭档考级
+  uint32 cl = 6;
+  // 搭档等级
+  uint32 lv = 7;
+}
+
+// 查看好友
+message LoadUserFriend {
+  // 当前用户位置
+  uint32 location = 1;
+  // 用户列表
+  repeated FriendUser friend_user = 2;
+}
+
+// 查看私信
+message LoadUserMail {
+  // 用户列表
+  repeated Mail mail = 1;
+}
+
+// 私信
+message Mail {
+  // 私信发送方用户名称
+  string user_from = 1;
+  // 私信时间
+  uint64 time = 2;
+  // 私信消息
+  string message = 3;
+}
+
+// 好友用户
+message FriendUser {
+  // 好友用户名称
+  string name = 1;
+  // 好友用户性别
+  string gender = 2;
+  // 好友用户是否在线
+  bool online = 3;
+  // 好友用户等级
+  uint32 lv = 4;
+}
+
+// 大厅加载用户列表或房间加载邀请列表
+message LoadUserList {
+  // 用户列表
+  repeated User user = 1;
+  // 用户是否在房间中
+  bool is_in_room = 2;
+}
+
+// 用户
+message User {
+  // 用户名称
+  string name = 1;
+  // 用户性别
+  string gender = 2;
+  // 用户等级
+  uint32 lv = 3;
+  // 用户所在房号或位置
+  uint32 room_id = 4;
+}
+
+// 等级考试
+message ClTest {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof cl_test {
+    // 等级考试选择考级曲对话框
+    ClTestDialog cl_test_dialog = 2;
+    // 等级考试获取考级曲
+    ClTestSong cl_test_song = 3;
+    // 等级考试弹奏完成
+    ClTestFinish cl_test_finish = 4;
+  }
+}
+
+// 等级考试选择考级曲对话框
+message ClTestDialog {
+  // 是否允许考级
+  bool allowed = 1;
+  // 考级对话框信息
+  string message = 2;
+}
+
+// 等级考试获取考级曲
+message ClTestSong {
+  // 考级左右手
+  uint32 hand = 1;
+  // 考级曲pm文件二进制内容
+  string song_content = 2;
+  // 用户当前的考级
+  uint32 cl = 3;
+}
+
+// 等级考试弹奏完成
+message ClTestFinish {
+  // 考级结果状态
+  uint32 status = 1;
+  // 考级目标分数
+  uint32 target_score = 2;
+  // 考级实际弹奏分数（可能有挑战或其他情况考级分数加成）
+  string score = 3;
+  // 考级所获经验
+  string exp = 4;
+}

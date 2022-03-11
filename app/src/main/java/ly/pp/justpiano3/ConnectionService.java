@@ -7,13 +7,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.protobuf.Descriptors;
+import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
 import com.king.anetty.Netty;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
@@ -22,17 +20,20 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.bytes.ByteArrayDecoder;
-import io.netty.handler.codec.bytes.ByteArrayEncoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.response.OnlineResponse;
 
 public class ConnectionService extends Service implements Runnable {
 
     private final JPBinder jpBinder = new JPBinder(this);
-    private JPApplication jpapplication;
+    private ly.pp.justpiano3.JPApplication jpapplication;
     private Netty mNetty;
 
     public static class JPBinder extends Binder {
@@ -67,9 +68,12 @@ public class ConnectionService extends Service implements Runnable {
         mNetty.disconnect();
     }
 
-    public final void writeData(byte[] bArr) {
+    public final void writeData(int type, MessageLite message) {
+        OnlineRequest.Message.Builder builder = OnlineRequest.Message.newBuilder();
+        Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
+        builder.setField(fieldDescriptor, message);
         if (mNetty.isConnected()) {
-            mNetty.sendMessage(bArr);
+            mNetty.sendMessage(builder);
         } else {
             outLineAndDialog();
         }
@@ -109,7 +113,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void onCreate() {
         super.onCreate();
-        jpapplication = (JPApplication) getApplication();
+        jpapplication = (ly.pp.justpiano3.JPApplication) getApplication();
         new Thread(this).start();
     }
 
@@ -130,17 +134,16 @@ public class ConnectionService extends Service implements Runnable {
                 ChannelPipeline channelPipeline = ch.pipeline();
                 // 添加相关编码器，解码器，处理器等
                 channelPipeline
+                        .addLast(new ProtobufVarint32FrameDecoder())
+                        .addLast(new ProtobufDecoder(OnlineResponse.Message.getDefaultInstance()))
+                        .addLast(new ProtobufVarint32LengthFieldPrepender())
+                        .addLast(new ProtobufEncoder())
                         .addLast(new IdleStateHandler(0, 7, 0, TimeUnit.SECONDS))
-                        .addLast(new LengthFieldBasedFrameDecoder(ByteOrder.BIG_ENDIAN, 1048576,
-                                1, 3, 0, 4, true))
-                        .addLast(new ByteArrayEncoder())
-                        .addLast(new ByteArrayDecoder())
-                        .addLast(new SimpleChannelInboundHandler<Object>() {
+                        .addLast(new SimpleChannelInboundHandler<OnlineResponse.Message>() {
                             @Override
-                            protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-                                // 接收到消息
-                                byte[] bytes = (byte[]) msg;
-                                Receive.receive(new String(bytes, StandardCharsets.UTF_8));
+                            protected void channelRead0(ChannelHandlerContext ctx, OnlineResponse.Message msg) throws Exception {
+                                int messageType = msg.getResponseCase().getNumber();
+                                ly.pp.justpiano3.Receive.receive(messageType, msg);
                             }
 
                             @Override
@@ -155,7 +158,7 @@ public class ConnectionService extends Service implements Runnable {
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
                                     if (IdleState.WRITER_IDLE.equals(event.state())) {
-                                        ctx.channel().writeAndFlush(new byte[]{94, 0, 0, 3, 41, 0, 0});
+                                        writeData(41, OnlineRequest.HeartBeat.getDefaultInstance());
                                     }
                                 }
                             }
@@ -166,19 +169,12 @@ public class ConnectionService extends Service implements Runnable {
 
             @Override
             public void onSuccess() {
-                // 连接成功
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("P", getPackageName());
-//                    jSONObject.put("V", jpapplication.getVersionCode());
-                    jSONObject.put("V", "20220218");
-                    jSONObject.put("N", jpapplication.getAccountName());
-                    jSONObject.put("K", JPApplication.kitiName);
-                    jSONObject.put("C", jpapplication.getPassword());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                writeData((byte) 10, (byte) 0, (byte) 0, jSONObject.toString(), null);
+                OnlineRequest.Login.Builder builder = OnlineRequest.Login.newBuilder();
+                builder.setAccount(jpapplication.getAccountName());
+                builder.setPassword(jpapplication.getPassword());
+                builder.setVersionCode("20220218");
+                builder.setPackageName(getPackageName());
+                writeData(10, builder.build());
             }
 
             @Override
@@ -223,8 +219,8 @@ public class ConnectionService extends Service implements Runnable {
 
     private void outLineAndDialog() {
         outLine();
-        if (JPStack.top() instanceof BaseActivity) {
-            BaseActivity baseActivity = (BaseActivity) JPStack.top();
+        if (ly.pp.justpiano3.JPStack.top() instanceof ly.pp.justpiano3.BaseActivity) {
+            ly.pp.justpiano3.BaseActivity baseActivity = (ly.pp.justpiano3.BaseActivity) ly.pp.justpiano3.JPStack.top();
             Message message = new Message();
             message.what = 0;
             assert baseActivity != null;

@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
 
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 final class GetPrize implements OnClickListener {
     private final OLChallenge challenge;
@@ -16,15 +16,11 @@ final class GetPrize implements OnClickListener {
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
         if (challenge.jpapplication.getConnectionService() != null) {
-            try {
-                JSONObject jSONObject = new JSONObject();
-                jSONObject.put("K", 6);
-                challenge.jpapplication.getConnectionService().writeData((byte) 16, (byte) 0, challenge.hallID, jSONObject.toString(), null);
-                Toast.makeText(challenge, "领取奖励成功!", Toast.LENGTH_SHORT).show();
-                dialogInterface.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+            builder.setType(6);
+            challenge.jpapplication.getConnectionService().writeData(16, builder.build());
+            Toast.makeText(challenge, "领取奖励成功!", Toast.LENGTH_SHORT).show();
+            dialogInterface.dismiss();
         }
     }
 }

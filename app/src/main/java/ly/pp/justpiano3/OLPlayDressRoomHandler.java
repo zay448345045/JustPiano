@@ -7,6 +7,7 @@ import android.os.Message;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 final class OLPlayDressRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -28,7 +29,7 @@ final class OLPlayDressRoomHandler extends Handler {
                 case 1:  // 进入换衣间加载音符和解锁情况
                     post(() -> {
                         olPlayDressRoom.goldNum.setText(message.getData().getString("G"));
-                        olPlayDressRoom.parseUnlockByteArray(message.getData().getByteArray("U"));
+                        olPlayDressRoom.handleBuyClothes(message.getData().getByteArray("U"));
                         ((DressAdapter) olPlayDressRoom.jacketGridView.getAdapter()).notifyDataSetChanged();
                     });
                     break;
@@ -42,7 +43,9 @@ final class OLPlayDressRoomHandler extends Handler {
                         jpDialog.setFirstButton("确定", new DialogDismissClick());
                         jpDialog.showDialog();
                         if (info.startsWith("购买成功")) {
-                            olPlayDressRoom.parseUnlockByteArray(message.getData().getByteArray("U"));
+                            int buyClothesType = message.getData().getInt("U_T");
+                            int buyClothesId = message.getData().getInt("U_I");
+                            olPlayDressRoom.handleBuyClothes(buyClothesType, buyClothesId);
                             ((DressAdapter) olPlayDressRoom.hairGridView.getAdapter()).notifyDataSetChanged();
                             ((DressAdapter) olPlayDressRoom.eyeGridView.getAdapter()).notifyDataSetChanged();
                             ((DressAdapter) olPlayDressRoom.jacketGridView.getAdapter()).notifyDataSetChanged();

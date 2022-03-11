@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
@@ -48,7 +50,7 @@ final class OLPlayHallRoomHandler extends Handler {
                             olPlayHallRoom.hallList.add(bundle.getBundle(String.valueOf(i)));
                         }
                         olPlayHallRoom.mo2843a(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
-                        olPlayHallRoom.userName.setText(data.getString("U"));  // 载入昵称
+                        olPlayHallRoom.userName.setText(data.getString("U"));
                         JPApplication.kitiName = data.getString("U");
                         olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
                         olPlayHallRoom.userLevelView.setText("LV." + data.getInt("LV"));
@@ -79,7 +81,9 @@ final class OLPlayHallRoomHandler extends Handler {
                         }
                         olPlayHallRoom.lv = data.getInt("LV");
                         olPlayHallRoom.cl = data.getInt("CL");
-                        olPlayHallRoom.mo2844a(data.getString("DR"));
+                        olPlayHallRoom.userSex = data.getString("S");
+                        olPlayHallRoom.loadDress(data.getInt("DR_H"), data.getInt("DR_E"),
+                                data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
                         i = data.getInt("M");
                         if (i > 0) {
                             olPlayHallRoom.mailCountsView.setText(String.valueOf(i));
@@ -215,7 +219,9 @@ final class OLPlayHallRoomHandler extends Handler {
                             jpdialog.setMessage(string2);
                             jpdialog.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
                                 dialog.dismiss();
-                                olPlayHallRoom.sendMsg((byte) 29, b, "");
+                                OnlineRequest.EnterHall.Builder builder = OnlineRequest.EnterHall.newBuilder();
+                                builder.setHallId(b);
+                                olPlayHallRoom.sendMsg(29, builder.build());
                             });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
@@ -266,15 +272,11 @@ final class OLPlayHallRoomHandler extends Handler {
                                 } else if (name.length() > 8) {
                                     Toast.makeText(olPlayHallRoom, "家族名称只能在八个字以下!", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    try {
-                                        dialog.dismiss();
-                                        JSONObject jSONObject = new JSONObject();
-                                        jSONObject.put("K", 4);
-                                        jSONObject.put("N", name);
-                                        olPlayHallRoom.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    dialog.dismiss();
+                                    OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                                    builder.setType(4);
+                                    builder.setFamilyName(name);
+                                    olPlayHallRoom.sendMsg(18, builder.build());
                                 }
                             });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
@@ -293,16 +295,12 @@ final class OLPlayHallRoomHandler extends Handler {
                         switch (result) {
                             case 0:
                                 Toast.makeText(olPlayHallRoom, "家族创建成功!", Toast.LENGTH_SHORT).show();
-                                JSONObject jSONObject = new JSONObject();
-                                try {
-                                    jSONObject.put("K", 2);
-                                    jSONObject.put("B", 0);
-                                } catch (JSONException e2) {
-                                    e2.printStackTrace();
-                                }
+                                OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                                builder.setType(2);
+                                builder.setPage(0);
                                 olPlayHallRoom.familyPageNum = 0;
                                 olPlayHallRoom.familyList.clear();
-                                olPlayHallRoom.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+                                olPlayHallRoom.sendMsg(18, builder.build());
                                 break;
                             case 1:
                                 Toast.makeText(olPlayHallRoom, "家族创建失败!", Toast.LENGTH_SHORT).show();
@@ -385,7 +383,9 @@ final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.coupleClView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
                         olPlayHallRoom.coupleClNameView.setText(Consts.nameCL[i]);
                         olPlayHallRoom.coupleClNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
-                        olPlayHallRoom.mo2847b(data.getString("DR"));
+                        olPlayHallRoom.coupleSex = data.getString("S");
+                        olPlayHallRoom.loadClothes(data.getInt("DR_H"), data.getInt("DR_E"),
+                                data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
                     });
                     return;
                 default:

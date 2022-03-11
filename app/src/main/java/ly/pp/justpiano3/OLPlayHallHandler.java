@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
@@ -311,15 +313,11 @@ final class OLPlayHallHandler extends Handler {
                         } else {
                             dialog.dismiss();
                             if (i == 1) {
-                                JSONObject jsonObject = new JSONObject();
-                                try {
-                                    jsonObject.put("T", 1);
-                                    jsonObject.put("S", checkedId);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                                OnlineRequest.ClTest.Builder builder = OnlineRequest.ClTest.newBuilder();
+                                builder.setType(1);
+                                builder.setSongIndex(checkedId);
                                 olPlayHall.jpprogressBar.show();
-                                olPlayHall.sendMsg((byte) 40, (byte) 0, (byte) 0, jsonObject.toString());
+                                olPlayHall.sendMsg(40, builder.build());
                             }
                         }
                     });

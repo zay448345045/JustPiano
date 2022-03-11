@@ -21,8 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.protobuf.MessageLite;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -31,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
     public byte hallID;
@@ -169,15 +170,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 l_nandu.setVisibility(View.GONE);
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", 2);
-                    sendMsg((byte) 40, (byte) 0, jSONObject.toString(), null);
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                OnlineRequest.ClTest.Builder builder = OnlineRequest.ClTest.newBuilder();
+                builder.setType(2);
+                sendMsg(40, builder.build());
+                return;
             case 4:    //挑战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
@@ -188,13 +184,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 l_nandu.setVisibility(View.GONE);
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("K", 3);
-                    sendMsg((byte) 16, (byte) 0, jSONObject.toString(), null);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.Challenge.Builder builder1 = OnlineRequest.Challenge.newBuilder();
+                builder1.setType(3);
+                sendMsg(16, builder1.build());
                 return;
             default:
         }
@@ -307,6 +299,14 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public final void sendMsg(byte b, byte b2, String str, byte[] bArr) {
         if (connectionService != null) {
             connectionService.writeData(b, (byte) 0, b2, str, bArr);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public final void sendMsg(int type, MessageLite msg) {
+        if (connectionService != null) {
+            connectionService.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }

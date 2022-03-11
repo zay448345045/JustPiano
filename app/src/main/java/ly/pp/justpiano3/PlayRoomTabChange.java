@@ -5,6 +5,8 @@ import android.widget.TabHost.OnTabChangeListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class PlayRoomTabChange implements OnTabChangeListener {
     private final OLPlayRoomInterface olPlayRoomInterface;
 
@@ -25,17 +27,12 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                     olPlayRoom.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
                 }
             }
-            JSONObject jSONObject;
             switch (str) {
                 case "tab1":
-                    jSONObject = new JSONObject();
-                    try {
-                        jSONObject.put("T", "L");
-                        jSONObject.put("B", olPlayRoom.page);
-                        olPlayRoom.sendMsg((byte) 34, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                    builder.setType(1);
+                    builder.setPage(olPlayRoom.page);
+                    olPlayRoom.sendMsg(34, builder.build());
                     break;
                 case "tab2":
                     if (olPlayRoom.msgListView != null && olPlayRoom.msgListView.getAdapter() != null) {
@@ -43,7 +40,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                     }
                     break;
                 case "tab4":
-                    olPlayRoom.sendMsg((byte) 36, (byte) 0, olPlayRoom.hallID0, "");
+                    olPlayRoom.sendMsg(36, OnlineRequest.LoadUserList.getDefaultInstance());
                     break;
             }
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
@@ -60,14 +57,10 @@ final class PlayRoomTabChange implements OnTabChangeListener {
             JSONObject jSONObject;
             switch (str) {
                 case "tab1":
-                    jSONObject = new JSONObject();
-                    try {
-                        jSONObject.put("T", "L");
-                        jSONObject.put("B", olPlayKeyboardRoom.page);
-                        olPlayKeyboardRoom.sendMsg((byte) 34, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                    builder.setType(1);
+                    builder.setPage(olPlayKeyboardRoom.page);
+                    olPlayKeyboardRoom.sendMsg(34, builder.build());
                     break;
                 case "tab2":
                     if (olPlayKeyboardRoom.msgListView != null && olPlayKeyboardRoom.msgListView.getAdapter() != null) {
@@ -75,7 +68,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                     }
                     break;
                 case "tab3":
-                    olPlayKeyboardRoom.sendMsg((byte) 36, (byte) 0, olPlayKeyboardRoom.hallID0, "");
+                    olPlayKeyboardRoom.sendMsg(36, OnlineRequest.LoadUserList.getDefaultInstance());
                     break;
             }
         }

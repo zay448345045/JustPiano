@@ -5,6 +5,8 @@ import android.widget.TabHost.OnTabChangeListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class PlayHallRoomTabChange implements OnTabChangeListener {
     private final OLPlayHallRoom olPlayHallRoom;
 
@@ -26,45 +28,29 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
         JSONObject jSONObject;
         switch (str) {
             case "tab1":
-                try {
-                    JSONObject jSONObject2 = new JSONObject();
-                    jSONObject2.put("T", "L");
-                    jSONObject2.put("B", olPlayHallRoom.pageNum);
-                    olPlayHallRoom.sendMsg((byte) 34, (byte) 0, jSONObject2.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(olPlayHallRoom.pageNum);
+                olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab4":
                 olPlayHallRoom.mailCountsView.setText("");
-                jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "M");
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                }
-                olPlayHallRoom.sendMsg((byte) 34, (byte) 0, jSONObject.toString());
+                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(2);
+                olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab3":
-                jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "C");
-                } catch (JSONException e22) {
-                    e22.printStackTrace();
-                }
-                olPlayHallRoom.sendMsg((byte) 34, (byte) 0, jSONObject.toString());
+                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(3);
+                olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab5":
                 if (olPlayHallRoom.familyPageNum == 0 && olPlayHallRoom.familyList.isEmpty()) {
-                    jSONObject = new JSONObject();
-                    try {
-                        jSONObject.put("K", 2);
-                        jSONObject.put("B", 0);
-                    } catch (JSONException e2) {
-                        e2.printStackTrace();
-                    }
+                    OnlineRequest.Family.Builder builder1 = OnlineRequest.Family.newBuilder();
+                    builder1.setType(2);
+                    builder1.setPage(0);
                     olPlayHallRoom.jpprogressBar.show();
-                    olPlayHallRoom.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+                    olPlayHallRoom.sendMsg(18, builder1.build());
                 } else {
                     FamilyAdapter fa = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
                     if (fa == null) {

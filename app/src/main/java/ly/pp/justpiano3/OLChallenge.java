@@ -12,14 +12,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.protobuf.MessageLite;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public class OLChallenge extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -41,13 +42,9 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("K", 0);
-            sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+        builder.setType(0);
+        sendMsg(16, builder.build());
         Intent intent = new Intent(this, OLPlayHall.class);
         intent.putExtra("hallName", hallName);
         intent.putExtra("hallID", hallID);
@@ -60,22 +57,14 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.startchallenge:
                 jpprogressBar.show();
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 2);
-                    sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+                builder.setType(2);
+                sendMsg(16, builder.build());
                 return;
             case R.id.drawPrize:
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 5);
-                    sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                builder = OnlineRequest.Challenge.newBuilder();
+                builder.setType(5);
+                sendMsg(16, builder.build());
         }
     }
 
@@ -95,13 +84,9 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.challenge);
         cs = jpapplication.getConnectionService();
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("K", 1);
-            sendMsg((byte) 16, (byte) 0, hallID, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+        builder.setType(1);
+        sendMsg(16, builder.build());
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
@@ -158,6 +143,15 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public final void sendMsg(int type, MessageLite msg) {
+        if (cs != null) {
+            cs.writeData(type, msg);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     final void mo2907b(ListView listView, List<HashMap> list) {
         listView.setAdapter(new ChallengeListAdapter(list, layoutinflater));

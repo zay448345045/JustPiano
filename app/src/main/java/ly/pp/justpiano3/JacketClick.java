@@ -7,6 +7,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class JacketClick implements OnItemClickListener {
 
     private final OLPlayDressRoom olplaydressroom;
@@ -31,13 +33,11 @@ final class JacketClick implements OnItemClickListener {
             jpdialog.setMessage("确定花费" + (olplaydressroom.sex.equals("f")
                     ? Consts.fJacket[i] : Consts.mJacket[i]) + "音符购买此服装吗?");
             jpdialog.setFirstButton("购买", (dialog, which) -> {
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "B");
-                    olplaydressroom.sendMsg((byte) 33, (byte) 2, (byte) (i + Byte.MIN_VALUE), jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+                builder.setType(2);
+                builder.setBuyClothesType(2);
+                builder.setBuyClothesId(i);
+                olplaydressroom.sendMsg(33, builder.build());
                 dialog.dismiss();
             }).setSecondButton("取消", new DialogDismissClick());
             try {

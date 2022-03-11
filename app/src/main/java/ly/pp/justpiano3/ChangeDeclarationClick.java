@@ -8,6 +8,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class ChangeDeclarationClick implements OnClickListener {
 
     private final OLFamily family;
@@ -38,10 +40,11 @@ final class ChangeDeclarationClick implements OnClickListener {
                 family.sendMsg((byte) 35, (byte) 0, jSONObject.toString());
             } else if (f5459c == 1) {
                 dialogInterface.dismiss();
-                jSONObject.put("K", 9);
-                jSONObject.put("I", valueOf);
+                OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                builder.setType(9);
+                builder.setMessage(valueOf);
+                family.sendMsg(18, builder.build());
                 family.declaration.setText("家族宣言:\n" + valueOf);
-                family.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
             }
         } catch (JSONException e2) {
             e2.printStackTrace();

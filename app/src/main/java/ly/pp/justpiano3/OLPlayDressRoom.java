@@ -18,6 +18,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.MessageLite;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,6 +27,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public String sex = "f";
@@ -82,7 +86,15 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         }
     }
 
-    public final void parseUnlockByteArray(byte[] bytes) {
+    public final void sendMsg(int type, MessageLite msg) {
+        if (connectionservice != null) {
+            connectionservice.writeData(type, msg);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public final void handleBuyClothes(byte[] bytes) {
         if (bytes != null) {
             for (int i = 0; i < bytes.length; i += 2) {
                 List<Integer> list = null;
@@ -108,30 +120,48 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         }
     }
 
+    public final void handleBuyClothes(int type, int id) {
+        List<Integer> list = null;
+        switch (type) {
+            case 0:
+                list = hairUnlock;
+                break;
+            case 1:
+                list = eyeUnlock;
+                break;
+            case 2:
+                list = jacketUnlock;
+                break;
+            case 3:
+                list = trousersUnlock;
+                break;
+            case 4:
+                list = shoesUnlock;
+                break;
+        }
+        list.add(id);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ol_dress_ok:
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "D");
-                    jSONObject.put("TR", trousersNow + 1);
-                    jSONObject.put("JA", jacketNow + 1);
-                    jSONObject.put("HA", hairNow + 1);
-                    jSONObject.put("EY", eyeNow + 1);
-                    jSONObject.put("SH", shoesNow + 1);
-                    sendMsg((byte) 33, (byte) 0, (byte) 0, jSONObject.toString());
-                    Intent intent = new Intent(this, OLPlayHallRoom.class);
-                    intent.putExtra("T", trousersNow + 1);
-                    intent.putExtra("J", jacketNow + 1);
-                    intent.putExtra("H", hairNow + 1);
-                    intent.putExtra("E", eyeNow + 1);
-                    intent.putExtra("O", shoesNow + 1);
-                    intent.putExtra("S", sex);
-                    setResult(-1, intent);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+                builder.setType(0);
+                builder.setHair(hairNow + 1);
+                builder.setEye(eyeNow + 1);
+                builder.setJacket(jacketNow + 1);
+                builder.setType(trousersNow + 1);
+                builder.setShoes(shoesNow + 1);
+                sendMsg(33, builder.build());
+                Intent intent = new Intent(this, OLPlayHallRoom.class);
+                intent.putExtra("T", trousersNow + 1);
+                intent.putExtra("J", jacketNow + 1);
+                intent.putExtra("H", hairNow + 1);
+                intent.putExtra("E", eyeNow + 1);
+                intent.putExtra("O", shoesNow + 1);
+                intent.putExtra("S", sex);
+                setResult(-1, intent);
                 break;
             case R.id.ol_dress_cancel:
                 finish();
@@ -221,13 +251,9 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             // 商品标签
             if (intValue == childCount - 1) {
                 jpprogressBar.show();
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("K", 1);
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                }
-                sendMsg((byte) 26, (byte) 0, (byte) 0, jSONObject.toString());
+                OnlineRequest.Shop.Builder builder = OnlineRequest.Shop.newBuilder();
+                builder.setType(1);
+                sendMsg(26, builder.build());
             }
         });
         tabhost.setCurrentTab(2);
@@ -325,13 +351,9 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             shoesImage.setImageBitmap(shoesArray.get(shoesNow));
         }
         shoesGridView.setOnItemClickListener(new ShoesClick(this));
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("T", "L");
-            sendMsg((byte) 33, (byte) 0, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+        builder.setType(1);
+        sendMsg(33, builder.build());
     }
 
     @Override

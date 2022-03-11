@@ -9,7 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
+
+import ly.pp.justpiano3.protobuf.response.OnlineResponse;
 
 final class JsonHandle {
 
@@ -54,7 +59,7 @@ final class JsonHandle {
         }
     }
 
-    static void m3949a(int i, String str) {
+    static void m3949a(int i, String str, OnlineResponse.Message msg) {
         int i2 = 0;
         Message message = new Message();
         Bundle bundle = new Bundle();
@@ -158,28 +163,23 @@ final class JsonHandle {
                 }
                 return;
             case 13:
-                try {
-                    jSONObject2 = new JSONObject(str);
-                    message.what = 2;
-                    bundle.putString("U", jSONObject2.getString("U"));
-                    bundle.putString("M", jSONObject2.getString("M"));
-                    bundle.putInt("T", jSONObject2.getInt("T"));
-                    if (jSONObject2.getInt("T") == 1) {
-                        bundle.putInt("V", jSONObject2.getInt("V"));
-                    }
-                    message.setData(bundle);
-                    if (JPStack.top() instanceof OLPlayRoom) {
-                        ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
-                        return;
-                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
-                        return;
-                    }
+                OnlineResponse.RoomChat roomChat = msg.getRoomChat();
+                message.what = 2;
+                bundle.putString("U", roomChat.getUserName());
+                bundle.putString("M", roomChat.getMessage());
+                bundle.putInt("T", roomChat.getType());
+                if (roomChat.getType() == 1) {
+                    bundle.putInt("V", roomChat.getColor());
+                }
+                message.setData(bundle);
+                if (JPStack.top() instanceof OLPlayRoom) {
+                    ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                     return;
-                } catch (JSONException e22) {
-                    e22.printStackTrace();
+                } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                    ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                     return;
                 }
+                return;
             case 14:
                 try {
                     jSONObject2 = new JSONObject(str);
@@ -436,43 +436,34 @@ final class JsonHandle {
         }
     }
 
-    static void m3950a(String str) {
+    static void loadRoomList(OnlineResponse.Message msg) {
         Bundle bundle = new Bundle();
         Message message = new Message();
         OLPlayHall olPlayHall = null;
         message.what = 3;
-        try {
-            JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(new JSONObject(str).getString("L")));
-            int length = jSONArray.length();
-            if (length > 0) {
-                int i = 0;
-                while (i < length) {
-                    JSONObject jSONObject = jSONArray.getJSONObject(i);
-                    Bundle bundle2 = new Bundle();
-                    Room room = new Room((byte) jSONObject.getInt("I"), jSONObject.getString("N"), jSONObject.getInt("F"), jSONObject.getInt("M"), jSONObject.getInt("S"), jSONObject.getInt("P"), jSONObject.getInt("V"), jSONObject.getInt("C"), jSONObject.getInt("D"));
-                    if (JPStack.top() instanceof OLPlayHall) {
-                        olPlayHall = (OLPlayHall) JPStack.top();
-                        olPlayHall.mo2825a(room.getRoomID(), room);
-                        bundle2.putByte("I", room.getRoomID());
-                        bundle2.putString("N", room.getRoomName());
-                        bundle2.putIntArray("UA", room.getPeople());
-                        bundle2.putBoolean("IF", room.getPeopleFull());
-                        bundle2.putInt("IP", room.getIsPlaying());
-                        bundle2.putInt("PA", room.getIsPassword());
-                        bundle2.putInt("V", room.getRoomKuang());
-                        bundle2.putInt("D", room.getRoomMode());
-                        bundle.putBundle(String.valueOf(i), bundle2);
-                        i++;
-                    } else {
-                        return;
-                    }
-                }
-                message.setData(bundle);
-                olPlayHall.olPlayHallHandler.handleMessage(message);
+        int i = 0;
+        OnlineResponse.LoadRoomList loadRoomList = msg.getLoadRoomList();
+        for (OnlineResponse.Room roomRaw : loadRoomList.getRoomList()) {
+            Bundle bundle2 = new Bundle();
+            Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
+                    roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
+                    roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
+            if (JPStack.top() instanceof OLPlayHall) {
+                olPlayHall = (OLPlayHall) JPStack.top();
+                olPlayHall.mo2825a(room.getRoomID(), room);
+                bundle2.putByte("I", room.getRoomID());
+                bundle2.putString("N", room.getRoomName());
+                bundle2.putIntArray("UA", room.getPeople());
+                bundle2.putBoolean("IF", room.getPeopleFull());
+                bundle2.putInt("IP", room.getIsPlaying());
+                bundle2.putInt("PA", room.getIsPassword());
+                bundle2.putInt("V", room.getRoomKuang());
+                bundle2.putInt("D", room.getRoomMode());
+                bundle.putBundle(String.valueOf(i), bundle2);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        message.setData(bundle);
+        olPlayHall.olPlayHallHandler.handleMessage(message);
     }
 
     static void m3951a(String str, String str2) {
@@ -535,47 +526,44 @@ final class JsonHandle {
         }
     }
 
-    static void m3953b(byte b, String str) {
+    static void m3953b(int b, String str, OnlineResponse.Message msg) {
         int i = 0;
         Message message = new Message();
         Bundle bundle;
-        JSONObject jSONObject;
-        JSONObject jSONObject2;
         int i2;
-        JSONArray jSONArray;
-        int length;
         Bundle bundle2;
         switch (b) {
             case (byte) 28:
                 bundle = new Bundle();
                 Bundle bundle3 = new Bundle();
                 message.what = 0;
+                OnlineResponse.LoadUser loadUser = msg.getLoadUser();
                 try {
-                    JSONObject jSONObject3 = new JSONObject(str);
-                    JSONArray jSONArray2 = new JSONArray(GZIP.ZIPTo(jSONObject3.getString("L")));
-                    int length2 = jSONArray2.length();
-                    while (i < length2) {
-                        jSONObject = jSONArray2.getJSONObject(i);
+                    for (OnlineResponse.Hall hall : loadUser.getHallList()) {
                         Bundle bundle4 = new Bundle();
-                        bundle4.putByte("I", (byte) jSONObject.getInt("I"));
-                        bundle4.putString("N", jSONObject.getString("N"));
-                        bundle4.putInt("PN", jSONObject.getInt("P"));
-                        bundle4.putInt("TN", jSONObject.getInt("T"));
-                        bundle4.putInt("W", jSONObject.getInt("W"));
+                        bundle4.putByte("I", (byte) hall.getId());
+                        bundle4.putString("N", hall.getName());
+                        bundle4.putInt("PN", hall.getSize());
+                        bundle4.putInt("TN", hall.getCapacity());
+                        bundle4.putInt("W", hall.getEncrypt() ? 1 : 0);
                         bundle3.putBundle(String.valueOf(i), bundle4);
                         i++;
                     }
                     bundle.putBundle("L", bundle3);
-                    bundle.putString("U", jSONObject3.getString("U"));
-                    bundle.putString("S", jSONObject3.getString("S"));
-                    bundle.putString("I", jSONObject3.getString("I"));
-                    bundle.putInt("LV", jSONObject3.getInt("LV"));
-                    bundle.putInt("CL", jSONObject3.getInt("CL"));
-                    bundle.putInt("E", jSONObject3.getInt("E"));
-                    bundle.putInt("X", jSONObject3.getInt("X"));
-                    bundle.putInt("M", jSONObject3.getInt("M"));
-                    bundle.putString("DR", jSONObject3.getString("DR"));
-                    bundle.putInt("CP", jSONObject3.getInt("CP"));
+                    bundle.putString("U", loadUser.getName());
+                    bundle.putString("S", loadUser.getGender());
+                    bundle.putString("I", String.valueOf(loadUser.getFamily()));
+                    bundle.putInt("LV", loadUser.getLv());
+                    bundle.putInt("CL", loadUser.getCl());
+                    bundle.putInt("E", loadUser.getExp());
+                    bundle.putInt("X", loadUser.getLvUpNeedExp());
+                    bundle.putInt("M", loadUser.getMessageNum());
+                    bundle.putInt("DR_H", loadUser.getClothes().getHair());
+                    bundle.putInt("DR_E", loadUser.getClothes().getEye());
+                    bundle.putInt("DR_J", loadUser.getClothes().getJacket());
+                    bundle.putInt("DR_T", loadUser.getClothes().getTrousers());
+                    bundle.putInt("DR_S", loadUser.getClothes().getShoes());
+                    bundle.putInt("CP", loadUser.getCoupleType());
                     message.setData(bundle);
                     if (JPStack.top() instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
@@ -587,151 +575,134 @@ final class JsonHandle {
                     return;
                 }
             case (byte) 33:
-                try {
-                    JSONObject jSONObject3 = new JSONObject(str);
-                    int type = jSONObject3.getInt("T");
-                    message.what = type;
-                    Bundle bundle5 = new Bundle();
-                    switch (type) {
-                        case 0:  // 保存服装
-                            bundle5.putString("I", jSONObject3.getString("I"));
-                            break;
-                        case 1:  // 进入换衣间加载音符和解锁情况
-                            bundle5.putString("G", jSONObject3.getString("G"));
-                            bundle5.putByteArray("U", GZIP.ZIPToArray(jSONObject3.getString("U")));
-                            break;
-                        case 2:  // 购买服装
-                            bundle5.putString("I", jSONObject3.getString("I"));
-                            bundle5.putString("G", jSONObject3.getString("G"));
-                            bundle5.putByteArray("U", GZIP.ZIPToArray(jSONObject3.getString("U")));
-                            break;
-                    }
-                    message.setData(bundle5);
-                    if (JPStack.top() instanceof OLPlayDressRoom) {
-                        ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
-                    }
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
+                OnlineResponse.ChangeClothes changeClothes = msg.getChangeClothes();
+                int type = changeClothes.getType();
+                message.what = type;
+                Bundle bundle5 = new Bundle();
+                switch (type) {
+                    case 0:  // 保存服装
+                        bundle5.putString("I", changeClothes.getMessage());
+                        break;
+                    case 1:  // 进入换衣间加载音符和解锁情况
+                        bundle5.putString("G", String.valueOf(changeClothes.getGold()));
+                        bundle5.putByteArray("U", GZIP.ZIPToArray(changeClothes.getUnlock()));
+                        break;
+                    case 2:  // 购买服装
+                        bundle5.putString("I", changeClothes.getMessage());
+                        bundle5.putString("G", String.valueOf(changeClothes.getGold()));
+                        bundle5.putInt("U_T", changeClothes.getBuyClothesType());
+                        bundle5.putInt("U_I", changeClothes.getBuyClothesId());
+                        break;
+                }
+                message.setData(bundle5);
+                if (JPStack.top() instanceof OLPlayDressRoom) {
+                    ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
                 }
                 return;
             case (byte) 34:
                 bundle = new Bundle();
-                try {
-                    jSONObject2 = new JSONObject(str);
-                    String string = jSONObject2.getString("T");
-                    switch (string) {
-                        case "L":
-                            i2 = jSONObject2.getInt("S");
-                            jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject2.getString("L")));
-                            length = jSONArray.length();
-                            if (length > 0) {
-                                while (i < length) {
-                                    bundle2 = new Bundle();
-                                    jSONObject = jSONArray.getJSONObject(i);
-                                    bundle2.putString("F", jSONObject.getString("F"));
-                                    bundle2.putInt("O", jSONObject.getInt("O"));
-                                    bundle2.putString("S", jSONObject.getString("S"));
-                                    bundle2.putInt("LV", jSONObject.getInt("LV"));
-                                    bundle.putBundle(String.valueOf(i), bundle2);
-                                    i++;
-                                }
-                            }
-                            switch (i2) {
-                                case 0:
-                                    message.what = 3;
-                                    new Bundle().putBundle("L", bundle);
-                                    message.setData(bundle);
-                                    if (JPStack.top() instanceof OLPlayHallRoom) {
-                                        ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
-                                        return;
-                                    }
-                                    return;
-                                case 1:
-                                    message.what = 5;
-                                    message.setData(bundle);
-                                    if (JPStack.top() instanceof OLPlayHall) {
-                                        ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
-                                        return;
-                                    }
-                                    return;
-                                case 2:
-                                    if (JPStack.top() instanceof OLPlayRoom) {
-                                        message.what = 11;
-                                        message.setData(bundle);
-                                        ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
-                                        return;
-                                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                                        message.what = 11;
-                                        message.setData(bundle);
-                                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
-                                        return;
-                                    }
-                                    return;
-                                default:
-                                    return;
-                            }
-                        case "M":
-                            JSONArray jSONArray3 = new JSONArray(GZIP.ZIPTo(jSONObject2.getString("L")));
-                            length = jSONArray3.length();
-                            if (length > 0) {
-                                while (i < length) {
-                                    Bundle bundle6 = new Bundle();
-                                    JSONObject jSONObject4 = jSONArray3.getJSONObject(i);
-                                    bundle6.putString("F", jSONObject4.getString("F"));
-                                    bundle6.putString("M", jSONObject4.getString("M"));
-                                    bundle6.putString("T", jSONObject4.getString("T"));
-                                    bundle6.putInt("type", 0);
-                                    bundle.putBundle(String.valueOf(i), bundle6);
-                                    i++;
-                                }
-                            }
-                            message.what = 4;
-                            message.setData(bundle);
-                            if (JPStack.top() instanceof OLPlayHallRoom) {
-                                ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
-                                return;
-                            }
-                            return;
-                        case "C":
-                            bundle.putString("U", jSONObject2.getString("U"));
-                            bundle.putString("S", jSONObject2.getString("S"));
-                            bundle.putInt("LV", jSONObject2.getInt("L"));
-                            bundle.putInt("CL", jSONObject2.getInt("C"));
-                            bundle.putString("DR", jSONObject2.getString("D"));
-                            bundle.putString("IN", jSONObject2.getString("I"));
-                            bundle.putInt("CP", jSONObject2.getInt("P"));
-                            message.what = 22;
-                            message.setData(bundle);
-                            if (JPStack.top() instanceof OLPlayHallRoom) {
-                                ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
-                                return;
-                            }
-                            return;
-                        default:
-                            return;
-                    }
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                    return;
-                }
-            case (byte) 36:
-                bundle = new Bundle();
-                try {
-                    jSONObject2 = new JSONObject(str);
-                    i2 = jSONObject2.getInt("S");
-                    jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject2.getString("L")));
-                    length = jSONArray.length();
-                    if (length > 0) {
-                        while (i < length) {
+                OnlineResponse.LoadUserInfo loadUserInfo = msg.getLoadUserInfo();
+                type = loadUserInfo.getType();
+                switch (type) {
+                    case 1:
+                        i2 = loadUserInfo.getLoadUserFriend().getLocation();
+                        for (OnlineResponse.FriendUser friendUser : loadUserInfo.getLoadUserFriend().getFriendUserList()) {
                             bundle2 = new Bundle();
-                            jSONObject = jSONArray.getJSONObject(i);
-                            bundle2.putString("U", jSONObject.getString("U"));
-                            bundle2.putString("S", jSONObject.getString("S"));
-                            bundle2.putInt("LV", jSONObject.getInt("LV"));
-                            bundle2.putInt("R", jSONObject.getInt("R"));
+                            bundle2.putString("F", friendUser.getName());
+                            bundle2.putInt("O", friendUser.getOnline() ? 1 : 0);
+                            bundle2.putString("S", friendUser.getGender());
+                            bundle2.putInt("LV", friendUser.getLv());
                             bundle.putBundle(String.valueOf(i), bundle2);
                             i++;
                         }
+                        switch (i2) {
+                            case 0:
+                                if (JPStack.top() instanceof OLPlayRoom) {
+                                    message.what = 11;
+                                    message.setData(bundle);
+                                    ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
+                                    return;
+                                } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                                    message.what = 11;
+                                    message.setData(bundle);
+                                    ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
+                                    return;
+                                }
+                                return;
+                            case 1:
+                                message.what = 5;
+                                message.setData(bundle);
+                                if (JPStack.top() instanceof OLPlayHall) {
+                                    ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
+                                    return;
+                                }
+                                return;
+                            case 2:
+                                message.what = 3;
+                                new Bundle().putBundle("L", bundle);
+                                message.setData(bundle);
+                                if (JPStack.top() instanceof OLPlayHallRoom) {
+                                    ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
+                                    return;
+                                }
+                                return;
+                            default:
+                                return;
+                        }
+                    case 2:
+                        for (OnlineResponse.Mail mail : loadUserInfo.getLoadUserMail().getMailList()) {
+                            Bundle bundle6 = new Bundle();
+                            bundle6.putString("F", mail.getUserFrom());
+                            bundle6.putString("M", mail.getMessage());
+                            String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE).format(new Date(mail.getTime()));
+                            bundle6.putString("T", dateTime);
+                            bundle6.putInt("type", 0);
+                            bundle.putBundle(String.valueOf(i), bundle6);
+                            i++;
+                        }
+                        message.what = 4;
+                        message.setData(bundle);
+                        if (JPStack.top() instanceof OLPlayHallRoom) {
+                            ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
+                            return;
+                        }
+                        return;
+                    case 3:
+                        OnlineResponse.LoadUserCouple loadUserCouple = loadUserInfo.getLoadUserCouple();
+                        bundle.putString("U", loadUserCouple.getName());
+                        bundle.putString("S", loadUserCouple.getGender());
+                        bundle.putInt("LV", loadUserCouple.getLv());
+                        bundle.putInt("CL", loadUserCouple.getCl());
+                        bundle.putInt("DR_H", loadUserCouple.getClothes().getHair());
+                        bundle.putInt("DR_E", loadUserCouple.getClothes().getEye());
+                        bundle.putInt("DR_J", loadUserCouple.getClothes().getJacket());
+                        bundle.putInt("DR_T", loadUserCouple.getClothes().getTrousers());
+                        bundle.putInt("DR_S", loadUserCouple.getClothes().getShoes());
+                        bundle.putString("IN", loadUserCouple.getDeclaration());
+                        bundle.putInt("CP", loadUserCouple.getBlessing());
+                        message.what = 22;
+                        message.setData(bundle);
+                        if (JPStack.top() instanceof OLPlayHallRoom) {
+                            ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
+                            return;
+                        }
+                        return;
+                    default:
+                        return;
+                }
+            case (byte) 36:
+                bundle = new Bundle();
+                OnlineResponse.LoadUserList loadUserList = msg.getLoadUserList();
+                try {
+                    i2 = loadUserList.getIsInRoom() ? 1 : 0;
+                    for (OnlineResponse.User user : loadUserList.getUserList()) {
+                        bundle2 = new Bundle();
+                        bundle2.putString("U", user.getName());
+                        bundle2.putString("S", user.getGender());
+                        bundle2.putInt("LV", user.getLv());
+                        bundle2.putInt("R", user.getRoomId());
+                        bundle.putBundle(String.valueOf(i), bundle2);
+                        i++;
                     }
                     switch (i2) {
                         case 0:
@@ -797,48 +768,46 @@ final class JsonHandle {
     }
 
 
-    static void m3955c(String str) {
+    static void changeRoomList(OnlineResponse.Message msg) {
         Bundle bundle = new Bundle();
         Message message = new Message();
         message.what = 3;
-        try {
-            if (JPStack.top() instanceof OLPlayHall) {
-                OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
-                assert olPlayHall != null;
-                JSONObject jSONObject = new JSONObject(str);
-                Room room = new Room((byte) jSONObject.getInt("I"), jSONObject.getString("N"), jSONObject.getInt("F"), jSONObject.getInt("M"), jSONObject.getInt("S"), jSONObject.getInt("P"), jSONObject.getInt("V"), jSONObject.getInt("C"), jSONObject.getInt("D"));
-                if (room.getFCount() + room.getMCount() == 0) {
-                    olPlayHall.roomTitleMap.remove(room.getRoomID());
+        if (JPStack.top() instanceof OLPlayHall) {
+            OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
+            assert olPlayHall != null;
+            OnlineResponse.Room roomRaw = msg.getRoomListChange();
+            Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
+                    roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
+                    roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
+            if (room.getFCount() + room.getMCount() == 0) {
+                olPlayHall.roomTitleMap.remove(room.getRoomID());
+            } else {
+                olPlayHall.mo2825a(room.getRoomID(), room);
+            }
+            Iterator it = olPlayHall.roomTitleMap.values().iterator();
+            int i = 0;
+            while (true) {
+                int i2 = i;
+                if (it.hasNext()) {
+                    room = (Room) it.next();
+                    room.getRoomName();
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putByte("I", room.getRoomID());
+                    bundle2.putString("N", room.getRoomName());
+                    bundle2.putIntArray("UA", room.getPeople());
+                    bundle2.putBoolean("IF", room.getPeopleFull());
+                    bundle2.putInt("IP", room.getIsPlaying());
+                    bundle2.putInt("PA", room.getIsPassword());
+                    bundle2.putInt("V", room.getRoomKuang());
+                    bundle2.putInt("D", room.getRoomMode());
+                    bundle.putBundle(String.valueOf(i2), bundle2);
+                    i = i2 + 1;
                 } else {
-                    olPlayHall.mo2825a(room.getRoomID(), room);
-                }
-                Iterator it = olPlayHall.roomTitleMap.values().iterator();
-                int i = 0;
-                while (true) {
-                    int i2 = i;
-                    if (it.hasNext()) {
-                        room = (Room) it.next();
-                        room.getRoomName();
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putByte("I", room.getRoomID());
-                        bundle2.putString("N", room.getRoomName());
-                        bundle2.putIntArray("UA", room.getPeople());
-                        bundle2.putBoolean("IF", room.getPeopleFull());
-                        bundle2.putInt("IP", room.getIsPlaying());
-                        bundle2.putInt("PA", room.getIsPassword());
-                        bundle2.putInt("V", room.getRoomKuang());
-                        bundle2.putInt("D", room.getRoomMode());
-                        bundle.putBundle(String.valueOf(i2), bundle2);
-                        i = i2 + 1;
-                    } else {
-                        message.setData(bundle);
-                        olPlayHall.olPlayHallHandler.handleMessage(message);
-                        return;
-                    }
+                    message.setData(bundle);
+                    olPlayHall.olPlayHallHandler.handleMessage(message);
+                    return;
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
@@ -1160,199 +1129,170 @@ final class JsonHandle {
         }
     }
 
-    static void family(String str) {
+    static void family(OnlineResponse.Message msg) {
         Message message = new Message();
-        try {
-            JSONObject jSONObject = new JSONObject(str);
-            switch (jSONObject.getInt("K")) {
-                case 0:  // 退出家族中心，请求界面切换至家族选项卡
-                    break;
-                case 1:  // 进入家族中心
-                    if (JPStack.top() instanceof OLFamily) {
-                        OLFamily family = (OLFamily) JPStack.top();
-                        JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
-                        assert family != null;
-                        message.what = 1;
-                        family.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
-                        int length = jSONArray.length();
-                        int i = 0;
-                        while (true) {
-                            int i2 = i;
-                            if (i2 >= length) {
-                                bundle.putString("D", jSONObject.getString("D"));
-                                bundle.putString("T", jSONObject.getString("T"));
-                                bundle.putString("Z", jSONObject.getString("Z"));
-                                bundle.putString("N", jSONObject.getString("N"));
-                                bundle.putString("C", jSONObject.getString("C"));
-                                bundle.putString("P", jSONObject.getString("P"));
-                                message.setData(bundle);
-                                family.familyHandler.handleMessage(message);
-                                return;
-                            }
-                            Bundle bundle2 = new Bundle();
-                            JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
-                            bundle2.putString("N", jSONObject2.getString("N"));
-                            bundle2.putString("C", jSONObject2.getString("C"));
-                            bundle2.putString("L", jSONObject2.getString("L"));
-                            bundle2.putString("S", jSONObject2.getString("S"));
-                            bundle2.putString("O", jSONObject2.getString("O"));
-                            bundle2.putString("P", jSONObject2.getString("P"));
-                            bundle.putBundle(String.valueOf(i2), bundle2);
-                            i = i2 + 1;
-                        }
+        OnlineResponse.Family family = msg.getFamily();
+        switch (family.getType()) {
+            case 1:
+                if (JPStack.top() instanceof OLFamily) {
+                    OLFamily olFamily = (OLFamily) JPStack.top();
+                    assert olFamily != null;
+                    message.what = 1;
+                    olFamily.jpprogressBar.dismiss();
+                    Bundle bundle = new Bundle();
+                    int i = 0;
+                    for (OnlineResponse.FamilyUser familyUser : family.getFamilyEnter().getFamilyUserList()) {
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString("N", familyUser.getName());
+                        bundle2.putString("C", String.valueOf(familyUser.getContribution()));
+                        bundle2.putString("L", String.valueOf(familyUser.getLv()));
+                        bundle2.putString("S", familyUser.getGender());
+                        bundle2.putString("O", String.valueOf(familyUser.getOnline() ? 1 : 0));
+                        bundle2.putString("P", String.valueOf(familyUser.getPosition()));
+                        bundle.putBundle(String.valueOf(i), bundle2);
+                        i++;
                     }
-                    break;
-                case 2:
-                    if (JPStack.top() instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom ophr = (OLPlayHallRoom) JPStack.top();
-                        JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
-                        assert ophr != null;
-                        message.what = 2;
-                        ophr.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
-                        int length = jSONArray.length();
-                        int i = 0;
-                        while (true) {
-                            int i2 = i;
-                            if (i2 >= length) {
-                                bundle.putString("C", jSONObject.getString("C"));
-                                bundle.putString("P", jSONObject.getString("P"));
-                                bundle.putString("N", jSONObject.getString("N"));
-                                bundle.putString("T", jSONObject.getString("T"));
-                                bundle.putString("U", jSONObject.getString("U"));
-                                bundle.putString("I", jSONObject.getString("I"));
-                                bundle.putByteArray("J", GZIP.ZIPToArray(jSONObject.getString("J")));
-                                message.setData(bundle);
-                                ophr.olPlayHallRoomHandler.handleMessage(message);
-                                return;
-                            }
-                            Bundle bundle2 = new Bundle();
-                            JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
-                            bundle2.putString("N", jSONObject2.getString("N"));
-                            bundle2.putString("C", jSONObject2.getString("C"));
-                            bundle2.putString("T", jSONObject2.getString("T"));
-                            bundle2.putString("U", jSONObject2.getString("U"));
-                            bundle2.putString("I", jSONObject2.getString("I"));
-                            bundle2.putByteArray("J", GZIP.ZIPToArray(jSONObject2.getString("J")));
-                            bundle.putBundle(String.valueOf(i2), bundle2);
-                            i = i2 + 1;
-                        }
+                    bundle.putString("D", family.getFamilyEnter().getDeclaration());
+                    String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+                            Locale.CHINESE).format(new Date(family.getFamilyEnter().getCreateDate()));
+                    bundle.putString("T", dateTime);
+                    bundle.putString("Z", family.getFamilyEnter().getLeader());
+                    bundle.putString("N", family.getFamilyEnter().getName());
+                    bundle.putString("C", String.valueOf(family.getFamilyEnter().getContribution()));
+                    bundle.putString("P", family.getFamilyEnter().getPosition());
+                    message.setData(bundle);
+                    olFamily.familyHandler.handleMessage(message);
+                }
+                break;
+            case 2:
+                if (JPStack.top() instanceof OLPlayHallRoom) {
+                    OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
+                    assert olPlayHallRoom != null;
+                    message.what = 2;
+                    olPlayHallRoom.jpprogressBar.dismiss();
+                    Bundle bundle = new Bundle();
+                    int i = 0;
+                    for (OnlineResponse.FamilyInfo familyInfo : family.getFamilyList().getFamilyInfoList()) {
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString("N", familyInfo.getName());
+                        bundle2.putString("C", String.valueOf(familyInfo.getContribution()));
+                        bundle2.putString("T", String.valueOf(familyInfo.getCapacity()));
+                        bundle2.putString("U", String.valueOf(familyInfo.getSize()));
+                        bundle2.putString("I", String.valueOf(familyInfo.getFamilyId()));
+                        bundle2.putByteArray("J", GZIP.ZIPToArray(familyInfo.getPicture()));
+                        bundle.putBundle(String.valueOf(i), bundle2);
+                        i++;
                     }
-                    break;
-                case 3:
-                    if (JPStack.top() instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("I", jSONObject.getString("I"));
-                        bundle.putInt("R", jSONObject.getInt("R"));
-                        message.setData(bundle);
-                        message.what = 9;
-                        assert olPlayHallRoom != null;
-                        olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
-                        return;
+                    bundle.putString("C", String.valueOf(family.getFamilyList().getContribution()));
+                    bundle.putString("P", String.valueOf(family.getFamilyList().getPosition()));
+                    bundle.putString("N", family.getFamilyList().getName());
+                    bundle.putString("T", String.valueOf(family.getFamilyList().getCapacity()));
+                    bundle.putString("U", String.valueOf(family.getFamilyList().getSize()));
+                    bundle.putString("I", String.valueOf(family.getFamilyList().getFamilyId()));
+                    bundle.putByteArray("J", GZIP.ZIPToArray(family.getFamilyList().getPicture()));
+                    message.setData(bundle);
+                    olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
+                }
+                break;
+            case 3:
+                if (JPStack.top() instanceof OLPlayHallRoom) {
+                    OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("I", family.getFamilyDialog().getMessage());
+                    bundle.putInt("R", family.getFamilyDialog().getAllowed() ? 1 : 0);
+                    message.setData(bundle);
+                    message.what = 9;
+                    assert olPlayHallRoom != null;
+                    olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
+                    return;
+                }
+                break;
+            case 4:
+                if (JPStack.top() instanceof OLPlayHallRoom) {
+                    OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("R", family.getFamilyCreate().getResult());
+                    message.setData(bundle);
+                    message.what = 10;
+                    assert olPlayHallRoom != null;
+                    olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
+                    return;
+                }
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 10:
+                if (JPStack.top() instanceof OLFamily) {
+                    OLFamily olFamily = (OLFamily) JPStack.top();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("I", family.getFamilyDialog().getMessage());
+                    message.setData(bundle);
+                    message.what = 5;
+                    assert olFamily != null;
+                    olFamily.familyHandler.handleMessage(message);
+                    return;
+                }
+                break;
+            case 8:
+                if (JPStack.top() instanceof OLFamily) {
+                    OLFamily olFamily = (OLFamily) JPStack.top();
+                    Bundle bundle = new Bundle();
+                    try {
+                        bundle.putString("I", family.getFamilyDialog().getMessage());
+                        bundle.putInt("R", family.getFamilyDialog().getAllowed() ? 1 : 0);
+                    } catch (Exception ignore) {
                     }
-                    break;
-                case 4:
-                    if (JPStack.top() instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) JPStack.top();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("R", jSONObject.getInt("R"));
-                        message.setData(bundle);
-                        message.what = 10;
-                        assert olPlayHallRoom != null;
-                        olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
-                        return;
-                    }
-                    break;
-                case 5:
-                case 6:
-                case 7:
-                case 10:
-                    if (JPStack.top() instanceof OLFamily) {
-                        OLFamily family = (OLFamily) JPStack.top();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("I", jSONObject.getString("I"));
-                        message.setData(bundle);
-                        message.what = 5;
-                        assert family != null;
-                        family.familyHandler.handleMessage(message);
-                        return;
-                    }
-                    break;
-                case 8:
-                    if (JPStack.top() instanceof OLFamily) {
-                        OLFamily family = (OLFamily) JPStack.top();
-                        Bundle bundle = new Bundle();
-                        try {
-                            bundle.putString("I", jSONObject.getString("I"));
-                            bundle.putInt("R", jSONObject.getInt("R"));
-                        } catch (Exception ignore) {
-                        }
-                        message.setData(bundle);
-                        message.what = 8;
-                        assert family != null;
-                        family.familyHandler.handleMessage(message);
-                        return;
-                    }
-                    break;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+                    message.setData(bundle);
+                    message.what = 8;
+                    assert olFamily != null;
+                    olFamily.familyHandler.handleMessage(message);
+                    return;
+                }
+                break;
         }
     }
 
-    static void shop(String str) {
+    static void shop(OnlineResponse.Message msg) {
+        OnlineResponse.Shop shop = msg.getShop();
         Message message = new Message();
-        try {
-            JSONObject jSONObject = new JSONObject(str);
-            switch (jSONObject.getInt("K")) {
-                case 1:  // 加载商品
-                    if (JPStack.top() instanceof OLPlayDressRoom) {
-                        OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
-                        JSONArray jSONArray = new JSONArray(GZIP.ZIPTo(jSONObject.getString("L")));
-                        assert olPlayDressRoom != null;
-                        message.what = 3;
-                        olPlayDressRoom.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
-                        int length = jSONArray.length();
-                        int i = 0;
-                        while (true) {
-                            int i2 = i;
-                            if (i2 >= length) {
-                                bundle.putString("G", jSONObject.getString("G"));
-                                message.setData(bundle);
-                                olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
-                                return;
-                            }
-                            Bundle bundle2 = new Bundle();
-                            JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
-                            bundle2.putString("N", jSONObject2.getString("N"));
-                            bundle2.putString("D", jSONObject2.getString("D"));
-                            bundle2.putInt("G", jSONObject2.getInt("G"));
-                            bundle2.putString("P", jSONObject2.getString("P"));
-                            bundle2.putInt("I", jSONObject2.getInt("I"));
-                            bundle.putBundle(String.valueOf(i2), bundle2);
-                            i = i2 + 1;
-                        }
+        switch (shop.getType()) {
+            case 1:  // 加载商品
+                if (JPStack.top() instanceof OLPlayDressRoom) {
+                    OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
+                    assert olPlayDressRoom != null;
+                    message.what = 3;
+                    olPlayDressRoom.jpprogressBar.dismiss();
+                    Bundle bundle = new Bundle();
+                    int i = 0;
+                    for (OnlineResponse.ShopProduct shopProduct : shop.getShopProductShow().getProductList()) {
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString("N", shopProduct.getName());
+                        bundle2.putString("D", shopProduct.getDescription());
+                        bundle2.putInt("G", shopProduct.getPrice());
+                        bundle2.putString("P", shopProduct.getPicture());
+                        bundle2.putInt("I", shopProduct.getId());
+                        bundle.putBundle(String.valueOf(i), bundle2);
+                        i++;
                     }
-                    break;
-                case 2:  // 购买商品
-                    if (JPStack.top() instanceof OLPlayDressRoom) {
-                        OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("I", jSONObject.getString("I"));
-                        bundle.putString("G", jSONObject.getString("G"));
-                        message.setData(bundle);
-                        message.what = 4;
-                        assert olPlayDressRoom != null;
-                        olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
-                        return;
-                    }
-                    break;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+                    bundle.putString("G", String.valueOf(shop.getShopProductShow().getGold()));
+                    message.setData(bundle);
+                    olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
+                }
+                break;
+            case 2:  // 购买商品
+                if (JPStack.top() instanceof OLPlayDressRoom) {
+                    OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) JPStack.top();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("I", shop.getShopProductBuy().getMessage());
+                    bundle.putString("G", String.valueOf(shop.getShopProductBuy().getGold()));
+                    message.setData(bundle);
+                    message.what = 4;
+                    assert olPlayDressRoom != null;
+                    olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
+                    return;
+                }
+                break;
         }
     }
 

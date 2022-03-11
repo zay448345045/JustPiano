@@ -32,6 +32,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.MessageLite;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +50,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, OnClickListener, View.OnTouchListener, OLPlayRoomInterface, MidiConnectionListener {
 
@@ -284,6 +288,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
+    public final void sendMsg(int type, MessageLite msg) {
+        if (connectionService != null) {
+            connectionService.writeData(type, msg);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public final void putJPhashMap(byte b, User User) {
         jpapplication.getHashmap().put(b, User);
     }
@@ -445,41 +457,26 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     page = 0;
                     return;
                 }
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", page);
-                    sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(page);
+                sendMsg(34, builder.build());
+                return;
             case R.id.online_button:
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", -1);
-                    sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                    return;
-                }
+                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(-1);
+                sendMsg(34, builder.build());
+                return;
             case R.id.next_button:
                 if (!canNotNextPage) {
                     page += 20;
                     if (page >= 0) {
-                        try {
-                            jSONObject = new JSONObject();
-                            jSONObject.put("T", "L");
-                            jSONObject.put("B", page);
-                            sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                            return;
-                        } catch (JSONException e22) {
-                            e22.printStackTrace();
-                            return;
-                        }
+                        builder = OnlineRequest.LoadUserInfo.newBuilder();
+                        builder.setType(1);
+                        builder.setPage(page);
+                        sendMsg(34, builder.build());
+                        return;
                     }
                     return;
                 }
@@ -729,7 +726,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, (byte) 13, roomID0, hallID0));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 13));
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);

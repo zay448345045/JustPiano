@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 public final class PlayView extends SurfaceView implements Callback {
     static long serialID = 2825651233768L;
     Bitmap whiteKeyRightImage;
@@ -564,17 +566,14 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    try {
-                        jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        long x = pianoPlay.times * serialID;
-                        long time = jpapplication.getServerTime();
-                        long crypt = (time >>> 12 | time << 52) ^ x;
-                        jSONObject.put("K", 4);
-                        jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 16, (byte) 0, jSONObject.toString(), null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    OnlineRequest.Challenge.Builder builder1 = OnlineRequest.Challenge.newBuilder();
+                    builder1.setType(4);
+                    builder1.setStatusArray(GZIP.arrayToZIP(bArr));
+                    long x = pianoPlay.times * serialID;
+                    long time = jpapplication.getServerTime();
+                    long crypt = (time >>> 12 | time << 52) ^ x;
+                    builder1.setCode(crypt);
+                    pianoPlay.sendMsg(16, builder1.build());
                     break;
                 case 3:
                     size2 = uploadTouchStatusList.size();
@@ -582,17 +581,14 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    try {
-                        jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        jSONObject.put("T", 3);
-                        long x = pianoPlay.times * serialID;
-                        long time = jpapplication.getServerTime();
-                        long crypt = (time >>> 12 | time << 52) ^ x;
-                        jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 40, (byte) 0, jSONObject.toString(), null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    OnlineRequest.ClTest.Builder builder = OnlineRequest.ClTest.newBuilder();
+                    builder.setType(3);
+                    builder.setStatusArray(GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
+                    x = pianoPlay.times * serialID;
+                    time = jpapplication.getServerTime();
+                    crypt = (time >>> 12 | time << 52) ^ x;
+                    builder.setCode(crypt);
+                    pianoPlay.sendMsg(40, builder.build());
                     break;
                 case 2:
                     message = new Message();
@@ -605,9 +601,9 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     try {
                         jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        long x = pianoPlay.roomBundle.getByte("ID") * serialID;
-                        long time = jpapplication.getServerTime();
-                        long crypt = (time >>> 12 | time << 52) ^ x;
+                        x = pianoPlay.roomBundle.getByte("ID") * serialID;
+                        time = jpapplication.getServerTime();
+                        crypt = (time >>> 12 | time << 52) ^ x;
                         jSONObject.put("Z", crypt);
                         pianoPlay.sendMsg((byte) 5, (byte) 0, jSONObject.toString(), null);
                     } catch (Exception e3) {

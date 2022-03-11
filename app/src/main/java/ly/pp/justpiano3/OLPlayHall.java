@@ -26,6 +26,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.MessageLite;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public final class OLPlayHall extends BaseActivity implements Callback, OnClickListener {
     public ConnectionService connectionService;
@@ -82,6 +86,14 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     public final void sendMsg(byte b, byte b2, byte b3, String str) {
         if (connectionService != null) {
             connectionService.writeData(b, b2, b3, str, null);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    final void sendMsg(int type, MessageLite message) {
+        if (connectionService != null) {
+            connectionService.writeData(type, message);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -258,7 +270,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        sendMsg((byte) 30, (byte) 0, hallID, "");
+        sendMsg(30, OnlineRequest.QuitHall.getDefaultInstance());
         startActivity(new Intent(this, OLPlayHallRoom.class));
         finish();
     }
@@ -288,15 +300,11 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 new JPDialog(this).setTitle("创建房间").loadInflate(inflate).setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup)).setSecondButton("取消", new DialogDismissClick()).showDialog();
                 return;
             case R.id.ol_testroom_b:
-                try {
-                    jSONObject.put("T", 0);
-                    jpprogressBar.show();
-                    sendMsg((byte) 40, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                OnlineRequest.ClTest.Builder builder2 = OnlineRequest.ClTest.newBuilder();
+                builder2.setType(0);
+                jpprogressBar.show();
+                sendMsg(40, builder2.build());
+                return;
             case R.id.ol_challenge_b:
                 Intent intent = new Intent();
                 intent.setClass(this, OLChallenge.class);
@@ -311,61 +319,45 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                     pageNum = 0;
                     return;
                 }
-                try {
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", pageNum);
-                    sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                    return;
-                }
+                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(pageNum);
+                sendMsg(34, builder.build());
+                return;
             case R.id.online_button:
-                try {
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", -1);
-                    sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e22) {
-                    e22.printStackTrace();
-                    return;
-                }
+                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(-1);
+                sendMsg(34, builder.build());
+                return;
             case R.id.next_button:
                 if (!pageIsEnd) {
                     pageNum += 20;
                     if (pageNum >= 0) {
-                        try {
-                            jSONObject.put("T", "L");
-                            jSONObject.put("B", pageNum);
-                            sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                            return;
-                        } catch (JSONException e222) {
-                            e222.printStackTrace();
-                            return;
-                        }
+                        builder = OnlineRequest.LoadUserInfo.newBuilder();
+                        builder.setType(1);
+                        builder.setPage(pageNum);
+                        sendMsg(34, builder.build());
+                        return;
                     }
                     return;
                 }
                 return;
             case R.id.ol_send_b:
                 String valueOf = String.valueOf(sendTextView.getText());
-                JSONObject jSONObject2 = new JSONObject();
-                try {
-                    if (!valueOf.startsWith(sendTo) || valueOf.length() <= sendTo.length()) {
-                        jSONObject2.put("@", "");
-                        jSONObject2.put("M", valueOf);
-                    } else {
-                        jSONObject2.put("@", sendTo);
-                        valueOf = valueOf.substring(sendTo.length());
-                        jSONObject2.put("M", valueOf);
-                    }
-                    sendTextView.setText("");
-                    sendTo = "";
-                    if (!valueOf.isEmpty()) {
-                        sendMsg((byte) 12, (byte) 0, hallID, jSONObject2.toString());
-                    }
-                } catch (JSONException e2222) {
-                    e2222.printStackTrace();
+                OnlineRequest.HallChat.Builder builder1 = OnlineRequest.HallChat.newBuilder();
+                if (!valueOf.startsWith(sendTo) || valueOf.length() <= sendTo.length()) {
+                    builder1.setUserName("");
+                    builder1.setMessage(valueOf);
+                } else {
+                    builder1.setUserName(sendTo);
+                    valueOf = valueOf.substring(sendTo.length());
+                    builder1.setMessage(valueOf);
+                }
+                sendTextView.setText("");
+                sendTo = "";
+                if (!valueOf.isEmpty()) {
+                    sendMsg(12, builder1.build());
                 }
                 sendTextView.setText("");
                 sendTo = "";
@@ -432,7 +424,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, (byte) 12, (byte) 0, hallID));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_bar));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -462,7 +454,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
         tabHost.setOnTabChangedListener(new PlayHallTabChange(this));
         tabHost.setCurrentTab(1);
-        sendMsg((byte) 19, (byte) 0, hallID, "");
+        OnlineRequest.LoadRoomList.Builder builder = OnlineRequest.LoadRoomList.newBuilder();
+        builder.setHallId(hallID);
+        sendMsg(19, builder.build());
         isTimeShowing = true;
         showTimeThread = new ShowTimeThread(this);
         showTimeThread.start();

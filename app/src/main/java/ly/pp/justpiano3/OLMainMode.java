@@ -16,7 +16,6 @@ import java.io.OutputStream;
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
     public JPApplication jpapplication;
-    public OutputStream outputStream;
     OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
 
     @Override

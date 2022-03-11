@@ -16,6 +16,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.MessageLite;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +25,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public class OLFamily extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -174,13 +178,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("K", 0);
-            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        builder.setType(0);
+        sendMsg(18, builder.build());
         Intent intent = new Intent(this, OLPlayHallRoom.class);
         intent.putExtra("HEAD", 16);
         intent.putExtra("pageNum", familyPageNum);
@@ -200,14 +200,10 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.manage_family:
                 jpprogressBar.show();
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 8);
-                    jSONObject.put("I", familyID);
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                builder.setType(8);
+                builder.setFamilyId(Integer.parseInt(familyID));
+                sendMsg(18, builder.build());
                 break;
             case R.id.in_out:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -255,14 +251,10 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                     infoWindow.dismiss();
                 }
                 jpprogressBar.show();
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 7);
-                    jSONObject.put("F", peopleNow);
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                builder = OnlineRequest.Family.newBuilder();
+                builder.setType(7);
+                builder.setUserName(peopleNow);
+                sendMsg(18, builder.build());
                 break;
             case R.id.ol_family_changedecl:
                 showSendDialog(" ", 1);
@@ -280,13 +272,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             case R.id.ol_family_changetest:
                 break;
             case R.id.ol_family_levelup:
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 10);
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                builder = OnlineRequest.Family.newBuilder();
+                builder.setType(10);
+                sendMsg(18, builder.build());
                 break;
         }
     }
@@ -315,14 +303,10 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         setContentView(R.layout.family);
         cs = jpapplication.getConnectionService();
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("K", 1);
-            jSONObject.put("I", familyID);
-            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        builder.setType(1);
+        builder.setFamilyId(Integer.parseInt(familyID));
+        sendMsg(18, builder.build());
         inOut = findViewById(R.id.in_out);
         inOut.setOnClickListener(this);
         manageFamily = findViewById(R.id.manage_family);
@@ -414,6 +398,14 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     public final void sendMsg(byte b, byte b2, String str) {
         if (cs != null) {
             cs.writeData(b, b2, (byte) 0, str, null);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public final void sendMsg(int type, MessageLite msg) {
+        if (cs != null) {
+            cs.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }

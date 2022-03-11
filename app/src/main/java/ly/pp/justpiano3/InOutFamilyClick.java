@@ -6,6 +6,8 @@ import android.content.DialogInterface.OnClickListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+
 final class InOutFamilyClick implements OnClickListener {
     private final OLFamily olFamily;
 
@@ -14,14 +16,10 @@ final class InOutFamilyClick implements OnClickListener {
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("K", 5);
-            jSONObject.put("I", olFamily.familyID);
-            olFamily.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        builder.setType(5);
+        builder.setFamilyId(Integer.parseInt(olFamily.familyID));
+        olFamily.sendMsg(18, builder.build());
         dialogInterface.dismiss();
         olFamily.jpprogressBar.show();
     }

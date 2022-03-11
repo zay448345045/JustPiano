@@ -22,6 +22,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.MessageLite;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import ly.pp.justpiano3.protobuf.request.OnlineRequest;
 
 public final class OLPlayHallRoom extends BaseActivity implements OnClickListener {
     public int cl = 0;
@@ -87,7 +91,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private int userHairIndex;
     private int userEyeIndex;
     private int userShoesIndex;
-    private String userSex = "f";
+    String userSex = "f";
     private Editor editor = null;
     private MainGameAdapter mailListAdapter = null;
     private MainGameAdapter hallListAdapter = null;
@@ -98,7 +102,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private ImageView coupleHairView;
     private ImageView coupleEyeView;
     private ImageView coupleShoesView;
-    private String coupleSex;
+    String coupleSex;
     private int coupleTrousersIndex;
     private int coupleJacketIndex;
     private int coupleHairIndex;
@@ -129,6 +133,14 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     final void sendMsg(byte b, byte b2, String str) {
         if (connectionService != null) {
             connectionService.writeData(b, (byte) 0, b2, str, null);
+        } else {
+            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    final void sendMsg(int type, MessageLite message) {
+        if (connectionService != null) {
+            connectionService.writeData(type, message);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -190,18 +202,12 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         hallListAdapter.notifyDataSetChanged();
     }
 
-    final void mo2844a(String str) {
-        try {
-            JSONObject jSONObject = new JSONObject(str);
-            userSex = jSONObject.getString("S");
-            userTrousersIndex = jSONObject.getInt("T");
-            userJacketIndex = jSONObject.getInt("J");
-            userHairIndex = jSONObject.getInt("H");
-            userEyeIndex = jSONObject.getInt("E");
-            userShoesIndex = jSONObject.getInt("O");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    final void loadDress(int hair, int eye, int jacket, int trousers, int shoes) {
+        userTrousersIndex = trousers;
+        userJacketIndex = jacket;
+        userHairIndex = hair;
+        userEyeIndex = eye;
+        userShoesIndex = shoes;
         userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
         userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
         userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
@@ -245,18 +251,12 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         userListAdapter.notifyDataSetChanged();
     }
 
-    final void mo2847b(String str) {
-        try {
-            JSONObject jSONObject = new JSONObject(str);
-            coupleSex = jSONObject.getString("S");
-            coupleTrousersIndex = jSONObject.getInt("T");
-            coupleJacketIndex = jSONObject.getInt("J");
-            coupleHairIndex = jSONObject.getInt("H");
-            coupleEyeIndex = jSONObject.getInt("E");
-            coupleShoesIndex = jSONObject.getInt("O");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    final void loadClothes(int hair, int eye, int jacket, int trousers, int shoes) {
+            coupleTrousersIndex = trousers;
+            coupleJacketIndex = jacket;
+            coupleHairIndex = hair;
+            coupleEyeIndex = eye;
+            coupleShoesIndex = shoes;
         coupleModView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "m", 1));
         coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", coupleTrousersIndex));
         coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", coupleJacketIndex));
@@ -384,13 +384,9 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                     return;
                 }
             case R.id.create_family:
-                try {
-                    JSONObject jSONObject2 = new JSONObject();
-                    jSONObject2.put("K", 3);
-                    sendMsg((byte) 18, (byte) 0, jSONObject2.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineRequest.Family.Builder builder1 = OnlineRequest.Family.newBuilder();
+                builder1.setType(3);
+                sendMsg(18, builder1.build());
                 return;
             case R.id.pre_button:
                 pageNum -= 20;
@@ -398,41 +394,25 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                     pageNum = 0;
                     return;
                 }
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", pageNum);
-                    sendMsg((byte) 34, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(pageNum);
+                sendMsg(34, builder.build());
+                return;
             case R.id.online_button:
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", -1);
-                    sendMsg((byte) 34, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                    return;
-                }
+                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder.setType(1);
+                builder.setPage(-1);
+                sendMsg(34, builder.build());
+                return;
             case R.id.next_button:
                 if (!pageIsEnd) {
                     pageNum += 20;
                     if (pageNum >= 0) {
-                        try {
-                            jSONObject = new JSONObject();
-                            jSONObject.put("T", "L");
-                            jSONObject.put("B", pageNum);
-                            sendMsg((byte) 34, (byte) 0, jSONObject.toString());
-                            return;
-                        } catch (JSONException e22) {
-                            e22.printStackTrace();
-                            return;
-                        }
+                        builder = OnlineRequest.LoadUserInfo.newBuilder();
+                        builder.setType(1);
+                        builder.setPage(pageNum);
+                        sendMsg(34, builder.build());
                     }
                     return;
                 }
@@ -492,15 +472,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     void letInFamily(String name) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("K", 6);
-            jSONObject.put("F", name);
-            jSONObject.put("S", 0);  //S为0表示进入家族
-            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        builder.setType(6);
+        builder.setStatus(0);
+        builder.setUserName(name);
+        sendMsg(18, builder.build());
     }
 
     @Override
@@ -526,14 +502,10 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         familyListView.setCacheColorHint(0);
         familyListView.setLoadListener(() -> ThreadPoolUtils.execute(() -> {
             familyPageNum++;
-            JSONObject jSONObject = new JSONObject();
-            try {
-                jSONObject.put("K", 2);
-                jSONObject.put("B", familyPageNum);
-            } catch (JSONException e2) {
-                e2.printStackTrace();
-            }
-            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+            OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+            builder.setType(2);
+            builder.setPage(familyPageNum);
+            sendMsg(18, builder.build());
         }));
         mailListView = findViewById(R.id.ol_mail_list);
         mailListView.setCacheColorHint(0);
@@ -669,7 +641,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 }
                 break;
         }
-        sendMsg((byte) 28, (byte) 0, "");
+        sendMsg(28, OnlineRequest.LoadUser.getDefaultInstance());
     }
 
     @Override
