@@ -13,9 +13,6 @@ import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -24,7 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineEnterRoomDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -158,27 +157,19 @@ final class OLPlayHallHandler extends Handler {
                                 String finalString = string;
                                 jpdialog.setFirstButton("同意", (dialog, which) -> {
                                     dialog.dismiss();
-                                    JSONObject jSONObject = new JSONObject();
-                                    try {
-                                        jSONObject.put("T", 1);
-                                        jSONObject.put("I", 0);
-                                        jSONObject.put("F", finalString);
-                                        olPlayHall.sendMsg((byte) 31, (byte) 0, olPlayHall.hallID, jSONObject.toString());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                    builder.setType(1);
+                                    builder.setName(finalString);
+                                    builder.setReject(false);
+                                    olPlayHall.sendMsg(31, builder.build());
                                 });
                                 jpdialog.setSecondButton("拒绝", (dialog, which) -> {
                                     dialog.dismiss();
-                                    JSONObject jSONObject = new JSONObject();
-                                    try {
-                                        jSONObject.put("T", 1);
-                                        jSONObject.put("I", 1);
-                                        jSONObject.put("F", finalString);
-                                        olPlayHall.sendMsg((byte) 31, (byte) 0, olPlayHall.hallID, jSONObject.toString());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                    builder.setType(1);
+                                    builder.setName(finalString);
+                                    builder.setReject(true);
+                                    olPlayHall.sendMsg(31, builder.build());
                                 });
                                 jpdialog.showDialog();
                             }
@@ -236,14 +227,10 @@ final class OLPlayHallHandler extends Handler {
                                 if (i == 0) {
                                     olPlayHall.mo2826a(data14.getInt("P"), b);
                                 } else if (i == 1) {
-                                    JSONObject jSONObject = new JSONObject();
-                                    try {
-                                        jSONObject.put("I", b);
-                                        jSONObject.put("P", data14.getString("P"));
-                                        olPlayHall.sendMsg((byte) 7, b, olPlayHall.hallID, jSONObject.toString());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
+                                    builder.setRoomId(b);
+                                    builder.setPassword(data14.getString("P"));
+                                    olPlayHall.sendMsg(7, builder.build());
                                 }
                             });
                             jpdialog.setSecondButton("取消", (dialog, which) -> {
@@ -265,16 +252,12 @@ final class OLPlayHallHandler extends Handler {
             case 10:
                 post(() -> {
                     Bundle data12 = message.getData();
-                    JSONObject jSONObject = new JSONObject();
-                    try {
-                        jSONObject.put("F", data12.getString("F"));
-                        jSONObject.put("T", 2);
-                        olPlayHall.friendList.remove(message.arg1);
-                        olPlayHall.sendMsg((byte) 31, (byte) 0, (byte) 0, jSONObject.toString());
-                        olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                    builder.setType(2);
+                    builder.setName(data12.getString("F"));
+                    olPlayHall.friendList.remove(message.arg1);
+                    olPlayHall.sendMsg(31, builder.build());
+                    olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                 });
                 return;
             case 11:
@@ -313,7 +296,7 @@ final class OLPlayHallHandler extends Handler {
                         } else {
                             dialog.dismiss();
                             if (i == 1) {
-                                OnlineRequest.ClTest.Builder builder = OnlineRequest.ClTest.newBuilder();
+                                OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                                 builder.setType(1);
                                 builder.setSongIndex(checkedId);
                                 olPlayHall.jpprogressBar.show();

@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
 
 public class OLChallenge extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -42,7 +42,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+        OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(0);
         sendMsg(16, builder.build());
         Intent intent = new Intent(this, OLPlayHall.class);
@@ -57,12 +57,12 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.startchallenge:
                 jpprogressBar.show();
-                OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+                OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
                 builder.setType(2);
                 sendMsg(16, builder.build());
                 return;
             case R.id.drawPrize:
-                builder = OnlineRequest.Challenge.newBuilder();
+                builder = OnlineChallengeDTO.newBuilder();
                 builder.setType(5);
                 sendMsg(16, builder.build());
         }
@@ -84,7 +84,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.challenge);
         cs = jpapplication.getConnectionService();
-        OnlineRequest.Challenge.Builder builder = OnlineRequest.Challenge.newBuilder();
+        OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
         sendMsg(16, builder.build());
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));

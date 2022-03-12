@@ -7,7 +7,6 @@ import android.os.Message;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 final class OLPlayDressRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

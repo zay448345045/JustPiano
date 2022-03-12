@@ -31,7 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineQuitRoomDTO;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
     public byte hallID;
@@ -170,7 +172,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 l_nandu.setVisibility(View.GONE);
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
-                OnlineRequest.ClTest.Builder builder = OnlineRequest.ClTest.newBuilder();
+                OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                 builder.setType(2);
                 sendMsg(40, builder.build());
                 return;
@@ -184,7 +186,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 l_nandu.setVisibility(View.GONE);
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
-                OnlineRequest.Challenge.Builder builder1 = OnlineRequest.Challenge.newBuilder();
+                OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                 builder1.setType(3);
                 sendMsg(16, builder1.build());
                 return;
@@ -537,7 +539,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     }
                     isPlayingStart = false;
                     isBack = true;
-                    sendMsg((byte) 8, (byte) 0, "", null);
+                    sendMsg(8, OnlineQuitRoomDTO.getDefaultInstance());
                     if (!isOutLine) {
                         intent = new Intent(this, OLPlayHall.class);
                         bundle.putString("hallName", hallBundle.getString("hallName"));

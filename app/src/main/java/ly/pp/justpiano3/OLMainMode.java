@@ -11,8 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.OutputStream;
-
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
     public JPApplication jpapplication;

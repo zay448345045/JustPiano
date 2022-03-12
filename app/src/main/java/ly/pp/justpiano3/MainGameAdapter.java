@@ -13,12 +13,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineDialogDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineEnterHallDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class MainGameAdapter extends BaseAdapter {
     Activity activity;
@@ -113,7 +112,7 @@ public final class MainGameAdapter extends BaseAdapter {
                     if (list.get(i).getInt("W") > 0) {
                         MainGameAdapter.m3978a(MainGameAdapter.this, b);
                     } else {
-                        OnlineRequest.EnterHall.Builder builder = OnlineRequest.EnterHall.newBuilder();
+                        OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
                         builder.setHallId(b);
                         connectionService.writeData(29, builder.build());
                     }
@@ -161,14 +160,10 @@ public final class MainGameAdapter extends BaseAdapter {
                     button.setTextColor(jpapplication.getResources().getColor(R.color.white1));
                     button2.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", string2);
-                            jSONObject.put("T", 0);
-                            connectionService.writeData((byte) 37, (byte) 0, (byte) 0, jSONObject.toString(), null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
+                        builder.setName(string2);
+                        builder.setType(0);
+                        connectionService.writeData(37, builder.build());
                     });
                     button.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
@@ -368,27 +363,19 @@ public final class MainGameAdapter extends BaseAdapter {
                     textView.setText("找TA");
                     textView.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", string7);
-                            jSONObject.put("T", 0);
-                            connectionService.writeData((byte) 37, (byte) 0, (byte) 0, jSONObject.toString(), null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
+                        builder.setType(0);
+                        builder.setName(string7);
+                        connectionService.writeData(37, builder.build());
                     });
                 } else if (activity instanceof OLPlayRoom || activity instanceof OLPlayKeyboardRoom) {
                     textView.setText("邀请");
                     textView.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", string7);
-                            jSONObject.put("T", 1);
-                            connectionService.writeData((byte) 37, (byte) 0, (byte) 0, jSONObject.toString(), null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
+                        builder.setType(1);
+                        builder.setName(string7);
+                        connectionService.writeData(37, builder.build());
                     });
                 }
                 ((TextView) view.findViewById(R.id.ol_friend_name)).setText(string7);
@@ -398,14 +385,9 @@ public final class MainGameAdapter extends BaseAdapter {
                 button.setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
                     if (connectionService != null && !string7.isEmpty()) {
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("C", 0);
-                            jSONObject.put("F", string7);
-                            connectionService.writeData((byte) 2, (byte) 0, (byte) 0, jSONObject.toString(), null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
+                        builder.setName(string7);
+                        connectionService.writeData(2, builder.build());
                     }
                 });
                 break;

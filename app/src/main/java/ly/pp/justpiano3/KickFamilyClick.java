@@ -3,10 +3,7 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
 
 final class KickFamilyClick implements OnClickListener {
     private final OLFamily olFamily;
@@ -17,7 +14,7 @@ final class KickFamilyClick implements OnClickListener {
 
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
-        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(6);
         builder.setUserName(olFamily.peopleNow);
         builder.setStatus(1);

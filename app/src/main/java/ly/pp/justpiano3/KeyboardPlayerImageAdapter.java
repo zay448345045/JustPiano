@@ -22,6 +22,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomDoorDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineKickedQuitRoomDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
+
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     byte roomID;
     ConnectionService connectionService;
@@ -75,14 +80,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (connectionService != null) {
-                            JSONObject jSONObject = new JSONObject();
-                            try {
-                                jSONObject.put("C", user.getPosition());
-                                jSONObject.put("T", 4);
-                                connectionService.writeData((byte) 45, roomID, olPlayKeyboardRoom.hallID0, jSONObject.toString(), null);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            builder.setType(4);
+                            connectionService.writeData(45, builder.build());
                         }
                     }
                 });
@@ -111,9 +112,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 button4.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        byte[] bArr = new byte[]{user.getPosition(), (byte) 2};
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
-                            connectionService.writeData((byte) 42, roomID, olPlayKeyboardRoom.hallID0, String.valueOf(user.getPosition()), bArr);
+                            OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            connectionService.writeData(42, builder.build());
                         }
                     }
                 });
@@ -123,9 +125,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 button4.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        byte[] bArr = new byte[]{user.getPosition(), (byte) 1};
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
-                            connectionService.writeData((byte) 42, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
+                            OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            connectionService.writeData(42, builder.build());
                         }
                     }
                 });
@@ -134,12 +137,13 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 button3.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        byte[] bArr = new byte[]{user.getPosition()};
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
                             if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
                                 Toast.makeText(olPlayKeyboardRoom, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                             } else {
-                                connectionService.writeData((byte) 9, roomID, olPlayKeyboardRoom.hallID0, user.getPlayerName(), bArr);
+                                OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
+                                builder.setRoomPosition(user.getPosition());
+                                connectionService.writeData(9, builder.build());
                                 olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
                             }
                         }
@@ -153,14 +157,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (connectionService != null) {
-                            JSONObject jSONObject = new JSONObject();
-                            try {
-                                jSONObject.put("C", user.getPosition());
-                                jSONObject.put("T", 4);
-                                connectionService.writeData((byte) 45, roomID, olPlayKeyboardRoom.hallID0, jSONObject.toString(), null);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            builder.setType(4);
+                            connectionService.writeData(45, builder.build());
                         }
                     }
                 });
@@ -178,13 +178,9 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                     if (connectionService != null) {
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("C", user.getPosition());
-                            connectionService.writeData((byte) 2, roomID, olPlayKeyboardRoom.hallID0, jSONObject.toString(), null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
+                        builder.setName(user.getPlayerName());
+                        connectionService.writeData(2, builder.build());
                     }
                 }
             });

@@ -2,10 +2,10 @@ package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserListDTO;
 
 final class PlayRoomTabChange implements OnTabChangeListener {
     private final OLPlayRoomInterface olPlayRoomInterface;
@@ -29,7 +29,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
             }
             switch (str) {
                 case "tab1":
-                    OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                    OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                     builder.setType(1);
                     builder.setPage(olPlayRoom.page);
                     olPlayRoom.sendMsg(34, builder.build());
@@ -40,7 +40,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                     }
                     break;
                 case "tab4":
-                    olPlayRoom.sendMsg(36, OnlineRequest.LoadUserList.getDefaultInstance());
+                    olPlayRoom.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
                     break;
             }
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
@@ -57,7 +57,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
             JSONObject jSONObject;
             switch (str) {
                 case "tab1":
-                    OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                    OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                     builder.setType(1);
                     builder.setPage(olPlayKeyboardRoom.page);
                     olPlayKeyboardRoom.sendMsg(34, builder.build());
@@ -68,7 +68,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
                     }
                     break;
                 case "tab3":
-                    olPlayKeyboardRoom.sendMsg(36, OnlineRequest.LoadUserList.getDefaultInstance());
+                    olPlayKeyboardRoom.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
                     break;
             }
         }

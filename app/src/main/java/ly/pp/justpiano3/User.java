@@ -1,8 +1,5 @@
 package ly.pp.justpiano3;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -25,13 +22,13 @@ public class User implements Serializable {
     private int shoes = 0;
     private String familyID = "0";
 
-    public User(byte b, String str, JSONObject jSONObject, String str2, String str3, String str4, int i, int i2, int i3, int i4, int i5, String familyID) {
+    public User(byte b, String str, int hair, int eye, int jacket, int trousers, int shoes, String str2, String str3, String str4, int i, int i2, int i3, int i4, int i5, String familyID) {
         position = b;
         playerName = str;
         sex = str2;
         status = str3;
         ishost = str4;
-        setClothes(jSONObject);
+        setClothes(hair, eye, jacket, trousers, shoes);
         kuang = i2;
         level = i;
         clevel = i3;
@@ -40,27 +37,20 @@ public class User implements Serializable {
         this.familyID = familyID;
     }
 
-    public User(String str, JSONObject jSONObject, String str2, int i, int i2) {
+    public User(String str, int hair, int eye, int jacket, int trousers, int shoes, String str2, int i, int i2) {
         playerName = str;
         sex = str2;
-        setClothes(jSONObject);
+        setClothes(hair, eye, jacket, trousers, shoes);
         level = i;
         clevel = i2;
     }
 
-    private void setClothes(JSONObject jSONObject) {
-        if (jSONObject != null) {
-            try {
-                sex = jSONObject.getString("S");
-                trousers = jSONObject.getInt("T");
-                jacket = jSONObject.getInt("J");
-                hair = jSONObject.getInt("H");
-                eye = jSONObject.getInt("E");
-                shoes = jSONObject.getInt("O");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+    private void setClothes(int hair, int eye, int jacket, int trousers, int shoes) {
+        this.hair = hair;
+        this.eye = eye;
+        this.jacket = jacket;
+        this.trousers = trousers;
+        this.score = shoes;
     }
 
     final String getPlayerName() {

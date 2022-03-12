@@ -2,10 +2,8 @@ package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserListDTO;
 
 final class PlayHallTabChange implements OnTabChangeListener {
     private final OLPlayHall olPlayHall;
@@ -26,12 +24,12 @@ final class PlayHallTabChange implements OnTabChangeListener {
             }
         }
         if (str.equals("tab1")) {
-            OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+            OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
             builder.setType(1);
             builder.setPage(olPlayHall.pageNum);
             olPlayHall.sendMsg(34, builder.build());
         } else if (str.equals("tab3")) {
-            olPlayHall.sendMsg(36, OnlineRequest.LoadUserList.getDefaultInstance());
+            olPlayHall.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
         }
     }
 }

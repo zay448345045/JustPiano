@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+
 final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
@@ -153,28 +155,20 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                     jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
                                     String finalString = string;
                                     jpdialog.setFirstButton("同意", (dialog, which) -> {
-                                        JSONObject jSONObject = new JSONObject();
-                                        try {
-                                            jSONObject.put("T", 1);
-                                            jSONObject.put("I", 0);
-                                            jSONObject.put("F", finalString);
-                                            olPlayKeyboardRoom.sendMsg((byte) 31, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
-                                            dialog.dismiss();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                        builder.setType(1);
+                                        builder.setReject(false);
+                                        builder.setName(finalString);
+                                        olPlayKeyboardRoom.sendMsg(31, builder.build());
+                                        dialog.dismiss();
                                     });
                                     jpdialog.setSecondButton("拒绝", (dialog, which) -> {
-                                        JSONObject jSONObject = new JSONObject();
-                                        try {
-                                            jSONObject.put("T", 1);
-                                            jSONObject.put("I", 1);
-                                            jSONObject.put("F", finalString);
-                                            olPlayKeyboardRoom.sendMsg((byte) 31, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
-                                            dialog.dismiss();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                        builder.setType(1);
+                                        builder.setReject(true);
+                                        builder.setName(finalString);
+                                        olPlayKeyboardRoom.sendMsg(31, builder.build());
+                                        dialog.dismiss();
                                     });
                                     jpdialog.showDialog();
                                 }
@@ -281,16 +275,12 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                 case 16:
                     post(() -> {
                         Bundle data = message.getData();
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", data.getString("F"));
-                            jSONObject.put("T", 2);
-                            olPlayKeyboardRoom.friendPlayerList.remove(message.arg1);
-                            olPlayKeyboardRoom.sendMsg((byte) 31, (byte) 0, (byte) 0, jSONObject.toString());
-                            olPlayKeyboardRoom.mo2863a(olPlayKeyboardRoom.friendsListView, olPlayKeyboardRoom.friendPlayerList, 1);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                        builder.setType(2);
+                        builder.setName(data.getString("F"));
+                        olPlayKeyboardRoom.friendPlayerList.remove(message.arg1);
+                        olPlayKeyboardRoom.sendMsg(31, builder.build());
+                        olPlayKeyboardRoom.mo2863a(olPlayKeyboardRoom.friendsListView, olPlayKeyboardRoom.friendPlayerList, 1);
                     });
                     return;
                 case 21:
@@ -304,17 +294,12 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                     return;
                 case 22:
                     post(() -> {
-                        try {
-                            JSONObject jSONObject = new JSONObject(message.getData().getString("MSG"));
-                            int i = jSONObject.getInt("T");
-                            int i2 = jSONObject.getInt("CT");
-                            byte b = (byte) jSONObject.getInt("CI");
-                            String string = jSONObject.getString("C");
-                            if (i != 0) {
-                                olPlayKeyboardRoom.mo2860a(i, string, i2, b);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        int i = message.getData().getInt("MSG_T");
+                        int i2 = message.getData().getInt("MSG_CT");
+                        byte b = (byte) message.getData().getInt("MSG_CI");
+                        String string = message.getData().getString("MSG_C");
+                        if (i != 0) {
+                            olPlayKeyboardRoom.mo2860a(i, string, i2, b);
                         }
                     });
                     return;

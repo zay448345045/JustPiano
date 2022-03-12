@@ -5,10 +5,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
 
 final class ChangeDeclarationClick implements OnClickListener {
 
@@ -27,27 +25,23 @@ final class ChangeDeclarationClick implements OnClickListener {
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f5458b.getText());
-        JSONObject jSONObject = new JSONObject();
-        try {
-            if (valueOf.isEmpty() || valueOf.equals("'")) {
-                Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 300) {
-                Toast.makeText(family, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
-            } else if (f5459c == 0) {
-                dialogInterface.dismiss();
-                jSONObject.put("T", f5460d);
-                jSONObject.put("M", valueOf);
-                family.sendMsg((byte) 35, (byte) 0, jSONObject.toString());
-            } else if (f5459c == 1) {
-                dialogInterface.dismiss();
-                OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
-                builder.setType(9);
-                builder.setMessage(valueOf);
-                family.sendMsg(18, builder.build());
-                family.declaration.setText("家族宣言:\n" + valueOf);
-            }
-        } catch (JSONException e2) {
-            e2.printStackTrace();
+        if (valueOf.isEmpty() || valueOf.equals("'")) {
+            Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
+        } else if (valueOf.length() > 300) {
+            Toast.makeText(family, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+        } else if (f5459c == 0) {
+            dialogInterface.dismiss();
+            OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
+            builder.setMessage(valueOf);
+            builder.setName(f5460d);
+            family.sendMsg(35, builder.build());
+        } else if (f5459c == 1) {
+            dialogInterface.dismiss();
+            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+            builder.setType(9);
+            builder.setMessage(valueOf);
+            family.sendMsg(18, builder.build());
+            family.declaration.setText("家族宣言:\n" + valueOf);
         }
     }
 }

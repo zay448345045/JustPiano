@@ -7,13 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
 
 final class FamilyHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -85,7 +82,7 @@ final class FamilyHandler extends Handler {
                             family.infoWindow.dismiss();
                         }
                         if (info.equals("您所在的家族已解散")) {
-                            OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                             builder.setType(0);
                             family.sendMsg(18, builder.build());
                             Intent intent = new Intent(family, OLPlayHallRoom.class);
@@ -93,7 +90,7 @@ final class FamilyHandler extends Handler {
                             family.startActivity(intent);
                             family.finish();
                         } else {
-                            OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                             builder.setType(1);
                             builder.setFamilyId(Integer.parseInt(family.familyID));
                             family.sendMsg(18, builder.build());

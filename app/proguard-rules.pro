@@ -22,6 +22,7 @@
 
 -keep class javazoom.jl.decoder.JavaLayerUtils{*;}
 -keep class io.netty.**{*;}
+-keep class ly.pp.justpiano3.protobuf.**{*;}
 
 -keepattributes Signature
 -keepnames class * implements java.io.Serializable

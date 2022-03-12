@@ -3,11 +3,14 @@ package ly.pp.justpiano3;
 import android.os.Bundle;
 import android.os.Message;
 
-import ly.pp.justpiano3.protobuf.response.OnlineResponse;
+import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
+import ly.pp.justpiano3.protobuf.vo.OnlineClTestVO;
+import ly.pp.justpiano3.protobuf.vo.OnlineEnterHallVO;
+import ly.pp.justpiano3.protobuf.vo.OnlineHallChatVO;
 
 final class Receive {
 
-    static void receive(int msgType, OnlineResponse.Message msg) {
+    static void receive(int msgType, OnlineBaseVO msg) {
         try {
             String string = "";
             OLPlayHall olPlayHall;
@@ -16,7 +19,6 @@ final class Receive {
             switch (msgType) {
                 case 2:
                 case 3:
-                case 4:
                 case 5:
                 case 9:
                 case 13:
@@ -32,10 +34,10 @@ final class Receive {
                     JsonHandle.m3949a(msgType, string, msg);
                     return;
                 case 6:
-                    JsonHandle.m3951a(string, "H");
+                    JsonHandle.m3951a(msg, "H");
                     return;
                 case 7:
-                    JsonHandle.m3951a(string, "G");
+                    JsonHandle.m3951a(msg, "G");
                     return;
                 case 10:
                     if (JPStack.top() instanceof OLMainMode) {
@@ -65,7 +67,7 @@ final class Receive {
                 case 12:
                     if (JPStack.top() instanceof OLPlayHall) {
                         olPlayHall = (OLPlayHall) JPStack.top();
-                        OnlineResponse.HallChat hallChat = msg.getHallChat();
+                        OnlineHallChatVO hallChat = msg.getHallChat();
                         message = new Message();
                         message.what = 1;
                         Bundle bundle2 = new Bundle();
@@ -82,7 +84,7 @@ final class Receive {
                     }
                     return;
                 case 16:
-                    JsonHandle.challenge(string);
+                    JsonHandle.challenge(msg);
                     return;
                 case 18:
                     JsonHandle.family(msg);
@@ -91,16 +93,16 @@ final class Receive {
                     JsonHandle.loadRoomList(msg);
                     return;
                 case 20:
-                    JsonHandle.m3956d(string);
+                    JsonHandle.changeRoomPosition(msg);
                     return;
                 case 21:
-                    JsonHandle.m3957e(string);
+                    JsonHandle.loadRoomPosition(msg);
                     return;
                 case 22:
                     JsonHandle.changeRoomList(msg);
                     return;
                 case 25:
-                    JsonHandle.m3948a(string);
+                    JsonHandle.miniGrade(string);
                     return;
                 case 26:
                     JsonHandle.shop(msg);
@@ -109,10 +111,10 @@ final class Receive {
                 case 33:
                 case 34:
                 case 36:
-                    JsonHandle.m3953b(msgType, string, msg);
+                    JsonHandle.m3953b(msgType, msg);
                     return;
                 case 29:
-                    OnlineResponse.EnterHall enterHall = msg.getEnterHall();
+                    OnlineEnterHallVO enterHall = msg.getEnterHall();
                     bundle = new Bundle();
                     if (enterHall.getAllowed()) {
                         bundle.putInt("T", 0);
@@ -132,13 +134,13 @@ final class Receive {
                     }
                     return;
                 case 38:
-                    JsonHandle.daily(string);
+                    JsonHandle.daily(msg);
                     return;
                 case 39:
-                    JsonHandle.keyboardNotes(string);
+                    JsonHandle.keyboardNotes(msg);
                     return;
                 case 40:
-                    OnlineResponse.ClTest clTest = msg.getClTest();
+                    OnlineClTestVO clTest = msg.getClTest();
                     bundle = new Bundle();
                     message = new Message();
                     PianoPlay pianoPlay;
@@ -197,7 +199,7 @@ final class Receive {
                     }
                     return;
                 case 43:
-                    JsonHandle.m3954b(string);
+                    JsonHandle.m3954b(msg);
                     return;
                 default:
             }

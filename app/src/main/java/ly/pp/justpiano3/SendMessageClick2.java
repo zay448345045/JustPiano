@@ -5,8 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
 
 final class SendMessageClick2 implements OnClickListener {
     private final OLPlayHall olPlayHall;
@@ -22,22 +21,18 @@ final class SendMessageClick2 implements OnClickListener {
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(textview.getText());
-        JSONObject jSONObject = new JSONObject();
-        try {
-            if (valueOf.isEmpty() || valueOf.equals("'")) {
-                Toast.makeText(olPlayHall, "请输入信件内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 300) {
-                Toast.makeText(olPlayHall, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
-            } else {
-                jSONObject.put("T", str);
-                jSONObject.put("M", valueOf);
-                if (!str.isEmpty()) {
-                    olPlayHall.connectionService.writeData((byte) 35, (byte) 0, (byte) 0, jSONObject.toString(), null);
-                }
-                dialogInterface.dismiss();
+        if (valueOf.isEmpty() || valueOf.equals("'")) {
+            Toast.makeText(olPlayHall, "请输入信件内容!", Toast.LENGTH_SHORT).show();
+        } else if (valueOf.length() > 300) {
+            Toast.makeText(olPlayHall, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+        } else {
+            OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
+            builder.setName(str);
+            builder.setMessage(valueOf);
+            if (!str.isEmpty()) {
+                olPlayHall.connectionService.writeData(35, builder.build());
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            dialogInterface.dismiss();
         }
     }
 }

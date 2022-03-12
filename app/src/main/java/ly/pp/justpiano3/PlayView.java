@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
 
 public final class PlayView extends SurfaceView implements Callback {
     static long serialID = 2825651233768L;
@@ -566,7 +567,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    OnlineRequest.Challenge.Builder builder1 = OnlineRequest.Challenge.newBuilder();
+                    OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                     builder1.setType(4);
                     builder1.setStatusArray(GZIP.arrayToZIP(bArr));
                     long x = pianoPlay.times * serialID;
@@ -581,7 +582,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    OnlineRequest.ClTest.Builder builder = OnlineRequest.ClTest.newBuilder();
+                    OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                     builder.setType(3);
                     builder.setStatusArray(GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
                     x = pianoPlay.times * serialID;

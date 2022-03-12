@@ -4,8 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineEnterRoomDTO;
 
 final class RoomPasswordClick2 implements OnClickListener {
     private final OLPlayHall f5377a;
@@ -21,14 +20,10 @@ final class RoomPasswordClick2 implements OnClickListener {
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f5378b.getText());
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("I", f5379c);
-            jSONObject.put("P", valueOf);
-            f5377a.sendMsg((byte) 7, f5377a.hallID, (byte) 0, jSONObject.toString());
-            dialogInterface.dismiss();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
+        builder.setRoomId(f5379c);
+        builder.setPassword(valueOf);
+        f5377a.sendMsg(7, builder.build());
+        dialogInterface.dismiss();
     }
 }

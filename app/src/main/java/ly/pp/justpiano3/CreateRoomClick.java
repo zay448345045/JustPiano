@@ -6,8 +6,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineCreateRoomDTO;
 
 final class CreateRoomClick implements OnClickListener {
     private final OLPlayHall olPlayHall;
@@ -44,17 +43,12 @@ final class CreateRoomClick implements OnClickListener {
                         i2 = 3;
                         break;
                 }
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("N", roomName);
-                    jSONObject.put("P", password);
-                    jSONObject.put("M", i2);
-                    olPlayHall.sendMsg((byte) 6, olPlayHall.hallID, (byte) 0, jSONObject.toString());
-                    jSONObject.toString();
-                    dialogInterface.dismiss();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineCreateRoomDTO.Builder builder = OnlineCreateRoomDTO.newBuilder();
+                builder.setRoomName(roomName);
+                builder.setPassword(password);
+                builder.setRoomMode(i2);
+                olPlayHall.sendMsg(6, builder.build());
+                dialogInterface.dismiss();
             } else {
                 Toast.makeText(olPlayHall, "确定密码在8个字之内!", Toast.LENGTH_SHORT).show();
             }

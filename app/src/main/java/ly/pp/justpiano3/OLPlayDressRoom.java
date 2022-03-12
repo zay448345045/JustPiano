@@ -20,15 +20,13 @@ import android.widget.Toast;
 
 import com.google.protobuf.MessageLite;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineShopDTO;
 
 public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public String sex = "f";
@@ -146,7 +144,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ol_dress_ok:
-                OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
                 builder.setType(0);
                 builder.setHair(hairNow + 1);
                 builder.setEye(eyeNow + 1);
@@ -251,7 +249,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             // 商品标签
             if (intValue == childCount - 1) {
                 jpprogressBar.show();
-                OnlineRequest.Shop.Builder builder = OnlineRequest.Shop.newBuilder();
+                OnlineShopDTO.Builder builder = OnlineShopDTO.newBuilder();
                 builder.setType(1);
                 sendMsg(26, builder.build());
             }
@@ -351,7 +349,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             shoesImage.setImageBitmap(shoesArray.get(shoesNow));
         }
         shoesGridView.setOnItemClickListener(new ShoesClick(this));
-        OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+        OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
         builder.setType(1);
         sendMsg(33, builder.build());
     }

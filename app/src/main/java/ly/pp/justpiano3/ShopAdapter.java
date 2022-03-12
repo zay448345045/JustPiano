@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineShopDTO;
 
 public final class ShopAdapter extends BaseAdapter {
     private final OLPlayDressRoom olPlayDressRoom;
@@ -58,7 +58,7 @@ public final class ShopAdapter extends BaseAdapter {
             jpdialog.setFirstButton("购买", (dialog, which) -> {
                 dialog.dismiss();
                 olPlayDressRoom.jpprogressBar.show();
-                OnlineRequest.Shop.Builder builder = OnlineRequest.Shop.newBuilder();
+                OnlineShopDTO.Builder builder = OnlineShopDTO.newBuilder();
                 builder.setType(2);
                 builder.setProductId(shopProduct.getId());
                 olPlayDressRoom.sendMsg(26, builder.build());

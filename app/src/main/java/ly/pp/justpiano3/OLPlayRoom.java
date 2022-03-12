@@ -43,7 +43,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomHandDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlinePlayStartDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
 
 public final class OLPlayRoom extends BaseActivity implements Callback, OnClickListener, OLPlayRoomInterface {
     public int lv;
@@ -132,13 +137,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public void setGroupOrHand(int i, PopupWindow popupWindow) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("G", i);
-            sendMsg((byte) 44, roomID0, hallID0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineChangeRoomHandDTO.Builder builder = OnlineChangeRoomHandDTO.newBuilder();
+        builder.setHand(i);
+        sendMsg(44, builder.build());
         if (popupWindow != null) {
             popupWindow.dismiss();
         }
@@ -147,11 +148,17 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private void showCpDialog(String str, String str2) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
         try {
-            JSONObject jSONObject = new JSONObject(GZIP.ZIPTo(str2));
+            JSONObject jSONObject = new JSONObject(str2);
             JSONObject jSONObject2 = jSONObject.getJSONObject("P");
-            User User = new User(jSONObject2.getString("N"), jSONObject2.getJSONObject("D"), jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
+            User User = new User(jSONObject2.getString("N"), jSONObject2.getInt("D_H"),
+                    jSONObject2.getInt("D_E"), jSONObject2.getInt("D_J"),
+                    jSONObject2.getInt("D_T"), jSONObject2.getInt("D_S"),
+                    jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
             JSONObject jSONObject3 = jSONObject.getJSONObject("C");
-            User User2 = new User(jSONObject3.getString("N"), jSONObject3.getJSONObject("D"), jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
+            User User2 = new User(jSONObject3.getString("N"),  jSONObject3.getInt("D_H"),
+                    jSONObject3.getInt("D_E"), jSONObject3.getInt("D_J"),
+                    jSONObject3.getInt("D_T"), jSONObject3.getInt("D_S"),
+                    jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
             JSONObject jSONObject4 = jSONObject.getJSONObject("I");
             TextView textView = inflate.findViewById(R.id.ol_player_level);
             TextView textView2 = inflate.findViewById(R.id.ol_player_class);
@@ -247,7 +254,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     void showInfoDialog(Bundle b) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), new JSONObject(b.getString("DR")), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -415,7 +423,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public final void mo2861a(GridView gridView, Bundle bundle) {
         playerList.clear();
         if (bundle != null) {
-            int size = bundle.size() - 3;
+            int size = bundle.size() - 6;
             for (int i = 0; i < size; i++) {
                 playerList.add(bundle.getBundle(String.valueOf(i)));
             }
@@ -672,13 +680,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     page = 0;
                     return;
                 }
-                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(page);
                 sendMsg(34, builder.build());
                 return;
             case R.id.online_button:
-                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
                 sendMsg(34, builder.build());
@@ -687,7 +695,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 if (!canNotNextPage) {
                     page += 20;
                     if (page >= 0) {
-                        builder = OnlineRequest.LoadUserInfo.newBuilder();
+                        builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(page);
                         sendMsg(34, builder.build());
@@ -697,28 +705,23 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.ol_send_b:
-                JSONObject jSONObject2 = new JSONObject();
-                try {
+                OnlineRoomChatDTO.Builder builder2 = OnlineRoomChatDTO.newBuilder();
                     str = String.valueOf(sendText.getText());
                     if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
-                        jSONObject2.put("@", "");
-                        jSONObject2.put("M", str);
+                        builder2.setUserName("");
+                        builder2.setMessage(str);
                     } else {
-                        jSONObject2.put("@", userTo);
+                        builder2.setUserName(userTo);
                         str = str.substring(userTo.length());
-                        jSONObject2.put("M", str);
+                        builder2.setMessage(str);
                     }
                     sendText.setText("");
-                    jSONObject2.put("V", colorNum);
+                    builder2.setColor(colorNum);
                     if (!str.isEmpty()) {
-                        sendMsg((byte) 13, roomID0, hallID0, jSONObject2.toString());
+                        sendMsg(13, builder2.build());
                     }
                     userTo = "";
                     return;
-                } catch (JSONException e222) {
-                    e222.printStackTrace();
-                    return;
-                }
             case R.id.ol_express_b:
                 expressWindow.showAtLocation(express, Gravity.CENTER, 0, 0);
                 return;
@@ -804,9 +807,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_ready_b:
                 if (playerKind.equals("G")) {
-                    sendMsg((byte) 4, roomID0, hallID0, "R");
+                    OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+                    builder1.setStatus("R");
+                    sendMsg(4, builder1.build());
                 } else {
-                    sendMsg((byte) 3, roomID0, hallID0, "");
+                    sendMsg(3, OnlinePlayStartDTO.getDefaultInstance());
                 }
                 return;
             case R.id.room_title:
@@ -1025,7 +1030,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
         songNameText.setOnClickListener(this);
         songsList.setAdapter(olRoomSongsAdapter);
-        sendMsg((byte) 21, roomID0, hallID0, "");
+        sendMsg(21, OnlineLoadRoomPositionDTO.getDefaultInstance());
         msgList.clear();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
@@ -1207,7 +1212,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onStart() {
         super.onStart();
         if (!isOnStart) {
-            sendMsg((byte) 4, roomID0, hallID0, "N");
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("N");
+            sendMsg(4, builder1.build());
         }
         isOnStart = true;
     }
@@ -1216,7 +1223,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onRestart() {
         super.onRestart();
         if (!isOnStart) {
-            sendMsg((byte) 4, roomID0, hallID0, "N");
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("N");
+            sendMsg(4, builder1.build());
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
                 msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
@@ -1229,7 +1238,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onStop() {
         super.onStop();
         if (isOnStart) {
-            sendMsg((byte) 4, roomID0, hallID0, "B");
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("B");
+            sendMsg(4, builder1.build());
         }
         isOnStart = false;
     }

@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineDailyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineEnterHallDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -219,7 +222,7 @@ final class OLPlayHallRoomHandler extends Handler {
                             jpdialog.setMessage(string2);
                             jpdialog.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
                                 dialog.dismiss();
-                                OnlineRequest.EnterHall.Builder builder = OnlineRequest.EnterHall.newBuilder();
+                                OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
                                 builder.setHallId(b);
                                 olPlayHallRoom.sendMsg(29, builder.build());
                             });
@@ -240,16 +243,12 @@ final class OLPlayHallRoomHandler extends Handler {
                 case 7:
                     post(() -> {
                         Bundle data = message.getData();
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", data.getString("F"));
-                            jSONObject.put("T", 2);
-                            olPlayHallRoom.friendList.remove(message.arg1);
-                            olPlayHallRoom.sendMsg((byte) 31, (byte) 0, jSONObject.toString());
-                            olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                        builder.setType(2);
+                        builder.setName(data.getString("F"));
+                        olPlayHallRoom.friendList.remove(message.arg1);
+                        olPlayHallRoom.sendMsg(31, builder.build());
+                        olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     });
                     return;
                 case 8:
@@ -273,7 +272,7 @@ final class OLPlayHallRoomHandler extends Handler {
                                     Toast.makeText(olPlayHallRoom, "家族名称只能在八个字以下!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     dialog.dismiss();
-                                    OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                                    OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                                     builder.setType(4);
                                     builder.setFamilyName(name);
                                     olPlayHallRoom.sendMsg(18, builder.build());
@@ -295,7 +294,7 @@ final class OLPlayHallRoomHandler extends Handler {
                         switch (result) {
                             case 0:
                                 Toast.makeText(olPlayHallRoom, "家族创建成功!", Toast.LENGTH_SHORT).show();
-                                OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                                OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                                 builder.setType(2);
                                 builder.setPage(0);
                                 olPlayHallRoom.familyPageNum = 0;
@@ -341,15 +340,11 @@ final class OLPlayHallRoomHandler extends Handler {
                         textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得奖励：" + tomorrowExp + "\n以下为昨日在线时长排名：");
                         JPDialog jpDialog = new JPDialog(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
                                 .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
-                                    try {
-                                        dialog.dismiss();
-                                        JSONObject jSONObject = new JSONObject();
-                                        jSONObject.put("K", 2);
-                                        olPlayHallRoom.jpprogressBar.show();
-                                        olPlayHallRoom.sendMsg((byte) 38, (byte) 0, jSONObject.toString());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    dialog.dismiss();
+                                    olPlayHallRoom.jpprogressBar.show();
+                                    OnlineDailyDTO.Builder builder = OnlineDailyDTO.newBuilder();
+                                    builder.setType(2);
+                                    olPlayHallRoom.sendMsg(38, builder.build());
                                 });
                         listView.setCacheColorHint(0);
                         listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));

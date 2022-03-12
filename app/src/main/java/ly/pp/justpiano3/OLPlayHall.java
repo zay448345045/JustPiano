@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.google.protobuf.MessageLite;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -40,7 +39,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineEnterRoomDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineHallChatDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomListDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomUserListDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineQuitHallDTO;
 
 public final class OLPlayHall extends BaseActivity implements Callback, OnClickListener {
     public ConnectionService connectionService;
@@ -74,13 +79,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     private TextView timeTextView;
 
     final void loadInRoomUserInfo(byte b) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("ID", b);
-            connectionService.writeData((byte) 43, (byte) 0, (byte) 0, jSONObject.toString(), null);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineLoadRoomUserListDTO.Builder builder = OnlineLoadRoomUserListDTO.newBuilder();
+        builder.setRoomId(b);
+        connectionService.writeData(43, builder.build());
     }
 
     public final void sendMsg(byte b, byte b2, byte b3, String str) {
@@ -106,8 +107,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     void showInfoDialog(Bundle b) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), new JSONObject(b.getString("DR")), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
-            ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
+            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
@@ -158,18 +159,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     }
 
     final void mo2826a(int i, byte b) {
-        JSONObject jSONObject = new JSONObject();
         switch (i) {
             case 0:
-                try {
-                    jSONObject.put("I", b);
-                    jSONObject.put("P", "");
-                    sendMsg((byte) 7, b, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
+                builder.setRoomId(b);
+                builder.setPassword("");
+                sendMsg(7, builder.build());
+                return;
             case 1:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.text_2);
@@ -270,14 +266,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        sendMsg(30, OnlineRequest.QuitHall.getDefaultInstance());
+        sendMsg(30, OnlineQuitHallDTO.getDefaultInstance());
         startActivity(new Intent(this, OLPlayHallRoom.class));
         finish();
     }
 
     @Override
     public void onClick(View view) {
-        JSONObject jSONObject = new JSONObject();
         switch (view.getId()) {
             case R.id.ol_createroom_b:
                 View inflate = getLayoutInflater().inflate(R.layout.create_room, findViewById(R.id.dialog));
@@ -300,7 +295,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 new JPDialog(this).setTitle("创建房间").loadInflate(inflate).setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup)).setSecondButton("取消", new DialogDismissClick()).showDialog();
                 return;
             case R.id.ol_testroom_b:
-                OnlineRequest.ClTest.Builder builder2 = OnlineRequest.ClTest.newBuilder();
+                OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
                 builder2.setType(0);
                 jpprogressBar.show();
                 sendMsg(40, builder2.build());
@@ -319,13 +314,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                     pageNum = 0;
                     return;
                 }
-                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(pageNum);
                 sendMsg(34, builder.build());
                 return;
             case R.id.online_button:
-                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
                 sendMsg(34, builder.build());
@@ -334,7 +329,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 if (!pageIsEnd) {
                     pageNum += 20;
                     if (pageNum >= 0) {
-                        builder = OnlineRequest.LoadUserInfo.newBuilder();
+                        builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(pageNum);
                         sendMsg(34, builder.build());
@@ -345,7 +340,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_send_b:
                 String valueOf = String.valueOf(sendTextView.getText());
-                OnlineRequest.HallChat.Builder builder1 = OnlineRequest.HallChat.newBuilder();
+                OnlineHallChatDTO.Builder builder1 = OnlineHallChatDTO.newBuilder();
                 if (!valueOf.startsWith(sendTo) || valueOf.length() <= sendTo.length()) {
                     builder1.setUserName("");
                     builder1.setMessage(valueOf);
@@ -454,8 +449,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
         tabHost.setOnTabChangedListener(new PlayHallTabChange(this));
         tabHost.setCurrentTab(1);
-        OnlineRequest.LoadRoomList.Builder builder = OnlineRequest.LoadRoomList.newBuilder();
-        builder.setHallId(hallID);
+        OnlineLoadRoomListDTO.Builder builder = OnlineLoadRoomListDTO.newBuilder();
         sendMsg(19, builder.build());
         isTimeShowing = true;
         showTimeThread = new ShowTimeThread(this);

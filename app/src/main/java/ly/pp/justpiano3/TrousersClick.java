@@ -4,10 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
 
 final class TrousersClick implements OnItemClickListener {
 
@@ -33,7 +30,7 @@ final class TrousersClick implements OnItemClickListener {
             jpdialog.setMessage("确定花费" + (olplaydressroom.sex.equals("f")
                     ? Consts.fTrousers[i] : Consts.mTrousers[i]) + "音符购买此服装吗?");
             jpdialog.setFirstButton("购买", (dialog, which) -> {
-                OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
                 builder.setType(2);
                 builder.setBuyClothesType(3);
                 builder.setBuyClothesId(i);

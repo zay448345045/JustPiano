@@ -16,7 +16,7 @@ final class Room {
 
     Room(byte b, String str, int i, int i2, int i3, int i4, int i5, int i6, int i7) {
         peopleFull = false;
-        int totalPeople;
+        int notEmptyPositionNum;
         roomID = b;
         roonName = str;
         mcount = i2;
@@ -25,14 +25,14 @@ final class Room {
         isPassword = i4;
         roomMode = i7;
         people = new int[peopleCapacity];
-        totalPeople = (i + i2) + i6;
-        if (totalPeople == peopleCapacity) {
+        notEmptyPositionNum = (i + i2) + i6;
+        if (notEmptyPositionNum == peopleCapacity) {
             peopleFull = true;
         }
         for (int i8 = 0; i8 < i; i8++) {
             people[i8] = 1;
         }
-        while (i < totalPeople - i6) {
+        while (i < notEmptyPositionNum - i6) {
             people[i] = 0;
             i++;
         }
@@ -40,7 +40,7 @@ final class Room {
             people[i8] = 3;
         }
         if (!peopleFull) {
-            for (int i8 = totalPeople - i6; i8 < peopleCapacity - i6; i8++) {
+            for (int i8 = notEmptyPositionNum - i6; i8 < peopleCapacity - i6; i8++) {
                 people[i8] = 2;
             }
         }

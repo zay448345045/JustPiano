@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
 
 final class HairClick implements OnItemClickListener {
     private final OLPlayDressRoom olPlayDressRoom;
@@ -29,7 +29,7 @@ final class HairClick implements OnItemClickListener {
             jpdialog.setMessage("确定花费" + (olPlayDressRoom.sex.equals("f")
                     ? Consts.fHair[i] : Consts.mHair[i]) + "音符购买此服装吗?");
             jpdialog.setFirstButton("购买", (dialog, which) -> {
-                OnlineRequest.ChangeClothes.Builder builder = OnlineRequest.ChangeClothes.newBuilder();
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
                 builder.setType(2);
                 builder.setBuyClothesType(0);
                 builder.setBuyClothesId(i);

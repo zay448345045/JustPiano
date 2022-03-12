@@ -6,6 +6,8 @@ import android.content.DialogInterface.OnClickListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
+
 final class SendZhufuClick implements OnClickListener {
     private final OLPlayRoomInterface olPlayRoomInterface;
     private final JSONObject f5512b;
@@ -17,32 +19,26 @@ final class SendZhufuClick implements OnClickListener {
 
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
-        if (olPlayRoomInterface instanceof OLPlayRoom) {
-            OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
-            JSONObject jSONObject = new JSONObject();
-            try {
-                jSONObject.put("T", 5);
-                jSONObject.put("C", f5512b.getInt("I"));
-                jSONObject.put("CI", -1);
-                jSONObject.put("CT", -1);
-                olPlayRoom.sendMsg((byte) 45, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
+        try {
+            if (olPlayRoomInterface instanceof OLPlayRoom) {
+                OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
+                OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                builder.setType(5);
+
+                builder.setRoomPosition(f5512b.getInt("I"));
+
+                olPlayRoom.sendMsg(45, builder.build());
+                dialogInterface.dismiss();
+            } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
+                OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
+                OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                builder.setType(5);
+                builder.setRoomPosition(f5512b.getInt("I"));
+                olPlayKeyboardRoom.sendMsg(45, builder.build());
+                dialogInterface.dismiss();
             }
-            dialogInterface.dismiss();
-        } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
-            OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
-            JSONObject jSONObject = new JSONObject();
-            try {
-                jSONObject.put("T", 5);
-                jSONObject.put("C", f5512b.getInt("I"));
-                jSONObject.put("CI", -1);
-                jSONObject.put("CT", -1);
-                olPlayKeyboardRoom.sendMsg((byte) 45, olPlayKeyboardRoom.roomID0, olPlayKeyboardRoom.hallID0, jSONObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            dialogInterface.dismiss();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -3,7 +3,8 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineHallChatDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
 
 final class ExpressClick implements OnClickListener {
     private final ExpressAdapter expressAdapter;
@@ -20,12 +21,12 @@ final class ExpressClick implements OnClickListener {
             expressAdapter.popupWindow.dismiss();
             if (expressAdapter.connectionService != null) {
                 if (expressAdapter.messageType == 12) {
-                    OnlineRequest.HallChat.Builder builder = OnlineRequest.HallChat.newBuilder();
+                    OnlineHallChatDTO.Builder builder = OnlineHallChatDTO.newBuilder();
                     builder.setMessage("//" + expressID);
                     builder.setUserName("");
                     expressAdapter.connectionService.writeData(expressAdapter.messageType, builder.build());
                 } else if (expressAdapter.messageType == 13) {
-                    OnlineRequest.RoomChat.Builder builder = OnlineRequest.RoomChat.newBuilder();
+                    OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
                     builder.setMessage("//" + expressID);
                     builder.setUserName("");
                     builder.setColor(99);

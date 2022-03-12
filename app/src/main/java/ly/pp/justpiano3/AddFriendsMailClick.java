@@ -4,8 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
 
 final class AddFriendsMailClick implements OnClickListener {
     private final OLFamily family;
@@ -21,15 +20,11 @@ final class AddFriendsMailClick implements OnClickListener {
         if (family.jpapplication.getConnectionService() == null) {
             return;
         }
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("T", name);
-            jSONObject.put("M", "");
-            family.sendMsg((byte) 35, (byte) 0, jSONObject.toString());
-            dialogInterface.dismiss();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
+        builder.setMessage("");
+        builder.setName(name);
+        family.sendMsg(35, builder.build());
+        dialogInterface.dismiss();
         Toast.makeText(family, "已向对方发送私信，请等待对方同意!", Toast.LENGTH_SHORT).show();
     }
 }

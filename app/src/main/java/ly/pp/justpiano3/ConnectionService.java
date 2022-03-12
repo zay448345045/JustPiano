@@ -27,8 +27,10 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
-import ly.pp.justpiano3.protobuf.response.OnlineResponse;
+import ly.pp.justpiano3.protobuf.dto.OnlineBaseDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineHeartBeatDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoginDTO;
+import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
 
 public class ConnectionService extends Service implements Runnable {
 
@@ -69,7 +71,7 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     public final void writeData(int type, MessageLite message) {
-        OnlineRequest.Message.Builder builder = OnlineRequest.Message.newBuilder();
+        OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
         if (mNetty.isConnected()) {
@@ -135,13 +137,13 @@ public class ConnectionService extends Service implements Runnable {
                 // 添加相关编码器，解码器，处理器等
                 channelPipeline
                         .addLast(new ProtobufVarint32FrameDecoder())
-                        .addLast(new ProtobufDecoder(OnlineResponse.Message.getDefaultInstance()))
+                        .addLast(new ProtobufDecoder(OnlineBaseVO.getDefaultInstance()))
                         .addLast(new ProtobufVarint32LengthFieldPrepender())
                         .addLast(new ProtobufEncoder())
                         .addLast(new IdleStateHandler(0, 7, 0, TimeUnit.SECONDS))
-                        .addLast(new SimpleChannelInboundHandler<OnlineResponse.Message>() {
+                        .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
-                            protected void channelRead0(ChannelHandlerContext ctx, OnlineResponse.Message msg) throws Exception {
+                            protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
                                 int messageType = msg.getResponseCase().getNumber();
                                 ly.pp.justpiano3.Receive.receive(messageType, msg);
                             }
@@ -158,7 +160,7 @@ public class ConnectionService extends Service implements Runnable {
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
                                     if (IdleState.WRITER_IDLE.equals(event.state())) {
-                                        writeData(41, OnlineRequest.HeartBeat.getDefaultInstance());
+                                        writeData(41, OnlineHeartBeatDTO.getDefaultInstance());
                                     }
                                 }
                             }
@@ -169,7 +171,7 @@ public class ConnectionService extends Service implements Runnable {
 
             @Override
             public void onSuccess() {
-                OnlineRequest.Login.Builder builder = OnlineRequest.Login.newBuilder();
+                OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode("20220218");

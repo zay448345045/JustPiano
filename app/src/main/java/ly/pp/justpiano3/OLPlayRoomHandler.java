@@ -12,9 +12,6 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -22,6 +19,9 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import ly.pp.justpiano3.protobuf.dto.OnlineQuitRoomDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -38,9 +38,8 @@ final class OLPlayRoomHandler extends Handler {
                 case 1:
                     post(() -> {
                         olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
-                        String str1, str;
+                        String str1;
                         str1 = message.getData().getString("SI");
-                        str = message.getData().getString("MSG");
                         if (!str1.isEmpty()) {
                             olPlayRoom.jpapplication.setNowSongsName(str1);
                             int diao = message.getData().getInt("diao");
@@ -68,19 +67,12 @@ final class OLPlayRoomHandler extends Handler {
                                 }
                             }
                         }
-                        if (!str.isEmpty()) {
-                            try {
-                                JSONObject jSONObject = new JSONObject(str);
-                                int i = jSONObject.getInt("T");
-                                int i2 = jSONObject.getInt("CT");
-                                byte b = (byte) jSONObject.getInt("CI");
-                                String string = jSONObject.getString("C");
-                                if (!string.isEmpty()) {
-                                    olPlayRoom.mo2860a(i, string, i2, b);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        int i = message.getData().getBoolean("MSG_I") ? 1 : 0;
+                        int i2 = message.getData().getInt("MSG_CT");
+                        byte b = (byte) message.getData().getInt("MSG_CI");
+                        String string = message.getData().getString("MSG_C");
+                        if (!string.isEmpty()) {
+                            olPlayRoom.mo2860a(i, string, i2, b);
                         }
                     });
                     return;
@@ -167,7 +159,7 @@ final class OLPlayRoomHandler extends Handler {
                         }
                         String str1 = message.getData().getString("S");
                         if (!olPlayRoom.isOnStart) {
-                            olPlayRoom.jpapplication.getConnectionService().writeData((byte) 8, olPlayRoom.roomID0, olPlayRoom.hallID0, null, null);
+                            olPlayRoom.jpapplication.getConnectionService().writeData(8, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);
@@ -238,28 +230,20 @@ final class OLPlayRoomHandler extends Handler {
                                     jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
                                     String finalString = string;
                                     jpdialog.setFirstButton("同意", (dialog, which) -> {
-                                        JSONObject jSONObject = new JSONObject();
-                                        try {
-                                            jSONObject.put("T", 1);
-                                            jSONObject.put("I", 0);
-                                            jSONObject.put("F", finalString);
-                                            olPlayRoom.sendMsg((byte) 31, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
-                                            dialog.dismiss();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                        builder.setType(1);
+                                        builder.setReject(false);
+                                        builder.setName(finalString);
+                                        olPlayRoom.sendMsg(31, builder.build());
+                                        dialog.dismiss();
                                     });
                                     jpdialog.setSecondButton("拒绝", (dialog, which) -> {
-                                        JSONObject jSONObject = new JSONObject();
-                                        try {
-                                            jSONObject.put("T", 1);
-                                            jSONObject.put("I", 1);
-                                            jSONObject.put("F", finalString);
-                                            olPlayRoom.sendMsg((byte) 31, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
-                                            dialog.dismiss();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                        builder.setType(1);
+                                        builder.setReject(true);
+                                        builder.setName(finalString);
+                                        olPlayRoom.sendMsg(31, builder.build());
+                                        dialog.dismiss();
                                     });
                                     jpdialog.showDialog();
                                 }
@@ -368,16 +352,12 @@ final class OLPlayRoomHandler extends Handler {
                 case 16:
                     post(() -> {
                         Bundle data = message.getData();
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", data.getString("F"));
-                            jSONObject.put("T", 2);
-                            olPlayRoom.friendPlayerList.remove(message.arg1);
-                            olPlayRoom.sendMsg((byte) 31, (byte) 0, (byte) 0, jSONObject.toString());
-                            olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                        builder.setType(2);
+                        builder.setName(data.getString("F"));
+                        olPlayRoom.friendPlayerList.remove(message.arg1);
+                        olPlayRoom.sendMsg(31, builder.build());
+                        olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
                     });
                     return;
                 case 21:
@@ -391,17 +371,12 @@ final class OLPlayRoomHandler extends Handler {
                     return;
                 case 22:
                     post(() -> {
-                        try {
-                            JSONObject jSONObject = new JSONObject(message.getData().getString("MSG"));
-                            int i = jSONObject.getInt("T");
-                            int i2 = jSONObject.getInt("CT");
-                            byte b = (byte) jSONObject.getInt("CI");
-                            String string = jSONObject.getString("C");
-                            if (i != 0) {
-                                olPlayRoom.mo2860a(i, string, i2, b);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        int i = message.getData().getInt("MSG_T");
+                        int i2 = message.getData().getInt("MSG_CT");
+                        byte b = (byte) message.getData().getInt("MSG_CI");
+                        String string = message.getData().getString("MSG_C");
+                        if (i != 0) {
+                            olPlayRoom.mo2860a(i, string, i2, b);
                         }
                     });
                     return;

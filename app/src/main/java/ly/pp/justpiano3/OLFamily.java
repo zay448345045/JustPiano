@@ -18,15 +18,13 @@ import android.widget.Toast;
 
 import com.google.protobuf.MessageLite;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
 
 public class OLFamily extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -122,7 +120,8 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     void showInfoDialog(Bundle b) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), new JSONObject(b.getString("DR")), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -178,7 +177,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(0);
         sendMsg(18, builder.build());
         Intent intent = new Intent(this, OLPlayHallRoom.class);
@@ -200,7 +199,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.manage_family:
                 jpprogressBar.show();
-                OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+                OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                 builder.setType(8);
                 builder.setFamilyId(Integer.parseInt(familyID));
                 sendMsg(18, builder.build());
@@ -236,14 +235,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                     infoWindow.dismiss();
                 }
                 if (cs != null) {
-                    JSONObject jSONObject = new JSONObject();
-                    try {
-                        jSONObject.put("C", 0);
-                        jSONObject.put("F", peopleNow);
-                        sendMsg((byte) 2, (byte) 0, jSONObject.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
+                    builder1.setName(peopleNow);
+                    sendMsg(2, builder1.build());
                 }
                 break;
             case R.id.ol_couple_b:  //提升/撤职副族长
@@ -251,7 +245,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                     infoWindow.dismiss();
                 }
                 jpprogressBar.show();
-                builder = OnlineRequest.Family.newBuilder();
+                builder = OnlineFamilyDTO.newBuilder();
                 builder.setType(7);
                 builder.setUserName(peopleNow);
                 sendMsg(18, builder.build());
@@ -272,7 +266,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             case R.id.ol_family_changetest:
                 break;
             case R.id.ol_family_levelup:
-                builder = OnlineRequest.Family.newBuilder();
+                builder = OnlineFamilyDTO.newBuilder();
                 builder.setType(10);
                 sendMsg(18, builder.build());
                 break;
@@ -303,7 +297,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         setContentView(R.layout.family);
         cs = jpapplication.getConnectionService();
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));
         sendMsg(18, builder.build());

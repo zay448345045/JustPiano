@@ -35,7 +35,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineDailyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends BaseActivity implements OnClickListener {
     public int cl = 0;
@@ -373,18 +377,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 startActivityForResult(intent, 0);
                 return;
             case R.id.ol_bonus_button:
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("K", 1);
-                    jpprogressBar.show();
-                    sendMsg((byte) 38, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                jpprogressBar.show();
+                OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();
+                builder2.setType(1);
+                sendMsg(38, builder2.build());
+                return;
             case R.id.create_family:
-                OnlineRequest.Family.Builder builder1 = OnlineRequest.Family.newBuilder();
+                OnlineFamilyDTO.Builder builder1 = OnlineFamilyDTO.newBuilder();
                 builder1.setType(3);
                 sendMsg(18, builder1.build());
                 return;
@@ -394,13 +393,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                     pageNum = 0;
                     return;
                 }
-                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(pageNum);
                 sendMsg(34, builder.build());
                 return;
             case R.id.online_button:
-                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
                 sendMsg(34, builder.build());
@@ -409,7 +408,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 if (!pageIsEnd) {
                     pageNum += 20;
                     if (pageNum >= 0) {
-                        builder = OnlineRequest.LoadUserInfo.newBuilder();
+                        builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(pageNum);
                         sendMsg(34, builder.build());
@@ -453,14 +452,10 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
             jpdialog.setTitle("警告");
             jpdialog.setMessage("确定要解除搭档关系吗?");
             jpdialog.setFirstButton("同意", (dialog, which) -> {
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("F", flag);
-                    jSONObject.put("T", 3);
-                    sendMsg((byte) 31, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                builder.setName(String.valueOf(flag));
+                builder.setType(3);
+                sendMsg(31, builder.build());
                 dialog.dismiss();
             }).setSecondButton("取消", new DialogDismissClick());
             try {
@@ -472,7 +467,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     void letInFamily(String name) {
-        OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(6);
         builder.setStatus(0);
         builder.setUserName(name);
@@ -502,7 +497,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         familyListView.setCacheColorHint(0);
         familyListView.setLoadListener(() -> ThreadPoolUtils.execute(() -> {
             familyPageNum++;
-            OnlineRequest.Family.Builder builder = OnlineRequest.Family.newBuilder();
+            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(2);
             builder.setPage(familyPageNum);
             sendMsg(18, builder.build());
@@ -641,7 +636,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 }
                 break;
         }
-        sendMsg(28, OnlineRequest.LoadUser.getDefaultInstance());
+        sendMsg(28, OnlineLoadUserDTO.getDefaultInstance());
     }
 
     @Override

@@ -2,10 +2,10 @@ package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.pp.justpiano3.protobuf.request.OnlineRequest;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
 
 final class PlayHallRoomTabChange implements OnTabChangeListener {
     private final OLPlayHallRoom olPlayHallRoom;
@@ -28,25 +28,25 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
         JSONObject jSONObject;
         switch (str) {
             case "tab1":
-                OnlineRequest.LoadUserInfo.Builder builder = OnlineRequest.LoadUserInfo.newBuilder();
+                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(olPlayHallRoom.pageNum);
                 olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab4":
                 olPlayHallRoom.mailCountsView.setText("");
-                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(2);
                 olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab3":
-                builder = OnlineRequest.LoadUserInfo.newBuilder();
+                builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(3);
                 olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab5":
                 if (olPlayHallRoom.familyPageNum == 0 && olPlayHallRoom.familyList.isEmpty()) {
-                    OnlineRequest.Family.Builder builder1 = OnlineRequest.Family.newBuilder();
+                    OnlineFamilyDTO.Builder builder1 = OnlineFamilyDTO.newBuilder();
                     builder1.setType(2);
                     builder1.setPage(0);
                     olPlayHallRoom.jpprogressBar.show();
