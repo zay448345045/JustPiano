@@ -28,7 +28,7 @@ final class OLPlayDressRoomHandler extends Handler {
                 case 1:  // 进入换衣间加载音符和解锁情况
                     post(() -> {
                         olPlayDressRoom.goldNum.setText(message.getData().getString("G"));
-                        olPlayDressRoom.handleBuyClothes(message.getData().getByteArray("U"));
+                        olPlayDressRoom.handleUnlockClothes(message.getData().getByteArray("U"));
                         ((DressAdapter) olPlayDressRoom.jacketGridView.getAdapter()).notifyDataSetChanged();
                     });
                     break;

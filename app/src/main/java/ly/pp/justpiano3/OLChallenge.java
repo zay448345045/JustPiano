@@ -136,14 +136,6 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         }
     }
 
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
-        if (cs != null) {
-            cs.writeData(b, b2, b3, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public final void sendMsg(int type, MessageLite msg) {
         if (cs != null) {
             cs.writeData(type, msg);

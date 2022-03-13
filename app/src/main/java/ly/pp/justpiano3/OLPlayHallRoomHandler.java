@@ -383,6 +383,9 @@ final class OLPlayHallRoomHandler extends Handler {
                                 data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
                     });
                     return;
+                case 23:
+                    post(() -> olPlayHallRoom.showInfoDialog(message.getData()));
+                    return;
                 default:
             }
         }

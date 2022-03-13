@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-final class sendMailClick implements OnClickListener {
+final class SendMailClick implements OnClickListener {
     private final FriendMailPage friendmailpage;
     private final TextView f6046b;
     private final int f6047c;
@@ -22,7 +22,7 @@ final class sendMailClick implements OnClickListener {
     private final int f6049e;
     private final String f6050f;
 
-    sendMailClick(FriendMailPage friendMailPage, TextView textView, int i, String str, int i2, String str2) {
+    SendMailClick(FriendMailPage friendMailPage, TextView textView, int i, String str, int i2, String str2) {
         friendmailpage = friendMailPage;
         f6046b = textView;
         f6047c = i;
@@ -40,8 +40,8 @@ final class sendMailClick implements OnClickListener {
                 if (valueOf.isEmpty() || valueOf.equals("'") || valueOf.equals("''")) {
                     Toast.makeText(friendmailpage, "请输入消息内容!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (valueOf.length() > 300) {
-                    Toast.makeText(friendmailpage, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+                } else if (valueOf.length() > 500) {
+                    Toast.makeText(friendmailpage, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     String format = SimpleDateFormat.getDateInstance(2, Locale.CHINESE).format(new Date());

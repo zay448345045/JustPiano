@@ -33,14 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.BytesValue;
 import com.google.protobuf.MessageLite;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -64,8 +62,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public static final int NOTES_SEND_INTERVAL = 120;
     public int lv;
     public int cl;
-    // 当前用户楼号-1
+    // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
+    public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
     public int kuang;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[6];
     public Handler handler;
@@ -99,7 +98,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     Bundle bundle0;
     Bundle bundle2;
     KeyboardModeView keyboardView;
-    ScheduledExecutorService scheduledExecutor;
+    ScheduledExecutorService keyboardScheduledExecutor;
     ScheduledExecutorService noteScheduledExecutor;
     ImageView keyboardSetting;
     // 用于记录上次的移动
@@ -291,15 +290,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    @Override
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
-        if (connectionService != null) {
-            connectionService.writeData(b, b2, b3, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public final void sendMsg(int type, MessageLite msg) {
         if (connectionService != null) {
             connectionService.writeData(type, msg);
@@ -385,7 +375,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
     }
 
-    final void mo2865b(String str) {
+    final void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -461,7 +451,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     @Override
     public void onClick(View view) {
         String str;
-        JSONObject jSONObject;
         switch (view.getId()) {
             case R.id.pre_button:
                 page -= 20;
@@ -639,7 +628,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
-                            String date = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String date = new SimpleDateFormat("yyyy年MM月dd日HH点mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
                             recordFileName = date + "录音.wav";
                             JPApplication.setRecordFilePath(recordFilePath);
@@ -996,7 +985,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float weight = event.getRawY() / (playerLayout.getHeight() + keyboardLayout.getHeight());
-                    if (reSize && weight > 0.65f && weight < 0.85f) {
+                    if (reSize && weight > 0.65f && weight < 0.92f) {
                         playerLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, weight));
                         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -1029,8 +1018,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     private void updateAddOrSubtract(int viewId) {
         final int vid = viewId;
-        scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutor.scheduleWithFixedDelay(() -> {
+        keyboardScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+        keyboardScheduledExecutor.scheduleWithFixedDelay(() -> {
             Message msg = new Message();
             msg.what = vid;
             interval -= 40;
@@ -1040,9 +1029,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     }
 
     private void stopAddOrSubtract() {
-        if (scheduledExecutor != null) {
-            scheduledExecutor.shutdownNow();
-            scheduledExecutor = null;
+        if (keyboardScheduledExecutor != null) {
+            keyboardScheduledExecutor.shutdownNow();
+            keyboardScheduledExecutor = null;
             interval = 320;
         }
     }

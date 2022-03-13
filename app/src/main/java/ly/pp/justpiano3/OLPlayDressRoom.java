@@ -57,6 +57,11 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     List<Integer> jacketUnlock = new ArrayList<>();
     List<Integer> trousersUnlock = new ArrayList<>();
     List<Integer> shoesUnlock = new ArrayList<>();
+    List<Integer> hairTry = new ArrayList<>();
+    List<Integer> eyeTry = new ArrayList<>();
+    List<Integer> jacketTry = new ArrayList<>();
+    List<Integer> trousersTry = new ArrayList<>();
+    List<Integer> shoesTry = new ArrayList<>();
     JPProgressBar jpprogressBar;
     int hairNow = -1;
     int eyeNow = -1;
@@ -76,14 +81,6 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         gridView.setAdapter(new DressAdapter(arrayList, this, type));
     }
 
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
-        if (connectionservice != null) {
-            connectionservice.writeData(b, b2, b3, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public final void sendMsg(int type, MessageLite msg) {
         if (connectionservice != null) {
             connectionservice.writeData(type, msg);
@@ -92,7 +89,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         }
     }
 
-    public final void handleBuyClothes(byte[] bytes) {
+    public final void handleUnlockClothes(byte[] bytes) {
         if (bytes != null) {
             for (int i = 0; i < bytes.length; i += 2) {
                 List<Integer> list = null;
@@ -120,23 +117,30 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
 
     public final void handleBuyClothes(int type, int id) {
         List<Integer> list = null;
+        List<Integer> tryList = null;
         switch (type) {
             case 0:
                 list = hairUnlock;
+                tryList = hairTry;
                 break;
             case 1:
                 list = eyeUnlock;
+                tryList = eyeTry;
                 break;
             case 2:
                 list = jacketUnlock;
+                tryList = jacketTry;
                 break;
             case 3:
                 list = trousersUnlock;
+                tryList = trousersTry;
                 break;
             case 4:
                 list = shoesUnlock;
+                tryList = shoesTry;
                 break;
         }
+        tryList.remove((Integer) id);
         list.add(id);
     }
 
@@ -144,22 +148,30 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ol_dress_ok:
-                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
-                builder.setType(0);
-                builder.setHair(hairNow + 1);
-                builder.setEye(eyeNow + 1);
-                builder.setJacket(jacketNow + 1);
-                builder.setType(trousersNow + 1);
-                builder.setShoes(shoesNow + 1);
-                sendMsg(33, builder.build());
-                Intent intent = new Intent(this, OLPlayHallRoom.class);
-                intent.putExtra("T", trousersNow + 1);
-                intent.putExtra("J", jacketNow + 1);
-                intent.putExtra("H", hairNow + 1);
-                intent.putExtra("E", eyeNow + 1);
-                intent.putExtra("O", shoesNow + 1);
-                intent.putExtra("S", sex);
-                setResult(-1, intent);
+                if (hairTry.isEmpty() && eyeTry.isEmpty() && jacketTry.isEmpty() && trousersTry.isEmpty() && shoesTry.isEmpty()) {
+                    OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
+                    builder.setType(0);
+                    builder.setHair(hairNow + 1);
+                    builder.setEye(eyeNow + 1);
+                    builder.setJacket(jacketNow + 1);
+                    builder.setTrousers(trousersNow + 1);
+                    builder.setShoes(shoesNow + 1);
+                    sendMsg(33, builder.build());
+                    Intent intent = new Intent(this, OLPlayHallRoom.class);
+                    intent.putExtra("T", trousersNow + 1);
+                    intent.putExtra("J", jacketNow + 1);
+                    intent.putExtra("H", hairNow + 1);
+                    intent.putExtra("E", eyeNow + 1);
+                    intent.putExtra("O", shoesNow + 1);
+                    intent.putExtra("S", sex);
+                    setResult(-1, intent);
+                } else {
+                    JPDialog jpDialog = new JPDialog(this);
+                    jpDialog.setTitle("提示");
+                    jpDialog.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
+                    jpDialog.setFirstButton("确定", new DialogDismissClick());
+                    jpDialog.showDialog();
+                }
                 break;
             case R.id.ol_dress_cancel:
                 finish();

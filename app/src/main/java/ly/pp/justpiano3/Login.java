@@ -127,7 +127,7 @@ public class Login extends BaseActivity implements OnClickListener {
                         JSONObject jSONObject = new JSONObject(string);
                         Iterator<String> keys = jSONObject.keys();
                         while (keys.hasNext()) {
-                            string = (String) keys.next();
+                            string = keys.next();
                             arrayList.add(string);
                         }
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));

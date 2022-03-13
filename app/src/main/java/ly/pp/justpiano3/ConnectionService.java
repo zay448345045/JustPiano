@@ -12,7 +12,6 @@ import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
 import com.king.anetty.Netty;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -50,22 +49,6 @@ public class ConnectionService extends Service implements Runnable {
         }
     }
 
-    /**
-     * 整数转字节数组
-     *
-     * @param value 整数
-     * @return 字节数组
-     */
-    public static byte[] intToByteArray(int value) {
-        byte[] result = new byte[4];
-        // 94为商议好的定界符，确认协议是否有效
-        result[0] = (byte) 94;
-        result[1] = (byte) ((value >> 16) & 0xFF);
-        result[2] = (byte) ((value >> 8) & 0xFF);
-        result[3] = (byte) (value & 0xFF);
-        return result;
-    }
-
     final void outLine() {
         mNetty.disconnect();
     }
@@ -79,32 +62,6 @@ public class ConnectionService extends Service implements Runnable {
         } else {
             outLineAndDialog();
         }
-    }
-
-    public final void writeData(byte b, byte b2, byte b3, String str, byte[] bArr) {
-        byte[] input;
-        if (str != null && !str.isEmpty()) {
-            input = str.getBytes(StandardCharsets.UTF_8);
-        } else if (bArr != null && bArr.length > 0) {
-            input = bArr;
-        } else {
-            input = new byte[0];
-        }
-        if (mNetty.isConnected()) {
-            mNetty.sendMessage(makeBytes(b, b2, b3, input));
-        } else {
-            outLineAndDialog();
-        }
-    }
-
-    public static byte[] makeBytes(byte b, byte b2, byte b3, byte[] bArr) {
-        byte[] bArr2 = new byte[]{b, b2, b3};
-        byte[] obj2 = new byte[7 + bArr.length];
-        byte[] bytes = intToByteArray(3 + bArr.length);
-        System.arraycopy(bytes, 0, obj2, 0, 4);
-        System.arraycopy(bArr2, 0, obj2, 4, 3);
-        System.arraycopy(bArr, 0, obj2, 7, bArr.length);
-        return obj2;
     }
 
     @Override

@@ -35,6 +35,11 @@ public final class OnlineRequest {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomUserStatusDTO_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlayFinishDTO_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlayFinishDTO_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCreateRoomDTO_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -100,6 +105,16 @@ public final class OnlineRequest {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomPositionDTO_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadPlayUserDTO_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadPlayUserDTO_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineMiniGradeDTO_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ly_pp_justpiano3_protobuf_dto_OnlineMiniGradeDTO_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineShopDTO_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -124,6 +139,11 @@ public final class OnlineRequest {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetUserInfoDTO_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetMiniGradeDTO_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetMiniGradeDTO_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeClothesDTO_descriptor;
   static final 
@@ -199,132 +219,144 @@ public final class OnlineRequest {
   static {
     java.lang.String[] descriptorData = {
       "\n\033OnlineRequestProtocol.proto\022\035ly.pp.jus" +
-      "tpiano3.protobuf.dto\"\274\024\n\rOnlineBaseDTO\022R" +
+      "tpiano3.protobuf.dto\"\366\026\n\rOnlineBaseDTO\022R" +
       "\n\020user_info_dialog\030\002 \001(\01326.ly.pp.justpia" +
       "no3.protobuf.dto.OnlineUserInfoDialogDTO" +
       "H\000\022G\n\nplay_start\030\003 \001(\01321.ly.pp.justpiano" +
       "3.protobuf.dto.OnlinePlayStartDTOH\000\022_\n\027c" +
       "hange_room_user_status\030\004 \001(\0132<.ly.pp.jus" +
       "tpiano3.protobuf.dto.OnlineChangeRoomUse" +
-      "rStatusDTOH\000\022I\n\013create_room\030\006 \001(\01322.ly.p" +
-      "p.justpiano3.protobuf.dto.OnlineCreateRo" +
-      "omDTOH\000\022G\n\nenter_room\030\007 \001(\01321.ly.pp.just" +
-      "piano3.protobuf.dto.OnlineEnterRoomDTOH\000" +
-      "\022E\n\tquit_room\030\010 \001(\01320.ly.pp.justpiano3.p" +
-      "rotobuf.dto.OnlineQuitRoomDTOH\000\022R\n\020kicke" +
-      "d_quit_room\030\t \001(\01326.ly.pp.justpiano3.pro" +
-      "tobuf.dto.OnlineKickedQuitRoomDTOH\000\022>\n\005l" +
-      "ogin\030\n \001(\0132-.ly.pp.justpiano3.protobuf.d" +
-      "to.OnlineLoginDTOH\000\022E\n\thall_chat\030\014 \001(\01320" +
-      ".ly.pp.justpiano3.protobuf.dto.OnlineHal" +
-      "lChatDTOH\000\022E\n\troom_chat\030\r \001(\01320.ly.pp.ju" +
-      "stpiano3.protobuf.dto.OnlineRoomChatDTOH" +
-      "\000\022R\n\020change_room_info\030\016 \001(\01326.ly.pp.just" +
-      "piano3.protobuf.dto.OnlineChangeRoomInfo" +
-      "DTOH\000\022E\n\tplay_song\030\017 \001(\01320.ly.pp.justpia" +
-      "no3.protobuf.dto.OnlinePlaySongDTOH\000\022F\n\t" +
-      "challenge\030\020 \001(\01321.ly.pp.justpiano3.proto" +
-      "buf.dto.OnlineChallengeDTOH\000\022@\n\006family\030\022" +
-      " \001(\0132..ly.pp.justpiano3.protobuf.dto.Onl" +
-      "ineFamilyDTOH\000\022I\n\tload_room\030\023 \001(\01324.ly.p" +
-      "p.justpiano3.protobuf.dto.OnlineLoadRoom" +
-      "ListDTOH\000\022V\n\022load_room_position\030\025 \001(\01328." +
-      "ly.pp.justpiano3.protobuf.dto.OnlineLoad" +
-      "RoomPositionDTOH\000\022<\n\004shop\030\032 \001(\0132,.ly.pp." +
-      "justpiano3.protobuf.dto.OnlineShopDTOH\000\022" +
-      "E\n\tload_user\030\034 \001(\01320.ly.pp.justpiano3.pr" +
-      "otobuf.dto.OnlineLoadUserDTOH\000\022G\n\nenter_" +
-      "hall\030\035 \001(\01321.ly.pp.justpiano3.protobuf.d" +
-      "to.OnlineEnterHallDTOH\000\022E\n\tquit_hall\030\036 \001" +
-      "(\01320.ly.pp.justpiano3.protobuf.dto.Onlin" +
-      "eQuitHallDTOH\000\022L\n\rset_user_info\030\037 \001(\01323." +
-      "ly.pp.justpiano3.protobuf.dto.OnlineSetU" +
-      "serInfoDTOH\000\022O\n\016change_clothes\030! \001(\01325.l" +
-      "y.pp.justpiano3.protobuf.dto.OnlineChang" +
-      "eClothesDTOH\000\022N\n\016load_user_info\030\" \001(\01324." +
-      "ly.pp.justpiano3.protobuf.dto.OnlineLoad" +
-      "UserInfoDTOH\000\022E\n\tsend_mail\030# \001(\01320.ly.pp" +
-      ".justpiano3.protobuf.dto.OnlineSendMailD" +
-      "TOH\000\022N\n\016load_user_list\030$ \001(\01324.ly.pp.jus" +
-      "tpiano3.protobuf.dto.OnlineLoadUserListD" +
-      "TOH\000\022@\n\006dialog\030% \001(\0132..ly.pp.justpiano3." +
-      "protobuf.dto.OnlineDialogDTOH\000\022>\n\005daily\030" +
-      "& \001(\0132-.ly.pp.justpiano3.protobuf.dto.On" +
-      "lineDailyDTOH\000\022M\n\rkeyboard_note\030\' \001(\01324." +
-      "ly.pp.justpiano3.protobuf.dto.OnlineKeyb" +
-      "oardNoteDTOH\000\022A\n\007cl_test\030( \001(\0132..ly.pp.j" +
-      "ustpiano3.protobuf.dto.OnlineClTestDTOH\000" +
-      "\022G\n\nheart_beat\030) \001(\01321.ly.pp.justpiano3." +
-      "protobuf.dto.OnlineHeartBeatDTOH\000\022R\n\020cha" +
-      "nge_room_door\030* \001(\01326.ly.pp.justpiano3.p" +
-      "rotobuf.dto.OnlineChangeRoomDoorDTOH\000\022W\n" +
-      "\023load_room_user_list\030+ \001(\01328.ly.pp.justp" +
-      "iano3.protobuf.dto.OnlineLoadRoomUserLis" +
-      "tDTOH\000\022R\n\020change_room_hand\030, \001(\01326.ly.pp" +
-      ".justpiano3.protobuf.dto.OnlineChangeRoo" +
-      "mHandDTOH\000\022@\n\006couple\030- \001(\0132..ly.pp.justp" +
-      "iano3.protobuf.dto.OnlineCoupleDTOH\000B\t\n\007" +
-      "requestJ\004\010\001\020\002J\004\010\013\020\014J\004\010\021\020\022J\004\010\024\020\025J\004\010\026\020\027J\004\010" +
-      "\033\020\034\"\'\n\027OnlineUserInfoDialogDTO\022\014\n\004name\030\001" +
-      " \001(\t\"\024\n\022OnlinePlayStartDTO\"/\n\035OnlineChan" +
-      "geRoomUserStatusDTO\022\016\n\006status\030\001 \001(\t\"M\n\023O" +
-      "nlineCreateRoomDTO\022\021\n\troom_name\030\001 \001(\t\022\021\n" +
-      "\troom_mode\030\002 \001(\r\022\020\n\010password\030\003 \001(\t\"7\n\022On" +
-      "lineEnterRoomDTO\022\017\n\007room_id\030\001 \001(\r\022\020\n\010pas" +
-      "sword\030\002 \001(\t\"\023\n\021OnlineQuitRoomDTO\"0\n\027Onli" +
-      "neKickedQuitRoomDTO\022\025\n\rroom_position\030\001 \001" +
-      "(\r\"_\n\016OnlineLoginDTO\022\024\n\014package_name\030\001 \001" +
-      "(\t\022\024\n\014version_code\030\002 \001(\t\022\017\n\007account\030\003 \001(" +
-      "\t\022\020\n\010password\030\004 \001(\t\"7\n\021OnlineHallChatDTO" +
-      "\022\021\n\tuser_name\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\"F\n\021" +
-      "OnlineRoomChatDTO\022\021\n\tuser_name\030\001 \001(\t\022\017\n\007" +
-      "message\030\002 \001(\t\022\r\n\005color\030\003 \001(\r\"C\n\027OnlineCh" +
-      "angeRoomInfoDTO\022\021\n\troom_name\030\001 \001(\t\022\025\n\rro" +
-      "om_password\030\002 \001(\t\"4\n\021OnlinePlaySongDTO\022\021" +
-      "\n\tsong_path\030\001 \001(\t\022\014\n\004tune\030\002 \001(\005\"j\n\022Onlin" +
-      "eChallengeDTO\022\014\n\004type\030\001 \001(\r\022\021\n\004code\030\002 \001(" +
-      "\004H\000\210\001\001\022\031\n\014status_array\030\003 \001(\tH\001\210\001\001B\007\n\005_co" +
-      "deB\017\n\r_status_array\"\363\001\n\017OnlineFamilyDTO\022" +
-      "\014\n\004type\030\001 \001(\r\022\026\n\tfamily_id\030\002 \001(\rH\000\210\001\001\022\024\n" +
-      "\007message\030\003 \001(\tH\001\210\001\001\022\021\n\004page\030\004 \001(\rH\002\210\001\001\022\030" +
-      "\n\013family_name\030\005 \001(\tH\003\210\001\001\022\026\n\tuser_name\030\006 " +
-      "\001(\tH\004\210\001\001\022\023\n\006status\030\007 \001(\rH\005\210\001\001B\014\n\n_family" +
-      "_idB\n\n\010_messageB\007\n\005_pageB\016\n\014_family_name" +
-      "B\014\n\n_user_nameB\t\n\007_status\"\027\n\025OnlineLoadR" +
-      "oomListDTO\"\033\n\031OnlineLoadRoomPositionDTO\"" +
-      "E\n\rOnlineShopDTO\022\014\n\004type\030\001 \001(\r\022\027\n\nproduc" +
-      "t_id\030\002 \001(\rH\000\210\001\001B\r\n\013_product_id\"\023\n\021Online" +
-      "LoadUserDTO\"I\n\022OnlineEnterHallDTO\022\017\n\007hal" +
-      "l_id\030\001 \001(\r\022\025\n\010password\030\002 \001(\tH\000\210\001\001B\013\n\t_pa" +
-      "ssword\"\023\n\021OnlineQuitHallDTO\"|\n\024OnlineSet" +
-      "UserInfoDTO\022\014\n\004type\030\001 \001(\r\022\014\n\004name\030\002 \001(\t\022" +
-      "\023\n\006reject\030\003 \001(\010H\000\210\001\001\022\030\n\013declaration\030\004 \001(" +
-      "\tH\001\210\001\001B\t\n\007_rejectB\016\n\014_declaration\"\326\001\n\026On" +
-      "lineChangeClothesDTO\022\014\n\004type\030\001 \001(\r\022\035\n\020bu" +
-      "y_clothes_type\030\002 \001(\rH\000\210\001\001\022\033\n\016buy_clothes" +
-      "_id\030\003 \001(\rH\001\210\001\001\022\014\n\004hair\030\004 \001(\r\022\013\n\003eye\030\005 \001(" +
-      "\r\022\016\n\006jacket\030\006 \001(\r\022\020\n\010trousers\030\007 \001(\r\022\r\n\005s" +
-      "hoes\030\010 \001(\rB\023\n\021_buy_clothes_typeB\021\n\017_buy_" +
-      "clothes_id\"A\n\025OnlineLoadUserInfoDTO\022\014\n\004t" +
-      "ype\030\001 \001(\r\022\021\n\004page\030\002 \001(\005H\000\210\001\001B\007\n\005_page\"2\n" +
-      "\021OnlineSendMailDTO\022\014\n\004name\030\001 \001(\t\022\017\n\007mess" +
-      "age\030\002 \001(\t\"\027\n\025OnlineLoadUserListDTO\"-\n\017On" +
-      "lineDialogDTO\022\014\n\004type\030\001 \001(\r\022\014\n\004name\030\002 \001(" +
-      "\t\"\036\n\016OnlineDailyDTO\022\014\n\004type\030\001 \001(\r\"%\n\025Onl" +
-      "ineKeyboardNoteDTO\022\014\n\004data\030\001 \001(\014\"\217\001\n\017Onl" +
-      "ineClTestDTO\022\014\n\004type\030\001 \001(\r\022\021\n\004code\030\002 \001(\004" +
-      "H\000\210\001\001\022\027\n\nsong_index\030\003 \001(\rH\001\210\001\001\022\031\n\014status" +
-      "_array\030\004 \001(\tH\002\210\001\001B\007\n\005_codeB\r\n\013_song_inde" +
-      "xB\017\n\r_status_array\"\024\n\022OnlineHeartBeatDTO" +
-      "\"0\n\027OnlineChangeRoomDoorDTO\022\025\n\rroom_posi" +
-      "tion\030\001 \001(\r\",\n\031OnlineLoadRoomUserListDTO\022" +
-      "\017\n\007room_id\030\001 \001(\r\"\'\n\027OnlineChangeRoomHand" +
-      "DTO\022\014\n\004hand\030\001 \001(\r\"\263\001\n\017OnlineCoupleDTO\022\014\n" +
-      "\004type\030\001 \001(\r\022\030\n\013couple_type\030\002 \001(\005H\000\210\001\001\022!\n" +
-      "\024couple_room_position\030\003 \001(\005H\001\210\001\001\022\032\n\rroom" +
-      "_position\030\004 \001(\005H\002\210\001\001B\016\n\014_couple_typeB\027\n\025" +
-      "_couple_room_positionB\020\n\016_room_positionB" +
-      "\021B\rOnlineRequestP\001b\006proto3"
+      "rStatusDTOH\000\022I\n\013play_finish\030\005 \001(\01322.ly.p" +
+      "p.justpiano3.protobuf.dto.OnlinePlayFini" +
+      "shDTOH\000\022I\n\013create_room\030\006 \001(\01322.ly.pp.jus" +
+      "tpiano3.protobuf.dto.OnlineCreateRoomDTO" +
+      "H\000\022G\n\nenter_room\030\007 \001(\01321.ly.pp.justpiano" +
+      "3.protobuf.dto.OnlineEnterRoomDTOH\000\022E\n\tq" +
+      "uit_room\030\010 \001(\01320.ly.pp.justpiano3.protob" +
+      "uf.dto.OnlineQuitRoomDTOH\000\022R\n\020kicked_qui" +
+      "t_room\030\t \001(\01326.ly.pp.justpiano3.protobuf" +
+      ".dto.OnlineKickedQuitRoomDTOH\000\022>\n\005login\030" +
+      "\n \001(\0132-.ly.pp.justpiano3.protobuf.dto.On" +
+      "lineLoginDTOH\000\022E\n\thall_chat\030\014 \001(\01320.ly.p" +
+      "p.justpiano3.protobuf.dto.OnlineHallChat" +
+      "DTOH\000\022E\n\troom_chat\030\r \001(\01320.ly.pp.justpia" +
+      "no3.protobuf.dto.OnlineRoomChatDTOH\000\022R\n\020" +
+      "change_room_info\030\016 \001(\01326.ly.pp.justpiano" +
+      "3.protobuf.dto.OnlineChangeRoomInfoDTOH\000" +
+      "\022E\n\tplay_song\030\017 \001(\01320.ly.pp.justpiano3.p" +
+      "rotobuf.dto.OnlinePlaySongDTOH\000\022F\n\tchall" +
+      "enge\030\020 \001(\01321.ly.pp.justpiano3.protobuf.d" +
+      "to.OnlineChallengeDTOH\000\022@\n\006family\030\022 \001(\0132" +
+      "..ly.pp.justpiano3.protobuf.dto.OnlineFa" +
+      "milyDTOH\000\022I\n\tload_room\030\023 \001(\01324.ly.pp.jus" +
+      "tpiano3.protobuf.dto.OnlineLoadRoomListD" +
+      "TOH\000\022V\n\022load_room_position\030\025 \001(\01328.ly.pp" +
+      ".justpiano3.protobuf.dto.OnlineLoadRoomP" +
+      "ositionDTOH\000\022N\n\016load_play_user\030\027 \001(\01324.l" +
+      "y.pp.justpiano3.protobuf.dto.OnlineLoadP" +
+      "layUserDTOH\000\022G\n\nmini_grade\030\031 \001(\01321.ly.pp" +
+      ".justpiano3.protobuf.dto.OnlineMiniGrade" +
+      "DTOH\000\022<\n\004shop\030\032 \001(\0132,.ly.pp.justpiano3.p" +
+      "rotobuf.dto.OnlineShopDTOH\000\022E\n\tload_user" +
+      "\030\034 \001(\01320.ly.pp.justpiano3.protobuf.dto.O" +
+      "nlineLoadUserDTOH\000\022G\n\nenter_hall\030\035 \001(\01321" +
+      ".ly.pp.justpiano3.protobuf.dto.OnlineEnt" +
+      "erHallDTOH\000\022E\n\tquit_hall\030\036 \001(\01320.ly.pp.j" +
+      "ustpiano3.protobuf.dto.OnlineQuitHallDTO" +
+      "H\000\022L\n\rset_user_info\030\037 \001(\01323.ly.pp.justpi" +
+      "ano3.protobuf.dto.OnlineSetUserInfoDTOH\000" +
+      "\022N\n\016set_mini_grade\030  \001(\01324.ly.pp.justpia" +
+      "no3.protobuf.dto.OnlineSetMiniGradeDTOH\000" +
+      "\022O\n\016change_clothes\030! \001(\01325.ly.pp.justpia" +
+      "no3.protobuf.dto.OnlineChangeClothesDTOH" +
+      "\000\022N\n\016load_user_info\030\" \001(\01324.ly.pp.justpi" +
+      "ano3.protobuf.dto.OnlineLoadUserInfoDTOH" +
+      "\000\022E\n\tsend_mail\030# \001(\01320.ly.pp.justpiano3." +
+      "protobuf.dto.OnlineSendMailDTOH\000\022N\n\016load" +
+      "_user_list\030$ \001(\01324.ly.pp.justpiano3.prot" +
+      "obuf.dto.OnlineLoadUserListDTOH\000\022@\n\006dial" +
+      "og\030% \001(\0132..ly.pp.justpiano3.protobuf.dto" +
+      ".OnlineDialogDTOH\000\022>\n\005daily\030& \001(\0132-.ly.p" +
+      "p.justpiano3.protobuf.dto.OnlineDailyDTO" +
+      "H\000\022M\n\rkeyboard_note\030\' \001(\01324.ly.pp.justpi" +
+      "ano3.protobuf.dto.OnlineKeyboardNoteDTOH" +
+      "\000\022A\n\007cl_test\030( \001(\0132..ly.pp.justpiano3.pr" +
+      "otobuf.dto.OnlineClTestDTOH\000\022G\n\nheart_be" +
+      "at\030) \001(\01321.ly.pp.justpiano3.protobuf.dto" +
+      ".OnlineHeartBeatDTOH\000\022R\n\020change_room_doo" +
+      "r\030* \001(\01326.ly.pp.justpiano3.protobuf.dto." +
+      "OnlineChangeRoomDoorDTOH\000\022W\n\023load_room_u" +
+      "ser_list\030+ \001(\01328.ly.pp.justpiano3.protob" +
+      "uf.dto.OnlineLoadRoomUserListDTOH\000\022R\n\020ch" +
+      "ange_room_hand\030, \001(\01326.ly.pp.justpiano3." +
+      "protobuf.dto.OnlineChangeRoomHandDTOH\000\022@" +
+      "\n\006couple\030- \001(\0132..ly.pp.justpiano3.protob" +
+      "uf.dto.OnlineCoupleDTOH\000B\t\n\007requestJ\004\010\001\020" +
+      "\002J\004\010\013\020\014J\004\010\021\020\022J\004\010\024\020\025J\004\010\026\020\027J\004\010\030\020\031J\004\010\033\020\034\"\'\n" +
+      "\027OnlineUserInfoDialogDTO\022\014\n\004name\030\001 \001(\t\"\024" +
+      "\n\022OnlinePlayStartDTO\"/\n\035OnlineChangeRoom" +
+      "UserStatusDTO\022\016\n\006status\030\001 \001(\t\"9\n\023OnlineP" +
+      "layFinishDTO\022\014\n\004code\030\001 \001(\004\022\024\n\014status_arr" +
+      "ay\030\002 \001(\t\"M\n\023OnlineCreateRoomDTO\022\021\n\troom_" +
+      "name\030\001 \001(\t\022\021\n\troom_mode\030\002 \001(\r\022\020\n\010passwor" +
+      "d\030\003 \001(\t\"7\n\022OnlineEnterRoomDTO\022\017\n\007room_id" +
+      "\030\001 \001(\r\022\020\n\010password\030\002 \001(\t\"\023\n\021OnlineQuitRo" +
+      "omDTO\"0\n\027OnlineKickedQuitRoomDTO\022\025\n\rroom" +
+      "_position\030\001 \001(\r\"_\n\016OnlineLoginDTO\022\024\n\014pac" +
+      "kage_name\030\001 \001(\t\022\024\n\014version_code\030\002 \001(\t\022\017\n" +
+      "\007account\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\"7\n\021Onli" +
+      "neHallChatDTO\022\021\n\tuser_name\030\001 \001(\t\022\017\n\007mess" +
+      "age\030\002 \001(\t\"F\n\021OnlineRoomChatDTO\022\021\n\tuser_n" +
+      "ame\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\022\r\n\005color\030\003 \001(" +
+      "\r\"C\n\027OnlineChangeRoomInfoDTO\022\021\n\troom_nam" +
+      "e\030\001 \001(\t\022\025\n\rroom_password\030\002 \001(\t\"4\n\021Online" +
+      "PlaySongDTO\022\021\n\tsong_path\030\001 \001(\t\022\014\n\004tune\030\002" +
+      " \001(\005\"j\n\022OnlineChallengeDTO\022\014\n\004type\030\001 \001(\r" +
+      "\022\021\n\004code\030\002 \001(\004H\000\210\001\001\022\031\n\014status_array\030\003 \001(" +
+      "\tH\001\210\001\001B\007\n\005_codeB\017\n\r_status_array\"\363\001\n\017Onl" +
+      "ineFamilyDTO\022\014\n\004type\030\001 \001(\r\022\026\n\tfamily_id\030" +
+      "\002 \001(\rH\000\210\001\001\022\024\n\007message\030\003 \001(\tH\001\210\001\001\022\021\n\004page" +
+      "\030\004 \001(\rH\002\210\001\001\022\030\n\013family_name\030\005 \001(\tH\003\210\001\001\022\026\n" +
+      "\tuser_name\030\006 \001(\tH\004\210\001\001\022\023\n\006status\030\007 \001(\rH\005\210" +
+      "\001\001B\014\n\n_family_idB\n\n\010_messageB\007\n\005_pageB\016\n" +
+      "\014_family_nameB\014\n\n_user_nameB\t\n\007_status\"\027" +
+      "\n\025OnlineLoadRoomListDTO\"\033\n\031OnlineLoadRoo" +
+      "mPositionDTO\"\027\n\025OnlineLoadPlayUserDTO\"*\n" +
+      "\022OnlineMiniGradeDTO\022\024\n\014status_array\030\001 \001(" +
+      "\t\"E\n\rOnlineShopDTO\022\014\n\004type\030\001 \001(\r\022\027\n\nprod" +
+      "uct_id\030\002 \001(\rH\000\210\001\001B\r\n\013_product_id\"\023\n\021Onli" +
+      "neLoadUserDTO\"I\n\022OnlineEnterHallDTO\022\017\n\007h" +
+      "all_id\030\001 \001(\r\022\025\n\010password\030\002 \001(\tH\000\210\001\001B\013\n\t_" +
+      "password\"\023\n\021OnlineQuitHallDTO\"|\n\024OnlineS" +
+      "etUserInfoDTO\022\014\n\004type\030\001 \001(\r\022\014\n\004name\030\002 \001(" +
+      "\t\022\023\n\006reject\030\003 \001(\010H\000\210\001\001\022\030\n\013declaration\030\004 " +
+      "\001(\tH\001\210\001\001B\t\n\007_rejectB\016\n\014_declaration\".\n\025O" +
+      "nlineSetMiniGradeDTO\022\025\n\rmini_grade_on\030\001 " +
+      "\001(\010\"\326\001\n\026OnlineChangeClothesDTO\022\014\n\004type\030\001" +
+      " \001(\r\022\035\n\020buy_clothes_type\030\002 \001(\rH\000\210\001\001\022\033\n\016b" +
+      "uy_clothes_id\030\003 \001(\rH\001\210\001\001\022\014\n\004hair\030\004 \001(\r\022\013" +
+      "\n\003eye\030\005 \001(\r\022\016\n\006jacket\030\006 \001(\r\022\020\n\010trousers\030" +
+      "\007 \001(\r\022\r\n\005shoes\030\010 \001(\rB\023\n\021_buy_clothes_typ" +
+      "eB\021\n\017_buy_clothes_id\"A\n\025OnlineLoadUserIn" +
+      "foDTO\022\014\n\004type\030\001 \001(\r\022\021\n\004page\030\002 \001(\005H\000\210\001\001B\007" +
+      "\n\005_page\"2\n\021OnlineSendMailDTO\022\014\n\004name\030\001 \001" +
+      "(\t\022\017\n\007message\030\002 \001(\t\"\027\n\025OnlineLoadUserLis" +
+      "tDTO\"-\n\017OnlineDialogDTO\022\014\n\004type\030\001 \001(\r\022\014\n" +
+      "\004name\030\002 \001(\t\"\036\n\016OnlineDailyDTO\022\014\n\004type\030\001 " +
+      "\001(\r\"%\n\025OnlineKeyboardNoteDTO\022\014\n\004data\030\001 \001" +
+      "(\014\"\217\001\n\017OnlineClTestDTO\022\014\n\004type\030\001 \001(\r\022\021\n\004" +
+      "code\030\002 \001(\004H\000\210\001\001\022\027\n\nsong_index\030\003 \001(\rH\001\210\001\001" +
+      "\022\031\n\014status_array\030\004 \001(\tH\002\210\001\001B\007\n\005_codeB\r\n\013" +
+      "_song_indexB\017\n\r_status_array\"\024\n\022OnlineHe" +
+      "artBeatDTO\"0\n\027OnlineChangeRoomDoorDTO\022\025\n" +
+      "\rroom_position\030\001 \001(\r\",\n\031OnlineLoadRoomUs" +
+      "erListDTO\022\017\n\007room_id\030\001 \001(\r\"\'\n\027OnlineChan" +
+      "geRoomHandDTO\022\014\n\004hand\030\001 \001(\r\"\263\001\n\017OnlineCo" +
+      "upleDTO\022\014\n\004type\030\001 \001(\r\022\030\n\013couple_type\030\002 \001" +
+      "(\005H\000\210\001\001\022!\n\024couple_room_position\030\003 \001(\005H\001\210" +
+      "\001\001\022\032\n\rroom_position\030\004 \001(\005H\002\210\001\001B\016\n\014_coupl" +
+      "e_typeB\027\n\025_couple_room_positionB\020\n\016_room" +
+      "_positionB\021B\rOnlineRequestP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -335,7 +367,7 @@ public final class OnlineRequest {
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineBaseDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineBaseDTO_descriptor,
-        new java.lang.String[] { "UserInfoDialog", "PlayStart", "ChangeRoomUserStatus", "CreateRoom", "EnterRoom", "QuitRoom", "KickedQuitRoom", "Login", "HallChat", "RoomChat", "ChangeRoomInfo", "PlaySong", "Challenge", "Family", "LoadRoom", "LoadRoomPosition", "Shop", "LoadUser", "EnterHall", "QuitHall", "SetUserInfo", "ChangeClothes", "LoadUserInfo", "SendMail", "LoadUserList", "Dialog", "Daily", "KeyboardNote", "ClTest", "HeartBeat", "ChangeRoomDoor", "LoadRoomUserList", "ChangeRoomHand", "Couple", "Request", });
+        new java.lang.String[] { "UserInfoDialog", "PlayStart", "ChangeRoomUserStatus", "PlayFinish", "CreateRoom", "EnterRoom", "QuitRoom", "KickedQuitRoom", "Login", "HallChat", "RoomChat", "ChangeRoomInfo", "PlaySong", "Challenge", "Family", "LoadRoom", "LoadRoomPosition", "LoadPlayUser", "MiniGrade", "Shop", "LoadUser", "EnterHall", "QuitHall", "SetUserInfo", "SetMiniGrade", "ChangeClothes", "LoadUserInfo", "SendMail", "LoadUserList", "Dialog", "Daily", "KeyboardNote", "ClTest", "HeartBeat", "ChangeRoomDoor", "LoadRoomUserList", "ChangeRoomHand", "Couple", "Request", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineUserInfoDialogDTO_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineUserInfoDialogDTO_fieldAccessorTable = new
@@ -354,188 +386,212 @@ public final class OnlineRequest {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomUserStatusDTO_descriptor,
         new java.lang.String[] { "Status", });
-    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCreateRoomDTO_descriptor =
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlayFinishDTO_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlayFinishDTO_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlayFinishDTO_descriptor,
+        new java.lang.String[] { "Code", "StatusArray", });
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCreateRoomDTO_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCreateRoomDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCreateRoomDTO_descriptor,
         new java.lang.String[] { "RoomName", "RoomMode", "Password", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineEnterRoomDTO_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineEnterRoomDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineEnterRoomDTO_descriptor,
         new java.lang.String[] { "RoomId", "Password", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineQuitRoomDTO_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineQuitRoomDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineQuitRoomDTO_descriptor,
         new java.lang.String[] { });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineKickedQuitRoomDTO_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineKickedQuitRoomDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineKickedQuitRoomDTO_descriptor,
         new java.lang.String[] { "RoomPosition", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoginDTO_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoginDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoginDTO_descriptor,
         new java.lang.String[] { "PackageName", "VersionCode", "Account", "Password", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineHallChatDTO_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineHallChatDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineHallChatDTO_descriptor,
         new java.lang.String[] { "UserName", "Message", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineRoomChatDTO_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineRoomChatDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineRoomChatDTO_descriptor,
         new java.lang.String[] { "UserName", "Message", "Color", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomInfoDTO_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomInfoDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomInfoDTO_descriptor,
         new java.lang.String[] { "RoomName", "RoomPassword", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlaySongDTO_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlaySongDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlinePlaySongDTO_descriptor,
         new java.lang.String[] { "SongPath", "Tune", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChallengeDTO_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChallengeDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChallengeDTO_descriptor,
         new java.lang.String[] { "Type", "Code", "StatusArray", "Code", "StatusArray", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineFamilyDTO_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineFamilyDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineFamilyDTO_descriptor,
         new java.lang.String[] { "Type", "FamilyId", "Message", "Page", "FamilyName", "UserName", "Status", "FamilyId", "Message", "Page", "FamilyName", "UserName", "Status", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomListDTO_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomListDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomListDTO_descriptor,
         new java.lang.String[] { });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomPositionDTO_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomPositionDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomPositionDTO_descriptor,
         new java.lang.String[] { });
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadPlayUserDTO_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadPlayUserDTO_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadPlayUserDTO_descriptor,
+        new java.lang.String[] { });
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineMiniGradeDTO_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineMiniGradeDTO_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ly_pp_justpiano3_protobuf_dto_OnlineMiniGradeDTO_descriptor,
+        new java.lang.String[] { "StatusArray", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineShopDTO_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineShopDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineShopDTO_descriptor,
         new java.lang.String[] { "Type", "ProductId", "ProductId", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserDTO_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserDTO_descriptor,
         new java.lang.String[] { });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineEnterHallDTO_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineEnterHallDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineEnterHallDTO_descriptor,
         new java.lang.String[] { "HallId", "Password", "Password", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineQuitHallDTO_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineQuitHallDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineQuitHallDTO_descriptor,
         new java.lang.String[] { });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetUserInfoDTO_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetUserInfoDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetUserInfoDTO_descriptor,
         new java.lang.String[] { "Type", "Name", "Reject", "Declaration", "Reject", "Declaration", });
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetMiniGradeDTO_descriptor =
+      getDescriptor().getMessageTypes().get(25);
+    internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetMiniGradeDTO_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSetMiniGradeDTO_descriptor,
+        new java.lang.String[] { "MiniGradeOn", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeClothesDTO_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeClothesDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeClothesDTO_descriptor,
         new java.lang.String[] { "Type", "BuyClothesType", "BuyClothesId", "Hair", "Eye", "Jacket", "Trousers", "Shoes", "BuyClothesType", "BuyClothesId", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserInfoDTO_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserInfoDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserInfoDTO_descriptor,
         new java.lang.String[] { "Type", "Page", "Page", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSendMailDTO_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSendMailDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineSendMailDTO_descriptor,
         new java.lang.String[] { "Name", "Message", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserListDTO_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserListDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadUserListDTO_descriptor,
         new java.lang.String[] { });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineDialogDTO_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineDialogDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineDialogDTO_descriptor,
         new java.lang.String[] { "Type", "Name", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineDailyDTO_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineDailyDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineDailyDTO_descriptor,
         new java.lang.String[] { "Type", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineKeyboardNoteDTO_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineKeyboardNoteDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineKeyboardNoteDTO_descriptor,
         new java.lang.String[] { "Data", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineClTestDTO_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineClTestDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineClTestDTO_descriptor,
         new java.lang.String[] { "Type", "Code", "SongIndex", "StatusArray", "Code", "SongIndex", "StatusArray", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineHeartBeatDTO_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(34);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineHeartBeatDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineHeartBeatDTO_descriptor,
         new java.lang.String[] { });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomDoorDTO_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(35);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomDoorDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomDoorDTO_descriptor,
         new java.lang.String[] { "RoomPosition", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomUserListDTO_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(36);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomUserListDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineLoadRoomUserListDTO_descriptor,
         new java.lang.String[] { "RoomId", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomHandDTO_descriptor =
-      getDescriptor().getMessageTypes().get(33);
+      getDescriptor().getMessageTypes().get(37);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomHandDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineChangeRoomHandDTO_descriptor,
         new java.lang.String[] { "Hand", });
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCoupleDTO_descriptor =
-      getDescriptor().getMessageTypes().get(34);
+      getDescriptor().getMessageTypes().get(38);
     internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCoupleDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ly_pp_justpiano3_protobuf_dto_OnlineCoupleDTO_descriptor,

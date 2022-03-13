@@ -63,7 +63,7 @@ private static final long serialVersionUID = 0L;
           }
           case 16: {
 
-            tune_ = input.readUInt32();
+            tune_ = input.readInt32();
             break;
           }
           case 26: {
@@ -176,7 +176,7 @@ private static final long serialVersionUID = 0L;
    * 房间内播放曲谱移调值
    * </pre>
    *
-   * <code>uint32 tune = 2;</code>
+   * <code>int32 tune = 2;</code>
    * @return The tune.
    */
   @java.lang.Override
@@ -300,7 +300,7 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, songPath_);
     }
     if (tune_ != 0) {
-      output.writeUInt32(2, tune_);
+      output.writeInt32(2, tune_);
     }
     if (roomPositionCouple_ != null) {
       output.writeMessage(3, getRoomPositionCouple());
@@ -322,7 +322,7 @@ private static final long serialVersionUID = 0L;
     }
     if (tune_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeUInt32Size(2, tune_);
+        .computeInt32Size(2, tune_);
     }
     if (roomPositionCouple_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -794,7 +794,7 @@ private static final long serialVersionUID = 0L;
      * 房间内播放曲谱移调值
      * </pre>
      *
-     * <code>uint32 tune = 2;</code>
+     * <code>int32 tune = 2;</code>
      * @return The tune.
      */
     @java.lang.Override
@@ -806,7 +806,7 @@ private static final long serialVersionUID = 0L;
      * 房间内播放曲谱移调值
      * </pre>
      *
-     * <code>uint32 tune = 2;</code>
+     * <code>int32 tune = 2;</code>
      * @param value The tune to set.
      * @return This builder for chaining.
      */
@@ -821,7 +821,7 @@ private static final long serialVersionUID = 0L;
      * 房间内播放曲谱移调值
      * </pre>
      *
-     * <code>uint32 tune = 2;</code>
+     * <code>int32 tune = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearTune() {

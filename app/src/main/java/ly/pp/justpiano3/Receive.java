@@ -12,7 +12,6 @@ final class Receive {
 
     static void receive(int msgType, OnlineBaseVO msg) {
         try {
-            String string = "";
             OLPlayHall olPlayHall;
             Message message;
             Bundle bundle;
@@ -25,19 +24,19 @@ final class Receive {
                 case 14:
                 case 15:
                 case 17:
-                case 24:
+                case 23:
                 case 27:
                 case 31:
                 case 32:
                 case 37:
                 case 45:
-                    JsonHandle.m3949a(msgType, string, msg);
+                    ReceiveHandle.m3949a(msgType, msg);
                     return;
                 case 6:
-                    JsonHandle.m3951a(msg, "H");
+                    ReceiveHandle.m3951a(msg, "H");
                     return;
                 case 7:
-                    JsonHandle.m3951a(msg, "G");
+                    ReceiveHandle.m3951a(msg, "G");
                     return;
                 case 10:
                     if (JPStack.top() instanceof OLMainMode) {
@@ -84,34 +83,34 @@ final class Receive {
                     }
                     return;
                 case 16:
-                    JsonHandle.challenge(msg);
+                    ReceiveHandle.challenge(msg);
                     return;
                 case 18:
-                    JsonHandle.family(msg);
+                    ReceiveHandle.family(msg);
                     return;
                 case 19:
-                    JsonHandle.loadRoomList(msg);
+                    ReceiveHandle.loadRoomList(msg);
                     return;
                 case 20:
-                    JsonHandle.changeRoomPosition(msg);
+                    ReceiveHandle.changeRoomPosition(msg);
                     return;
                 case 21:
-                    JsonHandle.loadRoomPosition(msg);
+                    ReceiveHandle.loadRoomPosition(msg);
                     return;
                 case 22:
-                    JsonHandle.changeRoomList(msg);
+                    ReceiveHandle.changeRoomList(msg);
                     return;
                 case 25:
-                    JsonHandle.miniGrade(string);
+                    ReceiveHandle.miniGrade(msg);
                     return;
                 case 26:
-                    JsonHandle.shop(msg);
+                    ReceiveHandle.shop(msg);
                     return;
                 case 28:
                 case 33:
                 case 34:
                 case 36:
-                    JsonHandle.m3953b(msgType, msg);
+                    ReceiveHandle.m3953b(msgType, msg);
                     return;
                 case 29:
                     OnlineEnterHallVO enterHall = msg.getEnterHall();
@@ -134,10 +133,10 @@ final class Receive {
                     }
                     return;
                 case 38:
-                    JsonHandle.daily(msg);
+                    ReceiveHandle.daily(msg);
                     return;
                 case 39:
-                    JsonHandle.keyboardNotes(msg);
+                    ReceiveHandle.keyboardNotes(msg);
                     return;
                 case 40:
                     OnlineClTestVO clTest = msg.getClTest();
@@ -199,7 +198,7 @@ final class Receive {
                     }
                     return;
                 case 43:
-                    JsonHandle.m3954b(msg);
+                    ReceiveHandle.m3954b(msg);
                     return;
                 default:
             }

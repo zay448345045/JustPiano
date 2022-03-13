@@ -12,9 +12,6 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -102,7 +99,7 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                 olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
                             }
                         }
-                        ThreadPoolUtils.execute(() -> {
+                        olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
                             for (int i = 1; i < notes.length; i += 3) {
                                 int intervalTime = notes[i];
                                 if (intervalTime > 0) {

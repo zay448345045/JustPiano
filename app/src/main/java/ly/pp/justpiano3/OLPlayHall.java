@@ -28,8 +28,6 @@ import android.widget.Toast;
 
 import com.google.protobuf.MessageLite;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,14 +80,6 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         OnlineLoadRoomUserListDTO.Builder builder = OnlineLoadRoomUserListDTO.newBuilder();
         builder.setRoomId(b);
         connectionService.writeData(43, builder.build());
-    }
-
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
-        if (connectionService != null) {
-            connectionService.writeData(b, b2, b3, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
     }
 
     final void sendMsg(int type, MessageLite message) {
@@ -215,7 +205,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
     }
 
-    final void mo2830a(String str) {
+    final void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);

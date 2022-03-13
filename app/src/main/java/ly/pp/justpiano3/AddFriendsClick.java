@@ -8,6 +8,7 @@ import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
 final class AddFriendsClick implements OnClickListener {
     private OLPlayRoomInterface olPlayRoomInterface = null;
     private OLPlayHall olPlayHall = null;
+    private OLPlayHallRoom olPlayHallRoom = null;
     private final String name;
 
     AddFriendsClick(OLPlayRoomInterface olPlayRoomInterface, String name) {
@@ -17,6 +18,11 @@ final class AddFriendsClick implements OnClickListener {
 
     AddFriendsClick(OLPlayHall olPlayHall, String name) {
         this.olPlayHall = olPlayHall;
+        this.name = name;
+    }
+
+    AddFriendsClick(OLPlayHallRoom olPlayHallRoom, String name) {
+        this.olPlayHallRoom = olPlayHallRoom;
         this.name = name;
     }
 
@@ -52,6 +58,15 @@ final class AddFriendsClick implements OnClickListener {
             builder.setType(0);
             builder.setName(name);
             olPlayHall.jpapplication.getConnectionService().writeData(31, builder.build());
+            dialogInterface.dismiss();
+        } else if (olPlayHallRoom != null) {
+            if (olPlayHallRoom.jpApplication.getConnectionService() == null) {
+                return;
+            }
+            OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+            builder.setType(0);
+            builder.setName(name);
+            olPlayHallRoom.jpApplication.getConnectionService().writeData(31, builder.build());
             dialogInterface.dismiss();
         }
     }

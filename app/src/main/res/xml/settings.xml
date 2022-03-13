@@ -110,7 +110,7 @@
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />
         <ListPreference
-            android:defaultValue="1.0"
+            android:defaultValue="0.8"
             android:dependency="@string/b_s_key"
             android:dialogTitle="@string/b_s_vol_title"
             android:entries="@array/vol_entries"

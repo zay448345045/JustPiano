@@ -25,8 +25,8 @@ final class SendMailClick2 implements OnClickListener {
             String valueOf = String.valueOf(textView.getText());
             if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(olPlayRoom, "请输入信件内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 300) {
-                Toast.makeText(olPlayRoom, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+            } else if (valueOf.length() > 500) {
+                Toast.makeText(olPlayRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
                 builder.setName(f5509c);
@@ -35,14 +35,15 @@ final class SendMailClick2 implements OnClickListener {
                     olPlayRoom.connectionService.writeData(35, builder.build());
                 }
                 dialogInterface.dismiss();
+                Toast.makeText(olPlayRoom, "发送成功!", Toast.LENGTH_SHORT).show();
             }
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
             String valueOf = String.valueOf(textView.getText());
             if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(olPlayKeyboardRoom, "请输入信件内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 300) {
-                Toast.makeText(olPlayKeyboardRoom, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+            } else if (valueOf.length() > 500) {
+                Toast.makeText(olPlayKeyboardRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
                 builder.setMessage(valueOf);
@@ -51,6 +52,7 @@ final class SendMailClick2 implements OnClickListener {
                     olPlayKeyboardRoom.connectionService.writeData(35, builder.build());
                 }
                 dialogInterface.dismiss();
+                Toast.makeText(olPlayKeyboardRoom, "发送成功!", Toast.LENGTH_SHORT).show();
             }
         }
     }

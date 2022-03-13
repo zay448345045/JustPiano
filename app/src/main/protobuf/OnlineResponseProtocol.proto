@@ -7,13 +7,15 @@ option java_outer_classname = "OnlineResponse";
 
 // 服务器发送协议
 message OnlineBaseVO {
-  reserved 1, 4, 8, 11, 17, 30, 35, 41, 42, 44;
+  reserved 1, 4, 8, 11, 17, 24, 30, 35, 41, 42, 44;
   // 消息体
   oneof response {
     // 查看用户个人资料对话框
     OnlineUserInfoDialogVO user_info_dialog = 2;
     // 开始弹奏
     OnlinePlayStartVO play_start = 3;
+    // 弹奏成绩判定
+    OnlinePlayFinishVO play_finish = 5;
     // 创建房间
     OnlineCreateRoomVO create_room = 6;
     // 进入房间
@@ -42,6 +44,10 @@ message OnlineBaseVO {
     OnlineLoadRoomPositionVO load_room_position = 21;
     // 大厅中加载变化房间列表
     OnlineRoomVO change_room_list = 22;
+    // 房间开始弹奏后加载用户
+    OnlineLoadPlayUserVO load_play_user = 23;
+    // 弹奏界面左上角成绩条
+    OnlineMiniGradeVO mini_grade = 25;
     // 商店
     OnlineShopVO shop = 26;
     // 推荐曲谱
@@ -52,6 +58,8 @@ message OnlineBaseVO {
     OnlineEnterHallVO enter_hall = 29;
     // 增删好友、解除搭档、设置祝语
     OnlineSetUserInfoVO set_user_info = 31;
+    // 显示/隐藏弹奏界面左上角成绩条
+    OnlineSetMiniGradeVO set_mini_grade = 32;
     // 更换服装
     OnlineChangeClothesVO change_clothes = 33;
     // 查看好友、私信和主界面查看搭档
@@ -103,6 +111,44 @@ message OnlinePlayStartVO {
   string song_path = 1;
   // 曲谱移调值
   int32 tune = 2;
+}
+
+// 弹奏成绩判定
+message OnlinePlayFinishVO {
+  // 弹奏成绩
+  repeated OnlinePlayGradeVO play_grade = 1;
+}
+
+// 弹奏成绩
+message OnlinePlayGradeVO {
+  // 用户目前是否位弹奏中
+  bool is_playing = 1;
+  // 用户名称
+  string name = 2;
+  // 用户弹奏分数
+  uint32 score = 3;
+  // 用户成绩
+  OnlineGradeVO grade = 4;
+}
+
+// 用户成绩
+message OnlineGradeVO {
+  // 暴击个数
+  uint32 perfect = 1;
+  // 很棒个数
+  uint32 cool = 2;
+  // 完美个数
+  uint32 great = 3;
+  // 一般个数
+  uint32 bad = 4;
+  // 失误个数
+  uint32 miss = 5;
+  // 连击个数
+  uint32 combo = 6;
+  // 成绩条颜色（用于组队模式）
+  uint32 grade_color = 7;
+  // 所获经验
+  uint32 exp = 8;
 }
 
 // 创建房间
@@ -361,7 +407,7 @@ message OnlineLoadRoomPositionVO {
   // 房间播放曲谱路径
   string song_path = 1;
   // 房间内播放曲谱移调值
-  uint32 tune = 2;
+  int32 tune = 2;
   // 搭档信息
   OnlineRoomPositionCoupleVO room_position_couple = 3;
   // 用户信息
@@ -428,6 +474,34 @@ message OnlineRoomVO {
   uint32 male_num = 8;
   // 房间关闭空位人数
   uint32 close_num = 9;
+}
+
+// 房间开始弹奏后加载用户
+message OnlineLoadPlayUserVO {
+  // 弹奏用户
+  repeated OnlinePlayUserVO play_user = 1;
+}
+
+// 弹奏用户
+message OnlinePlayUserVO {
+  //用户名称
+  string name = 1;
+  // 用户左右手/组队值
+  uint32 hand = 2;
+  // 房间模式
+  uint32 mode = 3;
+  // 房间位置编号
+  uint32 room_position = 4;
+}
+
+// 弹奏界面左上角成绩条
+message OnlineMiniGradeVO {
+  // 连击数量
+  uint32 combo = 1;
+  // 用户当前弹奏分数
+  uint32 score = 2;
+  // 用户所在房间位置
+  uint32 room_position = 3;
 }
 
 // 商店
@@ -563,6 +637,22 @@ message OnlineSetUserInfoVO {
   optional string friend_msg = 7;
   // 当前用户位置（0为在房间，1为在大厅，2为在选择大厅初始界面等）
   optional uint32 location = 8;
+}
+
+// 显示/隐藏弹奏界面左上角成绩条
+message OnlineSetMiniGradeVO {
+  // 左上角成绩刚刚开启
+  repeated OnlineMiniGradeOnVO mini_grade_on = 1;
+}
+
+// 左上角成绩刚刚开启
+message OnlineMiniGradeOnVO {
+  // 用户左右手/组队值
+  uint32 hand = 1;
+  // 用户名称
+  string name = 2;
+  // 房间模式
+  uint32 mode = 3;
 }
 
 // 更换服装

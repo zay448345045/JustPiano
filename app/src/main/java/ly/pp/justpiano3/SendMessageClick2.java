@@ -23,8 +23,8 @@ final class SendMessageClick2 implements OnClickListener {
         String valueOf = String.valueOf(textview.getText());
         if (valueOf.isEmpty() || valueOf.equals("'")) {
             Toast.makeText(olPlayHall, "请输入信件内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > 300) {
-            Toast.makeText(olPlayHall, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+        } else if (valueOf.length() > 500) {
+            Toast.makeText(olPlayHall, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
             builder.setName(str);
@@ -33,6 +33,7 @@ final class SendMessageClick2 implements OnClickListener {
                 olPlayHall.connectionService.writeData(35, builder.build());
             }
             dialogInterface.dismiss();
+            Toast.makeText(olPlayHall, "发送成功!", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -55,7 +55,11 @@ public final class DressAdapter extends BaseAdapter {
                             ? String.valueOf(Consts.fHair[i]) : String.valueOf(Consts.mHair[i]));
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    if (olPlayDressRoom.hairTry.contains(i)) {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
+                    } else {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    }
                 }
                 break;
             case 1:
@@ -68,7 +72,11 @@ public final class DressAdapter extends BaseAdapter {
                             ? String.valueOf(Consts.fEye[i]) : String.valueOf(Consts.mEye[i]));
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    if (olPlayDressRoom.eyeTry.contains(i)) {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
+                    } else {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    }
                 }
                 break;
             case 2:
@@ -81,7 +89,11 @@ public final class DressAdapter extends BaseAdapter {
                             ? String.valueOf(Consts.fJacket[i]) : String.valueOf(Consts.mJacket[i]));
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    if (olPlayDressRoom.jacketTry.contains(i)) {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
+                    } else {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    }
                 }
                 break;
             case 3:
@@ -94,7 +106,11 @@ public final class DressAdapter extends BaseAdapter {
                             ? String.valueOf(Consts.fTrousers[i]) : String.valueOf(Consts.mTrousers[i]));
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    if (olPlayDressRoom.trousersTry.contains(i)) {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
+                    } else {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    }
                 }
                 break;
             case 4:
@@ -107,7 +123,11 @@ public final class DressAdapter extends BaseAdapter {
                             ? String.valueOf(Consts.fShoes[i]) : String.valueOf(Consts.mShoes[i]));
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    if (olPlayDressRoom.shoesTry.contains(i)) {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
+                    } else {
+                        view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
+                    }
                 }
                 break;
         }

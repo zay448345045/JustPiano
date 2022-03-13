@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 
+import ly.pp.justpiano3.protobuf.dto.OnlinePlaySongDTO;
+
 public final class PlaySongs {
     public JPApplication jpapplication;
     boolean isPlayingSongs;
@@ -76,7 +78,10 @@ public final class PlaySongs {
         if (olPlayRoom != null) {
             switch (jpapplication.getPlaySongsMode()) {
                 case 1:
-                    olPlayRoom.sendMsg((byte) 15, olPlayRoom.roomID0, olPlayRoom.hallID0, (olPlayRoom.getdiao() + 20) + jpapplication.getNowSongsName());
+                    OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+                    builder.setTune(olPlayRoom.getdiao());
+                    builder.setSongPath(jpapplication.getNowSongsName());
+                    olPlayRoom.sendMsg(15, builder.build());
                     Message obtainMessage1 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                     obtainMessage1.what = 12;
                     olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage1);
@@ -91,7 +96,10 @@ public final class PlaySongs {
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
                         String str1 = str0.substring(6, str0.length() - 3);
                         jpapplication.setNowSongsName(str1);
-                        olPlayRoom.sendMsg((byte) 15, olPlayRoom.roomID0, olPlayRoom.hallID0, (olPlayRoom.getdiao() + 20) + str1);
+                        OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                        builder1.setTune(olPlayRoom.getdiao());
+                        builder1.setSongPath(str1);
+                        olPlayRoom.sendMsg(15, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);
@@ -110,7 +118,10 @@ public final class PlaySongs {
                         }
                         String str1 = str0.substring(6, str0.length() - 3);
                         jpapplication.setNowSongsName(str1);
-                        olPlayRoom.sendMsg((byte) 15, olPlayRoom.roomID0, olPlayRoom.hallID0, (olPlayRoom.getdiao() + 20) + str1);
+                        OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                        builder1.setTune(olPlayRoom.getdiao());
+                        builder1.setSongPath(str1);
+                        olPlayRoom.sendMsg(15, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);

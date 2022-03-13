@@ -141,6 +141,14 @@ public final class MainGameAdapter extends BaseAdapter {
                 button = view.findViewById(R.id.ol_friend_chat);
                 view.findViewById(R.id.ol_friend_room).setVisibility(View.GONE);
                 Button button2 = view.findViewById(R.id.ol_friend_game);
+                Button dialogButton = view.findViewById(R.id.ol_friend_dialog);
+                dialogButton.setVisibility(View.VISIBLE);
+                dialogButton.setOnClickListener(v -> {
+                    relativeLayout2.setVisibility(View.GONE);
+                    OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
+                    builder.setName(string2);
+                    connectionService.writeData(2, builder.build());
+                });
                 TextView textView2 = view.findViewById(R.id.ol_friend_name);
                 ImageView imageView = view.findViewById(R.id.ol_friend_sex);
                 if (string3.equals("f")) {
@@ -201,13 +209,13 @@ public final class MainGameAdapter extends BaseAdapter {
                 view.findViewById(R.id.ol_friend_send).setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
                     if (activity instanceof OLPlayHall) {
-                        ((OLPlayHall) activity).mo2830a(string2);
+                        ((OLPlayHall) activity).sendMail(string2);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string2, 0);
                     } else if (activity instanceof OLPlayRoom) {
-                        ((OLPlayRoom) activity).mo2865b(string2);
+                        ((OLPlayRoom) activity).sendMail(string2);
                     } else if (activity instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) activity).mo2865b(string2);
+                        ((OLPlayKeyboardRoom) activity).sendMail(string2);
                     }
                 });
                 view.findViewById(R.id.ol_friend_dele).setOnClickListener(v -> {
@@ -379,7 +387,21 @@ public final class MainGameAdapter extends BaseAdapter {
                     });
                 }
                 ((TextView) view.findViewById(R.id.ol_friend_name)).setText(string7);
-                view.findViewById(R.id.ol_friend_send).setVisibility(View.INVISIBLE);
+                if (string7.equals("琴娘")) {
+                    view.findViewById(R.id.ol_friend_send).setVisibility(View.INVISIBLE);
+                }
+                view.findViewById(R.id.ol_friend_send).setOnClickListener(v -> {
+                    relativeLayout2.setVisibility(View.GONE);
+                    if (activity instanceof OLPlayHall) {
+                        ((OLPlayHall) activity).sendMail(string7);
+                    } else if (activity instanceof OLPlayHallRoom) {
+                        ((OLPlayHallRoom) activity).sendMail(string7, 0);
+                    } else if (activity instanceof OLPlayRoom) {
+                        ((OLPlayRoom) activity).sendMail(string7);
+                    } else if (activity instanceof OLPlayKeyboardRoom) {
+                        ((OLPlayKeyboardRoom) activity).sendMail(string7);
+                    }
+                });
                 button = view.findViewById(R.id.ol_friend_dele);
                 button.setText("查看资料");
                 button.setOnClickListener(v -> {

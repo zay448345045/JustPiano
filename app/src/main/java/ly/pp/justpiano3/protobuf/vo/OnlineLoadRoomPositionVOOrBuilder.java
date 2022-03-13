@@ -32,7 +32,7 @@ public interface OnlineLoadRoomPositionVOOrBuilder extends
    * 房间内播放曲谱移调值
    * </pre>
    *
-   * <code>uint32 tune = 2;</code>
+   * <code>int32 tune = 2;</code>
    * @return The tune.
    */
   int getTune();

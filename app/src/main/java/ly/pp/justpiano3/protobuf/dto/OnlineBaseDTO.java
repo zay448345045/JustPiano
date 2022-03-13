@@ -94,6 +94,20 @@ private static final long serialVersionUID = 0L;
             requestCase_ = 4;
             break;
           }
+          case 42: {
+            ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.Builder subBuilder = null;
+            if (requestCase_ == 5) {
+              subBuilder = ((ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_).toBuilder();
+            }
+            request_ =
+                input.readMessage(ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_);
+              request_ = subBuilder.buildPartial();
+            }
+            requestCase_ = 5;
+            break;
+          }
           case 50: {
             ly.pp.justpiano3.protobuf.dto.OnlineCreateRoomDTO.Builder subBuilder = null;
             if (requestCase_ == 6) {
@@ -276,6 +290,34 @@ private static final long serialVersionUID = 0L;
             requestCase_ = 21;
             break;
           }
+          case 186: {
+            ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.Builder subBuilder = null;
+            if (requestCase_ == 23) {
+              subBuilder = ((ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_).toBuilder();
+            }
+            request_ =
+                input.readMessage(ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_);
+              request_ = subBuilder.buildPartial();
+            }
+            requestCase_ = 23;
+            break;
+          }
+          case 202: {
+            ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.Builder subBuilder = null;
+            if (requestCase_ == 25) {
+              subBuilder = ((ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_).toBuilder();
+            }
+            request_ =
+                input.readMessage(ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_);
+              request_ = subBuilder.buildPartial();
+            }
+            requestCase_ = 25;
+            break;
+          }
           case 210: {
             ly.pp.justpiano3.protobuf.dto.OnlineShopDTO.Builder subBuilder = null;
             if (requestCase_ == 26) {
@@ -344,6 +386,20 @@ private static final long serialVersionUID = 0L;
               request_ = subBuilder.buildPartial();
             }
             requestCase_ = 31;
+            break;
+          }
+          case 258: {
+            ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.Builder subBuilder = null;
+            if (requestCase_ == 32) {
+              subBuilder = ((ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_).toBuilder();
+            }
+            request_ =
+                input.readMessage(ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_);
+              request_ = subBuilder.buildPartial();
+            }
+            requestCase_ = 32;
             break;
           }
           case 266: {
@@ -568,6 +624,7 @@ private static final long serialVersionUID = 0L;
     USER_INFO_DIALOG(2),
     PLAY_START(3),
     CHANGE_ROOM_USER_STATUS(4),
+    PLAY_FINISH(5),
     CREATE_ROOM(6),
     ENTER_ROOM(7),
     QUIT_ROOM(8),
@@ -581,11 +638,14 @@ private static final long serialVersionUID = 0L;
     FAMILY(18),
     LOAD_ROOM(19),
     LOAD_ROOM_POSITION(21),
+    LOAD_PLAY_USER(23),
+    MINI_GRADE(25),
     SHOP(26),
     LOAD_USER(28),
     ENTER_HALL(29),
     QUIT_HALL(30),
     SET_USER_INFO(31),
+    SET_MINI_GRADE(32),
     CHANGE_CLOTHES(33),
     LOAD_USER_INFO(34),
     SEND_MAIL(35),
@@ -619,6 +679,7 @@ private static final long serialVersionUID = 0L;
         case 2: return USER_INFO_DIALOG;
         case 3: return PLAY_START;
         case 4: return CHANGE_ROOM_USER_STATUS;
+        case 5: return PLAY_FINISH;
         case 6: return CREATE_ROOM;
         case 7: return ENTER_ROOM;
         case 8: return QUIT_ROOM;
@@ -632,11 +693,14 @@ private static final long serialVersionUID = 0L;
         case 18: return FAMILY;
         case 19: return LOAD_ROOM;
         case 21: return LOAD_ROOM_POSITION;
+        case 23: return LOAD_PLAY_USER;
+        case 25: return MINI_GRADE;
         case 26: return SHOP;
         case 28: return LOAD_USER;
         case 29: return ENTER_HALL;
         case 30: return QUIT_HALL;
         case 31: return SET_USER_INFO;
+        case 32: return SET_MINI_GRADE;
         case 33: return CHANGE_CLOTHES;
         case 34: return LOAD_USER_INFO;
         case 35: return SEND_MAIL;
@@ -792,6 +856,49 @@ private static final long serialVersionUID = 0L;
        return (ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO) request_;
     }
     return ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO.getDefaultInstance();
+  }
+
+  public static final int PLAY_FINISH_FIELD_NUMBER = 5;
+  /**
+   * <pre>
+   * 弹奏成绩判定
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+   * @return Whether the playFinish field is set.
+   */
+  @java.lang.Override
+  public boolean hasPlayFinish() {
+    return requestCase_ == 5;
+  }
+  /**
+   * <pre>
+   * 弹奏成绩判定
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+   * @return The playFinish.
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO getPlayFinish() {
+    if (requestCase_ == 5) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance();
+  }
+  /**
+   * <pre>
+   * 弹奏成绩判定
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTOOrBuilder getPlayFinishOrBuilder() {
+    if (requestCase_ == 5) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance();
   }
 
   public static final int CREATE_ROOM_FIELD_NUMBER = 6;
@@ -1353,6 +1460,92 @@ private static final long serialVersionUID = 0L;
     return ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO.getDefaultInstance();
   }
 
+  public static final int LOAD_PLAY_USER_FIELD_NUMBER = 23;
+  /**
+   * <pre>
+   * 房间开始弹奏后加载用户
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+   * @return Whether the loadPlayUser field is set.
+   */
+  @java.lang.Override
+  public boolean hasLoadPlayUser() {
+    return requestCase_ == 23;
+  }
+  /**
+   * <pre>
+   * 房间开始弹奏后加载用户
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+   * @return The loadPlayUser.
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO getLoadPlayUser() {
+    if (requestCase_ == 23) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance();
+  }
+  /**
+   * <pre>
+   * 房间开始弹奏后加载用户
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTOOrBuilder getLoadPlayUserOrBuilder() {
+    if (requestCase_ == 23) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance();
+  }
+
+  public static final int MINI_GRADE_FIELD_NUMBER = 25;
+  /**
+   * <pre>
+   * 弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+   * @return Whether the miniGrade field is set.
+   */
+  @java.lang.Override
+  public boolean hasMiniGrade() {
+    return requestCase_ == 25;
+  }
+  /**
+   * <pre>
+   * 弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+   * @return The miniGrade.
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO getMiniGrade() {
+    if (requestCase_ == 25) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance();
+  }
+  /**
+   * <pre>
+   * 弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTOOrBuilder getMiniGradeOrBuilder() {
+    if (requestCase_ == 25) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance();
+  }
+
   public static final int SHOP_FIELD_NUMBER = 26;
   /**
    * <pre>
@@ -1566,6 +1759,49 @@ private static final long serialVersionUID = 0L;
        return (ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO) request_;
     }
     return ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO.getDefaultInstance();
+  }
+
+  public static final int SET_MINI_GRADE_FIELD_NUMBER = 32;
+  /**
+   * <pre>
+   * 显示/隐藏弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+   * @return Whether the setMiniGrade field is set.
+   */
+  @java.lang.Override
+  public boolean hasSetMiniGrade() {
+    return requestCase_ == 32;
+  }
+  /**
+   * <pre>
+   * 显示/隐藏弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+   * @return The setMiniGrade.
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO getSetMiniGrade() {
+    if (requestCase_ == 32) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance();
+  }
+  /**
+   * <pre>
+   * 显示/隐藏弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+   */
+  @java.lang.Override
+  public ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTOOrBuilder getSetMiniGradeOrBuilder() {
+    if (requestCase_ == 32) {
+       return (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_;
+    }
+    return ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance();
   }
 
   public static final int CHANGE_CLOTHES_FIELD_NUMBER = 33;
@@ -2150,6 +2386,9 @@ private static final long serialVersionUID = 0L;
     if (requestCase_ == 4) {
       output.writeMessage(4, (ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO) request_);
     }
+    if (requestCase_ == 5) {
+      output.writeMessage(5, (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_);
+    }
     if (requestCase_ == 6) {
       output.writeMessage(6, (ly.pp.justpiano3.protobuf.dto.OnlineCreateRoomDTO) request_);
     }
@@ -2189,6 +2428,12 @@ private static final long serialVersionUID = 0L;
     if (requestCase_ == 21) {
       output.writeMessage(21, (ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO) request_);
     }
+    if (requestCase_ == 23) {
+      output.writeMessage(23, (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_);
+    }
+    if (requestCase_ == 25) {
+      output.writeMessage(25, (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_);
+    }
     if (requestCase_ == 26) {
       output.writeMessage(26, (ly.pp.justpiano3.protobuf.dto.OnlineShopDTO) request_);
     }
@@ -2203,6 +2448,9 @@ private static final long serialVersionUID = 0L;
     }
     if (requestCase_ == 31) {
       output.writeMessage(31, (ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO) request_);
+    }
+    if (requestCase_ == 32) {
+      output.writeMessage(32, (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_);
     }
     if (requestCase_ == 33) {
       output.writeMessage(33, (ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO) request_);
@@ -2264,6 +2512,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, (ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO) request_);
     }
+    if (requestCase_ == 5) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_);
+    }
     if (requestCase_ == 6) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, (ly.pp.justpiano3.protobuf.dto.OnlineCreateRoomDTO) request_);
@@ -2316,6 +2568,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(21, (ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO) request_);
     }
+    if (requestCase_ == 23) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(23, (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_);
+    }
+    if (requestCase_ == 25) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(25, (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_);
+    }
     if (requestCase_ == 26) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(26, (ly.pp.justpiano3.protobuf.dto.OnlineShopDTO) request_);
@@ -2335,6 +2595,10 @@ private static final long serialVersionUID = 0L;
     if (requestCase_ == 31) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(31, (ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO) request_);
+    }
+    if (requestCase_ == 32) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(32, (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_);
     }
     if (requestCase_ == 33) {
       size += com.google.protobuf.CodedOutputStream
@@ -2417,6 +2681,10 @@ private static final long serialVersionUID = 0L;
         if (!getChangeRoomUserStatus()
             .equals(other.getChangeRoomUserStatus())) return false;
         break;
+      case 5:
+        if (!getPlayFinish()
+            .equals(other.getPlayFinish())) return false;
+        break;
       case 6:
         if (!getCreateRoom()
             .equals(other.getCreateRoom())) return false;
@@ -2469,6 +2737,14 @@ private static final long serialVersionUID = 0L;
         if (!getLoadRoomPosition()
             .equals(other.getLoadRoomPosition())) return false;
         break;
+      case 23:
+        if (!getLoadPlayUser()
+            .equals(other.getLoadPlayUser())) return false;
+        break;
+      case 25:
+        if (!getMiniGrade()
+            .equals(other.getMiniGrade())) return false;
+        break;
       case 26:
         if (!getShop()
             .equals(other.getShop())) return false;
@@ -2488,6 +2764,10 @@ private static final long serialVersionUID = 0L;
       case 31:
         if (!getSetUserInfo()
             .equals(other.getSetUserInfo())) return false;
+        break;
+      case 32:
+        if (!getSetMiniGrade()
+            .equals(other.getSetMiniGrade())) return false;
         break;
       case 33:
         if (!getChangeClothes()
@@ -2568,6 +2848,10 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + CHANGE_ROOM_USER_STATUS_FIELD_NUMBER;
         hash = (53 * hash) + getChangeRoomUserStatus().hashCode();
         break;
+      case 5:
+        hash = (37 * hash) + PLAY_FINISH_FIELD_NUMBER;
+        hash = (53 * hash) + getPlayFinish().hashCode();
+        break;
       case 6:
         hash = (37 * hash) + CREATE_ROOM_FIELD_NUMBER;
         hash = (53 * hash) + getCreateRoom().hashCode();
@@ -2620,6 +2904,14 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + LOAD_ROOM_POSITION_FIELD_NUMBER;
         hash = (53 * hash) + getLoadRoomPosition().hashCode();
         break;
+      case 23:
+        hash = (37 * hash) + LOAD_PLAY_USER_FIELD_NUMBER;
+        hash = (53 * hash) + getLoadPlayUser().hashCode();
+        break;
+      case 25:
+        hash = (37 * hash) + MINI_GRADE_FIELD_NUMBER;
+        hash = (53 * hash) + getMiniGrade().hashCode();
+        break;
       case 26:
         hash = (37 * hash) + SHOP_FIELD_NUMBER;
         hash = (53 * hash) + getShop().hashCode();
@@ -2639,6 +2931,10 @@ private static final long serialVersionUID = 0L;
       case 31:
         hash = (37 * hash) + SET_USER_INFO_FIELD_NUMBER;
         hash = (53 * hash) + getSetUserInfo().hashCode();
+        break;
+      case 32:
+        hash = (37 * hash) + SET_MINI_GRADE_FIELD_NUMBER;
+        hash = (53 * hash) + getSetMiniGrade().hashCode();
         break;
       case 33:
         hash = (37 * hash) + CHANGE_CLOTHES_FIELD_NUMBER;
@@ -2881,6 +3177,13 @@ private static final long serialVersionUID = 0L;
           result.request_ = changeRoomUserStatusBuilder_.build();
         }
       }
+      if (requestCase_ == 5) {
+        if (playFinishBuilder_ == null) {
+          result.request_ = request_;
+        } else {
+          result.request_ = playFinishBuilder_.build();
+        }
+      }
       if (requestCase_ == 6) {
         if (createRoomBuilder_ == null) {
           result.request_ = request_;
@@ -2972,6 +3275,20 @@ private static final long serialVersionUID = 0L;
           result.request_ = loadRoomPositionBuilder_.build();
         }
       }
+      if (requestCase_ == 23) {
+        if (loadPlayUserBuilder_ == null) {
+          result.request_ = request_;
+        } else {
+          result.request_ = loadPlayUserBuilder_.build();
+        }
+      }
+      if (requestCase_ == 25) {
+        if (miniGradeBuilder_ == null) {
+          result.request_ = request_;
+        } else {
+          result.request_ = miniGradeBuilder_.build();
+        }
+      }
       if (requestCase_ == 26) {
         if (shopBuilder_ == null) {
           result.request_ = request_;
@@ -3005,6 +3322,13 @@ private static final long serialVersionUID = 0L;
           result.request_ = request_;
         } else {
           result.request_ = setUserInfoBuilder_.build();
+        }
+      }
+      if (requestCase_ == 32) {
+        if (setMiniGradeBuilder_ == null) {
+          result.request_ = request_;
+        } else {
+          result.request_ = setMiniGradeBuilder_.build();
         }
       }
       if (requestCase_ == 33) {
@@ -3160,6 +3484,10 @@ private static final long serialVersionUID = 0L;
           mergeChangeRoomUserStatus(other.getChangeRoomUserStatus());
           break;
         }
+        case PLAY_FINISH: {
+          mergePlayFinish(other.getPlayFinish());
+          break;
+        }
         case CREATE_ROOM: {
           mergeCreateRoom(other.getCreateRoom());
           break;
@@ -3212,6 +3540,14 @@ private static final long serialVersionUID = 0L;
           mergeLoadRoomPosition(other.getLoadRoomPosition());
           break;
         }
+        case LOAD_PLAY_USER: {
+          mergeLoadPlayUser(other.getLoadPlayUser());
+          break;
+        }
+        case MINI_GRADE: {
+          mergeMiniGrade(other.getMiniGrade());
+          break;
+        }
         case SHOP: {
           mergeShop(other.getShop());
           break;
@@ -3230,6 +3566,10 @@ private static final long serialVersionUID = 0L;
         }
         case SET_USER_INFO: {
           mergeSetUserInfo(other.getSetUserInfo());
+          break;
+        }
+        case SET_MINI_GRADE: {
+          mergeSetMiniGrade(other.getSetMiniGrade());
           break;
         }
         case CHANGE_CLOTHES: {
@@ -3861,6 +4201,183 @@ private static final long serialVersionUID = 0L;
       requestCase_ = 4;
       onChanged();;
       return changeRoomUserStatusBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO, ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTOOrBuilder> playFinishBuilder_;
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     * @return Whether the playFinish field is set.
+     */
+    @java.lang.Override
+    public boolean hasPlayFinish() {
+      return requestCase_ == 5;
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     * @return The playFinish.
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO getPlayFinish() {
+      if (playFinishBuilder_ == null) {
+        if (requestCase_ == 5) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance();
+      } else {
+        if (requestCase_ == 5) {
+          return playFinishBuilder_.getMessage();
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    public Builder setPlayFinish(ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO value) {
+      if (playFinishBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        request_ = value;
+        onChanged();
+      } else {
+        playFinishBuilder_.setMessage(value);
+      }
+      requestCase_ = 5;
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    public Builder setPlayFinish(
+        ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.Builder builderForValue) {
+      if (playFinishBuilder_ == null) {
+        request_ = builderForValue.build();
+        onChanged();
+      } else {
+        playFinishBuilder_.setMessage(builderForValue.build());
+      }
+      requestCase_ = 5;
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    public Builder mergePlayFinish(ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO value) {
+      if (playFinishBuilder_ == null) {
+        if (requestCase_ == 5 &&
+            request_ != ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance()) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.newBuilder((ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          request_ = value;
+        }
+        onChanged();
+      } else {
+        if (requestCase_ == 5) {
+          playFinishBuilder_.mergeFrom(value);
+        }
+        playFinishBuilder_.setMessage(value);
+      }
+      requestCase_ = 5;
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    public Builder clearPlayFinish() {
+      if (playFinishBuilder_ == null) {
+        if (requestCase_ == 5) {
+          requestCase_ = 0;
+          request_ = null;
+          onChanged();
+        }
+      } else {
+        if (requestCase_ == 5) {
+          requestCase_ = 0;
+          request_ = null;
+        }
+        playFinishBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    public ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.Builder getPlayFinishBuilder() {
+      return getPlayFinishFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTOOrBuilder getPlayFinishOrBuilder() {
+      if ((requestCase_ == 5) && (playFinishBuilder_ != null)) {
+        return playFinishBuilder_.getMessageOrBuilder();
+      } else {
+        if (requestCase_ == 5) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 弹奏成绩判定
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO, ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTOOrBuilder> 
+        getPlayFinishFieldBuilder() {
+      if (playFinishBuilder_ == null) {
+        if (!(requestCase_ == 5)) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.getDefaultInstance();
+        }
+        playFinishBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO, ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTOOrBuilder>(
+                (ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO) request_,
+                getParentForChildren(),
+                isClean());
+        request_ = null;
+      }
+      requestCase_ = 5;
+      onChanged();;
+      return playFinishBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -6165,6 +6682,360 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO, ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTOOrBuilder> loadPlayUserBuilder_;
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     * @return Whether the loadPlayUser field is set.
+     */
+    @java.lang.Override
+    public boolean hasLoadPlayUser() {
+      return requestCase_ == 23;
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     * @return The loadPlayUser.
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO getLoadPlayUser() {
+      if (loadPlayUserBuilder_ == null) {
+        if (requestCase_ == 23) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance();
+      } else {
+        if (requestCase_ == 23) {
+          return loadPlayUserBuilder_.getMessage();
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    public Builder setLoadPlayUser(ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO value) {
+      if (loadPlayUserBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        request_ = value;
+        onChanged();
+      } else {
+        loadPlayUserBuilder_.setMessage(value);
+      }
+      requestCase_ = 23;
+      return this;
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    public Builder setLoadPlayUser(
+        ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.Builder builderForValue) {
+      if (loadPlayUserBuilder_ == null) {
+        request_ = builderForValue.build();
+        onChanged();
+      } else {
+        loadPlayUserBuilder_.setMessage(builderForValue.build());
+      }
+      requestCase_ = 23;
+      return this;
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    public Builder mergeLoadPlayUser(ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO value) {
+      if (loadPlayUserBuilder_ == null) {
+        if (requestCase_ == 23 &&
+            request_ != ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance()) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.newBuilder((ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          request_ = value;
+        }
+        onChanged();
+      } else {
+        if (requestCase_ == 23) {
+          loadPlayUserBuilder_.mergeFrom(value);
+        }
+        loadPlayUserBuilder_.setMessage(value);
+      }
+      requestCase_ = 23;
+      return this;
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    public Builder clearLoadPlayUser() {
+      if (loadPlayUserBuilder_ == null) {
+        if (requestCase_ == 23) {
+          requestCase_ = 0;
+          request_ = null;
+          onChanged();
+        }
+      } else {
+        if (requestCase_ == 23) {
+          requestCase_ = 0;
+          request_ = null;
+        }
+        loadPlayUserBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    public ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.Builder getLoadPlayUserBuilder() {
+      return getLoadPlayUserFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTOOrBuilder getLoadPlayUserOrBuilder() {
+      if ((requestCase_ == 23) && (loadPlayUserBuilder_ != null)) {
+        return loadPlayUserBuilder_.getMessageOrBuilder();
+      } else {
+        if (requestCase_ == 23) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 房间开始弹奏后加载用户
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO, ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTOOrBuilder> 
+        getLoadPlayUserFieldBuilder() {
+      if (loadPlayUserBuilder_ == null) {
+        if (!(requestCase_ == 23)) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.getDefaultInstance();
+        }
+        loadPlayUserBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO, ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTOOrBuilder>(
+                (ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO) request_,
+                getParentForChildren(),
+                isClean());
+        request_ = null;
+      }
+      requestCase_ = 23;
+      onChanged();;
+      return loadPlayUserBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO, ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTOOrBuilder> miniGradeBuilder_;
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     * @return Whether the miniGrade field is set.
+     */
+    @java.lang.Override
+    public boolean hasMiniGrade() {
+      return requestCase_ == 25;
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     * @return The miniGrade.
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO getMiniGrade() {
+      if (miniGradeBuilder_ == null) {
+        if (requestCase_ == 25) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance();
+      } else {
+        if (requestCase_ == 25) {
+          return miniGradeBuilder_.getMessage();
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    public Builder setMiniGrade(ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO value) {
+      if (miniGradeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        request_ = value;
+        onChanged();
+      } else {
+        miniGradeBuilder_.setMessage(value);
+      }
+      requestCase_ = 25;
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    public Builder setMiniGrade(
+        ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.Builder builderForValue) {
+      if (miniGradeBuilder_ == null) {
+        request_ = builderForValue.build();
+        onChanged();
+      } else {
+        miniGradeBuilder_.setMessage(builderForValue.build());
+      }
+      requestCase_ = 25;
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    public Builder mergeMiniGrade(ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO value) {
+      if (miniGradeBuilder_ == null) {
+        if (requestCase_ == 25 &&
+            request_ != ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance()) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.newBuilder((ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          request_ = value;
+        }
+        onChanged();
+      } else {
+        if (requestCase_ == 25) {
+          miniGradeBuilder_.mergeFrom(value);
+        }
+        miniGradeBuilder_.setMessage(value);
+      }
+      requestCase_ = 25;
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    public Builder clearMiniGrade() {
+      if (miniGradeBuilder_ == null) {
+        if (requestCase_ == 25) {
+          requestCase_ = 0;
+          request_ = null;
+          onChanged();
+        }
+      } else {
+        if (requestCase_ == 25) {
+          requestCase_ = 0;
+          request_ = null;
+        }
+        miniGradeBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    public ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.Builder getMiniGradeBuilder() {
+      return getMiniGradeFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTOOrBuilder getMiniGradeOrBuilder() {
+      if ((requestCase_ == 25) && (miniGradeBuilder_ != null)) {
+        return miniGradeBuilder_.getMessageOrBuilder();
+      } else {
+        if (requestCase_ == 25) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO, ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTOOrBuilder> 
+        getMiniGradeFieldBuilder() {
+      if (miniGradeBuilder_ == null) {
+        if (!(requestCase_ == 25)) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.getDefaultInstance();
+        }
+        miniGradeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO, ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTOOrBuilder>(
+                (ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO) request_,
+                getParentForChildren(),
+                isClean());
+        request_ = null;
+      }
+      requestCase_ = 25;
+      onChanged();;
+      return miniGradeBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
         ly.pp.justpiano3.protobuf.dto.OnlineShopDTO, ly.pp.justpiano3.protobuf.dto.OnlineShopDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineShopDTOOrBuilder> shopBuilder_;
     /**
      * <pre>
@@ -7047,6 +7918,183 @@ private static final long serialVersionUID = 0L;
       requestCase_ = 31;
       onChanged();;
       return setUserInfoBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO, ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTOOrBuilder> setMiniGradeBuilder_;
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     * @return Whether the setMiniGrade field is set.
+     */
+    @java.lang.Override
+    public boolean hasSetMiniGrade() {
+      return requestCase_ == 32;
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     * @return The setMiniGrade.
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO getSetMiniGrade() {
+      if (setMiniGradeBuilder_ == null) {
+        if (requestCase_ == 32) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance();
+      } else {
+        if (requestCase_ == 32) {
+          return setMiniGradeBuilder_.getMessage();
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    public Builder setSetMiniGrade(ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO value) {
+      if (setMiniGradeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        request_ = value;
+        onChanged();
+      } else {
+        setMiniGradeBuilder_.setMessage(value);
+      }
+      requestCase_ = 32;
+      return this;
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    public Builder setSetMiniGrade(
+        ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.Builder builderForValue) {
+      if (setMiniGradeBuilder_ == null) {
+        request_ = builderForValue.build();
+        onChanged();
+      } else {
+        setMiniGradeBuilder_.setMessage(builderForValue.build());
+      }
+      requestCase_ = 32;
+      return this;
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    public Builder mergeSetMiniGrade(ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO value) {
+      if (setMiniGradeBuilder_ == null) {
+        if (requestCase_ == 32 &&
+            request_ != ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance()) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.newBuilder((ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          request_ = value;
+        }
+        onChanged();
+      } else {
+        if (requestCase_ == 32) {
+          setMiniGradeBuilder_.mergeFrom(value);
+        }
+        setMiniGradeBuilder_.setMessage(value);
+      }
+      requestCase_ = 32;
+      return this;
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    public Builder clearSetMiniGrade() {
+      if (setMiniGradeBuilder_ == null) {
+        if (requestCase_ == 32) {
+          requestCase_ = 0;
+          request_ = null;
+          onChanged();
+        }
+      } else {
+        if (requestCase_ == 32) {
+          requestCase_ = 0;
+          request_ = null;
+        }
+        setMiniGradeBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    public ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.Builder getSetMiniGradeBuilder() {
+      return getSetMiniGradeFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    @java.lang.Override
+    public ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTOOrBuilder getSetMiniGradeOrBuilder() {
+      if ((requestCase_ == 32) && (setMiniGradeBuilder_ != null)) {
+        return setMiniGradeBuilder_.getMessageOrBuilder();
+      } else {
+        if (requestCase_ == 32) {
+          return (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_;
+        }
+        return ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * 显示/隐藏弹奏界面左上角成绩条
+     * </pre>
+     *
+     * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO, ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTOOrBuilder> 
+        getSetMiniGradeFieldBuilder() {
+      if (setMiniGradeBuilder_ == null) {
+        if (!(requestCase_ == 32)) {
+          request_ = ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.getDefaultInstance();
+        }
+        setMiniGradeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO, ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO.Builder, ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTOOrBuilder>(
+                (ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO) request_,
+                getParentForChildren(),
+                isClean());
+        request_ = null;
+      }
+      requestCase_ = 32;
+      onChanged();;
+      return setMiniGradeBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<

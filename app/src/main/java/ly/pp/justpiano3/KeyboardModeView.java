@@ -54,7 +54,7 @@ public class KeyboardModeView extends View {
             0, 0, 1, 1, 2, 3, 2, 4, 3, 5, 4, 6
     };
 
-    // Geometry.
+    // 位置变量
     private float viewWidth;
     private float viewHeight;
     private float whiteKeyWidth;
@@ -339,8 +339,19 @@ public class KeyboardModeView extends View {
                 return;
             }
             notesOnArray[pitchInScreen] = true;
-            if (kuangColorIndex >= 0 && kuangColorIndex < Consts.kuangColorFilter.length) {
-                notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilter[kuangColorIndex]);
+            if (kuangColorIndex >= 0 && kuangColorIndex < Consts.kuangColorFilterMultiPly.length) {
+                boolean isBlack = false;
+                for (int blackKeyOffset : BLACK_KEY_OFFSETS) {
+                    if (pitchInScreen % NOTES_PER_OCTAVE == blackKeyOffset) {
+                        isBlack = true;
+                        break;
+                    }
+                }
+                if (isBlack) {
+                    notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilterAdd[kuangColorIndex]);
+                } else {
+                    notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilterMultiPly[kuangColorIndex]);
+                }
             }
             invalidate();
         }

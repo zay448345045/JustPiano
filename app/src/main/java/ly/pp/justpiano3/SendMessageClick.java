@@ -28,8 +28,8 @@ final class SendMessageClick implements OnClickListener {
         try {
             if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(popUserInfo, "请输入消息内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 300) {
-                Toast.makeText(popUserInfo, "确定在三百字之内!", Toast.LENGTH_SHORT).show();
+            } else if (valueOf.length() > 500) {
+                Toast.makeText(popUserInfo, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 jSONObject.put("H", 0);
                 jSONObject.put("T", f5775c);

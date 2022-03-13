@@ -83,7 +83,7 @@ public class FriendMailPage extends Activity implements Callback {
             str3 = "发送";
             str4 = "发私信给" + str;
         }
-        new JPDialog(this).setTitle(str4).loadInflate(inflate).setFirstButton(str3, new sendMailClick(this, textView, i, str, i2, str2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialog(this).setTitle(str4).loadInflate(inflate).setFirstButton(str3, new SendMailClick(this, textView, i, str, i2, str2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     public final void mo2683a(int i, int i2, String str, String str2) {

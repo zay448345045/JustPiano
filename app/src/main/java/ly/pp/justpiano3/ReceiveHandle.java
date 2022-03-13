@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,6 +26,7 @@ import ly.pp.justpiano3.protobuf.vo.OnlineFamilyUserVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineFamilyVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineFriendUserVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineHallVO;
+import ly.pp.justpiano3.protobuf.vo.OnlineLoadPlayUserVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomListVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomPositionVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomUserListVO;
@@ -37,71 +36,65 @@ import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserInfoVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserListVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineMailVO;
+import ly.pp.justpiano3.protobuf.vo.OnlineMiniGradeOnVO;
+import ly.pp.justpiano3.protobuf.vo.OnlinePlayFinishVO;
+import ly.pp.justpiano3.protobuf.vo.OnlinePlayGradeVO;
+import ly.pp.justpiano3.protobuf.vo.OnlinePlayUserVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineRoomChatVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineRoomVO;
+import ly.pp.justpiano3.protobuf.vo.OnlineSetMiniGradeVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineSetUserInfoVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineShopProductVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineShopVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineUserInfoDialogVO;
 import ly.pp.justpiano3.protobuf.vo.OnlineUserVO;
 
-final class JsonHandle {
+final class ReceiveHandle {
 
-    static void miniGrade(String str) {
+    static void miniGrade(OnlineBaseVO msg) {
         int i = 0;
         Message message = new Message();
-        try {
-            if (JPStack.top() instanceof PianoPlay) {
-                PianoPlay pianoPlay = (PianoPlay) JPStack.top();
-                JSONObject jSONObject = new JSONObject(str);
-                User User = (User) pianoPlay.userMap.get((byte) jSONObject.getInt("I"));
-                Bundle bundle = new Bundle();
-                Bundle bundle2;
-                User User2;
-                int i2 = jSONObject.getInt("S");
-                int i3 = jSONObject.getInt("T");
-                if (i2 < 0) {
-                    User.setOpenPosition();
-                    User.setPlayerName("");
-                } else {
-                    User.setScore(i2);
-                    User.setCombo(i3);
-                }
-                for (byte ba = 1; ba <= 6; ba++) {
-                    User2 = (User) pianoPlay.userMap.get(ba);
-                    if (!User2.getPlayerName().isEmpty()) {
-                        bundle2 = new Bundle();
-                        bundle2.putString("G", String.valueOf(User2.getHand()));
-                        bundle2.putString("U", User2.getPlayerName());
-                        bundle2.putString("M", User2.getScore());
-                        bundle2.putString("T", User2.getCombo() + "");
-                        bundle.putBundle(String.valueOf(i), bundle2);
-                        i++;
-                    }
-                }
-                message.what = 2;
-                message.setData(bundle);
-                pianoPlay.pianoPlayHandler.handleMessage(message);
+        if (JPStack.top() instanceof PianoPlay) {
+            PianoPlay pianoPlay = (PianoPlay) JPStack.top();
+            User User = (User) pianoPlay.userMap.get((byte) msg.getMiniGrade().getRoomPosition());
+            Bundle bundle = new Bundle();
+            Bundle bundle2;
+            User User2;
+            int i2 = msg.getMiniGrade().getScore();
+            int i3 = msg.getMiniGrade().getCombo();
+            if (i2 < 0) {
+                User.setOpenPosition();
+                User.setPlayerName("");
+            } else {
+                User.setScore(i2);
+                User.setCombo(i3);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            for (byte ba = 1; ba <= 6; ba++) {
+                User2 = (User) pianoPlay.userMap.get(ba);
+                if (!User2.getPlayerName().isEmpty()) {
+                    bundle2 = new Bundle();
+                    bundle2.putString("G", String.valueOf(User2.getHand()));
+                    bundle2.putString("U", User2.getPlayerName());
+                    bundle2.putString("M", User2.getScore());
+                    bundle2.putString("T", User2.getCombo() + "");
+                    bundle.putBundle(String.valueOf(i), bundle2);
+                    i++;
+                }
+            }
+            message.what = 2;
+            message.setData(bundle);
+            pianoPlay.pianoPlayHandler.handleMessage(message);
         }
     }
 
-    static void m3949a(int i, String str, OnlineBaseVO msg) {
+    static void m3949a(int i, OnlineBaseVO msg) {
         int i2 = 0;
         Message message = new Message();
         Bundle bundle = new Bundle();
         Bundle bundle2;
-        JSONObject jSONObject;
         Bundle bundle3;
-        JSONObject jSONObject2;
-        JSONObject jSONObject3;
         Handler handler;
-        JSONArray jSONArray;
-        int length;
-        String string;
         switch (i) {
             case 2:
                 OnlineUserInfoDialogVO userInfoDialog = msg.getUserInfoDialog();
@@ -129,61 +122,49 @@ final class JsonHandle {
                     ((OLPlayHall) JPStack.top()).olPlayHallHandler.handleMessage(message);
                 } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
                     ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
+                } else if (JPStack.top() instanceof OLPlayHallRoom) {
+                    ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                 }
                 break;
             case 3:
                 message.what = 5;
                 bundle2 = new Bundle();
-                try {
-                    JSONObject jSONObject4 = new JSONObject(str);
-                    bundle2.putString("S", jSONObject4.getString("S"));
-                    bundle2.putInt("D", jSONObject4.getInt("D"));
-                    message.setData(bundle2);
-                    if (JPStack.top() instanceof OLPlayRoom) {
-                        ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
-                        return;
-                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
-                        return;
-                    }
+                bundle2.putString("S", msg.getPlayStart().getSongPath());
+                bundle2.putInt("D", msg.getPlayStart().getTune());
+                message.setData(bundle2);
+                if (JPStack.top() instanceof OLPlayRoom) {
+                    ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                     return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                    ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                     return;
                 }
+                return;
             case 5:
-                try {
-                    message.what = 3;
-                    JSONArray jSONArray2 = new JSONArray(GZIP.ZIPTo(new JSONObject(str).getString("L")));
-                    int length2 = jSONArray2.length();
-                    while (i2 < length2) {
-                        jSONObject = jSONArray2.getJSONObject(i2);
-                        bundle3 = new Bundle();
-                        bundle3.putString("I", jSONObject.getString("I"));
-                        bundle3.putString("N", jSONObject.getString("N"));
-                        bundle3.putString("SC", jSONObject.getString("SC"));
-                        JSONObject jSONObject5 = new JSONObject(jSONObject.getString("SI"));
-                        bundle3.putString("P", jSONObject5.getString("P"));
-                        bundle3.putString("C", jSONObject5.getString("C"));
-                        bundle3.putString("G", jSONObject5.getString("G"));
-                        bundle3.putString("B", jSONObject5.getString("B"));
-                        bundle3.putString("M", jSONObject5.getString("M"));
-                        bundle3.putString("T", jSONObject5.getString("T"));
-                        bundle3.putString("E", jSONObject5.getString("E"));
-                        bundle3.putString("GR", jSONObject5.getString("GR"));
-                        bundle.putBundle(String.valueOf(i2), bundle3);
-                        i2++;
-                    }
-                    message.setData(bundle);
-                    if (JPStack.top() instanceof PianoPlay) {
-                        ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
-                        return;
-                    }
-                    return;
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
+                message.what = 3;
+                OnlinePlayFinishVO playFinish = msg.getPlayFinish();
+                for (OnlinePlayGradeVO playGrade : playFinish.getPlayGradeList()) {
+                    bundle3 = new Bundle();
+                    bundle3.putString("I", playGrade.getIsPlaying() ? "P" : "");
+                    bundle3.putString("N", playGrade.getName());
+                    bundle3.putString("SC", String.valueOf(playGrade.getScore()));
+                    bundle3.putString("P", String.valueOf(playGrade.getGrade().getPerfect()));
+                    bundle3.putString("C", String.valueOf(playGrade.getGrade().getCool()));
+                    bundle3.putString("G", String.valueOf(playGrade.getGrade().getGreat()));
+                    bundle3.putString("B", String.valueOf(playGrade.getGrade().getBad()));
+                    bundle3.putString("M", String.valueOf(playGrade.getGrade().getMiss()));
+                    bundle3.putString("T", String.valueOf(playGrade.getGrade().getCombo()));
+                    bundle3.putString("E", String.valueOf(playGrade.getGrade().getExp()));
+                    bundle3.putString("GR", String.valueOf(playGrade.getGrade().getGradeColor()));
+                    bundle.putBundle(String.valueOf(i2), bundle3);
+                    i2++;
+                }
+                message.setData(bundle);
+                if (JPStack.top() instanceof PianoPlay) {
+                    ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                     return;
                 }
+                return;
             case 9:
                 message.what = 8;
                 if (JPStack.top() instanceof OLPlayRoom) {
@@ -225,11 +206,10 @@ final class JsonHandle {
                 return;
             case 15:
                 try {
-                    jSONObject3 = new JSONObject(str);
                     message.what = 3;
                     bundle2 = new Bundle();
-                    bundle2.putString("song_path", jSONObject3.getString("S").replace("\\/", "/"));
-                    bundle2.putInt("diao", jSONObject3.getInt("D"));
+                    bundle2.putString("song_path", msg.getPlaySong().getSongPath().replace("\\/", "/"));
+                    bundle2.putInt("diao", msg.getPlaySong().getTune());
                     message.setData(bundle2);
                     if (JPStack.top() instanceof OLPlayRoom) {
                         ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
@@ -243,85 +223,73 @@ final class JsonHandle {
                 }
                 return;
             case 17:
-                try {
-                    jSONObject3 = new JSONObject(str);
-                    if (JPStack.top() instanceof OLPlayHallRoom) {
-                        handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
-                        if (handler != null) {
-                            message.what = 6;
-                            if (!str.isEmpty()) {
-                                bundle.putInt("C", jSONObject3.getInt("C"));
-                                bundle.putInt("D", jSONObject3.getInt("D"));
-                                bundle.putString("U", jSONObject3.getString("U"));
-                                bundle.putString("M", jSONObject3.getString("M"));
-                                message.setData(bundle);
-                                handler.handleMessage(message);
-                                return;
-                            }
-                            return;
-                        }
-                        return;
-                    }
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
-            case 24:
+//                try {
+//                    jSONObject3 = new JSONObject(str);
+//                    if (JPStack.top() instanceof OLPlayHallRoom) {
+//                        handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
+//                        if (handler != null) {
+//                            message.what = 6;
+//                            if (!str.isEmpty()) {
+//                                bundle.putInt("C", jSONObject3.getInt("C"));
+//                                bundle.putInt("D", jSONObject3.getInt("D"));
+//                                bundle.putString("U", jSONObject3.getString("U"));
+//                                bundle.putString("M", jSONObject3.getString("M"));
+//                                message.setData(bundle);
+//                                handler.handleMessage(message);
+//                                return;
+//                            }
+//                            return;
+//                        }
+//                        return;
+//                    }
+//                    return;
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    return;
+//                }
+                return;
+            case 23:
                 message.what = 1;
                 message.arg1 = 0;
-                try {
-                    jSONArray = new JSONArray(str);
-                    length = jSONArray.length();
-                    while (i2 < length) {
-                        jSONObject = jSONArray.getJSONObject(i2);
-                        bundle3 = new Bundle();
-                        bundle3.putString("G", jSONObject.getString("G"));
-                        bundle3.putString("U", jSONObject.getString("U"));
-                        bundle3.putString("M", jSONObject.getString("M"));
-                        bundle.putBundle(String.valueOf(i2), bundle3);
-                        i2++;
-                    }
-                    message.setData(bundle);
-                    if (JPStack.top() instanceof PianoPlay) {
-                        ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
-                        return;
-                    }
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                OnlineLoadPlayUserVO loadPlayUser = msg.getLoadPlayUser();
+                for (OnlinePlayUserVO playUser : loadPlayUser.getPlayUserList()) {
+                    bundle3 = new Bundle();
+                    bundle3.putString("G", String.valueOf(playUser.getHand()));
+                    bundle3.putString("U", playUser.getName());
+                    bundle3.putString("M", String.valueOf(playUser.getMode()));
+                    bundle.putBundle(String.valueOf(i2), bundle3);
+                    i2++;
+                }
+                message.setData(bundle);
+                if (JPStack.top() instanceof PianoPlay) {
+                    ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                     return;
                 }
+                return;
             case 27:
-                try {
-                    jSONObject2 = new JSONObject(str);
-                    message.what = 4;
-                    bundle.putString("U", jSONObject2.getString("U"));
-                    bundle.putString("M", "推荐歌曲:");
-                    bundle.putString("I", jSONObject2.getString("I"));
-                    bundle.putInt("D", 0);
-                    bundle.putInt("T", 0);
-                    message.setData(bundle);
-                    if (JPStack.top() instanceof OLPlayRoom) {
-                        ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
-                        return;
-                    } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
-                        return;
-                    }
+                message.what = 4;
+                bundle.putString("U", msg.getRecommendSong().getName());
+                bundle.putString("M", "推荐歌曲:");
+                bundle.putString("I", msg.getRecommendSong().getSongPath());
+                bundle.putInt("D", 0);
+                bundle.putInt("T", 0);
+                message.setData(bundle);
+                if (JPStack.top() instanceof OLPlayRoom) {
+                    ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
                     return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
+                    ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                     return;
                 }
+                return;
             case 31:
                 OnlineSetUserInfoVO setUserInfo = msg.getSetUserInfo();
                 int type = setUserInfo.getType();
                 if (type == 3 || type == 4) {
                     bundle = new Bundle();
                     bundle.putInt("T", 1);
-                    bundle.putString("I", setUserInfo.getCoupleTitle());
-                    bundle.putString("N", setUserInfo.getMessage());
+                    bundle.putString("I", setUserInfo.getMessage());
+                    bundle.putString("N", setUserInfo.getCoupleTitle());
                     message = new Message();
                     message.what = 1;
                     message.setData(bundle);
@@ -357,7 +325,7 @@ final class JsonHandle {
                         return;
                 }
                 if (handler != null) {
-                    string = setUserInfo.getName();
+                    String string = setUserInfo.getName();
                     if (!string.isEmpty()) {
                         bundle.putInt("T", type);
                         if (type == 1) {
@@ -376,24 +344,18 @@ final class JsonHandle {
             case 32:
                 message.what = 1;
                 message.arg1 = 1;
-                try {
-                    jSONArray = new JSONArray(str);
-                    length = jSONArray.length();
-                    while (i2 < length) {
-                        jSONObject = jSONArray.getJSONObject(i2);
-                        bundle3 = new Bundle();
-                        bundle3.putString("G", jSONObject.getString("G"));
-                        bundle3.putString("U", jSONObject.getString("U"));
-                        bundle3.putString("M", jSONObject.getString("M"));
-                        bundle.putBundle(String.valueOf(i2), bundle3);
-                        i2++;
-                    }
-                    message.setData(bundle);
-                    if (JPStack.top() instanceof PianoPlay) {
-                        ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                OnlineSetMiniGradeVO setMiniGrade = msg.getSetMiniGrade();
+                for (OnlineMiniGradeOnVO miniGradeOn : setMiniGrade.getMiniGradeOnList()) {
+                    bundle3 = new Bundle();
+                    bundle3.putString("G", String.valueOf(miniGradeOn.getHand()));
+                    bundle3.putString("U", miniGradeOn.getName());
+                    bundle3.putString("M", String.valueOf(miniGradeOn.getMode()));
+                    bundle.putBundle(String.valueOf(i2), bundle3);
+                    i2++;
+                }
+                message.setData(bundle);
+                if (JPStack.top() instanceof PianoPlay) {
+                    ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                 }
                 break;
             case 37:
@@ -436,7 +398,7 @@ final class JsonHandle {
                         return;
                 }
                 if (handler != null) {
-                    string = dialog.getMessage();
+                    String string = dialog.getMessage();
                     if (!string.isEmpty()) {
                         bundle.putInt("T", type);
                         bundle.putString("Ti", dialog.getTitle());
@@ -518,17 +480,17 @@ final class JsonHandle {
     static void loadRoomList(OnlineBaseVO msg) {
         Bundle bundle = new Bundle();
         Message message = new Message();
-        OLPlayHall olPlayHall = null;
+        OLPlayHall olPlayHall;
         message.what = 3;
         int i = 0;
         OnlineLoadRoomListVO loadRoomList = msg.getLoadRoomList();
-        for (OnlineRoomVO roomRaw : loadRoomList.getRoomList()) {
-            Bundle bundle2 = new Bundle();
-            Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
-                    roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
-                    roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
-            if (JPStack.top() instanceof OLPlayHall) {
-                olPlayHall = (OLPlayHall) JPStack.top();
+        if (JPStack.top() instanceof OLPlayHall) {
+            olPlayHall = (OLPlayHall) JPStack.top();
+            for (OnlineRoomVO roomRaw : loadRoomList.getRoomList()) {
+                Bundle bundle2 = new Bundle();
+                Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
+                        roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
+                        roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
                 olPlayHall.mo2825a(room.getRoomID(), room);
                 bundle2.putByte("I", room.getRoomID());
                 bundle2.putString("N", room.getRoomName());
@@ -540,9 +502,9 @@ final class JsonHandle {
                 bundle2.putInt("D", room.getRoomMode());
                 bundle.putBundle(String.valueOf(i), bundle2);
             }
+            message.setData(bundle);
+            olPlayHall.olPlayHallHandler.handleMessage(message);
         }
-        message.setData(bundle);
-        olPlayHall.olPlayHallHandler.handleMessage(message);
     }
 
     static void m3951a(OnlineBaseVO msg, String str2) {

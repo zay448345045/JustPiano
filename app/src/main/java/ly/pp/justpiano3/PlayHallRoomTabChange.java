@@ -2,8 +2,6 @@ package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
 
-import org.json.JSONObject;
-
 import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
 
@@ -25,7 +23,6 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
                 olPlayHallRoom.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
             }
         }
-        JSONObject jSONObject;
         switch (str) {
             case "tab1":
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();

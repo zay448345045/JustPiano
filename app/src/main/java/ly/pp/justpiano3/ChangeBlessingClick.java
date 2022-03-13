@@ -44,6 +44,7 @@ final class ChangeBlessingClick implements OnClickListener {
             builder.setMessage(valueOf);
             builder.setName(f5460d);
             olPlayHallRoom.connectionService.writeData(35, builder.build());
+            Toast.makeText(olPlayHallRoom, "发送成功!", Toast.LENGTH_SHORT).show();
             olPlayHallRoom.mailList.clear();
             String format = SimpleDateFormat.getDateInstance(2, Locale.CHINESE).format(new Date());
             Bundle bundle = new Bundle();

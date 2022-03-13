@@ -134,19 +134,65 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         }
     }
 
-    final void sendMsg(byte b, byte b2, String str) {
-        if (connectionService != null) {
-            connectionService.writeData(b, (byte) 0, b2, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     final void sendMsg(int type, MessageLite message) {
         if (connectionService != null) {
             connectionService.writeData(type, message);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void showInfoDialog(Bundle b) {
+        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        try {
+            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
+            ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
+            ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
+            ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
+            ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
+            TextView textView = inflate.findViewById(R.id.user_info);
+            TextView textView2 = inflate.findViewById(R.id.user_psign);
+            imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
+            if (User.getTrousers() <= 0) {
+                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_t" + (User.getTrousers() - 1) + ".png")));
+            }
+            if (User.getJacket() <= 0) {
+                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_j" + (User.getJacket() - 1) + ".png")));
+            }
+            if (User.getHair() <= 0) {
+                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
+            }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
+            }
+            if (User.getShoes() <= 0) {
+                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_s" + (User.getShoes() - 1) + ".png")));
+            }
+            int lv = b.getInt("LV");
+            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
+            textView.setText("用户名称:" + b.getString("U")
+                    + "\n用户等级:Lv." + lv
+                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
+                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n所在家族:" + b.getString("F")
+                    + "\n在线曲库冠军数:" + b.getInt("W")
+                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
+            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
+            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, User.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -358,7 +404,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
-        JSONObject jSONObject;
         switch (view.getId()) {
             case R.id.ol_player_mod:
             case R.id.ol_dress_button:

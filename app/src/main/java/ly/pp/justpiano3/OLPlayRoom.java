@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.google.protobuf.MessageLite;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -47,6 +46,7 @@ import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomHandDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlinePlaySongDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlinePlayStartDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
 
@@ -129,7 +129,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         str = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
         String str1 = str.substring(6, str.length() - 3);
         jpapplication.setNowSongsName(str1);
-        sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + str1);
+        OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+        builder.setTune(diao);
+        builder.setSongPath(str1);
+        sendMsg(15, builder.build());
         query.close();
         if (moreSongs != null) {
             moreSongs.dismiss();
@@ -353,15 +356,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    @Override
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
-        if (connectionService != null) {
-            connectionService.writeData(b, b2, b3, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public final void sendMsg(int type, MessageLite msg) {
         if (connectionService != null) {
             connectionService.writeData(type, msg);
@@ -479,7 +473,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         return strArr;
     }
 
-    final void mo2865b(String str) {
+    final void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -526,7 +520,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         Bundle data = message.getData();
         switch (message.what) {
             case 1:
-                sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + data.getString("S"));
+                OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+                builder.setTune(diao);
+                builder.setSongPath(data.getString("S"));
+                sendMsg(15, builder.build());
                 break;
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
@@ -561,7 +558,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     @Override
     public void onClick(View view) {
         String str;
-        JSONObject jSONObject;
         int i;
         switch (view.getId()) {
             case R.id.favor:
@@ -871,7 +867,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     } else {
                         diao = 6;
                     }
-                    sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + jpapplication.getNowSongsName());
+                    OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                    builder1.setTune(diao);
+                    builder1.setSongPath(jpapplication.getNowSongsName());
+                    sendMsg(15, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
                     olPlayRoomHandler.handleMessage(obtainMessage);
@@ -889,7 +888,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     } else {
                         diao = -6;
                     }
-                    sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + jpapplication.getNowSongsName());
+                    OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                    builder1.setTune(diao);
+                    builder1.setSongPath(jpapplication.getNowSongsName());
+                    sendMsg(15, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
                     olPlayRoomHandler.handleMessage(obtainMessage);

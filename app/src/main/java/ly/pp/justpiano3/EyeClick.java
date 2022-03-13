@@ -35,7 +35,24 @@ final class EyeClick implements OnItemClickListener {
                 builder.setBuyClothesId(i);
                 olPlayDressRoom.sendMsg(33, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", new DialogDismissClick());
+            });
+            if (olPlayDressRoom.eyeTry.contains(i)) {
+                jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.eyeImage.setImageBitmap(olPlayDressRoom.none);
+                    olPlayDressRoom.eyeNow = -1;
+                    ((DressAdapter) olPlayDressRoom.eyeGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.eyeTry.remove((Integer) i);
+                });
+            } else {
+                jpdialog.setSecondButton("试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.eyeImage.setImageBitmap(olPlayDressRoom.eyeArray.get(i));
+                    olPlayDressRoom.eyeNow = i;
+                    ((DressAdapter) olPlayDressRoom.eyeGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.eyeTry.add(i);
+                });
+            }
             try {
                 jpdialog.showDialog();
             } catch (Exception e3) {

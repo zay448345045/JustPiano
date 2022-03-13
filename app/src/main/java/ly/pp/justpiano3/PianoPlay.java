@@ -33,6 +33,7 @@ import java.util.Timer;
 
 import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineQuitRoomDTO;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
@@ -159,8 +160,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     finish();
                 });
                 finishView.setVisibility(View.GONE);
-                sendMsg((byte) 23, (byte) 0, "", null);
-                songName.setOnClickListener(v -> sendMsg((byte) 23, (byte) 0, "", null));
+                sendMsg(23, OnlineLoadPlayUserDTO.getDefaultInstance());
+                songName.setOnClickListener(v -> sendMsg(23, OnlineLoadPlayUserDTO.getDefaultInstance()));
                 return;
             case 3:    //考级
                 songName.setText("请稍后...");
@@ -296,14 +297,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             JPApplication.preloadSounds(i);
         }
         JPApplication.confirmLoadSounds();
-    }
-
-    public final void sendMsg(byte b, byte b2, String str, byte[] bArr) {
-        if (connectionService != null) {
-            connectionService.writeData(b, (byte) 0, b2, str, bArr);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public final void sendMsg(int type, MessageLite msg) {

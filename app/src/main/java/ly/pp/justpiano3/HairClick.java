@@ -33,8 +33,26 @@ final class HairClick implements OnItemClickListener {
                 builder.setType(2);
                 builder.setBuyClothesType(0);
                 builder.setBuyClothesId(i);
+                olPlayDressRoom.sendMsg(33, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", new DialogDismissClick());
+            });
+            if (olPlayDressRoom.hairTry.contains(i)) {
+                jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.none);
+                    olPlayDressRoom.hairNow = -1;
+                    ((DressAdapter) olPlayDressRoom.hairGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.hairTry.remove((Integer) i);
+                });
+            } else {
+                jpdialog.setSecondButton("试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.hairArray.get(i));
+                    olPlayDressRoom.hairNow = i;
+                    ((DressAdapter) olPlayDressRoom.hairGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.hairTry.add(i);
+                });
+            }
             try {
                 jpdialog.showDialog();
             } catch (Exception e3) {

@@ -7,7 +7,7 @@ option java_outer_classname = "OnlineRequest";
 
 // 服务器接收协议
 message OnlineBaseDTO {
-  reserved 1, 11, 17, 20, 22, 27;
+  reserved 1, 11, 17, 20, 22, 24, 27;
   // 消息体
   oneof request {
     // 查看用户个人资料对话框
@@ -16,6 +16,8 @@ message OnlineBaseDTO {
     OnlinePlayStartDTO play_start = 3;
     // 用户房间中状态变化
     OnlineChangeRoomUserStatusDTO change_room_user_status = 4;
+    // 弹奏成绩判定
+    OnlinePlayFinishDTO play_finish = 5;
     // 创建房间
     OnlineCreateRoomDTO create_room = 6;
     // 进入房间
@@ -42,6 +44,10 @@ message OnlineBaseDTO {
     OnlineLoadRoomListDTO load_room = 19;
     // 房间内初次加载所有用户数据
     OnlineLoadRoomPositionDTO load_room_position = 21;
+    // 房间开始弹奏后加载用户
+    OnlineLoadPlayUserDTO load_play_user = 23;
+    // 弹奏界面左上角成绩条
+    OnlineMiniGradeDTO mini_grade = 25;
     // 商店
     OnlineShopDTO shop = 26;
     // 主界面加载用户信息及大厅列表
@@ -52,6 +58,8 @@ message OnlineBaseDTO {
     OnlineQuitHallDTO quit_hall = 30;
     // 增删好友、解除搭档、设置祝语
     OnlineSetUserInfoDTO set_user_info = 31;
+    // 显示/隐藏弹奏界面左上角成绩条
+    OnlineSetMiniGradeDTO set_mini_grade = 32;
     // 更换服装
     OnlineChangeClothesDTO change_clothes = 33;
     // 查看好友、私信和主界面查看搭档
@@ -96,6 +104,14 @@ message OnlinePlayStartDTO {
 message OnlineChangeRoomUserStatusDTO {
   // 新状态
   string status = 1;
+}
+
+// 弹奏成绩判定
+message OnlinePlayFinishDTO {
+  // 加密时间戳
+  uint64 code = 1;
+  // 弹奏状态数组
+  string status_array = 2;
 }
 
 // 创建房间
@@ -211,6 +227,17 @@ message OnlineLoadRoomPositionDTO {
 
 }
 
+// 房间开始弹奏后加载用户
+message OnlineLoadPlayUserDTO {
+
+}
+
+// 弹奏界面左上角成绩条
+message OnlineMiniGradeDTO {
+  // 弹奏状态数组
+  string status_array = 1;
+}
+
 // 商店
 message OnlineShopDTO {
   // 消息类型
@@ -247,6 +274,12 @@ message OnlineSetUserInfoDTO {
   optional bool reject = 3;
   // 祝语
   optional string declaration = 4;
+}
+
+// 显示/隐藏弹奏界面左上角成绩条
+message OnlineSetMiniGradeDTO {
+  // 是否显示左上角成绩条
+  bool mini_grade_on = 1;
 }
 
 // 更换服装

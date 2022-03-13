@@ -55,7 +55,7 @@ public final class LoadBackgrounds extends Thread {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
                 }
-                if (jpapplication.getGameMode() != 3) {  //不是欣赏模式
+                if (jpapplication.getGameMode() != 3) {  // 不是欣赏模式
                     playView.mo2930b(canvas);
                 } else {
                     playView.mo2931c(canvas);

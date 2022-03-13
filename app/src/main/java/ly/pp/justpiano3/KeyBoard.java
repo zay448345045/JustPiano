@@ -367,7 +367,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
-                            String date = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String date = new SimpleDateFormat("yyyy年MM月dd日HH点mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
                             recordFileName = date + "录音.wav";
                             JPApplication.setRecordFilePath(recordFilePath);

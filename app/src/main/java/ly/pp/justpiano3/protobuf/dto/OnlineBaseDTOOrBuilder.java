@@ -90,6 +90,33 @@ public interface OnlineBaseDTOOrBuilder extends
 
   /**
    * <pre>
+   * 弹奏成绩判定
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+   * @return Whether the playFinish field is set.
+   */
+  boolean hasPlayFinish();
+  /**
+   * <pre>
+   * 弹奏成绩判定
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+   * @return The playFinish.
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO getPlayFinish();
+  /**
+   * <pre>
+   * 弹奏成绩判定
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO play_finish = 5;</code>
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTOOrBuilder getPlayFinishOrBuilder();
+
+  /**
+   * <pre>
    * 创建房间
    * </pre>
    *
@@ -441,6 +468,60 @@ public interface OnlineBaseDTOOrBuilder extends
 
   /**
    * <pre>
+   * 房间开始弹奏后加载用户
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+   * @return Whether the loadPlayUser field is set.
+   */
+  boolean hasLoadPlayUser();
+  /**
+   * <pre>
+   * 房间开始弹奏后加载用户
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+   * @return The loadPlayUser.
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO getLoadPlayUser();
+  /**
+   * <pre>
+   * 房间开始弹奏后加载用户
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO load_play_user = 23;</code>
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTOOrBuilder getLoadPlayUserOrBuilder();
+
+  /**
+   * <pre>
+   * 弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+   * @return Whether the miniGrade field is set.
+   */
+  boolean hasMiniGrade();
+  /**
+   * <pre>
+   * 弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+   * @return The miniGrade.
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO getMiniGrade();
+  /**
+   * <pre>
+   * 弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO mini_grade = 25;</code>
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTOOrBuilder getMiniGradeOrBuilder();
+
+  /**
+   * <pre>
    * 商店
    * </pre>
    *
@@ -573,6 +654,33 @@ public interface OnlineBaseDTOOrBuilder extends
    * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO set_user_info = 31;</code>
    */
   ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTOOrBuilder getSetUserInfoOrBuilder();
+
+  /**
+   * <pre>
+   * 显示/隐藏弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+   * @return Whether the setMiniGrade field is set.
+   */
+  boolean hasSetMiniGrade();
+  /**
+   * <pre>
+   * 显示/隐藏弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+   * @return The setMiniGrade.
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO getSetMiniGrade();
+  /**
+   * <pre>
+   * 显示/隐藏弹奏界面左上角成绩条
+   * </pre>
+   *
+   * <code>.ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO set_mini_grade = 32;</code>
+   */
+  ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTOOrBuilder getSetMiniGradeOrBuilder();
 
   /**
    * <pre>

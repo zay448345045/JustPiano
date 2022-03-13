@@ -17,8 +17,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import org.json.JSONObject;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO;
 
 public final class PlayView extends SurfaceView implements Callback {
     static long serialID = 2825651233768L;
@@ -469,7 +469,9 @@ public final class PlayView extends SurfaceView implements Callback {
                 uploadNoteIndex++;
                 return returnNoteValue;
             }
-            pianoPlay.sendMsg((byte) 25, pianoPlay.hallID, "", uploadTimeArray);
+            OnlineMiniGradeDTO.Builder builder = OnlineMiniGradeDTO.newBuilder();
+            builder.setStatusArray(GZIP.arrayToZIP(uploadTimeArray));
+            pianoPlay.sendMsg(25, builder.build());
             uploadNoteIndex = 0;
         }
         return returnNoteValue;
@@ -555,7 +557,6 @@ public final class PlayView extends SurfaceView implements Callback {
         if (notesList.size() == 0) {
             pianoPlay.isPlayingStart = false;
             startFirstNoteTouching = false;
-            JSONObject jSONObject = new JSONObject();
             pianoPlay.f4620k = true;
             int size2;
             byte[] bArr;
@@ -600,16 +601,13 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    try {
-                        jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        x = pianoPlay.roomBundle.getByte("ID") * serialID;
-                        time = jpapplication.getServerTime();
-                        crypt = (time >>> 12 | time << 52) ^ x;
-                        jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 5, (byte) 0, jSONObject.toString(), null);
-                    } catch (Exception e3) {
-                        e3.printStackTrace();
-                    }
+                    OnlinePlayFinishDTO.Builder builder2 = OnlinePlayFinishDTO.newBuilder();
+                    builder2.setStatusArray(GZIP.arrayToZIP(bArr));
+                    x = pianoPlay.roomBundle.getByte("ID") * serialID;
+                    time = jpapplication.getServerTime();
+                    crypt = (time >>> 12 | time << 52) ^ x;
+                    builder2.setCode(crypt);
+                    pianoPlay.sendMsg(5, builder2.build());
                     break;
                 default:
                     Intent intent = new Intent();

@@ -389,14 +389,6 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
     }
 
-    public final void sendMsg(byte b, byte b2, String str) {
-        if (cs != null) {
-            cs.writeData(b, b2, (byte) 0, str, null);
-        } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public final void sendMsg(int type, MessageLite msg) {
         if (cs != null) {
             cs.writeData(type, msg);

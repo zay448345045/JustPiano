@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
+/**
+ * 标记接口
+ */
 public interface OLPlayRoomInterface {
-
-    void sendMsg(byte b, byte b2, byte b3, String str);
 }
