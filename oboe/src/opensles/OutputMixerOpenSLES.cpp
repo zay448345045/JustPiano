@@ -49,7 +49,7 @@ SLresult OutputMixerOpenSL::open() {
 
     return result;
 
-    error:
+error:
     close();
     return result;
 }

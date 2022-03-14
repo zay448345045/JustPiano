@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
+
 final class GetPrize implements OnClickListener {
     private final OLChallenge challenge;
 
@@ -14,13 +16,11 @@ final class GetPrize implements OnClickListener {
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
         if (challenge.jpapplication.getConnectionService() != null) {
-            try {
-                challenge.jpapplication.getConnectionService().writeData((byte) 16, (byte) 0, challenge.hallID, "6", null);
-                Toast.makeText(challenge, "领取奖励成功!", Toast.LENGTH_SHORT).show();
-                dialogInterface.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+            builder.setType(6);
+            challenge.jpapplication.getConnectionService().writeData(16, builder.build());
+            Toast.makeText(challenge, "领取奖励成功!", Toast.LENGTH_SHORT).show();
+            dialogInterface.dismiss();
         }
     }
 }

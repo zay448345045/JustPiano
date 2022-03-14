@@ -18,6 +18,7 @@
 #define OBOE_STREAM_AAUDIO_H_
 
 #include <atomic>
+#include <shared_mutex>
 #include <mutex>
 #include <thread>
 
@@ -34,99 +35,104 @@ namespace oboe {
  * Do not create this class directly.
  * Use an OboeStreamBuilder to create one.
  */
-    class AudioStreamAAudio : public AudioStream {
-    public:
-        AudioStreamAAudio();
+class AudioStreamAAudio : public AudioStream {
+public:
+    AudioStreamAAudio();
+    explicit AudioStreamAAudio(const AudioStreamBuilder &builder);
 
-        explicit AudioStreamAAudio(const AudioStreamBuilder &builder);
+    virtual ~AudioStreamAAudio() = default;
 
-        virtual ~AudioStreamAAudio() = default;
+    /**
+     *
+     * @return true if AAudio is supported on this device.
+     */
+    static bool isSupported();
 
-        /**
-         *
-         * @return true if AAudio is supported on this device.
-         */
-        static bool isSupported();
+    // These functions override methods in AudioStream.
+    // See AudioStream for documentation.
+    Result open() override;
+    Result close() override;
 
-        // These functions override methods in AudioStream.
-        // See AudioStream for documentation.
-        Result open() override;
+    Result requestStart() override;
+    Result requestPause() override;
+    Result requestFlush() override;
+    Result requestStop() override;
 
-        Result close() override;
+    ResultWithValue<int32_t> write(const void *buffer,
+                  int32_t numFrames,
+                  int64_t timeoutNanoseconds) override;
 
-        Result requestStart() override;
+    ResultWithValue<int32_t> read(void *buffer,
+                 int32_t numFrames,
+                 int64_t timeoutNanoseconds) override;
 
-        Result requestPause() override;
+    ResultWithValue<int32_t> setBufferSizeInFrames(int32_t requestedFrames) override;
+    int32_t getBufferSizeInFrames() override;
+    ResultWithValue<int32_t> getXRunCount()  override;
+    bool isXRunCountSupported() const override { return true; }
 
-        Result requestFlush() override;
+    ResultWithValue<double> calculateLatencyMillis() override;
 
-        Result requestStop() override;
+    Result waitForStateChange(StreamState currentState,
+                              StreamState *nextState,
+                              int64_t timeoutNanoseconds) override;
 
-        ResultWithValue<int32_t> write(const void *buffer,
-                                       int32_t numFrames,
-                                       int64_t timeoutNanoseconds) override;
+    Result getTimestamp(clockid_t clockId,
+                                       int64_t *framePosition,
+                                       int64_t *timeNanoseconds) override;
 
-        ResultWithValue<int32_t> read(void *buffer,
-                                      int32_t numFrames,
-                                      int64_t timeoutNanoseconds) override;
+    StreamState getState() override;
 
-        ResultWithValue<int32_t> setBufferSizeInFrames(int32_t requestedFrames) override;
+    AudioApi getAudioApi() const override {
+        return AudioApi::AAudio;
+    }
 
-        int32_t getBufferSizeInFrames() override;
+    DataCallbackResult callOnAudioReady(AAudioStream *stream,
+                                                   void *audioData,
+                                                   int32_t numFrames);
 
-        int32_t getFramesPerBurst() override;
+    bool                 isMMapUsed();
 
-        ResultWithValue<int32_t> getXRunCount() const override;
+protected:
+    static void internalErrorCallback(
+            AAudioStream *stream,
+            void *userData,
+            aaudio_result_t error);
 
-        bool isXRunCountSupported() const override { return true; }
+    void *getUnderlyingStream() const override {
+        return mAAudioStream.load();
+    }
 
-        ResultWithValue<double> calculateLatencyMillis() override;
+    void updateFramesRead() override;
+    void updateFramesWritten() override;
 
-        Result waitForStateChange(StreamState currentState,
-                                  StreamState *nextState,
-                                  int64_t timeoutNanoseconds) override;
+    void logUnsupportedAttributes();
 
-        Result getTimestamp(clockid_t clockId,
-                            int64_t *framePosition,
-                            int64_t *timeNanoseconds) override;
+private:
+    // Must call under mLock. And stream must NOT be nullptr.
+    Result requestStop_l(AAudioStream *stream);
 
-        StreamState getState() const override;
+    /**
+     * Launch a thread that will stop the stream.
+     */
+    void launchStopThread();
 
-        AudioApi getAudioApi() const override {
-            return AudioApi::AAudio;
-        }
+    // Time to sleep in order to prevent a race condition with a callback after a close().
+    // Two milliseconds may be enough but 10 msec is even safer.
+    static constexpr int kDelayBeforeCloseMillis = 10;
 
-        DataCallbackResult callOnAudioReady(AAudioStream *stream,
-                                            void *audioData,
-                                            int32_t numFrames);
+    std::atomic<bool>    mCallbackThreadEnabled;
+    std::atomic<bool>    mStopThreadAllowed{false};
 
-        bool isMMapUsed();
+    // pointer to the underlying 'C' AAudio stream, valid if open, null if closed
+    std::atomic<AAudioStream *> mAAudioStream{nullptr};
+    std::shared_mutex           mAAudioStreamLock; // to protect mAAudioStream while closing
 
-    protected:
-        static void internalErrorCallback(
-                AAudioStream *stream,
-                void *userData,
-                aaudio_result_t error);
+    static AAudioLoader *mLibLoader;
 
-        void *getUnderlyingStream() const override {
-            return mAAudioStream.load();
-        }
-
-        void updateFramesRead() override;
-
-        void updateFramesWritten() override;
-
-        void logUnsupportedAttributes();
-
-    private:
-
-        std::atomic<bool> mCallbackThreadEnabled;
-
-        // pointer to the underlying AAudio stream, valid if open, null if closed
-        std::atomic<AAudioStream *> mAAudioStream{nullptr};
-
-        static AAudioLoader *mLibLoader;
-    };
+    // We may not use this but it is so small that it is not worth allocating dynamically.
+    AudioStreamErrorCallback mDefaultErrorCallback;
+};
 
 } // namespace oboe
 

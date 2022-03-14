@@ -182,6 +182,11 @@
                                     android:layout_height="wrap_content" />
 
                                 <ImageView
+                                    android:id="@+id/ol_player_eye"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
                                     android:id="@+id/ol_player_hair"
                                     android:layout_width="100dp"
                                     android:layout_height="wrap_content" />
@@ -279,15 +284,14 @@
                                 android:visibility="visible" />
 
                             <Button
-                                android:id="@+id/ol_shop_button"
+                                android:id="@+id/ol_bonus_button"
                                 android:layout_width="100dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="商城"
+                                android:text="在线奖励"
                                 android:textColor="@color/white1"
-                                android:textSize="18sp"
-                                android:visibility="gone" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -328,6 +332,11 @@
 
                                     <ImageView
                                         android:id="@+id/ol_couple_hair"
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content" />
+
+                                    <ImageView
+                                        android:id="@+id/ol_couple_eye"
                                         android:layout_width="100dp"
                                         android:layout_height="wrap_content" />
 
@@ -576,7 +585,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:layout_marginStart="3dp"
-                                        android:layout_weight="2"
+                                        android:layout_weight="1.4"
                                         android:gravity="center"
                                         android:text="名次"
                                         android:textColor="@color/songname"
@@ -623,7 +632,7 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"
-                                        android:layout_weight="2"
+                                        android:layout_weight="3"
                                         android:gravity="center"
                                         android:text="贡献度"
                                         android:textColor="@color/songname"
@@ -645,7 +654,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:layout_marginStart="3dp"
-                                        android:layout_weight="2"
+                                        android:layout_weight="1.4"
                                         android:gravity="center"
                                         android:text="(空)"
                                         android:textColor="@color/white1"
@@ -658,8 +667,7 @@
                                         android:layout_height="32dp"
                                         android:layout_marginStart="3dp"
                                         android:gravity="center"
-                                        android:src="@drawable/family"
-                                        android:text="(空)" />
+                                        android:src="@drawable/family" />
 
                                     <TextView
                                         android:id="@+id/ol_myfamily_name"
@@ -690,7 +698,7 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"
-                                        android:layout_weight="2"
+                                        android:layout_weight="3"
                                         android:gravity="center"
                                         android:text="(空)"
                                         android:textColor="@color/white1"
@@ -720,8 +728,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="120dp"
-                android:background="@drawable/umeng_common_gradient_orange"
                 android:textColor="@color/white1"
+                android:background="@color/brown"
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>

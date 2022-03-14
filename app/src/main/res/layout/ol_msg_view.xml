@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"
-        android:text="玩家"
+        android:text="用户"
         android:textColor="@color/white1"
         android:textColorHighlight="@color/black"
         android:textSize="12sp"

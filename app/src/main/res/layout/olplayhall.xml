@@ -64,7 +64,7 @@
                 android:background="@drawable/selector_ol_orange"
                 android:gravity="center"
                 android:keepScreenOn="true"
-                android:text="游戏大厅:"
+                android:text="大厅:"
                 android:textColor="@color/white1"
                 android:textSize="18sp"
                 android:textStyle="bold"

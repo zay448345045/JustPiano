@@ -2,15 +2,14 @@ package ly.pp.justpiano3;
 
 import android.content.Context;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 final class ReadPm {
     private Context context;
-    private String filepath;
     private InputStream inputstream;
     private byte[] noteArray;
     private byte[] tickArray;
@@ -20,15 +19,12 @@ final class ReadPm {
     private float leftNandu = 0;
     private int songTime = 0;
     private String songName = "";
-    private BufferedReader bufferedReader;
-    private InputStreamReader inputstreamreader;
     private int songNameLength = 0;
     private float nandu = 0;
 
     ReadPm(Context ct, String str) {
         context = ct;
-        filepath = str;
-        m4095i();
+        createWithSongPath(str);
     }
 
     ReadPm(byte[] bArr) {
@@ -39,15 +35,16 @@ final class ReadPm {
         try {
             inputstream = new ByteArrayInputStream(bArr);
             int pmSize = inputstream.available();
-            inputstreamreader = new InputStreamReader(inputstream);
-            bufferedReader = new BufferedReader(inputstreamreader);
-            songName = bufferedReader.readLine();
-            songName = songName.trim();
-            songNameLength = songName.getBytes().length;
-            int pmDataGroupSize = (pmSize - (songNameLength + 4)) / 4;
             byte[] pmData = new byte[pmSize];
-            inputstream.reset();
             inputstream.read(pmData);
+            for (int j = 0; j < pmData.length; j++) {
+                if (pmData[j] == 0x0A) {
+                    songName = new String(pmData, 0, j, StandardCharsets.UTF_8);
+                    songNameLength = j;
+                    break;
+                }
+            }
+            int pmDataGroupSize = (pmSize - (songNameLength + 4)) / 4;
             leftNandu = pmData[songNameLength + 1] / 10f;
             pm_2 = pmData[pmSize - 2];
             noteArray = new byte[pmDataGroupSize];
@@ -82,10 +79,6 @@ final class ReadPm {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
                     inputstream = null;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -96,10 +89,6 @@ final class ReadPm {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
                     inputstream = null;
                 } catch (IOException e3) {
                     e3.printStackTrace();
@@ -109,10 +98,6 @@ final class ReadPm {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
                     inputstream = null;
                 } catch (IOException e4) {
                     e4.printStackTrace();
@@ -121,19 +106,29 @@ final class ReadPm {
         }
     }
 
-    private void m4095i() {
+    private void createWithSongPath(String songPath) {
         int i = 0;
         try {
-            inputstream = context.getResources().getAssets().open(filepath);
+            inputstream = context.getResources().getAssets().open(songPath);
+        } catch (Exception e) {
+            try {
+                inputstream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Songs/" + songPath.substring(8));
+            } catch (Exception fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+        try {
             int pmSize = inputstream.available();
-            inputstreamreader = new InputStreamReader(inputstream);
-            bufferedReader = new BufferedReader(inputstreamreader);
-            songName = bufferedReader.readLine();
-            songNameLength = songName.getBytes().length;
-            int pmDataGroupSize = (pmSize - (songNameLength + 4)) / 4;
             byte[] pmData = new byte[pmSize];
-            inputstream.reset();
             inputstream.read(pmData);
+            for (int j = 0; j < pmData.length; j++) {
+                if (pmData[j] == 0x0A) {
+                    songName = new String(pmData, 0, j, StandardCharsets.UTF_8);
+                    songNameLength = j;
+                    break;
+                }
+            }
+            int pmDataGroupSize = (pmSize - (songNameLength + 4)) / 4;
             leftNandu = pmData[songNameLength + 1] / 10f;
             pm_2 = pmData[pmSize - 2];
             noteArray = new byte[pmDataGroupSize];
@@ -168,10 +163,6 @@ final class ReadPm {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
                     inputstream = null;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -181,10 +172,6 @@ final class ReadPm {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
                     inputstream = null;
                 } catch (IOException e3) {
                     e3.printStackTrace();
@@ -193,44 +180,59 @@ final class ReadPm {
         }
     }
 
-    final void mo3452a(Context context, String str) {
+    final void loadWithSongPath(Context context, String str) {
         try {
             inputstream = context.getResources().getAssets().open(str);
+        } catch (Exception e) {
+            try {
+                inputstream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Songs" + str.substring(8));
+            } catch (Exception fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+        try {
+            loadWithInputStream(inputstream);
+        } catch (Throwable e2) {
+            if (inputstream != null) {
+                try {
+                    inputstream.close();
+                    inputstream = null;
+                } catch (IOException e3) {
+                    e3.printStackTrace();
+                }
+            }
+        }
+    }
+
+    final void loadWithInputStream(InputStream inputstream) {
+        try {
+            this.inputstream = inputstream;
             int pmSize = inputstream.available();
-            inputstreamreader = new InputStreamReader(inputstream);
-            bufferedReader = new BufferedReader(inputstreamreader);
-            songName = bufferedReader.readLine();
-            songNameLength = songName.getBytes().length;
             byte[] pmData = new byte[pmSize];
-            inputstream.reset();
             inputstream.read(pmData);
+            for (int i = 0; i < pmData.length; i++) {
+                if (pmData[i] == 0x0A) {
+                    songName = new String(pmData, 0, i, StandardCharsets.UTF_8);
+                    songNameLength = i;
+                    break;
+                }
+            }
             leftNandu = pmData[songNameLength + 1] / 10f;
             for (int i = songNameLength + 2; i < pmSize; i += 4) {
                 songTime += pmData[i];
             }
             songTime /= 200;
             nandu = (float) pmData[pmSize - 1] / 10;
-            if (inputstream != null) {
-                try {
-                    inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
-                    inputstream = null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                inputstream.close();
+                inputstream = null;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } catch (Throwable e2) {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                    inputstreamreader.close();
-                    bufferedReader.close();
-                    bufferedReader = null;
-                    inputstreamreader = null;
-                    inputstream = null;
                 } catch (IOException e3) {
                     e3.printStackTrace();
                 }

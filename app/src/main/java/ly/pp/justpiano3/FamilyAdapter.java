@@ -17,7 +17,7 @@ import java.util.List;
 public final class FamilyAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;
     private List<HashMap> list;
-    private LayoutInflater li;
+    private final LayoutInflater li;
 
     FamilyAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
         this.list = list;
@@ -47,7 +47,7 @@ public final class FamilyAdapter extends BaseAdapter {
     @Override
     public final View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_c_family_view, null);
+            view = li.inflate(R.layout.ol_o_family_view, null);
         }
         if (list.size() == 0) {
             return view;

@@ -27,39 +27,37 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         String s = "";
         if (!searchSongs.get().f4948c.isEmpty()) {
-            do {
-                String str;
-                String str2;
-                if (searchSongs.get().f4958m == 6) {
-                    str = "GetTopListByKeywords";
-                    str2 = "6";
-                } else {
-                    str = "GetListByKeywords";
-                    str2 = "0";
+            String str;
+            String str2;
+            if (searchSongs.get().headType == 6) {
+                str = "GetTopListByKeywords";
+                str2 = "6";
+            } else {
+                str = "GetListByKeywords";
+                str2 = "0";
+            }
+            HttpPost httpPost = new HttpPost("http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + str);
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("version", searchSongs.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("head", str2));
+            arrayList.add(new BasicNameValuePair("keywords", searchSongs.get().f4948c));
+            arrayList.add(new BasicNameValuePair("user", searchSongs.get().jpapplication.getAccountName()));
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
+            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
+            try {
+                HttpResponse execute = defaultHttpClient.execute(httpPost);
+                if (execute.getStatusLine().getStatusCode() == 200) {
+                    s = EntityUtils.toString(execute.getEntity());
                 }
-                HttpPost httpPost = new HttpPost("http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + str);
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("version", searchSongs.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("head", str2));
-                arrayList.add(new BasicNameValuePair("keywords", searchSongs.get().f4948c));
-                arrayList.add(new BasicNameValuePair("user", searchSongs.get().jpapplication.getAccountName()));
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-                defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-                defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-                try {
-                    HttpResponse execute = defaultHttpClient.execute(httpPost);
-                    if (execute.getStatusLine().getStatusCode() == 200) {
-                        s = EntityUtils.toString(execute.getEntity());
-                    }
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                }
-            } while (!s.endsWith("\"}"));
+            } catch (Exception e3) {
+                e3.printStackTrace();
+            }
         }
         return s;
     }
@@ -71,10 +69,10 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     @Override
     protected final void onPostExecute(String str) {
         if (str.length() > 3) {
-            if (searchSongs.get().f4958m < 2) {
+            if (searchSongs.get().headType < 2) {
                 searchSongs.get().mo2963a(str, searchSongs.get().songsListView);
                 searchSongs.get().songsListView.setCacheColorHint(0x00000000);
-            } else if (searchSongs.get().f4958m == 6) {
+            } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
                         searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().m3841b(GZIP.ZIPTo(new JSONObject(str).getString("L")))));

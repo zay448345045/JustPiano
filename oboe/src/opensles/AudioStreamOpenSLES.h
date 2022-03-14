@@ -29,8 +29,8 @@
 
 namespace oboe {
 
-    constexpr int kBitsPerByte = 8;
-    constexpr int kBufferQueueLength = 2; // double buffered for callbacks
+constexpr int kBitsPerByte = 8;
+constexpr int kBufferQueueLength = 2; // double buffered for callbacks
 
 /**
  * INTERNAL USE ONLY
@@ -41,95 +41,91 @@ namespace oboe {
  * Use an OboeStreamBuilder to create one.
  */
 
-    class AudioStreamOpenSLES : public AudioStreamBuffered {
-    public:
+class AudioStreamOpenSLES : public AudioStreamBuffered {
+public:
 
-        AudioStreamOpenSLES();
+    AudioStreamOpenSLES();
+    explicit AudioStreamOpenSLES(const AudioStreamBuilder &builder);
 
-        explicit AudioStreamOpenSLES(const AudioStreamBuilder &builder);
+    virtual ~AudioStreamOpenSLES() = default;
 
-        virtual ~AudioStreamOpenSLES() = default;
+    virtual Result open() override;
 
-        virtual Result open() override;
+    /**
+     * Query the current state, eg. OBOE_STREAM_STATE_PAUSING
+     *
+     * @return state or a negative error.
+     */
+    StreamState getState() override { return mState.load(); }
 
-        virtual Result close() override;
+    AudioApi getAudioApi() const override {
+        return AudioApi::OpenSLES;
+    }
 
-        /**
-         * Query the current state, eg. OBOE_STREAM_STATE_PAUSING
-         *
-         * @return state or a negative error.
-         */
-        StreamState getState() const override { return mState.load(); }
+    /**
+     * Process next OpenSL ES buffer.
+     * Called by by OpenSL ES framework.
+     *
+     * This is public, but don't call it directly.
+     */
+    void processBufferCallback(SLAndroidSimpleBufferQueueItf bq);
 
-        int32_t getFramesPerBurst() override;
+    Result waitForStateChange(StreamState currentState,
+                              StreamState *nextState,
+                              int64_t timeoutNanoseconds) override;
 
+protected:
 
-        AudioApi getAudioApi() const override {
-            return AudioApi::OpenSLES;
-        }
+    // This must be called under mLock.
+    Result close_l();
 
-        /**
-         * Process next OpenSL ES buffer.
-         * Called by by OpenSL ES framework.
-         *
-         * This is public, but don't call it directly.
-         */
-        void processBufferCallback(SLAndroidSimpleBufferQueueItf bq);
+    SLuint32 channelCountToChannelMaskDefault(int channelCount) const;
 
-        Result waitForStateChange(StreamState currentState,
-                                  StreamState *nextState,
-                                  int64_t timeoutNanoseconds) override;
+    virtual Result onBeforeDestroy() { return Result::OK; }
+    virtual Result onAfterDestroy() { return Result::OK; }
 
-    protected:
+    static SLuint32 getDefaultByteOrder();
 
-        SLuint32 channelCountToChannelMaskDefault(int channelCount) const;
+    SLresult registerBufferQueueCallback();
 
-        virtual Result onBeforeDestroy() { return Result::OK; }
+    int32_t getBufferDepth(SLAndroidSimpleBufferQueueItf bq);
 
-        virtual Result onAfterDestroy() { return Result::OK; }
+    SLresult enqueueCallbackBuffer(SLAndroidSimpleBufferQueueItf bq);
 
-        static SLuint32 getDefaultByteOrder();
+    SLresult configurePerformanceMode(SLAndroidConfigurationItf configItf);
 
-        SLresult registerBufferQueueCallback();
+    SLresult updateStreamParameters(SLAndroidConfigurationItf configItf);
 
-        int32_t getBufferDepth(SLAndroidSimpleBufferQueueItf bq);
+    PerformanceMode convertPerformanceMode(SLuint32 openslMode) const;
+    SLuint32 convertPerformanceMode(PerformanceMode oboeMode) const;
 
-        SLresult enqueueCallbackBuffer(SLAndroidSimpleBufferQueueItf bq);
+    Result configureBufferSizes(int32_t sampleRate);
 
-        SLresult configurePerformanceMode(SLAndroidConfigurationItf configItf);
+    void logUnsupportedAttributes();
 
-        SLresult updateStreamParameters(SLAndroidConfigurationItf configItf);
+    /**
+     * Internal use only.
+     * Use this instead of directly setting the internal state variable.
+     */
+    void setState(StreamState state) {
+        mState.store(state);
+    }
 
-        PerformanceMode convertPerformanceMode(SLuint32 openslMode) const;
+    int64_t getFramesProcessedByServer();
 
-        SLuint32 convertPerformanceMode(PerformanceMode oboeMode) const;
+    // OpenSLES stuff
+    SLObjectItf                   mObjectInterface = nullptr;
+    SLAndroidSimpleBufferQueueItf mSimpleBufferQueueInterface = nullptr;
 
-        Result configureBufferSizes(int32_t sampleRate);
+    int32_t                       mBytesPerCallback = oboe::kUnspecified;
+    MonotonicCounter              mPositionMillis; // for tracking OpenSL ES service position
 
-        void logUnsupportedAttributes();
+private:
+    std::unique_ptr<uint8_t[]>    mCallbackBuffer[kBufferQueueLength];
+    int                           mCallbackBufferIndex = 0;
+    std::atomic<StreamState>      mState{StreamState::Uninitialized};
 
-        /**
-         * Internal use only.
-         * Use this instead of directly setting the internal state variable.
-         */
-        void setState(StreamState state) {
-            mState.store(state);
-        }
-
-        int64_t getFramesProcessedByServer();
-
-        // OpenSLES stuff
-        SLObjectItf mObjectInterface = nullptr;
-        SLAndroidSimpleBufferQueueItf mSimpleBufferQueueInterface = nullptr;
-
-        int32_t mBytesPerCallback = oboe::kUnspecified;
-        MonotonicCounter mPositionMillis; // for tracking OpenSL ES service position
-
-    private:
-        std::unique_ptr<uint8_t[]> mCallbackBuffer;
-        std::atomic<StreamState> mState{StreamState::Uninitialized};
-
-    };
+};
 
 } // namespace oboe
 

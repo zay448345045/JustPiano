@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 public class BaseActivity extends Activity {
-    boolean f3995a = false;
+    boolean isOutLine = false;
     int activityNum = 0;
     JPProgressBar jpprogressBar;
     String versionStr;
@@ -22,7 +22,7 @@ public class BaseActivity extends Activity {
     final void setPackageAndVersion() {
         versionStr = "4.3";
         versionNum = 41;
-        packageName = "ly.pp.justpiano";
+        packageName = getPackageName();
     }
 
     final void addDialog(String str, String str2, String str3) {

@@ -17,12 +17,13 @@ public final class JPDialog {
     private EditText editText;
     private RadioGroup radioGroup;
     private View inflate;
-    private Context context;
+    private final Context context;
     private OnClickListener listener2;
     private String title;
     private String message;
     private String positiveText;
     private String negativeText;
+    private boolean positiveButtonDisabled;
     private View view;
     private boolean cancelable = true;
     private OnClickListener listener;
@@ -47,6 +48,11 @@ public final class JPDialog {
         return this;
     }
 
+    public final JPDialog setFirstButtonDisabled(boolean disabled) {
+        positiveButtonDisabled = disabled;
+        return this;
+    }
+
     final void setCancelableFalse() {
         cancelable = false;
     }
@@ -57,10 +63,11 @@ public final class JPDialog {
             inflate = layoutInflater.inflate(R.layout.mydialog, null);
         }
         JDialog jDialog = new JDialog(context);
-        jDialog.addContentView(inflate, new LayoutParams(-1, -2));
+        jDialog.addContentView(inflate, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         ((TextView) inflate.findViewById(R.id.title)).setText(title);
         if (positiveText != null) {
             ((Button) inflate.findViewById(R.id.positiveButton)).setText(positiveText);
+            inflate.findViewById(R.id.positiveButton).setEnabled(!positiveButtonDisabled);
             if (listener2 != null) {
                 inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(jDialog, -1));
             }
@@ -77,9 +84,10 @@ public final class JPDialog {
         }
         if (message != null) {
             ((TextView) inflate.findViewById(R.id.message)).setText(message);
-        } else if (view != null) {
+        }
+        if (view != null) {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
-            ((LinearLayout) inflate.findViewById(R.id.content)).addView(view, new LayoutParams(-2, -2));
+            ((LinearLayout) inflate.findViewById(R.id.content)).addView(view, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
         jDialog.setContentView(inflate);
         jDialog.setCanceledOnTouchOutside(false);
@@ -116,12 +124,16 @@ public final class JPDialog {
     }
 
     public int getRadioGroupCheckedId() {
-        int id = radioGroup.getCheckedRadioButtonId();
-        if (id == -1) {
-            return id;
+        if (radioGroup != null) {
+            int id = radioGroup.getCheckedRadioButtonId();
+            if (id == -1) {
+                return id;
+            }
+            View v = inflate.findViewById(id);
+            return (int) v.getTag();
+        } else {
+            return -1;
         }
-        View v = inflate.findViewById(id);
-        return (int) v.getTag();
     }
 
     public String getEditTextString() {

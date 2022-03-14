@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KeyboardModeView">
+        <attr name="whiteKeyNum" format="integer"/>
+        <attr name="whiteKeyOffset" format="integer"/>
+    </declare-styleable>
+</resources>

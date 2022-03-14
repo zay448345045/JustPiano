@@ -26,31 +26,29 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... v) {
         String str = "";
         if (!showSongsInfo.get().keywords.isEmpty()) {
-            do {
-                HttpPost httpPost = new HttpPost("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByKeywords");
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("version", showSongsInfo.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("head", showSongsInfo.get().head));
-                arrayList.add(new BasicNameValuePair("keywords", showSongsInfo.get().keywords));
-                arrayList.add(new BasicNameValuePair("user", showSongsInfo.get().jpapplication.getAccountName()));
-                arrayList.add(new BasicNameValuePair("page", String.valueOf(showSongsInfo.get().page)));
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            HttpPost httpPost = new HttpPost("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByKeywords");
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("version", showSongsInfo.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("head", showSongsInfo.get().head));
+            arrayList.add(new BasicNameValuePair("keywords", showSongsInfo.get().keywords));
+            arrayList.add(new BasicNameValuePair("user", showSongsInfo.get().jpapplication.getAccountName()));
+            arrayList.add(new BasicNameValuePair("page", String.valueOf(showSongsInfo.get().page)));
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
+            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
+            try {
+                HttpResponse execute = defaultHttpClient.execute(httpPost);
+                if (execute.getStatusLine().getStatusCode() == 200) {
+                    str = EntityUtils.toString(execute.getEntity());
                 }
-                DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-                defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-                defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-                try {
-                    HttpResponse execute = defaultHttpClient.execute(httpPost);
-                    if (execute.getStatusLine().getStatusCode() == 200) {
-                        str = EntityUtils.toString(execute.getEntity());
-                    }
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                }
-            } while (!str.endsWith("\"}"));
+            } catch (Exception e3) {
+                e3.printStackTrace();
+            }
         }
         return str;
     }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class OLUsersPage extends Activity implements OnClickListener {
 
@@ -49,12 +48,6 @@ public class OLUsersPage extends Activity implements OnClickListener {
                 finish();
                 return;
             case R.id.ol_local_b:
-                Toast.makeText(this, "数据备份功能正在施工中，敬请期待!", Toast.LENGTH_SHORT).show();
-//                intent.setClass(this, ShowTopInfo.class);
-//                intent.putExtra("head", 5);
-//                intent.putExtra("keywords", "F");
-//                startActivity(intent);
-//                finish();
                 return;
             default:
         }

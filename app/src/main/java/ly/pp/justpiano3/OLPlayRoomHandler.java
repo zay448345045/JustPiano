@@ -12,9 +12,6 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -23,8 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineQuitRoomDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+
 final class OLPlayRoomHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     OLPlayRoomHandler(OLPlayRoom olPlayRoom) {
         weakReference = new WeakReference<>(olPlayRoom);
@@ -38,9 +38,8 @@ final class OLPlayRoomHandler extends Handler {
                 case 1:
                     post(() -> {
                         olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
-                        String str1, str;
+                        String str1;
                         str1 = message.getData().getString("SI");
-                        str = message.getData().getString("MSG");
                         if (!str1.isEmpty()) {
                             olPlayRoom.jpapplication.setNowSongsName(str1);
                             int diao = message.getData().getInt("diao");
@@ -54,11 +53,11 @@ final class OLPlayRoomHandler extends Handler {
                                 try {
                                     if (olPlayRoom.getMode() == 0) {
                                         if (diao > 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "+" + diao);
+                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
                                         } else if (diao < 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "-" + diao);
+                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "" + diao);
                                         } else {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().substring(0, 1) + "0" + diao);
+                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
                                         }
                                     }
                                     olPlayRoom.playSongs = new PlaySongs(olPlayRoom.jpapplication, str1, null, olPlayRoom, 0, olPlayRoom.getdiao());
@@ -68,19 +67,12 @@ final class OLPlayRoomHandler extends Handler {
                                 }
                             }
                         }
-                        if (!str.isEmpty()) {
-                            try {
-                                JSONObject jSONObject = new JSONObject(str);
-                                int i = jSONObject.getInt("T");//对话框类型
-                                int i2 = jSONObject.getInt("CT");//搭档类型
-                                byte b = (byte) jSONObject.getInt("CI");
-                                String string = jSONObject.getString("C");
-                                if (!string.isEmpty()) {
-                                    olPlayRoom.mo2860a(i, string, i2, b);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        int i = message.getData().getBoolean("MSG_I") ? 1 : 0;
+                        int i2 = message.getData().getInt("MSG_CT");
+                        byte b = (byte) message.getData().getInt("MSG_CI");
+                        String string = message.getData().getString("MSG_C");
+                        if (!string.isEmpty()) {
+                            olPlayRoom.mo2860a(i, string, i2, b);
                         }
                     });
                     return;
@@ -90,8 +82,14 @@ final class OLPlayRoomHandler extends Handler {
                         if (olPlayRoom.msgList.size() > olPlayRoom.maxListValue) {
                             olPlayRoom.msgList.remove(0);
                         }
-                        olPlayRoom.msgList.add(message.getData());
                         SharedPreferences ds = PreferenceManager.getDefaultSharedPreferences(olPlayRoom);
+                        boolean showTime = ds.getBoolean("chats_time_show", false);
+                        String time = "";
+                        if (showTime) {
+                            time = new SimpleDateFormat("HH:mm", Locale.CHINESE).format(new Date(olPlayRoom.jpapplication.getServerTime()));
+                        }
+                        message.getData().putString("TIME", time);
+                        olPlayRoom.msgList.add(message.getData());
                         if (ds.getBoolean("save_chats", false)) {
                             try {
                                 File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");
@@ -110,20 +108,20 @@ final class OLPlayRoomHandler extends Handler {
                                 String str = message.getData().getString("M");
                                 if (str.startsWith("//")) {
                                     writer.close();
-                                    olPlayRoom.mo2862a();
+                                    olPlayRoom.mo2862a(showTime);
                                     return;
                                 } else if (message.getData().getInt("T") == 2) {
-                                    writer.write(("[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
+                                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
                                     writer.close();
                                 } else if (message.getData().getInt("T") == 1) {
-                                    writer.write(("[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
+                                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
                                     writer.close();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        olPlayRoom.mo2862a();
+                        olPlayRoom.mo2862a(showTime);
                     });
                     return;
                 case 3:
@@ -166,9 +164,8 @@ final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.playSongs = null;
                         }
                         String str1 = message.getData().getString("S");
-                        int i = message.getData().getInt("T");
                         if (!olPlayRoom.isOnStart) {
-                            olPlayRoom.jpapplication.getConnectionService().writeData((byte) 8, olPlayRoom.roomID0, olPlayRoom.hallID0, olPlayRoom.roomTitleString, null);
+                            olPlayRoom.jpapplication.getConnectionService().writeData(8, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);
@@ -187,7 +184,6 @@ final class OLPlayRoomHandler extends Handler {
                                 intent2.putExtra("path", str1);
                                 intent2.putExtra("name", str);
                                 intent2.putExtra("diao", olPlayRoom.getdiao());
-                                intent2.putExtra("uploadTimes", i);
                                 intent2.putExtra("roomMode", olPlayRoom.roomMode);
                                 intent2.putExtra("hand", olPlayRoom.currentHand);
                                 intent2.putExtra("bundle", olPlayRoom.bundle0);
@@ -238,8 +234,23 @@ final class OLPlayRoomHandler extends Handler {
                                     JPDialog jpdialog = new JPDialog(olPlayRoom);
                                     jpdialog.setTitle("好友请求");
                                     jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
-                                    jpdialog.setFirstButton("同意", new AddFriendsClick3(string, olPlayRoom));
-                                    jpdialog.setSecondButton("拒绝", new RefuseFriendsClick(string, olPlayRoom));
+                                    String finalString = string;
+                                    jpdialog.setFirstButton("同意", (dialog, which) -> {
+                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                        builder.setType(1);
+                                        builder.setReject(false);
+                                        builder.setName(finalString);
+                                        olPlayRoom.sendMsg(31, builder.build());
+                                        dialog.dismiss();
+                                    });
+                                    jpdialog.setSecondButton("拒绝", (dialog, which) -> {
+                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                                        builder.setType(1);
+                                        builder.setReject(true);
+                                        builder.setName(finalString);
+                                        olPlayRoom.sendMsg(31, builder.build());
+                                        dialog.dismiss();
+                                    });
                                     jpdialog.showDialog();
                                 }
                                 return;
@@ -273,7 +284,9 @@ final class OLPlayRoomHandler extends Handler {
                 case 10:
                     post(() -> {
                         String name = message.getData().getString("R");
-                        olPlayRoom.roomTitle.setText("[" + olPlayRoom.roomID0 + "]" + name);
+                        olPlayRoom.bundle0.putString("R", name);
+                        olPlayRoom.roomName = name;
+                        olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomID0 + "]" + olPlayRoom.roomName);
                     });
                     return;
                 case 11:
@@ -345,16 +358,12 @@ final class OLPlayRoomHandler extends Handler {
                 case 16:
                     post(() -> {
                         Bundle data = message.getData();
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", data.getString("F"));
-                            jSONObject.put("T", 2);
-                            olPlayRoom.friendPlayerList.remove(message.arg1);
-                            olPlayRoom.sendMsg((byte) 31, (byte) 0, (byte) 0, jSONObject.toString());
-                            olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                        builder.setType(2);
+                        builder.setName(data.getString("F"));
+                        olPlayRoom.friendPlayerList.remove(message.arg1);
+                        olPlayRoom.sendMsg(31, builder.build());
+                        olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
                     });
                     return;
                 case 21:
@@ -368,17 +377,12 @@ final class OLPlayRoomHandler extends Handler {
                     return;
                 case 22:
                     post(() -> {
-                        try {
-                            JSONObject jSONObject = new JSONObject(message.getData().getString("MSG"));
-                            int i = jSONObject.getInt("T");
-                            int i2 = jSONObject.getInt("CT");
-                            byte b = (byte) jSONObject.getInt("CI");
-                            String string = jSONObject.getString("C");
-                            if (i != 0) {
-                                olPlayRoom.mo2860a(i, string, i2, b);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        int i = message.getData().getInt("MSG_T");
+                        int i2 = message.getData().getInt("MSG_CT");
+                        byte b = (byte) message.getData().getInt("MSG_CI");
+                        String string = message.getData().getString("MSG_C");
+                        if (i != 0) {
+                            olPlayRoom.mo2860a(i, string, i2, b);
                         }
                     });
                     return;

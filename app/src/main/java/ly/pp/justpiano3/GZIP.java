@@ -1,8 +1,5 @@
 package ly.pp.justpiano3;
 
-import android.os.Handler;
-import android.os.Message;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,7 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -37,7 +36,8 @@ public final class GZIP {
         return str;
     }
 
-    static void ZIPFileTo(File file, String str) {
+    static List<File> ZIPFileTo(File file, String str) {
+        List<File> unZipFileList = new ArrayList<>();
         File file2 = new File(str);
         if (!file2.exists()) {
             file2.mkdirs();
@@ -72,10 +72,12 @@ public final class GZIP {
                 }
                 inputStream.close();
                 fileOutputStream.close();
+                unZipFileList.add(file2);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return unZipFileList;
     }
 
     public static String ZIPTo(String str) {
@@ -141,38 +143,6 @@ public final class GZIP {
                     return bArr;
                 }
                 byteArrayOutputStream.write(bArr, 0, read);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static byte[] ZIPToArrayAddHandle(String str, Handler handler, int progress) {
-        if (str == null || str.length() == 0) {
-            return null;
-        }
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            InputStream byteArrayInputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.ISO_8859_1));
-            GZIPInputStream gZIPInputStream = new GZIPInputStream(byteArrayInputStream, 256);
-            byte[] bArr = new byte[4096];
-            while (true) {
-                int read = gZIPInputStream.read(bArr);
-                if (read < 0) {
-                    bArr = byteArrayOutputStream.toByteArray();
-                    byteArrayOutputStream.close();
-                    byteArrayInputStream.close();
-                    gZIPInputStream.close();
-                    return bArr;
-                }
-                byteArrayOutputStream.write(bArr, 0, read);
-                progress += 4096;
-                Message message = new Message();
-                message.what = 1;
-                if (handler != null) {
-                    handler.sendMessage(message);
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();

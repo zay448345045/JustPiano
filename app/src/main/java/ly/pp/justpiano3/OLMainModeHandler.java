@@ -9,7 +9,7 @@ import android.os.Message;
 import java.lang.ref.WeakReference;
 
 final class OLMainModeHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     OLMainModeHandler(OLMainMode oLMainMode) {
         weakReference = new WeakReference<>(oLMainMode);
@@ -58,7 +58,7 @@ final class OLMainModeHandler extends Handler {
             case 6:
                 oLMainMode.jpprogressBar.cancel();
                 Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "您的版本过低，请下载最新版本进行游戏.");
+                oLMainMode.addDialog("提示", "确定", "您的版本过低，请下载最新版本");
                 Looper.loop();
                 return;
             default:

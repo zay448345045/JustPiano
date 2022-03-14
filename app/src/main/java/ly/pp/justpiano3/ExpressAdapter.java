@@ -9,21 +9,17 @@ import android.widget.PopupWindow;
 
 public final class ExpressAdapter extends BaseAdapter {
     PopupWindow popupWindow;
-    ConnectionService cs;
-    byte f6036e;
-    byte f6037f;
-    byte f6038g;
-    private Context context;
-    private Integer[] f6033b;
+    ConnectionService connectionService;
+    int messageType;
+    private final Context context;
+    private final Integer[] f6033b;
 
-    ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, byte b, byte b2, byte b3) {
+    ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, int b) {
         this.context = context;
         f6033b = numArr;
         this.popupWindow = popupWindow;
-        cs = connectionService;
-        f6036e = b2;
-        f6037f = b3;
-        f6038g = b;
+        this.connectionService = connectionService;
+        messageType = b;
     }
 
     @Override

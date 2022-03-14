@@ -40,7 +40,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     PictureHandle f5001q;
     Handler handler;
     private TextView f4993i;
-    private int f4998n = 20;
+    private final int f4998n = 20;
     private Bitmap f5003s = null;
 
     public Bitmap m3874a(Context context) {
@@ -163,7 +163,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
                 f4992h.setText("-" + f4999o + "个人等级榜-");
                 break;
             case 5:
-                f4992h.setText("-备份-");
+                f4992h.setText("-导出-");
                 f4994j.setVisibility(View.GONE);
                 f4995k.setVisibility(View.GONE);
                 f4993i.setVisibility(View.GONE);

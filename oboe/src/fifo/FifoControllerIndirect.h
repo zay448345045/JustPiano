@@ -20,52 +20,46 @@
 #include <atomic>
 #include <stdint.h>
 
-#include "FifoControllerBase.h"
+#include "oboe/FifoControllerBase.h"
 
 namespace oboe {
 
 /**
  * A FifoControllerBase with counters external to the class.
  */
-    class FifoControllerIndirect : public FifoControllerBase {
+class FifoControllerIndirect : public FifoControllerBase {
 
-    public:
-        FifoControllerIndirect(uint32_t bufferSize,
-                               std::atomic<uint64_t> *readCounterAddress,
-                               std::atomic<uint64_t> *writeCounterAddress);
+public:
+    FifoControllerIndirect(uint32_t bufferSize,
+                           std::atomic<uint64_t> *readCounterAddress,
+                           std::atomic<uint64_t> *writeCounterAddress);
+    virtual ~FifoControllerIndirect() = default;
 
-        virtual ~FifoControllerIndirect() = default;
+    virtual uint64_t getReadCounter() const override {
+        return mReadCounterAddress->load(std::memory_order_acquire);
+    }
+    virtual void setReadCounter(uint64_t n) override {
+        mReadCounterAddress->store(n, std::memory_order_release);
+    }
+    virtual void incrementReadCounter(uint64_t n) override {
+        mReadCounterAddress->fetch_add(n, std::memory_order_acq_rel);
+    }
+    virtual uint64_t getWriteCounter() const override {
+        return mWriteCounterAddress->load(std::memory_order_acquire);
+    }
+    virtual void setWriteCounter(uint64_t n) override {
+        mWriteCounterAddress->store(n, std::memory_order_release);
+    }
+    virtual void incrementWriteCounter(uint64_t n) override {
+        mWriteCounterAddress->fetch_add(n, std::memory_order_acq_rel);
+    }
 
-        virtual uint64_t getReadCounter() const override {
-            return mReadCounterAddress->load(std::memory_order_acquire);
-        }
+private:
 
-        virtual void setReadCounter(uint64_t n) override {
-            mReadCounterAddress->store(n, std::memory_order_release);
-        }
+    std::atomic<uint64_t> *mReadCounterAddress;
+    std::atomic<uint64_t> *mWriteCounterAddress;
 
-        virtual void incrementReadCounter(uint64_t n) override {
-            mReadCounterAddress->fetch_add(n, std::memory_order_acq_rel);
-        }
-
-        virtual uint64_t getWriteCounter() const override {
-            return mWriteCounterAddress->load(std::memory_order_acquire);
-        }
-
-        virtual void setWriteCounter(uint64_t n) override {
-            mWriteCounterAddress->store(n, std::memory_order_release);
-        }
-
-        virtual void incrementWriteCounter(uint64_t n) override {
-            mWriteCounterAddress->fetch_add(n, std::memory_order_acq_rel);
-        }
-
-    private:
-
-        std::atomic<uint64_t> *mReadCounterAddress;
-        std::atomic<uint64_t> *mWriteCounterAddress;
-
-    };
+};
 
 } // namespace oboe
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--背景效果(灰色)-->
+    <item android:id="@android:id/background">
+
+        <shape>
+            <solid android:color="#0c000000"/>
+        </shape>
+
+    </item>
+
+    <!--第一进度条背景（渐变），clip：裁剪进度条右侧部分-->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <gradient
+                    android:angle="180"
+                    android:centerColor="@color/yellow"
+                    android:endColor="@color/v8"
+                    android:centerX="0.35"
+                    android:startColor="@color/v3" />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>

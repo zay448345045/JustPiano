@@ -18,6 +18,7 @@
 #define _PLAYER_SAMPLESOURCE_
 
 #include <cstdint>
+#include <queue>
 
 #include "DataSource.h"
 
@@ -39,23 +40,21 @@ namespace iolib {
         static constexpr float PAN_CENTER = 0.0f;
 
         SampleSource(SampleBuffer *sampleBuffer, float pan)
-                : mSampleBuffer(sampleBuffer), mCurFrameIndex(0), mIsPlaying(false), mGain(1.0f) {
+                : mSampleBuffer(sampleBuffer), mGain(1.0f) {
             setPan(pan);
         }
 
         virtual ~SampleSource() {}
 
-        void setPlayMode() {
-            mCurFrameIndex = 0;
-            mIsPlaying = true;
+        void setPlayMode(int32_t volume) {
+            mCurFrameIndexQueue.push(std::make_pair(0, volume));
         }
 
         void setStopMode() {
-            mIsPlaying = false;
-            mCurFrameIndex = 0;
+            while(!mCurFrameIndexQueue.empty()) {
+                mCurFrameIndexQueue.pop();
+            }
         }
-
-        bool isPlaying() { return mIsPlaying; }
 
         void setPan(float pan) {
             if (pan < PAN_HARDLEFT) {
@@ -81,12 +80,26 @@ namespace iolib {
             return mGain;
         }
 
+        int32_t getCurFrameIndexQueueSize() {
+            return mCurFrameIndexQueue.size();
+        }
+
+        std::pair<int32_t, int32_t>& frontCurFrameIndexQueue() {
+            return mCurFrameIndexQueue.front();
+        }
+
+        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t>& pair) {
+            mCurFrameIndexQueue.push(pair);
+        }
+
+        void popCurFrameIndexQueue() {
+            mCurFrameIndexQueue.pop();
+        }
+
     protected:
         SampleBuffer *mSampleBuffer;
 
-        int32_t mCurFrameIndex;
-
-        bool mIsPlaying;
+        std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
 
         // Logical pan value
         float mPan;

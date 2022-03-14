@@ -26,18 +26,18 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
 
     @Override
     protected final void onPostExecute(String str) {
-        if (OLMelodySelect.f4294d == null || OLMelodySelect.f4294d.length <= 3) {
+        if (OLMelodySelect.songBytes == null || OLMelodySelect.songBytes.length <= 3) {
             olMelodySelect.get().jpprogressBar.cancel();
             Toast.makeText(olMelodySelect.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent();
         intent.putExtra("head", 1);
-        intent.putExtra("songBytes", OLMelodySelect.f4294d);
-        intent.putExtra("songName", olMelodySelect.get().f4318f);
+        intent.putExtra("songBytes", OLMelodySelect.songBytes);
+        intent.putExtra("songName", olMelodySelect.get().songName);
         intent.putExtra("songID", OLMelodySelect.songID);
-        intent.putExtra("topScore", olMelodySelect.get().f4301F);
-        intent.putExtra("degree", olMelodySelect.get().f4300E);
+        intent.putExtra("topScore", olMelodySelect.get().topScore);
+        intent.putExtra("degree", olMelodySelect.get().degree);
         intent.setClass(olMelodySelect.get(), PianoPlay.class);
         olMelodySelect.get().startActivity(intent);
         olMelodySelect.get().jpprogressBar.cancel();
@@ -46,26 +46,24 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     @Override
     protected String doInBackground(String... objects) {
         if (!OLMelodySelect.songID.isEmpty()) {
-            do {
-                HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("songID", OLMelodySelect.songID));
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("songID", OLMelodySelect.songID));
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                HttpResponse execute = new DefaultHttpClient().execute(httpPost);
+                if (execute.getStatusLine().getStatusCode() == 200) {
+                    str = EntityUtils.toString(execute.getEntity());
                 }
-                try {
-                    HttpResponse execute = new DefaultHttpClient().execute(httpPost);
-                    if (execute.getStatusLine().getStatusCode() == 200) {
-                        str = EntityUtils.toString(execute.getEntity());
-                    }
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
-            } while (!str.endsWith("\"}"));
-            OLMelodySelect.f4294d = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+            OLMelodySelect.songBytes = GZIP.ZIPToArray(str);
         }
         return null;
     }

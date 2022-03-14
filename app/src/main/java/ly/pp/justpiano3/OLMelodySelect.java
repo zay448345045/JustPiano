@@ -26,20 +26,20 @@ import java.util.HashMap;
 import java.util.List;
 
 public class OLMelodySelect extends Activity implements Callback, OnClickListener {
-    static byte[] f4294d = null;
+    static byte[] songBytes = null;
     static String songID;
     public JPApplication jpapplication;
-    double f4300E;
-    int f4301F;
+    double degree;
+    int topScore;
     Button pageButton;
-    int f4303H;
-    int f4305J = 1;
-    OLMelodySelectAdapter olMelodySelectAdapter = null;
+    int index;
+    int pageNum = 1;
+    PopupWindowSelectAdapter popupWindowSelectAdapter = null;
     int f4314a;
     String f4315b = "";
     int f4316c;
     String f4317e = "";
-    String f4318f = "";
+    String songName = "";
     JPProgressBar jpprogressBar;
     int f4322k;
     LayoutInflater layoutInflater1;
@@ -52,17 +52,17 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     boolean f4333v = true;
     boolean f4334w = true;
     boolean f4335x = true;
-    Button f4336y;
+    Button showTitleButton;
     private PopupWindow popupWindow = null;
-    private List<String> f4308M = new ArrayList<>();
-    private Handler f4311P;
-    private boolean f4312Q = false;
+    private final List<String> pageList = new ArrayList<>();
+    private Handler handler;
+    private boolean firstLoadFocusFinish = false;
     private List<HashMap> songList = null;
 
     void m3643a(int i) {
-        f4308M.clear();
+        pageList.clear();
         for (int i2 = 1; i2 <= i; i2++) {
-            f4308M.add(i2 - 1, "第" + i2 + "页");
+            pageList.add(i2 - 1, "第" + i2 + "页");
         }
     }
 
@@ -114,14 +114,14 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         switch (message.what) {
             case 1:
                 int i = data.getInt("selIndex");
-                pageButton.setText(" " + f4308M.get(i) + " ");
-                f4303H = i;
+                pageButton.setText(" " + pageList.get(i) + " ");
+                index = i;
                 popupWindow.dismiss();
                 new OLMelodySelectTask(this).execute();
                 break;
             case 2:
-                f4308M.remove(data.getInt("delIndex"));
-                olMelodySelectAdapter.notifyDataSetChanged();
+                pageList.remove(data.getInt("delIndex"));
+                popupWindowSelectAdapter.notifyDataSetChanged();
                 break;
         }
         return false;
@@ -190,7 +190,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
                 finish();
                 return;
             case R.id.ol_top_next:
-                if (f4312Q) {
+                if (firstLoadFocusFinish) {
                     popupWindow.showAsDropDown(pageButton);
                     return;
                 }
@@ -206,7 +206,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(0);
         try {
-            jpapplication.loadSettings(1);
+            jpapplication.loadSettings(true);
             jpapplication.setTempSpeed();
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
@@ -225,7 +225,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
                 f4314a = position;
                 f4315b = Consts.items[position + 1];
                 f4317e = Consts.items[position + 1];
-                f4303H = 0;
+                index = 0;
                 pageButton.setText(" 第1页 ");
                 new OLMelodySelectTask(OLMelodySelect.this).execute();
             });
@@ -233,7 +233,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             if (!f4330s) {
                 f4328q.setVisibility(View.VISIBLE);
             }
-            f4336y = findViewById(R.id.show_button);
+            showTitleButton = findViewById(R.id.show_button);
             Button f4337z = findViewById(R.id.ol_date_b);
             f4337z.setOnClickListener(this);
             Button f4296A = findViewById(R.id.ol_degree_b);
@@ -246,7 +246,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             f4298C.setOnClickListener(this);
             pageButton = findViewById(R.id.ol_top_next);
             pageButton.setOnClickListener(this);
-            f4336y.setOnClickListener(new ShowTitleClick(this));
+            showTitleButton.setOnClickListener(new ShowTitleClick(this));
             jpprogressBar = new JPProgressBar(this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,30 +257,30 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
 
     @Override
     protected void onDestroy() {
-        f4311P = null;
+        handler = null;
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
-        f4294d = null;
+        songBytes = null;
         super.onResume();
     }
 
     @Override
     public void onWindowFocusChanged(boolean z) {
-        while (!f4312Q) {
-            f4311P = new Handler(this);
-            int f4309N = pageButton.getWidth();
-            m3643a(f4305J);
+        while (!firstLoadFocusFinish) {
+            handler = new Handler(this);
+            int width = pageButton.getWidth();
+            m3643a(pageNum);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);
-            ListView f4310O = inflate.findViewById(R.id.list);
-            olMelodySelectAdapter = new OLMelodySelectAdapter(this, f4311P, f4308M);
-            f4310O.setAdapter(olMelodySelectAdapter);
-            popupWindow = new PopupWindow(inflate, f4309N, -2, true);
+            ListView listView = inflate.findViewById(R.id.list);
+            popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, pageList, 1);
+            listView.setAdapter(popupWindowSelectAdapter);
+            popupWindow = new PopupWindow(inflate, width, -2, true);
             popupWindow.setOutsideTouchable(true);
             popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_face));
-            f4312Q = true;
+            firstLoadFocusFinish = true;
         }
     }
 }

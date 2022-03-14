@@ -17,12 +17,15 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import org.json.JSONObject;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO;
 
 public final class PlayView extends SurfaceView implements Callback {
     static long serialID = 2825651233768L;
@@ -37,15 +40,12 @@ public final class PlayView extends SurfaceView implements Callback {
     SurfaceHolder surfaceholder;
     PianoPlay pianoPlay;
     PlayNote currentPlayNote;
-    int offset;
     int screenWidth;
     JPApplication jpapplication;
     boolean isTouchRightNote = true;
     Bitmap keyboardImage;
     Bitmap nullImage;
-    int[] tickGroupArray;
     byte[] noteArray;
-    byte[] trackXArray;
     byte[] volumeArray;
     int arrayLength;
     Bitmap backgroundImage;
@@ -92,10 +92,12 @@ public final class PlayView extends SurfaceView implements Callback {
     private int greatNum;
     private int badNum;
     private int missNum;
-    private List<PlayNote> notesList = new CopyOnWriteArrayList<>();
-    private List<ShowTouchNotesLevel> touchNotesList = new ArrayList<>();
+    private final List<PlayNote> notesList = new CopyOnWriteArrayList<>();
+    private final List<ShowTouchNotesLevel> touchNotesList = new ArrayList<>();
     private ShowScoreAndLevels showScoreAndLevels;
     private double nandu;
+    private double leftNandu;
+    private int songsTime;
     private int screenHeight;
     private String songsPath;
     private Rect f4769bA;
@@ -108,10 +110,10 @@ public final class PlayView extends SurfaceView implements Callback {
     private List<Byte> uploadTouchStatusList;
     private byte[] uploadTimeArray;
     private int uploadNoteIndex;
-    private List<PlayNote> tempNotesArray = new ArrayList<>();
+    private final List<PlayNote> tempNotesArray = new ArrayList<>();
     private float halfHeightSub10;
     private int notesDownSpeed = 6;
-    private List<Integer> f4788bm = new ArrayList<>();
+    private final List<Integer> f4788bm = new ArrayList<>();
     private int handValue;
     private byte[] tickArray;
     private byte[] trackArray;
@@ -120,7 +122,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private PlayNote ln;
     private int noteCounts;
     private Rect f4801bz;
-    private Paint line = new Paint();
+    private final Paint line = new Paint();
     private float widthDiv8;
     private float width2Div8;
     private float width4Div8;
@@ -137,7 +139,7 @@ public final class PlayView extends SurfaceView implements Callback {
         super(context);
     }
 
-    PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d, int i, int kind, int i3, int i4, int diao) {
+    PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int diao) {
         super(context);
         jpapplication = jPApplication;
         this.pianoPlay = pianoPlay;
@@ -145,8 +147,10 @@ public final class PlayView extends SurfaceView implements Callback {
         gameType = kind;
         uploadTime = i4;
         songsPath = str;
-        nandu = d;
+        nandu = d1;
+        leftNandu = d2;
         score = i;
+        songsTime = i5;
         loadParams();
         try {
             loadPm(context, str, diao);
@@ -239,7 +243,7 @@ public final class PlayView extends SurfaceView implements Callback {
         jpapplication.setWidthDiv8(jpapplication.getWidthPixels() / 8f);
         jpapplication.setWhiteKeyHeight((int) (jpapplication.getHeightPixels() * 0.49));
         jpapplication.setHalfHeightSub20(jpapplication.getWhiteKeyHeight() - 20);
-        jpapplication.mo2724e(jpapplication.getHeightPixels() / 3.4f);
+        jpapplication.setBlackKeyHeight(jpapplication.getHeightPixels() / 3.4f);
         jpapplication.setBlackKeyWidth(jpapplication.getWidthPixels() * 0.0413f);
         jpapplication.setHalfHeightSub10(jpapplication.getHeightPixels() * 0.5f - 10);
         jpapplication.setWhiteKeyHeightAdd90(jpapplication.getWhiteKeyHeight() + 90f);
@@ -288,7 +292,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
                         i3 = noteArray[i4] / 12;
                     }
-                    if (noteArray[i4] == 110 && volumeArray[i4] == 3) {
+                    if (noteArray[i4] == 110 + diao && volumeArray[i4] == 3) {
                         trackArray[i4] = 2;
                     }
                     ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
@@ -366,7 +370,7 @@ public final class PlayView extends SurfaceView implements Callback {
         line.setStrokeWidth(3);
         screenWidth = jpapplication.getWidthPixels();
         screenHeight = jpapplication.getHeightPixels();
-        widthDiv8 = jpapplication.getWidthPixels() / 8f;//每个琴键宽度
+        widthDiv8 = jpapplication.getWidthPixels() / 8f;// 每个琴键宽度
         width2Div8 = jpapplication.getWidthPixels() / 4f;
         width4Div8 = jpapplication.getWidthPixels() / 2f;
         width5Div8 = jpapplication.getWidthPixels() / 1.6f;
@@ -389,10 +393,12 @@ public final class PlayView extends SurfaceView implements Callback {
         uploadTouchStatusList = new ArrayList<>();
     }
 
-    private void judgeTouchNote(int i) {
+    private int judgeTouchNote(int i, boolean isMidi) {
         int i2;
         int i3;
-        if (i == noteRightValue) {
+        boolean midiFlag = isMidi && i + 12 == noteRightValue;
+        int returnNoteValue = midiFlag ? 12 : i % 12;
+        if (i == noteRightValue || midiFlag) {
             int i4;
             isTouchRightNote = true;
             double abs;
@@ -461,16 +467,19 @@ public final class PlayView extends SurfaceView implements Callback {
             uploadTimeArray[uploadNoteIndex] = b;
             if (uploadNoteIndex < uploadTime - 1) {
                 uploadNoteIndex++;
-                return;
+                return returnNoteValue;
             }
-            pianoPlay.sendMsg((byte) 25, pianoPlay.hallID, "", uploadTimeArray);
+            OnlineMiniGradeDTO.Builder builder = OnlineMiniGradeDTO.newBuilder();
+            builder.setStatusArray(GZIP.arrayToZIP(uploadTimeArray));
+            pianoPlay.sendMsg(25, builder.build());
             uploadNoteIndex = 0;
         }
+        return returnNoteValue;
     }
 
     final int eventPositionToTouchNoteNum(float f, float f2) {
         int i = 1;
-        float w = jpapplication.getWhiteKeyHeight() + jpapplication.mo2749x();
+        float w = jpapplication.getWhiteKeyHeight() + jpapplication.getBlackKeyHeight();
         if (f2 >= jpapplication.getWhiteKeyHeight()) {
             if (f2 <= w) {
                 if (Math.abs(widthDiv8 - f) < jpapplication.getBlackKeyWidth()) {
@@ -522,10 +531,18 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     final void judgeAndPlaySound(int i) {
-        judgeTouchNote(i + noteMod12 * 12);
+        int noteOctaveOffset = noteMod12 * 12;
+        judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
-            jpapplication.playSound(i + (noteMod12 + jpapplication.getBadu()) * 12, volume0 * 0.01f);
+            jpapplication.playSound(i + noteOctaveOffset, volume0);
         }
+    }
+
+    final int midiJudgeAndPlaySound(int i) {
+        int noteOctaveOffset = noteMod12 * 12;
+        int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
+        jpapplication.playSound(trueNote + noteOctaveOffset, volume0);
+        return trueNote;
     }
 
     final void mo2929a(Canvas canvas) {
@@ -540,7 +557,6 @@ public final class PlayView extends SurfaceView implements Callback {
         if (notesList.size() == 0) {
             pianoPlay.isPlayingStart = false;
             startFirstNoteTouching = false;
-            JSONObject jSONObject = new JSONObject();
             pianoPlay.f4620k = true;
             int size2;
             byte[] bArr;
@@ -552,16 +568,14 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    try {
-                        jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        long x = pianoPlay.times * serialID;
-                        long time = jpapplication.getServerTime();
-                        long crypt = (time >>> 12 | time << 52) ^ x;
-                        jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 16, (byte) 0, "4" + jSONObject.toString(), null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
+                    builder1.setType(4);
+                    builder1.setStatusArray(GZIP.arrayToZIP(bArr));
+                    long x = pianoPlay.times * serialID;
+                    long time = jpapplication.getServerTime();
+                    long crypt = (time >>> 12 | time << 52) ^ x;
+                    builder1.setCode(crypt);
+                    pianoPlay.sendMsg(16, builder1.build());
                     break;
                 case 3:
                     size2 = uploadTouchStatusList.size();
@@ -569,17 +583,14 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    try {
-                        jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        jSONObject.put("T", 3);
-                        long x = pianoPlay.times * serialID;
-                        long time = jpapplication.getServerTime();
-                        long crypt = (time >>> 12 | time << 52) ^ x;
-                        jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 40, (byte) 0, jSONObject.toString(), null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
+                    builder.setType(3);
+                    builder.setStatusArray(GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
+                    x = pianoPlay.times * serialID;
+                    time = jpapplication.getServerTime();
+                    crypt = (time >>> 12 | time << 52) ^ x;
+                    builder.setCode(crypt);
+                    pianoPlay.sendMsg(40, builder.build());
                     break;
                 case 2:
                     message = new Message();
@@ -590,23 +601,15 @@ public final class PlayView extends SurfaceView implements Callback {
                     for (size = 0; size < size2; size++) {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
-                    try {
-                        jSONObject.put("S", GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                        long x = pianoPlay.roomBundle.getByte("ID") * serialID;
-                        long time = jpapplication.getServerTime();
-                        long crypt = (time >>> 12 | time << 52) ^ x;
-                        jSONObject.put("Z", crypt);
-                        pianoPlay.sendMsg((byte) 5, (byte) 0, jSONObject.toString(), null);
-                    } catch (Exception e3) {
-                        e3.printStackTrace();
-                    }
+                    OnlinePlayFinishDTO.Builder builder2 = OnlinePlayFinishDTO.newBuilder();
+                    builder2.setStatusArray(GZIP.arrayToZIP(bArr));
+                    x = pianoPlay.roomBundle.getByte("ID") * serialID;
+                    time = jpapplication.getServerTime();
+                    crypt = (time >>> 12 | time << 52) ^ x;
+                    builder2.setCode(crypt);
+                    pianoPlay.sendMsg(5, builder2.build());
                     break;
                 default:
-                    if (pianoPlay.isRecord) {
-                        message = new Message();
-                        message.what = 22;
-                        pianoPlay.pianoPlayHandler.handleMessage(message);
-                    }
                     Intent intent = new Intent();
                     intent.setClass(pianoPlay, PlayFinish.class);
                     intent.putExtra("head", gameType);
@@ -628,6 +631,9 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("songID", songID);
                     intent.putExtra("path", songsPath);
                     intent.putExtra("nandu", nandu);
+                    intent.putExtra("leftnandu", leftNandu);
+                    intent.putExtra("songstime", songsTime);
+                    intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
                     pianoPlay.startActivityForResult(intent, size2);
                     break;
@@ -693,62 +699,62 @@ public final class PlayView extends SurfaceView implements Callback {
         notesList.removeAll(tempNotesArray);
         if (canvas != null && touchNotesList != null && jpapplication.getIfShowNotesLevel()) {
             try {
-                for (ShowTouchNotesLevel aF4756ao : touchNotesList) {
+                for (ShowTouchNotesLevel showTouchNotesLevel : touchNotesList) {
                     Rect rect = f4770bB;
                     RectF rectF = f4771bC;
-                    if (aF4756ao.levelImage != null) {
-                        canvas.drawBitmap(aF4756ao.levelImage, (aF4756ao.screenWidth - (aF4756ao.playView.perfectImage.getWidth() / 2f)), aF4756ao.screenHeight, null);
+                    if (showTouchNotesLevel.levelImage != null) {
+                        canvas.drawBitmap(showTouchNotesLevel.levelImage, (showTouchNotesLevel.screenWidth - (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
                     }
-                    if (aF4756ao.comboNum > 1 && aF4756ao.comboNum <= 9) {
-                        canvas.drawBitmap(aF4756ao.playView.xImage, (aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2f)), aF4756ao.screenHeight, null);
-                        rect.set((aF4756ao.comboNum * aF4756ao.playView.scoreNumImage.getWidth()) / 10, 0, ((aF4756ao.comboNum + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                    } else if (aF4756ao.comboNum > 9 && aF4756ao.comboNum <= 99) {
-                        i = aF4756ao.comboNum % 10;
-                        i2 = aF4756ao.comboNum / 10;
-                        canvas.drawBitmap(aF4756ao.playView.xImage, (aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2f)), aF4756ao.screenHeight, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                    } else if (aF4756ao.comboNum > 99 && aF4756ao.comboNum <= 999) {
-                        i = aF4756ao.comboNum / 100;
-                        i2 = (aF4756ao.comboNum - (i * 100)) / 10;
-                        i3 = aF4756ao.comboNum % 10;
-                        canvas.drawBitmap(aF4756ao.playView.xImage, (aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2f)), aF4756ao.screenHeight, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i3) / 10, 0, ((i3 + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 2)), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                    } else if (aF4756ao.comboNum > 999 && aF4756ao.comboNum <= 9999) {
-                        i = aF4756ao.comboNum / 1000;
-                        i2 = (aF4756ao.comboNum - (i * 1000)) / 100;
-                        i3 = ((aF4756ao.comboNum - (i * 1000)) - (i2 * 100)) / 10;
-                        int i4 = aF4756ao.comboNum % 10;
-                        canvas.drawBitmap(aF4756ao.playView.xImage, (aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2f)), aF4756ao.screenHeight, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + (aF4756ao.playView.scoreNumImage.getWidth() / 10)), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i3) / 10, 0, ((i3 + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 2)), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                        rect.set((aF4756ao.playView.scoreNumImage.getWidth() * i4) / 10, 0, ((i4 + 1) * aF4756ao.playView.scoreNumImage.getWidth()) / 10, aF4756ao.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 3)), (float) aF4756ao.screenHeight, (float) (((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2)) + aF4756ao.playView.xImage.getWidth()) + ((aF4756ao.playView.scoreNumImage.getWidth() / 10) * 4)), (float) (aF4756ao.screenHeight + aF4756ao.playView.scoreNumImage.getHeight()));
-                        canvas.drawBitmap(aF4756ao.playView.scoreNumImage, rect, rectF, null);
-                    } else if (aF4756ao.comboNum > 9999) {
-                        canvas.drawBitmap(aF4756ao.playView.xImage, (aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2f)), aF4756ao.screenHeight, null);
-                        canvas.drawBitmap(aF4756ao.playView.maxImage, ((aF4756ao.screenWidth + (aF4756ao.playView.perfectImage.getWidth() / 2f)) + aF4756ao.playView.xImage.getWidth()), aF4756ao.screenHeight, null);
+                    if (showTouchNotesLevel.comboNum > 1 && showTouchNotesLevel.comboNum <= 9) {
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        rect.set((showTouchNotesLevel.comboNum * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, 0, ((showTouchNotesLevel.comboNum + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                    } else if (showTouchNotesLevel.comboNum > 9 && showTouchNotesLevel.comboNum <= 99) {
+                        i = showTouchNotesLevel.comboNum % 10;
+                        i2 = showTouchNotesLevel.comboNum / 10;
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                    } else if (showTouchNotesLevel.comboNum > 99 && showTouchNotesLevel.comboNum <= 999) {
+                        i = showTouchNotesLevel.comboNum / 100;
+                        i2 = (showTouchNotesLevel.comboNum - (i * 100)) / 10;
+                        i3 = showTouchNotesLevel.comboNum % 10;
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i3) / 10, 0, ((i3 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                    } else if (showTouchNotesLevel.comboNum > 999 && showTouchNotesLevel.comboNum <= 9999) {
+                        i = showTouchNotesLevel.comboNum / 1000;
+                        i2 = (showTouchNotesLevel.comboNum - (i * 1000)) / 100;
+                        i3 = ((showTouchNotesLevel.comboNum - (i * 1000)) - (i2 * 100)) / 10;
+                        int i4 = showTouchNotesLevel.comboNum % 10;
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i3) / 10, 0, ((i3 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                        rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i4) / 10, 0, ((i4 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
+                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 4)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
+                    } else if (showTouchNotesLevel.comboNum > 9999) {
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.maxImage, ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)) + showTouchNotesLevel.playView.xImage.getWidth()), showTouchNotesLevel.screenHeight, null);
                     }
                 }
             } catch (Exception ignored) {
@@ -845,7 +851,7 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        if (pianoPlay.f4619j) {
+        if (pianoPlay.isBack) {
             if (downNotes != null) {
                 while (downNotes.isAlive()) {
                     pianoPlay.isPlayingStart = false;

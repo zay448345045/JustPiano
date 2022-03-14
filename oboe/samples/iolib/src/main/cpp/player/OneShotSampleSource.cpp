@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <string.h>
+#include <cstring>
 
 #include "wav/WavStreamReader.h"
 
@@ -22,10 +22,12 @@
 
 namespace iolib {
 
-    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames) {
+    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, std::pair<int32_t, int32_t>& curFrameIndex) {
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
-        int32_t numWriteFrames = mIsPlaying
-                                 ? std::min(numFrames, numSampleFrames - mCurFrameIndex)
+        int32_t& trueIndex = curFrameIndex.first;
+        int32_t trueVolume = curFrameIndex.second;
+        int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
+                                 ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
 
         if (numWriteFrames != 0) {
@@ -35,20 +37,29 @@ namespace iolib {
             const float *data = mSampleBuffer->getSampleData();
             if (numChannels == 1) {
                 // MONO output
+                // stop to use, because it can clipping wave.
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[frameIndex] += data[mCurFrameIndex++] * mGain;
+                    outBuff[frameIndex] += data[trueIndex++] * trueVolume / 64;
                 }
             } else if (numChannels == 2) {
                 // STEREO output
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += data[mCurFrameIndex] * mLeftGain;
-                    outBuff[dstSampleIndex++] += data[mCurFrameIndex++] * mRightGain;
+                    float value = data[trueIndex] * trueVolume / 128;
+                    outBuff[dstSampleIndex++] += value;
+                    outBuff[dstSampleIndex++] += value;
+                    trueIndex++;
                 }
-            }
-
-            if (mCurFrameIndex >= numSampleFrames) {
-                mIsPlaying = false;
+            } else if (numChannels == 4) {
+                int dstSampleIndex = 0;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
+                    float value = data[trueIndex] * trueVolume / 256;;
+                    outBuff[dstSampleIndex++] += value;
+                    outBuff[dstSampleIndex++] += value;
+                    outBuff[dstSampleIndex++] += value;
+                    outBuff[dstSampleIndex++] += value;
+                    trueIndex++;
+                }
             }
         }
 

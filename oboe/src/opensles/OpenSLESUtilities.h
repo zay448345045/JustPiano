@@ -22,7 +22,7 @@
 
 namespace oboe {
 
-    const char *getSLErrStr(SLresult code);
+const char *getSLErrStr(SLresult code);
 
 /**
  * Creates an extended PCM format from the supplied format and data representation. This method
@@ -34,10 +34,10 @@ namespace oboe {
  * @param representation
  * @return the extended PCM format
  */
-    SLAndroidDataFormat_PCM_EX OpenSLES_createExtendedFormat(SLDataFormat_PCM format,
-                                                             SLuint32 representation);
+SLAndroidDataFormat_PCM_EX OpenSLES_createExtendedFormat(SLDataFormat_PCM format,
+                                                         SLuint32 representation);
 
-    SLuint32 OpenSLES_ConvertFormatToRepresentation(AudioFormat format);
+SLuint32 OpenSLES_ConvertFormatToRepresentation(AudioFormat format);
 
 } // namespace oboe
 

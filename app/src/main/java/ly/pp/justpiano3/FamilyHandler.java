@@ -7,14 +7,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+
 final class FamilyHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     FamilyHandler(OLFamily family) {
         weakReference = new WeakReference<>(family);
@@ -82,27 +81,19 @@ final class FamilyHandler extends Handler {
                         if (family.infoWindow != null && family.infoWindow.isShowing()) {
                             family.infoWindow.dismiss();
                         }
-                        if (info.equals("您所在的家族已解散!")) {
-                            try {
-                                JSONObject jSONObject = new JSONObject();
-                                jSONObject.put("K", 0);
-                                family.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        if (info.equals("您所在的家族已解散")) {
+                            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                            builder.setType(0);
+                            family.sendMsg(18, builder.build());
                             Intent intent = new Intent(family, OLPlayHallRoom.class);
                             intent.putExtra("HEAD", 16);
                             family.startActivity(intent);
                             family.finish();
                         } else {
-                            try {
-                                JSONObject jSONObject = new JSONObject();
-                                jSONObject.put("K", 1);
-                                jSONObject.put("I", family.familyID);
-                                family.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                            builder.setType(1);
+                            builder.setFamilyId(Integer.parseInt(family.familyID));
+                            family.sendMsg(18, builder.build());
                         }
                     });
                     return;

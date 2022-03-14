@@ -4,41 +4,55 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
 
 final class ShoesClick implements OnItemClickListener {
-    private final OLPlayDressRoom olplaydressroom;
+    private final OLPlayDressRoom olPlayDressRoom;
 
     ShoesClick(OLPlayDressRoom oLPlayDressRoom) {
-        olplaydressroom = oLPlayDressRoom;
+        olPlayDressRoom = oLPlayDressRoom;
     }
 
     @Override
     public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        if (olplaydressroom.shoesUnlock.contains(i)) {
-            if (i == olplaydressroom.shoesNow) {
-                olplaydressroom.shoesImage.setImageBitmap(olplaydressroom.none);
-                olplaydressroom.shoesNow = -1;
+        if (olPlayDressRoom.shoesUnlock.contains(i) || i == 0) {
+            if (i == olPlayDressRoom.shoesNow) {
+                olPlayDressRoom.shoesImage.setImageBitmap(olPlayDressRoom.none);
+                olPlayDressRoom.shoesNow = -1;
                 return;
             }
-            olplaydressroom.shoesImage.setImageBitmap(olplaydressroom.shoesArray.get(i));
-            olplaydressroom.shoesNow = i;
+            olPlayDressRoom.shoesImage.setImageBitmap(olPlayDressRoom.shoesArray.get(i));
+            olPlayDressRoom.shoesNow = i;
         } else {
-            JPDialog jpdialog = new JPDialog(olplaydressroom);
+            JPDialog jpdialog = new JPDialog(olPlayDressRoom);
             jpdialog.setTitle("解锁服装");
-            jpdialog.setMessage("确定花费" + (olplaydressroom.sex.equals("f")
+            jpdialog.setMessage("确定花费" + (olPlayDressRoom.sex.equals("f")
                     ? Consts.fShoes[i] : Consts.mShoes[i]) + "音符购买此服装吗?");
             jpdialog.setFirstButton("购买", (dialog, which) -> {
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "B");
-                    olplaydressroom.sendMsg((byte) 33, (byte) 3, (byte) i, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
+                builder.setType(2);
+                builder.setBuyClothesType(4);
+                builder.setBuyClothesId(i);
+                olPlayDressRoom.sendMsg(33, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", new DialogDismissClick());
+            });
+            if (olPlayDressRoom.shoesTry.contains(i)) {
+                jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.shoesImage.setImageBitmap(olPlayDressRoom.none);
+                    olPlayDressRoom.shoesNow = -1;
+                    ((DressAdapter) olPlayDressRoom.shoesGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.shoesTry.remove((Integer) i);
+                });
+            } else {
+                jpdialog.setSecondButton("试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.shoesImage.setImageBitmap(olPlayDressRoom.shoesArray.get(i));
+                    olPlayDressRoom.shoesNow = i;
+                    ((DressAdapter) olPlayDressRoom.shoesGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.shoesTry.add(i);
+                });
+            }
             try {
                 jpdialog.showDialog();
             } catch (Exception e3) {

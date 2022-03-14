@@ -24,32 +24,32 @@
 #include "FlowGraphNode.h"
 
 namespace FLOWGRAPH_OUTER_NAMESPACE {
-    namespace flowgraph {
+namespace flowgraph {
 
 /**
  * Combine multiple mono inputs into one interleaved multi-channel output.
  */
-        class ManyToMultiConverter : public flowgraph::FlowGraphNode {
-        public:
-            explicit ManyToMultiConverter(int32_t channelCount);
+class ManyToMultiConverter : public flowgraph::FlowGraphNode {
+public:
+    explicit ManyToMultiConverter(int32_t channelCount);
 
-            virtual ~ManyToMultiConverter() = default;
+    virtual ~ManyToMultiConverter() = default;
 
-            int32_t onProcess(int numFrames) override;
+    int32_t onProcess(int numFrames) override;
 
-            void setEnabled(bool enabled) {}
+    void setEnabled(bool /*enabled*/) {}
 
-            std::vector<std::unique_ptr<flowgraph::FlowGraphPortFloatInput>> inputs;
-            flowgraph::FlowGraphPortFloatOutput output;
+    std::vector<std::unique_ptr<flowgraph::FlowGraphPortFloatInput>> inputs;
+    flowgraph::FlowGraphPortFloatOutput output;
 
-            const char *getName() override {
-                return "ManyToMultiConverter";
-            }
+    const char *getName() override {
+        return "ManyToMultiConverter";
+    }
 
-        private:
-        };
+private:
+};
 
-    } /* namespace flowgraph */
+} /* namespace flowgraph */
 } /* namespace FLOWGRAPH_OUTER_NAMESPACE */
 
 #endif //FLOWGRAPH_MANY_TO_MULTI_CONVERTER_H

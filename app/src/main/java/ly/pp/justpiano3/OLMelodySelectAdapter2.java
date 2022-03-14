@@ -14,8 +14,8 @@ import java.util.List;
 
 public final class OLMelodySelectAdapter2 extends BaseAdapter {
     final OLMelodySelect olMelodySelect;
-    private int length;
-    private List<HashMap> songsList;
+    private final int length;
+    private final List<HashMap> songsList;
 
     OLMelodySelectAdapter2(OLMelodySelect oLMelodySelect, int i, List<HashMap> list) {
         olMelodySelect = oLMelodySelect;
@@ -61,15 +61,19 @@ public final class OLMelodySelectAdapter2 extends BaseAdapter {
         double d = (double) songsList.get(i).get("degree");
         ((TextView) view.findViewById(R.id.ol_items)).setText(songsList.get(i).get("items").toString());
         TextView textView = view.findViewById(R.id.ol_topuser);
-        String obj = songsList.get(i).get("topUser").toString();
-        textView.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.putExtra("head", 1);
-            intent.putExtra("userKitiName", obj);
-            intent.setClass(olMelodySelect, PopUserInfo.class);
-            olMelodySelect.startActivity(intent);
-        });
-        textView.setText(obj);
+        String topUserKitiName = songsList.get(i).get("topUser").toString();
+        if (!topUserKitiName.equals("(暂无冠军)")) {
+            textView.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.putExtra("head", 1);
+                intent.putExtra("userKitiName", topUserKitiName);
+                intent.setClass(olMelodySelect, PopUserInfo.class);
+                olMelodySelect.startActivity(intent);
+            });
+        } else {
+            textView.setOnClickListener(null);
+        }
+        textView.setText(topUserKitiName);
         ((TextView) view.findViewById(R.id.ol_topscore)).setText("得分:" + songsList.get(i).get("topScore"));
         int songsTime = Integer.parseInt(songsList.get(i).get("length").toString());
         String str1 = songsTime / 60 >= 10 ? "" + songsTime / 60 : "0" + songsTime / 60;

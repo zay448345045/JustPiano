@@ -28,32 +28,30 @@ public final class SearchSongsPlayTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... v) {
         if (!searchSongs.get().songID.isEmpty()) {
-            do {
-                HttpResponse execute;
-                HttpPost httpPost = new HttpPost("http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
-                List<BasicNameValuePair> arrayList = new ArrayList<>();
-                arrayList.add(new BasicNameValuePair("version", searchSongs.get().jpapplication.getVersion()));
-                arrayList.add(new BasicNameValuePair("songID", searchSongs.get().songID));
+            HttpResponse execute;
+            HttpPost httpPost = new HttpPost("http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
+            List<BasicNameValuePair> arrayList = new ArrayList<>();
+            arrayList.add(new BasicNameValuePair("version", searchSongs.get().jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("songID", searchSongs.get().songID));
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                execute = new DefaultHttpClient().execute(httpPost);
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                execute = null;
+            }
+            if (execute.getStatusLine().getStatusCode() == 200) {
                 try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    str = EntityUtils.toString(execute.getEntity());
+                } catch (Exception e4) {
+                    e4.printStackTrace();
                 }
-                try {
-                    execute = new DefaultHttpClient().execute(httpPost);
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                    execute = null;
-                }
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    try {
-                        str = EntityUtils.toString(execute.getEntity());
-                    } catch (Exception e4) {
-                        e4.printStackTrace();
-                    }
-                }
-            } while (!str.endsWith("\"}"));
-            songBytes = GZIP.ZIPToArray(str.substring(0, str.length() - 2));
+            }
+            songBytes = GZIP.ZIPToArray(str);
         }
         return null;
     }
@@ -69,7 +67,7 @@ public final class SearchSongsPlayTask extends AsyncTask<Void, Void, Void> {
             Toast.makeText(searchSongs.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
             return;
         }
-        OLMelodySelect.f4294d = songBytes;
+        OLMelodySelect.songBytes = songBytes;
         Intent intent = new Intent();
         intent.putExtra("head", 1);
         intent.putExtra("songBytes", songBytes);

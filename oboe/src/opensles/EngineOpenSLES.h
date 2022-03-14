@@ -28,40 +28,36 @@ namespace oboe {
 /**
  * INTERNAL USE ONLY
  */
-    class EngineOpenSLES {
-    public:
-        static EngineOpenSLES &getInstance();
+class EngineOpenSLES {
+public:
+    static EngineOpenSLES &getInstance();
 
-        SLresult open();
+    SLresult open();
 
-        void close();
+    void close();
 
-        SLresult createOutputMix(SLObjectItf *objectItf);
+    SLresult createOutputMix(SLObjectItf *objectItf);
 
-        SLresult createAudioPlayer(SLObjectItf *objectItf,
-                                   SLDataSource *audioSource,
-                                   SLDataSink *audioSink);
+    SLresult createAudioPlayer(SLObjectItf *objectItf,
+                               SLDataSource *audioSource,
+                               SLDataSink *audioSink);
+    SLresult createAudioRecorder(SLObjectItf *objectItf,
+                                 SLDataSource *audioSource,
+                                 SLDataSink *audioSink);
 
-        SLresult createAudioRecorder(SLObjectItf *objectItf,
-                                     SLDataSource *audioSource,
-                                     SLDataSink *audioSink);
+private:
+    // Make this a safe Singleton
+    EngineOpenSLES()= default;
+    ~EngineOpenSLES()= default;
+    EngineOpenSLES(const EngineOpenSLES&)= delete;
+    EngineOpenSLES& operator=(const EngineOpenSLES&)= delete;
 
-    private:
-        // Make this a safe Singleton
-        EngineOpenSLES() = default;
+    std::mutex             mLock;
+    int32_t                mOpenCount = 0;
 
-        ~EngineOpenSLES() = default;
-
-        EngineOpenSLES(const EngineOpenSLES &) = delete;
-
-        EngineOpenSLES &operator=(const EngineOpenSLES &) = delete;
-
-        std::mutex mLock;
-        int32_t mOpenCount = 0;
-
-        SLObjectItf mEngineObject = nullptr;
-        SLEngineItf mEngineInterface = nullptr;
-    };
+    SLObjectItf            mEngineObject = nullptr;
+    SLEngineItf            mEngineInterface = nullptr;
+};
 
 } // namespace oboe
 

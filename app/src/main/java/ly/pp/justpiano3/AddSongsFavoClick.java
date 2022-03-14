@@ -11,8 +11,8 @@ final class AddSongsFavoClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;
     private final Cursor cursor;
     private final Context context;
-    private String songsPath;
-    private String songsName;
+    private final String songsPath;
+    private final String songsName;
 
     AddSongsFavoClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, Context context) {
         this.localSongsAdapter = localSongsAdapter;

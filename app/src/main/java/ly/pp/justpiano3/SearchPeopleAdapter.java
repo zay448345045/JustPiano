@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class SearchPeopleAdapter extends BaseAdapter {
     final SearchSongs searchSongs;
-    private List<HashMap> peopleList;
+    private final List<HashMap> peopleList;
 
     SearchPeopleAdapter(SearchSongs searchSongs, List<HashMap> list) {
         this.searchSongs = searchSongs;

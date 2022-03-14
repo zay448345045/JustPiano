@@ -59,7 +59,7 @@
             android:layout_height="160dp"
             android:background="#10293535"
             android:drawableTop="@drawable/local_people"
-            android:text="备份"
+            android:text="导出"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 

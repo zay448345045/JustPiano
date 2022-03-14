@@ -3,8 +3,7 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
 
 final class CpRequestClick implements OnClickListener {
 
@@ -22,17 +21,12 @@ final class CpRequestClick implements OnClickListener {
 
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
-        try {
-            if (f5515b == 1 || f5515b == 2) {
-                JSONObject jSONObject = new JSONObject();
-                jSONObject.put("T", f5515b + 1);
-                jSONObject.put("C", olPlayRoom.user.getPlayerName());
-                jSONObject.put("CI", f5516c);
-                jSONObject.put("CT", f5517d);
-                olPlayRoom.sendMsg((byte) 45, olPlayRoom.roomID0, olPlayRoom.hallID0, jSONObject.toString());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (f5515b == 1 || f5515b == 2) {
+            OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+            builder.setType(f5515b + 1);
+            builder.setCoupleType(f5517d);
+            builder.setCoupleRoomPosition(f5516c);
+            olPlayRoom.sendMsg(45, builder.build());
         }
         dialogInterface.dismiss();
     }

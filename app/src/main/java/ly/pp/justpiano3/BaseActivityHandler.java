@@ -7,7 +7,7 @@ import android.os.Message;
 import java.lang.ref.WeakReference;
 
 final class BaseActivityHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     BaseActivityHandler(BaseActivity baseActivity) {
         weakReference = new WeakReference<>(baseActivity);
@@ -18,7 +18,7 @@ final class BaseActivityHandler extends Handler {
         final BaseActivity baseActivity = (BaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {
-                baseActivity.f3995a = true;
+                baseActivity.isOutLine = true;
                 baseActivity.outLine();
             });
         }

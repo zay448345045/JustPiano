@@ -31,7 +31,6 @@ class MonotonicCounter {
 
 public:
     MonotonicCounter() {}
-
     virtual ~MonotonicCounter() {}
 
     /**

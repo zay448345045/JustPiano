@@ -28,20 +28,20 @@ namespace resampler {
  * Resampler that can interpolate between coefficients.
  * This can be used to support arbitrary ratios.
  */
-    class SincResampler : public MultiChannelResampler {
-    public:
-        explicit SincResampler(const MultiChannelResampler::Builder &builder);
+class SincResampler : public MultiChannelResampler {
+public:
+    explicit SincResampler(const MultiChannelResampler::Builder &builder);
 
-        virtual ~SincResampler() = default;
+    virtual ~SincResampler() = default;
 
-        void readFrame(float *frame) override;
+    void readFrame(float *frame) override;
 
-    protected:
+protected:
 
-        std::vector<float> mSingleFrame2; // for interpolation
-        int32_t mNumRows = 0;
-        double mPhaseScaler = 1.0;
-    };
+    std::vector<float> mSingleFrame2; // for interpolation
+    int32_t            mNumRows = 0;
+    double             mPhaseScaler = 1.0;
+};
 
 }
 #endif //OBOE_SINC_RESAMPLER_H

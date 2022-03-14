@@ -32,7 +32,7 @@ typedef void *(*fp_ATrace_endSection)();
 
 bool Trace::mIsTracingSupported = false;
 
-void Trace::beginSection(const char *format, ...) {
+void Trace::beginSection(const char *format, ...){
 
     if (mIsTracingSupported) {
         va_list va;
@@ -68,7 +68,7 @@ void Trace::initialize() {
                 reinterpret_cast<fp_ATrace_endSection >(
                         dlsym(lib, "ATrace_endSection"));
 
-        if (ATrace_beginSection != nullptr && ATrace_endSection != nullptr) {
+        if (ATrace_beginSection != nullptr && ATrace_endSection != nullptr){
             mIsTracingSupported = true;
         }
     }

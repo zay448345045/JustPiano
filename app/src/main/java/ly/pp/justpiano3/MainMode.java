@@ -3,21 +3,27 @@ package ly.pp.justpiano3;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;
+    public JPApplication jpApplication;
     private JPProgressBar jpprogressBar;
 
     @Override
@@ -71,9 +77,10 @@ public class MainMode extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, RecordFiles.class);
                 startActivity(intent);
-                finish();
                 return;
             case R.id.piano_help:
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                sharedPreferences.edit().putBoolean("new_help", false).apply();
                 intent.setClass(this, PianoHelper.class);
                 startActivity(intent);
                 finish();
@@ -82,21 +89,31 @@ public class MainMode extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, ChatFiles.class);
                 startActivity(intent);
-                finish();
                 return;
             case R.id.settings:
                 intent.setClass(this, SettingsMode.class);
-                startActivity(intent);
+                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 return;
             case R.id.feed_back:
+                View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
+                TextView textView = inflate.findViewById(R.id.text_1);
+                if (jpApplication.getKitiName() != null) {
+                    textView.setText(jpApplication.getKitiName());
+                }
+                TextView textViewTitle = inflate.findViewById(R.id.title_1);
+                TextView messageView = inflate.findViewById(R.id.message_view);
+                inflate.findViewById(R.id.message_view).setVisibility(View.VISIBLE);
+                messageView.setText("问题将直接反馈至开发者，请认真填写，感谢您的支持和宝贵意见（若昵称填写准确，您可能会收到私信回复问题处理结果）");
+                textViewTitle.setText("昵称:");
+                TextView textView2 = inflate.findViewById(R.id.text_2);
+                TextView textView2Title = inflate.findViewById(R.id.title_2);
+                textView2Title.setText("内容:");
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("反馈");
-                jpdialog.setMessage("反馈问题请使用极品钢琴账号登录官网，打开官网问题反馈页面进行意见反馈");
-                jpdialog.setFirstButton("访问官网", (dialog, which) -> {
+                jpdialog.loadInflate(inflate);
+                jpdialog.setFirstButton("提交", (dialog, which) -> {
                     dialog.dismiss();
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("https://i.justpiano.fun"));
-                    startActivity(intent1);
+                    new FeedbackTask(this, textView.getText().toString(), textView2.getText().toString()).execute();
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.showDialog();
@@ -106,13 +123,26 @@ public class MainMode extends Activity implements OnClickListener {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+            jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        }
+    }
+
+    @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
-        jpApplication.loadSettings(0);
+        jpApplication = (JPApplication) getApplication();
+        jpApplication.loadSettings(false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean newHelp = sharedPreferences.getBoolean("new_help", true);
+        if (newHelp) {
+            findViewById(R.id.new_help).setVisibility(View.VISIBLE);
+        }
         TextView f4202b = findViewById(R.id.local_game);
         f4202b.setOnClickListener(this);
         TextView f4203c = findViewById(R.id.online_game);
@@ -129,9 +159,9 @@ public class MainMode extends Activity implements OnClickListener {
         f4206f.setOnClickListener(this);
         TextView f4208h = findViewById(R.id.piano_help);
         f4208h.setOnClickListener(this);
-        TextView f4211k = (Button) findViewById(R.id.listen);
+        TextView f4211k = findViewById(R.id.listen);
         f4211k.setOnClickListener(this);
-        f4211k = (Button) findViewById(R.id.feed_back);
+        f4211k = findViewById(R.id.feed_back);
         f4211k.setOnClickListener(this);
         jpprogressBar = new JPProgressBar(this);
         if (jpApplication.title != null && jpApplication.f4072f != null && !jpApplication.title.isEmpty() && !jpApplication.f4072f.isEmpty()) {
@@ -145,7 +175,13 @@ public class MainMode extends Activity implements OnClickListener {
             });
             jpdialog.showDialog();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
@@ -158,6 +194,25 @@ public class MainMode extends Activity implements OnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
             }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
+            }
+        }
+        try {
+            File file1 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
+            File file2 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
+            File file3 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records");
+            if (!file1.exists()) {
+                file1.mkdirs();
+            }
+            if (!file2.exists()) {
+                file2.mkdirs();
+            }
+            if (!file3.exists()) {
+                file3.mkdirs();
+            }
+        } catch (Exception e4) {
+            e4.printStackTrace();
         }
     }
 }

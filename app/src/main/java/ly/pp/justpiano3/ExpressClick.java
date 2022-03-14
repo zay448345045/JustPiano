@@ -3,8 +3,8 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineHallChatDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
 
 final class ExpressClick implements OnClickListener {
     private final ExpressAdapter expressAdapter;
@@ -19,15 +19,18 @@ final class ExpressClick implements OnClickListener {
     public final void onClick(View view) {
         if (expressAdapter.popupWindow != null && expressAdapter.popupWindow.isShowing()) {
             expressAdapter.popupWindow.dismiss();
-            if (expressAdapter.cs != null) {
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("@", "");
-                    jSONObject.put("M", "//" + expressID);
-                    jSONObject.put("V", 99);
-                    expressAdapter.cs.writeData(expressAdapter.f6038g, expressAdapter.f6036e, expressAdapter.f6037f, jSONObject.toString(), null);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            if (expressAdapter.connectionService != null) {
+                if (expressAdapter.messageType == 12) {
+                    OnlineHallChatDTO.Builder builder = OnlineHallChatDTO.newBuilder();
+                    builder.setMessage("//" + expressID);
+                    builder.setUserName("");
+                    expressAdapter.connectionService.writeData(expressAdapter.messageType, builder.build());
+                } else if (expressAdapter.messageType == 13) {
+                    OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
+                    builder.setMessage("//" + expressID);
+                    builder.setUserName("");
+                    builder.setColor(99);
+                    expressAdapter.connectionService.writeData(expressAdapter.messageType, builder.build());
                 }
             }
         }

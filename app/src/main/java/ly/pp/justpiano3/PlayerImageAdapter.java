@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,12 +22,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomDoorDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineKickedQuitRoomDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
+
 public final class PlayerImageAdapter extends BaseAdapter {
     byte roomID;
     ConnectionService connectionService;
-    private OLPlayRoom olPlayRoom;
-    private List<Bundle> playerList;
-    private LayoutInflater layoutInflater;
+    private final OLPlayRoom olPlayRoom;
+    private final List<Bundle> playerList;
+    private final LayoutInflater layoutInflater;
 
     PlayerImageAdapter(List<Bundle> list, OLPlayRoom olPlayRoom) {
         layoutInflater = olPlayRoom.getLayoutInflater();
@@ -60,14 +66,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (connectionService != null) {
-                            JSONObject jSONObject = new JSONObject();
-                            try {
-                                jSONObject.put("C", user.getPosition());
-                                jSONObject.put("T", 4);
-                                connectionService.writeData((byte) 45, roomID, olPlayRoom.hallID0, jSONObject.toString(), null);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            builder.setType(4);
+                            connectionService.writeData(45, builder.build());
                         }
                     }
                 });
@@ -93,14 +95,45 @@ public final class PlayerImageAdapter extends BaseAdapter {
             } else if (user.getIsHost().equals("C")) {
                 button4.setText("打开空位");
                 button3.setVisibility(View.GONE);
-                button4.setOnClickListener(new OpenPositionClick(this, popupWindow, user, olPlayRoom));
+                button4.setOnClickListener(v -> {
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                        if (olPlayRoom.playerKind.equals("H") && connectionService != null) {
+                            OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            connectionService.writeData(42, builder.build());
+                        }
+                    }
+                });
             } else if (user.getIsHost().equals("O")) {
                 button4.setText("关闭空位");
                 button3.setVisibility(View.GONE);
-                button4.setOnClickListener(new ClosePositionClick(this, popupWindow, user, olPlayRoom));
+                button4.setOnClickListener(v -> {
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                        if (olPlayRoom.playerKind.equals("H") && connectionService != null) {
+                            OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            connectionService.writeData(42, builder.build());
+                        }
+                    }
+                });
             } else {
                 button4.setVisibility(View.GONE);
-                button3.setOnClickListener(new KickOutRoomClick(this, popupWindow, user, olPlayRoom));
+                button3.setOnClickListener(v -> {
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                        if (olPlayRoom.playerKind.equals("H") && connectionService != null) {
+                            if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
+                                Toast.makeText(olPlayRoom, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
+                                builder.setRoomPosition(user.getPosition());
+                                connectionService.writeData(9, builder.build());
+                            }
+                        }
+                    }
+                });
             }
         } else {
             if (user.getCpKind() > 0 && user.getCpKind() <= 3) {
@@ -109,14 +142,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (connectionService != null) {
-                            JSONObject jSONObject = new JSONObject();
-                            try {
-                                jSONObject.put("C", user.getPosition());
-                                jSONObject.put("T", 4);
-                                connectionService.writeData((byte) 45, roomID, olPlayRoom.hallID0, jSONObject.toString(), null);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                            builder.setRoomPosition(user.getPosition());
+                            builder.setType(4);
+                            connectionService.writeData(45, builder.build());
                         }
                     }
                 });
@@ -134,13 +163,9 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                     if (connectionService != null) {
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("C", user.getPosition());
-                            connectionService.writeData((byte) 2, roomID, olPlayRoom.hallID0, jSONObject.toString(), null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
+                        builder.setName(user.getPlayerName());
+                        connectionService.writeData(2, builder.build());
                     }
                 }
             });
@@ -202,6 +227,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
         ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
         ImageView imageView5 = view.findViewById(R.id.ol_player_hair);
+        ImageView imageView5e = view.findViewById(R.id.ol_player_eye);
         ImageView imageView6 = view.findViewById(R.id.ol_player_couple);
         ImageView imageView7 = view.findViewById(R.id.ol_player_family);
         int i3 = playerList.get(i).getInt("LV");
@@ -285,6 +311,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             int i6 = playerList.get(i).getInt("TR") - 1;
             int i7 = playerList.get(i).getInt("JA") - 1;
             int i8 = playerList.get(i).getInt("HA") - 1;
+            int i8e = playerList.get(i).getInt("EY") - 1;
             int i9 = playerList.get(i).getInt("SH") - 1;
             textView3.setText("LV." + i3);
             textView4.setText("CL." + i4);
@@ -311,6 +338,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_h" + i8 + ".png")));
+            }
+            if (i8e < 0) {
+                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_e" + i8e + ".png")));
             }
         } catch (Exception e) {
             e.printStackTrace();

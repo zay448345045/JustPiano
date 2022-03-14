@@ -72,8 +72,8 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
         arrayList.add(new BasicNameValuePair("keywords", strArr[0]));
         arrayList.add(new BasicNameValuePair("userName", usersInfo.get().jpapplication.getAccountName()));
         if (strArr[1] == null || strArr[2] == null) {
-            arrayList.add(new BasicNameValuePair("msg", usersInfo.get().f5066j));
-            arrayList.add(new BasicNameValuePair("age", String.valueOf(usersInfo.get().f5067k)));
+            arrayList.add(new BasicNameValuePair("msg", usersInfo.get().pSign));
+            arrayList.add(new BasicNameValuePair("age", String.valueOf(usersInfo.get().age)));
         } else {
             arrayList.add(new BasicNameValuePair("oldPass", strArr[1]));
             arrayList.add(new BasicNameValuePair("newPass", strArr[2]));

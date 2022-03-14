@@ -28,17 +28,17 @@ namespace oboe {
 /**
  * AudioSource that uses callback to get more float data.
  */
-    class SourceFloatCaller : public AudioSourceCaller {
-    public:
-        SourceFloatCaller(int32_t channelCount, int32_t framesPerCallback)
-                : AudioSourceCaller(channelCount, framesPerCallback, (int32_t) sizeof(float)) {}
+class SourceFloatCaller : public AudioSourceCaller {
+public:
+    SourceFloatCaller(int32_t channelCount, int32_t framesPerCallback)
+    : AudioSourceCaller(channelCount, framesPerCallback, (int32_t)sizeof(float)) {}
 
-        int32_t onProcess(int32_t numFrames) override;
+    int32_t onProcess(int32_t numFrames) override;
 
-        const char *getName() override {
-            return "SourceFloatCaller";
-        }
-    };
+    const char *getName() override {
+        return "SourceFloatCaller";
+    }
+};
 
 }
 #endif //OBOE_SOURCE_FLOAT_CALLER_H

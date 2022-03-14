@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.sql.Date;
 
 public class PlayFinish extends Activity implements OnClickListener {
-    private static int head;
+    private int head;
     public JPApplication jpapplication;
     String scoreArray = "";
     JPProgressBar jpprogressBar;
@@ -30,9 +30,12 @@ public class PlayFinish extends Activity implements OnClickListener {
     private int clickNum = 0;
     private int combo = 0;
     private double nandu;
+    private double leftNandu;
+    private int hand;
+    private int songsTime;
     private String path = "";
-    private ImageButton f4671o;
-    private ImageButton f4672p;
+    private ImageButton finishButton;
+    private ImageButton retryButton;
     private boolean isWinner = false;
     private int topScore;
     private int totalScore;
@@ -50,34 +53,38 @@ public class PlayFinish extends Activity implements OnClickListener {
     public void onClick(View view) {
         Intent intent = new Intent(this, PianoPlay.class);
         int i = Math.max(topScore, totalScore);
-        if (view == f4671o) {
-            OLMelodySelect.f4294d = null;
+        if (view == finishButton) {
+            OLMelodySelect.songBytes = null;
             setResult(-1, intent);
             finish();
-        } else if (view == f4672p) {
+        } else if (view == retryButton) {
             switch (head) {
                 case 0:
                     setResult(-1, intent);
                     intent = new Intent();
                     intent.setClass(this, PianoPlay.class);
                     intent.putExtra("head", head);
+                    intent.putExtra("hand", hand);
                     intent.putExtra("name", name);
                     intent.putExtra("path", path);
                     intent.putExtra("nandu", nandu);
+                    intent.putExtra("leftnandu", leftNandu);
+                    intent.putExtra("songstime", songsTime);
+                    intent.putExtra("isrecord", false);
                     intent.putExtra("score", i);
                     startActivity(intent);
                     finish();
                     return;
                 case 1:
-                    if (OLMelodySelect.f4294d != null) {
+                    if (OLMelodySelect.songBytes != null) {
                         setResult(-1, intent);
                         intent = new Intent();
                         intent.setClass(this, PianoPlay.class);
                         intent.putExtra("head", head);
                         intent.putExtra("songName", name);
                         intent.putExtra("degree", nandu);
-                        intent.putExtra("songBytes", OLMelodySelect.f4294d);
-                        intent.putExtra("songID", OLMelodySelect.songID);
+                        intent.putExtra("songBytes", OLMelodySelect.songBytes);
+                        intent.putExtra("songID", songID);
                         intent.putExtra("topScore", i);
                         startActivity(intent);
                         finish();
@@ -108,6 +115,9 @@ public class PlayFinish extends Activity implements OnClickListener {
                 name = extras.getString("name");
                 path = extras.getString("path");
                 nandu = extras.getDouble("nandu");
+                leftNandu = extras.getDouble("leftnandu");
+                songsTime = extras.getInt("songstime");
+                hand = extras.getInt("hand");
                 combo = extras.getInt("top_combo");
                 comboScore = extras.getInt("combo_scr");
                 perfectScore = perfect * 10;
@@ -155,7 +165,8 @@ public class PlayFinish extends Activity implements OnClickListener {
                 combo = extras.getInt("top_combo");
                 comboScore = extras.getInt("combo_scr");
                 try {
-                    scoreArray = GZIP.arrayToZIP(extras.getByteArray("scoreArray"));
+                    byte[] scoreArrays = extras.getByteArray("scoreArray");
+                    scoreArray = GZIP.arrayToZIP(scoreArrays);
                 } catch (Exception e2) {
                     e2.printStackTrace();
                 }
@@ -175,10 +186,10 @@ public class PlayFinish extends Activity implements OnClickListener {
         }
         setContentView(R.layout.finish);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        f4671o = findViewById(R.id.ok);
-        f4671o.setOnClickListener(this);
-        f4672p = findViewById(R.id.retry);
-        f4672p.setOnClickListener(this);
+        finishButton = findViewById(R.id.ok);
+        finishButton.setOnClickListener(this);
+        retryButton = findViewById(R.id.retry);
+        retryButton.setOnClickListener(this);
         Button f4654R = findViewById(R.id.share_score);
         f4654R.setOnClickListener(this);
         TextView f4681y = findViewById(R.id.perfect);
@@ -215,9 +226,9 @@ public class PlayFinish extends Activity implements OnClickListener {
         f4650N.setText(String.valueOf(totalScore));
         TextView f4651O = findViewById(R.id.report);
         if (isWinner) {
-            f4651O.setText("恭喜您获得了<" + name + ">曲目的冠军!");
+            f4651O.setText("恭喜您获得了《" + name + "》曲目的冠军!");
         } else {
-            f4651O.setText("很不幸,你差点就是<" + name + ">曲目的冠军了。");
+            f4651O.setText("很不幸,您差点就是《" + name + "》曲目的冠军了");
         }
     }
 }

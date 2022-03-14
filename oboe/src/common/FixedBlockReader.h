@@ -27,7 +27,8 @@
  * This can be used to convert a pull data flow from fixed sized buffers to variable sized buffers.
  * An example would be an audio output callback that reads from the app.
  */
-class FixedBlockReader : public FixedBlockAdapter {
+class FixedBlockReader : public FixedBlockAdapter
+{
 public:
     FixedBlockReader(FixedBlockProcessor &fixedBlockProcessor);
 
@@ -52,7 +53,7 @@ public:
 private:
     int32_t readFromStorage(uint8_t *buffer, int32_t numBytes);
 
-    int32_t mValid = 0;            // Number of valid bytes in mStorage.
+    int32_t               mValid = 0;            // Number of valid bytes in mStorage.
 };
 
 

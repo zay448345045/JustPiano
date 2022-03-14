@@ -63,13 +63,13 @@ public class ImageLoader {
             CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
             KEEP_ALIVE, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(), sThreadFactory);
-    private Context mContext;
+    private final Context mContext;
     private boolean mIsDiskLruCacheCreated = false;
-    private LruCache<String, Bitmap> mMemoryCache;
+    private final LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache = null;
     private ImageResizer mImageResizer;
     // Handler
-    private Handler mMainHandler = new Handler(Looper.getMainLooper()) {
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             LoaderResult result = (LoaderResult) msg.obj;
@@ -337,7 +337,9 @@ public class ImageLoader {
         try {
             out = new BufferedOutputStream(outputStream, 8 * 1024);
             byte[] array = GZIP.ZIPToArray(response);
-            out.write(array);
+            if (array != null && array.length > 0) {
+                out.write(array);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();

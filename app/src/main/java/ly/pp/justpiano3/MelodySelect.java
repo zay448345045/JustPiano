@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     SharedPreferences sharedPreferences;
     LayoutInflater layoutInflater1;
     LayoutInflater layoutInflater2;
+    JPProgressBar jpprogressBar;
     ImageView f4228E;
     String f4231H = "";
     String f4238O = "online = 1";
@@ -56,30 +58,27 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     PlaySongs playSongs;
     String f4263s = "";
     int f4264t;
-    TextView f4266v;
+    TextView titleTextView;
     JPApplication jpapplication;
     Cursor cursor;
-    private Button f4229F;
-    private boolean f4234K;
-    private PopupWindow popupwindow = null;
+    private Button sortButton;
+    private ImageView menuListButton;
+    private boolean firstLoadFocusFinish;
+    private PopupWindow sortPopupwindow = null;
+    private PopupWindow menuPopupwindow = null;
     private TextView f4237N;
     private int f4244U;
-    private ListView f4246b;
-    private LocalSongsAdapter f4250f;
-    private TestSQL testSQL;
+    private ListView songListView;
+    private LocalSongsAdapter songListAdapter;
+    public TestSQL testSQL;
     private int score;
-    private List<String> f4269y = new ArrayList<>();
-
-    private void m3611b() {
-        f4269y.clear();
-        Collections.addAll(f4269y, Consts.sortNames);
-    }
+    private final List<String> sortNamesList = new ArrayList<>();
 
     public final void mo2784a(Cursor cursor) {
         isFollowPlay.setChecked(false);
-        if (f4250f == null) {
-            f4250f = new LocalSongsAdapter(this, this, cursor);
-            f4246b.setAdapter(f4250f);
+        if (songListAdapter == null) {
+            songListAdapter = new LocalSongsAdapter(this, this, cursor);
+            songListView.setAdapter(songListAdapter);
             return;
         }
         Cursor cursor2;
@@ -114,8 +113,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             default:
                 cursor2 = new JustPianoCursorWrapper(cursor, "name", true);
         }
-        f4250f.changeCursor(cursor2);
-        f4250f.notifyDataSetChanged();
+        songListAdapter.changeCursor(cursor2);
+        songListAdapter.notifyDataSetChanged();
     }
 
     protected final void mo2785a(String str2, int i) {
@@ -137,12 +136,57 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         switch (message.what) {
             case 1:
                 int i = data.getInt("selIndex");
-                f4229F.setText(f4269y.get(i));
+                sortButton.setText(sortNamesList.get(i));
                 sortStr = Consts.sortSyntax[i];
-                if (!f4231H.isEmpty() && f4250f != null && sqlitedatabase != null) {
+                if (!f4231H.isEmpty() && songListAdapter != null && sqlitedatabase != null) {
                     mo2784a(sqlitedatabase.query("jp_data", null, "ishot = 0 and " + f4238O + " and item=?", new String[]{f4231H}, null, null, sortStr));
                 }
-                popupwindow.dismiss();
+                sortPopupwindow.dismiss();
+                break;
+            case 2:
+                menuPopupwindow.dismiss();
+                if (playSongs != null) {
+                    playSongs.isPlayingSongs = false;
+                    playSongs = null;
+                }
+                Intent intent = new Intent();
+                switch (data.getInt("selIndex")) {
+                    case 0:  // 参数设置
+                        intent.setClass(this, SettingsMode.class);
+                        startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                        break;
+                    case 1:  // 曲库同步
+                        new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(testSQL)).execute();
+                        break;
+                    case 2:  // 数据导出
+                        JPDialog jpdialog = new JPDialog(this);
+                        jpdialog.setTitle("数据导入导出");
+                        jpdialog.setMessage("此功能可将本地收藏夹、弹奏分数数据进行导入导出，导出路径为SD卡\\JustPiano\\local_data.db。导入文件后将清除当前本地曲谱分数及收藏数据，请谨慎操作");
+                        jpdialog.setVisibleRadioGroup(true);
+                        RadioButton radioButton = new RadioButton(this);
+                        radioButton.setText("APP本地收藏夹、弹奏分数数据导出至SD卡\\JustPiano\\local_data.db");
+                        radioButton.setTextSize(13);
+                        radioButton.setTag(1);
+                        radioButton.setHeight(100);
+                        jpdialog.addRadioButton(radioButton);
+                        radioButton = new RadioButton(this);
+                        radioButton.setText("导入SD卡\\JustPiano\\local_data.db中的数据至APP(导入后将清除当前数据)");
+                        radioButton.setTextSize(13);
+                        radioButton.setTag(2);
+                        radioButton.setHeight(100);
+                        jpdialog.addRadioButton(radioButton);
+                        jpdialog.setFirstButton("执行", (dialog, which) -> {
+                            dialog.dismiss();
+                            new LocalDataImportExportTask(this, jpdialog.getRadioGroupCheckedId()).execute();
+                        });
+                        jpdialog.setSecondButton("取消", new DialogDismissClick());
+                        jpdialog.showDialog();
+                        break;
+                    case 3:  // 录音文件
+                        intent.setClass(this, RecordFiles.class);
+                        startActivity(intent);
+                        break;
+                }
                 break;
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
@@ -152,7 +196,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 }
                 break;
             case 4:
-                Cursor cursor = f4250f.getCursor();
+                Cursor cursor = songListAdapter.getCursor();
                 int i2 = data.getInt("position") + 1;
                 playSongs = null;
                 songsPath = "";
@@ -166,6 +210,14 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 break;
         }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        }
     }
 
     @Override
@@ -194,8 +246,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.list_sort_b:
-                if (f4234K) {
-                    popupwindow.showAsDropDown(f4229F);
+                if (firstLoadFocusFinish) {
+                    sortPopupwindow.showAsDropDown(sortButton);
                 }
                 return;
             case R.id.search_button:
@@ -218,10 +270,10 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                     e.printStackTrace();
                 }
                 return;
-            case R.id.setting_fast:
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsMode.class);
-                startActivity(intent);
+            case R.id.menu_list_fast:
+                if (firstLoadFocusFinish) {
+                    menuPopupwindow.showAsDropDown(menuListButton);
+                }
                 return;
             default:
         }
@@ -234,6 +286,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         sortStr = Consts.sortSyntax[0];
         jpapplication = (JPApplication) getApplication();
+        jpprogressBar = new JPProgressBar(this, jpapplication);
         try {
             LayoutInflater f4265u = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             layoutInflater1 = LayoutInflater.from(this);
@@ -253,9 +306,9 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             setContentView(linearLayout);
             linearLayout.setOnTouchListener((v, event) -> {
                 if (null != getCurrentFocus()) {
-                    InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    if (mInputMethodManager != null) {
-                        return mInputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    if (inputMethodManager != null) {
+                        return inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     }
                 }
                 return false;
@@ -263,23 +316,27 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             jpapplication.setBackGround(this, "ground", linearLayout);
             Button f4230G = findViewById(R.id.search_button);
             f4230G.setOnClickListener(this);
-            f4229F = findViewById(R.id.list_sort_b);
-            f4229F.setOnClickListener(this);
+            sortButton = findViewById(R.id.list_sort_b);
+            sortButton.setOnClickListener(this);
             ListView f4245a = findViewById(R.id.f_list);
-            f4246b = findViewById(R.id.c_list);
+            songListView = findViewById(R.id.c_list);
             TextView f4247c = findViewById(R.id.all_mel);
             autoctv = findViewById(R.id.search_edit);
             ImageView searchFast = findViewById(R.id.search_fast);
             searchFast.setOnClickListener(this);
-            ImageView settingFast = findViewById(R.id.setting_fast);
-            settingFast.setOnClickListener(this);
+            menuListButton = findViewById(R.id.menu_list_fast);
+            menuListButton.setOnClickListener(this);
             autoctv.addTextChangedListener(this);
             initAutoComplete(autoctv);
             isRecord = findViewById(R.id.check_record);
             if (f4244U == 10) {
                 isRecord.setVisibility(View.GONE);
             } else {
-                isRecord.setOnCheckedChangeListener(new RecordCheckChange(this));
+                isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
+                        mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
+                    }
+                });
             }
             isFollowPlay = findViewById(R.id.check_play);
             if (f4244U == 10) {
@@ -287,7 +344,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isFollowPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("play_dialog", true)) {
-                        mo2785a("选择后软件将从当前播放的曲目开始依次播放试听。", 1);
+                        mo2785a("选择后软件将从当前播放的曲目开始依次播放试听", 1);
                     }
                 });
             }
@@ -297,7 +354,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
-                        mo2785a("选择后您将弹奏曲谱的和弦，软件将自动播放主旋律。", 2);
+                        mo2785a("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 2);
                     }
                 });
             }
@@ -305,7 +362,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             f4247c.setText("曲谱:" + f4257m);
             f4248d.setText("总分:" + score);
             f4245a.setAdapter(new LocalSongsItemAdapter(this));
-            f4246b.setCacheColorHint(0);
+            songListView.setCacheColorHint(0);
             f4245a.setCacheColorHint(0);
             f4245a.setOnItemClickListener((parent, view, position, id) -> {
                 Cursor query;
@@ -325,29 +382,29 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 f4263s = Consts.items[position];
                 f4261q = view;
             });
-            f4266v = findViewById(R.id.title_bar);
-            f4266v.setVisibility(View.GONE);
+            titleTextView = findViewById(R.id.title_bar);
+            titleTextView.setVisibility(View.GONE);
             f4237N = findViewById(R.id.time_text);
             if (f4255k) {
-                f4266v.setVisibility(View.VISIBLE);
+                titleTextView.setVisibility(View.VISIBLE);
             }
             f4249e = findViewById(R.id.show_button);
             f4249e.setVisibility(View.GONE);
             f4249e.setOnClickListener(v -> {
                 if (f4255k) {
-                    f4266v.setVisibility(View.GONE);
+                    titleTextView.setVisibility(View.GONE);
                     f4255k = false;
                     f4249e.setText("显示标题");
                     return;
                 }
-                f4266v.setVisibility(View.GONE);
+                titleTextView.setVisibility(View.GONE);
                 f4255k = true;
                 f4249e.setText("隐藏标题");
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sharedPreferences = getSharedPreferences("set", 0);
+        sharedPreferences = getSharedPreferences("set", MODE_PRIVATE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     }
@@ -359,8 +416,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             playSongs = null;
         }
         handler = null;
-        if (f4250f != null && f4250f.getCursor() != null) {
-            f4250f.getCursor().close();
+        if (songListAdapter != null && songListAdapter.getCursor() != null) {
+            songListAdapter.getCursor().close();
         }
         if (cursor != null) {
             cursor.close();
@@ -384,18 +441,28 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     @Override
     public void onWindowFocusChanged(boolean z) {
         super.onWindowFocusChanged(z);
-        while (!f4234K) {
+        while (!firstLoadFocusFinish) {
             handler = new Handler(this);
-            int f4232I = f4229F.getWidth() + 10;
-            m3611b();
+            sortNamesList.clear();
+            Collections.addAll(sortNamesList, Consts.sortNames);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);
-            ListView f4233J = inflate.findViewById(R.id.list);
-            OLMelodySelectAdapter f4236M = new OLMelodySelectAdapter(this, handler, f4269y);
-            f4233J.setAdapter(f4236M);
-            popupwindow = new PopupWindow(inflate, f4232I, -2, true);
-            popupwindow.setOutsideTouchable(true);
-            popupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
-            f4234K = true;
+            ListView listView = inflate.findViewById(R.id.list);
+            PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
+            listView.setAdapter(popupWindowSelectAdapter);
+            sortPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 10, -2, true);
+            sortPopupwindow.setOutsideTouchable(true);
+            sortPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+
+            List<String> menuListNames = new ArrayList<>();
+            Collections.addAll(menuListNames, Consts.localMenuListNames);
+            inflate = getLayoutInflater().inflate(R.layout.options, null);
+            listView = inflate.findViewById(R.id.list);
+            popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
+            listView.setAdapter(popupWindowSelectAdapter);
+            menuPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 10, -2, true);
+            menuPopupwindow.setOutsideTouchable(true);
+            menuPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+            firstLoadFocusFinish = true;
         }
     }
 

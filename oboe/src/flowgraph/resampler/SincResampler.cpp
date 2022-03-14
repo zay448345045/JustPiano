@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
+#include <cassert>
 #include <math.h>
 #include "SincResampler.h"
 
 using namespace resampler;
 
 SincResampler::SincResampler(const MultiChannelResampler::Builder &builder)
-        : MultiChannelResampler(builder), mSingleFrame2(builder.getChannelCount()) {
+        : MultiChannelResampler(builder)
+        , mSingleFrame2(builder.getChannelCount()) {
     assert((getNumTaps() % 4) == 0); // Required for loop unrolling.
     mNumRows = kMaxCoefficients / getNumTaps(); // no guard row needed
-//    printf("SincResampler: numRows = %d\n", mNumRows);
     mPhaseScaler = (double) mNumRows / mDenominator;
     double phaseIncrement = 1.0 / mNumRows;
     generateCoefficients(builder.getInputRate(),
@@ -60,7 +61,7 @@ void SincResampler::readFrame(float *frame) {
         float coefficient2 = *coefficients2++;
         for (int channel = 0; channel < getChannelCount(); channel++) {
             float sample = *xFrame++;
-            mSingleFrame[channel] += sample * coefficient1;
+            mSingleFrame[channel] +=  sample * coefficient1;
             mSingleFrame2[channel] += sample * coefficient2;
         }
     }

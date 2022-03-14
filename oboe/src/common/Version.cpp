@@ -22,7 +22,7 @@ namespace oboe {
     // Please do not optimize or change in any way.
     char kVersionText[] = "OboeVersion" OBOE_VERSION_TEXT;
 
-    const char *getVersionText() {
+    const char * getVersionText(){
         return kVersionText;
     }
 } // namespace oboe

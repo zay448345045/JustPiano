@@ -43,109 +43,111 @@ namespace oboe {
  * }
  * </code>
  */
-    template<typename T>
-    class ResultWithValue {
-    public:
+template <typename T>
+class ResultWithValue {
+public:
 
-        /**
-         * Construct a ResultWithValue containing an error result.
-         *
-         * @param error The error
-         */
-        ResultWithValue(oboe::Result error)
-                : mValue{}, mError(error) {}
+    /**
+     * Construct a ResultWithValue containing an error result.
+     *
+     * @param error The error
+     */
+    ResultWithValue(oboe::Result error)
+            : mValue{}
+            , mError(error) {}
 
-        /**
-         * Construct a ResultWithValue containing an OK result and a value.
-         *
-         * @param value the value to store
-         */
-        explicit ResultWithValue(T value)
-                : mValue(value), mError(oboe::Result::OK) {}
+    /**
+     * Construct a ResultWithValue containing an OK result and a value.
+     *
+     * @param value the value to store
+     */
+    explicit ResultWithValue(T value)
+            : mValue(value)
+            , mError(oboe::Result::OK) {}
 
-        /**
-         * Get the result.
-         *
-         * @return the result
-         */
-        oboe::Result error() const {
-            return mError;
+    /**
+     * Get the result.
+     *
+     * @return the result
+     */
+    oboe::Result error() const {
+        return mError;
+    }
+
+    /**
+     * Get the value
+     * @return
+     */
+    T value() const {
+        return mValue;
+    }
+
+    /**
+     * @return true if OK
+     */
+    explicit operator bool() const { return mError == oboe::Result::OK; }
+
+    /**
+     * Quick way to check for an error.
+     *
+     * The caller could write something like this:
+     * <code>
+     *     if (!result) { printf("Got error %s\n", convertToText(result.error())); }
+     * </code>
+     *
+     * @return true if an error occurred
+     */
+    bool operator !() const { return mError != oboe::Result::OK; }
+
+    /**
+     * Implicitly convert to a Result. This enables easy comparison with Result values. Example:
+     *
+     * <code>
+     *     ResultWithValue result = openStream();
+     *     if (result == Result::ErrorNoMemory){ // tell user they're out of memory }
+     * </code>
+     */
+    operator Result() const {
+        return mError;
+    }
+
+    /**
+     * Create a ResultWithValue from a number. If the number is positive the ResultWithValue will
+     * have a result of Result::OK and the value will contain the number. If the number is negative
+     * the result will be obtained from the negative number (numeric error codes can be found in
+     * AAudio.h) and the value will be null.
+     *
+     */
+    static ResultWithValue<T> createBasedOnSign(T numericResult){
+
+        // Ensure that the type is either an integer or float
+        static_assert(std::is_arithmetic<T>::value,
+                      "createBasedOnSign can only be called for numeric types (int or float)");
+
+        if (numericResult >= 0){
+            return ResultWithValue<T>(numericResult);
+        } else {
+            return ResultWithValue<T>(static_cast<Result>(numericResult));
         }
+    }
 
-        /**
-         * Get the value
-         * @return
-         */
-        T value() const {
-            return mValue;
-        }
-
-        /**
-         * @return true if OK
-         */
-        explicit operator bool() const { return mError == oboe::Result::OK; }
-
-        /**
-         * Quick way to check for an error.
-         *
-         * The caller could write something like this:
-         * <code>
-         *     if (!result) { printf("Got error %s\n", convertToText(result.error())); }
-         * </code>
-         *
-         * @return true if an error occurred
-         */
-        bool operator!() const { return mError != oboe::Result::OK; }
-
-        /**
-         * Implicitly convert to a Result. This enables easy comparison with Result values. Example:
-         *
-         * <code>
-         *     ResultWithValue result = openStream();
-         *     if (result == Result::ErrorNoMemory){ // tell user they're out of memory }
-         * </code>
-         */
-        operator Result() const {
-            return mError;
-        }
-
-        /**
-         * Create a ResultWithValue from a number. If the number is positive the ResultWithValue will
-         * have a result of Result::OK and the value will contain the number. If the number is negative
-         * the result will be obtained from the negative number (numeric error codes can be found in
-         * AAudio.h) and the value will be null.
-         *
-         */
-        static ResultWithValue<T> createBasedOnSign(T numericResult) {
-
-            // Ensure that the type is either an integer or float
-            static_assert(std::is_arithmetic<T>::value,
-                          "createBasedOnSign can only be called for numeric types (int or float)");
-
-            if (numericResult >= 0) {
-                return ResultWithValue<T>(numericResult);
-            } else {
-                return ResultWithValue<T>(static_cast<Result>(numericResult));
-            }
-        }
-
-    private:
-        const T mValue;
-        const oboe::Result mError;
-    };
+private:
+    const T             mValue;
+    const oboe::Result  mError;
+};
 
 /**
  * If the result is `OK` then return the value, otherwise return a human-readable error message.
  */
-    template<typename T>
-    std::ostream &operator<<(std::ostream &strm, const ResultWithValue<T> &result) {
-        if (!result) {
-            strm << convertToText(result.error());
-        } else {
-            strm << result.value();
-        }
-        return strm;
+template <typename T>
+std::ostream& operator<<(std::ostream &strm, const ResultWithValue<T> &result) {
+    if (!result) {
+        strm << convertToText(result.error());
+    } else {
+        strm << result.value();
     }
+   return strm;
+}
 
 } // namespace oboe
 

@@ -14,11 +14,11 @@ import org.json.JSONObject;
 import java.util.List;
 
 public final class ChangeAccountAdapter extends BaseAdapter {
-    private Login login;
-    private List<String> list;
-    private LayoutInflater li;
-    private JPDialog.JDialog dialog;
-    private JSONObject jsonObject;
+    private final Login login;
+    private final List<String> list;
+    private final LayoutInflater li;
+    private final JPDialog.JDialog dialog;
+    private final JSONObject jsonObject;
 
     ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, Login login, JPDialog.JDialog dialog, JSONObject jsonObject) {
         this.list = list;

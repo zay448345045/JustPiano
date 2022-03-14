@@ -26,9 +26,10 @@ set(IOLIB_DIR ../../../../oboe/samples/iolib)
 
 # Set the path to the Oboe library directory
 set(OBOE_DIR ../../../../oboe)
-#message("OBOE_DIR = " + ${OBOE_DIR})
 
 add_subdirectory(${OBOE_DIR} ./oboe-bin)
+
+include_directories(taskqueue)
 
 # include folders
 include_directories(
@@ -47,6 +48,8 @@ include_directories(
 # App specific sources
 set(APP_SOURCES
         SoundEngine.cpp
+        RecordingIO.cpp
+        utils/Utils.h
         )
 
 # Build the drumthumper (native) library

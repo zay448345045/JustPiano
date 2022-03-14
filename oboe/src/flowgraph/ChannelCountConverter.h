@@ -23,32 +23,32 @@
 #include "FlowGraphNode.h"
 
 namespace FLOWGRAPH_OUTER_NAMESPACE {
-    namespace flowgraph {
+namespace flowgraph {
 
 /**
  * Change the number of number of channels without mixing.
  * When increasing the channel count, duplicate input channels.
  * When decreasing the channel count, drop input channels.
  */
-        class ChannelCountConverter : public FlowGraphNode {
-        public:
-            explicit ChannelCountConverter(
-                    int32_t inputChannelCount,
-                    int32_t outputChannelCount);
+    class ChannelCountConverter : public FlowGraphNode {
+    public:
+        explicit ChannelCountConverter(
+                int32_t inputChannelCount,
+                int32_t outputChannelCount);
 
-            virtual ~ChannelCountConverter();
+        virtual ~ChannelCountConverter();
 
-            int32_t onProcess(int32_t numFrames) override;
+        int32_t onProcess(int32_t numFrames) override;
 
-            const char *getName() override {
-                return "ChannelCountConverter";
-            }
+        const char *getName() override {
+            return "ChannelCountConverter";
+        }
 
-            FlowGraphPortFloatInput input;
-            FlowGraphPortFloatOutput output;
-        };
+        FlowGraphPortFloatInput input;
+        FlowGraphPortFloatOutput output;
+    };
 
-    } /* namespace flowgraph */
+} /* namespace flowgraph */
 } /* namespace FLOWGRAPH_OUTER_NAMESPACE */
 
 #endif //FLOWGRAPH_CHANNEL_COUNT_CONVERTER_H

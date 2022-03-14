@@ -55,7 +55,7 @@ SLresult EngineOpenSLES::open() {
 
     return result;
 
-    error:
+error:
     close();
     return result;
 }
@@ -91,7 +91,7 @@ SLresult EngineOpenSLES::createAudioRecorder(SLObjectItf *objectItf,
                                              SLDataSource *audioSource,
                                              SLDataSink *audioSink) {
 
-    const SLInterfaceID ids[] = {SL_IID_ANDROIDSIMPLEBUFFERQUEUE, SL_IID_ANDROIDCONFIGURATION};
+    const SLInterfaceID ids[] = {SL_IID_ANDROIDSIMPLEBUFFERQUEUE, SL_IID_ANDROIDCONFIGURATION };
     const SLboolean reqs[] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
 
     return (*mEngineInterface)->CreateAudioRecorder(mEngineInterface, objectItf, audioSource,

@@ -26,7 +26,6 @@ public class Login extends BaseActivity implements OnClickListener {
     public String password;
     String kitiName = "";
     String accountX = "";
-    String sex = "";
     TextView accountTextView;
     TextView passwordTextView;
     JPProgressBar jpprogressBar;
@@ -126,9 +125,9 @@ public class Login extends BaseActivity implements OnClickListener {
                 try {
                     if (!string.isEmpty()) {
                         JSONObject jSONObject = new JSONObject(string);
-                        Iterator keys = jSONObject.keys();
+                        Iterator<String> keys = jSONObject.keys();
                         while (keys.hasNext()) {
-                            string = (String) keys.next();
+                            string = keys.next();
                             arrayList.add(string);
                         }
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
@@ -164,9 +163,8 @@ public class Login extends BaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
         jpapplication.setServer(s.getString("ip", "120.25.100.169"));
-        sharedPreferences = getSharedPreferences("account_list", 0);
+        sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         setPackageAndVersion();
-        JPStack.create();
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);

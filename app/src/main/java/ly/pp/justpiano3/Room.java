@@ -2,28 +2,21 @@ package ly.pp.justpiano3;
 
 final class Room {
 
-    private byte roomID;
-    private String roonName;
-    private int fcount;
-    private int mcount;
-    private int isPlaying;
-    private int[] people;
+    private final int peopleCapacity = 6;
+    private final byte roomID;
+    private final String roonName;
+    private final int fcount;
+    private final int mcount;
+    private final int isPlaying;
+    private final int[] people;
     private boolean peopleFull;
-    private int isPassword;
-    private int roomKuang;
-    private int roomMode;
+    private final int isPassword;
+    private final int roomKuang;
+    private final int roomMode;
 
     Room(byte b, String str, int i, int i2, int i3, int i4, int i5, int i6, int i7) {
-        roomID = (byte) 0;
-        roonName = "";
-        fcount = 0;
-        mcount = 0;
-        people = new int[6];
         peopleFull = false;
-        int totalPeople;
-        isPassword = 0;
-        roomKuang = 0;
-        roomMode = 0;
+        int notEmptyPositionNum;
         roomID = b;
         roonName = str;
         mcount = i2;
@@ -31,22 +24,23 @@ final class Room {
         isPlaying = i3;
         isPassword = i4;
         roomMode = i7;
-        totalPeople = (i + i2) + i6;
-        if (totalPeople == 6) {
+        people = new int[peopleCapacity];
+        notEmptyPositionNum = (i + i2) + i6;
+        if (notEmptyPositionNum == peopleCapacity) {
             peopleFull = true;
         }
         for (int i8 = 0; i8 < i; i8++) {
             people[i8] = 1;
         }
-        while (i < totalPeople - i6) {
+        while (i < notEmptyPositionNum - i6) {
             people[i] = 0;
             i++;
         }
-        for (int i8 = 6 - i6; i8 < 6; i8++) {
+        for (int i8 = peopleCapacity - i6; i8 < peopleCapacity; i8++) {
             people[i8] = 3;
         }
         if (!peopleFull) {
-            for (int i8 = totalPeople - i6; i8 < 6 - i6; i8++) {
+            for (int i8 = notEmptyPositionNum - i6; i8 < peopleCapacity - i6; i8++) {
                 people[i8] = 2;
             }
         }

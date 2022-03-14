@@ -10,7 +10,7 @@ import java.util.List;
 
 public final class SoundDownloadCntPre extends Thread {
     private final SoundDownload soundDownload;
-    private String fileName;
+    private final String fileName;
 
     SoundDownloadCntPre(SoundDownload soundDownload, String str) {
         this.soundDownload = soundDownload;

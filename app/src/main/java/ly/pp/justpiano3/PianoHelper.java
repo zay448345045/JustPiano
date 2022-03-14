@@ -35,7 +35,7 @@ public class PianoHelper extends Activity implements OnGestureListener {
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(imageResource);
             imageView.setScaleType(ScaleType.FIT_XY);
-            viewFlipper.addView(imageView, new LayoutParams(-1, -1));
+            viewFlipper.addView(imageView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         }
         viewFlipper.setAutoStart(false);
         viewFlipper.setFlipInterval(30000);

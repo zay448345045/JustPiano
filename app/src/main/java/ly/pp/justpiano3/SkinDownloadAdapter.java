@@ -12,8 +12,8 @@ import org.json.JSONObject;
 
 public final class SkinDownloadAdapter extends BaseAdapter {
     final SkinDownload skinDownload;
-    private JSONArray jsonArray;
-    private ImageLoader imageLoader;
+    private final JSONArray jsonArray;
+    private final ImageLoader imageLoader;
 
     SkinDownloadAdapter(SkinDownload skinDownload, JSONArray jSONArray) {
         this.skinDownload = skinDownload;

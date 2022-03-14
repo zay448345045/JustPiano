@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <cassert>
 #include "PolyphaseResamplerMono.h"
 
 using namespace resampler;
@@ -33,7 +34,7 @@ void PolyphaseResamplerMono::writeFrame(const float *frame) {
     float *dest = &mX[mCursor * MONO];
     const int offset = mNumTaps * MONO;
     // Write each channel twice so we avoid having to wrap when running the FIR.
-    const float sample = frame[0];
+    const float sample =  frame[0];
     // Put ordered writes together.
     dest[0] = sample;
     dest[offset] = sample;

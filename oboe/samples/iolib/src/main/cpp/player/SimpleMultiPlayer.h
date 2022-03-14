@@ -19,10 +19,14 @@
 
 #include <vector>
 
+#include <string>
+#include <cstring>
+
 #include <oboe/Oboe.h>
 
 #include "OneShotSampleSource.h"
 #include "SampleBuffer.h"
+#include "RecordingIO.h"
 
 namespace iolib {
 
@@ -63,7 +67,7 @@ namespace iolib {
          */
         void unloadSampleData();
 
-        void triggerDown(int32_t index);
+        void triggerDown(int32_t index, int32_t volume);
 
         void triggerUp(int32_t index);
 
@@ -81,6 +85,10 @@ namespace iolib {
 
         float getGain(int index);
 
+        void setRecord(bool r);
+
+        void setRecordFilePath(char* s);
+
     private:
         // Oboe Audio Stream
         oboe::ManagedStream mAudioStream;
@@ -90,11 +98,16 @@ namespace iolib {
         int32_t mSampleRate;
 
         // Sample Data
-        int32_t mNumSampleBuffers;
+        int32_t mNumSampleBuffers{};
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
 
+        bool record{};
+
         bool mOutputReset;
+        shared_ptr<RecordingIO> mRecordingIO {
+                new RecordingIO()
+        };
     };
 
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="vol_entries">
+        <item>0.1</item>
+        <item>0.2</item>
+        <item>0.3</item>
+        <item>0.4</item>
         <item>0.5</item>
         <item>0.6</item>
         <item>0.7</item>
@@ -14,11 +18,13 @@
         <item>1.5</item>
     </string-array>
     <string-array name="anim_entries">
+        <item>极高</item>
         <item>高</item>
         <item>中</item>
         <item>低</item>
     </string-array>
     <string-array name="anim_value">
+        <item>2</item>
         <item>4</item>
         <item>8</item>
         <item>12</item>
@@ -37,19 +43,20 @@
         <item>4</item>
         <item>6</item>
     </string-array>
-    <string-array name="badu">
-        <item>低两个八度</item>
-        <item>低一个八度</item>
-        <item>默认</item>
-        <item>高一个八度</item>
-        <item>高两个八度</item>
-    </string-array>
-    <string-array name="badu_value">
+    <string-array name="midi_keyboard_tune">
+        <item>-6</item>
+        <item>-5</item>
+        <item>-4</item>
+        <item>-3</item>
         <item>-2</item>
         <item>-1</item>
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
     </string-array>
     <string-array name="temp_e">
         <item>0.5</item>

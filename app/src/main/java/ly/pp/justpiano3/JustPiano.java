@@ -8,23 +8,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.DisplayMetrics;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
 
 public class JustPiano extends Activity implements Callback, Runnable {
     public static boolean updateSQL = false;
     Handler handler;
-    private boolean f4094d;
-    private boolean f4096f;
+    private boolean isPause;
+    private boolean loadFinish;
     private int songCount;
     private TestSQL testSQL;
     private SQLiteDatabase sqliteDataBase;
@@ -34,14 +31,27 @@ public class JustPiano extends Activity implements Callback, Runnable {
     private int progress;
     private String loading = "";
 
-    private void m3587a(SQLiteDatabase sQLiteDatabase) {
+    private void updateSql(SQLiteDatabase sQLiteDatabase) {
+        // 删除上个版本曲谱同步下来的所有文件
+        File syncDir = new File(getFilesDir().getAbsolutePath(), "Songs");
+        if (syncDir.exists()) {
+            File[] files = syncDir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+        }
         String string;
-        //键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
+        // 键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
         Map<String, String> pmPathMap = new HashMap<>();
         ReadPm readpm = new ReadPm(null);
-        Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path"}, null, null, null, null, "_id desc");
+        // 下面的字段是删除标记，更新和插入的曲谱会得到更新，然后把未更新也未插入的（就是新版没有这个pm）的曲子删掉，也就是在客户端曲子删库用
+        int originalPmVersion = 0;
+        Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path", "count"}, null, null, null, null, "_id desc");
         while (query.moveToNext()) {
             string = query.getString(query.getColumnIndex("path"));
+            originalPmVersion = query.getInt(query.getColumnIndex("count"));
             if (string.length() > 8 && string.charAt(7) == '/') {
                 pmPathMap.put(string.substring(9), string);
             }
@@ -55,7 +65,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     if (list3 != null) {
                         for (String aList3 : list3) {
                             string = "songs/" + list[i] + "/" + aList3;
-                            readpm.mo3452a(this, string);
+                            readpm.loadWithSongPath(this, string);
                             String h = readpm.getSongName();
                             if (h != null) {
                                 float g = readpm.getNandu();
@@ -72,6 +82,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                     contentvalues.put("length", l);
                                     contentvalues.put("isnew", 0);
                                     contentvalues.put("online", 1);
+                                    contentvalues.put("count", originalPmVersion + 1);
                                     sQLiteDatabase.update("jp_data", contentvalues, "path = '" + pmPathMap.get(aList3.substring(1)) + "'", null);
                                     contentvalues.clear();
                                 } else {
@@ -85,7 +96,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                     contentvalues.put("player", "");
                                     contentvalues.put("score", 0);
                                     contentvalues.put("date", 0);
-                                    contentvalues.put("count", 0);
+                                    contentvalues.put("count", originalPmVersion + 1);
                                     contentvalues.put("diff", g);
                                     contentvalues.put("online", 1);
                                     contentvalues.put("Ldiff", j);
@@ -103,10 +114,11 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 }
                 sQLiteDatabase.setTransactionSuccessful();
                 sQLiteDatabase.endTransaction();
+                // 删除未检测到pm的曲谱
+                sQLiteDatabase.delete("jp_data", "count=" + originalPmVersion, null);
                 info = "";
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         query.close();
@@ -119,8 +131,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 justpianoview.mo2761a(progress, info, loading);
                 break;
             case 1:
-                f4096f = true;
-                if (!f4094d) {
+                loadFinish = true;
+                if (!isPause) {
                     Intent intent = new Intent();
                     intent.setClass(this, MainMode.class);
                     startActivity(intent);
@@ -149,8 +161,10 @@ public class JustPiano extends Activity implements Callback, Runnable {
         justpianoview = new JustPianoView(this, jpapplication);
         setContentView(justpianoview);
         contentvalues = new ContentValues();
-        Timer timer = new Timer();
-        timer.schedule(new JustPianoTimerTask(this, timer), 0, 1000);
+        Message obtainMessage = handler.obtainMessage();
+        obtainMessage.what = 0;
+        handler.sendMessage(obtainMessage);
+        ThreadPoolUtils.execute(this);
     }
 
     @Override
@@ -176,21 +190,21 @@ public class JustPiano extends Activity implements Callback, Runnable {
     @Override
     public void onPause() {
         super.onPause();
-        if (!f4096f) {
-            f4094d = true;
+        if (!loadFinish) {
+            isPause = true;
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (f4094d && f4096f) {
+        if (isPause && loadFinish) {
             Intent intent = new Intent();
             intent.setClass(this, MainMode.class);
             startActivity(intent);
             finish();
         } else {
-            f4094d = false;
+            isPause = false;
         }
     }
 
@@ -201,37 +215,32 @@ public class JustPiano extends Activity implements Callback, Runnable {
 
     @Override
     public void run() {
-        Message obtainMessage;
-        FileOutputStream fileOutputStream;
-        try {
-            File file1 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
-            File file2 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-            if (file1.mkdirs() && file2.mkdirs()) {
-                fileOutputStream = new FileOutputStream(new File(file1, "看我.txt"));
-                fileOutputStream.write(".ps格式皮肤文件请直接放入此文件夹中".getBytes());
-                fileOutputStream = new FileOutputStream(new File(file2, "看我.txt"));
-                fileOutputStream.write(".ss格式音源文件请直接放入此文件夹中".getBytes());
-            }
-        } catch (Exception e4) {
-            e4.printStackTrace();
+        File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
+        if (!file.exists()) {
+            file.mkdirs();
         }
+        file = new File(getFilesDir().getAbsolutePath() + "/Songs");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        file = new File(getFilesDir().getAbsolutePath() + "/Records");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        Message obtainMessage;
         testSQL = new TestSQL(this, "data");
         sqliteDataBase = testSQL.getWritableDatabase();
         try {
             Cursor query = sqliteDataBase.query("jp_data", null, null, null, null, null, null);
             if ((query != null && (query.getCount() == 0)) || updateSQL) {
                 loading = "";
-                m3587a(sqliteDataBase);
+                updateSql(sqliteDataBase);
             }
             if (query != null) {
                 query.close();
             }
         } catch (Exception e5) {
             System.exit(-1);
-        }
-        File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
-        if (!file.exists()) {
-            file.mkdirs();
         }
         for (int i = 108; i >= 24; i--) {
             JPApplication.preloadSounds(i);
@@ -242,12 +251,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
             handler.sendMessage(obtainMessage2);
         }
         JPApplication.confirmLoadSounds();
-        loading = "载入界面资源...";
-        progress = 99;
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);
-        info = "载入完成.";
-        progress = 100;
     }
 }

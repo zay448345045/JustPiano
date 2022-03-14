@@ -12,11 +12,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.MessageLite;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
 
 public class OLChallenge extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -38,7 +42,9 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        sendMsg((byte) 16, (byte) 0, hallID, "0");
+        OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+        builder.setType(0);
+        sendMsg(16, builder.build());
         Intent intent = new Intent(this, OLPlayHall.class);
         intent.putExtra("hallName", hallName);
         intent.putExtra("hallID", hallID);
@@ -51,10 +57,14 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.startchallenge:
                 jpprogressBar.show();
-                sendMsg((byte) 16, (byte) 0, hallID, "2");
+                OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+                builder.setType(2);
+                sendMsg(16, builder.build());
                 return;
             case R.id.drawPrize:
-                sendMsg((byte) 16, (byte) 0, hallID, "5");
+                builder = OnlineChallengeDTO.newBuilder();
+                builder.setType(5);
+                sendMsg(16, builder.build());
         }
     }
 
@@ -63,7 +73,6 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         activityNum = 6;
         challengeHandler = new ChallengeHandler(this);
-        JPStack.create();
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
@@ -75,7 +84,9 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.challenge);
         cs = jpapplication.getConnectionService();
-        sendMsg((byte) 16, (byte) 0, hallID, "1");
+        OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+        builder.setType(1);
+        sendMsg(16, builder.build());
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
@@ -101,14 +112,14 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         if (prizeNum != -1) {
             int prizeType = prizeNum / 100;
             dp.luckyStart(prizeType);
-            if (prizeType == 0) {
-                color.setVisibility(View.VISIBLE);
-                int kuang = prizeNum + 7;
-                if (prizeNum > 17) {
-                    kuang = 2 + (prizeNum - 18) * 5 / 82;
-                }
-                color.setBackgroundResource(Consts.kuang[kuang]);
-            }
+//            if (prizeType == 0) {
+//                color.setVisibility(View.VISIBLE);
+//                int kuang = prizeNum + 7;
+//                if (prizeNum > 17) {
+//                    kuang = 2 + (prizeNum - 18) * 5 / 82;
+//                }
+//                color.setBackgroundResource(Consts.kuang[kuang]);
+//            }
             try {
                 new JPDialog(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrize(this)).setSecondButton("放弃领取", new DialogDismissClick()).showDialog();
             } catch (Exception e) {
@@ -125,13 +136,14 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         }
     }
 
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
+    public final void sendMsg(int type, MessageLite msg) {
         if (cs != null) {
-            cs.writeData(b, b2, b3, str, null);
+            cs.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     final void mo2907b(ListView listView, List<HashMap> list) {
         listView.setAdapter(new ChallengeListAdapter(list, layoutinflater));
@@ -139,7 +151,6 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }

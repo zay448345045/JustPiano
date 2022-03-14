@@ -21,10 +21,9 @@
 using namespace FLOWGRAPH_OUTER_NAMESPACE::flowgraph;
 
 MonoToMultiConverter::MonoToMultiConverter(int32_t outputChannelCount)
-        : input(*this, 1), output(*this, outputChannelCount) {
+        : input(*this, 1)
+        , output(*this, outputChannelCount) {
 }
-
-MonoToMultiConverter::~MonoToMultiConverter() {}
 
 int32_t MonoToMultiConverter::onProcess(int32_t numFrames) {
     const float *inputBuffer = input.getBuffer();

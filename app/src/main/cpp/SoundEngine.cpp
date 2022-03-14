@@ -1,19 +1,3 @@
-/*
- * Copyright 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 #include <jni.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -25,6 +9,7 @@
 // parselib includes
 #include <stream/MemInputStream.h>
 #include <wav/WavStreamReader.h>
+#include "utils/Utils.h"
 
 #include <player/OneShotSampleSource.h>
 #include <player/SimpleMultiPlayer.h>
@@ -103,15 +88,8 @@ Java_ly_pp_justpiano3_JPApplication_unloadWavAssetsNative(JNIEnv *env, jclass) {
  * Native (JNI) implementation of DrumPlayer.trigger()
  */
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_JPApplication_trigger(JNIEnv *env, jclass, jint index) {
-    sDTPlayer.triggerDown(index);
-}
-
-/**
- * Native (JNI) implementation of DrumPlayer.getOutputReset()
- */
-JNIEXPORT jboolean JNICALL Java_ly_pp_justpiano3_JPApplication_getOutputReset(JNIEnv *, jclass) {
-    return sDTPlayer.getOutputReset();
+Java_ly_pp_justpiano3_JPApplication_trigger(JNIEnv *env, jclass, jint index, jint volume) {
+    sDTPlayer.triggerDown(index, volume);
 }
 
 /**
@@ -151,6 +129,17 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setGain(
 JNIEXPORT jfloat JNICALL Java_ly_pp_justpiano3_JPApplication_getGain(
         JNIEnv *env, jclass thiz, jint index) {
     return sDTPlayer.getGain(index);
+}
+
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setRecord(
+        JNIEnv *env, jclass thiz, jboolean record) {
+sDTPlayer.setRecord(record);
+}
+
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setRecordFilePath(
+        JNIEnv *env, jclass thiz, jstring recordFilePath) {
+char* path = java_str_to_c_str(env, recordFilePath);
+sDTPlayer.setRecordFilePath(path);
 }
 
 #ifdef __cplusplus

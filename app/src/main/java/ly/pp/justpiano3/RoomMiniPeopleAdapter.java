@@ -7,8 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 public final class RoomMiniPeopleAdapter extends BaseAdapter {
-    private Context context;
-    private int[] f5805b;
+    private final Context context;
+    private final int[] f5805b;
 
     RoomMiniPeopleAdapter(Context context, int[] iArr) {
         this.context = context;

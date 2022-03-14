@@ -11,10 +11,10 @@ import java.util.List;
 
 public final class MiniScoreAdapter extends BaseAdapter {
     private List<Bundle> list;
-    private LayoutInflater layoutInfalter;
-    private int f5671d;
-    private int[] f5672e = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name};
-    private int[] f5673f = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
+    private final LayoutInflater layoutInfalter;
+    private final int f5671d;
+    private final int[] f5672e = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name};
+    private final int[] f5673f = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
 
     MiniScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
         this.list = list;

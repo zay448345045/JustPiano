@@ -7,21 +7,21 @@ import android.graphics.RectF;
 import android.view.SurfaceHolder;
 
 public final class LoadBackgrounds extends Thread {
-    private PlayView playView;
-    private SurfaceHolder surfaceholder;
+    private final PlayView playView;
+    private final SurfaceHolder surfaceholder;
     private Canvas canvas;
-    private float widthDiv120;
-    private float longKeyboardHeight;
+    private final float widthDiv120;
+    private final float longKeyboardHeight;
     private float f6021g;
     private float f6022h;
-    private Paint f6023i;
-    private Paint f6024j;
-    private Paint f6025k;
-    private JPApplication jpapplication;
-    private Rect f6028n;
-    private Rect f6029o;
-    private Rect backgroundRect;
-    private PianoPlay pianoPlay;
+    private final Paint f6023i;
+    private final Paint f6024j;
+    private final Paint f6025k;
+    private final JPApplication jpapplication;
+    private final Rect f6028n;
+    private final Rect f6029o;
+    private final Rect backgroundRect;
+    private final PianoPlay pianoPlay;
 
     LoadBackgrounds(JPApplication jPApplication, PlayView playView, PianoPlay pianoPlay) {
         jpapplication = jPApplication;
@@ -34,7 +34,7 @@ public final class LoadBackgrounds extends Thread {
         f6023i.setStrokeWidth(2.0f);
         f6023i.setStyle(Paint.Style.STROKE);
         f6024j = new Paint();
-        f6024j.setColor(-16711936);
+        f6024j.setColor(0xff00ff00);
         f6025k = new Paint();
         f6025k.setARGB(255, 255, 125, 25);
         f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) jPApplication.getHalfHeightSub20());
@@ -55,7 +55,7 @@ public final class LoadBackgrounds extends Thread {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
                 }
-                if (jpapplication.getGameMode() != 3) {  //不是欣赏模式
+                if (jpapplication.getGameMode() != 3) {  // 不是欣赏模式
                     playView.mo2930b(canvas);
                 } else {
                     playView.mo2931c(canvas);

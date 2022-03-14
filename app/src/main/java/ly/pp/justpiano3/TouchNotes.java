@@ -1,6 +1,8 @@
 package ly.pp.justpiano3;
 
-import android.os.Message;
+import android.content.pm.PackageManager;
+import android.media.midi.MidiReceiver;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -13,6 +15,20 @@ final class TouchNotes implements OnTouchListener {
 
     TouchNotes(PlayView playView) {
         this.playView = playView;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (playView.pianoPlay.jpapplication.midiOutputPort != null && playView.pianoPlay.midiFramer == null) {
+                    playView.pianoPlay.midiFramer = new MidiFramer(new MidiReceiver() {
+                        @Override
+                        public void onSend(byte[] data, int offset, int count, long timestamp) {
+                            playView.pianoPlay.midiConnectHandle(data);
+                        }
+                    });
+                    playView.pianoPlay.jpapplication.midiOutputPort.connect(playView.pianoPlay.midiFramer);
+                }
+                playView.pianoPlay.jpapplication.addMidiConnectionListener(playView.pianoPlay);
+            }
+        }
     }
 
     @Override
@@ -65,11 +81,7 @@ final class TouchNotes implements OnTouchListener {
                     break;
             }
         }
-        if (playView.jpapplication.hasKeyboardPerfer()) {
-            Message obtainMessage = playView.pianoPlay.pianoPlayHandler.obtainMessage();
-            obtainMessage.what = 4;
-            playView.pianoPlay.pianoPlayHandler.handleMessage(obtainMessage);
-        }
+        playView.pianoPlay.updateKeyboardPrefer();
         return true;
     }
 }

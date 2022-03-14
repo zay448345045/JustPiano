@@ -2,13 +2,10 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,12 +23,11 @@ public class RecordFiles extends Activity {
     private List<HashMap> f4917b = null;
     private ListView f4919d;
     private TextView f4921f;
-    private int[] f4923h = new int[]{R.drawable.umeng_socialize_share_music, R.drawable.umeng_socialize_share_music, R.drawable.umeng_socialize_share_music};
     private RecordFilesAdapter recordFilesAdapter;
 
     private void m3824a(File file) {
         File[] f4924i = file.listFiles();
-        f4921f.setText("录音文件目录为:SD卡\\justpiano\\Records");
+        f4921f.setText("录音文件目录为:SD卡\\JustPiano\\Records");
         f4921f.setTextSize(20);
         f4917b = new ArrayList<>();
         int i = 0;
@@ -45,7 +41,7 @@ public class RecordFiles extends Activity {
         while (i < j) {
             HashMap hashMap = new HashMap();
             if (f4924i[i].isFile() && f4924i[i].getName().endsWith(".wav")) {
-                hashMap.put("image", f4923h[0]);
+                hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
                 hashMap.put("time", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINESE).format(new Date(f4924i[i].lastModified())));
@@ -91,9 +87,6 @@ public class RecordFiles extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, MainMode.class);
-        startActivity(intent);
         finish();
     }
 
@@ -101,13 +94,11 @@ public class RecordFiles extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         JPApplication jpApplication = (JPApplication) getApplication();
-        LayoutInflater f4922g = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout linearLayout = (LinearLayout) f4922g.inflate(R.layout.record_list, null);
         setContentView(R.layout.record_list);
-        jpApplication.setBackGround(this, "ground", linearLayout);
+        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);
         f4919d.setCacheColorHint(0);
         f4921f = findViewById(R.id.txt1);
-        m3824a(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Record/"));
+        m3824a(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/"));
     }
 }

@@ -7,6 +7,8 @@ import android.os.Environment;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -30,14 +32,14 @@ public class SkinListPreference extends DialogPreference {
 
     private void m3906a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-        List<File> f5023c = SkinAndSoundFileHandle.getLocalSkinList(str);
-        int size = f5023c.size();
+        List<File> localSkinList = SkinAndSoundFileHandle.getLocalSkinList(str);
+        int size = localSkinList.size();
         f5021a = new CharSequence[(size + 2)];
         f5022b = new CharSequence[(size + 2)];
         for (int i = 0; i < size; i++) {
-            str = f5023c.get(i).getName();
+            str = localSkinList.get(i).getName();
             f5021a[i] = str.subSequence(0, str.lastIndexOf('.'));
-            f5022b[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + f5023c.get(i).getName();
+            f5022b[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + localSkinList.get(i).getName();
         }
         f5021a[size] = "原生主题";
         f5022b[size] = "original";
@@ -78,18 +80,18 @@ public class SkinListPreference extends DialogPreference {
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         m3906a();
-        jpProgressBar = new JPProgressBar(context);
-        LinearLayout f5028h = new LinearLayout(context);
-        f5028h.setLayoutParams(new LayoutParams(-1, -2));
-        f5028h.setOrientation(LinearLayout.VERTICAL);
-        f5028h.setMinimumWidth(400);
-        f5028h.setPadding(20, 20, 20, 20);
-        f5028h.setBackgroundColor(-1);
-        ListView f5027g = new ListView(context);
-        f5027g.setDivider(null);
+        jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setMinimumWidth(400);
+        linearLayout.setPadding(20, 20, 20, 20);
+        linearLayout.setBackgroundColor(-1);
+        ListView skinListView = new ListView(context);
+        skinListView.setDivider(null);
         skinListAdapter = new SkinListAdapter(this, context, f5021a, f5022b);
-        f5027g.setAdapter(skinListAdapter);
-        f5028h.addView(f5027g);
-        builder.setView(f5028h);
+        skinListView.setAdapter(skinListAdapter);
+        linearLayout.addView(skinListView);
+        builder.setView(linearLayout);
     }
 }

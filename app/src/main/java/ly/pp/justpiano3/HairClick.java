@@ -4,8 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
 
 final class HairClick implements OnItemClickListener {
     private final OLPlayDressRoom olPlayDressRoom;
@@ -16,7 +15,7 @@ final class HairClick implements OnItemClickListener {
 
     @Override
     public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        if (olPlayDressRoom.hairUnlock.contains(i)) {
+        if (olPlayDressRoom.hairUnlock.contains(i) || i == 0) {
             if (i == olPlayDressRoom.hairNow) {
                 olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.none);
                 olPlayDressRoom.hairNow = -1;
@@ -30,15 +29,30 @@ final class HairClick implements OnItemClickListener {
             jpdialog.setMessage("确定花费" + (olPlayDressRoom.sex.equals("f")
                     ? Consts.fHair[i] : Consts.mHair[i]) + "音符购买此服装吗?");
             jpdialog.setFirstButton("购买", (dialog, which) -> {
-                JSONObject jSONObject = new JSONObject();
-                try {
-                    jSONObject.put("T", "B");
-                    olPlayDressRoom.sendMsg((byte) 33, (byte) 0, (byte) i, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
+                builder.setType(2);
+                builder.setBuyClothesType(0);
+                builder.setBuyClothesId(i);
+                olPlayDressRoom.sendMsg(33, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", new DialogDismissClick());
+            });
+            if (olPlayDressRoom.hairTry.contains(i)) {
+                jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.none);
+                    olPlayDressRoom.hairNow = -1;
+                    ((DressAdapter) olPlayDressRoom.hairGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.hairTry.remove((Integer) i);
+                });
+            } else {
+                jpdialog.setSecondButton("试穿", (dialog, which) -> {
+                    dialog.dismiss();
+                    olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.hairArray.get(i));
+                    olPlayDressRoom.hairNow = i;
+                    ((DressAdapter) olPlayDressRoom.hairGridView.getAdapter()).notifyDataSetChanged();
+                    olPlayDressRoom.hairTry.add(i);
+                });
+            }
             try {
                 jpdialog.showDialog();
             } catch (Exception e3) {

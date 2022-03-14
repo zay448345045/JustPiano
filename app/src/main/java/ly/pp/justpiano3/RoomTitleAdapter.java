@@ -13,8 +13,8 @@ import java.util.List;
 
 public final class RoomTitleAdapter extends BaseAdapter {
     private List<Bundle> list;
-    private LayoutInflater layoutInflater;
-    private OLPlayHall olPlayHall;
+    private final LayoutInflater layoutInflater;
+    private final OLPlayHall olPlayHall;
 
     RoomTitleAdapter(List<Bundle> list, LayoutInflater layoutInflater, OLPlayHall olPlayHall) {
         this.list = list;
@@ -59,7 +59,7 @@ public final class RoomTitleAdapter extends BaseAdapter {
         TextView textView = view.findViewById(R.id.ol_room_name);
         textView.setText(string);
         textView.setBackgroundResource(Consts.kuang[i2]);
-        textView.setOnClickListener(v -> olPlayHall.mo2823a(b));
+        textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(b));
         Button button = view.findViewById(R.id.ol_getin_button);
         if (i3 == 1) {
             button.setText("弹奏中");
@@ -84,8 +84,11 @@ public final class RoomTitleAdapter extends BaseAdapter {
             case 2:
                 string = "双人";
                 break;
+            case 3:
+                string = "键盘";
+                break;
         }
-        if (i4 >= 0 && i4 < 3) {
+        if (i4 >= 0 && i4 <= 3) {
             textView.setBackgroundResource(Consts.groupModeColor[i4]);
         }
         textView.setText(string);

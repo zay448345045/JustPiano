@@ -8,7 +8,7 @@ First production ready version
 
 **API changes**
 - [Remove `AudioStream::setNativeFormat`](https://github.com/google/oboe/pull/213/commits/0e8af6a65efef55ec180f8ce76e699adcee5f413)
-- [Remove `AudioStream::isPlaying`](https://github.com/google/oboe/pull/213/commits/6437f5aa224330fbdf77ecc161cc868be663a974).
+- [Remove `AudioStream::getPlayingNum`](https://github.com/google/oboe/pull/213/commits/6437f5aa224330fbdf77ecc161cc868be663a974).
 - [Add `AudioStream::getTimestamp(clockid_t)`](https://github.com/google/oboe/pull/213/commits/ab695c116e5f196e57560a86efa3c982360838d3).
 - Deprecate `AudioStream::getTimestamp(clockid_t, int64_t, int64_t)`. Same commit as above.
 - [Add Android P functions](https://github.com/google/oboe/commit/c30bbe603c256f92cdf2876c3122bc5be24b5e3e)

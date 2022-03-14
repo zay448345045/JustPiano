@@ -20,6 +20,8 @@
 #include <stream/MemInputStream.h>
 #include <wav/WavStreamReader.h>
 
+#include <utility>
+
 // local includes
 #include "OneShotSampleSource.h"
 #include "SimpleMultiPlayer.h"
@@ -51,9 +53,26 @@ namespace iolib {
 
         // OneShotSampleSource* sources = mSampleSources.get();
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
-            if (mSampleSources[index]->isPlaying()) {
-                mSampleSources[index]->mixAudio((float *) audioData, mChannelCount, numFrames);
+            SampleSource* sampleSource = mSampleSources[index];
+            int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
+            int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
+            int count = 0;
+            for(int32_t i = 0; i < queueSize; i++) {
+                std::pair<int32_t, int32_t> curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                sampleSource->mixAudio((float *) audioData, mChannelCount, numFrames, curFrameIndex);
+                if (curFrameIndex.first >= numSampleFrames) {
+                    count++;
+                }
+                sampleSource->pushCurFrameIndexQueue(curFrameIndex);
+                sampleSource->popCurFrameIndexQueue();
             }
+            while(count--) {
+                sampleSource->popCurFrameIndexQueue();
+            }
+        }
+
+        if (record) {
+            mRecordingIO->write_buffer((float *)audioData, numFrames);
         }
 
         return DataCallbackResult::Continue;
@@ -120,8 +139,7 @@ namespace iolib {
         __android_log_print(ANDROID_LOG_INFO, TAG, "setupAudioStream()");
         mChannelCount = channelCount;
         mSampleRate = sampleRate;
-        mSampleRate = sampleRate;
-
+        mRecordingIO->init(mSampleRate, mChannelCount);
         openStream();
     }
 
@@ -154,9 +172,9 @@ namespace iolib {
         mNumSampleBuffers = 0;
     }
 
-    void SimpleMultiPlayer::triggerDown(int32_t index) {
+    void SimpleMultiPlayer::triggerDown(int32_t index, int32_t volume) {
         if (index < mNumSampleBuffers) {
-            mSampleSources[index]->setPlayMode();
+            mSampleSources[index]->setPlayMode(volume);
         }
     }
 
@@ -188,4 +206,16 @@ namespace iolib {
         return mSampleSources[index]->getGain();
     }
 
+    void SimpleMultiPlayer::setRecord(bool r) {
+        if (r) {
+            mRecordingIO->reserveRecordingBuffer(mSampleRate);
+        } else {
+            mRecordingIO->clearRecordingBuffer();
+        }
+        record = r;
+    }
+
+    void SimpleMultiPlayer::setRecordFilePath(char* s) {
+        mRecordingIO->setRecordingFilePath(s);
+    }
 }

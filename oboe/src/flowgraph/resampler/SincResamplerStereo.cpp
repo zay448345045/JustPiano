@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <cassert>
 #include <math.h>
 
 #include "SincResamplerStereo.h"
@@ -35,7 +36,7 @@ void SincResamplerStereo::writeFrame(const float *frame) {
     float *dest = &mX[mCursor * STEREO];
     const int offset = mNumTaps * STEREO;
     // Write each channel twice so we avoid having to wrap when running the FIR.
-    const float left = frame[0];
+    const float left =  frame[0];
     const float right = frame[1];
     // Put ordered writes together.
     dest[0] = left;
@@ -65,7 +66,7 @@ void SincResamplerStereo::readFrame(float *frame) {
         float coefficient2 = *coefficients2++;
         for (int channel = 0; channel < getChannelCount(); channel++) {
             float sample = *xFrame++;
-            mSingleFrame[channel] += sample * coefficient1;
+            mSingleFrame[channel] +=  sample * coefficient1;
             mSingleFrame2[channel] += sample * coefficient2;
         }
     }

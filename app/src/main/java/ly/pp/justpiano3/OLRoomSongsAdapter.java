@@ -47,10 +47,10 @@ public final class OLRoomSongsAdapter extends CursorAdapter {
         time.setText((timeNum / 60 < 10 ? "0" : "") + (timeNum / 60) + ":" + (timeNum % 60 < 10 ? "0" : "") + (timeNum % 60));
         ratingBar.setNumStars(5);
         ratingBar.setClickable(false);
-        ratingBar.setRating(f);
+        ratingBar.setRating(f / 2);
         ratingBar2.setNumStars(5);
         ratingBar2.setClickable(false);
-        ratingBar2.setRating(g);
+        ratingBar2.setRating(g / 2);
         songName.setOnClickListener(new OLChooseSongClick(this, string));
         view.setOnClickListener(new OLChooseSongClick(this, string));
     }

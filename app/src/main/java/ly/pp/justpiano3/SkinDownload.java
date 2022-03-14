@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,8 +27,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SkinDownload extends Activity implements Callback {
     public JPApplication jpapplication;
@@ -48,11 +45,7 @@ public class SkinDownload extends Activity implements Callback {
 
     static void downloadPS(SkinDownload skinDownload, String str, String str2) {
         Message message = new Message();
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + str2 + ".ps");
+        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + str2 + ".ps");
         if (file.exists()) {
             Bundle bundle = new Bundle();
             bundle.putString("name", str2);
@@ -82,12 +75,11 @@ public class SkinDownload extends Activity implements Callback {
             Message message2;
             try {
                 skinDownload.outputStream = new FileOutputStream(file);
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
                 skinDownload.length = connection.getContentLength();
                 int n;
                 while (-1 != (n = in.read(buffer))) {
-                    output.write(buffer, 0, n);
+                    skinDownload.outputStream.write(buffer, 0, n);
                     skinDownload.progress += 4096;
                     message = new Message();
                     message.what = 1;
@@ -96,9 +88,6 @@ public class SkinDownload extends Activity implements Callback {
                     }
                 }
                 in.close();
-                byte[] array = GZIP.ZIPToArrayAddHandle(new String(output.toByteArray(), UTF_8), skinDownload.handler, skinDownload.progress);
-                output.close();
-                skinDownload.outputStream.write(array, 0, array.length);
                 skinDownload.outputStream.close();
                 message2 = new Message();
                 message2.what = 2;

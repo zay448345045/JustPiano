@@ -31,9 +31,9 @@
         android:layout_toEndOf="@+id/user_face"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:text="玩家"
+        android:text="用户"
         android:textColor="@color/white1"
-        android:textSize="21sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/TextView01"
@@ -68,11 +68,11 @@
         android:singleLine="true"
         android:text="TextView"
         android:textColor="@color/white1"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/ol_nuns_top"
-        android:layout_width="120dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/ol_score_top"
         android:layout_alignBottom="@+id/ol_score_top"
@@ -80,5 +80,5 @@
         android:singleLine="true"
         android:text="TextView"
         android:textColor="@color/white1"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 </RelativeLayout>

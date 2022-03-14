@@ -1,13 +1,8 @@
 package ly.pp.justpiano3;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
@@ -16,7 +11,7 @@ public class SettingsMode extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        jpApplication.loadSettings(0);
+        jpApplication.loadSettings(false);
         finish();
     }
 
@@ -36,22 +31,6 @@ public class SettingsMode extends PreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("skin_list", "original").equals("original")) {
-                Bitmap bitmap = null;
-                try {
-                    bitmap = BitmapFactory.decodeFile(getActivity().getDir("Skin", Context.MODE_PRIVATE) + "/ground.jpg");
-                } catch (Exception ignored) {
-                }
-                if (bitmap == null) {
-                    try {
-                        bitmap = BitmapFactory.decodeFile(getActivity().getDir("Skin", Context.MODE_PRIVATE) + "/ground.png");
-                    } catch (Exception ignored) {
-                    }
-                }
-                if (bitmap != null) {
-                    getActivity().getWindow().getDecorView().setBackground(new BitmapDrawable(getResources(), bitmap));
-                }
-            }
             addPreferencesFromResource(R.xml.settings);
         }
     }

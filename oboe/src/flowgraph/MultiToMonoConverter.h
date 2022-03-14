@@ -23,29 +23,29 @@
 #include "FlowGraphNode.h"
 
 namespace FLOWGRAPH_OUTER_NAMESPACE {
-    namespace flowgraph {
+namespace flowgraph {
 
 /**
  * Convert a multi-channel interleaved stream to a monophonic stream
  * by extracting channel[0].
  */
-        class MultiToMonoConverter : public FlowGraphNode {
-        public:
-            explicit MultiToMonoConverter(int32_t inputChannelCount);
+    class MultiToMonoConverter : public FlowGraphNode {
+    public:
+        explicit MultiToMonoConverter(int32_t inputChannelCount);
 
-            virtual ~MultiToMonoConverter();
+        virtual ~MultiToMonoConverter();
 
-            int32_t onProcess(int32_t numFrames) override;
+        int32_t onProcess(int32_t numFrames) override;
 
-            const char *getName() override {
-                return "MultiToMonoConverter";
-            }
+        const char *getName() override {
+            return "MultiToMonoConverter";
+        }
 
-            FlowGraphPortFloatInput input;
-            FlowGraphPortFloatOutput output;
-        };
+        FlowGraphPortFloatInput input;
+        FlowGraphPortFloatOutput output;
+    };
 
-    } /* namespace flowgraph */
+} /* namespace flowgraph */
 } /* namespace FLOWGRAPH_OUTER_NAMESPACE */
 
 #endif //FLOWGRAPH_MULTI_TO_MONO_CONVERTER_H

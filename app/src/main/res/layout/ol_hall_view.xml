@@ -17,7 +17,7 @@
         android:background="@drawable/title_bar"
         android:gravity="center"
         android:singleLine="true"
-        android:text="极品钢琴"
+        android:text="大厅名称"
         android:textColor="@color/white1"
         android:textSize="18sp" />
 
@@ -44,7 +44,7 @@
         android:layout_toStartOf="@+id/ol_getin_text"
         android:gravity="center"
         android:singleLine="true"
-        android:text="极品钢琴"
+        android:text="0/100"
         android:textColor="@color/more"
         android:textSize="18sp"
         tools:ignore="RtlCompat" />

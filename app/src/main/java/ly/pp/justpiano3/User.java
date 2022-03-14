@@ -1,8 +1,5 @@
 package ly.pp.justpiano3;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -14,23 +11,24 @@ public class User implements Serializable {
     private int score = 0;
     private int combo;
     private int kuang;
-    private int level;
+    private final int level;
     private int trousers;
     private int jacket;
     private int hair;
-    private int clevel;
+    private int eye;
+    private final int clevel;
     private int hand = 0;
     private int cpKind = 0;
     private int shoes = 0;
     private String familyID = "0";
 
-    public User(byte b, String str, JSONObject jSONObject, String str2, String str3, String str4, int i, int i2, int i3, int i4, int i5, String familyID) {
+    public User(byte b, String str, int hair, int eye, int jacket, int trousers, int shoes, String str2, String str3, String str4, int i, int i2, int i3, int i4, int i5, String familyID) {
         position = b;
         playerName = str;
         sex = str2;
         status = str3;
         ishost = str4;
-        setClothes(jSONObject);
+        setClothes(hair, eye, jacket, trousers, shoes);
         kuang = i2;
         level = i;
         clevel = i3;
@@ -39,26 +37,20 @@ public class User implements Serializable {
         this.familyID = familyID;
     }
 
-    public User(String str, JSONObject jSONObject, String str2, int i, int i2) {
+    public User(String str, int hair, int eye, int jacket, int trousers, int shoes, String str2, int i, int i2) {
         playerName = str;
         sex = str2;
-        setClothes(jSONObject);
+        setClothes(hair, eye, jacket, trousers, shoes);
         level = i;
         clevel = i2;
     }
 
-    private void setClothes(JSONObject jSONObject) {
-        if (jSONObject != null) {
-            try {
-                sex = jSONObject.getString("S");
-                trousers = jSONObject.getInt("T");
-                jacket = jSONObject.getInt("J");
-                hair = jSONObject.getInt("H");
-                shoes = jSONObject.getInt("O");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+    private void setClothes(int hair, int eye, int jacket, int trousers, int shoes) {
+        this.hair = hair;
+        this.eye = eye;
+        this.jacket = jacket;
+        this.trousers = trousers;
+        this.score = shoes;
     }
 
     final String getPlayerName() {
@@ -121,6 +113,14 @@ public class User implements Serializable {
         return hair;
     }
 
+    public int getEye() {
+        return eye;
+    }
+
+    public void setEye(int eye) {
+        this.eye = eye;
+    }
+
     final int getCLevel() {
         return clevel;
     }
@@ -151,28 +151,5 @@ public class User implements Serializable {
 
     final void setFamilyID(String familyID) {
         this.familyID = familyID;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "playerName='" + playerName + '\'' +
-                ", sex='" + sex + '\'' +
-                ", status='" + status + '\'' +
-                ", ishost='" + ishost + '\'' +
-                ", position=" + position +
-                ", score=" + score +
-                ", combo=" + combo +
-                ", kuang=" + kuang +
-                ", level=" + level +
-                ", trousers=" + trousers +
-                ", jacket=" + jacket +
-                ", hair=" + hair +
-                ", clevel=" + clevel +
-                ", hand=" + hand +
-                ", cpKind=" + cpKind +
-                ", shoes=" + shoes +
-                ", familyID='" + familyID + '\'' +
-                '}';
     }
 }

@@ -31,7 +31,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
+import com.google.protobuf.MessageLite;
+
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -41,7 +42,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public final class OLPlayRoom extends BaseActivity implements Callback, OnClickListener {
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomHandDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlinePlaySongDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlinePlayStartDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
+
+public final class OLPlayRoom extends BaseActivity implements Callback, OnClickListener, OLPlayRoomInterface {
     public int lv;
     public int cl;
     public SQLiteDatabase sqlitedatabase;
@@ -69,9 +78,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     int page;
     User user;
     byte roomID0;
-    String roomTitleString;
+    String roomName;
     JPApplication jpapplication = null;
-    TextView roomTitle;
+    TextView roomNameView;
     String playerKind = "";
     Button groupButton;
     Button playButton;
@@ -87,14 +96,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private TextView searchText;
     private ImageView express;
     private LayoutInflater layoutInflater;
-    private List<Bundle> playerList = new ArrayList<>();
+    private final List<Bundle> playerList = new ArrayList<>();
     private PopupWindow expressWindow = null;
     private PopupWindow moreSongs = null;
     private PopupWindow groupModeGroup = null;
     private PopupWindow coupleModeGroup = null;
-    private PopupWindow changeclr = null;
+    private PopupWindow changeColor = null;
     private PopupWindow playSongsMode = null;
-    private OLRoomSongsAdapter f4503ab;
+    private OLRoomSongsAdapter olRoomSongsAdapter;
     private TestSQL testSQL;
     private Cursor cursor;
     private TextView timeTextView;
@@ -120,7 +129,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         str = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
         String str1 = str.substring(6, str.length() - 3);
         jpapplication.setNowSongsName(str1);
-        sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + str1);
+        OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+        builder.setTune(diao);
+        builder.setSongPath(str1);
+        sendMsg(15, builder.build());
         query.close();
         if (moreSongs != null) {
             moreSongs.dismiss();
@@ -128,13 +140,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public void setGroupOrHand(int i, PopupWindow popupWindow) {
-        JSONObject jSONObject = new JSONObject();
-        try {
-            jSONObject.put("G", i);
-            sendMsg((byte) 44, roomID0, hallID0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineChangeRoomHandDTO.Builder builder = OnlineChangeRoomHandDTO.newBuilder();
+        builder.setHand(i);
+        sendMsg(44, builder.build());
         if (popupWindow != null) {
             popupWindow.dismiss();
         }
@@ -143,11 +151,17 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private void showCpDialog(String str, String str2) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
         try {
-            JSONObject jSONObject = new JSONObject(GZIP.ZIPTo(str2));
+            JSONObject jSONObject = new JSONObject(str2);
             JSONObject jSONObject2 = jSONObject.getJSONObject("P");
-            User User = new User(jSONObject2.getString("N"), jSONObject2.getJSONObject("D"), jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
+            User User = new User(jSONObject2.getString("N"), jSONObject2.getInt("D_H"),
+                    jSONObject2.getInt("D_E"), jSONObject2.getInt("D_J"),
+                    jSONObject2.getInt("D_T"), jSONObject2.getInt("D_S"),
+                    jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
             JSONObject jSONObject3 = jSONObject.getJSONObject("C");
-            User User2 = new User(jSONObject3.getString("N"), jSONObject3.getJSONObject("D"), jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
+            User User2 = new User(jSONObject3.getString("N"),  jSONObject3.getInt("D_H"),
+                    jSONObject3.getInt("D_E"), jSONObject3.getInt("D_J"),
+                    jSONObject3.getInt("D_T"), jSONObject3.getInt("D_S"),
+                    jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
             JSONObject jSONObject4 = jSONObject.getJSONObject("I");
             TextView textView = inflate.findViewById(R.id.ol_player_level);
             TextView textView2 = inflate.findViewById(R.id.ol_player_class);
@@ -160,11 +174,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             ImageView imageView2 = inflate.findViewById(R.id.ol_player_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_player_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_player_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_player_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_player_shoes);
             ImageView imageView6 = inflate.findViewById(R.id.ol_couple_mod);
             ImageView imageView7 = inflate.findViewById(R.id.ol_couple_trousers);
             ImageView imageView8 = inflate.findViewById(R.id.ol_couple_jacket);
             ImageView imageView9 = inflate.findViewById(R.id.ol_couple_hair);
+            ImageView imageView9e = inflate.findViewById(R.id.ol_couple_eye);
             ImageView imageView10 = inflate.findViewById(R.id.ol_couple_shoes);
             TextView textView8 = inflate.findViewById(R.id.couple_bless);
             TextView textView9 = inflate.findViewById(R.id.couple_pionts);
@@ -196,6 +212,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
             }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
+            }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -217,6 +238,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             } else {
                 imageView9.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_h" + (User2.getHair() - 1) + ".png")));
             }
+            if (User2.getEye() <= 0) {
+                imageView9e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView9e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_e" + (User2.getEye() - 1) + ".png")));
+            }
             if (User2.getShoes() <= 0) {
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -231,11 +257,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     void showInfoDialog(Bundle b) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), new JSONObject(b.getString("DR")), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
@@ -255,6 +283,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
             }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
+            }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -262,8 +295,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             }
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("玩家名称:" + b.getString("U")
-                    + "\n玩家等级:Lv." + lv
+            textView.setText("用户名称:" + b.getString("U")
+                    + "\n用户等级:Lv." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
                     + "\n考级进度:Cl." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
@@ -283,11 +316,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             str = " AND " + online_1;
         }
         sqlWhere = "item = '" + Consts.items[i + 1] + "' OR item = '" + Consts.items[i + 2] + "'" + str;
-        if (!sqlWhere.isEmpty()) {
-            cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-            f4503ab.changeCursor(cursor);
-            f4503ab.notifyDataSetChanged();
-        }
+        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
+        olRoomSongsAdapter.changeCursor(cursor);
+        olRoomSongsAdapter.notifyDataSetChanged();
         moreSongs.dismiss();
     }
 
@@ -298,11 +329,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             str = " AND " + online_1;
         }
         sqlWhere = "item = '" + Consts.items[i + 1] + "'" + str;
-        if (!sqlWhere.isEmpty()) {
-            cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-            f4503ab.changeCursor(cursor);
-            f4503ab.notifyDataSetChanged();
-        }
+        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
+        olRoomSongsAdapter.changeCursor(cursor);
+        olRoomSongsAdapter.notifyDataSetChanged();
         moreSongs.dismiss();
     }
 
@@ -313,25 +342,23 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             str = " AND " + online_1;
         }
         sqlWhere = "item = '" + Consts.items[i + 1] + "' OR item = '" + Consts.items[j + 1] + "'" + str;
-        if (!sqlWhere.isEmpty()) {
-            cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-            f4503ab.changeCursor(cursor);
-            f4503ab.notifyDataSetChanged();
-        }
+        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
+        olRoomSongsAdapter.changeCursor(cursor);
+        olRoomSongsAdapter.notifyDataSetChanged();
         moreSongs.dismiss();
     }
 
     public void m3756h() {
         if (!sqlWhere.isEmpty()) {
             cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-            f4503ab.changeCursor(cursor);
-            f4503ab.notifyDataSetChanged();
+            olRoomSongsAdapter.changeCursor(cursor);
+            olRoomSongsAdapter.notifyDataSetChanged();
         }
     }
 
-    public final void sendMsg(byte b, byte b2, byte b3, String str) {
+    public final void sendMsg(int type, MessageLite msg) {
         if (connectionService != null) {
-            connectionService.writeData(b, b2, b3, str, null);
+            connectionService.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -390,22 +417,26 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public final void mo2861a(GridView gridView, Bundle bundle) {
         playerList.clear();
         if (bundle != null) {
-            int size = bundle.size() - 3;
+            int size = bundle.size() - 6;
             for (int i = 0; i < size; i++) {
                 playerList.add(bundle.getBundle(String.valueOf(i)));
             }
             List<Bundle> list = playerList;
-            if (list != null && !list.isEmpty()) {
+            if (!list.isEmpty()) {
                 Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("PI"), o2.getByte("PI")));
             }
             gridView.setAdapter(new PlayerImageAdapter(list, this));
         }
     }
 
-    public final void mo2862a() {
+    public final void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-        msgListView.setSelection(posi + 2);
+        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
+        if (posi > 0) {
+            msgListView.setSelection(posi + 2);
+        } else {
+            msgListView.setSelection(msgListView.getBottom());
+        }
     }
 
     public final void mo2863a(ListView listView, List<Bundle> list, int i) {
@@ -416,7 +447,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public final String[] mo2864a(String str) {
-        Throwable th;
         Cursor cursor = null;
         String[] strArr = new String[2];
         Cursor query;
@@ -435,10 +465,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return strArr;
             } catch (Throwable th2) {
                 cursor = query;
-                th = th2;
-                throw th;
+                throw th2;
             }
-        } catch (Exception ignored) {
         } catch (Throwable th3) {
             if (cursor != null) {
                 cursor.close();
@@ -447,7 +475,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         return strArr;
     }
 
-    final void mo2865b(String str) {
+    final void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -494,7 +522,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         Bundle data = message.getData();
         switch (message.what) {
             case 1:
-                sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + data.getString("S"));
+                OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+                builder.setTune(diao);
+                builder.setSongPath(data.getString("S"));
+                sendMsg(15, builder.build());
                 break;
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
@@ -529,7 +560,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     @Override
     public void onClick(View view) {
         String str;
-        JSONObject jSONObject;
         int i;
         switch (view.getId()) {
             case R.id.favor:
@@ -539,11 +569,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     str = " AND " + online_1;
                 }
                 sqlWhere = "isfavo = 1" + str;
-                if (!sqlWhere.isEmpty()) {
-                    cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-                    f4503ab.changeCursor(cursor);
-                    f4503ab.notifyDataSetChanged();
-                }
+                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
+                olRoomSongsAdapter.changeCursor(cursor);
+                olRoomSongsAdapter.notifyDataSetChanged();
                 moreSongs.dismiss();
                 return;
             case R.id.couple_1:
@@ -576,12 +604,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.left_hand:
                 currentHand = 1;
                 setGroupOrHand(1, commonModeGroup);
-                groupButton.setText(Consts.hands[currentHand] + groupButton.getText().toString().substring(1));
+                groupButton.setText("左" + groupButton.getText().toString().substring(1));
                 return;
             case R.id.right_hand:
                 currentHand = 0;
                 setGroupOrHand(0, commonModeGroup);
-                groupButton.setText(Consts.hands[currentHand] + groupButton.getText().toString().substring(1));
+                groupButton.setText("右" + groupButton.getText().toString().substring(1));
                 return;
             case R.id.rand_0:
                 m3744a(2, 4);
@@ -632,16 +660,16 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf + "%'" + (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
                 int count = cursor.getCount();
                 if (valueOf.isEmpty()) {
-                    f4503ab.changeCursor(cursor);
-                    f4503ab.notifyDataSetChanged();
+                    olRoomSongsAdapter.changeCursor(cursor);
+                    olRoomSongsAdapter.notifyDataSetChanged();
                     return;
                 } else if (cursor.getCount() == 0) {
                     Toast.makeText(this, "未搜索到与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Toast.makeText(this, "搜索到" + count + "首与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                    f4503ab.changeCursor(cursor);
-                    f4503ab.notifyDataSetChanged();
+                    olRoomSongsAdapter.changeCursor(cursor);
+                    olRoomSongsAdapter.notifyDataSetChanged();
                     return;
                 }
             case R.id.pre_button:
@@ -650,68 +678,48 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     page = 0;
                     return;
                 }
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", page);
-                    sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
+                builder.setType(1);
+                builder.setPage(page);
+                sendMsg(34, builder.build());
+                return;
             case R.id.online_button:
-                try {
-                    jSONObject = new JSONObject();
-                    jSONObject.put("T", "L");
-                    jSONObject.put("B", -1);
-                    sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                    return;
-                } catch (JSONException e2) {
-                    e2.printStackTrace();
-                    return;
-                }
+                builder = OnlineLoadUserInfoDTO.newBuilder();
+                builder.setType(1);
+                builder.setPage(-1);
+                sendMsg(34, builder.build());
+                return;
             case R.id.next_button:
                 if (!canNotNextPage) {
                     page += 20;
                     if (page >= 0) {
-                        try {
-                            jSONObject = new JSONObject();
-                            jSONObject.put("T", "L");
-                            jSONObject.put("B", page);
-                            sendMsg((byte) 34, (byte) 0, (byte) 0, jSONObject.toString());
-                            return;
-                        } catch (JSONException e22) {
-                            e22.printStackTrace();
-                            return;
-                        }
+                        builder = OnlineLoadUserInfoDTO.newBuilder();
+                        builder.setType(1);
+                        builder.setPage(page);
+                        sendMsg(34, builder.build());
+                        return;
                     }
                     return;
                 }
                 return;
             case R.id.ol_send_b:
-                JSONObject jSONObject2 = new JSONObject();
-                try {
+                OnlineRoomChatDTO.Builder builder2 = OnlineRoomChatDTO.newBuilder();
                     str = String.valueOf(sendText.getText());
                     if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
-                        jSONObject2.put("@", "");
-                        jSONObject2.put("M", str);
+                        builder2.setUserName("");
+                        builder2.setMessage(str);
                     } else {
-                        jSONObject2.put("@", userTo);
+                        builder2.setUserName(userTo);
                         str = str.substring(userTo.length());
-                        jSONObject2.put("M", str);
+                        builder2.setMessage(str);
                     }
                     sendText.setText("");
-                    jSONObject2.put("V", colorNum);
+                    builder2.setColor(colorNum);
                     if (!str.isEmpty()) {
-                        sendMsg((byte) 13, roomID0, hallID0, jSONObject2.toString());
+                        sendMsg(13, builder2.build());
                     }
                     userTo = "";
                     return;
-                } catch (JSONException e222) {
-                    e222.printStackTrace();
-                    return;
-                }
             case R.id.ol_express_b:
                 expressWindow.showAtLocation(express, Gravity.CENTER, 0, 0);
                 return;
@@ -723,10 +731,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.ol_changecolor:
-                if (changeclr != null) {
+                if (changeColor != null) {
                     int[] iArr = new int[2];
                     changeColorButton.getLocationOnScreen(iArr);
-                    changeclr.showAtLocation(changeColorButton, 51, iArr[0] / 2 - 30, (int) (iArr[1] * 0.84f));
+                    changeColor.showAtLocation(changeColorButton, 51, iArr[0] / 2 - 30, (int) (iArr[1] * 0.84f));
                 }
                 return;
             case R.id.white:
@@ -761,7 +769,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.onetimeplay:
                 if (playSongs != null && playSongs.isPlayingSongs && playSongs.jpapplication.getPlaySongsMode() != 0 && playerKind.equals("H")) {
-                    playSongs.jpapplication.setPlaySongsMode(0);
+                    jpapplication.setPlaySongsMode(0);
                     Toast.makeText(this, "单次播放已开启", Toast.LENGTH_SHORT).show();
                 } else if (playSongs != null && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -797,19 +805,21 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_ready_b:
                 if (playerKind.equals("G")) {
-                    sendMsg((byte) 4, roomID0, hallID0, "R");
+                    OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+                    builder1.setStatus("R");
+                    sendMsg(4, builder1.build());
                 } else {
-                    sendMsg((byte) 3, roomID0, hallID0, "");
+                    sendMsg(3, OnlinePlayStartDTO.getDefaultInstance());
                 }
                 return;
             case R.id.room_title:
                 if (playerKind.equals("G")) {
-                    Toast.makeText(this, "非房主不能修改房名或密码!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
                 } else {
                     View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                     EditText text1 = inflate.findViewById(R.id.text_1);
                     EditText text2 = inflate.findViewById(R.id.text_2);
-                    new JPDialog(this).setTitle("修改房名或密码").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                    new JPDialog(this).setTitle("修改房名").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
                 }
                 return;
             case R.id.ol_songlist_b:
@@ -859,7 +869,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     } else {
                         diao = 6;
                     }
-                    sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + jpapplication.getNowSongsName());
+                    OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                    builder1.setTune(diao);
+                    builder1.setSongPath(jpapplication.getNowSongsName());
+                    sendMsg(15, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
                     olPlayRoomHandler.handleMessage(obtainMessage);
@@ -877,7 +890,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     } else {
                         diao = -6;
                     }
-                    sendMsg((byte) 15, roomID0, hallID0, (diao + 20) + jpapplication.getNowSongsName());
+                    OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                    builder1.setTune(diao);
+                    builder1.setSongPath(jpapplication.getNowSongsName());
+                    sendMsg(15, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
                     olPlayRoomHandler.handleMessage(obtainMessage);
@@ -937,8 +953,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         } else {
             Toast.makeText(this, "您的等级未达到" + lv + "级，不能使用该颜色!", Toast.LENGTH_SHORT).show();
         }
-        if (changeclr != null) {
-            changeclr.dismiss();
+        if (changeColor != null) {
+            changeColor.dismiss();
         }
     }
 
@@ -946,7 +962,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         activityNum = 4;
-        JPStack.create();
         JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         layoutInflater = LayoutInflater.from(this);
@@ -955,17 +970,17 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         connectionService = jpapplication.getConnectionService();
         setContentView(R.layout.olplayroom);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        roomTitle = findViewById(R.id.room_title);
+        roomNameView = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");
         hallID0 = bundle2.getByte("hallID");
         hallName = bundle2.getString("hallName");
         roomID0 = bundle0.getByte("ID");
-        roomTitleString = bundle0.getString("R");
+        roomName = bundle0.getString("R");
         roomMode = bundle0.getInt("mode");
         playerKind = bundle0.getString("isHost");
-        roomTitle.setText("[" + roomID0 + "]" + roomTitleString);
-        roomTitle.setOnClickListener(this);
+        roomNameView.setText("[" + roomID0 + "]" + roomName);
+        roomNameView.setOnClickListener(this);
         playerGrid = findViewById(R.id.ol_player_grid);
         playerGrid.setCacheColorHint(0);
         playerList.clear();
@@ -1011,20 +1026,20 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         testSQL = new TestSQL(this, "data");
         sqlitedatabase = testSQL.getWritableDatabase();
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, online_1, null, null, null, null);
-        f4503ab = new OLRoomSongsAdapter(this, this, cursor);
+        olRoomSongsAdapter = new OLRoomSongsAdapter(this, this, cursor);
         songNameText = findViewById(R.id.ol_songlist_b);
         if (!jpapplication.getNowSongsName().isEmpty()) {
             songNameText.setText(mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
         songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
         songNameText.setOnClickListener(this);
-        songsList.setAdapter(f4503ab);
-        sendMsg((byte) 21, roomID0, hallID0, "");
+        songsList.setAdapter(olRoomSongsAdapter);
+        sendMsg(21, OnlineLoadRoomPositionDTO.getDefaultInstance());
         msgList.clear();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, (byte) 13, roomID0, hallID0));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 13));
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -1113,7 +1128,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         popupWindow3.setFocusable(true);
         popupWindow3.setTouchable(true);
         popupWindow3.setOutsideTouchable(true);
-        changeclr = popupWindow3;
+        changeColor = popupWindow3;
         PopupWindow popupWindow4 = new PopupWindow(this);
         View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
         popupWindow4.setContentView(inflate4);
@@ -1167,6 +1182,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
 
     @Override
     protected void onDestroy() {
+        if (playSongs != null) {
+            playSongs.isPlayingSongs = false;
+            playSongs = null;
+        }
         timeUpdateRunning = false;
         try {
             timeUpdateThread.interrupt();
@@ -1176,10 +1195,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         playerList.clear();
         invitePlayerList.clear();
         friendPlayerList.clear();
-        JPStack.create();
         JPStack.pop(this);
-        if (f4503ab != null && f4503ab.getCursor() != null) {
-            f4503ab.getCursor().close();
+        if (olRoomSongsAdapter != null && olRoomSongsAdapter.getCursor() != null) {
+            olRoomSongsAdapter.getCursor().close();
         }
         if (cursor != null) {
             cursor.close();
@@ -1198,7 +1216,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onStart() {
         super.onStart();
         if (!isOnStart) {
-            sendMsg((byte) 4, roomID0, hallID0, "N");
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("N");
+            sendMsg(4, builder1.build());
         }
         isOnStart = true;
     }
@@ -1207,7 +1227,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onRestart() {
         super.onRestart();
         if (!isOnStart) {
-            sendMsg((byte) 4, roomID0, hallID0, "N");
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("N");
+            sendMsg(4, builder1.build());
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
                 msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
@@ -1220,7 +1242,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onStop() {
         super.onStop();
         if (isOnStart) {
-            sendMsg((byte) 4, roomID0, hallID0, "B");
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("B");
+            sendMsg(4, builder1.build());
         }
         isOnStart = false;
     }

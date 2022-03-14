@@ -31,59 +31,56 @@
 
 namespace oboe {
 
-    class AudioStream;
-
-    class AudioSourceCaller;
+class AudioStream;
+class AudioSourceCaller;
 
 /**
  * Convert PCM channels, format and sample rate for optimal latency.
  */
-    class DataConversionFlowGraph : public FixedBlockProcessor {
-    public:
+class DataConversionFlowGraph : public FixedBlockProcessor {
+public:
 
-        DataConversionFlowGraph()
-                : mBlockWriter(*this) {}
+    DataConversionFlowGraph()
+    : mBlockWriter(*this) {}
 
-        void setSource(const void *buffer, int32_t numFrames);
+    void setSource(const void *buffer, int32_t numFrames);
 
-        /** Connect several modules together to convert from source to sink.
-         * This should only be called once for each instance.
-         *
-         * @param sourceFormat
-         * @param sourceChannelCount
-         * @param sinkFormat
-         * @param sinkChannelCount
-         * @return
-         */
-        oboe::Result configure(oboe::AudioStream *sourceStream, oboe::AudioStream *sinkStream);
+    /** Connect several modules together to convert from source to sink.
+     * This should only be called once for each instance.
+     *
+     * @param sourceFormat
+     * @param sourceChannelCount
+     * @param sinkFormat
+     * @param sinkChannelCount
+     * @return
+     */
+    oboe::Result configure(oboe::AudioStream *sourceStream, oboe::AudioStream *sinkStream);
 
-        int32_t read(void *buffer, int32_t numFrames, int64_t timeoutNanos);
+    int32_t read(void *buffer, int32_t numFrames, int64_t timeoutNanos);
 
-        int32_t write(void *buffer, int32_t numFrames);
+    int32_t write(void *buffer, int32_t numFrames);
 
-        int32_t onProcessFixedBlock(uint8_t *buffer, int32_t numBytes) override;
+    int32_t onProcessFixedBlock(uint8_t *buffer, int32_t numBytes) override;
 
-        DataCallbackResult getDataCallbackResult() {
-            return mCallbackResult;
-        }
+    DataCallbackResult getDataCallbackResult() {
+        return mCallbackResult;
+    }
 
-    private:
-        std::unique_ptr<flowgraph::FlowGraphSourceBuffered> mSource;
-        std::unique_ptr<AudioSourceCaller> mSourceCaller;
-        std::unique_ptr<flowgraph::MonoToMultiConverter> mMonoToMultiConverter;
-        std::unique_ptr<flowgraph::MultiToMonoConverter> mMultiToMonoConverter;
-        std::unique_ptr<flowgraph::ChannelCountConverter> mChannelCountConverter;
-        std::unique_ptr<resampler::MultiChannelResampler> mResampler;
-        std::unique_ptr<flowgraph::SampleRateConverter> mRateConverter;
-        std::unique_ptr<flowgraph::FlowGraphSink> mSink;
+private:
+    std::unique_ptr<flowgraph::FlowGraphSourceBuffered>    mSource;
+    std::unique_ptr<AudioSourceCaller>                 mSourceCaller;
+    std::unique_ptr<flowgraph::MonoToMultiConverter>   mMonoToMultiConverter;
+    std::unique_ptr<flowgraph::MultiToMonoConverter>   mMultiToMonoConverter;
+    std::unique_ptr<flowgraph::ChannelCountConverter>  mChannelCountConverter;
+    std::unique_ptr<resampler::MultiChannelResampler>  mResampler;
+    std::unique_ptr<flowgraph::SampleRateConverter>    mRateConverter;
+    std::unique_ptr<flowgraph::FlowGraphSink>              mSink;
 
-        FixedBlockWriter mBlockWriter;
-        DataCallbackResult mCallbackResult = DataCallbackResult::Continue;
-        AudioStream *mFilterStream = nullptr;
-        std::unique_ptr<uint8_t[]> mAppBuffer;
-
-        int64_t mFramePosition = 0;
-    };
+    FixedBlockWriter                                   mBlockWriter;
+    DataCallbackResult                                 mCallbackResult = DataCallbackResult::Continue;
+    AudioStream                                       *mFilterStream = nullptr;
+    std::unique_ptr<uint8_t[]>                         mAppBuffer;
+};
 
 }
 #endif //OBOE_OBOE_FLOW_GRAPH_H

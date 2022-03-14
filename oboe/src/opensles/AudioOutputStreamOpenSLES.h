@@ -29,53 +29,49 @@ namespace oboe {
 /**
  * INTERNAL USE ONLY
  */
-    class AudioOutputStreamOpenSLES : public AudioStreamOpenSLES {
-    public:
-        AudioOutputStreamOpenSLES();
+class AudioOutputStreamOpenSLES : public AudioStreamOpenSLES {
+public:
+    AudioOutputStreamOpenSLES();
+    explicit AudioOutputStreamOpenSLES(const AudioStreamBuilder &builder);
 
-        explicit AudioOutputStreamOpenSLES(const AudioStreamBuilder &builder);
+    virtual ~AudioOutputStreamOpenSLES() = default;
 
-        virtual ~AudioOutputStreamOpenSLES() = default;
+    Result open() override;
+    Result close() override;
 
-        Result open() override;
+    Result requestStart() override;
+    Result requestPause() override;
+    Result requestFlush() override;
+    Result requestStop() override;
 
-        Result close() override;
+protected:
+    Result requestPause_l();
 
-        Result requestStart() override;
+    void setFramesRead(int64_t framesRead);
 
-        Result requestPause() override;
+    Result updateServiceFrameCounter() override;
 
-        Result requestFlush() override;
+    void updateFramesRead() override;
 
-        Result requestStop() override;
+private:
 
-    protected:
+    SLuint32 channelCountToChannelMask(int chanCount) const;
 
-        void setFramesRead(int64_t framesRead);
+    Result onAfterDestroy() override;
 
-        Result updateServiceFrameCounter() override;
+    Result requestFlush_l();
 
-        void updateFramesRead() override;
+    /**
+     * Set OpenSL ES PLAYSTATE.
+     *
+     * @param newState SL_PLAYSTATE_PAUSED, SL_PLAYSTATE_PLAYING, SL_PLAYSTATE_STOPPED
+     * @return
+     */
+    Result setPlayState_l(SLuint32 newState);
 
-    private:
+    SLPlayItf      mPlayInterface = nullptr;
 
-        SLuint32 channelCountToChannelMask(int chanCount) const;
-
-        Result onAfterDestroy() override;
-
-        Result requestFlush_l();
-
-        /**
-         * Set OpenSL ES PLAYSTATE.
-         *
-         * @param newState SL_PLAYSTATE_PAUSED, SL_PLAYSTATE_PLAYING, SL_PLAYSTATE_STOPPED
-         * @return
-         */
-        Result setPlayState_l(SLuint32 newState);
-
-        SLPlayItf mPlayInterface = nullptr;
-
-    };
+};
 
 } // namespace oboe
 

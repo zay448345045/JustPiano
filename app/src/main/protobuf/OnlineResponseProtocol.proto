@@ -1,0 +1,947 @@
+syntax = "proto3";
+
+package ly.pp.justpiano3.protobuf.vo;
+
+option java_multiple_files = true;
+option java_outer_classname = "OnlineResponse";
+
+// 服务器发送协议
+message OnlineBaseVO {
+  reserved 1, 4, 8, 11, 17, 24, 30, 35, 41, 42, 44;
+  // 消息体
+  oneof response {
+    // 查看用户个人资料对话框
+    OnlineUserInfoDialogVO user_info_dialog = 2;
+    // 开始弹奏
+    OnlinePlayStartVO play_start = 3;
+    // 弹奏成绩判定
+    OnlinePlayFinishVO play_finish = 5;
+    // 创建房间
+    OnlineCreateRoomVO create_room = 6;
+    // 进入房间
+    OnlineEnterRoomVO enter_room = 7;
+    // 被踢出房间
+    OnlineKickedQuitRoomVO kicked_quit_room = 9;
+    // 用户登录对战
+    OnlineLoginVO login = 10;
+    // 大厅聊天
+    OnlineHallChatVO hall_chat = 12;
+    // 房间聊天
+    OnlineRoomChatVO room_chat = 13;
+    // 改变房间信息
+    OnlineChangeRoomInfoVO change_room_info = 14;
+    // 播放曲谱
+    OnlinePlaySongVO play_song = 15;
+    // 每日挑战
+    OnlineChallengeVO challenge = 16;
+    // 家族
+    OnlineFamilyVO family = 18;
+    // 进入大厅后加载房间列表
+    OnlineLoadRoomListVO load_room_list = 19;
+    // 改变房间位置状态
+    OnlineChangeRoomPositionVO change_room_position = 20;
+    // 房间内初次加载所有用户数据
+    OnlineLoadRoomPositionVO load_room_position = 21;
+    // 大厅中加载变化房间列表
+    OnlineRoomVO change_room_list = 22;
+    // 房间开始弹奏后加载用户
+    OnlineLoadPlayUserVO load_play_user = 23;
+    // 弹奏界面左上角成绩条
+    OnlineMiniGradeVO mini_grade = 25;
+    // 商店
+    OnlineShopVO shop = 26;
+    // 推荐曲谱
+    OnlineRecommendSongVO recommend_song = 27;
+    // 主界面加载用户信息及大厅列表
+    OnlineLoadUserVO load_user = 28;
+    // 进入大厅
+    OnlineEnterHallVO enter_hall = 29;
+    // 增删好友、解除搭档、设置祝语
+    OnlineSetUserInfoVO set_user_info = 31;
+    // 显示/隐藏弹奏界面左上角成绩条
+    OnlineSetMiniGradeVO set_mini_grade = 32;
+    // 更换服装
+    OnlineChangeClothesVO change_clothes = 33;
+    // 查看好友、私信和主界面查看搭档
+    OnlineLoadUserInfoVO load_user_info = 34;
+    // 大厅加载用户列表或房间加载邀请列表
+    OnlineLoadUserListVO load_user_list = 36;
+    // 找Ta或邀请对话框
+    OnlineDialogVO dialog = 37;
+    // 每日奖励
+    OnlineDailyVO daily = 38;
+    // 键盘模式传输音符数据
+    OnlineKeyboardNoteVO keyboard_note = 39;
+    // 等级考试
+    OnlineClTestVO cl_test = 40;
+    // 大厅中显示房间内成员信息
+    OnlineLoadRoomUserListVO load_room_user_list = 43;
+    // 搭档、祝福
+    OnlineCoupleVO couple = 45;
+  }
+}
+
+// 查看用户个人资料对话框
+message OnlineUserInfoDialogVO {
+  // 用户名称
+  string name = 1;
+  // 用户等级
+  uint32 lv = 2;
+  // 用户经验
+  uint32 exp = 3;
+  // 用户考级
+  uint32 cl = 4;
+  // 用户所在家族名称及职位
+  string family = 5;
+  // 用户服装
+  OnlineClothesVO clothes = 6;
+  // 用户冠军数量
+  uint32 winner_num = 7;
+  // 用户在线曲库总分
+  uint32 score = 8;
+  // 用户个性签名
+  string signature = 9;
+  // 用户性别
+  string gender = 10;
+}
+
+// 开始弹奏
+message OnlinePlayStartVO {
+  // 曲谱路径
+  string song_path = 1;
+  // 曲谱移调值
+  int32 tune = 2;
+}
+
+// 弹奏成绩判定
+message OnlinePlayFinishVO {
+  // 弹奏成绩
+  repeated OnlinePlayGradeVO play_grade = 1;
+}
+
+// 弹奏成绩
+message OnlinePlayGradeVO {
+  // 用户目前是否位弹奏中
+  bool is_playing = 1;
+  // 用户名称
+  string name = 2;
+  // 用户弹奏分数
+  uint32 score = 3;
+  // 用户成绩
+  OnlineGradeVO grade = 4;
+}
+
+// 用户成绩
+message OnlineGradeVO {
+  // 暴击个数
+  uint32 perfect = 1;
+  // 很棒个数
+  uint32 cool = 2;
+  // 完美个数
+  uint32 great = 3;
+  // 一般个数
+  uint32 bad = 4;
+  // 失误个数
+  uint32 miss = 5;
+  // 连击个数
+  uint32 combo = 6;
+  // 成绩条颜色（用于组队模式）
+  uint32 grade_color = 7;
+  // 所获经验
+  uint32 exp = 8;
+}
+
+// 创建房间
+message OnlineCreateRoomVO {
+  // 房间id
+  uint32 room_id = 1;
+  // 房间名称
+  string room_name = 2;
+  // 房间模式
+  uint32 room_mode = 3;
+  // 创建房间是否成功
+  bool is_success = 4;
+}
+
+// 进入房间
+message OnlineEnterRoomVO {
+  // 房间id
+  uint32 room_id = 1;
+  // 房间名称
+  string room_name = 2;
+  // 房间模式
+  uint32 room_mode = 3;
+  // 是否可进入房间（对应多种状态提示）
+  uint32 status = 4;
+}
+
+// 被踢出房间
+message OnlineKickedQuitRoomVO {
+
+}
+
+// 用户登录
+message OnlineLoginVO {
+  // 登录结果
+  string status = 1;
+  // 服务端时间
+  uint64 time = 2;
+}
+
+// 大厅聊天
+message OnlineHallChatVO {
+  // 私聊用户名称
+  string user_name = 1;
+  // 消息内容
+  string message = 2;
+  // 聊天种类（1公聊，2私聊，3系统消息，18全服广播）
+  uint32 type = 3;
+}
+
+// 房间聊天
+message OnlineRoomChatVO {
+  // 私聊用户名称
+  string user_name = 1;
+  // 消息内容
+  string message = 2;
+  // 聊天种类（1公聊，2私聊，3系统消息，18全服广播）
+  uint32 type = 3;
+  // 消息文字颜色
+  uint32 color = 4;
+}
+
+// 改变房间信息
+message OnlineChangeRoomInfoVO {
+  // 新房间名称
+  string room_name = 1;
+}
+
+// 播放曲谱
+message OnlinePlaySongVO {
+  // 曲谱路径
+  string song_path = 1;
+  // 曲谱移调值
+  int32 tune = 2;
+}
+
+// 每日挑战
+message OnlineChallengeVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof challenge {
+    // 每日挑战返回排名信息和个人信息
+    OnlineChallengeEnterVO challenge_enter = 2;
+    // 每日挑战返回曲目和对话框
+    OnlineChallengeDialogVO challenge_dialog = 3;
+    // 每日挑战结束弹奏时返回结果
+    OnlineChallengeFinishVO challenge_finish = 4;
+    // 每日挑战抽奖
+    OnlineChallengePrizeVO challenge_prize = 5;
+  }
+}
+
+// 每日挑战返回排名信息和个人信息
+message OnlineChallengeEnterVO {
+  // 排名列表
+  repeated OnlineChallengeUserVO user_score = 1;
+  // 当前用户今日排名
+  string position = 2;
+  // 当前用户昨日排名
+  string yesterday_position = 3;
+  // 当前用户今日挑战最高分数
+  uint32 score = 4;
+  // 当前用户今日剩余挑战次数
+  uint32 challenge_num = 5;
+}
+
+// 每日挑战返回曲目和对话框
+message OnlineChallengeDialogVO {
+  // 是否可参与挑战
+  bool allowed = 1;
+  // 挑战曲pm文件二进制内容
+  optional string song_content = 2;
+  // 对话框显示消息
+  string message = 3;
+}
+
+// 每日挑战返回排名信息
+message OnlineChallengeUserVO {
+  // 用户名称
+  string name = 1;
+  // 用户挑战最高分数
+  uint32 score = 2;
+  // 挑战参与时间
+  string time = 3;
+}
+
+// 每日挑战结束弹奏时返回结果
+message OnlineChallengeFinishVO {
+  // 对话框显示消息
+  string message = 1;
+}
+
+// 每日挑战抽奖
+message OnlineChallengePrizeVO {
+  // 奖励种类（-1表示无奖励）
+  int32 prize_type = 1;
+  // 奖励名称
+  string prize_name = 2;
+}
+
+// 家族
+message OnlineFamilyVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof family {
+    // 进入家族中心
+    OnlineFamilyEnterVO family_enter = 2;
+    // 读取家族列表（未进入家族中心）
+    OnlineFamilyListVO family_list = 3;
+    // 家族对话框
+    OnlineFamilyDialogVO family_dialog = 4;
+    // 创建家族
+    OnlineFamilyCreateVO family_create = 5;
+  }
+}
+
+// 进入家族
+message OnlineFamilyEnterVO {
+  // 家族成员列表
+  repeated OnlineFamilyUserVO family_user = 1;
+  // 家族宣言
+  string declaration = 2;
+  // 家族创建时间
+  uint64 create_date = 3;
+  // 族长名称
+  string leader = 4;
+  // 家族名称
+  string name = 5;
+  // 当前用户职位
+  string position = 6;
+  // 家族贡献
+  uint32 contribution = 7;
+}
+
+// 家族成员用户
+message OnlineFamilyUserVO {
+  // 用户名称
+  string name = 1;
+  // 用户职位
+  uint32 position = 2;
+  // 用户等级
+  uint32 lv = 3;
+  // 用户性别
+  string gender = 4;
+  // 用户贡献
+  uint32 contribution = 5;
+  // 用户是否在线
+  bool online = 6;
+}
+
+// 读取家族列表（未进入家族中心）
+message OnlineFamilyListVO {
+  // 家族信息
+  repeated OnlineFamilyInfoVO family_info = 1;
+  // 当前用户所在家族名称
+  string name = 2;
+  // 当前用户所在家族排名
+  uint32 position = 3;
+  // 当前用户所在家族贡献
+  uint32 contribution = 4;
+  // 当前用户所在家族最大容量
+  uint32 capacity = 5;
+  // 当前用户所在家族当前成员总数
+  uint32 size = 6;
+  // 当前用户所在家族id
+  uint32 family_id = 7;
+  // 当前用户所在家族族徽图片
+  string picture = 8;
+}
+
+// 家族信息
+message OnlineFamilyInfoVO {
+  // 家族名称
+  string name = 1;
+  // 家族贡献
+  uint32 contribution = 2;
+  // 家族最大容量
+  uint32 capacity = 3;
+  // 家族当前成员总数
+  uint32 size = 4;
+  // 家族id
+  uint32 family_id = 5;
+  // 族徽图片
+  string picture = 6;
+}
+
+// 家族对话框
+message OnlineFamilyDialogVO {
+  // 是否可创建家族
+  optional bool allowed = 1;
+  // 对话框显示消息
+  optional string message = 2;
+}
+
+// 创建家族
+message OnlineFamilyCreateVO {
+  // 创建家族结果
+  uint32 result = 1;
+}
+
+// 进入大厅后加载房间列表
+message OnlineLoadRoomListVO {
+  // 房间列表
+  repeated OnlineRoomVO room = 1;
+}
+
+// 改变房间位置状态
+message OnlineChangeRoomPositionVO {
+  // 用户信息
+  repeated OnlineRoomPositionUserVO room_position_user = 4;
+}
+
+// 房间内初次加载所有用户数据
+message OnlineLoadRoomPositionVO {
+  // 房间播放曲谱路径
+  string song_path = 1;
+  // 房间内播放曲谱移调值
+  int32 tune = 2;
+  // 搭档信息
+  OnlineRoomPositionCoupleVO room_position_couple = 3;
+  // 用户信息
+  repeated OnlineRoomPositionUserVO room_position_user = 4;
+}
+
+// 搭档信息
+message OnlineRoomPositionCoupleVO {
+  // 发送搭档请求
+  bool invite = 1;
+  // 搭档位置楼号
+  int32 couple_position = 2;
+  // 搭档名称
+  string couple_name = 3;
+  // 搭档类型
+  uint32 couple_type = 4;
+}
+
+// 用户信息
+message OnlineRoomPositionUserVO {
+  // 用户服装
+  OnlineClothesVO clothes = 1;
+  // 房间位置编号
+  uint32 position = 2;
+  // 用户性别
+  string gender = 3;
+  // 用户等级
+  uint32 lv = 4;
+  // 用户考级
+  uint32 cl = 5;
+  // 用户家族id
+  uint32 family = 6;
+  // 房间所在位置状态
+  string position_status = 7;
+  // 用户状态
+  string user_status = 8;
+  // 用户左右手/组队队伍值
+  uint32 hand = 9;
+  // 用户框框颜色编号
+  uint32 color = 10;
+  // 用户名称
+  string name = 11;
+  // 用户搭档类型
+  uint32 couple_type = 12;
+}
+
+// 房间
+message OnlineRoomVO {
+  // 房间id
+  uint32 room_id = 1;
+  // 房间名称
+  string room_name = 2;
+  // 房名颜色
+  uint32 color = 3;
+  // 房间模式
+  uint32 room_mode = 4;
+  // 房间是否处于弹奏中状态
+  bool is_playing = 5;
+  // 房间是否有密码
+  bool is_encrypt = 6;
+  // 房间女生人数
+  uint32 female_num = 7;
+  // 房间男生人数
+  uint32 male_num = 8;
+  // 房间关闭空位人数
+  uint32 close_num = 9;
+}
+
+// 房间开始弹奏后加载用户
+message OnlineLoadPlayUserVO {
+  // 弹奏用户
+  repeated OnlinePlayUserVO play_user = 1;
+}
+
+// 弹奏用户
+message OnlinePlayUserVO {
+  //用户名称
+  string name = 1;
+  // 用户左右手/组队值
+  uint32 hand = 2;
+  // 房间模式
+  uint32 mode = 3;
+  // 房间位置编号
+  uint32 room_position = 4;
+}
+
+// 弹奏界面左上角成绩条
+message OnlineMiniGradeVO {
+  // 连击数量
+  uint32 combo = 1;
+  // 用户当前弹奏分数
+  uint32 score = 2;
+  // 用户所在房间位置
+  uint32 room_position = 3;
+}
+
+// 商店
+message OnlineShopVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof shop {
+    // 商品列表
+    OnlineShopProductShowVO shop_product_show = 2;
+    // 商店购买商品
+    OnlineShopProductBuyVO shop_product_buy = 3;
+  }
+}
+
+// 商品列表
+message OnlineShopProductShowVO {
+  // 商品列表
+  repeated OnlineShopProductVO product = 1;
+  // 当前用户音符数量
+  uint32 gold = 2;
+}
+
+// 商品
+message OnlineShopProductVO {
+  // 商品id
+  uint32 id = 1;
+  // 商品名称
+  string name = 2;
+  // 商品图片
+  string picture = 3;
+  // 商品价格
+  uint32 price = 4;
+  // 商品描述
+  string description = 5;
+}
+
+// 商店购买商品
+message OnlineShopProductBuyVO {
+  // 剩余音符数量
+  uint32 gold = 1;
+  // 返回对话框消息
+  string message = 2;
+}
+
+// 推荐曲谱
+message OnlineRecommendSongVO {
+  // 推荐用户名称
+  string name = 1;
+  // 曲谱路径
+  string song_path = 2;
+}
+
+// 主界面加载用户信息及大厅列表
+message OnlineLoadUserVO {
+  // 用户名称
+  string name = 1;
+  // 用户等级
+  uint32 lv = 2;
+  // 用户经验
+  uint32 exp = 3;
+  // 用户考级
+  uint32 cl = 4;
+  // 用户性别
+  string gender = 5;
+  // 用户家族id
+  uint32 family = 6;
+  // 用户服装
+  OnlineClothesVO clothes = 7;
+  // 大厅列表
+  repeated OnlineHallVO hall = 8;
+  // 用户当前等级升级所需经验
+  uint32 lv_up_need_exp = 9;
+  // 用户未读私信数量
+  uint32 message_num = 10;
+  // 用户搭档类型
+  uint32 couple_type = 11;
+}
+
+// 服装
+message OnlineClothesVO {
+  // 头发编号
+  uint32 hair = 1;
+  // 眼镜编号
+  uint32 eye = 2;
+  // 衣服编号
+  uint32 jacket = 3;
+  // 裤子编号
+  uint32 trousers = 4;
+  // 鞋子编号
+  uint32 shoes = 5;
+}
+
+// 大厅
+message OnlineHallVO {
+  // 大厅id
+  uint32 id = 1;
+  // 大厅名称
+  string name = 2;
+  // 大厅容量
+  uint32 capacity = 3;
+  // 大厅当前人数
+  uint32 size = 4;
+  // 大厅是否有密码
+  bool encrypt = 5;
+}
+
+// 进入大厅
+message OnlineEnterHallVO {
+  // 是否允许进入大厅
+  bool allowed = 1;
+  // 允许进入大厅时为大厅名称，禁止进入大厅时为显示的提示对话框标题
+  string name_or_title = 2;
+  // 允许进入大厅时为大厅id，禁止进入大厅时为显示的提示对话框内容
+  string hall_id_or_msg = 3;
+}
+
+// 增删好友、解除搭档、设置祝语
+message OnlineSetUserInfoVO {
+  // 消息类型
+  uint32 type = 1;
+  // 相关用户名称
+  optional string name = 2;
+  // 搭档相关对话框标题
+  optional string couple_title = 3;
+  // 搭档相关对话框内容，或好友相关信息
+  optional string message = 4;
+  // 好友请求结果
+  optional uint32 result = 5;
+  // 好友相关对话框标题
+  optional string friend_title = 6;
+  // 好友相关对话框内容
+  optional string friend_msg = 7;
+  // 当前用户位置（0为在房间，1为在大厅，2为在选择大厅初始界面等）
+  optional uint32 location = 8;
+}
+
+// 显示/隐藏弹奏界面左上角成绩条
+message OnlineSetMiniGradeVO {
+  // 左上角成绩刚刚开启
+  repeated OnlineMiniGradeOnVO mini_grade_on = 1;
+}
+
+// 左上角成绩刚刚开启
+message OnlineMiniGradeOnVO {
+  // 用户左右手/组队值
+  uint32 hand = 1;
+  // 用户名称
+  string name = 2;
+  // 房间模式
+  uint32 mode = 3;
+}
+
+// 更换服装
+message OnlineChangeClothesVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息
+  optional string message = 2;
+  // 音符个数
+  optional uint32 gold = 3;
+  // 服装解锁情况
+  optional string unlock = 4;
+  // 新购买解锁的服装分类编号
+  optional uint32 buy_clothes_type = 5;
+  // 新购买解锁的服装编号
+  optional uint32 buy_clothes_id = 6;
+}
+
+// 查看好友、私信和主界面查看搭档
+message OnlineLoadUserInfoVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof user_info {
+    // 查看好友
+    OnlineLoadUserFriendVO load_user_friend = 2;
+    // 查看私信
+    OnlineLoadUserMailVO load_user_mail = 3;
+    // 主界面查看搭档
+    OnlineLoadUserCoupleVO load_user_couple = 4;
+  }
+}
+
+// 主界面查看搭档
+message OnlineLoadUserCoupleVO {
+  // 搭档名称
+  string name = 1;
+  // 搭档服装
+  OnlineClothesVO clothes = 2;
+  // 搭档祝福数
+  uint32 blessing = 3;
+  // 搭档祝语
+  string declaration = 4;
+  // 搭档性别
+  string gender = 5;
+  // 搭档考级
+  uint32 cl = 6;
+  // 搭档等级
+  uint32 lv = 7;
+}
+
+// 查看好友
+message OnlineLoadUserFriendVO {
+  // 当前用户位置
+  uint32 location = 1;
+  // 用户列表
+  repeated OnlineFriendUserVO friend_user = 2;
+}
+
+// 查看私信
+message OnlineLoadUserMailVO {
+  // 用户列表
+  repeated OnlineMailVO mail = 1;
+}
+
+// 私信
+message OnlineMailVO {
+  // 私信发送方用户名称
+  string user_from = 1;
+  // 私信时间
+  uint64 time = 2;
+  // 私信消息
+  string message = 3;
+}
+
+// 好友用户
+message OnlineFriendUserVO {
+  // 好友用户名称
+  string name = 1;
+  // 好友用户性别
+  string gender = 2;
+  // 好友用户是否在线
+  bool online = 3;
+  // 好友用户等级
+  uint32 lv = 4;
+}
+
+// 大厅加载用户列表或房间加载邀请列表
+message OnlineLoadUserListVO {
+  // 用户列表
+  repeated OnlineUserVO user = 1;
+  // 用户是否在房间中
+  bool is_in_room = 2;
+}
+
+// 用户
+message OnlineUserVO {
+  // 用户名称
+  string name = 1;
+  // 用户性别
+  string gender = 2;
+  // 用户等级
+  uint32 lv = 3;
+  // 用户所在房号或位置
+  uint32 room_id = 4;
+}
+
+// 找Ta或邀请对话框
+message OnlineDialogVO {
+  // 对话框类型（0为找Ta，1为邀请）
+  uint32 type = 1;
+  // 相关用户名称（找Ta时为被找人名称，邀请时为发出邀请的用户）
+  string name = 2;
+  // 对话框标题
+  string title = 3;
+  // 对话框内容
+  string message = 4;
+  // 用户所在位置（0为在房间，1为在大厅，2为在选择大厅初始界面等）
+  uint32 location = 5;
+  // 相关用户大厅序号
+  uint32 hall_id = 6;
+  // 相关用户房号
+  uint32 room_id = 7;
+  // 相关房间密码
+  string password = 8;
+  // 是否可进入大厅
+  bool can_enter = 9;
+}
+
+// 每日奖励
+message OnlineDailyVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof daily {
+    // 昨日在线时长列表
+    OnlineDailyTimeListVO daily_time_list = 2;
+    // 领取每日奖励
+    OnlineDailyPrizeGetVO daily_prize_get = 3;
+  }
+}
+
+// 键盘模式传输音符数据
+message OnlineKeyboardNoteVO {
+  // 传输数据
+  bytes data = 1;
+}
+
+// 昨日在线时长列表
+message OnlineDailyTimeListVO {
+  // 昨日在线时长列表内用户
+  repeated OnlineDailyTimeUserVO daily_time_user = 1;
+  // 今日在线时长
+  uint32 today_online_time = 2;
+  // 明日可领奖励
+  string tomorrow_bonus = 3;
+}
+
+// 昨日在线时长列表内用户
+message OnlineDailyTimeUserVO {
+  // 用户名称
+  string name = 1;
+  // 在线时长
+  uint32 online_time = 2;
+  // 奖励
+  string bonus = 3;
+  // 是否已领取过奖励
+  bool bonus_get = 4;
+}
+
+// 领取每日奖励
+message OnlineDailyPrizeGetVO {
+  // 返回消息
+  string message = 1;
+}
+
+// 等级考试
+message OnlineClTestVO {
+  // 消息类型
+  uint32 type = 1;
+  // 消息体
+  oneof cl_test {
+    // 等级考试选择考级曲对话框
+    OnlineClTestDialogVO cl_test_dialog = 2;
+    // 等级考试获取考级曲
+    OnlineClTestSongVO cl_test_song = 3;
+    // 等级考试弹奏完成
+    OnlineClTestFinishVO cl_test_finish = 4;
+  }
+}
+
+// 等级考试选择考级曲对话框
+message OnlineClTestDialogVO {
+  // 是否允许考级
+  bool allowed = 1;
+  // 考级对话框信息
+  string message = 2;
+}
+
+// 等级考试获取考级曲
+message OnlineClTestSongVO {
+  // 考级左右手
+  uint32 hand = 1;
+  // 考级曲pm文件二进制内容
+  string song_content = 2;
+  // 用户当前的考级
+  uint32 cl = 3;
+}
+
+// 等级考试弹奏完成
+message OnlineClTestFinishVO {
+  // 考级结果状态
+  uint32 status = 1;
+  // 考级目标分数
+  uint32 target_score = 2;
+  // 考级实际弹奏分数（可能有挑战或其他情况考级分数加成）
+  string score = 3;
+  // 考级所获经验
+  string exp = 4;
+}
+
+// 大厅中显示房间内成员信息
+message OnlineLoadRoomUserListVO {
+  // 用户列表
+  repeated OnlineLoadRoomUserVO load_room_user = 1;
+  // 房间id
+  uint32 room_id = 2;
+  // 房间是否弹奏中
+  bool is_playing = 3;
+  // 房间是否加密
+  bool is_encrypt = 4;
+}
+
+// 大厅中显示房间内用户列表
+message OnlineLoadRoomUserVO {
+  // 用户名称
+  string name = 1;
+  // 用户性别
+  string gender = 2;
+  // 用户等级
+  uint32 lv = 3;
+}
+
+// 搭档、祝福
+message OnlineCoupleVO {
+  // 消息类型
+  uint32 type = 1;
+  // 搭档类型
+  int32 couple_type = 2;
+  // 搭档对应所在房间位置
+  int32 couple_room_position = 3;
+  // 相关内容
+  optional string content = 4;
+  // 搭档证书对话框
+  optional OnlineCoupleDialogVO couple_dialog = 5;
+}
+
+// 搭档证书对话框
+message OnlineCoupleDialogVO {
+  // 搭档信息
+  OnlineCoupleDialogInfoVO couple_dialog_info = 1;
+  // 用户信息
+  OnlineCoupleDialogUserVO dialog_user = 2;
+  // 搭档用户信息
+  OnlineCoupleDialogUserVO dialog_couple_user = 3;
+}
+
+// 搭档证书对话框-搭档信息
+message OnlineCoupleDialogInfoVO {
+  // 祝语、搭档日期
+  string declaration = 1;
+  // 祝福数
+  uint32 blessing = 2;
+  // 搭档类型
+  uint32 type = 3;
+  // 搭档证书启动的用户在房间中的位置
+  uint32 room_position = 4;
+}
+
+// 搭档证书对话框-用户信息
+message OnlineCoupleDialogUserVO {
+  // 用户服装
+  OnlineClothesVO clothes = 1;
+  // 用户名称
+  string name = 2;
+  // 用户等级
+  uint32 lv = 3;
+  // 用户考级
+  uint32 cl = 4;
+  // 用户性别
+  string gender = 5;
+}

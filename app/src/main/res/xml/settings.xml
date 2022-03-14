@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/settings_name">
-    <PreferenceCategory android:title="音块与界面">
+    <PreferenceCategory android:title="弹奏音块与界面">
         <ly.pp.justpiano3.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
@@ -30,7 +30,7 @@
             android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
             android:title="击中音块消失" />
         <ListPreference
-            android:defaultValue="8"
+            android:defaultValue="4"
             android:dialogTitle="音块下落帧率"
             android:entries="@array/anim_entries"
             android:entryValues="@array/anim_value"
@@ -65,12 +65,6 @@
             android:title="判断线加粗" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="auto_play"
-            android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"
-            android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符"
-            android:title="自动弹奏" />
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="show_line"
             android:summaryOff="关闭吊线提示"
             android:summaryOn="打开吊线提示"
@@ -81,6 +75,20 @@
             android:summaryOff="键盘缩略图已关闭"
             android:summaryOn="键盘缩略图已打开"
             android:title="键盘缩略图" />
+        <ListPreference
+            android:defaultValue="1.0"
+            android:dialogTitle="节拍比率(仅本地模式有效)"
+            android:entries="@array/temp_e"
+            android:entryValues="@array/temp_e"
+            android:key="temp_speed"
+            android:summary="值越小，音乐整体节拍越慢，持续时间越长"
+            android:title="节拍比率(仅本地模式有效)" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="auto_play"
+            android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"
+            android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符"
+            android:title="自动弹奏(仅本地模式有效)" />
     </PreferenceCategory>
     <PreferenceCategory android:title="声音">
         <ly.pp.justpiano3.SoundListPreference
@@ -90,13 +98,19 @@
             android:title="音源" />
         <SwitchPreference
             android:defaultValue="true"
+            android:key="compatible_sound"
+            android:summaryOff="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
+            android:summaryOn="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
+            android:title="兼容模式播放" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/b_s_key"
-            android:summary="@string/b_s_open_1"
+            android:summary=""
             android:summaryOff="@string/b_s_open_2"
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />
         <ListPreference
-            android:defaultValue="1.0"
+            android:defaultValue="0.8"
             android:dependency="@string/b_s_key"
             android:dialogTitle="@string/b_s_vol_title"
             android:entries="@array/vol_entries"
@@ -104,29 +118,43 @@
             android:key="b_s_vol"
             android:summary="@string/b_s_vol_sum"
             android:title="@string/b_s_vol_title" />
-        <ListPreference
-            android:defaultValue="1.0"
-            android:dialogTitle="节拍比率(仅本地模式有效)"
-            android:entries="@array/temp_e"
-            android:entryValues="@array/temp_e"
-            android:key="temp_speed"
-            android:summary="值越小，音乐整体节拍越慢，持续时间越长"
-            android:title="节拍比率(仅本地模式有效)" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="键盘模式">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyboard_anim"
+            android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
+            android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
+            android:title="启用键盘移动缩放动画" />
         <ListPreference
             android:defaultValue="0"
-            android:dialogTitle="八度调整"
-            android:entries="@array/badu"
-            android:entryValues="@array/badu_value"
-            android:key="badu"
-            android:summary="调整曲谱的整体音高(除非特别需求，一般情况下无需修改)"
-            android:title="八度调整" />
+            android:dialogTitle="触屏点击声音移调"
+            android:entries="@array/midi_keyboard_tune"
+            android:entryValues="@array/midi_keyboard_tune"
+            android:key="keyboard_sound_tune"
+            android:summary="调整键盘模式触屏点击按键播放的声音移调"
+            android:title="触屏点击声音移调" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="MIDI键盘移调"
+            android:entries="@array/midi_keyboard_tune"
+            android:entryValues="@array/midi_keyboard_tune"
+            android:key="midi_keyboard_tune"
+            android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
+            android:title="MIDI键盘移调" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="其他功能">
+    <PreferenceCategory android:title="在线聊天">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="chats_time_show"
+            android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
+            android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
+            android:title="聊天行首显示时间" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="save_chats"
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
-            android:summaryOn="&lt;打开&gt; 联网模式的的聊天记录会保存在文件中"
+            android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
     </PreferenceCategory>
 </PreferenceScreen>

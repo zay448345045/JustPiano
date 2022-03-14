@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 final class ChallengeHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     ChallengeHandler(OLChallenge challenge) {
         weakReference = new WeakReference<>(challenge);
@@ -36,7 +36,7 @@ final class ChallengeHandler extends Handler {
                         }
                         challenge.mo2907b(challenge.scoreListView, challenge.scoreList);
                         StringBuilder sb = new StringBuilder();
-                        sb.append("玩家名称:").append(challenge.jpapplication.getKitiName())
+                        sb.append("用户名称:").append(challenge.jpapplication.getKitiName())
                                 .append("\n最高分:").append(data.getInt("S"))
                                 .append("\n今日名次:").append(data.getString("P"))
                                 .append("\n昨日名次:").append(data.getString("Z"))

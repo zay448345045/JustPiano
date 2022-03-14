@@ -32,7 +32,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     public void onClick(View view) {
         Intent intent = new Intent();
         switch (view.getId()) {
-            case R.id.ol_ance_b:
+            case R.id.ol_web_b:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("提示");
                 jpdialog.setMessage("官网访问方式：在浏览器中输入网址https://i.justpiano.fun\n" +
@@ -56,41 +56,10 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                int i;
                 TestSQL testSQL = new TestSQL(this, "data");
-                SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
-                Cursor query = writableDatabase.query("jp_data", new String[]{"online"}, "online=1", null, null, null, null);
-                int count = query.getCount();
-                query.close();
+                String maxSongIdFromDatabase = getMaxSongIdFromDatabase(testSQL);
                 testSQL.close();
-                writableDatabase.close();
-                String str = "";
-                if (count != 5517) {
-                    str = "您载入的曲谱数量为:" + count + "。本版本曲谱数量为:5517。曲库不完整。无法进行在线对战。请在设置中的应用程序选项找到极品钢琴，清除程序数据，再重新打开游戏。或者您也可以卸载后重新安装本程序。载入曲谱时请勿中断或后台本软件!";
-                    i = 1;
-                } else {
-                    if (jpapplication.getIsBindService()) {
-                        jpprogressBar.show();
-                        try {
-                            jpapplication.unbindService(jpapplication.mo2696L());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
-                    } else {
-                        jpprogressBar.show();
-                        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.mo2696L(), Context.BIND_AUTO_CREATE));
-                    }
-                    i = 0;
-                }
-                jpdialog = new JPDialog(context);
-                jpdialog.setTitle("检查曲库");
-                jpdialog.setMessage(str);
-                jpdialog.setFirstButton("确定", new DialogDismissClick());
-                if (i != 0) {
-                    jpdialog.showDialog();
-                    return;
-                }
+                new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
                 return;
             case R.id.ol_top_b:
                 intent.setClass(this, OLTopUser.class);
@@ -98,15 +67,19 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case R.id.ol_users_b:
-                intent.setClass(this, OLUsersPage.class);
+                intent.putExtra("head", 0);
+                intent.setClass(this, UsersInfo.class);
                 startActivity(intent);
                 finish();
                 return;
             case R.id.ol_bindmail_b:
                 Toast.makeText(this, "此版本不支持绑定邮箱!", Toast.LENGTH_SHORT).show();
                 return;
-            case R.id.ol_zhuanyi_b:
-                Toast.makeText(this, "极品钢琴2服务器已失效!", Toast.LENGTH_SHORT).show();
+            case R.id.ol_finduser_b:
+                intent.putExtra("head", 6);
+                intent.setClass(this, SearchSongs.class);
+                startActivity(intent);
+                finish();
                 return;
             default:
         }
@@ -118,37 +91,37 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         activityNum = 0;
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
-        jpapplication.loadSettings(1);
+        jpapplication.loadSettings(true);
         setContentView(R.layout.olmainmode);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(0);
-        Button f4285k = findViewById(R.id.ol_top_b);
-        f4285k.setOnClickListener(this);
-        Button f4286l = findViewById(R.id.ol_users_b);
-        f4286l.setOnClickListener(this);
-        Button f4288n = findViewById(R.id.ol_playhall_b);
-        f4288n.setOnClickListener(this);
-        Button f4287m = findViewById(R.id.ol_songs_b);
-        f4287m.setOnClickListener(this);
-        Button f4289o = findViewById(R.id.ol_ance_b);
-        f4289o.setOnClickListener(this);
-        f4289o.setVisibility(View.VISIBLE);
-        Button f4290p = findViewById(R.id.ol_bindmail_b);
-        f4290p.setOnClickListener(this);
-        Button f4291q = findViewById(R.id.ol_zhuanyi_b);
-        f4291q.setOnClickListener(this);
+        Button topButton = findViewById(R.id.ol_top_b);
+        topButton.setOnClickListener(this);
+        Button userButton = findViewById(R.id.ol_users_b);
+        userButton.setOnClickListener(this);
+        Button hallButton = findViewById(R.id.ol_playhall_b);
+        hallButton.setOnClickListener(this);
+        Button songButton = findViewById(R.id.ol_songs_b);
+        songButton.setOnClickListener(this);
+        Button webButton = findViewById(R.id.ol_web_b);
+        webButton.setOnClickListener(this);
+        webButton.setVisibility(View.VISIBLE);
+        Button mailButton = findViewById(R.id.ol_bindmail_b);
+        mailButton.setOnClickListener(this);
+        Button findUserButton = findViewById(R.id.ol_finduser_b);
+        findUserButton.setOnClickListener(this);
         try {
             if (jpapplication.getConnectionService() != null) {
                 jpapplication.getConnectionService().outLine();
             }
             if (jpapplication.getIsBindService()) {
-                jpapplication.unbindService(jpapplication.mo2696L());
+                jpapplication.unbindService(jpapplication.getServiceConnection());
+                jpapplication.setIsBindService(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JPStack.create();
         JPStack.push(this);
         if (jpapplication.f4073g != null && jpapplication.f4074h != null && !jpapplication.f4073g.isEmpty() && !jpapplication.f4074h.isEmpty()) {
             JPDialog jpdialog = new JPDialog(this);
@@ -165,8 +138,35 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
+    }
+
+    public void loginOnline() {
+        jpprogressBar.show();
+        if (jpapplication.getIsBindService()) {
+            try {
+                jpapplication.unbindService(jpapplication.getServiceConnection());
+                jpapplication.setIsBindService(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
+    }
+
+    public static String getMaxSongIdFromDatabase(TestSQL testSQL) {
+        SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
+        Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
+        int maxSongId = 0;
+        while (query.moveToNext()) {
+            String path = query.getString(query.getColumnIndex("path"));
+            if (path.length() > 8 && path.charAt(7) == '/') {
+                maxSongId = Math.max(maxSongId, Integer.parseInt(path.substring(9, 15)));
+            }
+        }
+        query.close();
+        writableDatabase.close();
+        return String.valueOf(maxSongId);
     }
 }

@@ -16,13 +16,15 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.protobuf.MessageLite;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
 
 public class OLFamily extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -42,7 +44,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     String myFamilyName;
     int listPosition;
     byte[] myFamilyPicArray;
-    List<HashMap> peopleList = new ArrayList<>();
+    List<HashMap<String, String>> peopleList = new ArrayList<>();
     ListView peopleListView;
     PopupWindow infoWindow;
     private LayoutInflater layoutinflater;
@@ -118,11 +120,13 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     void showInfoDialog(Bundle b) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), new JSONObject(b.getString("DR")), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
+            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
@@ -142,6 +146,11 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             } else {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
             }
+            if (User.getEye() <= 0) {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
+            } else {
+                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
+            }
             if (User.getShoes() <= 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -149,8 +158,8 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             }
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("玩家名称:" + b.getString("U")
-                    + "\n玩家等级:Lv." + lv
+            textView.setText("用户名称:" + b.getString("U")
+                    + "\n用户等级:Lv." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
                     + "\n考级进度:Cl." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
@@ -168,13 +177,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("K", 0);
-            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+        builder.setType(0);
+        sendMsg(18, builder.build());
         Intent intent = new Intent(this, OLPlayHallRoom.class);
         intent.putExtra("HEAD", 16);
         intent.putExtra("pageNum", familyPageNum);
@@ -194,14 +199,10 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.manage_family:
                 jpprogressBar.show();
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 8);
-                    jSONObject.put("I", familyID);
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                builder.setType(8);
+                builder.setFamilyId(Integer.parseInt(familyID));
+                sendMsg(18, builder.build());
                 break;
             case R.id.in_out:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -234,14 +235,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                     infoWindow.dismiss();
                 }
                 if (cs != null) {
-                    JSONObject jSONObject = new JSONObject();
-                    try {
-                        jSONObject.put("C", 0);
-                        jSONObject.put("F", peopleNow);
-                        sendMsg((byte) 2, (byte) 0, jSONObject.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
+                    builder1.setName(peopleNow);
+                    sendMsg(2, builder1.build());
                 }
                 break;
             case R.id.ol_couple_b:  //提升/撤职副族长
@@ -249,14 +245,10 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                     infoWindow.dismiss();
                 }
                 jpprogressBar.show();
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 7);
-                    jSONObject.put("F", peopleNow);
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                builder = OnlineFamilyDTO.newBuilder();
+                builder.setType(7);
+                builder.setUserName(peopleNow);
+                sendMsg(18, builder.build());
                 break;
             case R.id.ol_family_changedecl:
                 showSendDialog(" ", 1);
@@ -274,13 +266,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             case R.id.ol_family_changetest:
                 break;
             case R.id.ol_family_levelup:
-                try {
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 10);
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                builder = OnlineFamilyDTO.newBuilder();
+                builder.setType(10);
+                sendMsg(18, builder.build());
                 break;
         }
     }
@@ -290,7 +278,6 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         activityNum = 7;
         familyHandler = new FamilyHandler(this);
-        JPStack.create();
         JPStack.push(this);
         Bundle b = getIntent().getExtras();
         familyID = b.getString("familyID");
@@ -310,14 +297,10 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         setContentView(R.layout.family);
         cs = jpapplication.getConnectionService();
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        try {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("K", 1);
-            jSONObject.put("I", familyID);
-            sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+        builder.setType(1);
+        builder.setFamilyId(Integer.parseInt(familyID));
+        sendMsg(18, builder.build());
         inOut = findViewById(R.id.in_out);
         inOut.setOnClickListener(this);
         manageFamily = findViewById(R.id.manage_family);
@@ -402,13 +385,13 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void mo2907b(ListView listView, List<HashMap> list) {
+    final void mo2907b(ListView listView, List<HashMap<String, String>> list) {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
     }
 
-    public final void sendMsg(byte b, byte b2, String str) {
+    public final void sendMsg(int type, MessageLite msg) {
         if (cs != null) {
-            cs.writeData(b, b2, (byte) 0, str, null);
+            cs.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -599,7 +582,6 @@ public class OLFamily extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.create();
         JPStack.pop(this);
         super.onDestroy();
     }

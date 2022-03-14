@@ -63,7 +63,7 @@ public final class LocalSongsAdapter extends CursorAdapter {
         textView.setText(str1 + ":" + str2);
         textView = view.findViewById(R.id.nandu_1);
         float f = cursor.getFloat(11);
-        if (f == 10) {
+        if ((int) f == 10) {
             textView.setText(" 难度: 右手 10 ");
         } else {
             textView.setText(" 难度: 右手 " + f);
@@ -74,7 +74,7 @@ public final class LocalSongsAdapter extends CursorAdapter {
         RatingBar ratingBar2 = view.findViewById(R.id.leftnandu);
         textView = view.findViewById(R.id.nandu_2);
         float j = cursor.getFloat(13);
-        if (j == 10) {
+        if ((int) j == 10) {
             textView.setText(" 左手 10");
         } else {
             textView.setText(" 左手 " + j);

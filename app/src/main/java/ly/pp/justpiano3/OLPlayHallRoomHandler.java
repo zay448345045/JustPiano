@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -18,10 +21,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import ly.pp.justpiano3.protobuf.dto.OnlineDailyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineEnterHallDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayHallRoomHandler extends Handler {
-    private WeakReference<Activity> weakReference;
+    private final WeakReference<Activity> weakReference;
 
     OLPlayHallRoomHandler(OLPlayHallRoom olPlayHallRoom) {
         weakReference = new WeakReference<>(olPlayHallRoom);
@@ -43,15 +53,15 @@ final class OLPlayHallRoomHandler extends Handler {
                             olPlayHallRoom.hallList.add(bundle.getBundle(String.valueOf(i)));
                         }
                         olPlayHallRoom.mo2843a(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
-                        olPlayHallRoom.userName.setText(data.getString("U"));//载入昵称
+                        olPlayHallRoom.userName.setText(data.getString("U"));
                         JPApplication.kitiName = data.getString("U");
-                        olPlayHallRoom.userExp.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
-                        olPlayHallRoom.userLevel.setText("LV." + data.getInt("LV"));
+                        olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
+                        olPlayHallRoom.userLevelView.setText("LV." + data.getInt("LV"));
                         i = data.getInt("CL");
-                        olPlayHallRoom.f4415E.setText("CL." + i);
-                        olPlayHallRoom.f4415E.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
-                        olPlayHallRoom.f4416F.setText(Consts.nameCL[i]);
-                        olPlayHallRoom.f4416F.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.userClassView.setText("CL." + i);
+                        olPlayHallRoom.userClassView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.userClassNameView.setText(Consts.nameCL[i]);
+                        olPlayHallRoom.userClassNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
                         olPlayHallRoom.cp = data.getInt("CP");
                         olPlayHallRoom.familyID = data.getString("I");
                         if (olPlayHallRoom.cp >= 0 && olPlayHallRoom.cp <= 3) {
@@ -74,10 +84,12 @@ final class OLPlayHallRoomHandler extends Handler {
                         }
                         olPlayHallRoom.lv = data.getInt("LV");
                         olPlayHallRoom.cl = data.getInt("CL");
-                        olPlayHallRoom.mo2844a(data.getString("DR"));
+                        olPlayHallRoom.userSex = data.getString("S");
+                        olPlayHallRoom.loadDress(data.getInt("DR_H"), data.getInt("DR_E"),
+                                data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
                         i = data.getInt("M");
                         if (i > 0) {
-                            olPlayHallRoom.mailCounts.setText(String.valueOf(i));
+                            olPlayHallRoom.mailCountsView.setText(String.valueOf(i));
                         }
                     });
                     return;
@@ -158,7 +170,7 @@ final class OLPlayHallRoomHandler extends Handler {
                             }
                             olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                         }
-                        olPlayHallRoom.f4467r = size < 20;
+                        olPlayHallRoom.pageIsEnd = size < 20;
                     });
                     return;
                 case 4:
@@ -208,7 +220,12 @@ final class OLPlayHallRoomHandler extends Handler {
                         jpdialog.setTitle(string);
                         if (b > 0) {
                             jpdialog.setMessage(string2);
-                            jpdialog.setFirstButton("进入Ta所在大厅", new GoIntoItsHall(b, olPlayHallRoom));
+                            jpdialog.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
+                                dialog.dismiss();
+                                OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
+                                builder.setHallId(b);
+                                olPlayHallRoom.sendMsg(29, builder.build());
+                            });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
                             jpdialog.setMessage(string2);
@@ -226,16 +243,12 @@ final class OLPlayHallRoomHandler extends Handler {
                 case 7:
                     post(() -> {
                         Bundle data = message.getData();
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("F", data.getString("F"));
-                            jSONObject.put("T", 2);
-                            olPlayHallRoom.friendList.remove(message.arg1);
-                            olPlayHallRoom.sendMsg((byte) 31, (byte) 0, jSONObject.toString());
-                            olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
+                        builder.setType(2);
+                        builder.setName(data.getString("F"));
+                        olPlayHallRoom.friendList.remove(message.arg1);
+                        olPlayHallRoom.sendMsg(31, builder.build());
+                        olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     });
                     return;
                 case 8:
@@ -251,7 +264,20 @@ final class OLPlayHallRoomHandler extends Handler {
                         jpdialog.setMessage(string2);
                         if (b > 0) {
                             jpdialog.setVisibleEditText(true);
-                            jpdialog.setFirstButton("创建家族", new CreateFamily(jpdialog, olPlayHallRoom));
+                            jpdialog.setFirstButton("创建家族", (dialog, which) -> {
+                                String name = jpdialog.getEditTextString();
+                                if (name.isEmpty()) {
+                                    Toast.makeText(olPlayHallRoom, "家族名称不能为空!", Toast.LENGTH_SHORT).show();
+                                } else if (name.length() > 8) {
+                                    Toast.makeText(olPlayHallRoom, "家族名称只能在八个字以下!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    dialog.dismiss();
+                                    OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                                    builder.setType(4);
+                                    builder.setFamilyName(name);
+                                    olPlayHallRoom.sendMsg(18, builder.build());
+                                }
+                            });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
                             jpdialog.setFirstButton("确定", new DialogDismissClick());
@@ -268,16 +294,12 @@ final class OLPlayHallRoomHandler extends Handler {
                         switch (result) {
                             case 0:
                                 Toast.makeText(olPlayHallRoom, "家族创建成功!", Toast.LENGTH_SHORT).show();
-                                JSONObject jSONObject = new JSONObject();
-                                try {
-                                    jSONObject.put("K", 2);
-                                    jSONObject.put("B", 0);
-                                } catch (JSONException e2) {
-                                    e2.printStackTrace();
-                                }
+                                OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                                builder.setType(2);
+                                builder.setPage(0);
                                 olPlayHallRoom.familyPageNum = 0;
                                 olPlayHallRoom.familyList.clear();
-                                olPlayHallRoom.sendMsg((byte) 18, (byte) 0, jSONObject.toString());
+                                olPlayHallRoom.sendMsg(18, builder.build());
                                 break;
                             case 1:
                                 Toast.makeText(olPlayHallRoom, "家族创建失败!", Toast.LENGTH_SHORT).show();
@@ -286,6 +308,53 @@ final class OLPlayHallRoomHandler extends Handler {
                                 Toast.makeText(olPlayHallRoom, "家族名称已存在，请重试!", Toast.LENGTH_SHORT).show();
                                 break;
                         }
+                    });
+                    return;
+                case 11:
+                    post(() -> {
+                        List<HashMap> list = new ArrayList<>();
+                        Bundle data = message.getData();
+                        boolean disabled = true;
+                        int size = data.size() - 2;
+                        for (int i = 0; i < size; i++) {
+                            HashMap hashMap = new HashMap();
+                            String name = data.getBundle(String.valueOf(i)).getString("N");
+                            String bonusGet = data.getBundle(String.valueOf(i)).getString("G");
+                            hashMap.put("N", name);
+                            hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
+                            hashMap.put("B", data.getBundle(String.valueOf(i)).getString("B"));
+                            hashMap.put("G", bonusGet);
+                            if (JPApplication.kitiName.equals(name) && bonusGet.equals("0")) {
+                                disabled = false;
+                            }
+                            list.add(hashMap);
+                        }
+                        String todayOnlineTime = data.getString("T");
+                        String tomorrowExp = data.getString("M");
+                        View inflate = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
+                        ListView listView = inflate.findViewById(R.id.account_list);
+                        listView.setBackgroundResource(R.color.dack);
+                        listView.setSelector(R.color.translent);
+                        TextView textView = inflate.findViewById(R.id.account_msg);
+                        textView.setVisibility(View.VISIBLE);
+                        textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得奖励：" + tomorrowExp + "\n以下为昨日在线时长排名：");
+                        JPDialog jpDialog = new JPDialog(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
+                                .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
+                                    dialog.dismiss();
+                                    olPlayHallRoom.jpprogressBar.show();
+                                    OnlineDailyDTO.Builder builder = OnlineDailyDTO.newBuilder();
+                                    builder.setType(2);
+                                    olPlayHallRoom.sendMsg(38, builder.build());
+                                });
+                        listView.setCacheColorHint(0);
+                        listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
+                        jpDialog.showDialog();
+                    });
+                    return;
+                case 12:
+                    post(() -> {
+                        String info = message.getData().getString("M");
+                        Toast.makeText(olPlayHallRoom, info, Toast.LENGTH_SHORT).show();
                     });
                     return;
                 case 21:
@@ -300,17 +369,22 @@ final class OLPlayHallRoomHandler extends Handler {
                 case 22:
                     post(() -> {
                         Bundle data = message.getData();
-                        olPlayHallRoom.coupleBless.setText(data.getString("IN"));
-                        olPlayHallRoom.f4438ab.setText(data.getString("U"));
-                        olPlayHallRoom.f4441ae.setText("LV." + data.getInt("LV"));
-                        olPlayHallRoom.f4442af.setText("祝福点数:" + data.getInt("CP"));
+                        olPlayHallRoom.coupleBlessView.setText(data.getString("IN"));
+                        olPlayHallRoom.coupleNameView.setText(data.getString("U"));
+                        olPlayHallRoom.coupleLvView.setText("LV." + data.getInt("LV"));
+                        olPlayHallRoom.couplePointsView.setText("祝福点数:" + data.getInt("CP"));
                         int i = data.getInt("CL");
-                        olPlayHallRoom.f4443ag.setText("CL." + i);
-                        olPlayHallRoom.f4443ag.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
-                        olPlayHallRoom.f4444ah.setText(Consts.nameCL[i]);
-                        olPlayHallRoom.f4444ah.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
-                        olPlayHallRoom.mo2847b(data.getString("DR"));
+                        olPlayHallRoom.coupleClView.setText("CL." + i);
+                        olPlayHallRoom.coupleClView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.coupleClNameView.setText(Consts.nameCL[i]);
+                        olPlayHallRoom.coupleClNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.coupleSex = data.getString("S");
+                        olPlayHallRoom.loadClothes(data.getInt("DR_H"), data.getInt("DR_E"),
+                                data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
                     });
+                    return;
+                case 23:
+                    post(() -> olPlayHallRoom.showInfoDialog(message.getData()));
                     return;
                 default:
             }

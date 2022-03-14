@@ -27,7 +27,6 @@
 class FixedBlockProcessor {
 public:
     virtual ~FixedBlockProcessor() = default;
-
     /**
      *
      * @param buffer Pointer to first byte of data.
@@ -40,7 +39,8 @@ public:
 /**
  * Base class for a variable-to-fixed-size block adapter.
  */
-class FixedBlockAdapter {
+class FixedBlockAdapter
+{
 public:
     FixedBlockAdapter(FixedBlockProcessor &fixedBlockProcessor)
             : mFixedBlockProcessor(fixedBlockProcessor) {}
@@ -58,10 +58,10 @@ public:
     int32_t close();
 
 protected:
-    FixedBlockProcessor &mFixedBlockProcessor;
+    FixedBlockProcessor  &mFixedBlockProcessor;
     std::unique_ptr<uint8_t[]> mStorage;       // Store data here while assembling buffers.
-    int32_t mSize = 0;           // Size in bytes of the fixed size buffer.
-    int32_t mPosition = 0;       // Offset of the last byte read or written.
+    int32_t               mSize = 0;           // Size in bytes of the fixed size buffer.
+    int32_t               mPosition = 0;       // Offset of the last byte read or written.
 };
 
 #endif /* AAUDIO_FIXED_BLOCK_ADAPTER_H */

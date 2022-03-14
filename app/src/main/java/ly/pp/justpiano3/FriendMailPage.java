@@ -26,7 +26,7 @@ public class FriendMailPage extends Activity implements Callback {
     public String f4024f = "F";
     public FriendMailPageAdapter f4025g;
     private SharedPreferences sharedPreferences = null;
-    private Editor f4028j = null;
+    private final Editor f4028j = null;
 
     static void m3506a(FriendMailPage friendMailPage, ListView listView, String str) {
         int i = 0;
@@ -83,7 +83,7 @@ public class FriendMailPage extends Activity implements Callback {
             str3 = "发送";
             str4 = "发私信给" + str;
         }
-        new JPDialog(this).setTitle(str4).loadInflate(inflate).setFirstButton(str3, new sendMailClick(this, textView, i, str, i2, str2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialog(this).setTitle(str4).loadInflate(inflate).setFirstButton(str3, new SendMailClick(this, textView, i, str, i2, str2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     public final void mo2683a(int i, int i2, String str, String str2) {
@@ -165,7 +165,7 @@ public class FriendMailPage extends Activity implements Callback {
             f4026h.setText("-好友列表-");
         } else if (f4024f.endsWith("M")) {
             f4026h.setText("-邮件列表-");
-            sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), 0);
+            sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
             //f4028j = sharedPreferences.edit();
         }
         f4023e = new JPProgressBar(this);

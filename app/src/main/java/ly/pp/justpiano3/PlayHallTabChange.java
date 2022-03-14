@@ -2,8 +2,8 @@ package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserListDTO;
 
 final class PlayHallTabChange implements OnTabChangeListener {
     private final OLPlayHall olPlayHall;
@@ -23,25 +23,13 @@ final class PlayHallTabChange implements OnTabChangeListener {
                 olPlayHall.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
             }
         }
-        JSONObject jSONObject;
         if (str.equals("tab1")) {
-            try {
-                jSONObject = new JSONObject();
-                jSONObject.put("T", "L");
-                jSONObject.put("B", olPlayHall.pageNum);
-                olPlayHall.sendMsg((byte) 34, (byte) 0, olPlayHall.hallID, jSONObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
+            builder.setType(1);
+            builder.setPage(olPlayHall.pageNum);
+            olPlayHall.sendMsg(34, builder.build());
         } else if (str.equals("tab3")) {
-            jSONObject = new JSONObject();
-            try {
-                jSONObject.put("T", "L");
-                jSONObject.put("B", 0);
-                olPlayHall.sendMsg((byte) 36, (byte) 0, olPlayHall.hallID, jSONObject.toString());
-            } catch (JSONException e2) {
-                e2.printStackTrace();
-            }
+            olPlayHall.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
         }
     }
 }

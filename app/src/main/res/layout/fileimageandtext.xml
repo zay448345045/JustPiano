@@ -13,33 +13,48 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:gravity="end|center_vertical|center_horizontal|center"
-        android:src="@drawable/umeng_socialize_share_music" />
+        android:gravity="end|center_vertical|center_horizontal|center" />
 
-    <TextView
-        android:id="@+id/txtview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout11"
+        android:orientation="vertical"
         android:layout_toEndOf="@+id/images"
-        android:text="Medium Text"
-        android:textColor="@color/white1"
-        android:textSize="16sp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medium Text"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/timeview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2000-01-01"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/showtxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="12dp"
         android:background="@drawable/selector_list_f"
         android:gravity="center"
-        android:src="@drawable/list_icon" />
+        android:src="@drawable/search_icon" />
 
     <ImageView
         android:id="@+id/playview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="12dp"
@@ -49,21 +64,12 @@
 
     <ImageView
         android:id="@+id/deleteview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_marginEnd="12dp"
         android:layout_toStartOf="@+id/playview"
         android:background="@drawable/selector_list_f"
         android:src="@drawable/dele" />
 
-    <TextView
-        android:id="@+id/timeview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/txtview"
-        android:layout_alignBottom="@+id/images"
-        android:text="Medium Text"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
 </RelativeLayout>

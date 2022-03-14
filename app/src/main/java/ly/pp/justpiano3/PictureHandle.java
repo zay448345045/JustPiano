@@ -18,7 +18,7 @@ public final class PictureHandle {
     Handler handler;
     String f5088f = ".jpg";
     private PictureHandleThread f5084b;
-    private int f5087e;
+    private final int f5087e;
 
     public PictureHandle(Handler handler, int i) {
         this.handler = handler;

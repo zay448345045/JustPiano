@@ -538,21 +538,6 @@
     <public name="c9" id="2131165233" type="color" />
     <public name="c10" id="2131165234" type="color" />
     <public name="c11" id="2131165235" type="color" />
-    <public name="umeng_fb_color_btn_pressed" id="2131165236" type="color" />
-    <public name="umeng_fb_color_btn_normal" id="2131165237" type="color" />
-    <public name="umeng_socialize_comments_bg" id="2131165238" type="color" />
-    <public name="umeng_socialize_color_group" id="2131165239" type="color" />
-    <public name="umeng_socialize_list_item_textcolor" id="2131165240" type="color" />
-    <public name="umeng_socialize_list_item_bgcolor" id="2131165241" type="color" />
-    <public name="umeng_socialize_divider" id="2131165242" type="color" />
-    <public name="umeng_socialize_text_time" id="2131165243" type="color" />
-    <public name="umeng_socialize_text_title" id="2131165244" type="color" />
-    <public name="umeng_socialize_text_friends_list" id="2131165245" type="color" />
-    <public name="umeng_socialize_text_share_content" id="2131165246" type="color" />
-    <public name="umeng_socialize_ucenter_bg" id="2131165247" type="color" />
-    <public name="umeng_socialize_text_ucenter" id="2131165248" type="color" />
-    <public name="umeng_socialize_edit_bg" id="2131165249" type="color" />
-    <public name="umeng_socialize_grid_divider_line" id="2131165250" type="color" />
     <public name="app_name" id="2131230720" type="string" />
     <public name="about" id="2131230721" type="string" />
     <public name="about_name" id="2131230722" type="string" />
@@ -595,95 +580,6 @@
     <public name="help_keyboard_mode" id="2131230759" type="string" />
     <public name="practice" id="2131230760" type="string" />
     <public name="thanks" id="2131230761" type="string" />
-    <public name="umeng_common_action_info_exist" id="2131230762" type="string" />
-    <public name="umeng_common_info_interrupt" id="2131230763" type="string" />
-    <public name="umeng_common_action_pause" id="2131230764" type="string" />
-    <public name="umeng_common_action_continue" id="2131230765" type="string" />
-    <public name="umeng_common_action_cancel" id="2131230766" type="string" />
-    <public name="umeng_common_download_notification_prefix" id="2131230767" type="string" />
-    <public name="umeng_common_start_download_notification" id="2131230768" type="string" />
-    <public name="umeng_common_start_patch_notification" id="2131230769" type="string" />
-    <public name="umeng_common_network_break_alert" id="2131230770" type="string" />
-    <public name="umeng_common_download_failed" id="2131230771" type="string" />
-    <public name="umeng_common_download_finish" id="2131230772" type="string" />
-    <public name="umeng_common_patch_finish" id="2131230773" type="string" />
-    <public name="umeng_fb_contact_info_hint" id="2131230774" type="string" />
-    <public name="umeng_fb_contact_update_at" id="2131230775" type="string" />
-    <public name="umeng_fb_back" id="2131230776" type="string" />
-    <public name="umeng_fb_title" id="2131230777" type="string" />
-    <public name="umeng_fb_contact_title" id="2131230778" type="string" />
-    <public name="umeng_fb_contact_info" id="2131230779" type="string" />
-    <public name="umeng_fb_reply_content_hint" id="2131230780" type="string" />
-    <public name="umeng_fb_send" id="2131230781" type="string" />
-    <public name="umeng_fb_reply_content_default" id="2131230782" type="string" />
-    <public name="umeng_fb_reply_date_default" id="2131230783" type="string" />
-    <public name="umeng_fb_powered_by" id="2131230784" type="string" />
-    <public name="umeng_fb_notification_ticker_text" id="2131230785" type="string" />
-    <public name="umeng_fb_notification_content_formatter_single_msg" id="2131230786" type="string" />
-    <public name="umeng_fb_notification_content_formatter_multiple_msg" id="2131230787" type="string" />
-    <public name="pull_to_refresh_pull_label" id="2131230788" type="string" />
-    <public name="pull_to_refresh_release_label" id="2131230789" type="string" />
-    <public name="pull_to_refresh_refreshing_label" id="2131230790" type="string" />
-    <public name="pull_to_refresh_tap_label" id="2131230791" type="string" />
-    <public name="umeng_socialize_network_break_alert" id="2131230792" type="string" />
-    <public name="umeng_socialize_comment" id="2131230793" type="string" />
-    <public name="umeng_socialize_comment_detail" id="2131230794" type="string" />
-    <public name="umeng_socialize_back" id="2131230795" type="string" />
-    <public name="umeng_socialize_near_At" id="2131230796" type="string" />
-    <public name="umeng_socialize_friends" id="2131230797" type="string" />
-    <public name="umeng_socialize_send" id="2131230798" type="string" />
-    <public name="umeng_socialize_tip_blacklist" id="2131230799" type="string" />
-    <public name="umeng_socialize_tip_loginfailed" id="2131230800" type="string" />
-    <public name="umeng_socialize_msg_sec" id="2131230801" type="string" />
-    <public name="umeng_socialize_msg_min" id="2131230802" type="string" />
-    <public name="umeng_socialize_msg_hor" id="2131230803" type="string" />
-    <public name="umeng_socialize_ucenter_login_title_guide" id="2131230804" type="string" />
-    <public name="umeng_socialize_ucenter_login_title_platform" id="2131230805" type="string" />
-    <public name="umeng_socialize_share_content" id="2131230806" type="string" />
-    <public name="umeng_socialize_login_qq" id="2131230807" type="string" />
-    <public name="umeng_socialize_login" id="2131230808" type="string" />
-    <public name="umeng_socialize_text_choose_account" id="2131230809" type="string" />
-    <public name="umeng_socialize_text_authorize" id="2131230810" type="string" />
-    <public name="umeng_socialize_text_unauthorize" id="2131230811" type="string" />
-    <public name="umeng_socialize_text_ucenter" id="2131230812" type="string" />
-    <public name="umeng_socialize_text_login_fail" id="2131230813" type="string" />
-    <public name="umeng_socialize_text_comment_hint" id="2131230814" type="string" />
-    <public name="umeng_socialize_text_friend_list" id="2131230815" type="string" />
-    <public name="umeng_socialize_text_visitor" id="2131230816" type="string" />
-    <public name="umeng_socialize_text_tencent_no_connection" id="2131230817" type="string" />
-    <public name="umeng_socialize_text_tencent_oauth_login_fail" id="2131230818" type="string" />
-    <public name="umeng_socialize_text_tencent_version_no_match" id="2131230819" type="string" />
-    <public name="umeng_socialize_text_tencent_no_install" id="2131230820" type="string" />
-    <public name="umeng_socialize_text_waitting" id="2131230821" type="string" />
-    <public name="umeng_socialize_text_waitting_weixin" id="2131230822" type="string" />
-    <public name="umeng_socialize_text_waitting_weixin_circle" id="2131230823" type="string" />
-    <public name="umeng_socialize_text_waitting_qq" id="2131230824" type="string" />
-    <public name="umeng_socialize_text_waitting_redirect" id="2131230825" type="string" />
-    <public name="umeng_socialize_text_waitting_message" id="2131230826" type="string" />
-    <public name="umeng_socialize_text_tencent_key" id="2131230827" type="string" />
-    <public name="umeng_socialize_text_sina_key" id="2131230828" type="string" />
-    <public name="umeng_socialize_text_qq_key" id="2131230829" type="string" />
-    <public name="umeng_socialize_text_qq_zone_key" id="2131230830" type="string" />
-    <public name="umeng_socialize_text_renren_key" id="2131230831" type="string" />
-    <public name="umeng_socialize_text_douban_key" id="2131230832" type="string" />
-    <public name="umeng_socialize_text_weixin_key" id="2131230833" type="string" />
-    <public name="umeng_socialize_text_weixin_circle_key" id="2131230834" type="string" />
-    <public name="umeng_socialize_text_add_custom_platform" id="2131230835" type="string" />
-    <public name="umeng_example_home_btn_plus" id="2131230836" type="string" />
-    <public name="umeng_socialize_text_waitting_share" id="2131230837" type="string" />
-    <public name="UMBreak_Network" id="2131230838" type="string" />
-    <public name="UMUpdateTitle" id="2131230839" type="string" />
-    <public name="UMNewVersion" id="2131230840" type="string" />
-    <public name="UMUpdateContent" id="2131230841" type="string" />
-    <public name="UMUpdateSize" id="2131230842" type="string" />
-    <public name="UMTargetSize" id="2131230843" type="string" />
-    <public name="UMGprsCondition" id="2131230844" type="string" />
-    <public name="UMUpdateNow" id="2131230845" type="string" />
-    <public name="UMAppUpdate" id="2131230846" type="string" />
-    <public name="UMNotNow" id="2131230847" type="string" />
-    <public name="UMIgnore" id="2131230848" type="string" />
-    <public name="UMToast_IsUpdating" id="2131230849" type="string" />
-    <public name="UMDialog_InstallAPK" id="2131230850" type="string" />
     <public name="Transparent" id="2131296256" type="style" />
     <public name="Theme" id="2131296257" type="style" />
     <public name="Theme.PlainText" id="2131296258" type="style" />

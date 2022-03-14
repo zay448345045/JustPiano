@@ -9,8 +9,8 @@ import java.util.Map;
 
 final class PictureHandleThread extends Thread {
     private final PictureHandle pictureHandle;
-    private JPApplication jpApplication;
-    private Map<String, ImageView> map = new LinkedHashMap<>();
+    private final JPApplication jpApplication;
+    private final Map<String, ImageView> map = new LinkedHashMap<>();
     private boolean f5147c;
 
     PictureHandleThread(JPApplication jpApplication, PictureHandle pictureHandle, ImageView imageView, String str) {
