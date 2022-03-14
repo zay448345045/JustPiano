@@ -101,7 +101,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private PopupWindow moreSongs = null;
     private PopupWindow groupModeGroup = null;
     private PopupWindow coupleModeGroup = null;
-    private PopupWindow changeclr = null;
+    private PopupWindow changeColor = null;
     private PopupWindow playSongsMode = null;
     private OLRoomSongsAdapter olRoomSongsAdapter;
     private TestSQL testSQL;
@@ -429,11 +429,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public final void mo2862a() {
+    public final void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-        if (posi >= 0) {
+        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
+        if (posi > 0) {
             msgListView.setSelection(posi + 2);
+        } else {
+            msgListView.setSelection(msgListView.getBottom());
         }
     }
 
@@ -729,10 +731,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.ol_changecolor:
-                if (changeclr != null) {
+                if (changeColor != null) {
                     int[] iArr = new int[2];
                     changeColorButton.getLocationOnScreen(iArr);
-                    changeclr.showAtLocation(changeColorButton, 51, iArr[0] / 2 - 30, (int) (iArr[1] * 0.84f));
+                    changeColor.showAtLocation(changeColorButton, 51, iArr[0] / 2 - 30, (int) (iArr[1] * 0.84f));
                 }
                 return;
             case R.id.white:
@@ -767,7 +769,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.onetimeplay:
                 if (playSongs != null && playSongs.isPlayingSongs && playSongs.jpapplication.getPlaySongsMode() != 0 && playerKind.equals("H")) {
-                    playSongs.jpapplication.setPlaySongsMode(0);
+                    jpapplication.setPlaySongsMode(0);
                     Toast.makeText(this, "单次播放已开启", Toast.LENGTH_SHORT).show();
                 } else if (playSongs != null && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -951,8 +953,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         } else {
             Toast.makeText(this, "您的等级未达到" + lv + "级，不能使用该颜色!", Toast.LENGTH_SHORT).show();
         }
-        if (changeclr != null) {
-            changeclr.dismiss();
+        if (changeColor != null) {
+            changeColor.dismiss();
         }
     }
 
@@ -1126,7 +1128,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         popupWindow3.setFocusable(true);
         popupWindow3.setTouchable(true);
         popupWindow3.setOutsideTouchable(true);
-        changeclr = popupWindow3;
+        changeColor = popupWindow3;
         PopupWindow popupWindow4 = new PopupWindow(this);
         View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
         popupWindow4.setContentView(inflate4);

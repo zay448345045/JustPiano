@@ -110,6 +110,7 @@ public class ConnectionService extends Service implements Runnable {
                                 super.exceptionCaught(ctx, cause);
                                 cause.printStackTrace();
                                 ctx.close();
+                                outLineAndDialog();
                             }
 
                             @Override

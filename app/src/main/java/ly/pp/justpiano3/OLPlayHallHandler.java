@@ -41,12 +41,18 @@ final class OLPlayHallHandler extends Handler {
                     if (olPlayHall.msgList.size() > 100) {
                         olPlayHall.msgList.remove(0);
                     }
-                    olPlayHall.msgList.add(message.getData());
                     File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");
                     if (!file.exists()) {
                         file.mkdirs();
                     }
                     SharedPreferences ds = PreferenceManager.getDefaultSharedPreferences(olPlayHall);
+                    boolean showTime = ds.getBoolean("chats_time_show", false);
+                    String time = "";
+                    if (showTime) {
+                        time = new SimpleDateFormat("HH:mm", Locale.CHINESE).format(new Date(olPlayHall.jpapplication.getServerTime()));
+                    }
+                    message.getData().putString("TIME", time);
+                    olPlayHall.msgList.add(message.getData());
                     if (ds.getBoolean("save_chats", false)) {
                         try {
                             String date = new SimpleDateFormat("yyyy-MM-dd聊天记录", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
@@ -60,19 +66,19 @@ final class OLPlayHallHandler extends Handler {
                             FileWriter writer = new FileWriter(file, true);
                             if (message.getData().getString("M").startsWith("//")) {
                                 writer.close();
-                                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
+                                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, showTime);
                                 return;
                             } else if (message.getData().getInt("T") == 2) {
-                                writer.write(("[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M"))));
+                                writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M"))));
                             } else {
-                                writer.write("[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n");
+                                writer.write(time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n");
                             }
                             writer.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
+                    olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, showTime);
                 });
                 return;
             case 2:

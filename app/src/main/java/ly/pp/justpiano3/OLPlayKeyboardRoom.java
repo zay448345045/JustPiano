@@ -69,6 +69,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[6];
     public Handler handler;
     protected byte hallID0;
+    JPProgressBar jpprogressBar;
     MidiReceiver midiFramer;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long lastNoteScheduleTime;
@@ -360,11 +361,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    public final void mo2862a() {
+    public final void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-        if (posi >= 0) {
+        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
+        System.out.println("位置" + posi);
+        if (posi > 0) {
             msgListView.setSelection(posi + 2);
+        } else {
+            msgListView.setSelection(msgListView.getBottom());
         }
     }
 
@@ -575,7 +579,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.midi_down_tune:
                 if (jpapplication.getMidiKeyboardTune() > -6) {
-                    jpapplication.setMidiKeyboardTune(jpapplication.getKeyboardSoundTune() - 1);
+                    jpapplication.setMidiKeyboardTune(jpapplication.getMidiKeyboardTune() - 1);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -583,7 +587,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.midi_up_tune:
                 if (jpapplication.getMidiKeyboardTune() < 6) {
-                    jpapplication.setMidiKeyboardTune(jpapplication.getKeyboardSoundTune() + 1);
+                    jpapplication.setMidiKeyboardTune(jpapplication.getMidiKeyboardTune() + 1);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -606,15 +610,35 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 return;
             case R.id.skin_setting:
-                // TODO
+                String path = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
+                List<File> localSkinList = SkinAndSoundFileHandle.getLocalSkinList(path);
+                List<String> skinList = new ArrayList<>();
+                skinList.add("原生主题");
+                for (File file : localSkinList) {
+                    skinList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
+                }
+                View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
+                ListView listView = inflate.findViewById(R.id.account_list);
+                JPDialog.JDialog b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                listView.setAdapter(new SimpleSkinListAdapter(skinList, localSkinList, layoutInflater, this, b));
+                b.show();
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
-                jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-                keyboardView.changeImage(this);
                 return;
             case R.id.sound_setting:
-
+                path = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
+                List<File> localSoundList = SkinAndSoundFileHandle.getLocalSoundList(path);
+                List<String> soundList = new ArrayList<>();
+                soundList.add("原生音源");
+                for (File file : localSoundList) {
+                    soundList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
+                }
+                inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
+                listView = inflate.findViewById(R.id.account_list);
+                b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                listView.setAdapter(new SimpleSoundListAdapter(soundList, localSoundList, layoutInflater, this, b));
+                b.show();
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
@@ -719,6 +743,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         handler = new Handler(this);
         sendMsg(21, OnlineLoadRoomPositionDTO.getDefaultInstance());
         msgList.clear();
+        jpprogressBar = new JPProgressBar(this);
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);

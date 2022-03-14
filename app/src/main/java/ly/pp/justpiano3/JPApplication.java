@@ -468,6 +468,8 @@ public final class JPApplication extends Application {
             if (bitmap != null && viewGroup != null) {
                 viewGroup.setBackground(new BitmapDrawable(getResources(), bitmap));
             }
+        } else {
+            viewGroup.setBackgroundResource(R.drawable.ground);
         }
     }
 
@@ -658,6 +660,8 @@ public final class JPApplication extends Application {
     }
 
     public void setMidiKeyboardTune(int midiKeyboardTune) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putString("midi_keyboard_tune", String.valueOf(midiKeyboardTune)).apply();
         this.midiKeyboardTune = midiKeyboardTune;
     }
 
@@ -666,6 +670,8 @@ public final class JPApplication extends Application {
     }
 
     public void setKeyboardSoundTune(int keyboardSoundTune) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putString("keyboard_sound_tune", String.valueOf(keyboardSoundTune)).apply();
         this.keyboardSoundTune = keyboardSoundTune;
     }
 

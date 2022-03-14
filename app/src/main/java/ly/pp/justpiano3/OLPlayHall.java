@@ -190,11 +190,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void mo2828a(ListView listView, List<Bundle> list) {
+    final void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
         int posi = listView.getFirstVisiblePosition();
-        listView.setAdapter(new ChattingAdapter(list, layoutImflater1));
-        if (posi >= 0) {
+        listView.setAdapter(new ChattingAdapter(list, layoutImflater1, showChatTime));
+        if (posi > 0) {
             listView.setSelection(posi + 2);
+        } else {
+            msgListView.setSelection(msgListView.getBottom());
         }
     }
 

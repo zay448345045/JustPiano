@@ -143,12 +143,18 @@
             android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
             android:title="MIDI键盘移调" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="其他功能">
+    <PreferenceCategory android:title="在线聊天">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="chats_time_show"
+            android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
+            android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
+            android:title="聊天行首显示时间" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="save_chats"
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
-            android:summaryOn="&lt;打开&gt; 联网模式的的聊天记录会保存在文件中"
+            android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -15,10 +15,12 @@ public final class ChattingAdapter extends BaseAdapter {
     Activity activity;
     private final List<Bundle> msgList;
     private final LayoutInflater layoutInflater;
+    private boolean showTime;
 
-    ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater) {
+    ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater, boolean showTime) {
         msgList = list;
         this.layoutInflater = layoutInflater;
+        this.showTime = showTime;
         if (JPStack.top() instanceof OLPlayRoom) {
             activity = JPStack.top();
         } else if (JPStack.top() instanceof OLPlayHall) {
@@ -58,7 +60,7 @@ public final class ChattingAdapter extends BaseAdapter {
                 str1 = "songs/" + str1 + ".pm";
                 ((OLPlayRoom) activity).setdiao(bundle.getInt("D"));
                 textView = inflate.findViewById(R.id.ol_user_text);
-                textView.setText("[荐]" + string);
+                textView.setText((showTime ? bundle.getString("TIME") : "") + "[荐]" + string);
                 textView2 = inflate.findViewById(R.id.ol_msg_text);
                 String[] a = ((OLPlayRoom) activity).mo2864a(str1);
                 if (a[0] != null && a[1] != null) {
@@ -75,7 +77,7 @@ public final class ChattingAdapter extends BaseAdapter {
             int id = bundle.getInt("V");
             if (!string2.startsWith("//")) {
                 textView = inflate.findViewById(R.id.ol_user_text);
-                textView.setText("[公]" + string);
+                textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
                 textView2 = inflate.findViewById(R.id.ol_user_mao);
                 TextView textView3 = inflate.findViewById(R.id.ol_msg_text);
                 if (JPStack.top() instanceof OLPlayRoom || JPStack.top() instanceof OLPlayKeyboardRoom) {
@@ -142,11 +144,11 @@ public final class ChattingAdapter extends BaseAdapter {
             } else {
                 try {
                     textView = inflate.findViewById(R.id.ol_user_text);
-                    textView.setText("[公]" + string);
+                    textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
                     ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
                 } catch (Exception e) {
                     textView = inflate.findViewById(R.id.ol_user_text);
-                    textView.setText("[公]" + string);
+                    textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
                     switch (string2) {
                         case "//dalao0":
                             ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
@@ -233,7 +235,7 @@ public final class ChattingAdapter extends BaseAdapter {
             }
         } else if (i2 == 2) {
             textView = inflate.findViewById(R.id.ol_user_text);
-            textView.setText("[私]" + string);
+            textView.setText((showTime ? bundle.getString("TIME") : "") + "[私]" + string);
             textView.setTextColor(0xff00ff00);
             textView2 = inflate.findViewById(R.id.ol_msg_text);
             ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
@@ -241,7 +243,7 @@ public final class ChattingAdapter extends BaseAdapter {
             textView2.setTextColor(0xff00ff00);
         } else if (i2 == 3) {
             textView = inflate.findViewById(R.id.ol_user_text);
-            textView.setText("[系统消息]" + string);
+            textView.setText((showTime ? bundle.getString("TIME") : "") + "[系统消息]" + string);
             textView.setTextColor(0xff00ffff);
             textView2 = inflate.findViewById(R.id.ol_msg_text);
             ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
@@ -250,7 +252,7 @@ public final class ChattingAdapter extends BaseAdapter {
         } else {
             if (i2 == 18) {
                 textView = inflate.findViewById(R.id.ol_user_text);
-                textView.setText("[全服消息]" + string);
+                textView.setText((showTime ? bundle.getString("TIME") : "") + "[全服消息]" + string);
                 textView.setTextColor(0xff00ffff);
                 textView2 = inflate.findViewById(R.id.ol_msg_text);
                 ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);

@@ -17,11 +17,11 @@
         android:background="@drawable/back_puased"
         android:text="MIDI键盘降调"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/midi_tune"
-        android:layout_width="60dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/midi_down_tune"
         android:layout_alignBottom="@id/midi_down_tune"
@@ -30,7 +30,7 @@
         android:gravity="center"
         android:text="0"
         android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/midi_up_tune"
@@ -40,7 +40,7 @@
         android:background="@drawable/back_puased"
         android:text="MIDI键盘升调"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/sound_down_tune"
@@ -53,23 +53,23 @@
         android:gravity="center"
         android:text="声音降调"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/sound_tune"
-        android:layout_width="60dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/midi_tune"
         android:layout_alignStart="@id/midi_tune"
-        android:layout_alignEnd="@id/midi_tune"
         android:layout_alignTop="@id/sound_down_tune"
+        android:layout_alignEnd="@id/midi_tune"
         android:layout_alignBottom="@id/sound_down_tune"
         android:layout_toEndOf="@+id/sound_down_tune"
         android:background="@color/white1"
         android:gravity="center"
         android:text="0"
         android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/sound_up_tune"
@@ -83,7 +83,7 @@
         android:gravity="center"
         android:text="声音升调"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_below="@id/sound_down_tune"
@@ -101,7 +101,7 @@
             android:gravity="center"
             android:text="皮肤设置"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/sound_setting"
@@ -112,6 +112,6 @@
             android:gravity="center"
             android:text="音源设置"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 </RelativeLayout>
