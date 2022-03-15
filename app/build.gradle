@@ -54,8 +54,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     sourceSets {
@@ -83,7 +83,7 @@ dependencies {
     implementation 'com.king.anetty:anetty:1.0.3'
     implementation 'com.google.protobuf:protobuf-java:3.19.4'
     implementation 'com.android.support:multidex:1.0.3'
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
 }
 
