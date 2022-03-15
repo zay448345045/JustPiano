@@ -1031,6 +1031,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         if (!jpapplication.getNowSongsName().isEmpty()) {
             songNameText.setText(mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
+        jpapplication.setPlaySongsMode(0);
         songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
         songNameText.setOnClickListener(this);
         songsList.setAdapter(olRoomSongsAdapter);
