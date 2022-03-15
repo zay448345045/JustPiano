@@ -7,18 +7,18 @@ import android.view.View.OnClickListener;
 
 final class ChangeRecommandSongClick implements OnClickListener {
     private final ChattingAdapter chattingAdapter;
-    private final String f5360b;
+    private final String songPath;
 
     ChangeRecommandSongClick(ChattingAdapter chattingAdapter, String str) {
         this.chattingAdapter = chattingAdapter;
-        f5360b = str;
+        songPath = str;
     }
 
     @Override
     public final void onClick(View view) {
         Message obtainMessage = ((OLPlayRoom) chattingAdapter.activity).getHandler().obtainMessage();
         Bundle bundle = new Bundle();
-        bundle.putString("S", f5360b);
+        bundle.putString("S", songPath);
         obtainMessage.setData(bundle);
         obtainMessage.what = 1;
         ((OLPlayRoom) chattingAdapter.activity).getHandler().sendMessage(obtainMessage);

@@ -133,13 +133,13 @@ JNIEXPORT jfloat JNICALL Java_ly_pp_justpiano3_JPApplication_getGain(
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setRecord(
         JNIEnv *env, jclass thiz, jboolean record) {
-sDTPlayer.setRecord(record);
+    sDTPlayer.setRecord(record);
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setRecordFilePath(
         JNIEnv *env, jclass thiz, jstring recordFilePath) {
-char* path = java_str_to_c_str(env, recordFilePath);
-sDTPlayer.setRecordFilePath(path);
+    char *path = java_str_to_c_str(env, recordFilePath);
+    sDTPlayer.setRecordFilePath(path);
 }
 
 #ifdef __cplusplus

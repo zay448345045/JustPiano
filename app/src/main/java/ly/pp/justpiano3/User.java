@@ -19,7 +19,7 @@ public class User implements Serializable {
     private final int clevel;
     private int hand = 0;
     private int cpKind = 0;
-    private int shoes = 0;
+    private final int shoes = 0;
     private String familyID = "0";
 
     public User(byte b, String str, int hair, int eye, int jacket, int trousers, int shoes, String str2, String str3, String str4, int i, int i2, int i3, int i4, int i5, String familyID) {

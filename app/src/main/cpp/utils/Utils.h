@@ -38,7 +38,7 @@ inline long getSizeOfFile(FILE *fp) {
     return sz;
 }
 
-inline char* java_str_to_c_str(JNIEnv *env, jstring jstr) {
+inline char *java_str_to_c_str(JNIEnv *env, jstring jstr) {
     char *rtn = NULL;
     jclass clsstring = env->FindClass("java/lang/String");
     jstring strencode = env->NewStringUTF("utf-8");

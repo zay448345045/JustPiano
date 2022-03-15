@@ -1,7 +1,7 @@
 package ly.pp.justpiano3;
 
 /**
- * 标记接口
+ * 房间标记接口
  */
 public interface OLPlayRoomInterface {
 }

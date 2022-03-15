@@ -66,7 +66,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:src="@drawable/back_arrow"
-            android:background="@drawable/selector_ol_orange"/>
+            android:background="@drawable/selector_ol_orange" />
 
         <TextView
             android:id="@+id/note_speed"

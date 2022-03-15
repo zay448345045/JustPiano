@@ -129,8 +129,7 @@
                     android:text="↕"
                     android:textColor="@color/white1"
                     android:textSize="18sp"
-                    android:textStyle="bold">
-                </Button>
+                    android:textStyle="bold"></Button>
 
                 <Button
                     android:id="@+id/keyboard_count_down"
@@ -153,8 +152,7 @@
                     android:text="←"
                     android:textColor="@color/white1"
                     android:textSize="18sp"
-                    android:textStyle="bold">
-                </Button>
+                    android:textStyle="bold"></Button>
 
                 <Button
                     android:id="@+id/keyboard_move_right"
@@ -165,8 +163,7 @@
                     android:background="@drawable/selector_orange_button"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
-                </Button>
+                    android:layout_height="match_parent"></Button>
 
                 <Button
                     android:id="@+id/keyboard_count_up"
@@ -187,7 +184,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:background="@drawable/selector_orange_button"
-                    android:src="@drawable/setting"/>
+                    android:src="@drawable/setting" />
 
                 <Button
                     android:id="@+id/keyboard_record"
@@ -392,7 +389,6 @@
             android:id="@+id/keyboard_view"
             android:keepScreenOn="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ly.pp.justpiano3.KeyboardModeView>
+            android:layout_height="match_parent"></ly.pp.justpiano3.KeyboardModeView>
     </LinearLayout>
 </LinearLayout>

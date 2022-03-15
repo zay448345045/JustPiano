@@ -24,13 +24,15 @@ public:
 
     void init(int32_t sampleRate, int32_t channelCount);
 
-    static void generateWavFileHeader(char* header, long totalAudioLen, long longSampleRate, int channels, int audioFormat);
+    static void
+    generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate, int channels,
+                          int audioFormat);
 
     int32_t write_buffer(const float *sourceData, int32_t numSamples);
 
     void flush_buffer();
 
-    void setRecordingFilePath(char* recordingFilePath) {
+    void setRecordingFilePath(char *recordingFilePath) {
         mRecordingFilePath = move(recordingFilePath);
     }
 
@@ -41,7 +43,7 @@ public:
 private:
     ThreadPool pool;
 
-    char* mRecordingFilePath{};
+    char *mRecordingFilePath{};
 
     int32_t mSampleRate;
     int32_t mChannelCount;
@@ -49,13 +51,16 @@ private:
     int mRecordingFile;
 
     vector<float> mData;
-    float* mBuff{};
+    float *mBuff{};
 
-    static void flush_to_file(float* data, int32_t length, int32_t sampleRate, char* recordingFilePath, int& recordingFile);
+    static void
+    flush_to_file(float *data, int32_t length, int32_t sampleRate, char *recordingFilePath,
+                  int &recordingFile);
 
     static mutex flushMtx;
     static condition_variable flushed;
     static bool ongoing_flush_completed;
+
     static bool check_if_flush_completed();
 };
 

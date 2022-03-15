@@ -15,7 +15,7 @@ public final class ChattingAdapter extends BaseAdapter {
     Activity activity;
     private final List<Bundle> msgList;
     private final LayoutInflater layoutInflater;
-    private boolean showTime;
+    private final boolean showTime;
 
     ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater, boolean showTime) {
         msgList = list;

@@ -37,7 +37,8 @@ void RecordingIO::clearRecordingBuffer() {
         mRecordingFilePath[wavFilePathLength - 3] = 'w';
         mRecordingFilePath[wavFilePathLength - 2] = 'a';
         mRecordingFilePath[wavFilePathLength - 1] = 'v';
-        int wavFile = open(mRecordingFilePath, O_CREAT | O_APPEND | O_WRONLY, S_IRWXO | S_IRWXG | S_IRWXU);
+        int wavFile = open(mRecordingFilePath, O_CREAT | O_APPEND | O_WRONLY,
+                           S_IRWXO | S_IRWXG | S_IRWXU);
         if (wavFile != -1) {
             int buffer_size = 8192;
             char buffer[buffer_size];
@@ -108,7 +109,8 @@ void RecordingIO::init(int32_t sampleRate, int32_t channelCount) {
 }
 
 
-void RecordingIO::generateWavFileHeader(char* header, long totalAudioLen, long longSampleRate, int channels, int audioFormat) {
+void RecordingIO::generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate,
+                                        int channels, int audioFormat) {
     long totalDataLen = totalAudioLen + 36;
     long byteRate = longSampleRate * 2 * channels;
     header[0] = 'R'; // RIFF

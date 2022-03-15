@@ -146,7 +146,8 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
         try {
             User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
+                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
             ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
@@ -302,11 +303,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     final void loadClothes(int hair, int eye, int jacket, int trousers, int shoes) {
-            coupleTrousersIndex = trousers;
-            coupleJacketIndex = jacket;
-            coupleHairIndex = hair;
-            coupleEyeIndex = eye;
-            coupleShoesIndex = shoes;
+        coupleTrousersIndex = trousers;
+        coupleJacketIndex = jacket;
+        coupleHairIndex = hair;
+        coupleEyeIndex = eye;
+        coupleShoesIndex = shoes;
         coupleModView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "m", 1));
         coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", coupleTrousersIndex));
         coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", coupleJacketIndex));

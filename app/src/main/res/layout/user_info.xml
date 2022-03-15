@@ -204,7 +204,7 @@
             android:layout_below="@+id/user_face"
             android:layout_alignEnd="@+id/user_face"
             android:text="" />
-<!--            android:text="(点击头像设置)"-->
+        <!--            android:text="(点击头像设置)"-->
 
 
         <ImageView

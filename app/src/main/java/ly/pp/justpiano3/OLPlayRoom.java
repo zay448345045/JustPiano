@@ -158,7 +158,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     jSONObject2.getInt("D_T"), jSONObject2.getInt("D_S"),
                     jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
             JSONObject jSONObject3 = jSONObject.getJSONObject("C");
-            User User2 = new User(jSONObject3.getString("N"),  jSONObject3.getInt("D_H"),
+            User User2 = new User(jSONObject3.getString("N"), jSONObject3.getInt("D_H"),
                     jSONObject3.getInt("D_E"), jSONObject3.getInt("D_J"),
                     jSONObject3.getInt("D_T"), jSONObject3.getInt("D_S"),
                     jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
@@ -704,22 +704,22 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_send_b:
                 OnlineRoomChatDTO.Builder builder2 = OnlineRoomChatDTO.newBuilder();
-                    str = String.valueOf(sendText.getText());
-                    if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
-                        builder2.setUserName("");
-                        builder2.setMessage(str);
-                    } else {
-                        builder2.setUserName(userTo);
-                        str = str.substring(userTo.length());
-                        builder2.setMessage(str);
-                    }
-                    sendText.setText("");
-                    builder2.setColor(colorNum);
-                    if (!str.isEmpty()) {
-                        sendMsg(13, builder2.build());
-                    }
-                    userTo = "";
-                    return;
+                str = String.valueOf(sendText.getText());
+                if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
+                    builder2.setUserName("");
+                    builder2.setMessage(str);
+                } else {
+                    builder2.setUserName(userTo);
+                    str = str.substring(userTo.length());
+                    builder2.setMessage(str);
+                }
+                sendText.setText("");
+                builder2.setColor(colorNum);
+                if (!str.isEmpty()) {
+                    sendMsg(13, builder2.build());
+                }
+                userTo = "";
+                return;
             case R.id.ol_express_b:
                 expressWindow.showAtLocation(express, Gravity.CENTER, 0, 0);
                 return;
