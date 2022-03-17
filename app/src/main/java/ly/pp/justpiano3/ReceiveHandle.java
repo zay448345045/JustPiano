@@ -589,7 +589,6 @@ final class ReceiveHandle {
                     bundle.putInt("LV", loadUser.getLv());
                     bundle.putInt("CL", loadUser.getCl());
                     bundle.putInt("E", loadUser.getExp());
-                    bundle.putInt("X", loadUser.getLvUpNeedExp());
                     bundle.putInt("M", loadUser.getMessageNum());
                     bundle.putInt("DR_H", loadUser.getClothes().getHair());
                     bundle.putInt("DR_E", loadUser.getClothes().getEye());

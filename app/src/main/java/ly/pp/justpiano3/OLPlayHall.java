@@ -70,8 +70,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     OLPlayHallHandler olPlayHallHandler = new OLPlayHallHandler(this);
     TextView sendTextView;
     private ImageView imageView;
-    private LayoutInflater layoutImflater1;
-    private LayoutInflater layoutImflater2;
+    private LayoutInflater layoutInflater1;
+    private LayoutInflater layoutInflater2;
     private PopupWindow popupWindow = null;
     private ShowTimeThread showTimeThread;
     private TextView timeTextView;
@@ -193,7 +193,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
 
     final void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
         int posi = listView.getFirstVisiblePosition();
-        listView.setAdapter(new ChattingAdapter(list, layoutImflater1, showChatTime));
+        listView.setAdapter(new ChattingAdapter(list, layoutInflater1, showChatTime));
         if (posi > 0) {
             listView.setSelection(posi + 2);
         } else {
@@ -225,7 +225,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
         RoomTitleAdapter roomTitleAdapter = (RoomTitleAdapter) listView.getAdapter();
         if (roomTitleAdapter == null) {
-            listView.setAdapter(new RoomTitleAdapter(list, layoutImflater2, this));
+            listView.setAdapter(new RoomTitleAdapter(list, layoutInflater2, this));
             return;
         }
         roomTitleAdapter.updateList(list);
@@ -367,8 +367,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         hallInfoBundle = getIntent().getExtras();
         hallName = hallInfoBundle.getString("hallName");
         hallID = hallInfoBundle.getByte("hallID");
-        layoutImflater1 = LayoutInflater.from(this);
-        layoutImflater2 = LayoutInflater.from(this);
+        layoutInflater1 = LayoutInflater.from(this);
+        layoutInflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         jpapplication.loadSettings(true);
         setContentView(R.layout.olplayhall);

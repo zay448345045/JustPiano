@@ -55,8 +55,10 @@ final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.mo2843a(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
                         olPlayHallRoom.userName.setText(data.getString("U"));
                         JPApplication.kitiName = data.getString("U");
-                        olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + data.getInt("X"));
-                        olPlayHallRoom.userLevelView.setText("LV." + data.getInt("LV"));
+                        int lv = data.getInt("LV");
+                        int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
+                        olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + targetExp);
+                        olPlayHallRoom.userLevelView.setText("LV." + lv);
                         i = data.getInt("CL");
                         olPlayHallRoom.userClassView.setText("CL." + i);
                         olPlayHallRoom.userClassView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
