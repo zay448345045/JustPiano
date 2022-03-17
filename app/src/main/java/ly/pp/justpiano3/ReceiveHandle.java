@@ -566,7 +566,7 @@ final class ReceiveHandle {
         int i2;
         Bundle bundle2;
         switch (b) {
-            case (byte) 28:
+            case 28:
                 bundle = new Bundle();
                 Bundle bundle3 = new Bundle();
                 message.what = 0;
@@ -606,7 +606,7 @@ final class ReceiveHandle {
                     e.printStackTrace();
                     return;
                 }
-            case (byte) 33:
+            case 33:
                 OnlineChangeClothesVO changeClothes = msg.getChangeClothes();
                 int type = changeClothes.getType();
                 message.what = type;
@@ -631,7 +631,7 @@ final class ReceiveHandle {
                     ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
                 }
                 return;
-            case (byte) 34:
+            case 34:
                 bundle = new Bundle();
                 OnlineLoadUserInfoVO loadUserInfo = msg.getLoadUserInfo();
                 type = loadUserInfo.getType();
@@ -722,7 +722,7 @@ final class ReceiveHandle {
                     default:
                         return;
                 }
-            case (byte) 36:
+            case 36:
                 bundle = new Bundle();
                 OnlineLoadUserListVO loadUserList = msg.getLoadUserList();
                 try {
