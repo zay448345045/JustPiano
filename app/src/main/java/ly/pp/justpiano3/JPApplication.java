@@ -598,9 +598,7 @@ public final class JPApplication extends Application {
                     @Override
                     public void onDeviceAdded(MidiDeviceInfo info) {
                         mMidiManager.openDevice(info, device -> {
-                            if (device == null) {
-                                Toast.makeText(context, "MIDI设备连接失败", Toast.LENGTH_SHORT).show();
-                            } else {
+                            if (device != null) {
                                 MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
                                 for (MidiDeviceInfo.PortInfo port : ports) {
                                     if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
@@ -608,6 +606,7 @@ public final class JPApplication extends Application {
                                         for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
                                             midiConnectionListener.onMidiConnect();
                                         }
+                                        break;
                                     }
                                 }
                                 Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
@@ -634,6 +633,23 @@ public final class JPApplication extends Application {
                         }
                     }
                 }, new Handler(Looper.getMainLooper()));
+                for (MidiDeviceInfo info : mMidiManager.getDevices()) {
+                    mMidiManager.openDevice(info, device -> {
+                        if (device != null) {
+                            MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
+                            for (MidiDeviceInfo.PortInfo port : ports) {
+                                if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                                    midiOutputPort = device.openOutputPort(port.getPortNumber());
+                                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                                        midiConnectionListener.onMidiConnect();
+                                    }
+                                    break;
+                                }
+                            }
+                            Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
+                        }
+                    }, new Handler(Looper.getMainLooper()));
+                }
             }
         }
     }

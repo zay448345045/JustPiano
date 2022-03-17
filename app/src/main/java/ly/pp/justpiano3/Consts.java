@@ -28,10 +28,10 @@ public interface Consts extends BaseColumns {
             R.drawable.b81, R.drawable.b82, R.drawable.b83, R.drawable.b84, R.drawable.b85, R.drawable.b86, R.drawable.b87, R.drawable.b88, R.drawable.b89, R.drawable.b90,
             R.drawable.b91, R.drawable.b92, R.drawable.b93, R.drawable.b94, R.drawable.b95, R.drawable.b96, R.drawable.b97, R.drawable.b98, R.drawable.b99, R.drawable.b100,
             R.drawable.b101, R.drawable.b102, R.drawable.b103, R.drawable.b104, R.drawable.b105, R.drawable.b106, R.drawable.b107, R.drawable.b108, R.drawable.b109, R.drawable.b110,
-            R.drawable.b111, R.drawable.b112, R.drawable.b113, R.drawable.b114, R.drawable.b115, R.drawable.b116, R.drawable.b117, R.drawable.b118, R.drawable.b119//, R.drawable.b120,
-            //R.drawable.b121, R.drawable.b122, R.drawable.b123, R.drawable.b124, R.drawable.b125, R.drawable.b126, R.drawable.b127, R.drawable.b128, R.drawable.b129, R.drawable.b130,
-            //R.drawable.b131, R.drawable.b132, R.drawable.b133, R.drawable.b134, R.drawable.b135, R.drawable.b136, R.drawable.b137, R.drawable.b138, R.drawable.b139, R.drawable.b140,
-    };
+            R.drawable.b111, R.drawable.b112, R.drawable.b113, R.drawable.b114, R.drawable.b115, R.drawable.b116, R.drawable.b117, R.drawable.b118, R.drawable.b119, R.drawable.b120,
+            R.drawable.b121, R.drawable.b122, R.drawable.b123, R.drawable.b124, R.drawable.b125, R.drawable.b126, R.drawable.b127, R.drawable.b128, R.drawable.b129, R.drawable.b130,
+            R.drawable.b131, R.drawable.b132, R.drawable.b133, R.drawable.b134, R.drawable.b135, R.drawable.b136, R.drawable.b137, R.drawable.b138, R.drawable.b139, R.drawable.b140,
+            R.drawable.b141, R.drawable.b142, R.drawable.b143};
     int[] colors = new int[]{R.color.translent, R.color.c1, R.color.c2, R.color.c3, R.color.c4, R.color.c5, R.color.c6, R.color.c7, R.color.c8, R.color.c9, R.color.c10, R.color.c11, R.color.c12};
     int[] couples = new int[]{R.drawable._none, R.drawable.couple_1, R.drawable.couple_2, R.drawable.couple_3};
     int[] sex = new int[]{R.drawable.m, R.drawable.f, R.drawable.none, R.drawable._none};
@@ -47,7 +47,7 @@ public interface Consts extends BaseColumns {
             R.drawable.v19_name, R.drawable.v20_name, R.drawable.v21_name, R.drawable.v22_name, R.drawable.v23_name, R.drawable.v24_name,
             R.drawable.v25_name, R.drawable.v26_name, R.drawable.v27_name};
     PorterDuffColorFilter[] kuangColorFilterAdd = new PorterDuffColorFilter[]{
-            new PorterDuffColorFilter(0x7fffffff, PorterDuff.Mode.ADD),
+            new PorterDuffColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY),
             new PorterDuffColorFilter(0x7fffcc00, PorterDuff.Mode.ADD),
             new PorterDuffColorFilter(0x7fff6600, PorterDuff.Mode.ADD),
             new PorterDuffColorFilter(0x7fff3333, PorterDuff.Mode.ADD),

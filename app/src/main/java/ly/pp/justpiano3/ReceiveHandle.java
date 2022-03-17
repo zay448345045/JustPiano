@@ -501,6 +501,7 @@ final class ReceiveHandle {
                 bundle2.putInt("V", room.getRoomKuang());
                 bundle2.putInt("D", room.getRoomMode());
                 bundle.putBundle(String.valueOf(i), bundle2);
+                i++;
             }
             message.setData(bundle);
             olPlayHall.olPlayHallHandler.handleMessage(message);
@@ -817,7 +818,6 @@ final class ReceiveHandle {
                 int i2 = i;
                 if (it.hasNext()) {
                     room = (Room) it.next();
-                    room.getRoomName();
                     Bundle bundle2 = new Bundle();
                     bundle2.putByte("I", room.getRoomID());
                     bundle2.putString("N", room.getRoomName());
