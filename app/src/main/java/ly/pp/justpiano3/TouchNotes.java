@@ -7,11 +7,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 final class TouchNotes implements OnTouchListener {
     private final PlayView playView;
     private int moveNoteNum = -2;
-    private int tapCounts;
-    private float lastY;
+    private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
     TouchNotes(PlayView playView) {
         this.playView = playView;
@@ -32,56 +34,103 @@ final class TouchNotes implements OnTouchListener {
     }
 
     @Override
-    public final boolean onTouch(View view, MotionEvent motionEvent) {
+    public final boolean onTouch(View view, MotionEvent event) {
         if (playView.startFirstNoteTouching) {
-            int actionIndex = motionEvent.getActionIndex();
-            float x = motionEvent.getX(actionIndex);
-            float y = motionEvent.getY(actionIndex);
-            switch (motionEvent.getActionMasked()) {
+            int action = event.getActionMasked();
+            // Track individual fingers.
+            int pointerIndex = event.getActionIndex();
+            int id = event.getPointerId(pointerIndex);
+            // Get the pointer's current position
+            float x = event.getX(pointerIndex);
+            float y = event.getY(pointerIndex);
+            // Some devices can return negative x or y, which can cause an array exception.
+            x = Math.max(x, 0.0f);
+            y = Math.max(y, 0.0f);
+            switch (action) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN:
-                    if (playView.currentPlayNote != null) {
-                        playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
-                    }
-                    int touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
-                    if (y >= playView.jpapplication.getWhiteKeyHeight() && touchNoteNum != -1 && !playView.pianoPlay.keyboardview.touchNoteSet.containsKey(touchNoteNum)) {
-                        playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
-                        playView.judgeAndPlaySound(touchNoteNum);
-                        moveNoteNum = touchNoteNum;
-                    }
-                    if (Math.abs(y - lastY) < 2) {
-                        tapCounts++;
-                    } else {
-                        tapCounts = 0;
-                    }
-                    if (tapCounts > 100) {
-                        playView.pianoPlay.finish();
-                    }
-                    lastY = y;
-                    break;
-                case MotionEvent.ACTION_POINTER_UP:
-                case MotionEvent.ACTION_UP:
-                    touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
-                    playView.pianoPlay.keyboardview.touchNoteSet.remove(touchNoteNum);
+                    onFingerDown(id, x, y);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (playView.currentPlayNote != null) {
-                        playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+                    int pointerCount = event.getPointerCount();
+                    for (int i = 0; i < pointerCount; i++) {
+                        id = event.getPointerId(i);
+                        x = event.getX(i);
+                        y = event.getY(i);
+                        x = Math.max(x, 0.0f);
+                        y = Math.max(y, 0.0f);
+                        onFingerMove(id, x, y);
                     }
-                    touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
-                    if (touchNoteNum != moveNoteNum) {
-                        playView.pianoPlay.keyboardview.touchNoteSet.remove(moveNoteNum);
-                        if (y >= playView.jpapplication.getWhiteKeyHeight() && touchNoteNum != -1 && !playView.pianoPlay.keyboardview.touchNoteSet.containsKey(touchNoteNum)) {
-                            playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
-                            playView.judgeAndPlaySound(touchNoteNum);
-                            moveNoteNum = touchNoteNum;
-                        }
-                    }
-                    tapCounts = 0;
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_POINTER_UP:
+                    onFingerUp(id, x, y);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    onAllFingersUp();
+                    break;
+                default:
                     break;
             }
         }
-        playView.pianoPlay.updateKeyboardPrefer();
         return true;
+    }
+
+    private void onFingerDown(int id, float x, float y) {
+        if (playView.currentPlayNote != null) {
+            playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+        }
+        int touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
+        fireKeyDown(touchNoteNum);
+        mFingerMap.put(id, touchNoteNum);
+    }
+
+    private void onFingerMove(int id, float x, float y) {
+        if (playView.currentPlayNote != null) {
+            playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+        }
+        Integer previousTouchNoteNum = mFingerMap.get(id);
+        if (previousTouchNoteNum != null) {
+            int touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
+            // Did we change to a new key.
+            if (touchNoteNum >= 0 && touchNoteNum != previousTouchNoteNum) {
+                fireKeyDown(touchNoteNum);
+                fireKeyUp(previousTouchNoteNum);
+                mFingerMap.put(id, touchNoteNum);
+            }
+        }
+    }
+
+    private void onFingerUp(int id, float x, float y) {
+        Integer previousPitch = mFingerMap.get(id);
+        if (previousPitch != null) {
+            fireKeyUp(previousPitch);
+            mFingerMap.remove(id);
+        } else {
+            int touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
+            fireKeyUp(touchNoteNum);
+        }
+    }
+
+    private void onAllFingersUp() {
+        // Turn off all notes.
+        for (Integer pitch : mFingerMap.values()) {
+            fireKeyUp(pitch);
+        }
+        mFingerMap.clear();
+    }
+
+    public void fireKeyDown(int touchNoteNum) {
+        if (touchNoteNum != -1 && !playView.pianoPlay.keyboardview.touchNoteSet.containsKey(touchNoteNum)) {
+            playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
+            playView.judgeAndPlaySound(touchNoteNum);
+            moveNoteNum = touchNoteNum;
+            playView.pianoPlay.updateKeyboardPrefer();
+        }
+    }
+
+    public void fireKeyUp(int touchNoteNum) {
+        playView.pianoPlay.keyboardview.touchNoteSet.remove(touchNoteNum);
+        playView.pianoPlay.updateKeyboardPrefer();
     }
 }
