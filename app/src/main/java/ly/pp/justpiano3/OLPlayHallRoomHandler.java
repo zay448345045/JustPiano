@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -72,10 +73,10 @@ final class OLPlayHallRoomHandler extends Handler {
                         if (!olPlayHallRoom.familyID.equals("0")) {
                             File file = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
                             if (file.exists()) {
-                                try {
+                                try (InputStream inputStream = new FileInputStream(file)){
                                     int length = (int) file.length();
                                     byte[] pic = new byte[length];
-                                    new FileInputStream(file).read(pic);
+                                    inputStream.read(pic);
                                     olPlayHallRoom.familyView.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -98,7 +99,6 @@ final class OLPlayHallRoomHandler extends Handler {
                 case 1:
                     post(() -> {
                         Bundle data = message.getData();
-                        Integer.valueOf(data.getInt("T"));
                         if (data.getInt("T") == 0) {
                             Intent intent = new Intent(olPlayHallRoom, OLPlayHall.class);
                             intent.putExtras(data);

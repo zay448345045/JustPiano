@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomDoorDTO;
@@ -263,10 +264,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
         if (!familyID.equals("0")) {
             File file = new File(olPlayRoom.getFilesDir(), familyID + ".jpg");
             if (file.exists()) {
-                try {
+                try (InputStream inputStream = new FileInputStream(file)){
                     int length = (int) file.length();
                     byte[] pic = new byte[length];
-                    new FileInputStream(file).read(pic);
+                    inputStream.read(pic);
                     imageView7.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
                 } catch (IOException e) {
                     e.printStackTrace();
