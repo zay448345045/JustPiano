@@ -12,7 +12,7 @@ public interface OnlineChangeRoomPositionVOOrBuilder extends
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   java.util.List<ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO> 
       getRoomPositionUserList();
@@ -21,7 +21,7 @@ public interface OnlineChangeRoomPositionVOOrBuilder extends
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO getRoomPositionUser(int index);
   /**
@@ -29,7 +29,7 @@ public interface OnlineChangeRoomPositionVOOrBuilder extends
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   int getRoomPositionUserCount();
   /**
@@ -37,7 +37,7 @@ public interface OnlineChangeRoomPositionVOOrBuilder extends
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   java.util.List<? extends ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVOOrBuilder> 
       getRoomPositionUserOrBuilderList();
@@ -46,7 +46,7 @@ public interface OnlineChangeRoomPositionVOOrBuilder extends
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVOOrBuilder getRoomPositionUserOrBuilder(
       int index);

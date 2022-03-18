@@ -536,7 +536,7 @@ public final class OnlineResponse {
       "\001(\r\"P\n\024OnlineLoadRoomListVO\0228\n\004room\030\001 \003(" +
       "\0132*.ly.pp.justpiano3.protobuf.vo.OnlineR" +
       "oomVO\"p\n\032OnlineChangeRoomPositionVO\022R\n\022r" +
-      "oom_position_user\030\004 \003(\01326.ly.pp.justpian" +
+      "oom_position_user\030\001 \003(\01326.ly.pp.justpian" +
       "o3.protobuf.vo.OnlineRoomPositionUserVO\"" +
       "\347\001\n\030OnlineLoadRoomPositionVO\022\021\n\tsong_pat" +
       "h\030\001 \001(\t\022\014\n\004tune\030\002 \001(\005\022V\n\024room_position_c" +

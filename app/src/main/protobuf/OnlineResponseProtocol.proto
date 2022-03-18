@@ -399,7 +399,7 @@ message OnlineLoadRoomListVO {
 // 改变房间位置状态
 message OnlineChangeRoomPositionVO {
     // 用户信息
-    repeated OnlineRoomPositionUserVO room_position_user = 4;
+    repeated OnlineRoomPositionUserVO room_position_user = 1;
 }
 
 // 房间内初次加载所有用户数据

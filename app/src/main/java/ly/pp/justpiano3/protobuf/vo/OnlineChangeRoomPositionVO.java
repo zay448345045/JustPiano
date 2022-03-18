@@ -54,7 +54,7 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 34: {
+          case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
               roomPositionUser_ = new java.util.ArrayList<ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO>();
               mutable_bitField0_ |= 0x00000001;
@@ -98,14 +98,14 @@ private static final long serialVersionUID = 0L;
             ly.pp.justpiano3.protobuf.vo.OnlineChangeRoomPositionVO.class, ly.pp.justpiano3.protobuf.vo.OnlineChangeRoomPositionVO.Builder.class);
   }
 
-  public static final int ROOM_POSITION_USER_FIELD_NUMBER = 4;
+  public static final int ROOM_POSITION_USER_FIELD_NUMBER = 1;
   private java.util.List<ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO> roomPositionUser_;
   /**
    * <pre>
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   @java.lang.Override
   public java.util.List<ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO> getRoomPositionUserList() {
@@ -116,7 +116,7 @@ private static final long serialVersionUID = 0L;
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   @java.lang.Override
   public java.util.List<? extends ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVOOrBuilder> 
@@ -128,7 +128,7 @@ private static final long serialVersionUID = 0L;
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   @java.lang.Override
   public int getRoomPositionUserCount() {
@@ -139,7 +139,7 @@ private static final long serialVersionUID = 0L;
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   @java.lang.Override
   public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO getRoomPositionUser(int index) {
@@ -150,7 +150,7 @@ private static final long serialVersionUID = 0L;
    * 用户信息
    * </pre>
    *
-   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+   * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
    */
   @java.lang.Override
   public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVOOrBuilder getRoomPositionUserOrBuilder(
@@ -173,7 +173,7 @@ private static final long serialVersionUID = 0L;
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     for (int i = 0; i < roomPositionUser_.size(); i++) {
-      output.writeMessage(4, roomPositionUser_.get(i));
+      output.writeMessage(1, roomPositionUser_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -186,7 +186,7 @@ private static final long serialVersionUID = 0L;
     size = 0;
     for (int i = 0; i < roomPositionUser_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, roomPositionUser_.get(i));
+        .computeMessageSize(1, roomPositionUser_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -521,7 +521,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public java.util.List<ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO> getRoomPositionUserList() {
       if (roomPositionUserBuilder_ == null) {
@@ -535,7 +535,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public int getRoomPositionUserCount() {
       if (roomPositionUserBuilder_ == null) {
@@ -549,7 +549,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO getRoomPositionUser(int index) {
       if (roomPositionUserBuilder_ == null) {
@@ -563,7 +563,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder setRoomPositionUser(
         int index, ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO value) {
@@ -584,7 +584,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder setRoomPositionUser(
         int index, ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder builderForValue) {
@@ -602,7 +602,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder addRoomPositionUser(ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO value) {
       if (roomPositionUserBuilder_ == null) {
@@ -622,7 +622,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder addRoomPositionUser(
         int index, ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO value) {
@@ -643,7 +643,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder addRoomPositionUser(
         ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder builderForValue) {
@@ -661,7 +661,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder addRoomPositionUser(
         int index, ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder builderForValue) {
@@ -679,7 +679,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder addAllRoomPositionUser(
         java.lang.Iterable<? extends ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO> values) {
@@ -698,7 +698,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder clearRoomPositionUser() {
       if (roomPositionUserBuilder_ == null) {
@@ -715,7 +715,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public Builder removeRoomPositionUser(int index) {
       if (roomPositionUserBuilder_ == null) {
@@ -732,7 +732,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder getRoomPositionUserBuilder(
         int index) {
@@ -743,7 +743,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVOOrBuilder getRoomPositionUserOrBuilder(
         int index) {
@@ -757,7 +757,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public java.util.List<? extends ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVOOrBuilder> 
          getRoomPositionUserOrBuilderList() {
@@ -772,7 +772,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder addRoomPositionUserBuilder() {
       return getRoomPositionUserFieldBuilder().addBuilder(
@@ -783,7 +783,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder addRoomPositionUserBuilder(
         int index) {
@@ -795,7 +795,7 @@ private static final long serialVersionUID = 0L;
      * 用户信息
      * </pre>
      *
-     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 4;</code>
+     * <code>repeated .ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO room_position_user = 1;</code>
      */
     public java.util.List<ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO.Builder> 
          getRoomPositionUserBuilderList() {
