@@ -12,7 +12,6 @@ import java.util.Map;
 
 final class TouchNotes implements OnTouchListener {
     private final PlayView playView;
-    private int moveNoteNum = -2;
     private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
     TouchNotes(PlayView playView) {
@@ -124,7 +123,6 @@ final class TouchNotes implements OnTouchListener {
         if (touchNoteNum != -1 && !playView.pianoPlay.keyboardview.touchNoteSet.containsKey(touchNoteNum)) {
             playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
             playView.judgeAndPlaySound(touchNoteNum);
-            moveNoteNum = touchNoteNum;
             playView.pianoPlay.updateKeyboardPrefer();
         }
     }
