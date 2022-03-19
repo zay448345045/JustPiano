@@ -100,6 +100,9 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
             MelodySelect melodySelect = (MelodySelect) activity.get();
             melodySelect.jpprogressBar.setCancelable(false);
             melodySelect.jpprogressBar.show();
+            if (type == 2) {
+                Toast.makeText(melodySelect, "导入开始，请耐心等候...", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
