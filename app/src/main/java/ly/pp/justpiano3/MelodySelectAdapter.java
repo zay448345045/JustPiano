@@ -31,7 +31,7 @@ public class MelodySelectAdapter extends CursorAdapter {
         TextView tx = view.findViewById(R.id.ol_s_p);
         String txstr = cursor.getString(cursor.getColumnIndex("name"));
         tx.setText(txstr);
-        tx.setTextSize(14);
+        tx.setTextSize(13);
         tx.setBackgroundResource(R.drawable.selector_ol_button);
         view.setOnClickListener(v -> {
             melodySelect.mo2784a(melodySelect.search(tx.getText().toString()));
