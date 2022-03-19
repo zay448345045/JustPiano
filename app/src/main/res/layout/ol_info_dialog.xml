@@ -27,12 +27,7 @@
                 android:layout_alignParentTop="true" />
 
             <ImageView
-                android:id="@+id/ol_user_shoes"
-                android:layout_width="100dp"
-                android:layout_height="200dp" />
-
-            <ImageView
-                android:id="@+id/ol_user_trousers"
+                android:id="@+id/ol_user_eye"
                 android:layout_width="100dp"
                 android:layout_height="200dp" />
 
@@ -42,7 +37,12 @@
                 android:layout_height="200dp" />
 
             <ImageView
-                android:id="@+id/ol_user_eye"
+                android:id="@+id/ol_user_shoes"
+                android:layout_width="100dp"
+                android:layout_height="200dp" />
+
+            <ImageView
+                android:id="@+id/ol_user_trousers"
                 android:layout_width="100dp"
                 android:layout_height="200dp" />
 

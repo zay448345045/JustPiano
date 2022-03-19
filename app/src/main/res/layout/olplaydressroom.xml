@@ -62,16 +62,11 @@
                     android:background="@drawable/filled_msg" />
 
                 <ImageView
-                    android:id="@+id/ol_dress_shoes"
+                    android:id="@+id/ol_dress_eye"
                     android:layout_width="100dp"
                     android:layout_height="200dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true" />
-
-                <ImageView
-                    android:id="@+id/ol_dress_trousers"
-                    android:layout_width="100dp"
-                    android:layout_height="200dp" />
 
                 <ImageView
                     android:id="@+id/ol_dress_hair"
@@ -81,7 +76,14 @@
                     android:layout_alignParentTop="true" />
 
                 <ImageView
-                    android:id="@+id/ol_dress_eye"
+                    android:id="@+id/ol_dress_shoes"
+                    android:layout_width="100dp"
+                    android:layout_height="200dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true" />
+
+                <ImageView
+                    android:id="@+id/ol_dress_trousers"
                     android:layout_width="100dp"
                     android:layout_height="200dp"
                     android:layout_alignParentStart="true"
@@ -90,7 +92,9 @@
                 <ImageView
                     android:id="@+id/ol_dress_jacket"
                     android:layout_width="100dp"
-                    android:layout_height="200dp" />
+                    android:layout_height="200dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true" />
             </RelativeLayout>
 
             <LinearLayout

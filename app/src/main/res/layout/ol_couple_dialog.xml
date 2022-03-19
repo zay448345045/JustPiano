@@ -145,22 +145,22 @@
                 android:layout_alignParentTop="true" />
 
             <ImageView
-                android:id="@+id/ol_player_shoes"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-
-            <ImageView
-                android:id="@+id/ol_player_trousers"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-
-            <ImageView
                 android:id="@+id/ol_player_eye"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 
             <ImageView
                 android:id="@+id/ol_player_hair"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <ImageView
+                android:id="@+id/ol_player_shoes"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <ImageView
+                android:id="@+id/ol_player_trousers"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 

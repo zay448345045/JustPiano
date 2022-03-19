@@ -158,11 +158,6 @@
                                     android:src="@drawable/b17" />
 
                                 <ImageView
-                                    android:id="@+id/ol_player_shoes"
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
-
-                                <ImageView
                                     android:id="@+id/ol_player_couple"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
@@ -177,17 +172,22 @@
                                     android:layout_marginTop="20dp" />
 
                                 <ImageView
-                                    android:id="@+id/ol_player_trousers"
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
-
-                                <ImageView
                                     android:id="@+id/ol_player_eye"
                                     android:layout_width="100dp"
                                     android:layout_height="wrap_content" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_hair"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:id="@+id/ol_player_shoes"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:id="@+id/ol_player_trousers"
                                     android:layout_width="100dp"
                                     android:layout_height="wrap_content" />
 
@@ -321,12 +321,7 @@
                                         android:src="@drawable/b17" />
 
                                     <ImageView
-                                        android:id="@+id/ol_couple_shoes"
-                                        android:layout_width="100dp"
-                                        android:layout_height="wrap_content" />
-
-                                    <ImageView
-                                        android:id="@+id/ol_couple_trousers"
+                                        android:id="@+id/ol_couple_eye"
                                         android:layout_width="100dp"
                                         android:layout_height="wrap_content" />
 
@@ -336,7 +331,12 @@
                                         android:layout_height="wrap_content" />
 
                                     <ImageView
-                                        android:id="@+id/ol_couple_eye"
+                                        android:id="@+id/ol_couple_shoes"
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content" />
+
+                                    <ImageView
+                                        android:id="@+id/ol_couple_trousers"
                                         android:layout_width="100dp"
                                         android:layout_height="wrap_content" />
 
