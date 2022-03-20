@@ -241,9 +241,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
         @Override
         public boolean handleMessage(Message msg) {
-            int viewId = msg.what;
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            switch (viewId) {
+            switch (msg.what) {
                 case R.id.keyboard1_count_down:
                     int keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() - 1;
                     edit.putInt("keyboard1_white_key_num", keyboard1WhiteKeyNum);

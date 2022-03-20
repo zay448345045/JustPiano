@@ -1,5 +1,6 @@
 package ly.pp.justpiano3;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.util.DisplayMetrics;
@@ -99,6 +101,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     Bundle bundle0;
     Bundle bundle2;
     KeyboardModeView keyboardView;
+    SharedPreferences sharedPreferences;
     ScheduledExecutorService keyboardScheduledExecutor;
     ScheduledExecutorService noteScheduledExecutor;
     ImageView keyboardSetting;
@@ -404,6 +407,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     @Override
     public boolean handleMessage(Message message) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
         switch (message.what) {
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
@@ -420,19 +424,27 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
+                edit.putInt("ol_keyboard_white_key_num", keyboard1WhiteKeyNum);
                 keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.apply();
                 break;
             case R.id.keyboard_count_up:
                 keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() + 1;
+                edit.putInt("ol_keyboard_white_key_num", keyboard1WhiteKeyNum);
                 keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.apply();
                 break;
             case R.id.keyboard_move_left:
                 int keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() - 1;
+                edit.putInt("ol_keyboard_white_key_offset", keyboard1WhiteKeyOffset);
                 keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.apply();
                 break;
             case R.id.keyboard_move_right:
                 keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() + 1;
+                edit.putInt("ol_keyboard_white_key_offset", keyboard1WhiteKeyOffset);
                 keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.apply();
                 break;
             default:
                 break;
@@ -830,6 +842,16 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
             }
         });
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int keyboardWhiteKeyNum = sharedPreferences.getInt("ol_keyboard_white_key_num", 15);
+        int keyboardWhiteKeyOffset = sharedPreferences.getInt("ol_keyboard_white_key_offset", 14);
+        float keyboardWeight = sharedPreferences.getFloat("ol_keyboard_weight", 0.75f);
+        keyboardView.setWhiteKeyOffset(keyboardWhiteKeyOffset, 0);
+        keyboardView.setWhiteKeyNum(keyboardWhiteKeyNum, 0);
+        playerLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
+        keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (jpapplication.midiOutputPort != null && midiFramer == null) {
@@ -1022,6 +1044,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 case MotionEvent.ACTION_CANCEL:
                     reSize = false;
                     view.setPressed(false);
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) playerLayout.getLayoutParams();
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putFloat("ol_keyboard_weight", layoutParams.weight);
+                    edit.apply();
                     break;
                 default:
                     break;
