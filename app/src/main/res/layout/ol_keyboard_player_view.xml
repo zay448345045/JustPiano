@@ -23,6 +23,15 @@
             android:background="@drawable/filled_msg" />
 
         <ImageView
+            android:id="@+id/ol_player_playing"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:visibility="invisible"
+            android:background="@drawable/filled_bar_playing" />
+
+        <ImageView
             android:id="@+id/ol_player_eye"
             android:layout_width="100dp"
             android:layout_height="100dp" />

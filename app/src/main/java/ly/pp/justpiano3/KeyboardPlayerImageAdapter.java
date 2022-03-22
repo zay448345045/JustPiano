@@ -217,6 +217,12 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         int i2 = playerList.get(i).getInt("IV");
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
+        ImageView isPlayingView = view.findViewById(R.id.ol_player_playing);
+        if (olPlayKeyboardRoom.olKeyboardStates[i].isPlaying()) {
+            isPlayingView.setVisibility(View.VISIBLE);
+        } else {
+            isPlayingView.setVisibility(View.INVISIBLE);
+        }
         imageView.setOnClickListener(v -> {
             PopupWindow a = m4034a(olPlayKeyboardRoom.jpapplication.getHashmap().get(b));
             int[] iArr = new int[2];

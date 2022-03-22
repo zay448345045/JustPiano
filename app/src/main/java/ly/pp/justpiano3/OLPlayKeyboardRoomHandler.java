@@ -97,8 +97,16 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                             return;
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
+                        boolean notify = false;
                         if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMidiKeyboardOn() != midiKeyboardOn) {
                             olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
+                            notify = true;
+                        }
+                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isPlaying()) {
+                            olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setPlaying(true);
+                            notify = true;
+                        }
+                        if (notify) {
                             if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
                                 ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                             } else {
@@ -128,6 +136,12 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                                     }
                                 });
                             }
+                            olPlayKeyboardRoom.runOnUiThread(() -> {
+                                if (olPlayKeyboardRoom.playerGrid.getAdapter() != null && olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isPlaying()) {
+                                    olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setPlaying(false);
+                                    ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                                }
+                            });
                         });
                     });
                     return;

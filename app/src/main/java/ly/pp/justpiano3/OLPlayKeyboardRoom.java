@@ -830,8 +830,16 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 if (hasAnotherUser()) {
                     notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
                 }
-                if (roomPositionSub1 >= 0 && !olKeyboardStates[roomPositionSub1].isMuted()) {
-                    jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
+                if (roomPositionSub1 >= 0) {
+                    if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                        jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
+                    }
+                    if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
+                        olKeyboardStates[roomPositionSub1].setPlaying(true);
+                        if (playerGrid.getAdapter() != null) {
+                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                        }
+                    }
                 }
             }
 
@@ -839,6 +847,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             public void onKeyUp(int pitch) {
                 if (hasAnotherUser()) {
                     notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+                }
+                if (roomPositionSub1 >= 0) {
+                    if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
+                        olKeyboardStates[roomPositionSub1].setPlaying(true);
+                        if (playerGrid.getAdapter() != null) {
+                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                        }
+                    }
                 }
             }
         });
@@ -1009,14 +1025,30 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             if (hasAnotherUser()) {
                 notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, data[2]));
             }
-            if (roomPositionSub1 >= 0 && !olKeyboardStates[roomPositionSub1].isMuted()) {
-                jpapplication.playSound(pitch, data[2]);
+            if (roomPositionSub1 >= 0) {
+                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                    jpapplication.playSound(pitch, data[2]);
+                }
+                if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
+                    olKeyboardStates[roomPositionSub1].setPlaying(true);
+                    if (playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                    }
+                }
             }
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
             keyboardView.fireKeyUp(pitch, false);
             if (hasAnotherUser()) {
                 notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+            }
+            if (roomPositionSub1 >= 0) {
+                if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
+                    olKeyboardStates[roomPositionSub1].setPlaying(true);
+                    if (playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                    }
+                }
             }
         }
     }
@@ -1105,6 +1137,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 if (!hasAnotherUser()) {
                     notesQueue.clear();
                     lastNoteScheduleTime = scheduleTimeNow;
+                    if (olKeyboardStates[roomPositionSub1].isPlaying()) {
+                        olKeyboardStates[roomPositionSub1].setPlaying(false);
+                        runOnUiThread(() -> {
+                            if (playerGrid.getAdapter() != null) {
+                                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                            }
+                        });
+                    }
                     return;
                 }
                 // 未检测到这段间隔有弹奏音符，或者房间里没有其他人，就不发消息给服务器，直接返回并记录此次定时任务执行时间点
@@ -1136,6 +1176,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
                     builder.setData(ByteString.copyFrom(notes));
                     sendMsg(39, builder.build());
+                    if (olKeyboardStates[roomPositionSub1].isPlaying()) {
+                        olKeyboardStates[roomPositionSub1].setPlaying(false);
+                        runOnUiThread(() -> {
+                            if (playerGrid.getAdapter() != null) {
+                                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                            }
+                        });
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {

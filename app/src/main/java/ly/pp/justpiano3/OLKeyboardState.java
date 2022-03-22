@@ -20,6 +20,11 @@ class OLKeyboardState {
      */
     private boolean hasUser;
 
+    /**
+     * 此位置是否正在弹奏（闪烁）
+     */
+    private boolean isPlaying;
+
     public boolean isMuted() {
         return muted;
     }
@@ -42,5 +47,13 @@ class OLKeyboardState {
 
     public void setHasUser(boolean hasUser) {
         this.hasUser = hasUser;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 }
