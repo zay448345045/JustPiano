@@ -132,7 +132,7 @@ public class ConnectionService extends Service implements Runnable {
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
                 builder.setPassword(jpapplication.getPassword());
-                builder.setVersionCode("20220218");
+                builder.setVersionCode("20220322");
                 builder.setPackageName(getPackageName());
                 writeData(10, builder.build());
             }

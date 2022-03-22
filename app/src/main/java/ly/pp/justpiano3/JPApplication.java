@@ -310,15 +310,6 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final int getVersionCode() {
-        try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
     public final ServiceConnection getServiceConnection() {
         return serviceConnection;
     }
