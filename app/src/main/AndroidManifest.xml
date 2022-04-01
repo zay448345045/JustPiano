@@ -33,6 +33,7 @@
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
+        android:isGame="true"
         android:screenOrientation="sensorLandscape"
         android:theme="@style/JustPianoTheme"
         android:usesCleartextTraffic="true"

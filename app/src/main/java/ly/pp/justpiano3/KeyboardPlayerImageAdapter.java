@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Consumer;
 
 import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomDoorDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
@@ -223,12 +224,14 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         } else {
             isPlayingView.setVisibility(View.INVISIBLE);
         }
-        imageView.setOnClickListener(v -> {
+        View.OnClickListener onClickListener = v -> {
             PopupWindow a = m4034a(olPlayKeyboardRoom.jpapplication.getHashmap().get(b));
             int[] iArr = new int[2];
             imageView.getLocationOnScreen(iArr);
             a.showAtLocation(imageView, 51, iArr[0] + imageView.getWidth(), iArr[1]);
-        });
+        };
+        imageView.setOnClickListener(onClickListener);
+        isPlayingView.setOnClickListener(onClickListener);
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
         if (olPlayKeyboardRoom.olKeyboardStates[i].isMuted()) {
             imageView8.setImageResource(R.drawable.stop);

@@ -26,7 +26,7 @@ android {
         config {
             keyAlias 'as2134u'
             keyPassword 'as2134.@u'
-            storeFile file('F:\\jpgq\\key.jks')
+            storeFile file('../key.jks')
             storePassword 'as2134.@u'
         }
     }
