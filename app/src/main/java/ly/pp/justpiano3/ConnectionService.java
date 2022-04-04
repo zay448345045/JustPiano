@@ -50,14 +50,16 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     final void outLine() {
-        mNetty.disconnect();
+        if (mNetty != null) {
+            mNetty.disconnect();
+        }
     }
 
     public final void writeData(int type, MessageLite message) {
         OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
-        if (mNetty.isConnected()) {
+        if (mNetty != null && mNetty.isConnected()) {
             mNetty.sendMessage(builder);
         } else {
             outLineAndDialog();
