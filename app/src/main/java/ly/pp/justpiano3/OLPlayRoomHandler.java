@@ -90,6 +90,9 @@ final class OLPlayRoomHandler extends Handler {
                         }
                         message.getData().putString("TIME", time);
                         olPlayRoom.msgList.add(message.getData());
+                        if (olPlayRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
+                            olPlayRoom.jpapplication.playChatSound();
+                        }
                         if (ds.getBoolean("save_chats", false)) {
                             try {
                                 File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");

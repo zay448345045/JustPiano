@@ -79,6 +79,7 @@ public final class JPApplication extends Application {
     private boolean loadLongKeyboard;
     private boolean isShowDialog;
     private boolean noteDismiss = true;
+    private boolean chatSound;
     private int playSongsMode;
     private float noteSize = 1;
     private final Map<Byte, User> hashMap = new HashMap<>();
@@ -155,6 +156,17 @@ public final class JPApplication extends Application {
         dataStream.close();
     }
 
+    private static void loadChatWav() throws IOException {
+        AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("chat_b5.wav");
+        FileInputStream dataStream = assetFD.createInputStream();
+        int dataLen = dataStream.available();
+        byte[] dataBytes = new byte[dataLen];
+        dataStream.read(dataBytes, 0, dataLen);
+        loadWavAssetNative(dataBytes, 0, 0);
+        assetFD.close();
+        dataStream.close();
+    }
+
     /**
      * 移动文件到新文件的位置（拷贝流）
      *
@@ -205,6 +217,11 @@ public final class JPApplication extends Application {
     }
 
     public static void confirmLoadSounds() {
+        try {
+            loadChatWav();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", true);
         setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
@@ -532,6 +549,7 @@ public final class JPApplication extends Application {
         midiKeyboardTune = Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0"));
         keyboardSoundTune = Integer.parseInt(sharedPreferences.getString("keyboard_sound_tune", "0"));
         keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true);
+        chatSound = sharedPreferences.getBoolean("chats_sound", false);
         notesDownSpeed = Integer.parseInt(sharedPreferences.getString("down_speed", "6"));
         noteSize = Float.parseFloat(sharedPreferences.getString("note_size", "1"));
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false);
@@ -762,6 +780,14 @@ public final class JPApplication extends Application {
         whiteKeyHeightAdd90 = f;
     }
 
+    public boolean isChatSound() {
+        return chatSound;
+    }
+
+    public void setChatSound(boolean chatSound) {
+        this.chatSound = chatSound;
+    }
+
     public final String getServer() {
         return server;
     }
@@ -788,6 +814,10 @@ public final class JPApplication extends Application {
 
     public final void stopSongs(int i) {
         // nothing
+    }
+
+    public final void playChatSound() {
+        trigger(85, 127);
     }
 
     private class CrashHandler implements Thread.UncaughtExceptionHandler {

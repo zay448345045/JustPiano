@@ -54,6 +54,9 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                         }
                         message.getData().putString("TIME", time);
                         olPlayKeyboardRoom.msgList.add(message.getData());
+                        if (olPlayKeyboardRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayKeyboardRoom.jpapplication.getKitiName())) {
+                            olPlayKeyboardRoom.jpapplication.playChatSound();
+                        }
                         if (ds.getBoolean("save_chats", false)) {
                             try {
                                 File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");

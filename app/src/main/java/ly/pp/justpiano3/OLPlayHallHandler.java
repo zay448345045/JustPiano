@@ -53,6 +53,9 @@ final class OLPlayHallHandler extends Handler {
                     }
                     message.getData().putString("TIME", time);
                     olPlayHall.msgList.add(message.getData());
+                    if (olPlayHall.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
+                        olPlayHall.jpapplication.playChatSound();
+                    }
                     if (ds.getBoolean("save_chats", false)) {
                         try {
                             String date = new SimpleDateFormat("yyyy-MM-dd聊天记录", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
