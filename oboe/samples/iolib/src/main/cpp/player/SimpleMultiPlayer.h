@@ -102,6 +102,8 @@ namespace iolib {
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
 
+        float mDecayFactor;
+
         bool record{};
 
         bool mOutputReset;

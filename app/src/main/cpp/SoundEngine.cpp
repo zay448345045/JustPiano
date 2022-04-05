@@ -70,7 +70,7 @@ Java_ly_pp_justpiano3_JPApplication_loadWavAssetNative(JNIEnv *env, jclass, jbyt
     SampleBuffer *sampleBuffer = new SampleBuffer();
     sampleBuffer->loadSampleData(&reader);
 
-    OneShotSampleSource *source = new OneShotSampleSource(sampleBuffer, pan);
+    OneShotSampleSource *source = new OneShotSampleSource(sampleBuffer);
     sDTPlayer.addSampleSource(source, sampleBuffer);
 
     delete[] buf;
@@ -109,16 +109,6 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_restartStream(JNIEnv 
     } else {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "openStream failed");
     }
-}
-
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setPan(
-        JNIEnv *env, jclass thiz, jint index, jfloat pan) {
-    sDTPlayer.setPan(index, pan);
-}
-
-JNIEXPORT jfloat JNICALL Java_ly_pp_justpiano3_JPApplication_getPan(
-        JNIEnv *env, jclass thiz, jint index) {
-    return sDTPlayer.getPan(index);
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setGain(

@@ -36,7 +36,7 @@ namespace iolib {
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
     SimpleMultiPlayer::SimpleMultiPlayer()
-            : mChannelCount(0), mSampleRate(0), mOutputReset(false) {}
+            : mChannelCount(0), mSampleRate(0), mOutputReset(false), mDecayFactor(1.0f) {}
 
     DataCallbackResult SimpleMultiPlayer::onAudioReady(AudioStream *oboeStream, void *audioData,
                                                        int32_t numFrames) {
@@ -51,28 +51,48 @@ namespace iolib {
 
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
 
+        float *data = (float *) audioData;
         // OneShotSampleSource* sources = mSampleSources.get();
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
-            SampleSource* sampleSource = mSampleSources[index];
+            SampleSource *sampleSource = mSampleSources[index];
             int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             int count = 0;
-            for(int32_t i = 0; i < queueSize; i++) {
+            for (int32_t i = 0; i < queueSize; i++) {
                 std::pair<int32_t, int32_t> curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                sampleSource->mixAudio((float *) audioData, mChannelCount, numFrames, curFrameIndex);
+                sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
                 if (curFrameIndex.first >= numSampleFrames) {
                     count++;
                 }
                 sampleSource->pushCurFrameIndexQueue(curFrameIndex);
                 sampleSource->popCurFrameIndexQueue();
             }
-            while(count--) {
+            while (count--) {
                 sampleSource->popCurFrameIndexQueue();
             }
         }
 
+        // 混音算法来源：https://blog.csdn.net/wxtsmart/article/details/2693329
+        // 暂停
+//        for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
+//            float value = mDecayFactor * data[i];
+//            if (value > 2) {
+//                mDecayFactor = 2 / value;
+//                data[i] = 2;
+//            } else if (value < -2) {
+//                mDecayFactor = -2 / value;
+//                data[i] = -2;
+//            } else {
+//                data[i] = value;
+//            }
+//            if (mDecayFactor < 1) {
+//                float step = (1 - mDecayFactor) / 16;
+//                mDecayFactor += step;
+//            }
+//        }
+
         if (record) {
-            mRecordingIO->write_buffer((float *)audioData, numFrames);
+            mRecordingIO->write_buffer((float *) audioData, numFrames);
         }
 
         return DataCallbackResult::Continue;
@@ -190,14 +210,6 @@ namespace iolib {
         }
     }
 
-    void SimpleMultiPlayer::setPan(int index, float pan) {
-        mSampleSources[index]->setPan(pan);
-    }
-
-    float SimpleMultiPlayer::getPan(int index) {
-        return mSampleSources[index]->getPan();
-    }
-
     void SimpleMultiPlayer::setGain(int index, float gain) {
         mSampleSources[index]->setGain(gain);
     }
@@ -215,7 +227,7 @@ namespace iolib {
         record = r;
     }
 
-    void SimpleMultiPlayer::setRecordFilePath(char* s) {
+    void SimpleMultiPlayer::setRecordFilePath(char *s) {
         mRecordingIO->setRecordingFilePath(s);
     }
 }

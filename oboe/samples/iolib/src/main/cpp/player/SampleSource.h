@@ -33,16 +33,9 @@ namespace iolib {
  */
     class SampleSource : public DataSource {
     public:
-        // Pan position of the audio in a stereo mix
-        // [left:-1.0f] <- [center: 0.0f] -> -[right: 1.0f]
-        static constexpr float PAN_HARDLEFT = -1.0f;
-        static constexpr float PAN_HARDRIGHT = 1.0f;
-        static constexpr float PAN_CENTER = 0.0f;
 
-        SampleSource(SampleBuffer *sampleBuffer, float pan)
-                : mSampleBuffer(sampleBuffer), mGain(1.0f) {
-            setPan(pan);
-        }
+        SampleSource(SampleBuffer *sampleBuffer)
+                : mSampleBuffer(sampleBuffer), mGain(1.0f) {}
 
         virtual ~SampleSource() {}
 
@@ -51,32 +44,16 @@ namespace iolib {
         }
 
         void setStopMode() {
-            while(!mCurFrameIndexQueue.empty()) {
+            while (!mCurFrameIndexQueue.empty()) {
                 mCurFrameIndexQueue.pop();
             }
         }
 
-        void setPan(float pan) {
-            if (pan < PAN_HARDLEFT) {
-                mPan = PAN_HARDLEFT;
-            } else if (pan > PAN_HARDRIGHT) {
-                mPan = PAN_HARDRIGHT;
-            } else {
-                mPan = pan;
-            }
-            calcGainFactors();
-        }
-
-        float getPan() {
-            return mPan;
-        }
-
         void setGain(float gain) {
             mGain = gain;
-            calcGainFactors();
         }
 
-        float getGain() {
+        float getGain() const {
             return mGain;
         }
 
@@ -84,11 +61,11 @@ namespace iolib {
             return mCurFrameIndexQueue.size();
         }
 
-        std::pair<int32_t, int32_t>& frontCurFrameIndexQueue() {
+        std::pair<int32_t, int32_t> &frontCurFrameIndexQueue() {
             return mCurFrameIndexQueue.front();
         }
 
-        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t>& pair) {
+        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> &pair) {
             mCurFrameIndexQueue.push(pair);
         }
 
@@ -101,23 +78,8 @@ namespace iolib {
 
         std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
 
-        // Logical pan value
-        float mPan;
-
-        // precomputed channel gains for pan
-        float mLeftGain;
-        float mRightGain;
-
         // Overall gain
         float mGain;
-
-    private:
-        void calcGainFactors() {
-            // useful panning information: http://www.cs.cmu.edu/~music/icm-online/readings/panlaws/
-            float rightPan = (mPan * 0.5) + 0.5;
-            mRightGain = rightPan * mGain;
-            mLeftGain = (1.0 - rightPan) * mGain;
-        }
     };
 
 } // namespace wavlib

@@ -29,15 +29,13 @@ namespace iolib {
         int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
-
         if (numWriteFrames != 0) {
             // Mix in the samples
-
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
             if (numChannels == 1) {
                 // MONO output
-                // stop to use, because it can clipping wave.
+                // do not use, because of clipping wave.
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
                     outBuff[frameIndex] += data[trueIndex++] * trueVolume / 64;
                 }
@@ -53,7 +51,7 @@ namespace iolib {
             } else if (numChannels == 4) {
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    float value = data[trueIndex] * trueVolume / 256;;
+                    float value = data[trueIndex] * trueVolume / 256;
                     outBuff[dstSampleIndex++] += value;
                     outBuff[dstSampleIndex++] += value;
                     outBuff[dstSampleIndex++] += value;
