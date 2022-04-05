@@ -54,7 +54,7 @@ final class ReceiveHandle {
 
     static void miniGrade(OnlineBaseVO msg) {
         int i = 0;
-        Message message = new Message();
+        Message message = Message.obtain();
         if (JPStack.top() instanceof PianoPlay) {
             PianoPlay pianoPlay = (PianoPlay) JPStack.top();
             User User = (User) pianoPlay.userMap.get((byte) msg.getMiniGrade().getRoomPosition());
@@ -90,7 +90,7 @@ final class ReceiveHandle {
 
     static void m3949a(int i, OnlineBaseVO msg) {
         int i2 = 0;
-        Message message = new Message();
+        Message message = Message.obtain();
         Bundle bundle = new Bundle();
         Bundle bundle2;
         Bundle bundle3;
@@ -290,7 +290,7 @@ final class ReceiveHandle {
                     bundle.putInt("T", 1);
                     bundle.putString("I", setUserInfo.getMessage());
                     bundle.putString("N", setUserInfo.getCoupleTitle());
-                    message = new Message();
+                    message = Message.obtain();
                     message.what = 1;
                     message.setData(bundle);
                     if (JPStack.top() instanceof OLPlayHallRoom) {
@@ -479,7 +479,7 @@ final class ReceiveHandle {
 
     static void loadRoomList(OnlineBaseVO msg) {
         Bundle bundle = new Bundle();
-        Message message = new Message();
+        Message message = Message.obtain();
         OLPlayHall olPlayHall;
         message.what = 3;
         int i = 0;
@@ -511,7 +511,7 @@ final class ReceiveHandle {
     static void m3951a(OnlineBaseVO msg, String str2) {
         if (JPStack.top() instanceof OLPlayHall) {
             OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
-            Message message = new Message();
+            Message message = Message.obtain();
             Bundle bundle = new Bundle();
             if (str2.equals("H")) {
                 if (msg.getCreateRoom().getIsSuccess()) {
@@ -561,7 +561,7 @@ final class ReceiveHandle {
 
     static void m3953b(int b, OnlineBaseVO msg) {
         int i = 0;
-        Message message = new Message();
+        Message message = Message.obtain();
         Bundle bundle;
         int i2;
         Bundle bundle2;
@@ -769,7 +769,7 @@ final class ReceiveHandle {
 
     static void m3954b(OnlineBaseVO msg) {
         Bundle bundle = new Bundle();
-        Message message = new Message();
+        Message message = Message.obtain();
         OnlineLoadRoomUserListVO loadRoomUserList = msg.getLoadRoomUserList();
         if (JPStack.top() instanceof OLPlayHall) {
             int i = loadRoomUserList.getRoomId();
@@ -797,7 +797,7 @@ final class ReceiveHandle {
 
     static void changeRoomList(OnlineBaseVO msg) {
         Bundle bundle = new Bundle();
-        Message message = new Message();
+        Message message = Message.obtain();
         message.what = 3;
         if (JPStack.top() instanceof OLPlayHall) {
             OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
@@ -839,7 +839,7 @@ final class ReceiveHandle {
 
     static void changeRoomPosition(OnlineBaseVO msg) {
         OnlineChangeRoomPositionVO changeRoomPosition = msg.getChangeRoomPosition();
-        Message message = new Message();
+        Message message = Message.obtain();
         message.what = 1;
         if (JPStack.top() instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) JPStack.top();
@@ -964,7 +964,7 @@ final class ReceiveHandle {
         if (JPStack.top() instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) JPStack.top();
             OnlineLoadRoomPositionVO loadRoomPosition = msg.getLoadRoomPosition();
-            Message message = new Message();
+            Message message = Message.obtain();
             message.what = 1;
             Bundle bundle = new Bundle();
             int i = 0;
@@ -1016,7 +1016,7 @@ final class ReceiveHandle {
         } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) JPStack.top();
             OnlineLoadRoomPositionVO loadRoomPosition = msg.getLoadRoomPosition();
-            Message message = new Message();
+            Message message = Message.obtain();
             message.what = 1;
             Bundle bundle = new Bundle();
             int i = 0;
@@ -1071,7 +1071,7 @@ final class ReceiveHandle {
                 byte[] keyboardNotes = msg.getKeyboardNote().getData().toByteArray();
                 Bundle bundle = new Bundle();
                 bundle.putByteArray("NOTES", keyboardNotes);
-                Message message = new Message();
+                Message message = Message.obtain();
                 message.what = 5;
                 message.setData(bundle);
                 olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
@@ -1083,7 +1083,7 @@ final class ReceiveHandle {
 
     static void challenge(OnlineBaseVO msg) {
         OnlineChallengeVO challenge = msg.getChallenge();
-        Message message = new Message();
+        Message message = Message.obtain();
         switch (challenge.getType()) {
             case 1:
                 if (JPStack.top() instanceof OLChallenge) {
@@ -1162,7 +1162,7 @@ final class ReceiveHandle {
     }
 
     static void family(OnlineBaseVO msg) {
-        Message message = new Message();
+        Message message = Message.obtain();
         OnlineFamilyVO family = msg.getFamily();
         switch (family.getType()) {
             case 1:
@@ -1287,7 +1287,7 @@ final class ReceiveHandle {
 
     static void shop(OnlineBaseVO msg) {
         OnlineShopVO shop = msg.getShop();
-        Message message = new Message();
+        Message message = Message.obtain();
         switch (shop.getType()) {
             case 1:  // 加载商品
                 if (JPStack.top() instanceof OLPlayDressRoom) {
@@ -1329,7 +1329,7 @@ final class ReceiveHandle {
     }
 
     static void daily(OnlineBaseVO msg) {
-        Message message = new Message();
+        Message message = Message.obtain();
         OnlineDailyVO daily = msg.getDaily();
         switch (daily.getType()) {
             case 0:

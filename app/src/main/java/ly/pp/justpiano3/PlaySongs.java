@@ -68,7 +68,7 @@ public final class PlaySongs {
 
     private void setNestSong() {
         if (melodyselect != null && melodyselect.getIsFollowPlay() && melodyselect.handler != null) {
-            Message message = new Message();
+            Message message = Message.obtain();
             Bundle bundle = new Bundle();
             bundle.putInt("position", position);
             message.what = 4;

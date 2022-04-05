@@ -41,7 +41,7 @@ final class Receive {
                 case 10:
                     if (JPStack.top() instanceof OLMainMode) {
                         OLMainMode oLMainMode = (OLMainMode) JPStack.top();
-                        Message message2 = new Message();
+                        Message message2 = Message.obtain();
                         String status = msg.getLogin().getStatus();
                         switch (status) {
                             case "N":
@@ -67,7 +67,7 @@ final class Receive {
                     if (JPStack.top() instanceof OLPlayHall) {
                         olPlayHall = (OLPlayHall) JPStack.top();
                         OnlineHallChatVO hallChat = msg.getHallChat();
-                        message = new Message();
+                        message = Message.obtain();
                         message.what = 1;
                         Bundle bundle2 = new Bundle();
                         bundle2.putString("M", hallChat.getMessage());
@@ -124,7 +124,7 @@ final class Receive {
                         bundle.putString("I", enterHall.getHallIdOrMsg());
                         bundle.putString("N", enterHall.getNameOrTitle());
                     }
-                    message = new Message();
+                    message = Message.obtain();
                     message.what = 1;
                     message.setData(bundle);
                     if (JPStack.top() instanceof OLPlayHallRoom) {
@@ -141,7 +141,7 @@ final class Receive {
                 case 40:
                     OnlineClTestVO clTest = msg.getClTest();
                     bundle = new Bundle();
-                    message = new Message();
+                    message = Message.obtain();
                     PianoPlay pianoPlay;
                     switch (clTest.getType()) {
                         case 0:

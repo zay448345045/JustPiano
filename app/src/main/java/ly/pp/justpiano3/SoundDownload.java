@@ -43,7 +43,7 @@ public class SoundDownload extends Activity implements Callback {
     private int intentFlag = 0;
 
     static void downloadSS(SoundDownload soundDownload, String str, String str2) {
-        Message message = new Message();
+        Message message = Message.obtain();
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str2 + ".ss");
         if (file.exists()) {
             Bundle bundle = new Bundle();
@@ -80,7 +80,7 @@ public class SoundDownload extends Activity implements Callback {
                 while (-1 != (n = in.read(buffer))) {
                     soundDownload.outputStream.write(buffer, 0, n);
                     soundDownload.progress += 4096;
-                    message = new Message();
+                    message = Message.obtain();
                     message.what = 1;
                     if (soundDownload.handler != null) {
                         soundDownload.handler.sendMessage(message);
@@ -88,7 +88,7 @@ public class SoundDownload extends Activity implements Callback {
                 }
                 in.close();
                 soundDownload.outputStream.close();
-                message2 = new Message();
+                message2 = Message.obtain();
                 message2.what = 2;
                 if (soundDownload.handler != null) {
                     Bundle bundle2 = new Bundle();
@@ -99,7 +99,7 @@ public class SoundDownload extends Activity implements Callback {
                 soundDownload.list.add(str2);
             } catch (Exception e3) {
                 e3.printStackTrace();
-                message2 = new Message();
+                message2 = Message.obtain();
                 message2.what = 3;
                 soundDownload.handler.sendMessage(message2);
                 try {
@@ -141,7 +141,7 @@ public class SoundDownload extends Activity implements Callback {
     }
 
     public final void mo3006a(String str) {
-        Message message = new Message();
+        Message message = Message.obtain();
         message.what = 5;
         handler.sendMessage(message);
         Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -168,7 +168,7 @@ public class SoundDownload extends Activity implements Callback {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        message = new Message();
+        message = Message.obtain();
         message.what = 6;
         handler.sendMessage(message);
     }

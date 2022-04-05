@@ -1112,7 +1112,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         final int vid = viewId;
         keyboardScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         keyboardScheduledExecutor.scheduleWithFixedDelay(() -> {
-            Message msg = new Message();
+            Message msg = Message.obtain();
             msg.what = vid;
             interval -= 40;
             interval = Math.max(80, interval);

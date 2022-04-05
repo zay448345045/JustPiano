@@ -183,7 +183,7 @@ public class ConnectionService extends Service implements Runnable {
         outLine();
         if (ly.pp.justpiano3.JPStack.top() instanceof ly.pp.justpiano3.BaseActivity) {
             ly.pp.justpiano3.BaseActivity baseActivity = (ly.pp.justpiano3.BaseActivity) ly.pp.justpiano3.JPStack.top();
-            Message message = new Message();
+            Message message = Message.obtain();
             message.what = 0;
             assert baseActivity != null;
             baseActivity.baseActivityHandler.handleMessage(message);
