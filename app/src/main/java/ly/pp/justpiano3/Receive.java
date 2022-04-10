@@ -41,7 +41,7 @@ final class Receive {
                 case 10:
                     if (JPStack.top() instanceof OLMainMode) {
                         OLMainMode oLMainMode = (OLMainMode) JPStack.top();
-                        Message message2 = Message.obtain();
+                        Message message2 = Message.obtain(oLMainMode.olMainModeHandler);
                         String status = msg.getLogin().getStatus();
                         switch (status) {
                             case "N":
@@ -67,7 +67,7 @@ final class Receive {
                     if (JPStack.top() instanceof OLPlayHall) {
                         olPlayHall = (OLPlayHall) JPStack.top();
                         OnlineHallChatVO hallChat = msg.getHallChat();
-                        message = Message.obtain();
+                        message = Message.obtain(olPlayHall.olPlayHallHandler);
                         message.what = 1;
                         Bundle bundle2 = new Bundle();
                         bundle2.putString("M", hallChat.getMessage());

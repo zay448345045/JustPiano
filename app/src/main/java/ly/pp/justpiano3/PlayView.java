@@ -593,7 +593,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     pianoPlay.sendMsg(40, builder.build());
                     break;
                 case 2:
-                    message = Message.obtain();
+                    message = Message.obtain(pianoPlay.pianoPlayHandler);
                     message.what = 8;
                     pianoPlay.pianoPlayHandler.handleMessage(message);
                     size2 = uploadTouchStatusList.size();

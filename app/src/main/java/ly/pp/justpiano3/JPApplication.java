@@ -849,13 +849,13 @@ public final class JPApplication extends Application {
                     Looper.loop();
                 }
             }.start();
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(-1);
+//            try {
+//                Thread.sleep(5000);
+//            } catch (InterruptedException e1) {
+//                e1.printStackTrace();
+//            }
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//            System.exit(-1);
         }
     }
 

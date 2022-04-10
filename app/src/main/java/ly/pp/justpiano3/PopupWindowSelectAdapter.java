@@ -52,7 +52,7 @@ public final class PopupWindowSelectAdapter extends BaseAdapter {
         }
         textView.setText(list.get(i));
         textView.setOnClickListener(v -> {
-            Message message = Message.obtain();
+            Message message = Message.obtain(handler);
             Bundle bundle = new Bundle();
             bundle.putInt("selIndex", i);
             message.setData(bundle);

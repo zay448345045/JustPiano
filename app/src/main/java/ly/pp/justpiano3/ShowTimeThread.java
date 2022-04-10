@@ -13,7 +13,7 @@ final class ShowTimeThread extends Thread {
     public final void run() {
         do {
             try {
-                Message message = Message.obtain();
+                Message message = Message.obtain(olPlayHall.showTimeHandler);
                 message.what = 3;
                 olPlayHall.showTimeHandler.sendMessage(message);
                 Thread.sleep(60000);

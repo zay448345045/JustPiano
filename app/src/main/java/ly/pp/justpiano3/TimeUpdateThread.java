@@ -15,7 +15,7 @@ public final class TimeUpdateThread extends Thread {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             do {
                 try {
-                    Message message = Message.obtain();
+                    Message message = Message.obtain(olPlayRoom.handler);
                     message.what = 3;
                     olPlayRoom.handler.sendMessage(message);
                     Thread.sleep(60000);
@@ -27,7 +27,7 @@ public final class TimeUpdateThread extends Thread {
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
             do {
                 try {
-                    Message message = Message.obtain();
+                    Message message = Message.obtain(olPlayKeyboardRoom.handler);
                     message.what = 3;
                     olPlayKeyboardRoom.handler.sendMessage(message);
                     Thread.sleep(60000);

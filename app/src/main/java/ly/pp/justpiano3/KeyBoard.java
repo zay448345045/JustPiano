@@ -221,7 +221,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         final int vid = viewId;
         scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutor.scheduleWithFixedDelay(() -> {
-            Message msg = Message.obtain();
+            Message msg = Message.obtain(handler);
             msg.what = vid;
             interval -= 40;
             interval = Math.max(80, interval);
