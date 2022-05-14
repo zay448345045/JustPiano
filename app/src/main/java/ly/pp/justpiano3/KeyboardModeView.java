@@ -61,6 +61,7 @@ public class KeyboardModeView extends View {
     private float blackKeyHeight;
 
     private RectF[] keyboardImageRectArray;
+
     // 当前页面中显示的所在八度完整区域内的rect和是否按下的boolean标记
     private RectF[] whiteKeyRectArray;
     private RectF[] blackKeyRectArray;

@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import javazoom.jl.converter.Converter;
 
 public final class JPApplication extends Application {
@@ -271,15 +270,15 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final int getGameMode() {
+    public int getGameMode() {
         return gameMode;
     }
 
-    public final void setGameMode(int i) {
+    public void setGameMode(int i) {
         gameMode = i;  //0为普通模式 1为自由模式 2为练习模式 3为欣赏模式
     }
 
-    public final List<Rect> getKeyRectArray() {
+    public List<Rect> getKeyRectArray() {
         List<Rect> arrayList = new ArrayList<>();
         arrayList.add(new Rect(0, whiteKeyHeight, (int) widthDiv8, heightPixels));
         arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
@@ -297,27 +296,27 @@ public final class JPApplication extends Application {
         return arrayList;
     }
 
-    public final int getHeightPixels() {
+    public int getHeightPixels() {
         return heightPixels;
     }
 
-    public final void setHeightPixels(int i) {
+    public void setHeightPixels(int i) {
         heightPixels = i;
     }
 
-    public final int getWidthPixels() {
+    public int getWidthPixels() {
         return widthPixels;
     }
 
-    public final void setWidthPixels(int i) {
+    public void setWidthPixels(int i) {
         widthPixels = i;
     }
 
-    public final boolean hasKeyboardPerfer() {
+    public boolean hasKeyboardPerfer() {
         return keyboardPrefer;
     }
 
-    public final String getVersion() {
+    public String getVersion() {
         String str = "";
         try {
             return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
@@ -327,76 +326,76 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final ServiceConnection getServiceConnection() {
+    public ServiceConnection getServiceConnection() {
         return serviceConnection;
     }
 
-    public final ConnectionService getConnectionService() {
+    public ConnectionService getConnectionService() {
         return connectionService;
     }
 
-    public final void setConnectionService(ConnectionService connectionService) {
+    public void setConnectionService(ConnectionService connectionService) {
         this.connectionService = connectionService;
     }
 
-    public final boolean getIsBindService() {
+    public boolean getIsBindService() {
         return isBindService;
     }
 
-    public final void setIsBindService(boolean z) {
+    public void setIsBindService(boolean z) {
         isBindService = z;
     }
 
-    public final float getNoteSize() {
+    public float getNoteSize() {
         return noteSize;
     }
 
-    public final Map<Byte, User> getHashmap() {
+    public Map<Byte, User> getHashmap() {
         return hashMap;
     }
 
-    public final String getAccountName() {
+    public String getAccountName() {
         if (accountName.isEmpty()) {
             accountName = sharedpreferences.getString("name", "");
         }
         return accountName;
     }
 
-    public final void setAccountName(String str) {
+    public void setAccountName(String str) {
         accountName = str;
     }
 
-    public final String getPassword() {
+    public String getPassword() {
         if (password.isEmpty()) {
             password = sharedpreferences.getString("password", "");
         }
         return password;
     }
 
-    public final void setPassword(String str) {
+    public void setPassword(String str) {
         password = str;
     }
 
-    public final String getNowSongsName() {
+    public String getNowSongsName() {
         return nowSongsName;
     }
 
-    public final void setNowSongsName(String str) {
+    public void setNowSongsName(String str) {
         nowSongsName = str;
     }
 
-    public final String getKitiName() {
+    public String getKitiName() {
         if (kitiName.isEmpty()) {
             kitiName = sharedpreferences.getString("userKitiName", "");
         }
         return kitiName;
     }
 
-    public final void setKitiName(String str) {
+    public void setKitiName(String str) {
         kitiName = str;
     }
 
-    public final List<Rect> getFireRectArray(PlayView playView) {
+    public List<Rect> getFireRectArray(PlayView playView) {
         List<Rect> arrayList = new ArrayList<>();
         arrayList.add(new Rect(0, (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) widthDiv8, (int) halfHeightSub20));
         arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 + blackKeyWidth), (int) halfHeightSub20));
@@ -414,7 +413,7 @@ public final class JPApplication extends Application {
         return arrayList;
     }
 
-    public final void drawFire(PlayView playView, Canvas canvas, int i) {
+    public void drawFire(PlayView playView, Canvas canvas, int i) {
         switch (i) {
             case 0:
                 canvas.drawBitmap(playView.fireImage, null, new RectF(0, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8, halfHeightSub20), null);
@@ -459,7 +458,7 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final void setBackGround(Context context, String str, ViewGroup viewGroup) {
+    public void setBackGround(Context context, String str, ViewGroup viewGroup) {
         System.gc();
         Bitmap bitmap = null;
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
@@ -481,7 +480,7 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final Bitmap loadImage(String str) {
+    public Bitmap loadImage(String str) {
         Bitmap bitmap = null;
         if (!PreferenceManager.getDefaultSharedPreferences(this).getString("skin_list", "original").equals("original")) {
             try {
@@ -505,19 +504,19 @@ public final class JPApplication extends Application {
         }
     }
 
-    public final int getAnimPosition() {
+    public int getAnimPosition() {
         return animPosition;
     }
 
-    public final void setAnimPosition(int f) {
+    public void setAnimPosition(int f) {
         animPosition = f;
     }
 
-    public final void downNote() {
+    public void downNote() {
         animPosition += animFrame;
     }
 
-    public final void setBlackKeyHeight(float f) {
+    public void setBlackKeyHeight(float f) {
         blackKeyHeight = f;
     }
 
@@ -529,7 +528,7 @@ public final class JPApplication extends Application {
         return serverTimeInterval + System.currentTimeMillis();
     }
 
-    public final void loadSettings(boolean online) {
+    public void loadSettings(boolean online) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (online) {
             tempSpeed = 1;
@@ -556,37 +555,37 @@ public final class JPApplication extends Application {
         changeNotesColor = sharedPreferences.getBoolean("change_color", true);
     }
 
-    public final void setTempSpeed() {
+    public void setTempSpeed() {
         tempSpeed = 1;
     }
 
-    public final float getTempSpeed() {
+    public float getTempSpeed() {
         return tempSpeed;
     }
 
-    public final boolean getNoteDismiss() {
+    public boolean getNoteDismiss() {
         return noteDismiss;
     }
 
-    public final int getDownSpeed() {
+    public int getDownSpeed() {
         return notesDownSpeed;
     }
 
-    public final void setDownSpeed(int speed) {
+    public void setDownSpeed(int speed) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putString("down_speed", String.valueOf(speed)).apply();
         notesDownSpeed = speed;
     }
 
-    public final boolean getIfLoadLongKeyboard() {
+    public boolean getIfLoadLongKeyboard() {
         return loadLongKeyboard;
     }
 
-    public final int getRoughLine() {
+    public int getRoughLine() {
         return roughLine;
     }
 
-    public final boolean getIsShowLine() {
+    public boolean getIsShowLine() {
         return showLine;
     }
 
@@ -675,7 +674,7 @@ public final class JPApplication extends Application {
         return animFrame;
     }
 
-    public final boolean getIfShowNotesLevel() {
+    public boolean getIfShowNotesLevel() {
         return showTouchNotesLevel;
     }
 
@@ -708,75 +707,75 @@ public final class JPApplication extends Application {
         this.keyboardAnim = keyboardAnim;
     }
 
-    public final int getPlaySongsMode() {
+    public int getPlaySongsMode() {
         return playSongsMode;
     }
 
-    public final void setPlaySongsMode(int n) {
+    public void setPlaySongsMode(int n) {
         playSongsMode = n;
     }
 
-    public final boolean getAutoPlay() {
+    public boolean getAutoPlay() {
         return autoPlay;
     }
 
-    public final float getChordVolume() {
+    public float getChordVolume() {
         return chordVolume;
     }
 
-    public final boolean getOpenChord() {
+    public boolean getOpenChord() {
         return isOpenChord;
     }
 
-    public final float getWidthDiv8() {
+    public float getWidthDiv8() {
         return widthDiv8;
     }
 
-    public final void setWidthDiv8(float f) {
+    public void setWidthDiv8(float f) {
         widthDiv8 = f;
     }
 
-    public final float getHalfHeightSub20() {
+    public float getHalfHeightSub20() {
         return halfHeightSub20;
     }
 
-    public final void setHalfHeightSub20(float f) {
+    public void setHalfHeightSub20(float f) {
         halfHeightSub20 = f;
     }
 
-    public final int getWhiteKeyHeight() {
+    public int getWhiteKeyHeight() {
         return whiteKeyHeight;
     }
 
-    public final void setWhiteKeyHeight(int f) {
+    public void setWhiteKeyHeight(int f) {
         whiteKeyHeight = f;
     }
 
-    public final float getBlackKeyHeight() {
+    public float getBlackKeyHeight() {
         return blackKeyHeight;
     }
 
-    public final float getBlackKeyWidth() {
+    public float getBlackKeyWidth() {
         return blackKeyWidth;
     }
 
-    public final void setBlackKeyWidth(float f) {
+    public void setBlackKeyWidth(float f) {
         blackKeyWidth = f;
     }
 
-    public final float getHalfHeightSub10() {
+    public float getHalfHeightSub10() {
         return halfHeightSub10;
     }
 
-    public final void setHalfHeightSub10(float f) {
+    public void setHalfHeightSub10(float f) {
         halfHeightSub10 = f;
     }
 
-    public final float getWhiteKeyHeightAdd90() {
+    public float getWhiteKeyHeightAdd90() {
         return whiteKeyHeightAdd90;
     }
 
-    public final void setWhiteKeyHeightAdd90(float f) {
+    public void setWhiteKeyHeightAdd90(float f) {
         whiteKeyHeightAdd90 = f;
     }
 
@@ -788,7 +787,7 @@ public final class JPApplication extends Application {
         this.chatSound = chatSound;
     }
 
-    public final String getServer() {
+    public String getServer() {
         return server;
     }
 
@@ -796,15 +795,15 @@ public final class JPApplication extends Application {
         this.server = server;
     }
 
-    public final boolean getIsShowDialog() {
+    public boolean getIsShowDialog() {
         return isShowDialog;
     }
 
-    public final void setIsShowDialog(boolean isShowDialog) {
+    public void setIsShowDialog(boolean isShowDialog) {
         this.isShowDialog = isShowDialog;
     }
 
-    public final int playSound(int note, int volume) {
+    public int playSound(int note, int volume) {
         if (note >= 24 && note <= 108 && volume > 3) {
             trigger(108 - note, volume);
             return note;
@@ -812,11 +811,11 @@ public final class JPApplication extends Application {
         return 0;
     }
 
-    public final void stopSongs(int i) {
+    public void stopSongs(int i) {
         // nothing
     }
 
-    public final void playChatSound() {
+    public void playChatSound() {
         trigger(85, 127);
     }
 
@@ -827,7 +826,7 @@ public final class JPApplication extends Application {
         }
 
         @Override
-        public void uncaughtException(@NonNull Thread t, Throwable e) {
+        public void uncaughtException(Thread t, Throwable e) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(byteArrayOutputStream));
             final String errorLog = byteArrayOutputStream.toString();
