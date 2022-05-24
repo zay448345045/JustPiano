@@ -25,7 +25,7 @@ namespace iolib {
     void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, std::pair<int32_t, int32_t>& curFrameIndex) {
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
         int32_t& trueIndex = curFrameIndex.first;
-        int32_t trueVolume = curFrameIndex.second;
+        auto trueVolume = (float) curFrameIndex.second;
         int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;

@@ -56,8 +56,8 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 fileOutputStream.close();
                 List<File> files = GZIP.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
-                TestSQL testSQL = new TestSQL(activity.get(), "data");
-                SQLiteDatabase sqliteDataBase = testSQL.getWritableDatabase();
+                SQLiteHelper SQLiteHelper = new SQLiteHelper(activity.get(), "data");
+                SQLiteDatabase sqliteDataBase = SQLiteHelper.getWritableDatabase();
                 sqliteDataBase.beginTransaction();
                 for (File file : files) {
                     String item = file.getName().substring(0, 1);
@@ -86,7 +86,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 sqliteDataBase.setTransactionSuccessful();
                 sqliteDataBase.endTransaction();
                 sqliteDataBase.close();
-                testSQL.close();
+                SQLiteHelper.close();
             }
         } catch (Exception e3) {
             e3.printStackTrace();

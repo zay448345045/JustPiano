@@ -7,14 +7,14 @@ import android.os.Environment;
 
 import java.io.File;
 
-public final class TestSQL extends SQLiteOpenHelper {
+public final class SQLiteHelper extends SQLiteOpenHelper {
 
     /**
      * 4.6版本的数据库版本号为44
      */
     public static final int DATABASE_VERSION = 44;
 
-    TestSQL(Context context, String str) {
+    SQLiteHelper(Context context, String str) {
         super(context, str, null, DATABASE_VERSION);
     }
 

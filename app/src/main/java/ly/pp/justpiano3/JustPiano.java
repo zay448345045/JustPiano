@@ -23,7 +23,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
     private boolean isPause;
     private boolean loadFinish;
     private int songCount;
-    private TestSQL testSQL;
+    private SQLiteHelper SQLiteHelper;
     private SQLiteDatabase sqliteDataBase;
     private ContentValues contentvalues;
     private JustPianoView justpianoview;
@@ -175,10 +175,10 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     sqliteDataBase.close();
                 }
                 sqliteDataBase = null;
-                if (testSQL != null) {
-                    testSQL.close();
+                if (SQLiteHelper != null) {
+                    SQLiteHelper.close();
                 }
-                testSQL = null;
+                SQLiteHelper = null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -228,8 +228,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
             file.mkdirs();
         }
         Message obtainMessage;
-        testSQL = new TestSQL(this, "data");
-        sqliteDataBase = testSQL.getWritableDatabase();
+        SQLiteHelper = new SQLiteHelper(this, "data");
+        sqliteDataBase = SQLiteHelper.getWritableDatabase();
         try {
             Cursor query = sqliteDataBase.query("jp_data", null, null, null, null, null, null);
             if ((query != null && (query.getCount() == 0)) || updateSQL) {

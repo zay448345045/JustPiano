@@ -70,7 +70,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     private int f4244U;
     private ListView songListView;
     private LocalSongsAdapter songListAdapter;
-    public TestSQL testSQL;
+    public SQLiteHelper SQLiteHelper;
     private int score;
     private final List<String> sortNamesList = new ArrayList<>();
 
@@ -156,7 +156,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                         break;
                     case 1:  // 曲库同步
-                        new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(testSQL)).execute();
+                        new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(SQLiteHelper)).execute();
                         break;
                     case 2:  // 数据导出
                         JPDialog jpdialog = new JPDialog(this);
@@ -291,8 +291,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             LayoutInflater f4265u = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
-            testSQL = new TestSQL(this, "data");
-            sqlitedatabase = testSQL.getWritableDatabase();
+            SQLiteHelper = new SQLiteHelper(this, "data");
+            sqlitedatabase = SQLiteHelper.getWritableDatabase();
             cursor = sqlitedatabase.query("jp_data", null, f4238O, null, null, null, null);
             while (cursor.moveToNext()) {
                 score += cursor.getInt(cursor.getColumnIndexOrThrow("score"));
@@ -426,8 +426,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         if (sqlitedatabase.isOpen()) {
             sqlitedatabase.close();
             sqlitedatabase = null;
-            testSQL.close();
-            testSQL = null;
+            SQLiteHelper.close();
+            SQLiteHelper = null;
         }
         super.onDestroy();
     }

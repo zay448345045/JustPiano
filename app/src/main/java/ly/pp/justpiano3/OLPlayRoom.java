@@ -104,7 +104,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private PopupWindow changeColor = null;
     private PopupWindow playSongsMode = null;
     private OLRoomSongsAdapter olRoomSongsAdapter;
-    private TestSQL testSQL;
+    private SQLiteHelper SQLiteHelper;
     private Cursor cursor;
     private TextView timeTextView;
     private String sqlWhere = "";
@@ -1023,8 +1023,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         ListView songsList = findViewById(R.id.ol_song_list);
         songsList.setCacheColorHint(0);
         handler = new Handler(this);
-        testSQL = new TestSQL(this, "data");
-        sqlitedatabase = testSQL.getWritableDatabase();
+        SQLiteHelper = new SQLiteHelper(this, "data");
+        sqlitedatabase = SQLiteHelper.getWritableDatabase();
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, online_1, null, null, null, null);
         olRoomSongsAdapter = new OLRoomSongsAdapter(this, this, cursor);
         songNameText = findViewById(R.id.ol_songlist_b);
@@ -1204,9 +1204,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             cursor.close();
             cursor = null;
         }
-        if (testSQL != null) {
-            testSQL.close();
-            testSQL = null;
+        if (SQLiteHelper != null) {
+            SQLiteHelper.close();
+            SQLiteHelper = null;
             sqlitedatabase.close();
             sqlitedatabase = null;
         }

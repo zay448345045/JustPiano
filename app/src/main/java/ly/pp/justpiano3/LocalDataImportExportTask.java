@@ -35,7 +35,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                         throw new Exception();
                     }
                     int count = 0;
-                    SQLiteDatabase writableDatabase = melodySelect.testSQL.getWritableDatabase();
+                    SQLiteDatabase writableDatabase = melodySelect.SQLiteHelper.getWritableDatabase();
                     writableDatabase.beginTransaction();
                     for (LocalSongData localSongData : list) {
                         ContentValues contentvalues = new ContentValues();
@@ -57,7 +57,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
         } else {
             try {
                 List<LocalSongData> list = new ArrayList<>();
-                SQLiteDatabase writableDatabase = melodySelect.testSQL.getWritableDatabase();
+                SQLiteDatabase writableDatabase = melodySelect.SQLiteHelper.getWritableDatabase();
                 Cursor query = writableDatabase.query("jp_data", new String[]{"path", "isfavo", "score", "Lscore"}, null, null, null, null, null);
                 while (query.moveToNext()) {
                     String path = query.getString(query.getColumnIndex("path"));

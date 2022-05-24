@@ -56,9 +56,9 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                TestSQL testSQL = new TestSQL(this, "data");
-                String maxSongIdFromDatabase = getMaxSongIdFromDatabase(testSQL);
-                testSQL.close();
+                SQLiteHelper SQLiteHelper = new SQLiteHelper(this, "data");
+                String maxSongIdFromDatabase = getMaxSongIdFromDatabase(SQLiteHelper);
+                SQLiteHelper.close();
                 new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
                 return;
             case R.id.ol_top_b:
@@ -155,8 +155,8 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
     }
 
-    public static String getMaxSongIdFromDatabase(TestSQL testSQL) {
-        SQLiteDatabase writableDatabase = testSQL.getWritableDatabase();
+    public static String getMaxSongIdFromDatabase(SQLiteHelper SQLiteHelper) {
+        SQLiteDatabase writableDatabase = SQLiteHelper.getWritableDatabase();
         Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
         int maxSongId = 0;
         while (query.moveToNext()) {

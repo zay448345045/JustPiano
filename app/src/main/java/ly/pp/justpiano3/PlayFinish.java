@@ -128,7 +128,7 @@ public class PlayFinish extends Activity implements OnClickListener {
                 totalScore = extras.getInt("totalScore");
                 Date f4652P = new Date(System.currentTimeMillis());
                 clickNum = perfect + cool + great + bad + miss;
-                SQLiteDatabase writableDatabase = new TestSQL(this, "data").getWritableDatabase();
+                SQLiteDatabase writableDatabase = new SQLiteHelper(this, "data").getWritableDatabase();
                 Cursor query = writableDatabase.query("jp_data", new String[]{"_id", "name", "score", "date", "isnew"}, "name='" + name.replace("'", "''") + "'", null, null, null, null);
                 while (query.moveToNext()) {
                     topScore = query.getInt(query.getColumnIndexOrThrow("score"));
