@@ -4,6 +4,7 @@ apply plugin: 'com.google.protobuf'
 android {
     compileSdkVersion 30
     useLibrary 'org.apache.http.legacy'
+    ndkVersion "25.0.8775105"
 
     defaultConfig {
         applicationId "ly.pp.justpiano3"
