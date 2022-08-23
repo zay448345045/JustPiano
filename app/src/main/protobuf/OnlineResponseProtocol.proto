@@ -338,6 +338,8 @@ message OnlineFamilyUserVO {
     uint32 contribution = 5;
     // 用户是否在线
     bool online = 6;
+    // 用户最近一次登录日期
+    string login_date = 7;
 }
 
 // 读取家族列表（未进入家族中心）
