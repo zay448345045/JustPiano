@@ -37,6 +37,7 @@ final class FamilyHandler extends Handler {
                             hashMap.put("O", "");
                             hashMap.put("P", "");
                             hashMap.put("S", "");
+                            hashMap.put("D", "");
                             family.peopleList.add(hashMap);
                         } else {
                             for (int i = 0; i < size; i++) {
@@ -47,6 +48,7 @@ final class FamilyHandler extends Handler {
                                 hashMap.put("O", data.getBundle(String.valueOf(i)).getString("O"));
                                 hashMap.put("P", data.getBundle(String.valueOf(i)).getString("P"));
                                 hashMap.put("S", data.getBundle(String.valueOf(i)).getString("S"));
+                                hashMap.put("D", data.getBundle(String.valueOf(i)).getString("D"));
                                 family.peopleList.add(hashMap);
                             }
                         }
