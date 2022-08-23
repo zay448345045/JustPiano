@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 
+import io.netty.util.internal.StringUtil;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -25,8 +26,8 @@ public final class AcceptFavorThread extends Thread {
     }
 
     @Override
-    public final void run() {
-        if (!userName.isEmpty()) {
+    public void run() {
+        if (!StringUtil.isNullOrEmpty(userName)) {
             HttpPost httpPost = new HttpPost("http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/AcceptFavorIn");
             List<BasicNameValuePair> arrayList = new ArrayList<>();
             arrayList.add(new BasicNameValuePair("version", jpapplication.getVersion()));

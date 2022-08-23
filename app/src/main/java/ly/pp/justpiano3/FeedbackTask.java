@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import io.netty.util.internal.StringUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -54,6 +55,6 @@ public final class FeedbackTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected final void onPostExecute(String str) {
-        Toast.makeText(mainMode.get(), str == null || str.isEmpty() ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mainMode.get(), StringUtil.isNullOrEmpty(str) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show();
     }
 }

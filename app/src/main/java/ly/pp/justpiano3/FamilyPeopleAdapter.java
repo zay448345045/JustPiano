@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import io.netty.util.internal.StringUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         // TODO 家族成员最后一次登录日期（list.get(i).get("D")）显示在哪里
         String contribution = list.get(i).get("C");
         String lv = list.get(i).get("L");
-        if (lv != null && !lv.isEmpty()) {
+        if (!StringUtil.isNullOrEmpty(lv)) {
             lv = "Lv." + lv;
         }
         TextView positionText = view.findViewById(R.id.ol_family_position);

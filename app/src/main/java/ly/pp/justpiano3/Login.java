@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.netty.util.internal.StringUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -123,7 +124,7 @@ public class Login extends BaseActivity implements OnClickListener {
                 String string = sharedPreferences.getString("accountList", "");
                 List<String> arrayList = new ArrayList<>();
                 try {
-                    if (!string.isEmpty()) {
+                    if (!StringUtil.isNullOrEmpty(string)) {
                         JSONObject jSONObject = new JSONObject(string);
                         Iterator<String> keys = jSONObject.keys();
                         while (keys.hasNext()) {

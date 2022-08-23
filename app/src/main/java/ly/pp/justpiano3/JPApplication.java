@@ -459,9 +459,11 @@ public final class JPApplication extends Application {
     }
 
     public void setBackGround(Context context, String str, ViewGroup viewGroup) {
-        System.gc();
-        Bitmap bitmap = null;
+        if (viewGroup == null) {
+            return;
+        }
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
+            Bitmap bitmap = null;
             try {
                 bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
             } catch (Exception ignored) {
@@ -472,7 +474,7 @@ public final class JPApplication extends Application {
                 } catch (Exception ignored) {
                 }
             }
-            if (bitmap != null && viewGroup != null) {
+            if (bitmap != null) {
                 viewGroup.setBackground(new BitmapDrawable(getResources(), bitmap));
             }
         } else {

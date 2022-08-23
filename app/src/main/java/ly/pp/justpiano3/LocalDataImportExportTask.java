@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
+import io.netty.util.internal.StringUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -88,7 +89,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
         if (activity.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) activity.get();
             melodySelect.jpprogressBar.dismiss();
-            if (str != null && !str.isEmpty()) {
+            if (!StringUtil.isNullOrEmpty(str)) {
                 Toast.makeText(melodySelect, str, Toast.LENGTH_LONG).show();
             }
         }

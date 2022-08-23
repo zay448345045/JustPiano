@@ -13,7 +13,7 @@ final class PlayRoomTabChange implements OnTabChangeListener {
     }
 
     @Override
-    public final void onTabChanged(String str) {
+    public void onTabChanged(String str) {
         if (olPlayRoomInterface instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;

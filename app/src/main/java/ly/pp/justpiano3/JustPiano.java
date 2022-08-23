@@ -153,7 +153,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
         super.onCreate(bundle);
         JPApplication jpapplication = (JPApplication) getApplication();
         handler = new Handler(this);
-        new Options().inPreferredConfig = Config.RGB_565;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         jpapplication.setHeightPixels(displayMetrics.heightPixels);

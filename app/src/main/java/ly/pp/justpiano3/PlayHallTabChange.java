@@ -13,7 +13,7 @@ final class PlayHallTabChange implements OnTabChangeListener {
     }
 
     @Override
-    public final void onTabChanged(String str) {
+    public void onTabChanged(String str) {
         int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
         int childCount = olPlayHall.tabHost.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {

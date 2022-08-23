@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomInfoDTO;
 
 final class ChangeRoomNameClick implements OnClickListener {
@@ -24,7 +25,7 @@ final class ChangeRoomNameClick implements OnClickListener {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             String name = this.name.getText().toString();
             String password = this.password.getText().toString();
-            if (name.isEmpty()) {
+            if (StringUtil.isNullOrEmpty(name)) {
                 Toast.makeText(olPlayRoom, "房名不能为空!", Toast.LENGTH_SHORT).show();
             } else if (name.length() > 8 || password.length() > 8) {
                 Toast.makeText(olPlayRoom, "房名或密码只能在八个字以下!", Toast.LENGTH_SHORT).show();
@@ -39,7 +40,7 @@ final class ChangeRoomNameClick implements OnClickListener {
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
             String name = this.name.getText().toString();
             String password = this.password.getText().toString();
-            if (name.isEmpty()) {
+            if (StringUtil.isNullOrEmpty(name)) {
                 Toast.makeText(olPlayKeyboardRoom, "房名不能为空!", Toast.LENGTH_SHORT).show();
             } else if (name.length() > 8 || password.length() > 8) {
                 Toast.makeText(olPlayKeyboardRoom, "房名或密码只能在八个字以下!", Toast.LENGTH_SHORT).show();

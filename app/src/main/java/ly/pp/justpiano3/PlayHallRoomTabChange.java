@@ -1,9 +1,16 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.content.pm.ComponentInfo;
+import android.os.Looper;
+import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
 import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+
+import java.util.ArrayList;
 
 final class PlayHallRoomTabChange implements OnTabChangeListener {
     private final OLPlayHallRoom olPlayHallRoom;
@@ -13,7 +20,7 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
     }
 
     @Override
-    public final void onTabChanged(String str) {
+    public void onTabChanged(String str) {
         int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
         int childCount = olPlayHallRoom.tabHost.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -42,6 +49,9 @@ final class PlayHallRoomTabChange implements OnTabChangeListener {
                 olPlayHallRoom.sendMsg(34, builder.build());
                 break;
             case "tab5":
+                if (olPlayHallRoom.familyList == null) {
+                    olPlayHallRoom.familyList = new ArrayList<>();
+                }
                 if (olPlayHallRoom.familyPageNum == 0 && olPlayHallRoom.familyList.isEmpty()) {
                     OnlineFamilyDTO.Builder builder1 = OnlineFamilyDTO.newBuilder();
                     builder1.setType(2);

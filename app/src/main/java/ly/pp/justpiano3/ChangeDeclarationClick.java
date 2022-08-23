@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
 
@@ -25,7 +26,7 @@ final class ChangeDeclarationClick implements OnClickListener {
     @Override
     public final void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f5458b.getText());
-        if (valueOf.isEmpty() || valueOf.equals("'")) {
+        if (StringUtil.isNullOrEmpty(valueOf) || "'".equals(valueOf)) {
             Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
         } else if (valueOf.length() > 500) {
             Toast.makeText(family, "确定在五百字之内!", Toast.LENGTH_SHORT).show();

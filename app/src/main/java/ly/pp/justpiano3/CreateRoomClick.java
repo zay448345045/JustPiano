@@ -6,6 +6,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.protobuf.dto.OnlineCreateRoomDTO;
 
 final class CreateRoomClick implements OnClickListener {
@@ -26,12 +27,12 @@ final class CreateRoomClick implements OnClickListener {
         int i2 = 0;
         String roomName = String.valueOf(roomNameText.getText());
         String password = String.valueOf(passwordText.getText());
-        if (roomName.isEmpty()) {
+        if (StringUtil.isNullOrEmpty(roomName)) {
             Toast.makeText(olPlayHall, "请输入房间名称!", Toast.LENGTH_SHORT).show();
         } else if (roomName.length() > 8) {
             Toast.makeText(olPlayHall, "确定字数在8个字之内!", Toast.LENGTH_SHORT).show();
         } else {
-            if (password.isEmpty() || password.length() <= 8) {
+            if (StringUtil.isNullOrEmpty(password) || password.length() <= 8) {
                 switch (roomModeRadioGroup.getCheckedRadioButtonId()) {
                     case R.id.group:
                         i2 = 1;
