@@ -151,9 +151,10 @@
                                 <ImageView
                                     android:id="@+id/ol_player_mod"
                                     android:layout_width="100dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_alignParentTop="true"
+                                    android:layout_height="150dp"
+                                    android:layout_alignParentStart="false"
+                                    android:layout_alignParentTop="false"
+                                    android:layout_marginTop="15dp"
                                     android:background="@drawable/filled_msg"
                                     android:src="@drawable/b17" />
 
@@ -173,28 +174,33 @@
 
                                 <ImageView
                                     android:id="@+id/ol_player_eye"
+                                    android:layout_marginTop="15dp"
                                     android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="150dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_hair"
+                                    android:layout_marginTop="15dp"
                                     android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="150dp"/>
 
                                 <ImageView
                                     android:id="@+id/ol_player_shoes"
+                                    android:layout_marginTop="15dp"
                                     android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="150dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_trousers"
+                                    android:layout_marginTop="15dp"
                                     android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="150dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_jacket"
+                                    android:layout_marginTop="15dp"
                                     android:layout_width="100dp"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="150dp" />
 
                                 <TextView
                                     android:id="@+id/ol_player_name"
