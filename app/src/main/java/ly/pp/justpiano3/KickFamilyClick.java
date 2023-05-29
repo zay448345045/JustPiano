@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineFamilyDTO;
 
 final class KickFamilyClick implements OnClickListener {
     private final OLFamily olFamily;

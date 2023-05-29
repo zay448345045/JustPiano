@@ -6,7 +6,7 @@ import android.content.DialogInterface.OnClickListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineCoupleDTO;
 
 final class SendZhufuClick implements OnClickListener {
     private final OLPlayRoomInterface olPlayRoomInterface;

@@ -26,10 +26,10 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
-import ly.pp.justpiano3.protobuf.dto.OnlineBaseDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineHeartBeatDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoginDTO;
-import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
+import protobuf.dto.OnlineBaseDTO;
+import protobuf.dto.OnlineHeartBeatDTO;
+import protobuf.dto.OnlineLoginDTO;
+import protobuf.vo.OnlineBaseVO;
 
 public class ConnectionService extends Service implements Runnable {
 

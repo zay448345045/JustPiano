@@ -6,8 +6,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineSendMailDTO;
 
 final class ChangeDeclarationClick implements OnClickListener {
 

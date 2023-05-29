@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadPlayUserDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineQuitRoomDTO;
+import protobuf.dto.OnlineChallengeDTO;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineLoadPlayUserDTO;
+import protobuf.dto.OnlineQuitRoomDTO;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
     public byte hallID;

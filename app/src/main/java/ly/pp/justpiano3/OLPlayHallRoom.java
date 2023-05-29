@@ -35,11 +35,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineDailyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+import protobuf.dto.OnlineDailyDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineLoadUserDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends BaseActivity implements OnClickListener {
     public int cl = 0;

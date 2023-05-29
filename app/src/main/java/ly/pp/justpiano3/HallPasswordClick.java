@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineEnterHallDTO;
+import protobuf.dto.OnlineEnterHallDTO;
 
 final class HallPasswordClick implements OnClickListener {
     private final MainGameAdapter mainGameAdapter;

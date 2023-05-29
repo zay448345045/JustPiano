@@ -5,7 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
+import protobuf.dto.OnlineSendMailDTO;
 
 final class SendMessageClick2 implements OnClickListener {
     private final OLPlayHall olPlayHall;

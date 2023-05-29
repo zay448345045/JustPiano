@@ -7,7 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.protobuf.dto.OnlineCreateRoomDTO;
+import protobuf.dto.OnlineCreateRoomDTO;
 
 final class CreateRoomClick implements OnClickListener {
     private final OLPlayHall olPlayHall;

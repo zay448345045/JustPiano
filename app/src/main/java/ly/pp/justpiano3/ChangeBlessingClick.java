@@ -14,8 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineSendMailDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+import protobuf.dto.OnlineSendMailDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class ChangeBlessingClick implements OnClickListener {
 

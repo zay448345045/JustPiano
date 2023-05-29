@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ly.pp.justpiano3.protobuf.vo;
+package protobuf.vo;
 
 option java_multiple_files = true;
 option java_outer_classname = "OnlineResponse";

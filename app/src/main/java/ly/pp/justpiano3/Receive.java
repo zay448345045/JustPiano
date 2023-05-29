@@ -3,10 +3,11 @@ package ly.pp.justpiano3;
 import android.os.Bundle;
 import android.os.Message;
 
-import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineClTestVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineEnterHallVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineHallChatVO;
+import protobuf.vo.OnlineBaseVO;
+import protobuf.vo.OnlineClTestVO;
+import protobuf.vo.OnlineEnterHallVO;
+import protobuf.vo.OnlineHallChatVO;
+import protobuf.vo.OnlineBaseVO;
 
 final class Receive {
 

@@ -21,10 +21,10 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Consumer;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomDoorDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineKickedQuitRoomDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
+import protobuf.dto.OnlineChangeRoomDoorDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineKickedQuitRoomDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     byte roomID;

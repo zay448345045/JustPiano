@@ -2,8 +2,8 @@ package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserListDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineLoadUserListDTO;
 
 final class PlayRoomTabChange implements OnTabChangeListener {
     private final OLPlayRoomInterface olPlayRoomInterface;

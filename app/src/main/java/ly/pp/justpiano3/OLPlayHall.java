@@ -37,13 +37,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineEnterRoomDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineHallChatDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomListDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomUserListDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineQuitHallDTO;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineEnterRoomDTO;
+import protobuf.dto.OnlineHallChatDTO;
+import protobuf.dto.OnlineLoadRoomListDTO;
+import protobuf.dto.OnlineLoadRoomUserListDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineQuitHallDTO;
 
 public final class OLPlayHall extends BaseActivity implements Callback, OnClickListener {
     public ConnectionService connectionService;

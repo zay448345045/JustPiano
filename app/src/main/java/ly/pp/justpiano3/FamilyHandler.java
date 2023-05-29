@@ -10,7 +10,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineFamilyDTO;
 
 final class FamilyHandler extends Handler {
     private final WeakReference<Activity> weakReference;

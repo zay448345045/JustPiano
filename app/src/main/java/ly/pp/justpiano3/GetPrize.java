@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
+import protobuf.dto.OnlineChallengeDTO;
 
 final class GetPrize implements OnClickListener {
     private final OLChallenge challenge;

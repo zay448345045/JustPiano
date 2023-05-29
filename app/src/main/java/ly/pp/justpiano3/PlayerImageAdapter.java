@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomDoorDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineKickedQuitRoomDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
+import protobuf.dto.OnlineChangeRoomDoorDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineKickedQuitRoomDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class PlayerImageAdapter extends BaseAdapter {
     byte roomID;

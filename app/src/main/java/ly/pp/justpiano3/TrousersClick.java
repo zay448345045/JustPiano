@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
+import protobuf.dto.OnlineChangeClothesDTO;
 
 final class TrousersClick implements OnItemClickListener {
 

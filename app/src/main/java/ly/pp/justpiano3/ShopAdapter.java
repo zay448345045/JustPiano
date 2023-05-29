@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineShopDTO;
+import protobuf.dto.OnlineShopDTO;
 
 public final class ShopAdapter extends BaseAdapter {
     private final OLPlayDressRoom olPlayDressRoom;

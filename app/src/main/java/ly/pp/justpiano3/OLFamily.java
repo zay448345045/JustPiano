@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public class OLFamily extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;

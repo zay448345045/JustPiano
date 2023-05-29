@@ -25,8 +25,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeClothesDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineShopDTO;
+import protobuf.dto.OnlineChangeClothesDTO;
+import protobuf.dto.OnlineShopDTO;
 
 public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public String sex = "f";

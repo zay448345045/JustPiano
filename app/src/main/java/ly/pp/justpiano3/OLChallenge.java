@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
+import protobuf.dto.OnlineChallengeDTO;
 
 public class OLChallenge extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;

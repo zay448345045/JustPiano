@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomInfoDTO;
+import protobuf.dto.OnlineChangeRoomInfoDTO;
 
 final class ChangeRoomNameClick implements OnClickListener {
     private final OLPlayRoomInterface olPlayRoomInterface;

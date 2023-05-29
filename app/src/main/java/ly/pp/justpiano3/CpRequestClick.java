@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineCoupleDTO;
 
 final class CpRequestClick implements OnClickListener {
 

@@ -7,8 +7,8 @@ import android.os.Looper;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
 
 import java.util.ArrayList;
 

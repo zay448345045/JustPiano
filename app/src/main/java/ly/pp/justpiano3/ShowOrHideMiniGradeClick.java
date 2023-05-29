@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineSetMiniGradeDTO;
+import protobuf.dto.OnlineSetMiniGradeDTO;
 
 final class ShowOrHideMiniGradeClick implements OnClickListener {
 

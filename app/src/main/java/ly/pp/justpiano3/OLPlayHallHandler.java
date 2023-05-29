@@ -21,9 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineEnterRoomDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineEnterRoomDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;

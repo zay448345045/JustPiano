@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 
-import ly.pp.justpiano3.protobuf.dto.OnlinePlaySongDTO;
+import protobuf.dto.OnlinePlaySongDTO;
 
 public final class PlaySongs {
     public JPApplication jpapplication;

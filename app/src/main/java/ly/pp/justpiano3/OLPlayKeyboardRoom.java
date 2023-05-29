@@ -53,11 +53,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineKeyboardNoteDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
+import protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import protobuf.dto.OnlineKeyboardNoteDTO;
+import protobuf.dto.OnlineLoadRoomPositionDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineRoomChatDTO;
 
 public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, OnClickListener, View.OnTouchListener, OLPlayRoomInterface, MidiConnectionListener {
 

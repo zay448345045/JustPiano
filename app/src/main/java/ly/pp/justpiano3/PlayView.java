@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChallengeDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineClTestDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineMiniGradeDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlinePlayFinishDTO;
+import protobuf.dto.OnlineChallengeDTO;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineMiniGradeDTO;
+import protobuf.dto.OnlinePlayFinishDTO;
 
 public final class PlayView extends SurfaceView implements Callback {
     static long serialID = 2825651233768L;

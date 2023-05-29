@@ -42,13 +42,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomHandDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadRoomPositionDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineLoadUserInfoDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlinePlaySongDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlinePlayStartDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
+import protobuf.dto.OnlineChangeRoomHandDTO;
+import protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import protobuf.dto.OnlineLoadRoomPositionDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlinePlaySongDTO;
+import protobuf.dto.OnlinePlayStartDTO;
+import protobuf.dto.OnlineRoomChatDTO;
 
 public final class OLPlayRoom extends BaseActivity implements Callback, OnClickListener, OLPlayRoomInterface {
     public int lv;

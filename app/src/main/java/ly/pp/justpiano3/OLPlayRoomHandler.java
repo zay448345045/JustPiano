@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineQuitRoomDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+import protobuf.dto.OnlineQuitRoomDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

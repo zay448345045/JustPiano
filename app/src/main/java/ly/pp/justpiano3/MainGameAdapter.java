@@ -15,9 +15,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineDialogDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineEnterHallDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineUserInfoDialogDTO;
+import protobuf.dto.OnlineDialogDTO;
+import protobuf.dto.OnlineEnterHallDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class MainGameAdapter extends BaseAdapter {
     Activity activity;

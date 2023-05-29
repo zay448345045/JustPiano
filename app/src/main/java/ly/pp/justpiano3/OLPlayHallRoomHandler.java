@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineDailyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineEnterHallDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineFamilyDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+import protobuf.dto.OnlineDailyDTO;
+import protobuf.dto.OnlineEnterHallDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

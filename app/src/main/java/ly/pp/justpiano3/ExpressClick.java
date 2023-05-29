@@ -3,8 +3,8 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineHallChatDTO;
-import ly.pp.justpiano3.protobuf.dto.OnlineRoomChatDTO;
+import protobuf.dto.OnlineHallChatDTO;
+import protobuf.dto.OnlineRoomChatDTO;
 
 final class ExpressClick implements OnClickListener {
     private final ExpressAdapter expressAdapter;

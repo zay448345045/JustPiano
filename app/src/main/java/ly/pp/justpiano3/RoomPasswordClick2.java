@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineEnterRoomDTO;
+import protobuf.dto.OnlineEnterRoomDTO;
 
 final class RoomPasswordClick2 implements OnClickListener {
     private final OLPlayHall f5377a;

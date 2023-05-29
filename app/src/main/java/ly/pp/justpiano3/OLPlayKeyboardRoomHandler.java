@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.protobuf.dto.OnlineSetUserInfoDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
