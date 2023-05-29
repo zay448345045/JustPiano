@@ -95,11 +95,10 @@
                 android:layout_alignEnd="@+id/ol_hall_list"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/selector_ol_orange"
                 android:gravity="center"
                 android:keepScreenOn="true"
                 android:text="大厅列表"
-                android:textColor="@color/white1"
+                android:textColor="@color/yellow_r"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
@@ -152,8 +151,8 @@
                                     android:id="@+id/ol_player_mod"
                                     android:layout_width="100dp"
                                     android:layout_height="150dp"
-                                    android:layout_alignParentStart="false"
-                                    android:layout_alignParentTop="false"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentTop="true"
                                     android:layout_marginTop="15dp"
                                     android:background="@drawable/filled_msg"
                                     android:src="@drawable/b17" />
@@ -163,14 +162,17 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:layout_alignEnd="@+id/ol_player_mod"
-                                    android:layout_alignParentTop="true" />
+                                    android:layout_alignBottom="@+id/ol_player_couple"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginBottom="0dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_family"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:layout_alignEnd="@+id/ol_player_mod"
-                                    android:layout_marginTop="20dp" />
+                                    android:layout_marginTop="40dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_eye"

@@ -92,10 +92,12 @@ public final class MainGameAdapter extends BaseAdapter {
                 i2 = list.get(i).getInt("PN");
                 i3 = list.get(i).getInt("TN");
                 View hallNameView = view.findViewById(R.id.ol_hall_name);
-                if ((float) i2 / i3 >= 0.8f) {
-                    hallNameView.setBackgroundResource(Consts.kuang[3]);
-                } else {
-                    hallNameView.setBackgroundResource(Consts.kuang[0]);
+                hallNameView.setBackgroundResource(R.drawable._none);
+                if ((float) i2 / i3 >= 0.05f) {
+                    ((TextView) hallNameView).setTextColor(0xFFCD064B);
+                }
+                else {
+                    ((TextView) hallNameView).setTextColor(0xFFFFBB40);
                 }
                 if (i2 < i3) {
                     z = false;
