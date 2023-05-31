@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/selector_ol_orange"
-                android:text="极品一服\n(120.25.100.169)"
+                android:text="正式服\n(普通的服务器普通的用)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
@@ -50,7 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/selector_ol_blue"
-                android:text="极品二服\n(120.25.100.134)"
+                android:text="测试服\n(测试用途或故障时备用)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -70,7 +70,7 @@
                 android:layout_width="157dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="其他服务器(填写ip):"
+                android:text="其他服务器(填写域名或IP):"
                 android:textSize="15sp" />
 
             <EditText
