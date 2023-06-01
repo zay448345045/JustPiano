@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.content.ContentValues;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -964,10 +965,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         activityNum = 4;
         JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        setContentView(R.layout.olplayroom);
+
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         jpapplication.getHashmap().clear();
         connectionService = jpapplication.getConnectionService();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         setContentView(R.layout.olplayroom);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);

@@ -67,7 +67,7 @@ public class JustPianoView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        paint.setARGB(255, 255, 0, 0);
+        paint.setARGB(240, 248, 204, 48);
         paint.setTextAlign(Align.RIGHT);
         paint.setAntiAlias(true);
         paint.setTextSize(20);

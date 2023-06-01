@@ -9,61 +9,6 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/ads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/top_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/title_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:keepScreenOn="true"
-            android:text="选择大厅:"
-            android:textColor="@color/white1"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:typeface="monospace" />
-
-        <ly.pp.justpiano3.ScrollText
-            android:id="@+id/broadCastText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentEnd="false"
-            android:layout_toEndOf="@+id/systemText"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="@color/white1"
-            android:textColorHighlight="@color/blue_d"
-            android:textColorHint="@color/blue_d"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:typeface="sans"
-            tools:ignore="EllipsizeMaxLines" />
-
-        <TextView
-            android:id="@+id/systemText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/title_bar"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/title_bar"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="18sp" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"

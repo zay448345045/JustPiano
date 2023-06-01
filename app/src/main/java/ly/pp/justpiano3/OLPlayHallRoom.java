@@ -593,9 +593,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         myFamilyName = findViewById(R.id.ol_myfamily_name);
         myFamilyPic = findViewById(R.id.ol_myfamily_pic);
         myFamilyPosition = findViewById(R.id.ol_myfamily_position);
-        systemTextView.setText(systemText);
-        broadCastTextView.setText(broadCastText);
-        broadCastTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
         coupleView = findViewById(R.id.ol_player_couple);
         familyView = findViewById(R.id.ol_player_family);
         Button preButton = findViewById(R.id.pre_button);
