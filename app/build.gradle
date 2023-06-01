@@ -5,6 +5,7 @@ android {
     compileSdkVersion 30
     useLibrary 'org.apache.http.legacy'
     ndkVersion "25.2.9519653"
+//    overridePathCheck = true
     defaultConfig {
         applicationId "ly.pp.justpiano3"
         minSdkVersion 19
@@ -86,6 +87,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
+    // 百分比布局
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
 }
 
 protobuf {
