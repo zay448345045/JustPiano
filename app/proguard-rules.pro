@@ -23,6 +23,7 @@
 -keep class javazoom.jl.decoder.JavaLayerUtils{*;}
 -keep class io.netty.**{*;}
 -keep class protobuf.**{*;}
+-keep class com.google.firebase.crashlytics.buildtools.reloc.org.**{*;}
 
 -keepattributes Signature
 -keepnames class * implements java.io.Serializable
