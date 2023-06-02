@@ -3,7 +3,7 @@ apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion 30
-    useLibrary 'org.apache.http.legacy'
+//    useLibrary 'org.apache.http.legacy'
     ndkVersion "25.2.9519653"
 //    overridePathCheck = true
     defaultConfig {
