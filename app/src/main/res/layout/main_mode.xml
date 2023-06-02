@@ -193,10 +193,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         android:gravity="center_horizontal"
-        android:text="此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除"
+        android:text=""
         android:textColor="#FFF7AF"
         android:textSize="12sp" />
 
