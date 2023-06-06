@@ -61,19 +61,27 @@
         android:layout_alignStart="@id/jiangdiao"
         android:layout_alignEnd="@id/shengdiao">
 
-    <TextView
-        android:id="@+id/changeScreenOrientation"
+        <TextView
+            android:id="@+id/changeScreenOrientation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/right_hand"
+            android:layout_alignStart="@id/right_hand"
+            android:layout_alignEnd="@id/right_hand"
+            android:layout_toEndOf="@+id/jiangdiao"
+            android:background="@drawable/selector_ol_purple_l"
+            android:text="旋转屏幕"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notespeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/right_hand"
-        android:layout_alignStart="@id/right_hand"
-        android:layout_alignEnd="@id/right_hand"
-        android:layout_toEndOf="@+id/jiangdiao"
-        android:background="@drawable/selector_ol_green"
-        android:text="切换"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
-
+        android:layout_below="@id/orientation"
+        android:layout_alignStart="@id/orientation"
+        android:layout_alignEnd="@id/orientation">
 
         <ImageView
             android:id="@+id/note_speed_0"
