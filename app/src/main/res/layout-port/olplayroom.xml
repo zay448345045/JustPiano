@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:id="@id/layout"
-    android:background="@drawable/ground"
+    android:background="@drawable/port"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:keepScreenOn="true">
@@ -172,7 +172,7 @@
                         android:id="@android:id/tabs"
                         android:background="@color/back"
                         android:layout_width="fill_parent"
-                        android:layout_height="45.0dip"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentBottom="false"
                         android:tabStripEnabled="false"

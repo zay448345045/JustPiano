@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.content.ContentValues;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -27,6 +28,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -612,6 +614,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 setGroupOrHand(0, commonModeGroup);
                 groupButton.setText("右" + groupButton.getText().toString().substring(1));
                 return;
+            case R.id.changeScreenOrientation:
+                changeScreenOrientation();
+                return;
             case R.id.rand_0:
                 m3744a(2, 4);
                 return;
@@ -839,6 +844,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
                     inflate2.findViewById(R.id.note_speed_0).setOnClickListener(this);
                     inflate2.findViewById(R.id.note_speed_1).setOnClickListener(this);
+                    inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
                     popupWindow2.setFocusable(true);
                     popupWindow2.setTouchable(true);
                     popupWindow2.setOutsideTouchable(true);
@@ -947,6 +953,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
+    private void changeScreenOrientation(){
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
     private void changeChatColor(int lv, int colorNum, int color) {
         if (this.lv >= lv) {
             sendText.setTextColor(color);
@@ -965,16 +979,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         activityNum = 4;
         JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
         setContentView(R.layout.olplayroom);
-
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         jpapplication.getHashmap().clear();
         connectionService = jpapplication.getConnectionService();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         setContentView(R.layout.olplayroom);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        //  jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");
@@ -1180,8 +1191,16 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 timeUpdateThread.start();
                 return;
             }
-            roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
-            ((TextView) roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title)).setTextColor(0xffffffff);
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 800;
+            } else {
+                roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
+            }
+            TextView tv = roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title);
+            ((TextView) tv).setTextColor(0xffffffff);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
             i = intValue + 1;
         }
     }
