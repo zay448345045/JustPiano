@@ -88,14 +88,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true">
 
-            <Button
-                android:id="@+id/ol_bindmail_b"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="#40000000"
-                android:text="绑定邮箱"
-                android:textColor="@color/online"
-                android:textSize="18sp" />
+
 
             <Button
                 android:id="@+id/ol_finduser_b"
