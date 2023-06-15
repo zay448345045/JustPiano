@@ -13,6 +13,7 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -266,7 +267,12 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
                 checkBox.setChecked(JPApplication.sharedpreferences.getBoolean("chec_autologin", false));
                 CheckBox checkBox2 = inflate.findViewById(R.id.re_password);
                 checkBox2.setChecked(JPApplication.sharedpreferences.getBoolean("chec_psw", false));
-                new JPDialog(this).setTitle("修改密码").loadInflate(inflate).setFirstButton("确定", new ChangePasswordClick(this, textView, textView2, textView3, checkBox, checkBox2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                JPDialog jpdialog = new JPDialog(this);
+                jpdialog
+                        .setTitle("修改密码").loadInflate(inflate)
+                        .setFirstButton("确定", new ChangePasswordClick(this, textView, textView2, textView3, checkBox, checkBox2))
+                        .setSecondButton("取消", new DialogDismissClick())
+                        .showDialog();
                 return;
             case R.id.modify_button:
                 String charSequence = ageText.getText().toString();
