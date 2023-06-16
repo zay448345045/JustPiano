@@ -64,9 +64,6 @@
                 android:right="10dp"
                 android:top="10dp"
                 android:bottom="10dp"/>
-            <blur
-                android:radius="25dp"
-                android:color="#80000000" />
         </shape>
     </item>
 </layer-list>

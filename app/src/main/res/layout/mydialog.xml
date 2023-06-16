@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_corner"
+    android:background="@drawable/style_dialog"
     android:minWidth="280dp"
     android:orientation="vertical">
 
@@ -64,25 +64,27 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/positiveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_ol_button"
-            android:singleLine="true"
-            android:text="确定"
-            android:textColor="@color/white1" />
-
-        <Button
             android:id="@+id/negativeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="4dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_ol_button"
+            android:background="@drawable/selector_ol_cancel"
             android:singleLine="true"
             android:text="取消"
+            android:textColor="@color/white1" />
+
+        <Button
+            android:id="@+id/positiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_ok"
+            android:singleLine="true"
+            android:text="确定"
             android:textColor="@color/white1" />
     </LinearLayout>
 </LinearLayout>
