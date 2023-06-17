@@ -30,6 +30,7 @@
     <color name="exit">#ffff4500</color>
     <color name="roomtext">#ffc6e2ff</color>
     <color name="songname">#ff00ffff</color>
+    <color name="dialog">#ff88a8db</color>
     <color name="v1">#ffffcc00</color>
     <color name="v2">#ffff6600</color>
     <color name="v3">#ffff3333</color>

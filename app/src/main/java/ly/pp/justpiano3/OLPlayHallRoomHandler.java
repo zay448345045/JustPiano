@@ -335,11 +335,13 @@ final class OLPlayHallRoomHandler extends Handler {
                         String tomorrowExp = data.getString("M");
                         View inflate = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
-                        listView.setBackgroundResource(R.color.dack);
+                        listView.setBackgroundResource(R.color.translent);
+                        listView.setCacheColorHint(0);
+                        listView.setAlwaysDrawnWithCacheEnabled(true);
                         listView.setSelector(R.color.translent);
                         TextView textView = inflate.findViewById(R.id.account_msg);
                         textView.setVisibility(View.VISIBLE);
-                        textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得奖励：" + tomorrowExp + "\n以下为昨日在线时长排名：");
+                        textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得" + tomorrowExp + "\n以下为昨日在线时长排名：");
                         JPDialog jpDialog = new JPDialog(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
                                 .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
                                     dialog.dismiss();
@@ -348,7 +350,6 @@ final class OLPlayHallRoomHandler extends Handler {
                                     builder.setType(2);
                                     olPlayHallRoom.sendMsg(38, builder.build());
                                 });
-                        listView.setCacheColorHint(0);
                         listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
                         jpDialog.showDialog();
                     });

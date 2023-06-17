@@ -93,7 +93,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 i3 = list.get(i).getInt("TN");
                 View hallNameView = view.findViewById(R.id.ol_hall_name);
                 hallNameView.setBackgroundResource(R.drawable._none);
-                if ((float) i2 / i3 >= 0.05f) {
+                if ((float) i2 / i3 >= 0.8f) {
                     ((TextView) hallNameView).setTextColor(0xFFCD064B);
                 }
                 else {
