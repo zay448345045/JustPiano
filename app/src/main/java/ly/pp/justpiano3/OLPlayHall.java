@@ -183,7 +183,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
             }
             mo2829a(listView, arrayList, 3, false);
         }
-        listView.setBackgroundColor(-16777216);
+        listView.setCacheColorHint(0);
+        listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
         new JPDialog(this).setTitle("房间用户信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();

@@ -65,7 +65,7 @@ public final class DailyTimeAdapter extends BaseAdapter {
             bonusGetText.setBackgroundColor(olPlayHallRoom.getResources().getColor(R.color.online));
         }
         if (JPApplication.kitiName.equals(name)) {
-            view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.color.yellow_d);
+            view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_a);
         } else {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_c);
         }
