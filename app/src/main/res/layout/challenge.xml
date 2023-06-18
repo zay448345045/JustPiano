@@ -14,15 +14,41 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/challengetitle"
+        <LinearLayout
+            android:id="@+id/relativeLayout40"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text=" 每日挑战 "
-            android:textColor="@color/white1"
-            android:textSize="24sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/challengetitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:layout_weight="23"
+                android:gravity="center"
+                android:paddingRight="12dp"
+                android:text=" 每日挑战 "
+                android:textColor="@color/white1"
+                android:textSize="22sp" />
+
+            <Button
+                android:id="@+id/viewChallenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="26dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_orange_button"
+                android:gravity="center"
+                android:text="今日挑战曲目"
+                android:textColor="@color/white1"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout5"
@@ -40,7 +66,7 @@
                 android:id="@+id/linearLayout6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="18dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
@@ -49,9 +75,9 @@
                     android:id="@+id/infoview"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_weight="3"
-                    android:background="@color/black"
+                    android:background="@drawable/list"
                     android:text="个人信息"
                     android:textColor="@color/white1"
                     android:textSize="14sp" />
@@ -60,24 +86,30 @@
                     android:id="@+id/drawPrize"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
                     android:gravity="center"
                     android:text="获取奖励"
                     android:textColor="@color/white1"
-                    android:textSize="22sp" />
+                    android:textSize="20sp" />
 
                 <Button
                     android:id="@+id/startchallenge"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="12dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
                     android:gravity="center"
                     android:text="开始挑战"
                     android:textColor="@color/white1"
-                    android:textSize="22sp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
@@ -88,70 +120,15 @@
                 android:layout_weight="3"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout71"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/listtitle1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@color/black"
-                        android:gravity="center"
-                        android:text="名次"
-                        android:textColor="@color/songname"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/listtitle2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="5"
-                        android:background="@color/black"
-                        android:gravity="center"
-                        android:text="用户名称"
-                        android:textColor="@color/songname"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/listtitle3"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:background="@color/black"
-                        android:gravity="center"
-                        android:text="最高得分"
-                        android:textColor="@color/songname"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/listtitle4"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="3"
-                        android:background="@color/black"
-                        android:gravity="center"
-                        android:text="挑战时间"
-                        android:textColor="@color/songname"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
                 <ListView
                     android:id="@+id/challenge_score_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/black"
+                    android:background="@drawable/list"
+                    android:paddingTop="8dp"
                     android:cacheColorHint="#00ffffff"
                     android:choiceMode="singleChoice"
-                    android:divider="@drawable/divider"
+                    android:divider="@null"
                     android:listSelector="@color/translent"
                     android:textColor="@color/white1"
                     android:textSize="14sp" />

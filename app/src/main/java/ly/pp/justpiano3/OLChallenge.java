@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.content.Intent;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +33,10 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
     ChallengeHandler challengeHandler;
     TextView info;
     Button start;
+    Button drawPrize;
+    Button viewChallenge;
     ListView scoreListView;
     List<HashMap> scoreList = new ArrayList<>();
-    Button drawPrize;
     private LayoutInflater layoutinflater;
 
     @Override
@@ -65,6 +67,12 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
                 builder = OnlineChallengeDTO.newBuilder();
                 builder.setType(5);
                 sendMsg(16, builder.build());
+                return;
+            case R.id.viewChallenge:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://justpiano.fun/pages/challenge.html"));
+                startActivity(intent);
+                return;
         }
     }
 
@@ -95,6 +103,8 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         start.setOnClickListener(this);
         drawPrize = findViewById(R.id.drawPrize);
         drawPrize.setOnClickListener(this);
+        viewChallenge = findViewById(R.id.viewChallenge);
+        viewChallenge.setOnClickListener(this);
         scoreListView = findViewById(R.id.challenge_score_view);
         scoreListView.setCacheColorHint(0);
     }
