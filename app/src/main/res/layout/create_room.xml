@@ -73,12 +73,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/top_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
             <RadioButton
                 android:id="@+id/normal"
                 android:layout_width="wrap_content"
@@ -90,12 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="组队" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/bottom_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
@@ -106,7 +95,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="双人" />
-            </LinearLayout>
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>
