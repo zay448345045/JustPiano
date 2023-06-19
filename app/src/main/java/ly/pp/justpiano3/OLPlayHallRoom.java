@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -646,7 +647,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         int childCount = tabHost.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {
             tabHost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
-            ((TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(0xffffffff);
+            TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            ((TextView) tv).setTextColor(0xffffffff);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         }
         tabHost.setOnTabChangedListener(new PlayHallRoomTabChange(this));
         tabHost.setCurrentTab(1);

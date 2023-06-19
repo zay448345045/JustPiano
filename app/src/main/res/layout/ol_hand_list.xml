@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/filled_bar"
+    android:background="@color/translent"
     android:gravity="center"
     android:keepScreenOn="true"
     android:orientation="vertical">
@@ -13,8 +13,9 @@
         android:id="@+id/left_hand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/back_puased"
+        android:background="@drawable/list"
         android:text="左手"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -23,8 +24,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/left_hand"
-        android:background="@drawable/back_puased"
+        android:background="@drawable/list"
         android:text="右手"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -35,8 +37,9 @@
         android:layout_below="@+id/left_hand"
         android:layout_alignStart="@id/left_hand"
         android:layout_alignEnd="@id/left_hand"
-        android:background="@drawable/selector_ol_green"
+        android:background="@drawable/list"
         android:text="降调"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -48,8 +51,9 @@
         android:layout_alignStart="@id/right_hand"
         android:layout_alignEnd="@id/right_hand"
         android:layout_toEndOf="@+id/jiangdiao"
-        android:background="@drawable/selector_ol_green"
+        android:background="@drawable/list"
         android:text="升调"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -69,8 +73,9 @@
             android:layout_alignStart="@id/right_hand"
             android:layout_alignEnd="@id/right_hand"
             android:layout_toEndOf="@+id/jiangdiao"
-            android:background="@drawable/selector_ol_purple_l"
+            android:background="@drawable/list"
             android:text="旋转屏幕"
+            android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30sp" />
     </LinearLayout>
@@ -80,6 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/orientation"
+        android:background="@drawable/list"
         android:layout_alignStart="@id/orientation"
         android:layout_alignEnd="@id/orientation">
 
@@ -89,17 +95,17 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:src="@drawable/back_arrow"
-            android:background="@drawable/selector_ol_orange" />
+            android:background="@color/translent" />
 
         <TextView
             android:id="@+id/note_speed"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="2"
-            android:background="@color/white1"
+            android:background="@color/translent"
             android:gravity="center"
             android:text="中"
-            android:textColor="@color/black"
+            android:textColor="@color/white1"
             android:textSize="24sp" />
 
         <ImageView
@@ -108,7 +114,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:src="@drawable/for_arrow"
-            android:background="@drawable/selector_ol_orange" />
+            android:background="@color/translent"/>
 
     </LinearLayout>
 
