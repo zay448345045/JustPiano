@@ -614,7 +614,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         newTabSpec.setIndicator("家族");
         tabHost.addTab(newTabSpec);
         coupleNameView = findViewById(R.id.ol_couple_name);
-        coupleNameView.setText("");
+        coupleNameView.setText("岛村抱月");
         Button breakUpCpButton = findViewById(R.id.ol_breakup_button);
         breakUpCpButton.setText("解除搭档");
         Button setBlessingButton = findViewById(R.id.ol_setblessing_button);
@@ -627,7 +627,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         LinearLayout myFamilyButton = findViewById(R.id.ol_myfamily_button);
         myFamilyButton.setOnClickListener(this);
         coupleLvView = findViewById(R.id.ol_couple_level);
-        coupleLvView.setText("");
+        coupleLvView.setText("LV.25");
         couplePointsView = findViewById(R.id.couple_points);
         coupleClView = findViewById(R.id.ol_couple_class);
         coupleClView.setText("");

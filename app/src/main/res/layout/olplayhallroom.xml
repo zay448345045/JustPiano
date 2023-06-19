@@ -78,7 +78,6 @@
                         android:id="@android:id/tabcontent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
                         <LinearLayout
                             android:id="@+id/infor_tab"
                             android:layout_width="match_parent"
@@ -100,7 +99,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginTop="15dp"
                                     android:background="@drawable/filled_msg"
-                                    android:src="@drawable/b17" />
+                                    android:src="@drawable/adachi" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_couple"
@@ -159,6 +158,7 @@
                                     android:background="@drawable/back_puased"
                                     android:gravity="center"
                                     android:singleLine="true"
+                                    android:text="安达樱"
                                     android:textColor="@color/white1"
                                     android:textSize="12sp" />
 
@@ -170,13 +170,11 @@
                                     android:layout_alignEnd="@+id/ol_player_mod"
                                     android:gravity="start"
                                     android:singleLine="true"
-                                    android:text="CL.25"
                                     android:textColor="@color/yellow"
                                     android:textColorHint="@color/yellow_r"
                                     android:textSize="12sp"
                                     android:textStyle="bold"
                                     android:typeface="sans" />
-
                                 <TextView
                                     android:id="@+id/ol_player_level"
                                     android:layout_width="wrap_content"
@@ -191,7 +189,6 @@
                                     android:textSize="12sp"
                                     android:textStyle="bold"
                                     android:typeface="sans" />
-
                                 <TextView
                                     android:id="@id/ol_ready_text"
                                     android:layout_width="wrap_content"
@@ -202,7 +199,6 @@
                                     android:textColor="@color/white1"
                                     android:textColorHint="@color/yellow_r"
                                     android:textSize="12sp" />
-
                                 <TextView
                                     android:id="@+id/user_classname"
                                     android:layout_width="wrap_content"
@@ -218,12 +214,13 @@
                                     android:textStyle="normal|bold|italic"
                                     android:typeface="monospace" />
                             </RelativeLayout>
-
                             <TextView
                                 android:id="@+id/user_exp"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginBottom="4dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="exp"
+                                android:text="1024/20310"
                                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
                             <Button
@@ -235,7 +232,6 @@
                                 android:textColor="@color/white1"
                                 android:textSize="18sp"
                                 android:visibility="visible" />
-
                             <Button
                                 android:id="@+id/ol_bonus_button"
                                 android:layout_width="100dp"
@@ -246,7 +242,6 @@
                                 android:textColor="@color/white1"
                                 android:textSize="18sp" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:id="@+id/couple_tab"
                             android:layout_width="match_parent"
@@ -256,7 +251,7 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="245dp">
 
                                 <RelativeLayout
                                     android:id="@+id/RelativeLayout01"
@@ -267,41 +262,60 @@
                                     <ImageView
                                         android:id="@+id/ol_couple_mod"
                                         android:layout_width="100dp"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="150dp"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginEnd="15dp"
                                         android:layout_alignParentStart="true"
                                         android:layout_alignParentTop="true"
                                         android:background="@drawable/filled_msg"
-                                        android:src="@drawable/b17" />
+                                        android:src="@drawable/shimamura" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_eye"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginEnd="15dp"
                                         android:layout_width="100dp"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="150dp"/>
 
                                     <ImageView
                                         android:id="@+id/ol_couple_hair"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginEnd="15dp"
                                         android:layout_width="100dp"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="150dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_shoes"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginEnd="15dp"
                                         android:layout_width="100dp"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="150dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_trousers"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginEnd="15dp"
                                         android:layout_width="100dp"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="150dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_jacket"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginEnd="15dp"
                                         android:layout_width="100dp"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="150dp" />
 
                                     <TextView
                                         android:id="@+id/ol_couple_name"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="20dp"
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="15dp"
                                         android:layout_below="@+id/ol_couple_mod"
                                         android:layout_alignEnd="@+id/ol_couple_mod"
                                         android:layout_alignParentStart="true"
@@ -309,7 +323,21 @@
                                         android:gravity="center"
                                         android:singleLine="true"
                                         android:textColor="@color/white1"
-                                        android:textSize="12sp" />
+                                        android:textSize="12sp"
+                                        android:text="CL.5"/>
+
+                                    <TextView
+                                        android:id="@+id/couple_points"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/ol_couple_name"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:background="@drawable/ol_rectangle_blue"
+                                        android:text="祝福点:9999"
+                                        android:textColor="@color/white1"
+                                        android:gravity="center"/>
 
                                     <TextView
                                         android:id="@+id/ol_couple_class"
@@ -356,6 +384,7 @@
                                         android:id="@+id/couple_classname"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="15dp"
                                         android:layout_alignParentStart="true"
                                         android:layout_alignParentTop="true"
                                         android:background="@drawable/filled_classname"
@@ -372,41 +401,45 @@
                                     android:id="@+id/ol_couple_blessing"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/ol_rectangle_blue"
+                                    android:layout_marginTop="15dp"
+                                    android:background="@drawable/list"
+                                    android:text="想钓到美好的未来。为此得先垂下钓线才行。"
                                     android:textColor="@color/white1" />
                             </LinearLayout>
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal">
-
+                                android:layout_marginTop="15dp">
+                                <LinearLayout
+                                    android:layout_width="130dp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal">
                                 <Button
                                     android:id="@+id/ol_breakup_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
                                     android:background="@drawable/selector_ol_button"
                                     android:text="解除搭档"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp"
                                     android:visibility="visible" />
-
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal">
                                 <Button
                                     android:id="@+id/ol_setblessing_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/selector_ol_button"
+                                    android:background="@drawable/selector_ol_button_login"
+                                    android:layout_centerHorizontal="true"
                                     android:text="设置祝语"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp"
                                     android:visibility="visible" />
-
-                                <TextView
-                                    android:id="@+id/couple_points"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ol_rectangle_blue"
-                                    android:textColor="@color/white1" />
+                            </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
 
@@ -415,13 +448,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
-
                                 <ListView
                                     android:id="@+id/ol_friend_list"
                                     android:layout_width="match_parent"
@@ -431,7 +462,6 @@
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
-
                                 <Button
                                     android:id="@+id/pre_button"
                                     android:layout_width="wrap_content"
