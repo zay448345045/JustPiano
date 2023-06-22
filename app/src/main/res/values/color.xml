@@ -10,7 +10,6 @@
     <color name="translent">#00ffffff</color>
     <color name="yellow_l">#30c1b9fd</color>
     <color name="red_l">#60ffb9fd</color>
-    <color name="purple_l">#60a699ef</color>
     <color name="green_y">#ff6e8848</color>
     <color name="yellow_r">#ffffbb40</color>
     <color name="yellow_r_1">#00f4b240</color>
@@ -30,7 +29,6 @@
     <color name="exit">#ffff4500</color>
     <color name="roomtext">#ffc6e2ff</color>
     <color name="songname">#ff00ffff</color>
-    <color name="dialog">#ff88a8db</color>
     <color name="v1">#ffffcc00</color>
     <color name="v2">#ffff6600</color>
     <color name="v3">#ffff3333</color>

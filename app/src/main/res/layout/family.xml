@@ -41,7 +41,6 @@
             android:textSize="14sp" />
 
         <ScrollView
-            android:id="@+id/declaration0"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"

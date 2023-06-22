@@ -15,7 +15,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/relativeLayout40"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -24,12 +23,12 @@
                 android:id="@+id/challengetitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
                 android:layout_weight="23"
+                android:layout_marginTop="@dimen/dimen_24dp"
+                android:layout_marginBottom="@dimen/dimen_24dp"
+                android:paddingRight="@dimen/dimen_12dp"
                 android:gravity="center"
-                android:paddingRight="12dp"
-                android:text=" 每日挑战 "
+                android:text="@string/challenge_title"
                 android:textColor="@color/white1"
                 android:textSize="22sp" />
 
@@ -37,14 +36,14 @@
                 android:id="@+id/viewChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginTop="22dp"
-                android:layout_marginBottom="26dp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_orange_button"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_22dp"
+                android:layout_marginEnd="@dimen/dimen_50dp"
+                android:layout_marginBottom="@dimen/dimen_26dp"
                 android:gravity="center"
-                android:text="今日挑战曲目"
+                android:background="@drawable/selector_orange_button"
+                android:text="@string/challenge_today"
                 android:textColor="@color/white1"
                 android:textSize="14sp" />
 
@@ -53,62 +52,62 @@
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_weight="6"
+            android:layout_marginStart="@dimen/dimen_40dp"
+            android:layout_marginEnd="@dimen/dimen_40dp"
             android:baselineAligned="false"
-            android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:paddingBottom="30dp">
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_30dp">
 
             <LinearLayout
                 android:id="@+id/linearLayout6"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="18dp"
                 android:layout_weight="1"
+                android:layout_marginEnd="@dimen/dimen_18dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/infoview"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="6dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="3"
+                    android:layout_marginBottom="@dimen/dimen_6dp"
                     android:background="@drawable/list"
-                    android:text="个人信息"
+                    android:text="@string/challenge_inf"
                     android:textColor="@color/white1"
                     android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/drawPrize"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1"
-                    android:background="@drawable/selector_ol_button"
+                    android:layout_marginStart="@dimen/dimen_4dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_4dp"
+                    android:layout_marginBottom="@dimen/dimen_8dp"
                     android:gravity="center"
-                    android:text="获取奖励"
+                    android:background="@drawable/selector_ol_button"
+                    android:text="@string/challenge_prize"
                     android:textColor="@color/white1"
                     android:textSize="20sp" />
 
                 <Button
                     android:id="@+id/startchallenge"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1"
-                    android:background="@drawable/selector_ol_button_login"
+                    android:layout_marginStart="@dimen/dimen_4dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_4dp"
+                    android:layout_marginBottom="@dimen/dimen_8dp"
                     android:gravity="center"
-                    android:text="开始挑战"
+                    android:background="@drawable/selector_ol_button_login"
+                    android:text="@string/challenge_start"
                     android:textColor="@color/white1"
                     android:textSize="20sp" />
 
@@ -116,17 +115,18 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout7"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
+
                 <ListView
                     android:id="@+id/challenge_score_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingTop="@dimen/dimen_8dp"
                     android:background="@drawable/list"
-                    android:paddingTop="8dp"
                     android:cacheColorHint="#00ffffff"
                     android:choiceMode="singleChoice"
                     android:divider="@null"

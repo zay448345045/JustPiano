@@ -6,18 +6,17 @@
     android:orientation="horizontal">
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <LinearLayout
-
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="6"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:id="@+id/linearLayout6"
@@ -33,9 +32,9 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:maxLines="1"
-                    android:text="曲名"
-                    android:textColor="@color/white1"
                     android:textColorHighlight="@color/blue_d"
+                    android:text="@string/c_view_name"
+                    android:textColor="@color/white1"
                     android:textColorHint="@color/blue_d"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -52,93 +51,92 @@
                     android:id="@+id/sound_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00:00"
+                    android:text="@string/c_view_length"
                     android:textColor="@color/white1"
-
                     android:textSize="10sp" />
 
                 <View
-                    android:layout_width="5dp"
-                    android:layout_height="1dp" />
+                    android:layout_width="@dimen/dimen_5dp"
+                    android:layout_height="@dimen/dimen_1dp" />
 
                 <TextView
                     android:id="@+id/nandu_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:text="右手难度:"
-                    android:textColor="@color/white1"
                     android:textColorHighlight="@color/black"
+                    android:text="@string/c_view_rdiff"
+                    android:textColor="@color/white1"
                     android:textSize="10sp" />
 
                 <RatingBar
-                    android:id="@+id/nandu"
                     style="?android:attr/ratingBarStyleSmall"
+                    android:id="@+id/nandu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:numStars="1" />
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:numStars="5" />
 
                 <TextView
                     android:id="@+id/nandu_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical|center_horizontal|center"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/dimen_5dp"
                     android:gravity="start|center_vertical|center_horizontal|center"
-                    android:text="左手难度:"
-                    android:textColor="@color/white1"
+                    android:text="@string/c_view_ldiff"
                     android:textColorHighlight="@color/black"
+                    android:textColor="@color/white1"
                     android:textSize="10sp" />
 
                 <RatingBar
-                    android:id="@+id/leftnandu"
                     style="?android:attr/ratingBarStyleSmall"
+                    android:id="@+id/leftnandu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:numStars="1" />
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:numStars="5" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
             android:layout_weight="2.7"
-            android:orientation="horizontal">
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+
+            >
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
                 android:layout_weight="1.5"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_5dp"
                 android:background="@drawable/grounpbar"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="2"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/is_new"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end|center_vertical|center_horizontal|center"
                         android:layout_weight="1"
+                        android:layout_gravity="end|center_vertical|center_horizontal|center"
                         android:src="@null" />
 
                     <ImageView
                         android:id="@+id/favor"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/selector_list_f"
@@ -146,7 +144,7 @@
 
                     <ImageView
                         android:id="@+id/play_image"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/selector_list_f"
@@ -157,26 +155,26 @@
                     android:id="@+id/highscore"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-
                     android:layout_gravity="start"
                     android:gravity="start"
-                    android:text="得分:"
-                    android:textColor="@color/white1"
+
                     android:textColorHighlight="@color/black"
                     android:textSize="12sp"
+                    android:text="@string/c_view_score"
+                    android:textColor="@color/white1"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/play"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:background="@color/translent"
                 android:src="@drawable/selector_child_paly" />
 
             <View
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2" />
 

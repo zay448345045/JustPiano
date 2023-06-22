@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>]
-    <string name="null0" />
-    <string name="app_name">极品钢琴</string>
-    <string name="about">极品钢琴V4.6 浴火重生版\n
-        更新日志：\n
-        1.联网键盘模式优化、降低延迟、房间扩容至6人\n
-        2.网络传输性能优化，录音功能修复\n
-        3.在线聊天支持开启时间显示，服装增加试穿功能\n
-        4.增加曲谱、服装、表情，修复若干问题\n
-        感谢各位新老用户的支持！\n\n
-
-        鸣谢所有参与开发合作的朋友们：\n
-        程序启发与数据传输协议解读：喵喵\n
-        服务器提供及运维：苹果箭\n
-        旧服务器数据迁移与清洗：SEA深海人鱼、漫步月球的小鹿的搭档\n
-        UI界面制作：敏儿\n
-        图片素材设计及制作：暖暖、油炸白米饭\n
-        程序图标设计及制作：NEW YORK YANKEES、敏儿\n
-        新考级曲目制定：七叶星果\n
-        安卓端协助开发(2020)：林间阳光\n
-        新曲谱整理与收录(2020)：NEW YORK YANKEES\n
-        曲谱上传与宣传网页制作(2020)：雨霁\n
-        服务器管理(2020)：ミク欧内酱\n
-        感谢所有参与制作、支持、贡献或提供建议的朋友们\n\n
-        有意向协助软件开发请联系开发负责人QQ2431548195(as2134u)，软件体系架构主要包括安卓客户端 + 对战部分即时通讯服务端(Netty) + 官网(前端/后端) + 后台管理(前端/后端)等组件\n
-        【此版本为个人自制，仅做学习研究软件开发使用，如您发现软件中的曲谱、皮肤等对您构成侵权，请联系开发者进行删除】\n
+<resources>
+	<string name="null0">
     </string>
-    <string name="settings_name">设置</string>
-    <string name="background_sound">和弦</string>
-    <string name="draw_speed">滑落速度(影响歌曲节奏)</string>
-    <string name="back_sound">和弦音量(突出弹奏声音)</string>
-    <string name="song_speed">歌曲速度调节：</string>
-    <string name="b_s_sum">减小和弦音量,突出主旋律</string>
-    <string name="b_s_open">打开和弦</string>
-    <string name="b_s_open_1">和弦已打开</string>
-    <string name="b_s_open_2">和弦已关闭</string>
-    <string name="b_s_key">sound_check_box</string>
-    <string name="b_s_vol">sound_vol</string>
-    <string name="b_s_vol_title">和弦音量</string>
-    <string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果。</string>
-    <string name="nandu">难度</string>
-    <string name="perfect">暴击</string>
-    <string name="cool">很棒</string>
-    <string name="great">完美</string>
-    <string name="bad">一般</string>
-    <string name="miss">失误</string>
-    <string name="totle">总共</string>
-    <string name="number">个数:</string>
-    <string name="score">分数:</string>
-    <string name="uget">你的分数:</string>
-    <string name="hscore">最高分:</string>
-    <string name="win">祝贺你,夺得此曲的冠军！</string>
-    <string name="thanks" />
+	<string name="app_name">极品钢琴</string>
+	<string name="about">极品钢琴V4.6 浴火重生版\n
+        更新日志：\n</string>
+	<string name="settings_name">设置</string>
+	<string name="background_sound">和弦</string>
+	<string name="draw_speed">滑落速度(影响歌曲节奏)</string>
+	<string name="back_sound">和弦音量(突出弹奏声音)</string>
+	<string name="song_speed">歌曲速度调节：</string>
+	<string name="b_s_sum">减小和弦音量,突出主旋律</string>
+	<string name="b_s_open">打开和弦</string>
+	<string name="b_s_open_1">和弦已打开</string>
+	<string name="b_s_open_2">和弦已关闭</string>
+	<string name="b_s_key">sound_check_box</string>
+	<string name="b_s_vol">sound_vol</string>
+	<string name="b_s_vol_title">和弦音量</string>
+	<string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果。</string>
+	<string name="perfect">暴击</string>
+	<string name="cool">很棒</string>
+	<string name="great">完美</string>
+	<string name="bad">一般</string>
+	<string name="miss">失误</string>
+	<string name="total">总共</string>
+	<string name="number">个数:</string>
+	<string name="score">分数:</string>
+	<string name="uget">你的分数:</string>
+	<string name="hscore">最高分:</string>
+	<string name="win">祝贺你,夺得此曲的冠军！</string>
+	<string name="thanks"> </string>
+	<string name="login_title">极品钢琴 v4.7 </string>
+	<string name="login_subtitle">浴火重生版</string>
+	<string name="login_acc_label">账号:</string>
+	<string name="login_pwd_label">密码:</string>
+	<string name="login_rem_acc">记住账号 </string>
+	<string name="login_rem_pwd">记住密码 </string>
+	<string name="login_auto">自动登录</string>
+	<string name="login_button"> 登录 </string>
+	<string name="reg_button"> 注册 </string>
+	<string name="login_sw_acc">切换账号</string>
+	<string name="login_sw_svr">切换服务器</string>
+	<string name="account_name_del">删除</string>
+	<string name="c_view_name">曲名</string>
+	<string name="c_view_length">00:00</string>
+	<string name="c_view_rdiff">右手难度:</string>
+	<string name="c_view_ldiff">左手难度:</string>
+	<string name="c_view_score">得分:</string>
+	<string name="challenge_title"> 每日挑战 </string>
+	<string name="challenge_today">今日挑战曲目</string>
+	<string name="challenge_inf">个人信息</string>
+	<string name="challenge_prize">获取奖励</string>
+	<string name="challenge_start">开始挑战</string>
 </resources>

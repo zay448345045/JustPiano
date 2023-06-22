@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/translent"
     android:baselineAligned="false"
+    android:background="@color/translent"
     android:gravity="center">
 
     <LinearLayout
@@ -13,22 +13,22 @@
 
         <TextView
             android:id="@+id/account_msg"
+            android:textColor="@color/white1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white1"
             android:lineSpacingExtra="6dp"
             android:visibility="gone"></TextView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="12dp"
+            android:layout_height="@dimen/dimen_180dp"
+            android:paddingTop="@dimen/dimen_6dp"
+            android:paddingBottom="@dimen/dimen_12dp"
             android:orientation="horizontal">
 
             <ListView
                 android:id="@+id/account_list"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:divider="@null" />

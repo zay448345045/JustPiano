@@ -11,7 +11,6 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/register_account_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/blue_l"
@@ -22,7 +21,6 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/register_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,7 +34,6 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/game_password_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -46,7 +43,6 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/game_password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -60,7 +56,6 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/email_address_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -70,7 +65,6 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/email_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

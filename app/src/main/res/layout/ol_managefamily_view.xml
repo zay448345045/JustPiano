@@ -75,7 +75,6 @@
                 android:textSize="24sp" />
 
             <CheckBox
-                android:id="@+id/ol_family_test_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -101,7 +100,6 @@
                     android:textStyle="bold" />
 
                 <AutoCompleteTextView
-                    android:id="@+id/ol_family_test_name"
                     style="@style/AutoCompleteStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +139,6 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/ol_family_test_score"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edittext_back"

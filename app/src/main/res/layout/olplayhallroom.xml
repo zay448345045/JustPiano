@@ -515,7 +515,6 @@
                             android:orientation="vertical">
 
                             <LinearLayout
-                                android:id="@+id/my_family_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -523,14 +522,12 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium">
 
                                 <LinearLayout
-                                    android:id="@+id/my_family_layout2"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
                                     android:textAppearance="?android:attr/textAppearanceMedium">
 
                                     <TextView
-                                        android:id="@+id/my_family_text"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="3"
@@ -554,7 +551,6 @@
                                 </LinearLayout>
 
                                 <LinearLayout
-                                    android:id="@+id/ol_myfamily"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@color/black"
@@ -562,7 +558,6 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/ol_myfamily_positionT"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
@@ -575,7 +570,6 @@
                                         android:textStyle="bold" />
 
                                     <TextView
-                                        android:id="@+id/ol_myfamily_picT"
                                         android:layout_width="32dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"
@@ -586,7 +580,6 @@
                                         android:textStyle="bold" />
 
                                     <TextView
-                                        android:id="@+id/ol_myfamily_nameT"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"
@@ -598,7 +591,6 @@
                                         android:textStyle="bold" />
 
                                     <TextView
-                                        android:id="@+id/ol_myfamily_countT"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"
@@ -610,7 +602,6 @@
                                         android:textStyle="bold" />
 
                                     <TextView
-                                        android:id="@+id/ol_myfamily_contributionT"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"

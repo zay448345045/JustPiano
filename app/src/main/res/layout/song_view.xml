@@ -69,7 +69,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp" />
+                    android:layout_marginStart="5dp"
+                    android:numStars="5"/>
 
                 <TextView
                     android:id="@+id/nandu_2"
@@ -87,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:numStars="1" />
+                    android:numStars="5" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
