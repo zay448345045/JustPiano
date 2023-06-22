@@ -8,10 +8,11 @@
         android:id="@+id/ol_s_p"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_ol_button"
         android:gravity="center"
-        android:text="TextView"
-        android:textColor="@color/white1"
+        android:background="@drawable/selector_ol_button"
         android:textSize="17sp"
+        android:fontFamily="@font/main"
+        android:text="@string/f_view"
+        android:textColor="@color/white1"
         android:textStyle="bold" />
 </LinearLayout>

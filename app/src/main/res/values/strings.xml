@@ -30,7 +30,8 @@
 	<string name="hscore">最高分:</string>
 	<string name="win">祝贺你,夺得此曲的冠军！</string>
 	<string name="thanks"> </string>
-	<string name="login_title">极品钢琴 v4.7 </string>
+	<string name="login_title">极品钢琴</string>
+	<string name="login_ver">v4.7</string>
 	<string name="login_subtitle">浴火重生版</string>
 	<string name="login_acc_label">账号:</string>
 	<string name="login_pwd_label">密码:</string>
@@ -52,4 +53,26 @@
 	<string name="challenge_inf">个人信息</string>
 	<string name="challenge_prize">获取奖励</string>
 	<string name="challenge_start">开始挑战</string>
+	<string name="main_mode_null">
+	</string>
+	<string name="main_mode_local">本地弹奏</string>
+	<string name="main_mode_ol">联网模式</string>
+	<string name="main_mode_set">参数设置</string>
+	<string name="main_mode_skin">皮肤下载</string>
+	<string name="main_mode_about">软件说明</string>
+	<string name="main_mode_rec">录音文件</string>
+	<string name="main_mode_hlp">软件帮助</string>
+	<string name="main_mode_chat">聊天记录</string>
+	<string name="main_mode_fb">问题反馈</string>
+	<string name="main_mode_sound">音源下载</string>
+	<string name="main_mode_wrn">此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除</string>
+	<string name="create_room_n">普通</string>
+	<string name="create_room_g">组队</string>
+	<string name="create_room_k">键盘</string>
+	<string name="create_room_c">双人</string>
+	<string name="f_view">TextView</string>
+	<string name="family_name">家族名称：</string>
+	<string name="family_declaration">家族宣言</string>
+	<string name="family_manage">族长入口</string>
+	<string name="family_io">申请加入</string>
 </resources>

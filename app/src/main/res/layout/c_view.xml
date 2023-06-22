@@ -8,15 +8,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="@dimen/dimen_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="6"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/linearLayout6"
@@ -31,10 +29,11 @@
                     android:layout_gravity="center"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:fontFamily="@font/main"
                     android:maxLines="1"
-                    android:textColorHighlight="@color/blue_d"
                     android:text="@string/c_view_name"
                     android:textColor="@color/white1"
+                    android:textColorHighlight="@color/blue_d"
                     android:textColorHint="@color/blue_d"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -51,6 +50,7 @@
                     android:id="@+id/sound_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/main"
                     android:text="@string/c_view_length"
                     android:textColor="@color/white1"
                     android:textSize="10sp" />
@@ -63,14 +63,15 @@
                     android:id="@+id/nandu_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColorHighlight="@color/black"
+                    android:fontFamily="@font/main"
                     android:text="@string/c_view_rdiff"
                     android:textColor="@color/white1"
+                    android:textColorHighlight="@color/black"
                     android:textSize="10sp" />
 
                 <RatingBar
-                    style="?android:attr/ratingBarStyleSmall"
                     android:id="@+id/nandu"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -83,15 +84,16 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical|center_horizontal|center"
                     android:layout_marginStart="@dimen/dimen_5dp"
+                    android:fontFamily="@font/main"
                     android:gravity="start|center_vertical|center_horizontal|center"
                     android:text="@string/c_view_ldiff"
-                    android:textColorHighlight="@color/black"
                     android:textColor="@color/white1"
+                    android:textColorHighlight="@color/black"
                     android:textSize="10sp" />
 
                 <RatingBar
-                    style="?android:attr/ratingBarStyleSmall"
                     android:id="@+id/leftnandu"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -104,8 +106,8 @@
         <LinearLayout
             android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2.7"
             android:layout_gravity="center_vertical"
+            android:layout_weight="2.7"
             android:orientation="horizontal"
 
             >
@@ -114,9 +116,9 @@
                 android:id="@+id/linearLayout3"
                 android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_weight="1.5"
                 android:background="@drawable/grounpbar"
                 android:orientation="vertical">
 
@@ -130,8 +132,8 @@
                         android:id="@+id/is_new"
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="end|center_vertical|center_horizontal|center"
+                        android:layout_weight="1"
                         android:src="@null" />
 
                     <ImageView
@@ -156,12 +158,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
-                    android:gravity="start"
+                    android:fontFamily="@font/main"
 
-                    android:textColorHighlight="@color/black"
-                    android:textSize="12sp"
+                    android:gravity="start"
                     android:text="@string/c_view_score"
                     android:textColor="@color/white1"
+                    android:textColorHighlight="@color/black"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
 

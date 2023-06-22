@@ -4,30 +4,35 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:paddingTop="@dimen/dimen_16dp"
+        android:paddingBottom="@dimen/dimen_16dp">
+
         <LinearLayout
+            style="@style/InputBoxStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            style="@style/InputBoxStyle">
+            android:gravity="center">
+
             <EditText
                 android:id="@+id/room_name"
-                android:layout_width="216dp"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen_216dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:textColor="@color/white1"
-                android:textSize="18sp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
+                android:fontFamily="@font/main"
                 android:hint="输入房名"
-                android:singleLine="true"
-                style="@style/EditTextStyle" />
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="18sp" />
+
             <requestFocus />
         </LinearLayout>
     </LinearLayout>
@@ -36,63 +41,74 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="16dp">
+        android:paddingBottom="@dimen/dimen_16dp">
 
         <LinearLayout
+            style="@style/InputBoxStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            style="@style/InputBoxStyle">
+            android:gravity="center">
 
             <EditText
                 android:id="@+id/room_password"
                 style="@style/EditTextStyle"
-                android:layout_width="216dp"
+                android:layout_width="@dimen/dimen_216dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:fontFamily="@font/main"
                 android:hint="输入密码"
                 android:inputType="textPassword"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:singleLine="true"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
+
             <requestFocus />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
         <RadioGroup
             android:id="@+id/room_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <RadioButton
                 android:id="@+id/normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="普通" />
+                android:fontFamily="@font/main"
+                android:text="@string/create_room_n" />
+
             <RadioButton
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="组队" />
+                android:fontFamily="@font/main"
+                android:text="@string/create_room_g" />
 
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="键盘" />
+                android:fontFamily="@font/main"
+                android:text="@string/create_room_k" />
+
             <RadioButton
                 android:id="@+id/couple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="双人" />
+                android:fontFamily="@font/main"
+                android:text="@string/create_room_c" />
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>

@@ -9,7 +9,7 @@
 
     <ListView
         android:id="@+id/family_people_list"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
         android:background="@color/translent"
@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout5"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
         android:background="@color/translent"
@@ -33,16 +33,17 @@
         <TextView
             android:id="@+id/info_text"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_weight="2"
             android:background="@color/blue_translent"
-            android:text="家族名称："
+            android:fontFamily="@font/main"
+            android:text="@string/family_name"
             android:textColor="@color/green_r"
             android:textSize="14sp" />
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_weight="3"
             android:background="@drawable/ol_rectangle_blue"
             android:scrollbars="none"
@@ -53,7 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ol_rectangle_blue"
-                android:text="家族宣言"
+                android:fontFamily="@font/main"
+                android:text="@string/family_declaration"
                 android:textColor="@color/white1"
                 android:textSize="14sp" />
         </ScrollView>
@@ -61,7 +63,7 @@
         <LinearLayout
             android:id="@+id/linearLayout6"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_weight="1"
             android:background="@color/translent"
             android:baselineAligned="false"
@@ -71,33 +73,35 @@
             <Button
                 android:id="@+id/manage_family"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/dimen_40dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
+                android:fontFamily="@font/main"
                 android:gravity="center"
-                android:text="族长入口"
+                android:text="@string/family_manage"
                 android:textColor="@color/white1"
                 android:textSize="14sp" />
 
             <Button
                 android:id="@+id/in_out"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/dimen_40dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_button"
+                android:fontFamily="@font/main"
                 android:gravity="center"
-                android:text="申请加入"
+                android:text="@string/family_io"
                 android:textColor="@color/white1"
                 android:textSize="14sp" />
 

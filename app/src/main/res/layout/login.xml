@@ -18,10 +18,21 @@
             android:id="@+id/TextView02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:fontFamily="@font/login"
             android:text="@string/login_title"
             android:textColor="@color/white1"
             android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/TextView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_6dp"
+            android:fontFamily="@font/login"
+            android:text="@string/login_ver"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/TextView01"
@@ -165,13 +176,13 @@
             android:id="@+id/ol_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/ol_login"
             android:layout_alignBaseline="@+id/ol_login"
             android:layout_alignParentTop="true"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_marginLeft="@dimen/dimen_10dp"
-            android:background="@drawable/selector_ol_button"
             android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_login"
+            android:background="@drawable/selector_ol_button"
             android:text="@string/reg_button"
             android:textColor="@color/white1"
             android:textSize="21sp" />
@@ -185,8 +196,8 @@
             android:layout_marginStart="@dimen/dimen_5dp"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:layout_marginRight="@dimen/dimen_8dp"
-            android:background="@drawable/selector_orange_button"
             android:layout_toEndOf="@+id/ol_register"
+            android:background="@drawable/selector_orange_button"
             android:text="@string/login_sw_acc"
             android:textColor="@color/white1"
             android:textSize="12sp" />
@@ -195,10 +206,10 @@
             android:id="@+id/ol_change_server"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/ol_change_account"
             android:layout_alignBaseline="@+id/ol_change_account"
-            android:background="@drawable/selector_orange_button"
             android:layout_alignBottom="@+id/ol_change_account"
+            android:layout_toEndOf="@+id/ol_change_account"
+            android:background="@drawable/selector_orange_button"
             android:text="@string/login_sw_svr"
             android:textColor="@color/white1"
             android:textSize="12sp" />
