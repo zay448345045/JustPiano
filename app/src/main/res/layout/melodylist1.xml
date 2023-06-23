@@ -8,27 +8,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ads"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="Suspicious0dp">
-
-        <TextView
-            android:id="@+id/title_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:keepScreenOn="true"
-            android:text="选择曲谱:"
-            android:textColor="@color/white1"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:typeface="monospace" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/linearLayout9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +22,6 @@
     </LinearLayout>
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue_d"
@@ -53,9 +31,9 @@
         android:orientation="horizontal">
 
         <View
-            android:layout_width="0dp"
-            android:layout_height="15dp"
-            android:layout_weight="0.1" />
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_weight="0.05" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -65,10 +43,11 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/totle_score_all"
+                android:id="@+id/total_score_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="总分"
+                android:fontFamily="@font/main"
+                android:text="@string/melodylist1_total_score_all"
                 android:textColor="@color/white1"
                 android:textSize="12sp" />
 
@@ -76,14 +55,15 @@
                 android:id="@+id/all_mel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="曲谱数"
+                android:fontFamily="@font/main"
+                android:text="@string/melodylist1_all_mel"
                 android:textColor="#ffffffff"
                 android:textSize="12sp" />
         </LinearLayout>
 
         <View
-            android:layout_width="0dp"
-            android:layout_height="15dp"
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_15dp"
             android:layout_weight="0.03" />
 
         <Button
@@ -93,60 +73,84 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.1"
             android:background="@drawable/selector_orange_button"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:singleLine="true"
-            android:text="排序方式"
+            android:maxLines="1"
+            android:text="@string/melodylist1_sort_b"
             android:textColor="@color/white1"
             android:textSize="14sp" />
 
-        <AutoCompleteTextView
-            android:id="@+id/search_edit"
-            style="@style/AutoCompleteStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:background="@drawable/search_box"
-            android:completionThreshold="1"
-            android:configChanges="keyboard"
-            android:divider="@null"
-            android:dropDownWidth="300dp"
-            android:dropDownHeight="220dp"
-            android:ems="10"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="搜索"
-            android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
-            android:listSelector="@android:color/transparent"
-            android:singleLine="true"
-            android:textColor="#ffffffff"
-            android:textColorHint="#90ffffff"
-            android:textSize="14sp" />
-
         <LinearLayout
-
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <View
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="@dimen/dimen_15dp"
+                android:layout_weight="0.03" />
+
+            <LinearLayout
+                style="@style/InputBoxStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.1" />
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <AutoCompleteTextView
+                    android:id="@+id/search_edit"
+                    style="@style/AutoCompleteStyle"
+                    android:layout_width="@dimen/dimen_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:completionThreshold="1"
+                    android:configChanges="keyboard"
+                    android:dropDownWidth="@dimen/dimen_320dp"
+                    android:dropDownHeight="@dimen/dimen_240dp"
+                    android:ems="10"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="@font/main"
+                    android:hint="搜索"
+                    android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
+                    android:maxLines="1"
+                    android:textColor="#ffffffff"
+                    android:textColorHint="#90ffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="@dimen/dimen_15dp"
+                android:layout_weight="0.03" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_55dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_weight="0.28"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="@dimen/dimen_0dp"
+                android:layout_weight="0.11" />
 
             <ImageView
                 android:id="@+id/search_fast"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
+                android:layout_width="@dimen/dimen_55dp"
+                android:layout_height="@dimen/dimen_0dp"
+                android:layout_weight="0.25"
+                android:background="@drawable/selector_ol_button"
                 android:src="@drawable/search" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.1" />
+                android:layout_height="@dimen/dimen_0dp"
+                android:layout_weight="0.11" />
         </LinearLayout>
 
         <CheckBox
@@ -154,97 +158,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:text="录音"
-            android:textSize="15sp" />
+            android:text="@string/melodylist1_rec"
+            android:textSize="16sp" />
 
         <CheckBox
             android:id="@+id/check_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:text="连续"
-            android:textSize="15sp" />
+            android:text="@string/melodylist1_seq"
+            android:textSize="16sp" />
 
         <CheckBox
             android:id="@+id/check_hand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:text="左手"
-            android:textSize="15sp" />
+            android:text="@string/melodylist1_hand"
+            android:textSize="16sp" />
 
         <LinearLayout
-
-            android:layout_width="0dp"
-            android:layout_height="55dp"
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_55dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.45"
+            android:orientation="vertical"
 
-            android:orientation="vertical">
+
+            >
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/dimen_0dp"
                 android:layout_weight="0.1" />
 
             <ImageView
                 android:id="@+id/menu_list_fast"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
+                android:layout_height="@dimen/dimen_0dp"
                 android:layout_gravity="center"
+                android:layout_weight="0.3"
                 android:src="@drawable/list_icon" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/dimen_0dp"
                 android:layout_weight="0.1" />
         </LinearLayout>
 
 
     </LinearLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/RelativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/blue_d"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="start"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-
-            android:background="@drawable/grounpbar"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="搜索: "
-            android:textColor="@color/white1"
-            android:textSize="18sp" />
-
-
-        <Button
-            android:id="@+id/show_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/filled_list"
-            android:gravity="fill"
-            android:text="隐藏标题"
-            android:textColor="@color/white1"
-            android:textColorHint="@color/yellow_r"
-            android:textSize="10sp" />
-    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -256,15 +227,16 @@
 
         <LinearLayout
             android:id="@+id/linearLayout13"
-            android:layout_width="95dp"
+            android:layout_width="@dimen/dimen_95dp"
             android:layout_height="match_parent"
-            android:background="@drawable/filled_bar">
+            android:background="@drawable/filled_bar"
+            android:gravity="center_vertical">
 
             <ListView
                 android:id="@+id/f_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@drawable/divider"
+                android:layout_height="wrap_content"
+                android:divider="@null"
                 android:fastScrollEnabled="false"
                 android:listSelector="#00000000" />
         </LinearLayout>
@@ -281,7 +253,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:cacheColorHint="#00ffffff"
-                android:divider="@drawable/divider" />
+                android:divider="@null" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

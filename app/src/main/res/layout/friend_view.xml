@@ -17,17 +17,18 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/friend_sex"
+            android:fontFamily="@font/main_bold"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/f_view"
             android:textColor="@color/white1"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/friend_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:src="@drawable/f" />
 
         <Button
@@ -36,8 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/selector_ol_button"
-            android:text="删除"
+            android:background="@drawable/selector_ol_button_login"
+            android:fontFamily="@font/main"
+            android:text="@string/account_name_del"
             android:textColor="@color/white1"
             android:textSize="18sp" />
 
@@ -46,9 +48,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_15dp"
             android:layout_toStartOf="@+id/friend_dele"
             android:background="@drawable/selector_ol_button"
-            android:text="私信"
+            android:fontFamily="@font/main"
+            android:text="@string/friend_view_pm"
             android:textColor="@color/white1"
             android:textSize="18sp" />
 
@@ -57,9 +61,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_8dp"
             android:layout_toStartOf="@+id/friend_send"
             android:background="@drawable/selector_ol_button"
-            android:text="资料"
+            android:fontFamily="@font/main"
+            android:text="@string/friend_view_info"
             android:textColor="@color/white1"
             android:textSize="18sp" />
 
@@ -68,11 +74,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_8dp"
             android:layout_toStartOf="@+id/friend_info"
+            android:fontFamily="@font/main_bold"
             android:gravity="center"
-            android:text="LV.36"
+            android:text="@string/friend_view_lv"
             android:textColor="@color/white1"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
     </RelativeLayout>
 </LinearLayout>

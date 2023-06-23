@@ -250,16 +250,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                     sortPopupwindow.showAsDropDown(sortButton);
                 }
                 return;
-            case R.id.search_button:
-                View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
-                TextView textView = inflate.findViewById(R.id.text_1);
-                TextView textView2 = inflate.findViewById(R.id.title_1);
-                TextView textView3 = inflate.findViewById(R.id.title_2);
-                inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
-                textView3.setVisibility(View.GONE);
-                textView2.setText("关键词:");
-                new JPDialog(this).setTitle("搜索曲谱").loadInflate(inflate).setFirstButton("搜索", new SearchSongsClick(this, textView.getText().toString())).setSecondButton("取消", new DialogDismissClick()).showDialog();
-                return;
             case R.id.search_fast:
                 autoctv.clearFocus();
                 cursor = sqlitedatabase.query("jp_data", null, "name like '%" + autoctv.getText().toString() + "%' AND " + f4238O, null, null, null, sortStr);
@@ -314,8 +304,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 return false;
             });
             jpapplication.setBackGround(this, "ground", linearLayout);
-            Button f4230G = findViewById(R.id.search_button);
-            f4230G.setOnClickListener(this);
             sortButton = findViewById(R.id.list_sort_b);
             sortButton.setOnClickListener(this);
             ListView f4245a = findViewById(R.id.f_list);
@@ -358,7 +346,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                     }
                 });
             }
-            TextView f4248d = findViewById(R.id.totle_score_all);
+            TextView f4248d = findViewById(R.id.total_score_all);
             f4247c.setText("曲谱:" + f4257m);
             f4248d.setText("总分:" + score);
             f4245a.setAdapter(new LocalSongsItemAdapter(this));
@@ -388,8 +376,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             if (f4255k) {
                 titleTextView.setVisibility(View.VISIBLE);
             }
-            f4249e = findViewById(R.id.show_button);
-            f4249e.setVisibility(View.GONE);
             f4249e.setOnClickListener(v -> {
                 if (f4255k) {
                     titleTextView.setVisibility(View.GONE);
@@ -452,13 +438,13 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             sortPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 10, -2, true);
             sortPopupwindow.setOutsideTouchable(true);
             sortPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
-
             List<String> menuListNames = new ArrayList<>();
             Collections.addAll(menuListNames, Consts.localMenuListNames);
             inflate = getLayoutInflater().inflate(R.layout.options, null);
             listView = inflate.findViewById(R.id.list);
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
             listView.setAdapter(popupWindowSelectAdapter);
+            listView.setDivider(null);
             menuPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 10, -2, true);
             menuPopupwindow.setOutsideTouchable(true);
             menuPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
@@ -474,6 +460,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
             AutoCompleteTextView view = (AutoCompleteTextView) v;
             if (hasFocus) {
+
                 view.showDropDown();
             }
         });

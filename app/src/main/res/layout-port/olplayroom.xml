@@ -252,7 +252,7 @@
                                 android:layout_height="wrap_content"
                                 android:listSelector="@color/translent"
                                 android:cacheColorHint="#00ffffff"
-                                android:divider="@drawable/divider"
+                                android:divider="@null"
                                 android:layout_above="@id/ol_search_text"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentStart="true"/>
@@ -319,7 +319,7 @@
                                 android:layout_height="225.0dip" 
                                 android:listSelector="@color/translent" 
                                 android:cacheColorHint="#00ffffff" 
-                                android:divider="@drawable/divider" 
+                                android:divider="@null"
                                 android:layout_above="@id/ol_express_b" 
                                 android:layout_alignParentTop="true" 
                                 android:layout_alignParentStart="true"/>

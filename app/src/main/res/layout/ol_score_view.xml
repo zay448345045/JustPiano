@@ -26,7 +26,7 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="end"
         android:layout_marginStart="70dp"
-        android:divider="@drawable/divider"
+        android:divider="@null"
         android:listSelector="@color/translent"
         android:visibility="gone" />
 

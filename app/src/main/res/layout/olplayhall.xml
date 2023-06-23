@@ -79,7 +79,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_weight="1"
                 android:cacheColorHint="#00000000"
-                android:divider="@drawable/divider" />
+                android:divider="@null" />
 
             <Button
                 android:id="@+id/ol_createroom_b"
@@ -248,7 +248,7 @@
                                 android:layout_above="@+id/ol_send_b"
                                 android:layout_alignParentTop="true"
                                 android:cacheColorHint="#00ffffff"
-                                android:divider="@drawable/divider"
+                                android:divider="@null"
                                 android:listSelector="@color/translent" />
 
                             <EditText

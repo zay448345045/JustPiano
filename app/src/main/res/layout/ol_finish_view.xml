@@ -43,7 +43,7 @@
                 android:layout_alignStart="@+id/RelativeLayout1"
                 android:layout_alignEnd="@+id/RelativeLayout1"
                 android:cacheColorHint="#00000000"
-                android:divider="@drawable/divider" />
+                android:divider="@null" />
 
             <LinearLayout
                 android:layout_width="match_parent"

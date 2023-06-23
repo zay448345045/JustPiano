@@ -81,11 +81,18 @@
     </style>
 
     <style name="AutoCompleteStyle">
-        <item name="android:popupBackground">@drawable/searchsongs</item>
+        <item name="android:popupBackground">@drawable/selector_ol_button</item>
+        <item name="android:dropDownVerticalOffset">20dip</item>
         <item name="android:dropDownHorizontalOffset">-25dip</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:background">@null</item>
         <item name="android:maxHeight">200dip</item>
         <item name="android:maxWidth">250dip</item>
-        <item name="android:divider">#ff0000</item>
+        <item name="android:divider">@color/translent</item>
+        <item name="android:dividerHeight">0sp</item>
     </style>
 
     <style name="Theme.UMDialog" parent="@android:style/Theme.Dialog">

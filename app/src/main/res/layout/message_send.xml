@@ -11,35 +11,50 @@
         android:layout_height="wrap_content"
         android:background="@color/blue_l"
         android:textColor="@color/white1"
-        android:visibility="gone"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_12dp">
 
         <TextView
             android:id="@+id/title_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/blue_l"
+            android:fontFamily="@font/main"
             android:gravity="center_vertical"
-            android:text="房名:"
-
+            android:text="@string/message_send_name"
             android:textColor="@color/white1"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/text_1"
-            android:layout_width="0dp"
+        <LinearLayout
+            style="@style/InputBoxStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/search_box"
-            android:ems="10"
-            android:maxLines="5"
-            android:minWidth="200dp"
-            android:textColor="@color/white1" />
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/text_1"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen_200dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+
+
+                android:fontFamily="@font/main"
+                android:maxLines="5"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -50,21 +65,35 @@
             android:id="@+id/title_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/main"
             android:gravity="center_vertical"
-            android:text="密码:"
+            android:text="@string/login_pwd_label"
             android:textColor="@color/white1"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/text_2"
-            android:layout_width="0dp"
+        <LinearLayout
+            style="@style/InputBoxStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/search_box"
-            android:ems="10"
-            android:maxLines="5"
-            android:minWidth="100dp"
-            android:textColor="@color/white1" />
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/text_2"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen_200dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+
+
+                android:fontFamily="@font/main"
+                android:maxLines="5"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

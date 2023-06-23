@@ -169,7 +169,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             ImageView imageView9e = inflate.findViewById(R.id.ol_couple_eye);
             ImageView imageView10 = inflate.findViewById(R.id.ol_couple_shoes);
             TextView textView8 = inflate.findViewById(R.id.couple_bless);
-            TextView textView9 = inflate.findViewById(R.id.couple_pionts);
             ImageView imageView11 = inflate.findViewById(R.id.couple_type);
             ((TextView) inflate.findViewById(R.id.ol_player_name)).setText(User.getPlayerName());
             textView.setText("LV." + User.getLevel());
@@ -180,7 +179,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             textView6.setText("CL." + User2.getCLevel());
             textView7.setText(Consts.nameCL[User2.getCLevel()]);
             textView8.setText(jSONObject4.getString("B"));
-            textView9.setText(String.valueOf(jSONObject4.getInt("P")));
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
             if (User.getTrousers() <= 0) {
@@ -234,7 +232,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             } else {
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_s" + (User2.getShoes() - 1) + ".png")));
             }
-            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福", new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:"+String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -771,7 +769,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         PopupWindow popupWindow3 = new PopupWindow(this);
         View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_changecolor, null);
         popupWindow3.setContentView(inflate3);
-        popupWindow3.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+        popupWindow3.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
         popupWindow3.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow3.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         inflate3.findViewById(R.id.white).setOnClickListener(this);

@@ -9,54 +9,54 @@
 
     <TextView
         android:id="@+id/ol_family_position"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="3dp"
         android:layout_weight="2.5"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
-        android:textColor="@color/white1"
+        android:fontFamily="@font/main_bold"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textColor="@color/white1" />
 
     <ImageView
         android:id="@+id/ol_family_pic"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="3dp"
+        android:layout_width="@dimen/dimen_32dp"
+        android:layout_height="@dimen/dimen_32dp"
+        android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
         android:src="@drawable/family" />
 
     <TextView
         android:id="@+id/ol_family_name"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
         android:layout_weight="7"
+        android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="start"
-        android:textColor="@color/white1"
+        android:fontFamily="@font/main_bold"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textColor="@color/white1" />
 
     <TextView
         android:id="@+id/ol_family_count"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
         android:layout_weight="2"
+        android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
-        android:textColor="@color/white1"
+        android:fontFamily="@font/main_bold"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textColor="@color/white1" />
 
     <TextView
         android:id="@+id/ol_family_contribution"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
         android:layout_weight="3"
+        android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
-        android:textColor="@color/white1"
+        android:fontFamily="@font/main_bold"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textColor="@color/white1" />
 </LinearLayout>

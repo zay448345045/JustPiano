@@ -20,7 +20,7 @@
             android:layout_below="@+id/relativeLayout2"
             android:layout_centerHorizontal="true"
             android:background="@color/translent"
-            android:src="@drawable/selector_child_paly" />
+            android:src="@drawable/selector_child_play" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"

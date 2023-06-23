@@ -64,7 +64,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             }
         });
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(olPlayKeyboardRoom.getResources().getDrawable(R.drawable.filled_box));
+        popupWindow.setBackgroundDrawable(olPlayKeyboardRoom.getResources().getDrawable(R.drawable._none));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);

@@ -8,11 +8,14 @@
         android:id="@+id/ol_s_p"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginLeft="@dimen/dimen_2dp"
+        android:layout_marginTop="@dimen/dimen_2dp"
+        android:layout_marginRight="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_2dp"
         android:background="@drawable/selector_ol_button"
-        android:textSize="17sp"
-        android:fontFamily="@font/main"
+        android:fontFamily="@font/main_bold"
+        android:gravity="center"
         android:text="@string/f_view"
         android:textColor="@color/white1"
-        android:textStyle="bold" />
+        android:textSize="18sp" />
 </LinearLayout>

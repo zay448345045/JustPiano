@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/style_dialog"
-    android:minWidth="280dp"
+    android:minWidth="@dimen/dimen_280dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,11 +13,11 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/DialogText_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:fontFamily="@font/main"
+            android:paddingLeft="@dimen/dimen_8dp"
+            android:paddingRight="@dimen/dimen_8dp"
             android:textColor="@color/white1"
             android:textSize="24sp" />
     </LinearLayout>
@@ -34,19 +34,20 @@
             style="@style/DialogText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:fontFamily="@font/main"
+            android:padding="@dimen/dimen_5dp"
             android:textColor="@color/white1"
             android:textSize="16sp" />
 
         <EditText
             android:id="@+id/Etext"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_weight="1"
             android:background="@drawable/search_box"
             android:ems="10"
             android:hint="@string/null0"
-            android:minWidth="200dp"
+            android:minWidth="@dimen/dimen_200dp"
             android:textColor="@color/white1"
             android:visibility="gone" />
 
@@ -67,24 +68,28 @@
             android:id="@+id/negativeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginTop="@dimen/dimen_3dp"
+            android:layout_marginRight="@dimen/dimen_4dp"
             android:layout_weight="1"
             android:background="@drawable/selector_ol_cancel"
-            android:singleLine="true"
-            android:text="取消"
-            android:textColor="@color/white1" />
+            android:fontFamily="@font/main_bold"
+            android:maxLines="1"
+            android:text="@string/mydialog_cancel"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/positiveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginLeft="@dimen/dimen_4dp"
+            android:layout_marginTop="@dimen/dimen_3dp"
             android:layout_weight="1"
             android:background="@drawable/selector_ol_ok"
-            android:singleLine="true"
-            android:text="确定"
-            android:textColor="@color/white1" />
+            android:fontFamily="@font/main_bold"
+            android:maxLines="1"
+            android:text="@string/mydialog_ok"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

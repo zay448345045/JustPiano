@@ -15,7 +15,7 @@
         android:background="@color/translent"
         android:cacheColorHint="#00ffffff"
         android:choiceMode="singleChoice"
-        android:divider="@drawable/divider"
+        android:divider="@null"
         android:listSelector="@color/translent"
         android:textColor="@color/white1"
         android:textSize="14sp" />

@@ -29,14 +29,13 @@
                     android:layout_gravity="center"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:fontFamily="@font/main"
+                    android:fontFamily="@font/main_bold"
                     android:maxLines="1"
                     android:text="@string/c_view_name"
                     android:textColor="@color/white1"
                     android:textColorHighlight="@color/blue_d"
                     android:textColorHint="@color/blue_d"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp"/>
             </LinearLayout>
 
 
@@ -158,14 +157,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
-                    android:fontFamily="@font/main"
-
+                    android:fontFamily="@font/main_bold"
                     android:gravity="start"
                     android:text="@string/c_view_score"
                     android:textColor="@color/white1"
                     android:textColorHighlight="@color/black"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <ImageView
@@ -174,7 +171,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:background="@color/translent"
-                android:src="@drawable/selector_child_paly" />
+                android:src="@drawable/selector_child_play" />
 
             <View
                 android:layout_width="@dimen/dimen_0dp"

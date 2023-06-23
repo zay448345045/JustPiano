@@ -49,7 +49,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         Button button4 = inflate.findViewById(R.id.ol_closepos_b);
         Button button5 = inflate.findViewById(R.id.ol_couple_b);
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(olPlayRoom.getResources().getDrawable(R.drawable.filled_box));
+        popupWindow.setBackgroundDrawable(olPlayRoom.getResources().getDrawable(R.drawable._none));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
