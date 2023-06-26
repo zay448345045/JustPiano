@@ -152,7 +152,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 f4592K.setVisibility(View.VISIBLE);
                 addContentView(finishView, layoutparams2);
                 ImageButton f4582A = finishView.findViewById(R.id.ol_ok);
-                finishView.findViewById(R.id.share_score);
                 f4582A.setOnClickListener(v -> {
                     Intent intent = new Intent(PianoPlay.this, OLPlayRoom.class);
                     intent.putExtras(roomBundle);

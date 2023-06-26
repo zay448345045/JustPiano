@@ -190,8 +190,6 @@ public class PlayFinish extends Activity implements OnClickListener {
         finishButton.setOnClickListener(this);
         retryButton = findViewById(R.id.retry);
         retryButton.setOnClickListener(this);
-        Button f4654R = findViewById(R.id.share_score);
-        f4654R.setOnClickListener(this);
         TextView f4681y = findViewById(R.id.perfect);
         f4681y.setText(String.valueOf(perfect));
         TextView f4682z = findViewById(R.id.cool);

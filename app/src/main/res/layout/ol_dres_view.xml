@@ -14,24 +14,25 @@
 
     <LinearLayout
         android:id="@+id/RelativeLayout1"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/ol_dress_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:fontFamily="@font/main_bold"
+            android:text="@string/finish_zero"
             android:textColor="@color/white1"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/ol_dress_gold_image"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="5dp"
+            android:layout_width="@dimen/dimen_18dp"
+            android:layout_height="@dimen/dimen_18dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:src="@drawable/gold" />
 
     </LinearLayout>

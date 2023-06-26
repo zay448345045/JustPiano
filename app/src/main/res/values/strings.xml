@@ -119,4 +119,17 @@
 	<string name="ol_c_view_length">长度</string>
 	<string name="ol_c_view_count">播放量</string>
 	<string name="ol_c_view_time">冠军时间</string>
+	<string name="ol_cp_list_bl">蓝队左手</string>
+	<string name="ol_cp_list_br">蓝队右手</string>
+	<string name="ol_cp_list_rl">红队右手</string>
+	<string name="ol_cp_list_rr">红队左手</string>
+	<string name="ol_cp_list_yl">黄队左手</string>
+	<string name="ol_cp_list_yr">黄队右手</string>
+	<string name="ol_draw_prize_result">奖励</string>
+	<string name="ol_findpass_diag_acc">注册账号</string>
+	<string name="ol_findpass_diag_email">邮箱地址</string>
+	<string name="ol_findpass_diag_what">邮箱地址</string>
+	<string name="ol_finish_view_ok">完成</string>
+	<string name="ol_finish_view_user"> 用户 </string>
+	<string name="ol_finish_view_exp"> 经验奖励 </string>
 </resources>

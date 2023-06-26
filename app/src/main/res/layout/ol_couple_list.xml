@@ -16,9 +16,10 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/back_puased"
-        android:text="蓝队左手"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_cp_list_bl"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="32sp" />
 
     <TextView
         android:id="@+id/couple_2"
@@ -27,9 +28,34 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/couple_1"
         android:background="@drawable/back_puased"
-        android:text="蓝队右手"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_cp_list_br"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/couple_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/couple_1"
+        android:layout_toStartOf="@+id/couple_2"
+        android:background="@drawable/v1_name"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_cp_list_yl"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/couple_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/couple_2"
+        android:layout_alignStart="@+id/couple_2"
+        android:background="@drawable/v1_name"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_cp_list_yr"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="32sp" />
 
     <TextView
         android:id="@+id/couple_6"
@@ -38,9 +64,10 @@
         android:layout_below="@+id/couple_4"
         android:layout_toEndOf="@+id/couple_5"
         android:background="@drawable/v6_name"
-        android:text="红队右手"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_cp_list_rl"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="32sp" />
 
     <TextView
         android:id="@+id/couple_5"
@@ -50,29 +77,10 @@
         android:layout_alignBottom="@+id/couple_6"
         android:layout_toStartOf="@+id/couple_4"
         android:background="@drawable/v6_name"
-        android:text="红队左手"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_cp_list_rr"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="32sp" />
 
-    <TextView
-        android:id="@+id/couple_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/couple_1"
-        android:layout_toStartOf="@+id/couple_2"
-        android:background="@drawable/v1_name"
-        android:text="黄队左手"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/couple_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/couple_2"
-        android:layout_alignStart="@+id/couple_2"
-        android:background="@drawable/v1_name"
-        android:text="黄队右手"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
 </RelativeLayout>

@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_ol_button"
+        android:fontFamily="@font/main_bold"
         android:gravity="center"
-        android:text="TextView"
+        android:text="@string/f_view"
         android:textColor="@color/white1"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp" />
 </LinearLayout>

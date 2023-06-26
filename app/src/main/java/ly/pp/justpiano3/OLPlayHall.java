@@ -415,7 +415,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_bar));
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
