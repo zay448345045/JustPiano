@@ -31,6 +31,7 @@ import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
 
+
 public class ConnectionService extends Service implements Runnable {
 
     private final JPBinder jpBinder = new JPBinder(this);
