@@ -89,11 +89,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public void onBackPressed() {
         jpprogressBar.dismiss();
         Intent intent = new Intent();
-        if (head == 5) {
-            intent.setClass(this, OLUsersPage.class);
-        } else {
-            intent.setClass(this, OLTopUser.class);
-        }
+        intent.setClass(this, OLTopUser.class);
         startActivity(intent);
         finish();
     }

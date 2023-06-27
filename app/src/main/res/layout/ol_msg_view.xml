@@ -12,24 +12,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:singleLine="true"
-        android:text="用户"
-        android:textColor="@color/white1"
+        android:fontFamily="@font/main_bold"
+        android:maxLines="1"
         android:textColorHighlight="@color/black"
         android:textSize="12sp"
-        android:textStyle="italic" />
+        android:text="@string/ol_msg_view_usr"
+        android:textColor="@color/white1" />
 
     <TextView
         android:id="@+id/ol_user_mao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:singleLine="true"
-        android:text=":"
-        android:textColor="@color/white1"
+        android:fontFamily="@font/main_bold"
+        android:maxLines="1"
         android:textColorHighlight="@color/black"
         android:textSize="15sp"
-        android:textStyle="italic" />
+        android:text="@string/ol_msg_view_mao"
+        android:textColor="@color/white1" />
 
     <ImageView
         android:id="@+id/ol_express_image"
@@ -40,20 +40,20 @@
         android:id="@+id/ol_msg_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/main"
         android:singleLine="false"
-        android:textColor="@color/white1"
         android:textColorHighlight="@color/black"
         android:textSize="12sp"
-        android:textStyle="italic" />
+        android:textColor="@color/white1" />
 
     <TextView
         android:id="@+id/ol_state_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/main"
         android:singleLine="false"
-        android:textColor="@color/exit"
         android:textColorHighlight="@color/black"
         android:textSize="12sp"
-        android:textStyle="italic"
+        android:textColor="@color/exit"
         android:typeface="monospace" />
 </LinearLayout>

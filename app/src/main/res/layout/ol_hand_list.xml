@@ -14,8 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/list"
-        android:text="左手"
+        android:fontFamily="@font/main"
         android:gravity="center"
+        android:text="@string/melodylist1_hand"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -25,8 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/left_hand"
         android:background="@drawable/list"
-        android:text="右手"
+        android:fontFamily="@font/main"
         android:gravity="center"
+        android:text="@string/ol_hand_list_r"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -38,8 +40,9 @@
         android:layout_alignStart="@id/left_hand"
         android:layout_alignEnd="@id/left_hand"
         android:background="@drawable/list"
-        android:text="降调"
+        android:fontFamily="@font/main"
         android:gravity="center"
+        android:text="@string/ol_hand_list_flat"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -52,8 +55,9 @@
         android:layout_alignEnd="@id/right_hand"
         android:layout_toEndOf="@+id/jiangdiao"
         android:background="@drawable/list"
-        android:text="升调"
+        android:fontFamily="@font/main"
         android:gravity="center"
+        android:text="@string/ol_hand_list_sharp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
@@ -63,7 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/jiangdiao"
         android:layout_alignStart="@id/jiangdiao"
-        android:layout_alignEnd="@id/shengdiao">
+        android:layout_alignEnd="@id/shengdiao"
+        android:fontFamily="@font/main">
 
         <TextView
             android:id="@+id/changeScreenOrientation"
@@ -74,8 +79,9 @@
             android:layout_alignEnd="@id/right_hand"
             android:layout_toEndOf="@+id/jiangdiao"
             android:background="@drawable/list"
-            android:text="旋转屏幕"
+            android:fontFamily="@font/main"
             android:gravity="center"
+            android:text="@string/ol_hand_list_rotate"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30sp" />
     </LinearLayout>
@@ -84,36 +90,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/orientation"
-        android:background="@drawable/list"
         android:layout_alignStart="@id/orientation"
-        android:layout_alignEnd="@id/orientation">
+        android:layout_alignEnd="@id/orientation"
+        android:background="@drawable/list">
 
         <ImageView
             android:id="@+id/note_speed_0"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_40dp"
             android:layout_weight="1"
-            android:src="@drawable/back_arrow"
-            android:background="@color/translent" />
+            android:background="@color/translent"
+            android:src="@drawable/back_arrow" />
 
         <TextView
             android:id="@+id/note_speed"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_40dp"
             android:layout_weight="2"
             android:background="@color/translent"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:text="中"
+            android:text="@string/ol_hand_list_medium"
             android:textColor="@color/white1"
             android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/note_speed_1"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimen_0dp"
+            android:layout_height="@dimen/dimen_40dp"
             android:layout_weight="1"
-            android:src="@drawable/for_arrow"
-            android:background="@color/translent"/>
+            android:background="@color/translent"
+            android:src="@drawable/for_arrow" />
 
     </LinearLayout>
 

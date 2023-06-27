@@ -14,21 +14,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/midi_down_tune"
+        android:layout_marginBottom="0dp"
         android:background="@drawable/back_puased"
-        android:text="MIDI键盘降调"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_kb_set_midi_down"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/midi_tune"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/dimen_40dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/midi_down_tune"
         android:layout_alignBottom="@id/midi_down_tune"
         android:layout_toEndOf="@+id/midi_down_tune"
         android:background="@color/white1"
+        android:fontFamily="@font/main"
         android:gravity="center"
-        android:text="0"
+        android:text="@string/finish_zero"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -38,7 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/midi_tune"
         android:background="@drawable/back_puased"
-        android:text="MIDI键盘升调"
+        android:fontFamily="@font/main"
+        android:text="@string/ol_kb_set_midi_up"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp" />
 
@@ -50,14 +54,15 @@
         android:layout_alignStart="@id/midi_down_tune"
         android:layout_alignEnd="@id/midi_down_tune"
         android:background="@drawable/selector_ol_green"
+        android:fontFamily="@font/main"
         android:gravity="center"
-        android:text="声音降调"
+        android:text="@string/ol_kb_set_sound_down"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/sound_tune"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/dimen_40dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/midi_tune"
         android:layout_alignStart="@id/midi_tune"
@@ -66,8 +71,9 @@
         android:layout_alignBottom="@id/sound_down_tune"
         android:layout_toEndOf="@+id/sound_down_tune"
         android:background="@color/white1"
+        android:fontFamily="@font/main"
         android:gravity="center"
-        android:text="0"
+        android:text="@string/finish_zero"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -80,37 +86,40 @@
         android:layout_alignEnd="@id/midi_up_tune"
         android:layout_toEndOf="@+id/sound_tune"
         android:background="@drawable/selector_ol_green"
+        android:fontFamily="@font/main"
         android:gravity="center"
-        android:text="声音升调"
+        android:text="@string/ol_kb_set_sound_up"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp" />
 
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/sound_down_tune"
         android:layout_alignStart="@id/sound_down_tune"
-        android:layout_alignEnd="@id/sound_up_tune"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_alignEnd="@id/sound_up_tune">
 
         <TextView
             android:id="@+id/skin_setting"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/selector_ol_orange"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:text="皮肤设置"
+            android:text="@string/ol_kb_set_skin"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/sound_setting"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/selector_ol_orange"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:text="音源设置"
+            android:text="@string/ol_kb_set_sound"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="18sp" />
     </LinearLayout>

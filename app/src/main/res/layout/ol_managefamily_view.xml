@@ -8,7 +8,7 @@
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="@dimen/dimen_400dp"
         android:background="@drawable/ol_rectangle_orange">
 
         <LinearLayout
@@ -21,7 +21,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="家族升级"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_up_ti"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -30,10 +31,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:ems="30"
+                android:fontFamily="@font/main"
                 android:gravity="top"
-                android:text="升级信息"
+                android:text="@string/ol_family_ma_up_info"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />
 
@@ -41,18 +43,20 @@
                 android:id="@+id/ol_family_levelup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
-                android:text="升级"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_up"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="家族宣言"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:fontFamily="@font/main"
+                android:text="@string/family_declaration"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -60,27 +64,30 @@
                 android:id="@+id/ol_family_changedecl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/selector_ol_button"
-                android:text="更改家族宣言"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_de"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="家族考核曲"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_ex"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
             <CheckBox
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:checked="false"
                 android:enabled="false"
-                android:text="申请者进入家族需要通过考核曲目(此功能暂未开放)"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_ex_info"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />
 
@@ -92,9 +99,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:fontFamily="@font/main"
                     android:maxEms="30"
-                    android:text="考核曲目："
+                    android:text="@string/ol_family_ma_ex_song"
                     android:textColor="@color/white1"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -108,17 +116,18 @@
                     android:completionThreshold="1"
                     android:configChanges="keyboard"
                     android:divider="@null"
-                    android:dropDownWidth="300dp"
-                    android:dropDownHeight="130dp"
+                    android:dropDownWidth="@dimen/dimen_300dp"
+                    android:dropDownHeight="@dimen/dimen_130dp"
                     android:ems="30"
                     android:enabled="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:fontFamily="@font/main"
                     android:hint="输入曲目进行搜索"
                     android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
                     android:listSelector="@android:color/transparent"
-                    android:minWidth="100dp"
-                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:minWidth="@dimen/dimen_100dp"
                     android:textColor="#ffffffff"
                     android:textColorHint="#90ffffff"
                     android:textSize="14sp" />
@@ -133,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="目标分数："
+                    android:text="@string/ol_family_ma_ex_target"
                     android:textColor="@color/white1"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -146,8 +155,8 @@
                     android:enabled="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:fontFamily="@font/main"
                     android:gravity="bottom"
-                    android:minWidth="100dp"
                     android:textColor="@color/white1"
                     android:textSize="16sp">
 
@@ -160,18 +169,20 @@
                 android:id="@+id/ol_family_changetest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
-                android:text="更改考核曲信息"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_ex_c"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="家族徽章"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_logo"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -179,10 +190,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:ems="30"
+                android:fontFamily="@font/main"
                 android:gravity="top"
-                android:text="抱歉，当前版本不支持家族族徽上传，上传族徽请登录官网!"
+                android:text="@string/ol_family_ma_logo_info"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />
 
@@ -190,11 +202,12 @@
                 android:id="@+id/ol_family_changepic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_80dp"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
-                android:text="修改家族徽章(从本地上传)"
+                android:fontFamily="@font/main"
+                android:text="@string/ol_family_ma_logo_c"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
 
@@ -203,4 +216,3 @@
     </ScrollView>
 
 </LinearLayout>
-

@@ -142,17 +142,6 @@ public class FriendMailPage extends Activity implements Callback {
     }
 
     @Override
-    public void onBackPressed() {
-        if (f4023e.isShowing()) {
-            f4023e.dismiss();
-        }
-        Intent intent = new Intent();
-        intent.setClass(this, OLUsersPage.class);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         jpApplication = (JPApplication) getApplication();

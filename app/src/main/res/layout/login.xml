@@ -42,7 +42,6 @@
             android:text="@string/login_subtitle"
             android:textColor="@color/yellow_r"
             android:textSize="18sp"
-            android:textStyle="bold"
             android:typeface="sans" />
     </LinearLayout>
 

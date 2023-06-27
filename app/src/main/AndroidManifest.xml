@@ -172,12 +172,6 @@
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
         <activity
-            android:name="ly.pp.justpiano3.OLUsersPage"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
-        <activity
             android:name="ly.pp.justpiano3.OLSongsPage"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
