@@ -233,7 +233,6 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             if (!f4330s) {
                 f4328q.setVisibility(View.VISIBLE);
             }
-            showTitleButton = findViewById(R.id.show_button);
             Button f4337z = findViewById(R.id.ol_date_b);
             f4337z.setOnClickListener(this);
             Button f4296A = findViewById(R.id.ol_degree_b);

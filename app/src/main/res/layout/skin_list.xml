@@ -31,21 +31,23 @@
             android:id="@+id/app_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="正在下载,请稍后..."
+            android:fontFamily="@font/main"
+            android:text="@string/skin_list_downloading"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/downloadText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="连接服务器ing..."
+            android:fontFamily="@font/main"
+            android:text="@string/skin_list_connecting"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/downloadProgress"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="240dp"
+            android:layout_width="@dimen/dimen_240dp"
             android:layout_height="wrap_content"
             android:visibility="visible" />
     </LinearLayout>

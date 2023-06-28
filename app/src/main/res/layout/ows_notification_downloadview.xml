@@ -25,6 +25,7 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
+        android:fontFamily="@font/main"
         android:layout_toEndOf="@+id/ows_pb_notification"
         android:gravity="center"
         android:textColor="#ffffffff"

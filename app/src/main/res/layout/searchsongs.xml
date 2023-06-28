@@ -3,15 +3,15 @@
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/ground"
     android:keepScreenOn="true"
+    android:background="@drawable/ground"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ol_rectangle_orange"
+        android:background="@drawable/list"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -19,44 +19,48 @@
             android:id="@+id/ol_search_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/ol_keywords"
-            android:layout_alignBottom="@+id/ol_keywords"
-            android:layout_alignParentEnd="true"
             android:background="@drawable/selector_ol_button"
-            android:text=" 搜索 "
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/main"
+            android:text="@string/olmelodylist_search"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/ol_keywords"
-            android:layout_width="300dp"
+        <LinearLayout
+            style="@style/InputBoxStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/ol_search_b"
-            android:layout_toEndOf="@+id/title_bar"
-            android:background="@drawable/search_box"
-            android:ems="10"
+            android:layout_toLeftOf="@+id/ol_search_b"
+            android:layout_toRightOf="@+id/title_bar"
+            android:gravity="center">
 
-            android:singleLine="true"
-            android:textColor="@color/local"
-            android:textSize="18sp">
+            <EditText
+                android:id="@+id/ol_keywords"
+                style="@style/EditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/main"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="20sp" />
 
             <requestFocus />
-        </EditText>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/title_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/ol_keywords"
-            android:layout_alignBottom="@+id/ol_keywords"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:keepScreenOn="true"
-            android:text="曲谱搜索:"
-            android:textColor="@color/white1"
+            android:fontFamily="@font/main_bold"
+            android:text="@string/searchsongs_label"
             android:textSize="20sp"
-            android:textStyle="bold"
+            android:textColor="@color/white1"
             android:typeface="monospace" />
     </RelativeLayout>
 
@@ -64,8 +68,8 @@
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fadingEdge="horizontal"
         android:fadingEdgeLength="5dp"
+        android:fadingEdge="horizontal"
         android:orientation="horizontal">
 
         <LinearLayout

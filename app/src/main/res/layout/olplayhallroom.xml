@@ -19,14 +19,14 @@
 
         <RelativeLayout
             android:id="@+id/RelativeLayout1"
-            android:layout_width="240dp"
+            android:layout_width="@dimen/dimen_240dp"
             android:layout_height="match_parent"
             android:background="@drawable/filled_bar"
             android:orientation="vertical">
 
             <ListView
                 android:id="@+id/ol_hall_list"
-                android:layout_width="240dp"
+                android:layout_width="@dimen/dimen_240dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ol_playhall_tittle"
                 android:layout_alignParentStart="true"
@@ -40,12 +40,12 @@
                 android:layout_alignEnd="@+id/ol_hall_list"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:fontFamily="@font/main_bold"
                 android:gravity="center"
                 android:keepScreenOn="true"
-                android:text="大厅列表"
+                android:text="@string/olplayhallroom_ti"
                 android:textColor="@color/yellow_r"
                 android:textSize="18sp"
-                android:textStyle="bold"
                 android:typeface="monospace" />
         </RelativeLayout>
 
@@ -78,6 +78,7 @@
                         android:id="@android:id/tabcontent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <LinearLayout
                             android:id="@+id/infor_tab"
                             android:layout_width="match_parent"
@@ -93,72 +94,72 @@
 
                                 <ImageView
                                     android:id="@+id/ol_player_mod"
-                                    android:layout_width="100dp"
-                                    android:layout_height="150dp"
+                                    android:layout_width="@dimen/dimen_100dp"
+                                    android:layout_height="@dimen/dimen_150dp"
                                     android:layout_alignParentLeft="true"
                                     android:layout_alignParentTop="true"
-                                    android:layout_marginTop="15dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp"
                                     android:background="@drawable/filled_msg"
                                     android:src="@drawable/adachi" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_couple"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
+                                    android:layout_width="@dimen/dimen_20dp"
+                                    android:layout_height="@dimen/dimen_20dp"
                                     android:layout_alignEnd="@+id/ol_player_mod"
                                     android:layout_alignBottom="@+id/ol_player_couple"
                                     android:layout_alignParentTop="true"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_marginBottom="0dp" />
+                                    android:layout_marginTop="@dimen/dimen_15dp"
+                                    android:layout_marginBottom="@dimen/dimen_0dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_family"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
+                                    android:layout_width="@dimen/dimen_20dp"
+                                    android:layout_height="@dimen/dimen_20dp"
                                     android:layout_alignEnd="@+id/ol_player_mod"
-                                    android:layout_marginTop="40dp" />
+                                    android:layout_marginTop="@dimen/dimen_40dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_eye"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="100dp"
-                                    android:layout_height="150dp" />
+                                    android:layout_width="@dimen/dimen_100dp"
+                                    android:layout_height="@dimen/dimen_150dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_hair"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="100dp"
-                                    android:layout_height="150dp"/>
+                                    android:layout_width="@dimen/dimen_100dp"
+                                    android:layout_height="@dimen/dimen_150dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_shoes"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="100dp"
-                                    android:layout_height="150dp" />
+                                    android:layout_width="@dimen/dimen_100dp"
+                                    android:layout_height="@dimen/dimen_150dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_trousers"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="100dp"
-                                    android:layout_height="150dp" />
+                                    android:layout_width="@dimen/dimen_100dp"
+                                    android:layout_height="@dimen/dimen_150dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp" />
 
                                 <ImageView
                                     android:id="@+id/ol_player_jacket"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="100dp"
-                                    android:layout_height="150dp" />
+                                    android:layout_width="@dimen/dimen_100dp"
+                                    android:layout_height="@dimen/dimen_150dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp" />
 
                                 <TextView
                                     android:id="@+id/ol_player_name"
                                     android:layout_width="match_parent"
-                                    android:layout_height="20dp"
+                                    android:layout_height="@dimen/dimen_20dp"
                                     android:layout_below="@+id/ol_player_mod"
                                     android:layout_alignEnd="@+id/ol_player_mod"
                                     android:layout_alignParentStart="true"
                                     android:background="@drawable/back_puased"
                                     android:gravity="center"
-                                    android:singleLine="true"
-                                    android:text="安达樱"
+                                    android:maxLines="1"
+                                    android:text="@string/olplayhallroom_name"
                                     android:textColor="@color/white1"
                                     android:textSize="12sp" />
 
@@ -168,27 +169,29 @@
                                     android:layout_height="wrap_content"
                                     android:layout_above="@+id/ol_player_level"
                                     android:layout_alignEnd="@+id/ol_player_mod"
+                                    android:fontFamily="@font/main_bold"
                                     android:gravity="start"
-                                    android:singleLine="true"
+                                    android:maxLines="1"
                                     android:textColor="@color/yellow"
                                     android:textColorHint="@color/yellow_r"
                                     android:textSize="12sp"
-                                    android:textStyle="bold"
                                     android:typeface="sans" />
+
                                 <TextView
                                     android:id="@+id/ol_player_level"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignTop="@+id/ol_ready_text"
                                     android:layout_alignEnd="@+id/ol_player_mod"
+                                    android:fontFamily="@font/main_bold"
                                     android:gravity="start"
-                                    android:singleLine="true"
-                                    android:text="LV.25"
+                                    android:maxLines="1"
+                                    android:text="@string/olplayhallroom_lv"
                                     android:textColor="@color/green_r"
                                     android:textColorHint="@color/yellow_r"
                                     android:textSize="12sp"
-                                    android:textStyle="bold"
                                     android:typeface="sans" />
+
                                 <TextView
                                     android:id="@id/ol_ready_text"
                                     android:layout_width="wrap_content"
@@ -199,6 +202,7 @@
                                     android:textColor="@color/white1"
                                     android:textColorHint="@color/yellow_r"
                                     android:textSize="12sp" />
+
                                 <TextView
                                     android:id="@+id/user_classname"
                                     android:layout_width="wrap_content"
@@ -211,37 +215,43 @@
                                     android:textColor="@color/white1"
                                     android:textColorHint="@color/yellow_r"
                                     android:textSize="12sp"
-                                    android:textStyle="normal|bold|italic"
+                                    android:fontFamily="@font/main_bold"
                                     android:typeface="monospace" />
                             </RelativeLayout>
+
                             <TextView
                                 android:id="@+id/user_exp"
-                                android:layout_marginTop="4dp"
-                                android:layout_marginBottom="4dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1024/20310"
+                                android:layout_marginTop="@dimen/dimen_4dp"
+                                android:layout_marginBottom="@dimen/dimen_4dp"
+                                android:fontFamily="@font/main"
+                                android:text="@string/olplayhallroom_exp"
                                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
                             <Button
                                 android:id="@+id/ol_dress_button"
-                                android:layout_width="100dp"
+                                android:layout_width="@dimen/dimen_100dp"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="换衣间"
+                                android:fontFamily="@font/main"
+                                android:text="@string/olplayhallroom_dress"
                                 android:textColor="@color/white1"
                                 android:textSize="18sp"
                                 android:visibility="visible" />
+
                             <Button
                                 android:id="@+id/ol_bonus_button"
-                                android:layout_width="100dp"
+                                android:layout_width="@dimen/dimen_100dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="@dimen/dimen_10dp"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="在线奖励"
+                                android:fontFamily="@font/main"
+                                android:text="@string/olplayhallroom_olprize"
                                 android:textColor="@color/white1"
                                 android:textSize="18sp" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/couple_tab"
                             android:layout_width="match_parent"
@@ -251,7 +261,7 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="245dp">
+                                android:layout_height="@dimen/dimen_245dp">
 
                                 <RelativeLayout
                                     android:id="@+id/RelativeLayout01"
@@ -261,83 +271,82 @@
 
                                     <ImageView
                                         android:id="@+id/ol_couple_mod"
-                                        android:layout_width="100dp"
-                                        android:layout_height="150dp"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginEnd="15dp"
+                                        android:layout_width="@dimen/dimen_100dp"
+                                        android:layout_height="@dimen/dimen_150dp"
                                         android:layout_alignParentStart="true"
                                         android:layout_alignParentTop="true"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp"
                                         android:background="@drawable/filled_msg"
                                         android:src="@drawable/shimamura" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_eye"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginEnd="15dp"
-                                        android:layout_width="100dp"
-                                        android:layout_height="150dp"/>
+                                        android:layout_width="@dimen/dimen_100dp"
+                                        android:layout_height="@dimen/dimen_150dp"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_hair"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginEnd="15dp"
-                                        android:layout_width="100dp"
-                                        android:layout_height="150dp" />
+                                        android:layout_width="@dimen/dimen_100dp"
+                                        android:layout_height="@dimen/dimen_150dp"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_shoes"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginEnd="15dp"
-                                        android:layout_width="100dp"
-                                        android:layout_height="150dp" />
+                                        android:layout_width="@dimen/dimen_100dp"
+                                        android:layout_height="@dimen/dimen_150dp"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_trousers"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginEnd="15dp"
-                                        android:layout_width="100dp"
-                                        android:layout_height="150dp" />
+                                        android:layout_width="@dimen/dimen_100dp"
+                                        android:layout_height="@dimen/dimen_150dp"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp" />
 
                                     <ImageView
                                         android:id="@+id/ol_couple_jacket"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginEnd="15dp"
-                                        android:layout_width="100dp"
-                                        android:layout_height="150dp" />
+                                        android:layout_width="@dimen/dimen_100dp"
+                                        android:layout_height="@dimen/dimen_150dp"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp" />
 
                                     <TextView
                                         android:id="@+id/ol_couple_name"
-                                        android:layout_width="100dp"
+                                        android:layout_width="@dimen/dimen_100dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="15dp"
                                         android:layout_below="@+id/ol_couple_mod"
                                         android:layout_alignEnd="@+id/ol_couple_mod"
                                         android:layout_alignParentStart="true"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
                                         android:background="@drawable/back_puased"
                                         android:gravity="center"
-                                        android:singleLine="true"
+                                        android:maxLines="1"
                                         android:textColor="@color/white1"
-                                        android:textSize="12sp"
-                                        android:text="CL.5"/>
+                                        android:textSize="12sp" />
 
                                     <TextView
                                         android:id="@+id/couple_points"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_below="@+id/ol_couple_name"
-                                        android:layout_marginTop="10dp"
-                                        android:layout_marginStart="15dp"
                                         android:layout_centerHorizontal="true"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_10dp"
                                         android:background="@drawable/ol_rectangle_blue"
-                                        android:text="祝福点:9999"
-                                        android:textColor="@color/white1"
-                                        android:gravity="center"/>
+                                        android:gravity="center"
+                                        android:text="@string/olplayhallroom_cp"
+                                        android:textColor="@color/white1" />
 
                                     <TextView
                                         android:id="@+id/ol_couple_class"
@@ -345,13 +354,13 @@
                                         android:layout_height="wrap_content"
                                         android:layout_above="@+id/ol_couple_level"
                                         android:layout_alignEnd="@+id/ol_couple_mod"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="start"
-                                        android:singleLine="true"
-                                        android:text="CL.5"
+                                        android:maxLines="1"
+                                        android:text="@string/olplayhallroom_cl"
                                         android:textColor="@color/yellow"
                                         android:textColorHint="@color/yellow_r"
                                         android:textSize="12sp"
-                                        android:textStyle="bold"
                                         android:typeface="sans" />
 
                                     <TextView
@@ -360,13 +369,13 @@
                                         android:layout_height="wrap_content"
                                         android:layout_alignTop="@+id/ol_ready_text"
                                         android:layout_alignEnd="@+id/ol_couple_mod"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="start"
-                                        android:singleLine="true"
-                                        android:text="LV.25"
+                                        android:maxLines="1"
+                                        android:text="@string/olplayhallroom_lv"
                                         android:textColor="@color/green_r"
                                         android:textColorHint="@color/yellow_r"
                                         android:textSize="12sp"
-                                        android:textStyle="bold"
                                         android:typeface="sans" />
 
                                     <TextView
@@ -375,6 +384,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_above="@+id/ol_couple_name"
                                         android:layout_alignParentStart="true"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
                                         android:textColor="@color/white1"
                                         android:textColorHint="@color/yellow_r"
@@ -384,15 +394,15 @@
                                         android:id="@+id/couple_classname"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="15dp"
-                                        android:layout_marginStart="15dp"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginTop="@dimen/dimen_15dp"
                                         android:background="@drawable/filled_classname"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
                                         android:maxEms="1"
                                         android:textColor="@color/white1"
                                         android:textColorHint="@color/yellow_r"
                                         android:textSize="12sp"
-                                        android:textStyle="normal|bold|italic"
                                         android:typeface="monospace" />
                                 </RelativeLayout>
 
@@ -400,45 +410,53 @@
                                     android:id="@+id/ol_couple_blessing"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="15dp"
+                                    android:layout_marginTop="@dimen/dimen_15dp"
                                     android:background="@drawable/list"
-                                    android:text="想钓到美好的未来。为此得先垂下钓线才行。"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhallroom_bl"
                                     android:textColor="@color/white1" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="15dp">
+                                android:layout_marginTop="@dimen/dimen_15dp">
+
                                 <LinearLayout
-                                    android:layout_width="130dp"
+                                    android:layout_width="@dimen/dimen_130dp"
                                     android:layout_height="match_parent"
                                     android:gravity="center_horizontal">
-                                <Button
-                                    android:id="@+id/ol_breakup_button"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:background="@drawable/selector_ol_button"
-                                    android:text="解除搭档"
-                                    android:textColor="@color/white1"
-                                    android:textSize="18sp"
-                                    android:visibility="visible" />
+
+                                    <Button
+                                        android:id="@+id/ol_breakup_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:background="@drawable/selector_ol_button"
+                                        android:fontFamily="@font/main_bold"
+                                        android:text="@string/olplayhallroom_br"
+                                        android:textColor="@color/white1"
+                                        android:textSize="18sp"
+                                        android:visibility="visible" />
                                 </LinearLayout>
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_horizontal">
-                                <Button
-                                    android:id="@+id/ol_setblessing_button"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/selector_ol_button_login"
-                                    android:layout_centerHorizontal="true"
-                                    android:text="设置祝语"
-                                    android:textColor="@color/white1"
-                                    android:textSize="18sp"
-                                    android:visibility="visible" />
-                            </LinearLayout>
+
+                                    <Button
+                                        android:id="@+id/ol_setblessing_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerHorizontal="true"
+                                        android:background="@drawable/selector_ol_button_login"
+                                        android:fontFamily="@font/main_bold"
+                                        android:text="@string/olplayhallroom_set_bl"
+                                        android:textColor="@color/white1"
+                                        android:textSize="18sp"
+                                        android:visibility="visible" />
+                                </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
 
@@ -447,11 +465,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
+
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="@dimen/dimen_0dp"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <ListView
                                     android:id="@+id/ol_friend_list"
                                     android:layout_width="match_parent"
@@ -461,6 +481,7 @@
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
+
                                 <Button
                                     android:id="@+id/pre_button"
                                     android:layout_width="wrap_content"
@@ -468,7 +489,8 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="上一页"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhall_b"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
 
@@ -479,7 +501,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_centerHorizontal="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="显示在线"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhall_o"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
 
@@ -490,7 +513,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="下一页"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhall_n"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
                             </RelativeLayout>
@@ -503,7 +527,7 @@
 
                             <ListView
                                 android:id="@+id/ol_mail_list"
-                                android:layout_width="0dp"
+                                android:layout_width="@dimen/dimen_0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1" />
                         </LinearLayout>
@@ -517,7 +541,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="@dimen/dimen_10dp"
                                 android:orientation="vertical"
                                 android:textAppearance="?android:attr/textAppearanceMedium">
 
@@ -528,24 +552,26 @@
                                     android:textAppearance="?android:attr/textAppearanceMedium">
 
                                     <TextView
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="3"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="start"
-                                        android:text="我的家族："
+                                        android:text="@string/olplayhallroom_family"
                                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                                     <Button
                                         android:id="@+id/create_family"
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="end"
-                                        android:layout_marginBottom="10dp"
+                                        android:layout_marginBottom="@dimen/dimen_10dp"
                                         android:layout_weight="1"
                                         android:background="@drawable/selector_orange_button"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:singleLine="true"
-                                        android:text="创建家族"
+                                        android:maxLines="1"
+                                        android:text="@string/olplayhallroom_cr"
                                         android:textColor="@color/white1"
                                         android:textSize="14sp" />
                                 </LinearLayout>
@@ -558,59 +584,59 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="1.4"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="名次"
+                                        android:text="@string/olplayhallroom_rank"
                                         android:textColor="@color/songname"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <TextView
-                                        android:layout_width="32dp"
+                                        android:layout_width="@dimen/dimen_32dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
                                         android:src="@drawable/family"
                                         android:textColor="@color/songname"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <TextView
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="6"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="家族名称"
+                                        android:text="@string/olplayhallroom_fam_name"
                                         android:textColor="@color/songname"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <TextView
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="3"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="人数"
+                                        android:text="@string/olplayhallroom_pn"
                                         android:textColor="@color/songname"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <TextView
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="3"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="贡献度"
+                                        android:text="@string/olplayhallroom_co"
                                         android:textColor="@color/songname"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -623,60 +649,60 @@
 
                                     <TextView
                                         android:id="@+id/ol_myfamily_position"
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="1.4"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="(空)"
+                                        android:text="@string/ol_c_challenge_view"
                                         android:textColor="@color/white1"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <ImageView
                                         android:id="@+id/ol_myfamily_pic"
-                                        android:layout_width="32dp"
-                                        android:layout_height="32dp"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_width="@dimen/dimen_32dp"
+                                        android:layout_height="@dimen/dimen_32dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:gravity="center"
                                         android:src="@drawable/family" />
 
                                     <TextView
                                         android:id="@+id/ol_myfamily_name"
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="6"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="start"
-                                        android:text="(空)"
+                                        android:text="@string/ol_c_challenge_view"
                                         android:textColor="@color/white1"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <TextView
                                         android:id="@+id/ol_myfamily_count"
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="3"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="(空)"
+                                        android:text="@string/ol_c_challenge_view"
                                         android:textColor="@color/white1"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
 
                                     <TextView
                                         android:id="@+id/ol_myfamily_contribution"
-                                        android:layout_width="0dp"
+                                        android:layout_width="@dimen/dimen_0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
+                                        android:layout_marginStart="@dimen/dimen_3dp"
                                         android:layout_weight="3"
+                                        android:fontFamily="@font/main_bold"
                                         android:gravity="center"
-                                        android:text="(空)"
+                                        android:text="@string/ol_c_challenge_view"
                                         android:textColor="@color/white1"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textSize="14sp" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -684,7 +710,7 @@
                                 android:id="@+id/ol_family_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="@dimen/dimen_10dp"
                                 android:background="@color/black"
                                 android:cacheColorHint="#00ffffff"
                                 android:choiceMode="singleChoice"
@@ -698,11 +724,12 @@
             <TextView
                 android:id="@+id/user_mailcount"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="17dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="120dp"
-                android:textColor="@color/white1"
+                android:layout_marginEnd="@dimen/dimen_120dp"
                 android:background="@color/brown"
+                android:fontFamily="@font/main_bold"
+                android:textColor="@color/white1"
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>

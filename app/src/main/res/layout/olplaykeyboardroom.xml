@@ -9,82 +9,31 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/ads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/top_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ly.pp.justpiano3.ScrollText
-            android:id="@+id/broadCastText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/systemText"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="2"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="异议以"
-            android:textColor="@color/settings"
-            android:textColorHighlight="@color/blue_d"
-            android:textColorHint="@color/blue_d"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <TextView
-            android:id="@+id/systemText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/broadCastText"
-            android:text="多少多少"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/a"
-            android:text="哈哈哈"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/online"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:ignore="RelativeOverlap" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/player_layout"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.75"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="5dp">
 
         <RelativeLayout
             android:id="@+id/RelativeLayout1"
-            android:layout_width="304dp"
+            android:layout_width="@dimen/dimen_304dp"
             android:layout_height="match_parent"
             android:background="@drawable/filled_bar"
             android:orientation="vertical">
 
             <GridView
                 android:id="@+id/ol_player_grid"
-                android:layout_width="304dp"
-                android:scrollbars="none"
+                android:layout_width="@dimen/dimen_304dp"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/keyboard_buttons"
                 android:layout_below="@+id/room_title"
                 android:layout_alignParentEnd="true"
                 android:listSelector="@color/translent"
-                android:numColumns="3" />
+                android:numColumns="3"
+                android:scrollbars="none" />
 
             <TextView
                 android:id="@+id/room_title"
@@ -93,9 +42,10 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
+                android:fontFamily="@font/main"
                 android:keepScreenOn="true"
-                android:singleLine="true"
-                android:text="房间名称"
+                android:maxLines="1"
+                android:text="@string/ol_room_view_name"
                 android:textColor="@color/roomtext"
                 android:textSize="20sp" />
 
@@ -116,87 +66,89 @@
             <LinearLayout
                 android:id="@+id/keyboard_buttons"
                 android:layout_width="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_height="45dp">
+                android:layout_height="@dimen/dimen_45dp"
+                android:layout_alignParentBottom="true">
 
                 <Button
                     android:id="@+id/keyboard_resize"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
+                    android:fontFamily="@font/main_bold"
                     android:gravity="center"
-                    android:text="↕"
+                    android:text="@string/ol_kbr_ha"
                     android:textColor="@color/white1"
-                    android:textSize="18sp"
-                    android:textStyle="bold"></Button>
+                    android:textSize="18sp"></Button>
 
                 <Button
                     android:id="@+id/keyboard_count_down"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
+                    android:fontFamily="@font/main_bold"
                     android:gravity="center"
-                    android:text="—"
+                    android:text="@string/keyboard_mode_minus"
                     android:textColor="@color/white1"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/keyboard_move_left"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
-                    android:text="←"
+                    android:fontFamily="@font/main_bold"
+                    android:text="@string/keyboard_mode_arrow_left"
                     android:textColor="@color/white1"
-                    android:textSize="18sp"
-                    android:textStyle="bold"></Button>
+                    android:textSize="18sp"></Button>
 
                 <Button
                     android:id="@+id/keyboard_move_right"
-                    android:text="→"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white1"
-                    android:background="@drawable/selector_orange_button"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"></Button>
+                    android:background="@drawable/selector_orange_button"
+                    android:fontFamily="@font/main_bold"
+                    android:text="@string/keyboard_mode_arrow_right"
+
+
+                    android:textColor="@color/white1"
+                    android:textSize="18sp"></Button>
 
                 <Button
                     android:id="@+id/keyboard_count_up"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
-                    android:text="＋"
+                    android:fontFamily="@font/main_bold"
+                    android:text="@string/keyboard_mode_plus"
                     android:textColor="@color/white1"
-                    android:textSize="18sp"
-                    android:textStyle="bold">
+                    android:textSize="18sp">
 
                 </Button>
 
                 <ImageView
                     android:id="@+id/keyboard_setting"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
                     android:src="@drawable/setting" />
 
                 <Button
                     android:id="@+id/keyboard_record"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
+                    android:fontFamily="@font/main_bold"
                     android:src="@drawable/setting"
-                    android:text="●"
+                    android:text="@string/keyboard_mode_rec"
                     android:textColor="@color/v3"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -263,7 +215,8 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="上一页"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhall_b"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
 
@@ -274,7 +227,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_centerHorizontal="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="显示在线"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhall_o"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
 
@@ -285,7 +239,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="下一页"
+                                    android:fontFamily="@font/main_bold"
+                                    android:text="@string/olplayhall_n"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
                             </RelativeLayout>
@@ -301,7 +256,7 @@
                             <ListView
                                 android:id="@+id/ol_msg_list"
                                 android:layout_width="match_parent"
-                                android:layout_height="225dp"
+                                android:layout_height="@dimen/dimen_225dp"
                                 android:layout_above="@+id/ol_express_b"
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
@@ -312,7 +267,7 @@
 
                             <ImageView
                                 android:id="@+id/ol_express_b"
-                                android:layout_width="45dp"
+                                android:layout_width="@dimen/dimen_45dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignTop="@+id/ol_send_text"
                                 android:layout_alignParentStart="true"
@@ -322,7 +277,7 @@
 
                             <ImageView
                                 android:id="@+id/ol_changecolor"
-                                android:layout_width="45dp"
+                                android:layout_width="@dimen/dimen_45dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignTop="@+id/ol_send_text"
                                 android:layout_alignParentBottom="true"
@@ -341,19 +296,19 @@
                                 android:background="@color/back"
                                 android:ems="10"
                                 android:imeOptions="actionDone"
+                                android:maxLines="1"
                                 android:scrollHorizontally="true"
-                                android:singleLine="true"
                                 android:textColor="@color/white1"
                                 android:textSize="14sp" />
 
                             <Button
                                 android:id="@+id/ol_send_b"
                                 android:layout_width="wrap_content"
-                                android:layout_height="45dp"
+                                android:layout_height="@dimen/dimen_45dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentBottom="true"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="发送"
+                                android:text="@string/olplayhall_s"
                                 android:textColor="@color/white1"
                                 android:textSize="20sp" />
                         </RelativeLayout>
@@ -380,15 +335,15 @@
     <LinearLayout
         android:id="@+id/keyboard_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.25">
 
         <ly.pp.justpiano3.KeyboardModeView
-            app:whiteKeyNum="15"
-            app:whiteKeyOffset="14"
             android:id="@+id/keyboard_view"
-            android:keepScreenOn="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></ly.pp.justpiano3.KeyboardModeView>
+            android:layout_height="match_parent"
+            android:keepScreenOn="true"
+            app:whiteKeyNum="15"
+            app:whiteKeyOffset="14"></ly.pp.justpiano3.KeyboardModeView>
     </LinearLayout>
 </LinearLayout>

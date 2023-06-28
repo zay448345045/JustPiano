@@ -14,17 +14,18 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:fontFamily="@font/main"
         android:gravity="center"
+        android:maxLines="1"
         android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="名称"
+        android:text="@string/skin_view_name"
         android:textColor="@color/white1"
         android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/skin_image"
-        android:layout_width="160dp"
-        android:layout_height="100dp" />
+        android:layout_width="@dimen/dimen_160dp"
+        android:layout_height="@dimen/dimen_100dp" />
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -37,9 +38,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:singleLine="true"
-            android:text="大小"
+            android:maxLines="1"
+            android:text="@string/skin_view_size"
             android:textColor="@color/white1"
             android:textSize="12sp" />
 
@@ -49,9 +51,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:fontFamily="@font/main"
             android:gravity="center"
-            android:singleLine="true"
-            android:text="下载"
+            android:maxLines="1"
+            android:text="@string/skin_view_dc"
             android:textColor="@color/white1"
             android:textSize="12sp" />
     </RelativeLayout>
@@ -60,9 +63,10 @@
         android:id="@+id/skin_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/main"
         android:gravity="center"
-        android:singleLine="true"
-        android:text="作者"
+        android:maxLines="1"
+        android:text="@string/skin_view_au"
         android:textColor="@color/white1"
         android:textSize="12sp" />
 </LinearLayout>

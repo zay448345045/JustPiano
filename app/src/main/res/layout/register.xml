@@ -24,16 +24,19 @@
                 android:id="@+id/register_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text=" 注册账号 "
+                android:layout_marginBottom="@dimen/dimen_12dp"
+                android:fontFamily="@font/login"
+                android:maxLines="1"
+                android:text="@string/register_ti"
                 android:textColor="@color/white1"
-                android:textSize="26sp" />
+                android:textSize="28sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_18dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -41,84 +44,132 @@
                 android:id="@+id/app_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="账号:"
+                android:fontFamily="@font/main"
+                android:text="@string/login_acc_label"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/rg_name"
-                android:layout_width="160dp"
+            <LinearLayout
+                style="@style/InputBoxStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/search_box"
-                android:nextFocusDown="@+id/rg_kiti"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/white1"
-                android:textSize="20sp" />
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/rg_name"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_160dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/main"
+                    android:hint="输入账号"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dimen_3dp"
+                    android:paddingBottom="@dimen/dimen_3dp"
+                    android:textColor="@color/white1"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/TextView03"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="昵称:"
+                android:fontFamily="@font/main"
+                android:text="@string/register_name"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/rg_kiti"
-                android:layout_width="160dp"
+
+            <LinearLayout
+                style="@style/InputBoxStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/search_box"
-                android:nextFocusDown="@+id/rg_psw_1"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/white1"
-                android:textSize="20sp" />
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/rg_kiti"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_160dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/main"
+                    android:hint="输入昵称"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dimen_3dp"
+                    android:paddingBottom="@dimen/dimen_3dp"
+                    android:textColor="@color/white1"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_12dp"
             android:gravity="center">
 
             <TextView
                 android:id="@+id/TextView02"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="密码:"
+                android:fontFamily="@font/main"
+                android:text="@string/login_pwd_label"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/rg_psw_1"
-                android:layout_width="160dp"
+            <LinearLayout
+                style="@style/InputBoxStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/search_box"
-                android:nextFocusDown="@+id/rg_psw_2"
-                android:password="true"
-                android:singleLine="true"
-                android:textColor="@color/white1"
-                android:textSize="20sp" />
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/rg_psw_1"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_160dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/main"
+                    android:hint="输入密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dimen_3dp"
+                    android:paddingBottom="@dimen/dimen_3dp"
+                    android:textColor="@color/white1"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/TextView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="确认:"
+                android:fontFamily="@font/main"
+                android:maxLines="1"
+                android:text="@string/register_confirm"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/rg_psw_2"
-                android:layout_width="160dp"
+            <LinearLayout
+                style="@style/InputBoxStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/search_box"
-                android:password="true"
-                android:singleLine="true"
-                android:textColor="@color/white1"
-                android:textSize="20sp" />
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/rg_psw_2"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_160dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/main"
+                    android:hint="确认密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dimen_3dp"
+                    android:paddingBottom="@dimen/dimen_3dp"
+                    android:textColor="@color/white1"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -132,7 +183,7 @@
                 android:id="@+id/TextView04"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="性别:"
+                android:text="@string/register_sex"
                 android:textColor="@color/yellow_r"
                 android:textSize="20sp" />
 
@@ -175,16 +226,19 @@
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:gravity="center">
 
             <Button
                 android:id="@+id/rg_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_marginRight="@dimen/dimen_8dp"
                 android:background="@drawable/selector_ol_button"
-                android:text=" 返回 "
+                android:fontFamily="@font/main"
+                android:text="@string/register_back"
                 android:textColor="@color/white1"
                 android:textSize="25sp" />
 
@@ -192,9 +246,11 @@
                 android:id="@+id/rg_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/selector_ol_button"
-                android:text=" 注册 "
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginLeft="@dimen/dimen_8dp"
+                android:background="@drawable/selector_ol_button_login"
+                android:fontFamily="@font/main"
+                android:text="@string/reg_button"
                 android:textColor="@color/white1"
                 android:textSize="25sp" />
         </LinearLayout>

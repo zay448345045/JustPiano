@@ -10,24 +10,23 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.4" />
 
     <LinearLayout
         android:id="@+id/LinearLayout01"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="1"
-
         android:orientation="horizontal">
 
         <View
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
 
@@ -37,9 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#00000000"
-
-                android:drawablePadding="0dp"
-                android:text=""
+                android:drawablePadding="@dimen/dimen_0dp"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -51,45 +48,45 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.8" />
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="3.5"
                     android:src="@drawable/local" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.3" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
+                    android:fontFamily="@font/main"
                     android:gravity="center"
-
-                    android:text="普通模式"
+                    android:text="@string/play_select_normal"
                     android:textColor="#ffffffff"
                     android:textSize="21sp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.6" />
 
             </LinearLayout>
         </RelativeLayout>
 
         <View
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
 
@@ -100,8 +97,8 @@
                 android:layout_weight="1"
                 android:background="#00000000"
 
-                android:drawablePadding="0dp"
-                android:text=""
+                android:drawablePadding="@dimen/dimen_0dp"
+
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -113,33 +110,33 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.8" />
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="3.5"
                     android:src="@drawable/feedback" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.3" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
+                    android:fontFamily="@font/main"
                     android:gravity="center"
-
-                    android:text="练习模式"
+                    android:text="@string/play_select_prac"
                     android:textColor="#ffffffff"
                     android:textSize="21sp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.6" />
 
 
@@ -149,7 +146,7 @@
         </RelativeLayout>
 
         <View
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
@@ -157,23 +154,23 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.1" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
         <View
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
 
@@ -184,8 +181,8 @@
                 android:layout_weight="1"
                 android:background="#00000000"
 
-                android:drawablePadding="0dp"
-                android:text=""
+                android:drawablePadding="@dimen/dimen_0dp"
+
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -197,33 +194,33 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.8" />
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="3.5"
                     android:src="@drawable/listen" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.3" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
+                    android:fontFamily="@font/main"
                     android:gravity="center"
-
-                    android:text="欣赏模式"
+                    android:text="@string/play_select_lis"
                     android:textColor="#ffffffff"
                     android:textSize="21sp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.6" />
 
 
@@ -233,12 +230,12 @@
         </RelativeLayout>
 
         <View
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
 
@@ -249,8 +246,8 @@
                 android:layout_weight="1"
                 android:background="#00000000"
 
-                android:drawablePadding="0dp"
-                android:text=""
+                android:drawablePadding="@dimen/dimen_0dp"
+
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -262,33 +259,33 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.8" />
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="3.5"
                     android:src="@drawable/key" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.3" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
+                    android:fontFamily="@font/main"
                     android:gravity="center"
-
-                    android:text="键盘模式"
+                    android:text="@string/keyboard_mode_title"
                     android:textColor="#ffffffff"
                     android:textSize="21sp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="0.6" />
 
 
@@ -298,7 +295,7 @@
         </RelativeLayout>
 
         <View
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
@@ -306,6 +303,6 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.4" />
 </LinearLayout>
