@@ -245,7 +245,6 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             f4298C.setOnClickListener(this);
             pageButton = findViewById(R.id.ol_top_next);
             pageButton.setOnClickListener(this);
-            showTitleButton.setOnClickListener(new ShowTitleClick(this));
             jpprogressBar = new JPProgressBar(this);
         } catch (Exception e) {
             e.printStackTrace();
