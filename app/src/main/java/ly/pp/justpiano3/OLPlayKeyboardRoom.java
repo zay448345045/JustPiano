@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -892,7 +893,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             }
             roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
-            ((TextView) roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title)).setTextColor(0xffffffff);
+            TextView tv = roomTabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            ((TextView) tv).setTextColor(0xffffffff);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
             i = intValue + 1;
         }
     }

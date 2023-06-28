@@ -59,7 +59,7 @@
                 android:layout_alignEnd="@+id/ol_couple_mod"
                 android:layout_alignParentStart="true"
                 android:background="@drawable/list"
-                android:fontFamily="@font/main"
+                android:fontFamily="@font/main_bold"
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/white1"
@@ -228,7 +228,7 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_80dp"
+        android:layout_height="@dimen/dimen_96dp"
         android:background="@drawable/list"
         android:scrollbars="none">
 

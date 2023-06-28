@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -246,7 +247,11 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         for (int i = 0; i < 6; i++) {
             tabhost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 512;
-            ((TextView) tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(0xffffffff);
+            TextView tv = tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            ((TextView) tv).setTextColor(0xffffffff);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         }
         tabhost.setOnTabChangedListener(str -> {
             int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
