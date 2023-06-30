@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/user_face"
         android:layout_alignTop="@+id/user_face"
-        android:fontFamily="@font/main_bold"
+        android:textStyle="bold"
         android:text="@string/ol_top_view_no"
         android:textColor="@color/exit"
         android:textSize="18sp" />
@@ -55,7 +55,7 @@
         android:layout_toEndOf="@+id/TextView01"
         android:layout_alignBaseline="@+id/TextView01"
         android:layout_alignBottom="@+id/TextView01"
-        android:fontFamily="@font/main_bold"
+        android:textStyle="bold"
         android:textSize="18sp"
         android:text="@string/ol_top_view_i"
         android:textColor="@color/exit" />

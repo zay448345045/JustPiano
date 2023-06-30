@@ -21,7 +21,7 @@
             android:gravity="center"
             android:background="@drawable/ol_rectangle_orange"
             android:keepScreenOn="true"
-            android:fontFamily="@font/main_bold"
+            android:textStyle="bold"
             android:text="@string/user_info_title"
             android:textSize="20sp"
             android:textColor="@color/white1"

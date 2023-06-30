@@ -57,7 +57,7 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:keepScreenOn="true"
-            android:fontFamily="@font/main_bold"
+            android:textStyle="bold"
             android:text="@string/searchsongs_label"
             android:textSize="20sp"
             android:textColor="@color/white1"

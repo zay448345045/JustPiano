@@ -13,7 +13,7 @@
         android:layout_marginRight="@dimen/dimen_3dp"
         android:layout_marginBottom="@dimen/dimen_2dp"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main_bold"
+        android:textStyle="bold"
         android:gravity="center"
         android:text="@string/f_view"
         android:textColor="@color/white1"

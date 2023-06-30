@@ -50,7 +50,7 @@
                     android:layout_toStartOf="@+id/ol_group_b"
                     android:layout_toEndOf="@+id/ol_ready_b"
                     android:background="@color/back"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/olplayroom_ra"
                     android:textColor="@color/roomtext"
@@ -64,7 +64,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:text="@string/olplayroom_team"
                     android:textColor="@color/white1"
                     android:textSize="20sp" />
@@ -86,7 +86,7 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
-                android:fontFamily="@font/main_bold"
+                android:textStyle="bold"
                 android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
@@ -170,7 +170,7 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:fontFamily="@font/main_bold"
+                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_b"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
@@ -182,7 +182,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_centerHorizontal="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:fontFamily="@font/main_bold"
+                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_o"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
@@ -194,7 +194,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:fontFamily="@font/main_bold"
+                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_n"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />

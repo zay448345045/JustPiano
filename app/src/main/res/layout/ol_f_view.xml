@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main_bold"
+        android:textStyle="bold"
         android:gravity="center"
         android:text="@string/f_view"
         android:textColor="@color/white1"

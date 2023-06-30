@@ -50,7 +50,7 @@
                     android:layout_toStartOf="@id/ol_group_b"
                     android:layout_toEndOf="@id/ol_ready_b"
                     android:background="@color/back"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:gravity="center"
                     android:text="@string/olplayroom_ra"
                     android:textColor="@color/roomtext"

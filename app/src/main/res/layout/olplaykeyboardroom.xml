@@ -75,7 +75,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:gravity="center"
                     android:text="@string/ol_kbr_ha"
                     android:textColor="@color/white1"
@@ -87,7 +87,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:gravity="center"
                     android:text="@string/keyboard_mode_minus"
                     android:textColor="@color/white1"
@@ -99,7 +99,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:text="@string/keyboard_mode_arrow_left"
                     android:textColor="@color/white1"
                     android:textSize="18sp"></Button>
@@ -110,7 +110,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:text="@string/keyboard_mode_arrow_right"
 
 
@@ -123,7 +123,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/selector_orange_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:text="@string/keyboard_mode_plus"
                     android:textColor="@color/white1"
                     android:textSize="18sp">
@@ -144,7 +144,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
-                    android:fontFamily="@font/main_bold"
+                    android:textStyle="bold"
                     android:src="@drawable/setting"
                     android:text="@string/keyboard_mode_rec"
                     android:textColor="@color/v3"
@@ -215,7 +215,7 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:fontFamily="@font/main_bold"
+                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_b"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
@@ -227,7 +227,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_centerHorizontal="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:fontFamily="@font/main_bold"
+                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_o"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />
@@ -239,7 +239,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:fontFamily="@font/main_bold"
+                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_n"
                                     android:textColor="@color/white1"
                                     android:textSize="18sp" />

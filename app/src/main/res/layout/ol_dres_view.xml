@@ -23,7 +23,7 @@
             android:id="@+id/ol_dress_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main_bold"
+            android:textStyle="bold"
             android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="16sp" />
