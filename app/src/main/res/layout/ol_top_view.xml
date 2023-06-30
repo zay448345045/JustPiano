@@ -31,7 +31,7 @@
         android:layout_toEndOf="@+id/user_face"
         android:layout_alignBottom="@+id/user_face"
         android:gravity="center_vertical"
-        android:fontFamily="@font/main"
+
         android:maxLines="1"
         android:text="@string/ol_msg_view_usr"
         android:textColor="@color/white1"
@@ -67,7 +67,7 @@
         android:layout_alignBottom="@+id/ol_user_top"
         android:layout_toEndOf="@+id/ol_user_top"
         android:layout_alignBaseline="@+id/ol_user_top"
-        android:fontFamily="@font/main"
+
         android:maxLines="1"
         android:text="@string/f_view"
         android:textColor="@color/white1"
@@ -80,7 +80,7 @@
         android:layout_alignBottom="@+id/ol_score_top"
         android:layout_toEndOf="@+id/ol_score_top"
         android:layout_alignBaseline="@+id/ol_score_top"
-        android:fontFamily="@font/main"
+
         android:maxLines="1"
         android:text="@string/f_view"
         android:textColor="@color/white1"

@@ -24,7 +24,7 @@
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:gravity="fill"
             android:background="@drawable/selector_orange_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmelodylist_update"
             android:textColorHint="@color/yellow_r"
             android:textColor="@color/white1"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/dimen_5dp"
-            android:fontFamily="@font/main"
+
             android:background="@drawable/selector_orange_button"
             android:gravity="fill"
             android:text="@string/olmelodylist_d"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/dimen_5dp"
-            android:fontFamily="@font/main"
+
             android:background="@drawable/selector_orange_button"
             android:gravity="fill"
             android:text="@string/olmelodylist_s"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/dimen_5dp"
-            android:fontFamily="@font/main"
+
             android:background="@drawable/selector_orange_button"
             android:gravity="fill"
             android:text="@string/olmelodylist_a"
@@ -80,7 +80,7 @@
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:gravity="fill"
             android:background="@drawable/selector_orange_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmelodylist_h"
             android:textColorHint="@color/yellow_r"
             android:textColor="@color/white1"
@@ -94,7 +94,7 @@
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:gravity="fill"
             android:background="@drawable/selector_orange_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmelodylist_search"
             android:textColorHint="@color/yellow_r"
             android:textColor="@color/white1"
@@ -111,14 +111,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/online"
-                android:textStyle="bold" />
+                 />
 
             <Button
                 android:id="@+id/ol_top_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_orange_button"
-                android:fontFamily="@font/main"
+
                 android:text="@string/olmelodylist_page"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />

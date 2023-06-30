@@ -42,7 +42,7 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
-                android:fontFamily="@font/main"
+
                 android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"

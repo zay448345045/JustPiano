@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dimen_12dp"
-            android:fontFamily="@font/main"
+
             android:background="@color/translent"
             android:keepScreenOn="true"
             android:gravity="center"
@@ -38,7 +38,7 @@
                 style="@style/EditTextStyle"
                 android:layout_width="@dimen/dimen_300dp"
                 android:layout_height="@dimen/dimen_100dp"
-                android:fontFamily="@font/main"
+
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingTop="@dimen/dimen_3dp"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_12dp"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_msg_set"
             android:textColor="@color/white1"
             android:textSize="20sp" />

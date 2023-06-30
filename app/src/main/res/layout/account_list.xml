@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="6dp"
             android:textColor="@color/white1"
-            android:fontFamily="@font/main"
+
             android:visibility="gone"></TextView>
 
         <LinearLayout

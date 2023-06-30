@@ -23,7 +23,7 @@
             android:layout_below="@+id/rand_all"
             android:layout_centerHorizontal="true"
             android:background="@drawable/filled_box"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_rand_2"
             android:textColor="@color/settings" />
 
@@ -34,7 +34,7 @@
             android:layout_below="@+id/rand_3"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_rand_4"
             android:textColor="@color/settings" />
 
@@ -45,7 +45,7 @@
             android:layout_below="@+id/rand_5"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_rand_5"
             android:textColor="@color/settings" />
 
@@ -56,7 +56,7 @@
             android:layout_below="@+id/add_favor"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_rand_1"
             android:textColor="@color/settings" />
 
@@ -67,7 +67,7 @@
             android:layout_below="@+id/rand_0"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_rand_3"
             android:textColor="@color/settings" />
 
@@ -78,7 +78,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_add_fa"
             android:textColor="@color/settings" />
     </RelativeLayout>
@@ -97,7 +97,7 @@
             android:layout_below="@+id/type_j"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_pop"
             android:textColor="@color/settings" />
 
@@ -108,7 +108,7 @@
             android:layout_below="@+id/type_d"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_red"
             android:textColor="@color/settings" />
 
@@ -119,7 +119,7 @@
             android:layout_below="@+id/type_e"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_ori"
             android:textColor="@color/settings" />
 
@@ -130,7 +130,7 @@
             android:layout_below="@+id/favor"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_classic"
             android:textColor="@color/settings" />
 
@@ -141,7 +141,7 @@
             android:layout_below="@+id/type_l"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_game"
             android:textColor="@color/settings" />
 
@@ -152,7 +152,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songpop_list_local_fa"
             android:textColor="@color/settings" />
     </RelativeLayout>

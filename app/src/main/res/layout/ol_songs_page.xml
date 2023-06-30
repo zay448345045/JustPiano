@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/kuang"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_c_view_item"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:background="#10293535"
             android:drawableTop="@drawable/music"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songs_page_hot"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/convert"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songs_page_new"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -72,7 +72,7 @@
             android:layout_weight="1"
             android:background="#10293535"
             android:drawableTop="@drawable/comment"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songs_page_fa"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -84,7 +84,7 @@
             android:layout_weight="1"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/feedback"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songs_page_test"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:background="#10293535"
             android:drawableTop="@drawable/search"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songs_page_search"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -108,7 +108,7 @@
             android:layout_weight="1"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/ranking"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_songs_page_winner"
             android:textColor="@color/white1"
             android:textSize="20sp" />

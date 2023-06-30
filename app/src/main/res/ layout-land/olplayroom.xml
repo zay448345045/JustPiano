@@ -32,7 +32,7 @@
             android:textColorHighlight="@color/blue_d"
             android:textColorHint="@color/blue_d"
             android:textSize="16sp"
-            android:textStyle="bold"
+
             android:typeface="sans" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_centerVertical="true"
             android:textColor="@color/online"
             android:textSize="18sp"
-            android:textStyle="bold"
+
             tools:ignore="RelativeOverlap" />
     </RelativeLayout>
 

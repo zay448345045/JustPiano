@@ -30,7 +30,7 @@
             android:textColorHighlight="@color/blue_d"
             android:textColorHint="@color/blue_d"
             android:textSize="18sp"
-            android:textStyle="bold"
+
             android:typeface="sans" />
 
         <TextView
@@ -89,7 +89,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_button"
-                android:fontFamily="@font/main"
+
                 android:text="@string/olplayhall_cr"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
@@ -103,7 +103,7 @@
                 android:layout_toEndOf="@+id/ol_createroom_b"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_button"
-                android:fontFamily="@font/main"
+
                 android:text="@string/olplayhall_cl"
                 android:textColor="@color/white1"
                 android:textSize="22sp" />
@@ -118,7 +118,7 @@
                 android:layout_toEndOf="@+id/ol_testroom_b"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_button"
-                android:fontFamily="@font/main"
+
                 android:text="@string/olplayhall_ch"
                 android:textColor="@color/white1"
                 android:textSize="22sp" />

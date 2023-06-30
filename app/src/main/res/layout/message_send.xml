@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/blue_l"
-            android:fontFamily="@font/main"
+
             android:gravity="center_vertical"
             android:text="@string/message_send_name"
             android:textColor="@color/white1"
@@ -44,7 +44,7 @@
                 android:ems="10"
 
 
-                android:fontFamily="@font/main"
+
                 android:maxLines="5"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
@@ -65,7 +65,7 @@
             android:id="@+id/title_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:gravity="center_vertical"
             android:text="@string/login_pwd_label"
             android:textColor="@color/white1"
@@ -85,7 +85,7 @@
                 android:ems="10"
 
 
-                android:fontFamily="@font/main"
+
                 android:maxLines="5"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"

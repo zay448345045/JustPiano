@@ -225,7 +225,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dimen_4dp"
                                 android:layout_marginBottom="@dimen/dimen_4dp"
-                                android:fontFamily="@font/main"
+
                                 android:text="@string/olplayhallroom_exp"
                                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -234,7 +234,7 @@
                                 android:layout_width="@dimen/dimen_100dp"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_ol_button"
-                                android:fontFamily="@font/main"
+
                                 android:text="@string/olplayhallroom_dress"
                                 android:textColor="@color/white1"
                                 android:textSize="18sp"
@@ -246,7 +246,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dimen_10dp"
                                 android:background="@drawable/selector_ol_button"
-                                android:fontFamily="@font/main"
+
                                 android:text="@string/olplayhallroom_olprize"
                                 android:textColor="@color/white1"
                                 android:textSize="18sp" />

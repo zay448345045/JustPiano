@@ -67,7 +67,7 @@
             android:layout_marginTop="@dimen/dimen_0dp"
             android:layout_marginEnd="@dimen/dimen_0dp"
             android:background="@drawable/back_puased"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/white1"
@@ -79,13 +79,13 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/ol_player_name"
             android:layout_alignEnd="@+id/ol_player_mod"
-            android:fontFamily="@font/main"
+
             android:gravity="start"
             android:maxLines="1"
             android:textColor="@color/green_r"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:textStyle="bold"
+
             android:typeface="sans" />
 
         <TextView
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/ol_player_mod"
             android:layout_alignParentStart="true"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:textColor="@color/white1"
             android:textColorHint="@color/yellow_r"
@@ -106,13 +106,13 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/ol_player_level"
             android:layout_alignEnd="@+id/ol_player_mod"
-            android:fontFamily="@font/main"
+
             android:gravity="start"
             android:maxLines="1"
             android:textColor="@color/yellow"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:textStyle="bold"
+
             android:typeface="sans" />
 
         <TextView
@@ -122,7 +122,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/filled_classname"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:maxEms="1"
             android:textColor="@color/white1"

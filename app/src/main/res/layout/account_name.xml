@@ -13,7 +13,7 @@
         android:background="@drawable/ol_rectangle_blue"
         android:textColor="@color/white1"
         android:textSize="18sp"
-        android:fontFamily="@font/main"/>
+        />
 
     <Button
         android:id="@+id/account_delete"
@@ -26,6 +26,6 @@
         android:text="@string/account_name_del"
         android:textColor="@color/white1"
         android:textSize="18sp"
-        android:fontFamily="@font/main"/>
+        />
 
 </LinearLayout>

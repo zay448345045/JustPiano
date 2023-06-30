@@ -30,7 +30,7 @@
         android:text="@string/ol_c_challenge_view"
         android:textColor="@color/white1"
         android:textSize="14sp"
-        android:textStyle="bold" />
+         />
 
     <TextView
         android:id="@+id/ol_challenge_score"
@@ -43,7 +43,7 @@
         android:text="@string/ol_c_challenge_view"
         android:textColor="@color/white1"
         android:textSize="14sp"
-        android:textStyle="bold" />
+         />
 
     <TextView
         android:id="@+id/ol_challenge_time"
@@ -56,5 +56,5 @@
         android:text="@string/ol_c_challenge_view"
         android:textColor="@color/white1"
         android:textSize="14sp"
-        android:textStyle="bold" />
+         />
 </LinearLayout>

@@ -30,7 +30,7 @@
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_top_usr_cl"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -40,7 +40,7 @@
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10293535"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_top_usr_lv"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -50,7 +50,7 @@
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_top_usr_w"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -60,7 +60,7 @@
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10293535"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_top_usr_s"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -70,7 +70,7 @@
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="@dimen/dimen_180dp"
             android:background="#10c6ffe9"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_top_usr_p"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -80,7 +80,7 @@
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10293535"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_top_usr_c"
             android:textColor="@color/white1"
             android:textSize="20sp" />

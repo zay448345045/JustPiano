@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:fontFamily="@font/main"
+
                 android:text="@string/ol_draw_prize_result"
                 android:textColor="@color/white1"
                 android:textSize="16sp" />

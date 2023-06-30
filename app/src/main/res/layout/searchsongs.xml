@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_ol_button"
             android:layout_alignParentEnd="true"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmelodylist_search"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -39,7 +39,7 @@
                 style="@style/EditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:maxLines="1"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:background="@drawable/filled_bar"
-        android:fontFamily="@font/main"
+
         android:gravity="start"
         android:text="@string/ol_score_view_hide"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -28,7 +28,7 @@
         android:layout_gravity="end"
         android:layout_marginStart="@dimen/dimen_70dp"
         android:divider="@null"
-        android:fontFamily="@font/main"
+
         android:listSelector="@color/translent"
         android:visibility="gone" />
 

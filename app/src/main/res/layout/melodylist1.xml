@@ -46,7 +46,7 @@
                 android:id="@+id/total_score_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/melodylist1_total_score_all"
                 android:textColor="@color/white1"
                 android:textSize="12sp" />
@@ -55,7 +55,7 @@
                 android:id="@+id/all_mel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/melodylist1_all_mel"
                 android:textColor="#ffffffff"
                 android:textSize="12sp" />
@@ -73,7 +73,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.1"
             android:background="@drawable/selector_orange_button"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/melodylist1_sort_b"
@@ -110,7 +110,7 @@
                     android:ems="10"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:fontFamily="@font/main"
+
                     android:hint="搜索"
                     android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
                     android:maxLines="1"
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/dimen_8dp"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/melodylist1_rec"
             android:textSize="16sp" />
@@ -170,7 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/dimen_8dp"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/melodylist1_seq"
             android:textSize="16sp" />
@@ -180,7 +180,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/melodylist1_hand"
             android:textSize="16sp" />

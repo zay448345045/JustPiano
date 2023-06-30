@@ -100,7 +100,7 @@
                             android:layout_width="@dimen/dimen_0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2.5"
-                            android:fontFamily="@font/main"
+
                             android:gravity="center"
                             android:text="@string/ol_finish_view_ok"
                             android:textColor="#ffffffff"

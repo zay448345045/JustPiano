@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:fontFamily="@font/main"
+
             android:text="@string/register_name"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/id"
             android:layout_alignStart="@+id/id"
-            android:fontFamily="@font/main"
+
             android:text="@string/register_sex"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/age"
             android:layout_alignParentStart="true"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_ts"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/score"
             android:layout_alignStart="@+id/score"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_w"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/num"
             android:layout_alignParentStart="true"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_si"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/name"
             android:layout_alignStart="@+id/name"
-            android:fontFamily="@font/main"
+
             android:text="@string/login_acc_label"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/sign"
             android:layout_toEndOf="@+id/num"
-            android:fontFamily="@font/main"
+
             android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/num"
             android:layout_toEndOf="@+id/score"
-            android:fontFamily="@font/main"
+
             android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -174,7 +174,7 @@
             android:layout_toEndOf="@+id/age"
             android:background="@color/blue_translent"
             android:inputType="number"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_1990"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -192,7 +192,7 @@
                 android:layout_width="@dimen/dimen_240dp"
                 android:layout_height="wrap_content"
                 android:background="@color/blue_translent"
-                android:fontFamily="@font/main"
+
                 android:textColor="@color/green_r"
                 android:textSize="20sp" />
         </ScrollView>
@@ -203,7 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/user_score"
             android:layout_toEndOf="@+id/user_age"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_year"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -213,7 +213,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_face"
-            android:fontFamily="@font/main"
+
             android:layout_alignEnd="@+id/user_face"/>
         <!--            android:text="(点击头像设置)"-->
 
@@ -234,7 +234,7 @@
             android:layout_below="@+id/app_size"
             android:background="@drawable/selector_orange_button"
             android:layout_alignEnd="@+id/app_size"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_mod_pass"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -246,7 +246,7 @@
             android:layout_below="@+id/password_button"
             android:layout_alignStart="@+id/password_button"
             android:background="@drawable/selector_orange_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/user_info_confirm"
             android:textColor="@color/white1"
             android:textSize="24sp" />

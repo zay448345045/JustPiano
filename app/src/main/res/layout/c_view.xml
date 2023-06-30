@@ -49,7 +49,7 @@
                     android:id="@+id/sound_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/c_view_length"
                     android:textColor="@color/white1"
                     android:textSize="10sp" />
@@ -62,7 +62,7 @@
                     android:id="@+id/nandu_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/c_view_rdiff"
                     android:textColor="@color/white1"
                     android:textColorHighlight="@color/black"
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical|center_horizontal|center"
                     android:layout_marginStart="@dimen/dimen_5dp"
-                    android:fontFamily="@font/main"
+
                     android:gravity="start|center_vertical|center_horizontal|center"
                     android:text="@string/c_view_ldiff"
                     android:textColor="@color/white1"

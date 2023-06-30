@@ -44,7 +44,7 @@
                 android:id="@+id/app_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/login_acc_label"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
@@ -60,7 +60,7 @@
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_160dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:hint="输入账号"
                     android:maxLines="1"
                     android:paddingTop="@dimen/dimen_3dp"
@@ -74,7 +74,7 @@
                 android:id="@+id/TextView03"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/register_name"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
@@ -91,7 +91,7 @@
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_160dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:hint="输入昵称"
                     android:maxLines="1"
                     android:paddingTop="@dimen/dimen_3dp"
@@ -113,7 +113,7 @@
                 android:id="@+id/TextView02"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/login_pwd_label"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
@@ -129,7 +129,7 @@
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_160dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:hint="输入密码"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -144,7 +144,7 @@
                 android:id="@+id/TextView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:maxLines="1"
                 android:text="@string/register_confirm"
                 android:textColor="@color/white1"
@@ -161,7 +161,7 @@
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_160dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:hint="确认密码"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -219,7 +219,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/yellow_r"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                     />
             </RadioGroup>
         </LinearLayout>
 
@@ -237,7 +237,7 @@
                 android:layout_marginEnd="@dimen/dimen_5dp"
                 android:layout_marginRight="@dimen/dimen_8dp"
                 android:background="@drawable/selector_ol_button"
-                android:fontFamily="@font/main"
+
                 android:text="@string/register_back"
                 android:textColor="@color/white1"
                 android:textSize="25sp" />
@@ -249,7 +249,7 @@
                 android:layout_marginStart="@dimen/dimen_5dp"
                 android:layout_marginLeft="@dimen/dimen_8dp"
                 android:background="@drawable/selector_ol_button_login"
-                android:fontFamily="@font/main"
+
                 android:text="@string/reg_button"
                 android:textColor="@color/white1"
                 android:textSize="25sp" />

@@ -27,7 +27,7 @@
                     android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
-                    android:fontFamily="@font/main"
+
                     android:gravity="start"
                     android:maxLines="1"
                     android:text="@string/c_view_name"
@@ -51,7 +51,7 @@
                     android:id="@+id/ol_sound_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/c_view_length"
                     android:textColor="@color/white1"
                     android:textSize="12sp" />
@@ -60,7 +60,7 @@
                     android:id="@+id/nandu_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/ol_hand_list_r"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white1"
@@ -79,7 +79,7 @@
                     android:id="@+id/nandu_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/melodylist1_hand"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white1"

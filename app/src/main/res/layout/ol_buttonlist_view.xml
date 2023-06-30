@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_btn_lv_info"
         android:textColor="@color/white1"
         android:textSize="16sp" />
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_btn_lv_pm"
         android:textColor="@color/white1"
         android:textSize="16sp" />
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_btn_lv_cp"
         android:textColor="@color/white1"
         android:textSize="16sp" />
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_15dp"
         android:background="@drawable/selector_ol_button_login"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_btn_lv_kick"
         android:textColor="@color/white1"
         android:textSize="16sp" />
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_btn_lv_cls"
         android:textColor="@color/white1"
         android:textSize="16sp" />
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_btn_lv_mute"
         android:textColor="@color/white1"
         android:textSize="16sp"

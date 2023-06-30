@@ -43,7 +43,7 @@
                 android:layout_marginBottom="@dimen/dimen_26dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_orange_button"
-                android:fontFamily="@font/main"
+
                 android:gravity="center"
                 android:text="@string/challenge_today"
                 android:textColor="@color/white1"
@@ -79,7 +79,7 @@
                     android:layout_marginBottom="@dimen/dimen_6dp"
                     android:layout_weight="3"
                     android:background="@drawable/list"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/challenge_inf"
                     android:textColor="@color/white1"
                     android:textSize="14sp" />
@@ -94,7 +94,7 @@
                     android:layout_marginBottom="@dimen/dimen_8dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
-                    android:fontFamily="@font/main"
+
                     android:gravity="center"
                     android:text="@string/challenge_prize"
                     android:textColor="@color/white1"
@@ -110,7 +110,7 @@
                     android:layout_marginBottom="@dimen/dimen_8dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button_login"
-                    android:fontFamily="@font/main"
+
                     android:gravity="center"
                     android:text="@string/challenge_start"
                     android:textColor="@color/white1"

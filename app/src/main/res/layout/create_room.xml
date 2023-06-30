@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:fontFamily="@font/main"
+
                 android:hint="输入房名"
                 android:maxLines="1"
                 android:paddingTop="@dimen/dimen_3dp"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:fontFamily="@font/main"
+
                 android:hint="输入密码"
                 android:inputType="textPassword"
                 android:maxLines="1"
@@ -86,28 +86,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:fontFamily="@font/main"
+
                 android:text="@string/create_room_n" />
 
             <RadioButton
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/create_room_g" />
 
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/create_room_k" />
 
             <RadioButton
                 android:id="@+id/couple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/main"
+
                 android:text="@string/create_room_c" />
         </RadioGroup>
     </LinearLayout>

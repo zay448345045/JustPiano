@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/ol_room_id"
         android:background="@drawable/title_bar"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/ol_room_view_name"
@@ -43,7 +43,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:background="@drawable/selector_ol_button"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/ol_room_view_ent"
         android:textColor="@color/white1"
@@ -70,7 +70,7 @@
         android:layout_alignTop="@+id/ol_player_grid"
         android:layout_marginTop="@dimen/dimen_2dp"
         android:background="@color/c10"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_room_view_grp"
         android:textColor="@color/white1"
         android:textSize="16sp" />

@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/list"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/melodylist1_hand"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/left_hand"
         android:background="@drawable/list"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/ol_hand_list_r"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -40,7 +40,7 @@
         android:layout_alignStart="@id/left_hand"
         android:layout_alignEnd="@id/left_hand"
         android:background="@drawable/list"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/ol_hand_list_flat"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -55,7 +55,7 @@
         android:layout_alignEnd="@id/right_hand"
         android:layout_toEndOf="@+id/jiangdiao"
         android:background="@drawable/list"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/ol_hand_list_sharp"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -68,7 +68,7 @@
         android:layout_below="@id/jiangdiao"
         android:layout_alignStart="@id/jiangdiao"
         android:layout_alignEnd="@id/shengdiao"
-        android:fontFamily="@font/main">
+        >
 
         <TextView
             android:id="@+id/changeScreenOrientation"
@@ -79,7 +79,7 @@
             android:layout_alignEnd="@id/right_hand"
             android:layout_toEndOf="@+id/jiangdiao"
             android:background="@drawable/list"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/ol_hand_list_rotate"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -108,7 +108,7 @@
             android:layout_height="@dimen/dimen_40dp"
             android:layout_weight="2"
             android:background="@color/translent"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/ol_hand_list_medium"
             android:textColor="@color/white1"

@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_20dp"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/finish_zero"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/olplaydressroom_save"
                     android:textColor="@color/white1"
                     android:textSize="24sp" />
@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/selector_ol_button"
-                    android:fontFamily="@font/main"
+
                     android:text="@string/finish_back"
                     android:textColor="@color/white1"
                     android:textSize="24sp" />

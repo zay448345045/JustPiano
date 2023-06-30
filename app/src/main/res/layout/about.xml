@@ -23,7 +23,7 @@
                 android:keepScreenOn="true"
                 android:text="@string/about"
                 android:textSize="16sp"
-                android:fontFamily="@font/main"/>
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

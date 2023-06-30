@@ -38,7 +38,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/selector_ol_button_login"
-            android:fontFamily="@font/main"
+
             android:text="@string/account_name_del"
             android:textColor="@color/white1"
             android:textSize="18sp" />
@@ -51,7 +51,7 @@
             android:layout_marginEnd="@dimen/dimen_15dp"
             android:layout_toStartOf="@+id/friend_dele"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/friend_view_pm"
             android:textColor="@color/white1"
             android:textSize="18sp" />
@@ -64,7 +64,7 @@
             android:layout_marginEnd="@dimen/dimen_8dp"
             android:layout_toStartOf="@+id/friend_send"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/friend_view_info"
             android:textColor="@color/white1"
             android:textSize="18sp" />

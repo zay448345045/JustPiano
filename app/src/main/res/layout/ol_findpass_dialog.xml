@@ -17,7 +17,7 @@
             style="@style/EditTextStyle"
             android:layout_width="@dimen/dimen_200dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:hint="@string/ol_findpass_diag_acc"
             android:maxLines="1"
             android:textSize="20sp" />
@@ -34,7 +34,7 @@
             style="@style/EditTextStyle"
             android:layout_width="@dimen/dimen_200dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:hint="@string/ol_findpass_diag_email"
             android:maxLines="1"
             android:textSize="20sp" />
@@ -51,7 +51,7 @@
             style="@style/EditTextStyle"
             android:layout_width="@dimen/dimen_200dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:hint="@string/ol_findpass_diag_what"
             android:maxLines="1"
             android:textSize="20sp" />
@@ -67,7 +67,7 @@
             android:id="@+id/dialog_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 </LinearLayout>

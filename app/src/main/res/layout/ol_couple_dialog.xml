@@ -106,7 +106,6 @@
                 android:textColor="@color/white1"
                 android:textColorHint="@color/yellow_r"
                 android:textSize="12sp"
-                android:textStyle="normal|bold|italic"
                 android:typeface="monospace" />
         </RelativeLayout>
 
@@ -220,7 +219,6 @@
                 android:textColor="@color/white1"
                 android:textColorHint="@color/yellow_r"
                 android:textSize="12sp"
-                android:textStyle="normal|bold|italic"
                 android:typeface="monospace" />
         </RelativeLayout>
     </LinearLayout>

@@ -16,7 +16,7 @@
         android:layout_alignBottom="@id/midi_down_tune"
         android:layout_marginBottom="0dp"
         android:background="@drawable/back_puased"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_kb_set_midi_down"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp" />
@@ -29,7 +29,7 @@
         android:layout_alignBottom="@id/midi_down_tune"
         android:layout_toEndOf="@+id/midi_down_tune"
         android:background="@color/white1"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/finish_zero"
         android:textColor="@color/black"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/midi_tune"
         android:background="@drawable/back_puased"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_kb_set_midi_up"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp" />
@@ -54,7 +54,7 @@
         android:layout_alignStart="@id/midi_down_tune"
         android:layout_alignEnd="@id/midi_down_tune"
         android:background="@drawable/selector_ol_green"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/ol_kb_set_sound_down"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -71,7 +71,7 @@
         android:layout_alignBottom="@id/sound_down_tune"
         android:layout_toEndOf="@+id/sound_down_tune"
         android:background="@color/white1"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/finish_zero"
         android:textColor="@color/black"
@@ -86,7 +86,7 @@
         android:layout_alignEnd="@id/midi_up_tune"
         android:layout_toEndOf="@+id/sound_tune"
         android:background="@drawable/selector_ol_green"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:text="@string/ol_kb_set_sound_up"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_ol_orange"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/ol_kb_set_skin"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_ol_orange"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/ol_kb_set_sound"
             android:textAppearance="?android:attr/textAppearanceLarge"

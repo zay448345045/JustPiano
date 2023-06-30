@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/friend_view_pm"
             android:textColor="@color/white1"
             android:textSize="18sp" />
@@ -84,7 +84,7 @@
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/ol_friend_chat"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_friend_view_find"
             android:textColor="@color/white1"
             android:textSize="18sp" />
@@ -97,7 +97,7 @@
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/ol_friend_game"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:text="@string/friend_view_info"
             android:textColor="@color/white1"
             android:textSize="18sp"
@@ -122,7 +122,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/selector_ol_button_login"
-            android:fontFamily="@font/main"
+
             android:text="@string/account_name_del"
             android:textColor="@color/white1"
             android:textSize="18sp" />

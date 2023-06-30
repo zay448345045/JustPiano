@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:maxLines="1"
         android:scrollHorizontally="true"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/skin_view_size"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/skin_view_dc"
@@ -63,7 +63,7 @@
         android:id="@+id/skin_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/main"
+
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/skin_view_au"

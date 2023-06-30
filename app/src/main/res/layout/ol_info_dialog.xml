@@ -63,7 +63,7 @@
             android:id="@+id/user_info"
             android:layout_width="@dimen/dimen_230dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:textColor="@color/white1" />
 
         <ScrollView
@@ -81,7 +81,7 @@
                     android:id="@+id/user_psign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/main"
+
                     android:textColor="@color/white1" />
             </LinearLayout>
         </ScrollView>

@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/about"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmainmode_about"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:background="#10293535"
             android:drawableTop="@drawable/music"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmainmode_songs"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/friends"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmainmode_ol"
             android:textColor="#ffff4664"
             android:textSize="24sp" />
@@ -65,7 +65,7 @@
             android:layout_height="match_parent"
             android:background="#10293535"
             android:drawableTop="@drawable/ranking"
-            android:fontFamily="@font/main"
+
             android:text="@string/olmainmode_li"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -76,7 +76,7 @@
             android:layout_height="@dimen/dimen_160dp"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/mine"
-            android:fontFamily="@font/main"
+
             android:text="@string/ol_msg_view_usr"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#10293535"
-                android:fontFamily="@font/main"
+
                 android:text="@string/olmainmode_fi"
                 android:textColor="#fffff66b"
                 android:textSize="18sp" />

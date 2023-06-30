@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/back_puased"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_group_list_b"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/v1_name"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_group_list_y"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/v6_name"
-        android:fontFamily="@font/main"
+
         android:text="@string/ol_group_list_r"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />

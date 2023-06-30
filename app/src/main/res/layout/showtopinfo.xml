@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/showtopinfo_label"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -33,7 +33,7 @@
             android:layout_alignBottom="@+id/ol_top_before"
             android:layout_alignParentEnd="true"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/showtopinfo_n"
             android:textColor="@color/white1"
@@ -47,7 +47,7 @@
             android:layout_marginLeft="@dimen/dimen_8dp"
             android:layout_marginRight="@dimen/dimen_8dp"
             android:layout_toStartOf="@+id/ol_top_next"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/showtopinfo_p"
             android:textColor="@color/white1"
@@ -60,7 +60,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/ol_top_page"
             android:background="@drawable/selector_ol_button"
-            android:fontFamily="@font/main"
+
             android:gravity="center"
             android:text="@string/showtopinfo_b"
             android:textColor="@color/white1"

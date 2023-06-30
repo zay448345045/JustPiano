@@ -15,7 +15,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:paddingLeft="@dimen/dimen_8dp"
             android:paddingRight="@dimen/dimen_8dp"
             android:textColor="@color/white1"
@@ -34,7 +34,7 @@
             style="@style/DialogText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/main"
+
             android:padding="@dimen/dimen_5dp"
             android:textColor="@color/white1"
             android:textSize="16sp" />
