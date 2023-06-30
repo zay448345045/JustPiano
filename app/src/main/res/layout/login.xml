@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_5dp"
-            android:fontFamily="@font/login"
+            android:fontFamily="@font/title"
             android:text="@string/login_title"
             android:textColor="@color/white1"
             android:textSize="34sp" />
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_6dp"
-            android:fontFamily="@font/login"
+            android:fontFamily="@font/title"
             android:text="@string/login_ver"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -38,7 +38,7 @@
             android:id="@+id/TextView01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/login"
+            android:fontFamily="@font/title"
             android:text="@string/login_subtitle"
             android:textColor="@color/yellow_r"
             android:textSize="18sp"

@@ -469,7 +469,7 @@
             android:layout_marginStart="@dimen/dimen_15dp"
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
-            android:fontFamily="@font/login"
+            android:fontFamily="@font/title"
             android:text="@string/main_mode_wrn"
             android:textColor="@color/white1"
             android:textSize="12sp" />

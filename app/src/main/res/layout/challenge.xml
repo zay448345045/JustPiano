@@ -26,7 +26,7 @@
                 android:layout_marginTop="@dimen/dimen_24dp"
                 android:layout_marginBottom="@dimen/dimen_24dp"
                 android:layout_weight="23"
-                android:fontFamily="@font/login"
+                android:fontFamily="@font/title"
                 android:gravity="center"
                 android:paddingRight="@dimen/dimen_12dp"
                 android:text="@string/challenge_title"

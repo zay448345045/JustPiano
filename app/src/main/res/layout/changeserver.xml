@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/login"
+            android:fontFamily="@font/title"
             android:paddingTop="20dp"
             android:text=" 选择服务器 "
             android:textColor="@color/white1"
@@ -41,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/selector_orange_button"
-                android:fontFamily="@font/login"
+                android:fontFamily="@font/title"
                 android:text="正式服\n(普通的服务器普通的用)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
@@ -52,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/selector_ol_button"
-                android:fontFamily="@font/login"
+                android:fontFamily="@font/title"
                 android:text="测试服\n(测试用途或故障时备用)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
@@ -80,7 +80,7 @@
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_260dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/login"
+                    android:fontFamily="@font/title"
                     android:hint="其他服务器(填写域名或IP):"
                     android:maxLines="1"
                     android:paddingTop="@dimen/dimen_3dp"
@@ -94,7 +94,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/selector_ol_button_login"
-                android:fontFamily="@font/login"
+                android:fontFamily="@font/title"
                 android:text="确认"
                 android:textSize="15sp" />
 

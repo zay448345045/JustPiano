@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_8dp"
-        android:fontFamily="@font/login"
+        android:fontFamily="@font/title"
         android:text="@string/main_mode_ol"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white1" />

@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_8dp"
-        android:fontFamily="@font/login"
+        android:fontFamily="@font/title"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/ol_songs_page_title"
         android:textColor="@color/white1" />
