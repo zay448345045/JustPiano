@@ -221,6 +221,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         TextView textView2 = view.findViewById(R.id.ol_ready_text);
+        TextView textView3 = view.findViewById(R.id.ol_player_level);
+        TextView textView4 = view.findViewById(R.id.ol_player_class);
+        TextView textView5 = view.findViewById(R.id.ol_player_clname);
+        ImageView imageView1 = view.findViewById(R.id.ol_player_bg);
         ImageView imageView2 = view.findViewById(R.id.ol_player_trousers);
         ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
         ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
@@ -234,6 +238,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
             olPlayRoom.lv = i3;
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;
+            textView3.setTextColor(olPlayRoom.getResources().getColor(R.color.yellow));
+            imageView1.setBackgroundResource(R.drawable._self);
             switch (olPlayRoom.getMode()) {
                 case 2:
                     olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;
@@ -264,7 +270,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         if (!familyID.equals("0")) {
             File file = new File(olPlayRoom.getFilesDir(), familyID + ".jpg");
             if (file.exists()) {
-                try (InputStream inputStream = new FileInputStream(file)){
+                try (InputStream inputStream = new FileInputStream(file)) {
                     int length = (int) file.length();
                     byte[] pic = new byte[length];
                     inputStream.read(pic);
@@ -276,9 +282,6 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView7.setImageResource(R.drawable.family);
             }
         }
-        TextView textView3 = view.findViewById(R.id.ol_player_level);
-        TextView textView4 = view.findViewById(R.id.ol_player_class);
-        TextView textView5 = view.findViewById(R.id.ol_player_clname);
         if (!string4.equals("H")) {
             if ("R".equals(string3)) {
                 textView2.setText("准备");

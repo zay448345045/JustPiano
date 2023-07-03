@@ -13,13 +13,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <ImageView
+            android:id="@+id/ol_player_bg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/_none" />
 
         <ImageView
             android:id="@+id/ol_player_mod"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:background="@drawable/filled_msg" />
 
         <ImageView
