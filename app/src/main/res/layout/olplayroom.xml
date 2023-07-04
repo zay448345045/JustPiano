@@ -32,42 +32,53 @@
 
                 <Button
                     android:id="@+id/ol_ready_b"
-                    android:layout_width="@dimen/dimen_80dp"
+                    android:layout_width="@dimen/dimen_64dp"
                     android:layout_height="@dimen/dimen_45dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
-
                     android:text="@string/olplayroom_begin"
                     android:textColor="@color/white1"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <ly.pp.justpiano3.ScrollText
-                    android:id="@+id/ol_songlist_b"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/LinearLayout01"
+                    style="@style/InputBoxStyle"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignTop="@+id/ol_ready_b"
-                    android:layout_toStartOf="@+id/ol_group_b"
-                    android:layout_toEndOf="@+id/ol_ready_b"
-                    android:background="@color/back"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="@string/olplayroom_ra"
-                    android:textColor="@color/roomtext"
-                    android:textSize="14sp" />
+                    android:layout_marginLeft="@dimen/dimen_66dp"
+                    android:layout_marginTop="@dimen/dimen_1dp"
+                    android:layout_marginRight="@dimen/dimen_66dp"
+                    android:layout_marginBottom="@dimen/dimen_1dp"
+                    android:gravity="center">
+
+                    <ly.pp.justpiano3.ScrollText
+                        android:id="@+id/ol_songlist_b"
+                        style="@style/EditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:text="@string/olplayroom_ra"
+                        android:textColor="@color/roomtext"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/ol_group_b"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/ol_songlist_b"
+                    android:layout_width="@dimen/dimen_64dp"
+                    android:layout_height="@dimen/dimen_45dp"
+
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
-                    android:textStyle="bold"
                     android:text="@string/olplayroom_team"
                     android:textColor="@color/white1"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <GridView
@@ -86,12 +97,12 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
-                android:textStyle="bold"
                 android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
                 android:textColor="@color/roomtext"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/time_text"
@@ -170,10 +181,10 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_b"
                                     android:textColor="@color/white1"
-                                    android:textSize="18sp" />
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
 
                                 <Button
                                     android:id="@+id/online_button"
@@ -182,10 +193,10 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_centerHorizontal="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_o"
                                     android:textColor="@color/white1"
-                                    android:textSize="18sp" />
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
 
                                 <Button
                                     android:id="@+id/next_button"
@@ -194,10 +205,10 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:textStyle="bold"
                                     android:text="@string/olplayhall_n"
                                     android:textColor="@color/white1"
-                                    android:textSize="18sp" />
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
                             </RelativeLayout>
                         </RelativeLayout>
 

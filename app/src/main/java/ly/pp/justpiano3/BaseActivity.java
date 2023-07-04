@@ -2,6 +2,8 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 public class BaseActivity extends Activity {
     boolean isOutLine = false;

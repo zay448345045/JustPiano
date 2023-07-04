@@ -32,35 +32,44 @@
 
                 <Button
                     android:id="@id/ol_ready_b"
-                    android:layout_width="@dimen/dimen_80dp"
+                    android:layout_width="@dimen/dimen_60dp"
                     android:layout_height="@dimen/dimen_35dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
-
                     android:text="@string/olplayroom_begin"
                     android:textColor="@color/white1"
-                    android:textSize="15sp" />
-
-                <ly.pp.justpiano3.ScrollText
-                    android:id="@id/ol_songlist_b"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignTop="@id/ol_ready_b"
-                    android:layout_toStartOf="@id/ol_group_b"
-                    android:layout_toEndOf="@id/ol_ready_b"
-                    android:background="@color/back"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:text="@string/olplayroom_ra"
-                    android:textColor="@color/roomtext"
                     android:textSize="14sp" />
+
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout01"
+                    style="@style/InputBoxStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignTop="@+id/ol_ready_b"
+                    android:layout_marginLeft="@dimen/dimen_62dp"
+                    android:layout_marginTop="@dimen/dimen_1dp"
+                    android:layout_marginRight="@dimen/dimen_62dp"
+                    android:layout_marginBottom="@dimen/dimen_1dp"
+                    android:gravity="center">
+
+                    <ly.pp.justpiano3.ScrollText
+                        android:id="@+id/ol_songlist_b"
+                        style="@style/EditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:text="@string/olplayroom_ra"
+                        android:textColor="@color/roomtext"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
                 <Button
                     android:id="@id/ol_group_b"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/ol_songlist_b"
+                    android:layout_width="@dimen/dimen_60dp"
+                    android:layout_height="@dimen/dimen_35dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"

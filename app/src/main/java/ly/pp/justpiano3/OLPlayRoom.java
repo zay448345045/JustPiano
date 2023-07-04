@@ -15,6 +15,7 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -250,7 +251,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_s" + (User2.getShoes() - 1) + ".png")));
             }
             JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle(str).loadInflate(inflate).setFirstButton("祝福:"+String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            jpdialog.setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -952,7 +953,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    private void changeScreenOrientation(){
+    private void changeScreenOrientation() {
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
@@ -1047,7 +1048,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             songNameText.setText(mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
         jpapplication.setPlaySongsMode(0);
-        songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        // songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        songNameText.setSingleLine(true);
+        songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        songNameText.setMarqueeRepeatLimit(-1);
+        songNameText.setSelected(true);
+        songNameText.setFocusable(true);
+        songNameText.setFocusableInTouchMode(true);
         songNameText.setOnClickListener(this);
         songsList.setAdapter(olRoomSongsAdapter);
         sendMsg(21, OnlineLoadRoomPositionDTO.getDefaultInstance());

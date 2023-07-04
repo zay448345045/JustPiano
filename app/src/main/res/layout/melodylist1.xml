@@ -99,7 +99,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/search_edit"
                     style="@style/AutoCompleteStyle"
-                    android:layout_width="@dimen/dimen_0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"

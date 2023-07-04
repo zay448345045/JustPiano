@@ -13,24 +13,26 @@
         android:id="@+id/left_hand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/list"
-
+        android:layout_marginRight="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:background="@drawable/selector_ol_button"
         android:gravity="center"
         android:text="@string/melodylist1_hand"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/right_hand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
         android:layout_toEndOf="@+id/left_hand"
-        android:background="@drawable/list"
-
+        android:background="@drawable/selector_ol_button"
         android:gravity="center"
         android:text="@string/ol_hand_list_r"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/jiangdiao"
@@ -39,12 +41,13 @@
         android:layout_below="@+id/left_hand"
         android:layout_alignStart="@id/left_hand"
         android:layout_alignEnd="@id/left_hand"
-        android:background="@drawable/list"
-
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:background="@drawable/selector_ol_button"
         android:gravity="center"
         android:text="@string/ol_hand_list_flat"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/shengdiao"
@@ -53,13 +56,14 @@
         android:layout_below="@id/right_hand"
         android:layout_alignStart="@id/right_hand"
         android:layout_alignEnd="@id/right_hand"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
         android:layout_toEndOf="@+id/jiangdiao"
-        android:background="@drawable/list"
-
+        android:background="@drawable/selector_ol_button"
         android:gravity="center"
         android:text="@string/ol_hand_list_sharp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp" />
 
     <LinearLayout
         android:id="@+id/orientation"
@@ -67,8 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/jiangdiao"
         android:layout_alignStart="@id/jiangdiao"
-        android:layout_alignEnd="@id/shengdiao"
-        >
+        android:layout_alignEnd="@id/shengdiao">
 
         <TextView
             android:id="@+id/changeScreenOrientation"
@@ -77,13 +80,14 @@
             android:layout_below="@id/right_hand"
             android:layout_alignStart="@id/right_hand"
             android:layout_alignEnd="@id/right_hand"
+            android:layout_marginTop="@dimen/dimen_9dp"
+            android:layout_marginBottom="@dimen/dimen_3dp"
             android:layout_toEndOf="@+id/jiangdiao"
-            android:background="@drawable/list"
-
+            android:background="@drawable/selector_ol_button"
             android:gravity="center"
             android:text="@string/ol_hand_list_rotate"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
+            android:textSize="28sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -92,7 +96,8 @@
         android:layout_below="@id/orientation"
         android:layout_alignStart="@id/orientation"
         android:layout_alignEnd="@id/orientation"
-        android:background="@drawable/list">
+        android:layout_marginTop="@dimen/dimen_9dp"
+        android:background="@drawable/selector_ol_button">
 
         <ImageView
             android:id="@+id/note_speed_0"
@@ -108,11 +113,10 @@
             android:layout_height="@dimen/dimen_40dp"
             android:layout_weight="2"
             android:background="@color/translent"
-
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/ol_hand_list_medium"
             android:textColor="@color/white1"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
         <ImageView
             android:id="@+id/note_speed_1"
