@@ -1,8 +1,14 @@
 package ly.pp.justpiano3;
 
+import static ly.pp.justpiano3.BaseActivity.dp2px;
+import static ly.pp.justpiano3.BaseActivity.px2dp;
+
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +16,9 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -194,6 +202,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
             return view;
         }
         TextView textView;
+        TextView textView2 = view.findViewById(R.id.ol_ready_text);
+        TextView textView3 = view.findViewById(R.id.ol_player_level);
+        TextView textView4 = view.findViewById(R.id.ol_player_class);
+        TextView textView5 = view.findViewById(R.id.ol_player_clname);
         String string = playerList.get(i).getString("N");
         String string2 = playerList.get(i).getString("S");
         String str = string2.equals("f") ? "f" : "m";
@@ -203,7 +215,61 @@ public final class PlayerImageAdapter extends BaseAdapter {
         int i2 = playerList.get(i).getInt("IV");
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
-        imageView.setOnClickListener(v -> {
+        ImageView imageView1 = view.findViewById(R.id.ol_player_bg);
+        ImageView imageView2 = view.findViewById(R.id.ol_player_trousers);
+        ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
+        ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
+        ImageView imageView5 = view.findViewById(R.id.ol_player_hair);
+        ImageView imageView5e = view.findViewById(R.id.ol_player_eye);
+        ImageView imageView6 = view.findViewById(R.id.ol_player_couple);
+        ImageView imageView7 = view.findViewById(R.id.ol_player_family);
+        int ori = olPlayRoom.getResources().getConfiguration().orientation;
+        DisplayMetrics dm = olPlayRoom.getResources().getDisplayMetrics();
+        if (ori == Configuration.ORIENTATION_PORTRAIT) {
+            if (px2dp(olPlayRoom, dm.widthPixels) < 360) {
+                imageView.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView1.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView2.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView3.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView4.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView5.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView5e.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView.getLayoutParams().height = imageView.getLayoutParams().width;
+                imageView1.getLayoutParams().height = imageView1.getLayoutParams().width;
+                imageView2.getLayoutParams().height = imageView2.getLayoutParams().width;
+                imageView3.getLayoutParams().height = imageView3.getLayoutParams().width;
+                imageView4.getLayoutParams().height = imageView4.getLayoutParams().width;
+                imageView5.getLayoutParams().height = imageView5.getLayoutParams().width;
+                imageView5e.getLayoutParams().height = imageView5e.getLayoutParams().width;
+            } else if (px2dp(olPlayRoom, dm.widthPixels) < 480 & px2dp(olPlayRoom, dm.widthPixels) >= 360) {
+                imageView.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView1.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView2.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView3.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView4.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView5.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView5e.getLayoutParams().width = (int) (dm.widthPixels) / 4;
+                imageView.getLayoutParams().height = imageView.getLayoutParams().width;
+                imageView1.getLayoutParams().height = imageView1.getLayoutParams().width;
+                imageView2.getLayoutParams().height = imageView2.getLayoutParams().width;
+                imageView3.getLayoutParams().height = imageView3.getLayoutParams().width;
+                imageView4.getLayoutParams().height = imageView4.getLayoutParams().width;
+                imageView5.getLayoutParams().height = imageView5.getLayoutParams().width;
+                imageView5e.getLayoutParams().height = imageView5e.getLayoutParams().width;
+            } else {
+                imageView.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView1.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView2.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView3.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView4.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView5.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView5e.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+            }
+        }
+
+        imageView.setOnClickListener(v ->
+
+        {
             PopupWindow a = m4034a(olPlayRoom.jpapplication.getHashmap().get(b));
             int[] iArr = new int[2];
             imageView.getLocationOnScreen(iArr);
@@ -217,21 +283,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_close.png")));
                 return view;
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
-        TextView textView2 = view.findViewById(R.id.ol_ready_text);
-        TextView textView3 = view.findViewById(R.id.ol_player_level);
-        TextView textView4 = view.findViewById(R.id.ol_player_class);
-        TextView textView5 = view.findViewById(R.id.ol_player_clname);
-        ImageView imageView1 = view.findViewById(R.id.ol_player_bg);
-        ImageView imageView2 = view.findViewById(R.id.ol_player_trousers);
-        ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
-        ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
-        ImageView imageView5 = view.findViewById(R.id.ol_player_hair);
-        ImageView imageView5e = view.findViewById(R.id.ol_player_eye);
-        ImageView imageView6 = view.findViewById(R.id.ol_player_couple);
-        ImageView imageView7 = view.findViewById(R.id.ol_player_family);
+
         int i3 = playerList.get(i).getInt("LV");
         int i4 = playerList.get(i).getInt("CL");
         if (JPApplication.kitiName.equals(string)) {
@@ -239,7 +295,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;
             textView3.setTextColor(olPlayRoom.getResources().getColor(R.color.yellow));
-        //  imageView1.setBackgroundResource(R.drawable._self);
+            //  imageView1.setBackgroundResource(R.drawable._self);
             try {
                 imageView1.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_self.png")));
             } catch (Exception e) {
@@ -268,6 +324,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 olPlayRoom.playButton.setTextSize(20);
             }
         }
+
         int i5 = playerList.get(i).getInt("CP");
         if (i5 >= 0 && i5 <= 3) {
             imageView6.setImageResource(Consts.couples[i5]);
@@ -325,6 +382,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             textView5.setText(Consts.nameCL[i4]);
             textView5.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
             imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_m0.png")));
+
             if (i6 < 0) {
                 imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
@@ -350,9 +408,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
             } else {
                 imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_e" + i8e + ".png")));
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
+
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(string);
         textView = view.findViewById(R.id.ol_player_hand);
@@ -378,4 +438,6 @@ public final class PlayerImageAdapter extends BaseAdapter {
         imageView.setBackgroundResource(Consts.filledKuang[i2]);
         return view;
     }
+
+
 }
