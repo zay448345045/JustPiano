@@ -226,7 +226,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         int ori = olPlayRoom.getResources().getConfiguration().orientation;
         DisplayMetrics dm = olPlayRoom.getResources().getDisplayMetrics();
         if (ori == Configuration.ORIENTATION_PORTRAIT) {
-            if (px2dp(olPlayRoom, dm.widthPixels) < 360) {
+            if (px2dp(olPlayRoom, dm.widthPixels) <= 360) {
                 imageView.getLayoutParams().width = (int) (dm.widthPixels) / 3;
                 imageView1.getLayoutParams().width = (int) (dm.widthPixels) / 3;
                 imageView2.getLayoutParams().width = (int) (dm.widthPixels) / 3;
@@ -234,21 +234,6 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView4.getLayoutParams().width = (int) (dm.widthPixels) / 3;
                 imageView5.getLayoutParams().width = (int) (dm.widthPixels) / 3;
                 imageView5e.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView.getLayoutParams().height = imageView.getLayoutParams().width;
-                imageView1.getLayoutParams().height = imageView1.getLayoutParams().width;
-                imageView2.getLayoutParams().height = imageView2.getLayoutParams().width;
-                imageView3.getLayoutParams().height = imageView3.getLayoutParams().width;
-                imageView4.getLayoutParams().height = imageView4.getLayoutParams().width;
-                imageView5.getLayoutParams().height = imageView5.getLayoutParams().width;
-                imageView5e.getLayoutParams().height = imageView5e.getLayoutParams().width;
-            } else if (px2dp(olPlayRoom, dm.widthPixels) < 480 & px2dp(olPlayRoom, dm.widthPixels) >= 360) {
-                imageView.getLayoutParams().width = (int) (dm.widthPixels) / 4;
-                imageView1.getLayoutParams().width = (int) (dm.widthPixels) / 4;
-                imageView2.getLayoutParams().width = (int) (dm.widthPixels) / 4;
-                imageView3.getLayoutParams().width = (int) (dm.widthPixels) / 4;
-                imageView4.getLayoutParams().width = (int) (dm.widthPixels) / 4;
-                imageView5.getLayoutParams().width = (int) (dm.widthPixels) / 4;
-                imageView5e.getLayoutParams().width = (int) (dm.widthPixels) / 4;
                 imageView.getLayoutParams().height = imageView.getLayoutParams().width;
                 imageView1.getLayoutParams().height = imageView1.getLayoutParams().width;
                 imageView2.getLayoutParams().height = imageView2.getLayoutParams().width;
@@ -317,8 +302,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 olPlayRoom.playButton.setText("开始");
                 olPlayRoom.playButton.setTextSize(20);
             } else if (string3.equals("R")) {
-                olPlayRoom.playButton.setText("取消准备");
-                olPlayRoom.playButton.setTextSize(14);
+                olPlayRoom.playButton.setText("取消");
+                olPlayRoom.playButton.setTextSize(20);
             } else {
                 olPlayRoom.playButton.setText("准备");
                 olPlayRoom.playButton.setTextSize(20);
@@ -346,28 +331,28 @@ public final class PlayerImageAdapter extends BaseAdapter {
         }
         if (!string4.equals("H")) {
             if ("R".equals(string3)) {
-                textView2.setText("准备");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setText("🆗");
+                //         textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
             }
         } else {
-            textView2.setText("房主");
-            textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.exit));
+            textView2.setText("⭐");
+            //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.exit));
         }
         switch (string3) {
             case "P":
-                textView2.setText("弹奏中");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setText("🎹");
+                //    textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
                 break;
             case "F":
-                textView2.setText("查看成绩");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setText("🏁");
+                //    textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
                 break;
             case "B":
-                textView2.setText("后台");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
+                textView2.setText("☕");
+                //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
                 break;
         }
         try {
@@ -376,8 +361,13 @@ public final class PlayerImageAdapter extends BaseAdapter {
             int i8 = playerList.get(i).getInt("HA") - 1;
             int i8e = playerList.get(i).getInt("EY") - 1;
             int i9 = playerList.get(i).getInt("SH") - 1;
-            textView3.setText("LV." + i3);
-            textView4.setText("CL." + i4);
+            if (ori == Configuration.ORIENTATION_PORTRAIT) {
+                textView3.setText(String.valueOf(i3));
+                textView4.setText(String.valueOf(i4));
+            } else {
+                textView3.setText("LV." + i3);
+                textView4.setText("CL." + i4);
+            }
             textView4.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
             textView5.setText(Consts.nameCL[i4]);
             textView5.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
@@ -418,12 +408,12 @@ public final class PlayerImageAdapter extends BaseAdapter {
         textView = view.findViewById(R.id.ol_player_hand);
         switch (olPlayRoom.getMode()) {
             case 0:
-                textView.setBackgroundResource(Consts.groupModeColor[0]);
+                //   textView.setBackgroundResource(Consts.groupModeColor[0]);
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") + 12) % 2]);
                 break;
             case 1:
                 textView.setText(Consts.groups[(playerList.get(i).getInt("GR")) - 1]);
-                textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
+                //    textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
                 break;
             case 2:
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") % 2)]);

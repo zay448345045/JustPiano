@@ -1202,27 +1202,19 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 960;
-                if (px2dp(this, displayMetrics.widthPixels) < 360) {
-                    int height = (int) (sp2px(this, 20) + dp2px(this, 216) + dm.widthPixels / 3);
+                if (px2dp(this, displayMetrics.widthPixels) <= 360) {
+                    int height = (int) (sp2px(this, 20) + dp2px(this, 224) + dm.widthPixels / 3);
                     RelativeLayout rs = (RelativeLayout) this.findViewById(R.id.RelativeLayout1);
                     rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(3);
-                } else if (px2dp(this, displayMetrics.widthPixels) < 480 & px2dp(this, displayMetrics.widthPixels) >= 360) {
-                    int height = (int) (sp2px(this, 20) + dp2px(this, 198) + dm.widthPixels / 4);
-                    RelativeLayout rs = (RelativeLayout) this.findViewById(R.id.RelativeLayout1);
-                    rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
-                    playerGrid.setNumColumns(4);
                 } else {
-                    int height = (int) (sp2px(this, 20) + dp2px(this, 72) + dm.widthPixels / 6);
+                    int height = (int) (sp2px(this, 20) + dp2px(this, 76) + dm.widthPixels / 6);
                     RelativeLayout rs = (RelativeLayout) this.findViewById(R.id.RelativeLayout1);
                     rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(6);
                 }
             } else {
                 roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
-                if (px2dp(this, displayMetrics.heightPixels) >= 480) {
-                    playerGrid.setNumColumns(2);
-                }
             }
             TextView tv = roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title);
             ((TextView) tv).setTextColor(0xffffffff);

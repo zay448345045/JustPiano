@@ -12,8 +12,8 @@ public interface Consts extends BaseColumns {
     String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "数据导出", "录音文件"};
     String[] sortSyntax = new String[]{"name asc", "name desc", "isnew desc", "date desc", "diff asc", "diff desc", "score asc", "score desc", "length asc", "length desc"};
     String[] noteSpeed = new String[]{"神快", "神快", "超快", "很快", "快", "中", "中"};
-    String[] hand = new String[]{"右手", "左手"};
-    String[] groups = new String[]{"蓝队", "黄队", "红队"};
+    String[] hand = new String[]{"🤚", "👋"};
+    String[] groups = new String[]{"🔵", "🟡", "🔴"};
     String[] coupleType = new String[]{"情侣证书", "基友证书", "百合证书"};
     String[] sqlColumns = new String[]{"_id", "name", "item", "path", "diff", "isfavo", "length", "Ldiff"};
     int[] helpPic = new int[]{R.drawable.help0, R.drawable.help1, R.drawable.help2, R.drawable.help3};
@@ -40,7 +40,7 @@ public interface Consts extends BaseColumns {
             R.drawable.filled_v13, R.drawable.filled_v14, R.drawable.filled_v15, R.drawable.filled_v16, R.drawable.filled_v17, R.drawable.filled_v18,
             R.drawable.filled_v19, R.drawable.filled_v20, R.drawable.filled_v21, R.drawable.filled_v22, R.drawable.filled_v23, R.drawable.filled_v24,
             R.drawable.filled_v25, R.drawable.filled_v26, R.drawable.filled_v27};
-    int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v7_name};
+    int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.selector_ol_green, R.drawable.v6_name, R.drawable.v7_name};
     int[] kuang = new int[]{R.drawable.title_bar, R.drawable.v1_name, R.drawable.v2_name, R.drawable.v3_name, R.drawable.v4_name, R.drawable.v5_name, R.drawable.v6_name,
             R.drawable.v7_name, R.drawable.v8_name, R.drawable.v9_name, R.drawable.v10_name, R.drawable.v11_name, R.drawable.v12_name,
             R.drawable.v13_name, R.drawable.v14_name, R.drawable.v15_name, R.drawable.v16_name, R.drawable.v17_name, R.drawable.v18_name,
