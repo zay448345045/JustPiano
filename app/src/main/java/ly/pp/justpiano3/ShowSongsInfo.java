@@ -124,7 +124,7 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
         setContentView(R.layout.showtopinfo);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
-        TextView f4974j = findViewById(R.id.ol_top_tittle);
+        TextView f4974j = findViewById(R.id.ol_top_title);
         Button f4976l = findViewById(R.id.ol_top_before);
         Button f4977m = findViewById(R.id.ol_top_next);
         f4976l.setOnClickListener(this);

@@ -7,40 +7,6 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/ads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/top_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ly.pp.justpiano3.ScrollText
-            android:id="@+id/broadCastText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/systemText"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textColor="@color/white1"
-            android:textColorHighlight="@color/blue_d"
-            android:textColorHint="@color/blue_d"
-            android:textSize="18sp"
-
-            android:typeface="sans" />
-
-        <TextView
-            android:id="@+id/systemText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="18sp" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
@@ -56,7 +22,7 @@
             android:background="@drawable/filled_bar">
 
             <TextView
-                android:id="@+id/ol_playhall_tittle"
+                android:id="@+id/ol_playhall_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/ol_room_list"
@@ -75,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/ol_createroom_b"
-                android:layout_below="@+id/ol_playhall_tittle"
+                android:layout_below="@+id/ol_playhall_title"
                 android:layout_alignParentEnd="true"
                 android:layout_weight="1"
                 android:cacheColorHint="#00000000"

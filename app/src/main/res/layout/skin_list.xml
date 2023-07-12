@@ -31,7 +31,6 @@
             android:id="@+id/app_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="@string/skin_list_downloading"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 

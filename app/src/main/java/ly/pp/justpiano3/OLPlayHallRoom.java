@@ -587,8 +587,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         userHairView = findViewById(R.id.ol_player_hair);
         userEyeView = findViewById(R.id.ol_player_eye);
         userShoesView = findViewById(R.id.ol_player_shoes);
-        broadCastTextView = findViewById(R.id.broadCastText);
-        systemTextView = findViewById(R.id.systemText);
         myFamilyContribution = findViewById(R.id.ol_myfamily_contribution);
         myFamilyCount = findViewById(R.id.ol_myfamily_count);
         myFamilyName = findViewById(R.id.ol_myfamily_name);

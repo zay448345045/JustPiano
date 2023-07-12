@@ -14,12 +14,12 @@
 
         <TextView
             android:id="@+id/ol_friend_level"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_64dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:textStyle="bold"
-            android:gravity="center"
+            android:gravity="right"
             android:text="@string/friend_view_lv"
             android:textColor="@color/settings"
             android:textSize="18sp"
@@ -48,7 +48,7 @@
 
         <TextView
             android:id="@+id/ol_friend_room"
-            android:layout_width="@dimen/dimen_40dp"
+            android:layout_width="@dimen/dimen_64dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/dimen_5dp"
@@ -71,7 +71,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:background="@drawable/selector_ol_button"
-
             android:text="@string/friend_view_pm"
             android:textColor="@color/white1"
             android:textSize="18sp" />

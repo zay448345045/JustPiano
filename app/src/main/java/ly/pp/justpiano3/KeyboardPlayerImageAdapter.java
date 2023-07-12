@@ -250,6 +250,9 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         TextView textView2 = view.findViewById(R.id.ol_ready_text);
+        TextView textView3 = view.findViewById(R.id.ol_player_level);
+        TextView textView4 = view.findViewById(R.id.ol_player_class);
+        TextView textView5 = view.findViewById(R.id.ol_player_clname);
         ImageView imageView2 = view.findViewById(R.id.ol_player_trousers);
         ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
         ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
@@ -263,6 +266,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             olPlayKeyboardRoom.lv = i3;
             olPlayKeyboardRoom.cl = i4;
             olPlayKeyboardRoom.playerKind = string4;
+            textView3.setTextColor(olPlayKeyboardRoom.getResources().getColor(R.color.yellow));
         }
         int i5 = playerList.get(i).getInt("CP");
         if (i5 >= 0 && i5 <= 3) {
@@ -283,23 +287,21 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 imageView7.setImageResource(R.drawable.family);
             }
         }
-        TextView textView3 = view.findViewById(R.id.ol_player_level);
-        TextView textView4 = view.findViewById(R.id.ol_player_class);
-        TextView textView5 = view.findViewById(R.id.ol_player_clname);
+
         if (!string4.equals("H")) {
             if ("R".equals(string3)) {
-                textView2.setText("准备");
+                textView2.setText("🆗");
                 textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
                 textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
             }
         } else {
-            textView2.setText("房主");
+            textView2.setText("⭐");
             textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.exit));
         }
         if ("B".equals(string3)) {
-            textView2.setText("后台");
+            textView2.setText("☕");
             textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.green_y));
         }
         try {

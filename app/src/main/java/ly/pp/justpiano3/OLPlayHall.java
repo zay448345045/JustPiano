@@ -187,7 +187,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         listView.setCacheColorHint(0);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle("房间用户信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+        new JPDialog(this).setTitle(String.valueOf(i2)+"房"+" 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             mo2826a(bundle.getInt("P"), (byte) i2);
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();
@@ -384,7 +384,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         Button f4407w = findViewById(R.id.ol_testroom_b);
         f4407w.setOnClickListener(this);
         sendTextView = findViewById(R.id.ol_send_text);
-        TextView f4410z = findViewById(R.id.ol_playhall_tittle);
+        TextView f4410z = findViewById(R.id.ol_playhall_title);
         f4410z.setText(hallName);
         showTimeHandler = new Handler(this);
         timeTextView = findViewById(R.id.time_text);
@@ -407,8 +407,6 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         imageView.setOnClickListener(this);
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(0);
-        ScrollText f4384Q = findViewById(R.id.broadCastText);
-        f4384Q.setMovementMethod(ScrollingMovementMethod.getInstance());
         roomList.clear();
         connectionService = jpapplication.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(this);

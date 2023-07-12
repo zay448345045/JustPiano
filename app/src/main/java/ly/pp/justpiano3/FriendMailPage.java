@@ -149,7 +149,7 @@ public class FriendMailPage extends Activity implements Callback {
         setContentView(R.layout.friendmailpage);
         f4019a = findViewById(R.id.list_view);
         f4019a.setCacheColorHint(0);
-        TextView f4026h = findViewById(R.id.ol_top_tittle);
+        TextView f4026h = findViewById(R.id.ol_top_title);
         if (f4024f.equals("F")) {
             f4026h.setText("-好友列表-");
         } else if (f4024f.endsWith("M")) {

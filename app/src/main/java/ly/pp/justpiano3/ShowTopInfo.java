@@ -126,7 +126,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         f4989e = findViewById(R.id.ol_top_list);
-        TextView f4992h = findViewById(R.id.ol_top_tittle);
+        TextView f4992h = findViewById(R.id.ol_top_title);
         Button f4994j = findViewById(R.id.ol_top_before);
         Button f4995k = findViewById(R.id.ol_top_next);
         f4997m = (f4996l * f4998n) + 1;
