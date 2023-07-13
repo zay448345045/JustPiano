@@ -1,20 +1,13 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.ParseException;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
-
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 final class FriendMailPageTask2 extends AsyncTask<String, Void, String> {
     private final WeakReference<FriendMailPage> friendMailPage;
@@ -29,28 +22,30 @@ final class FriendMailPageTask2 extends AsyncTask<String, Void, String> {
         if (strArr[0].isEmpty()) {
             return str;
         }
-        HttpPost httpPost = new HttpPost("http://" + friendMailPage.get().jpApplication.getServer() + ":8910/JustPianoServer/server/" + strArr[1]);
-        List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("head", "2"));
-        arrayList.add(new BasicNameValuePair("version", friendMailPage.get().jpApplication.getVersion()));
-        arrayList.add(new BasicNameValuePair("keywords", strArr[0]));
-        arrayList.add(new BasicNameValuePair("userName", ""));
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("head", "2")
+                .add("version", friendMailPage.get().jpApplication.getVersion())
+                .add("keywords", strArr[0])
+                .add("userName", "")
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + friendMailPage.get().jpApplication.getServer() + ":8910/JustPianoServer/server/" + strArr[1])
+                .post(formBody)
+                .build();
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
+            // 发送请求并获取响应
+            Response response = client.newCall(request).execute();
+            return response.isSuccessful() ? response.body().string() : str;
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            return execute.getStatusLine().getStatusCode() == 200 ? EntityUtils.toString(execute.getEntity()) : str;
-        } catch (ParseException | IOException e2) {
-            e2.printStackTrace();
             return str;
         }
     }
+
 
     @Override
     protected final void onPostExecute(String str) {

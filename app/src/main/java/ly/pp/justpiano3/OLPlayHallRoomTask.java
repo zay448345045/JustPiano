@@ -1,20 +1,13 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.ClientProtocolException;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
-
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLPlayHallRoom> olPlayHallRoom;
@@ -26,28 +19,28 @@ final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strArr) {
         String str = "";
-        HttpPost httpPost = new HttpPost("http://" + olPlayHallRoom.get().jpApplication.getServer() + ":8910/JustPianoServer/server/GetUserInfo");
-        List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("head", "2"));
-        arrayList.add(new BasicNameValuePair("version", olPlayHallRoom.get().jpApplication.getVersion()));
-        arrayList.add(new BasicNameValuePair("keywords", strArr[0]));
-        arrayList.add(new BasicNameValuePair("userName", strArr[1]));
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("head", "2")
+                .add("version", olPlayHallRoom.get().jpApplication.getVersion())
+                .add("keywords", strArr[0])
+                .add("userName", strArr[1])
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + olPlayHallRoom.get().jpApplication.getServer() + ":8910/JustPianoServer/server/GetUserInfo")
+                .post(formBody)
+                .build();
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                str = EntityUtils.toString(execute.getEntity());
+            // 发送请求并获取响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                str = response.body().string();
             }
-        } catch (ClientProtocolException ignored) {
-        } catch (IOException e3) {
-            e3.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return str;
     }

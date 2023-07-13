@@ -1,13 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
-
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
+import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class LoginTask extends AsyncTask<String, Void, String> {
     private final WeakReference<Login> activity;
@@ -28,6 +20,36 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         this.activity = new WeakReference<>(login);
     }
 
+    public static void main(String[] args) {
+        String ip = "server.justpiano.fun";
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建HttpUrl.Builder对象，用于添加查询参数
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder.add("versionName", "4.6");
+        formBuilder.add("packageNames", "");
+        formBuilder.add("versionCode", "4.6");
+        formBuilder.add("username", "testbot");
+        formBuilder.add("password", "testbot");
+        formBuilder.add("local", "4.6");
+        RequestBody requestBody = formBuilder.build();
+        // 创建Request对象，用于发送请求
+        Request request = new Request.Builder()
+                .url(urlBuilder.build())
+                .post(requestBody)
+                .build();
+        try {
+            // 同步执行请求，获取Response对象
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String string = response.body().string();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected String doInBackground(String... objects) {
         String f5140b = "";
@@ -36,27 +58,32 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         login.password = login.passwordTextView.getText().toString();
         if (!login.accountX.isEmpty() && !login.password.isEmpty()) {
             String ip = login.jpapplication.getServer();
-            HttpPost httpPost = new HttpPost("http://" + ip + ":8910/JustPianoServer/server/LoginServlet");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("versionName", login.versionStr));
-            arrayList.add(new BasicNameValuePair("packageNames", login.packageName));
-            arrayList.add(new BasicNameValuePair("versionCode", String.valueOf(login.versionNum)));
-            arrayList.add(new BasicNameValuePair("username", login.accountX));
-            arrayList.add(new BasicNameValuePair("password", login.password));
-            arrayList.add(new BasicNameValuePair("local", login.jpapplication.getVersion()));
+            // 创建OkHttpClient对象
+            OkHttpClient client = new OkHttpClient();
+            // 创建HttpUrl.Builder对象，用于添加查询参数
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
+            FormBody.Builder formBuilder = new FormBody.Builder();
+            formBuilder.add("versionName", login.versionStr);
+            formBuilder.add("packageNames", login.packageName);
+            formBuilder.add("versionCode", String.valueOf(login.versionNum));
+            formBuilder.add("username", login.accountX);
+            formBuilder.add("password", login.password);
+            formBuilder.add("local", login.jpapplication.getVersion());
+            // 创建Request对象，用于发送请求
+            Request request = new Request.Builder()
+                    .url(urlBuilder.build())
+                    .post(formBuilder.build())
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-                DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-                defaultHttpClient.getParams().setParameter("http.connection.timeout", 20000);
-                defaultHttpClient.getParams().setParameter("http.socket.timeout", 20000);
-                HttpResponse execute = defaultHttpClient.execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(execute.getEntity().getContent(), StandardCharsets.UTF_8));
+                // 同步执行请求，获取Response对象
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream(), StandardCharsets.UTF_8));
                     String line;
                     while ((line = reader.readLine()) != null) {
                         f5139a = line;
                     }
-                    execute.getEntity().consumeContent();
+                    response.body().close();
                     return f5140b;
                 }
             } catch (Exception e) {

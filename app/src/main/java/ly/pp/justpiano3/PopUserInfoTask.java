@@ -2,18 +2,9 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
-
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     private final WeakReference<PopUserInfo> popUserInfo;
@@ -26,31 +17,33 @@ final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String str = "";
         if (!popUserInfo.get().kitiName.isEmpty()) {
-            HttpPost httpPost = new HttpPost("http://" + popUserInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m);
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("head", String.valueOf(popUserInfo.get().headType)));
-            arrayList.add(new BasicNameValuePair("version", popUserInfo.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("keywords", popUserInfo.get().f4830d));
-            arrayList.add(new BasicNameValuePair("userName", popUserInfo.get().kitiName));
+            // 创建OkHttpClient对象
+            OkHttpClient client = new OkHttpClient();
+            // 创建HttpUrl.Builder对象，用于添加查询参数
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + popUserInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m).newBuilder();
+            FormBody.Builder formBuilder = new FormBody.Builder();
+            formBuilder.add("head", String.valueOf(popUserInfo.get().headType));
+            formBuilder.add("version", popUserInfo.get().jpapplication.getVersion());
+            formBuilder.add("keywords", popUserInfo.get().f4830d);
+            formBuilder.add("userName", popUserInfo.get().kitiName);
+            // 创建Request对象，用于发送请求
+            Request request = new Request.Builder()
+                    .url(urlBuilder.build())
+                    .post(formBuilder.build())
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-            try {
-                HttpResponse execute = defaultHttpClient.execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    str = EntityUtils.toString(execute.getEntity());
+                // 同步执行请求，获取Response对象
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    str = response.body().string();
                 }
-            } catch (Exception e3) {
-                e3.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return str;
     }
+
 
     @Override
     protected final void onPostExecute(String str) {

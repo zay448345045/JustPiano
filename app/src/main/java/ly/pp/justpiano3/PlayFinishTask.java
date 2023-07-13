@@ -2,18 +2,10 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
-
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     private final WeakReference<PlayFinish> playFinish;
@@ -26,27 +18,32 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String str = "";
         if (!playFinish.get().jpapplication.getAccountName().isEmpty()) {
-            HttpPost httpPost = new HttpPost("http://" + playFinish.get().jpapplication.getServer() + ":8910/JustPianoServer/server/ScoreUpload");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", playFinish.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("songID", playFinish.get().songID));
-            arrayList.add(new BasicNameValuePair("userName", playFinish.get().jpapplication.getAccountName()));
-            arrayList.add(new BasicNameValuePair("scoreArray", playFinish.get().scoreArray));
+            OkHttpClient client = new OkHttpClient();
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host(playFinish.get().jpapplication.getServer())
+                    .port(8910)
+                    .addPathSegment("JustPianoServer")
+                    .addPathSegment("server")
+                    .addPathSegment("ScoreUpload")
+                    .build();
+            RequestBody body = new FormBody.Builder()
+                    .add("version", playFinish.get().jpapplication.getVersion())
+                    .add("songID", playFinish.get().songID)
+                    .add("userName", playFinish.get().jpapplication.getAccountName())
+                    .add("scoreArray", playFinish.get().scoreArray)
+                    .build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-            try {
-                HttpResponse execute = defaultHttpClient.execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    str = EntityUtils.toString(execute.getEntity());
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    str = response.body().string();
                 }
-            } catch (Exception e3) {
-                e3.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return str;

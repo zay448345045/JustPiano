@@ -5,17 +5,15 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import protobuf.dto.OnlineSendMailDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import protobuf.dto.OnlineSendMailDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class ChangeBlessingClick implements OnClickListener {
 

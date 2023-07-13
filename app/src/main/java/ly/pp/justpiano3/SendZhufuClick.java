@@ -2,10 +2,8 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import protobuf.dto.OnlineCoupleDTO;
 
 final class SendZhufuClick implements OnClickListener {

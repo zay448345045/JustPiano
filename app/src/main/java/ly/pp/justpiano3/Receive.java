@@ -2,12 +2,10 @@ package ly.pp.justpiano3;
 
 import android.os.Bundle;
 import android.os.Message;
-
 import protobuf.vo.OnlineBaseVO;
 import protobuf.vo.OnlineClTestVO;
 import protobuf.vo.OnlineEnterHallVO;
 import protobuf.vo.OnlineHallChatVO;
-import protobuf.vo.OnlineBaseVO;
 
 final class Receive {
 

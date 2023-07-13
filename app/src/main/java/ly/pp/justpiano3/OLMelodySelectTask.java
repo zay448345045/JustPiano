@@ -2,21 +2,16 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
@@ -30,34 +25,38 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String string = "";
         if (!olMelodySelect.get().f4317e.isEmpty()) {
-            HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByType");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("page", String.valueOf(olMelodySelect.get().index)));
-            arrayList.add(new BasicNameValuePair("type", olMelodySelect.get().f4317e));
+            // 创建OkHttpClient对象
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时时间
+                    .readTimeout(10, TimeUnit.SECONDS) // 设置读取超时时间
+                    .build();
+            // 创建请求参数
+            FormBody formBody = new FormBody.Builder()
+                    .add("version", olMelodySelect.get().jpapplication.getVersion())
+                    .add("page", String.valueOf(olMelodySelect.get().index))
+                    .add("type", olMelodySelect.get().f4317e)
+                    .build();
+            // 创建请求对象
+            Request request = new Request.Builder()
+                    .url("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByType")
+                    .post(formBody) // 设置请求方式为POST
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
-                DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-                defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-                defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-                HttpResponse execute = defaultHttpClient.execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
+                // 发送请求并获取响应
+                Response response = okHttpClient.newCall(request).execute();
+                if (response.isSuccessful()) { // 判断响应是否成功
                     try {
-                        str = EntityUtils.toString(execute.getEntity());
-                    } catch (Exception e3) {
-                        e3.printStackTrace();
+                        string = response.body().string(); // 获取响应内容
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            } catch (Exception e5) {
-                e5.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             JSONObject jSONObject;
             try {
-                jSONObject = new JSONObject(str);
+                jSONObject = new JSONObject(string);
                 string = GZIP.ZIPTo(jSONObject.getString("L"));
                 if (olMelodySelect.get().index == 0) {
                     olMelodySelect.get().pageNum = jSONObject.getInt("P");

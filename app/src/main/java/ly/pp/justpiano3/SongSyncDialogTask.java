@@ -2,20 +2,13 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMainMode> olMainMode;
@@ -28,25 +21,26 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... objects) {
-        HttpPost httpPost = new HttpPost("http://" + olMainMode.get().jpapplication.getServer() + ":8910/JustPianoServer/server/SongSyncDialog");
-        List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("version", olMainMode.get().jpapplication.getVersion()));
-        arrayList.add(new BasicNameValuePair("maxSongId", String.valueOf(maxSongId)));
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("version", olMainMode.get().jpapplication.getVersion())
+                .add("maxSongId", String.valueOf(maxSongId))
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + olMainMode.get().jpapplication.getServer() + ":8910/JustPianoServer/server/SongSyncDialog")
+                .post(formBody)
+                .build();
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                return EntityUtils.toString(execute.getEntity());
+            // 发送请求并获取响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().string();
             }
-        } catch (Exception e3) {
-            e3.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

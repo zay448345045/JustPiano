@@ -1,90 +1,84 @@
 package ly.pp.justpiano3;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
-
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public final class SearchSongsPlayTask extends AsyncTask<Void, Void, Void> {
+public final class SearchSongsPlayTask {
     private final WeakReference<SearchSongs> searchSongs;
     private byte[] songBytes = null;
     private String str = "";
+    private ExecutorService executorService;
+    private Future<Void> future;
 
     SearchSongsPlayTask(SearchSongs searchSongs) {
         this.searchSongs = new WeakReference<>(searchSongs);
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    @Override
-    protected Void doInBackground(Void... v) {
-        if (!searchSongs.get().songID.isEmpty()) {
-            HttpResponse execute;
-            HttpPost httpPost = new HttpPost("http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", searchSongs.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("songID", searchSongs.get().songID));
-            try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
-                execute = new DefaultHttpClient().execute(httpPost);
-            } catch (Exception e2) {
-                e2.printStackTrace();
-                execute = null;
-            }
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                try {
-                    str = EntityUtils.toString(execute.getEntity());
-                } catch (Exception e4) {
-                    e4.printStackTrace();
+    public void execute() {
+        future = executorService.submit(() -> {
+            if (!searchSongs.get().songID.isEmpty()) {
+                String url = "http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong";
+
+                OkHttpClient client = new OkHttpClient();
+
+                FormBody.Builder formBuilder = new FormBody.Builder();
+                formBuilder.add("version", searchSongs.get().jpapplication.getVersion());
+                formBuilder.add("songID", searchSongs.get().songID);
+                RequestBody requestBody = formBuilder.build();
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        str = response.body().string();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                songBytes = GZIP.ZIPToArray(str);
             }
-            songBytes = GZIP.ZIPToArray(str);
+            return null;
+        });
+
+        // Handle the result in onPostExecute
+        handleResult();
+    }
+
+    public void cancel() {
+        if (future != null) {
+            future.cancel(true);
         }
-        return null;
     }
 
-    @Override
-    protected final void onCancelled() {
-    }
-
-    @Override
-    protected final void onPostExecute(Void v) {
-        if (songBytes == null || songBytes.length <= 3) {
+    private void handleResult() {
+        searchSongs.get().runOnUiThread(() -> {
+            if (songBytes == null || songBytes.length <= 3) {
+                searchSongs.get().jpprogressBar.cancel();
+                Toast.makeText(searchSongs.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            OLMelodySelect.songBytes = songBytes;
+            Intent intent = new Intent();
+            intent.putExtra("head", 1);
+            intent.putExtra("songBytes", songBytes);
+            intent.putExtra("songName", searchSongs.get().f4949d);
+            intent.putExtra("songID", searchSongs.get().songID);
+            intent.putExtra("topScore", searchSongs.get().f4954i);
+            intent.putExtra("degree", searchSongs.get().f4953h);
+            intent.setClass(searchSongs.get(), PianoPlay.class);
+            searchSongs.get().startActivity(intent);
             searchSongs.get().jpprogressBar.cancel();
-            Toast.makeText(searchSongs.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        OLMelodySelect.songBytes = songBytes;
-        Intent intent = new Intent();
-        intent.putExtra("head", 1);
-        intent.putExtra("songBytes", songBytes);
-        intent.putExtra("songName", searchSongs.get().f4949d);
-        intent.putExtra("songID", searchSongs.get().songID);
-        intent.putExtra("topScore", searchSongs.get().f4954i);
-        intent.putExtra("degree", searchSongs.get().f4953h);
-        intent.setClass(searchSongs.get(), PianoPlay.class);
-        searchSongs.get().startActivity(intent);
-        searchSongs.get().jpprogressBar.cancel();
-    }
-
-    @Override
-    protected final void onPreExecute() {
-        searchSongs.get().jpprogressBar.setMessage("正在载入曲谱,请稍后...");
-        searchSongs.get().jpprogressBar.setCancelable(true);
-        searchSongs.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
-        searchSongs.get().jpprogressBar.show();
+        });
     }
 }

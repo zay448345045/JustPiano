@@ -12,6 +12,9 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineEnterRoomDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,10 +23,6 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import protobuf.dto.OnlineClTestDTO;
-import protobuf.dto.OnlineEnterRoomDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;

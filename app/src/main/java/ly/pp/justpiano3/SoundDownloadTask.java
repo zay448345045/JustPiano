@@ -1,44 +1,63 @@
 package ly.pp.justpiano3;
 
-import android.os.AsyncTask;
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import android.os.Handler;
+import android.os.Looper;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
-public final class SoundDownloadTask extends AsyncTask<String, Void, String> {
+public class SoundDownloadTask {
     private final WeakReference<SoundDownload> soundDownload;
+    private Future<?> future;
 
     SoundDownloadTask(SoundDownload soundDownload) {
         this.soundDownload = new WeakReference<>(soundDownload);
     }
 
-    @Override
-    protected String doInBackground(String... strArr) {
+    public void execute(String... strArr) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        onPreExecute();
+
+        future = executor.submit(() -> {
+            final String result = doInBackground(strArr);
+
+            new Handler(Looper.getMainLooper()).post(() -> onPostExecute(result));
+        });
+    }
+
+    private String doInBackground(String... strArr) {
         try {
             soundDownload.get().getLocalSoundList();
-            HttpPost httpPost = new HttpPost("http://" + soundDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSoundList");
-            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() != 200) {
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)  // 连接超时
+                    .readTimeout(10, TimeUnit.SECONDS)  // 读取超时
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://" + soundDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSoundList")
+                    .post(RequestBody.create("", null))
+                    .build();
+            Response response = client.newCall(request).execute();
+            if (response.code() != 200) {
                 return "err001";
             }
-            return EntityUtils.toString(execute.getEntity());
+            return response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
             return "err001";
         }
     }
 
-    @Override
-    protected final void onPostExecute(String str) {
+    private void onPostExecute(String str) {
         soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray()));
         try {
             soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray(GZIP.ZIPTo(new JSONObject(str).getString("L")))));
@@ -48,10 +67,16 @@ public final class SoundDownloadTask extends AsyncTask<String, Void, String> {
         soundDownload.get().jpProgressBar.dismiss();
     }
 
-    @Override
-    protected final void onPreExecute() {
+    private void onPreExecute() {
         soundDownload.get().jpProgressBar.setCancelable(true);
-        soundDownload.get().jpProgressBar.setOnCancelListener(dialog -> cancel(true));
+        soundDownload.get().jpProgressBar.setOnCancelListener(dialog -> cancel());
         soundDownload.get().jpProgressBar.show();
     }
+
+    private void cancel() {
+        if (future != null) {
+            future.cancel(true);
+        }
+    }
 }
+

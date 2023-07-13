@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
+import protobuf.dto.OnlineFamilyDTO;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-
-import protobuf.dto.OnlineFamilyDTO;
 
 final class FamilyHandler extends Handler {
     private final WeakReference<Activity> weakReference;

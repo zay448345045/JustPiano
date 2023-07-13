@@ -3,7 +3,6 @@ package ly.pp.justpiano3;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-
 import androidx.annotation.NonNull;
 
 public class SettingsMode extends PreferenceActivity {

@@ -6,14 +6,10 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
 import com.king.anetty.Netty;
-
-import java.util.concurrent.TimeUnit;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -30,6 +26,8 @@ import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class ConnectionService extends Service implements Runnable {

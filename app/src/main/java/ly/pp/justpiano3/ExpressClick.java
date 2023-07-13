@@ -2,7 +2,6 @@ package ly.pp.justpiano3;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-
 import protobuf.dto.OnlineHallChatDTO;
 import protobuf.dto.OnlineRoomChatDTO;
 

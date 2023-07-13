@@ -10,26 +10,19 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import protobuf.dto.OnlineDailyDTO;
 import protobuf.dto.OnlineEnterHallDTO;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
+
+import java.io.*;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

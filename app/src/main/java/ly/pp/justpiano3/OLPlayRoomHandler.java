@@ -11,6 +11,8 @@ import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
+import protobuf.dto.OnlineQuitRoomDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,9 +21,6 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import protobuf.dto.OnlineQuitRoomDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

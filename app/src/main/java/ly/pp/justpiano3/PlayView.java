@@ -2,13 +2,7 @@ package ly.pp.justpiano3;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.SurfaceHolder;
@@ -16,16 +10,15 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
+import protobuf.dto.OnlineChallengeDTO;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineMiniGradeDTO;
+import protobuf.dto.OnlinePlayFinishDTO;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import protobuf.dto.OnlineChallengeDTO;
-import protobuf.dto.OnlineClTestDTO;
-import protobuf.dto.OnlineMiniGradeDTO;
-import protobuf.dto.OnlinePlayFinishDTO;
 
 public final class PlayView extends SurfaceView implements Callback {
     static long serialID = 2825651233768L;

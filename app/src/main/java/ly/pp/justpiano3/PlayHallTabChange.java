@@ -1,7 +1,6 @@
 package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
-
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineLoadUserListDTO;
 

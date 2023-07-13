@@ -13,6 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.*;
+import protobuf.dto.OnlineChangeRoomDoorDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineKickedQuitRoomDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,11 +32,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import protobuf.dto.OnlineChangeRoomDoorDTO;
-import protobuf.dto.OnlineCoupleDTO;
-import protobuf.dto.OnlineKickedQuitRoomDTO;
-import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class PlayerImageAdapter extends BaseAdapter {
     byte roomID;

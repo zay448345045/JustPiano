@@ -3,18 +3,12 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
@@ -45,26 +39,28 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
 
     @Override
     protected String doInBackground(String... objects) {
-        if (!OLMelodySelect.songID.isEmpty()) {
-            HttpPost httpPost = new HttpPost("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", olMelodySelect.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("songID", OLMelodySelect.songID));
-            try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("version", olMelodySelect.get().jpapplication.getVersion())
+                .add("songID", OLMelodySelect.songID)
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong")
+                .post(formBody)
+                .build();
+        try {
+            // 发送请求并获取响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                str = response.body().string();
             }
-            try {
-                HttpResponse execute = new DefaultHttpClient().execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    str = EntityUtils.toString(execute.getEntity());
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-            OLMelodySelect.songBytes = GZIP.ZIPToArray(str);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        OLMelodySelect.songBytes = GZIP.ZIPToArray(str);
         return null;
     }
 

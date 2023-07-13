@@ -8,26 +8,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.SpannableString;
-import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.protobuf.MessageLite;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import protobuf.dto.*;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,12 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import protobuf.dto.OnlineDailyDTO;
-import protobuf.dto.OnlineFamilyDTO;
-import protobuf.dto.OnlineLoadUserDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends BaseActivity implements OnClickListener {
     public int cl = 0;

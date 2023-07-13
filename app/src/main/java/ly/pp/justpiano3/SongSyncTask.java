@@ -6,20 +6,15 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
-
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
@@ -34,22 +29,23 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... objects) {
-        HttpPost httpPost = new HttpPost("http://" + ((JPApplication) activity.get().getApplication()).getServer() + ":8910/JustPianoServer/server/SongSync");
-        List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("version", ((JPApplication) activity.get().getApplication()).getVersion()));
-        arrayList.add(new BasicNameValuePair("maxSongId", maxSongId));
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("version", ((JPApplication) activity.get().getApplication()).getVersion())
+                .add("maxSongId", maxSongId)
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + ((JPApplication) activity.get().getApplication()).getServer() + ":8910/JustPianoServer/server/SongSync")
+                .post(formBody)
+                .build();
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                byte[] bytes = EntityUtils.toByteArray(execute.getEntity());
+            // 发送请求并获取响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                byte[] bytes = response.body().bytes();
                 File zipFile = new File(activity.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
                 FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
                 fileOutputStream.write(bytes, 0, bytes.length);

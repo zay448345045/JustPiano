@@ -4,36 +4,21 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.os.*;
 import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import androidx.annotation.NonNull;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
 
 /**
  * Create by SunnyDay on 2019/04/18
@@ -321,26 +306,26 @@ public class ImageLoader {
      */
     private boolean downloadUrlToStream(String urlString, OutputStream outputStream) {
         String response = "";
-        HttpPost httpPost = new HttpPost(urlString);
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                response = EntityUtils.toString(execute.getEntity());
-            }
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url(urlString)
+                .post(new FormBody.Builder().build()) // 空的表单参数
+                .build();
         BufferedOutputStream out = null;
         try {
-            out = new BufferedOutputStream(outputStream, 8 * 1024);
-            byte[] array = GZIP.ZIPToArray(response);
-            if (array != null && array.length > 0) {
-                out.write(array);
+            // 发送请求并获取响应
+            Response execute = client.newCall(request).execute();
+            if (execute.isSuccessful()) {
+                response = execute.body().string();
+                out = new BufferedOutputStream(outputStream, 8 * 1024);
+                byte[] array = GZIP.ZIPToArray(response);
+                if (array != null && array.length > 0) {
+                    out.write(array);
+                }
+                return true;
             }
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -360,19 +345,24 @@ public class ImageLoader {
      */
     private Bitmap downloadBitmapFromUrl(String urlString) {
         String response = "";
-        HttpPost httpPost = new HttpPost(urlString);
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
+        // 创建OkHttpClient对象
+        OkHttpClient client = new OkHttpClient();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url(urlString)
+                .post(new FormBody.Builder().build()) // 空的表单参数
+                .build();
         try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                response = EntityUtils.toString(execute.getEntity());
+            // 发送请求并获取响应
+            Response execute = client.newCall(request).execute();
+            if (execute.isSuccessful()) {
+                response = execute.body().string();
             }
-        } catch (Exception e3) {
-            e3.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         byte[] array = GZIP.ZIPToArray(response);
         return BitmapFactory.decodeByteArray(array, 0, array.length);
     }
+
 }

@@ -1,16 +1,13 @@
 package ly.pp.justpiano3;
 
 import android.app.Activity;
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
 import io.netty.util.internal.StringUtil;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 public final class AcceptFavorThread extends Thread {
     private final String type;
@@ -28,21 +25,25 @@ public final class AcceptFavorThread extends Thread {
     @Override
     public void run() {
         if (!StringUtil.isNullOrEmpty(userName)) {
-            HttpPost httpPost = new HttpPost("http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/AcceptFavorIn");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("type", type));
-            arrayList.add(new BasicNameValuePair("songID", songID));
-            arrayList.add(new BasicNameValuePair("user", userName));
+            String url = "http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/AcceptFavorIn";
+
+            OkHttpClient client = new OkHttpClient();
+
+            FormBody.Builder formBuilder = new FormBody.Builder();
+            formBuilder.add("version", jpapplication.getVersion());
+            formBuilder.add("type", type);
+            formBuilder.add("songID", songID);
+            formBuilder.add("user", userName);
+            RequestBody requestBody = formBuilder.build();
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(requestBody)
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
+                client.newCall(request).execute();
+            } catch (IOException e) {
                 e.printStackTrace();
-            }
-            try {
-                new DefaultHttpClient().execute(httpPost);
-            } catch (Exception e2) {
-                e2.printStackTrace();
             }
         }
     }

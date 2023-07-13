@@ -3,7 +3,6 @@ package ly.pp.justpiano3;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
-
 import protobuf.dto.OnlinePlaySongDTO;
 
 public final class PlaySongs {

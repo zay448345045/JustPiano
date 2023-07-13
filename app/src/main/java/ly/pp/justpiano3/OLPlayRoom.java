@@ -7,12 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
+import android.os.*;
 import android.os.Handler.Callback;
-import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -23,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.*;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -33,27 +30,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.protobuf.MessageLite;
-
 import org.json.JSONObject;
+import protobuf.dto.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import protobuf.dto.OnlineChangeRoomHandDTO;
-import protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import protobuf.dto.OnlineLoadRoomPositionDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlinePlaySongDTO;
-import protobuf.dto.OnlinePlayStartDTO;
-import protobuf.dto.OnlineRoomChatDTO;
+import java.util.*;
 
 public final class OLPlayRoom extends BaseActivity implements Callback, OnClickListener, OLPlayRoomInterface {
     public int lv;

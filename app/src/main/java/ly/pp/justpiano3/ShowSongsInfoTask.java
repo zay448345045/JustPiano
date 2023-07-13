@@ -2,18 +2,12 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
@@ -26,28 +20,29 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... v) {
         String str = "";
         if (!showSongsInfo.get().keywords.isEmpty()) {
-            HttpPost httpPost = new HttpPost("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByKeywords");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", showSongsInfo.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("head", showSongsInfo.get().head));
-            arrayList.add(new BasicNameValuePair("keywords", showSongsInfo.get().keywords));
-            arrayList.add(new BasicNameValuePair("user", showSongsInfo.get().jpapplication.getAccountName()));
-            arrayList.add(new BasicNameValuePair("page", String.valueOf(showSongsInfo.get().page)));
+            // 创建一个OkHttpClient对象
+            OkHttpClient client = new OkHttpClient();
+            // 创建一个FormBody对象，用于存放请求参数
+            FormBody formBody = new FormBody.Builder()
+                    .add("version", showSongsInfo.get().jpapplication.getVersion())
+                    .add("head", showSongsInfo.get().head)
+                    .add("keywords", showSongsInfo.get().keywords)
+                    .add("user", showSongsInfo.get().jpapplication.getAccountName())
+                    .add("page", String.valueOf(showSongsInfo.get().page))
+                    .build();
+            // 创建一个Request对象，设置请求URL和请求体
+            Request request = new Request.Builder()
+                    .url("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByKeywords")
+                    .post(formBody)
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-            defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-            defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-            try {
-                HttpResponse execute = defaultHttpClient.execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    str = EntityUtils.toString(execute.getEntity());
+                // 发送请求并获取响应
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    str = response.body().string();
                 }
-            } catch (Exception e3) {
-                e3.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return str;

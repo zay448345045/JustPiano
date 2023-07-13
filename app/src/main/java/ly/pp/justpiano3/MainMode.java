@@ -15,11 +15,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import java.io.File;
 
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;

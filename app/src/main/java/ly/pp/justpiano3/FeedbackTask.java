@@ -1,60 +1,74 @@
 package ly.pp.justpiano3;
 
-import android.os.AsyncTask;
 import android.widget.Toast;
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
 import io.netty.util.internal.StringUtil;
+import okhttp3.*;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public final class FeedbackTask extends AsyncTask<String, Void, String> {
+public final class FeedbackTask {
     private final WeakReference<MainMode> mainMode;
     private final String userName;
     private final String message;
+    private final ExecutorService executorService;
+    private Future<String> future;
 
     FeedbackTask(MainMode mainMode, String userName, String message) {
         this.mainMode = new WeakReference<>(mainMode);
         this.userName = userName;
         this.message = message;
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    @Override
-    protected String doInBackground(String... objects) {
-        HttpPost httpPost = new HttpPost("http://" + mainMode.get().jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback");
-        List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("version", mainMode.get().jpApplication.getVersion()));
-        arrayList.add(new BasicNameValuePair("userName", userName));
-        arrayList.add(new BasicNameValuePair("message", message));
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                return EntityUtils.toString(execute.getEntity());
+    public void execute(String... objects) {
+        String url = "http://" + mainMode.get().jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback";
+
+        OkHttpClient client = new OkHttpClient();
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder.add("version", mainMode.get().jpApplication.getVersion());
+        formBuilder.add("userName", userName);
+        formBuilder.add("message", message);
+        RequestBody requestBody = formBuilder.build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+
+        future = executorService.submit(() -> {
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
-        return null;
+            return null;
+        });
+        handleResult();
     }
 
-    @Override
-    protected final void onPostExecute(String str) {
-        Toast.makeText(mainMode.get(), StringUtil.isNullOrEmpty(str) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show();
+    public void cancel() {
+        if (future != null) {
+            future.cancel(true);
+        }
+    }
+
+    private void handleResult() {
+        executorService.execute(() -> {
+            try {
+                final String str = future.get();
+                mainMode.get().runOnUiThread(() -> {
+                    Toast.makeText(mainMode.get(), StringUtil.isNullOrEmpty(str) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

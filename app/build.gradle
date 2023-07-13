@@ -21,8 +21,8 @@ android {
                 abiFilters 'arm64-v8a', 'x86_64'
             }
         }
-        multiDexEnabled true
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+//        multiDexEnabled true
+//        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     signingConfigs {
@@ -42,41 +42,41 @@ android {
 
     buildTypes {
         release {
-          minifyEnabled true
-          shrinkResources true
-          proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         debug {
             signingConfig signingConfigs.config
         }
 
-    externalNativeBuild {
-        cmake{
-            path "src/main/cpp/CMakeLists.txt"
-        }
-    }
-
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    sourceSets {
-        main {
-            java.srcDir('src/main/java')
-            proto {
-                srcDir 'src/main/protobuf'
-                include '**/*.proto'
+        externalNativeBuild {
+            cmake {
+                path "src/main/cpp/CMakeLists.txt"
             }
         }
-    }
-    buildToolsVersion '30.0.2'
+
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        sourceSets {
+            main {
+                java.srcDir('src/main/java')
+                proto {
+                    srcDir 'src/main/protobuf'
+                    include '**/*.proto'
+                }
+            }
+        }
+        buildToolsVersion '30.0.2'
 
     }
 }
@@ -93,9 +93,7 @@ dependencies {
     implementation 'com.king.anetty:anetty:1.0.3'
     implementation 'com.google.protobuf:protobuf-java:3.23.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:2.28.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 }
 
 protobuf {

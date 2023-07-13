@@ -7,24 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+import protobuf.dto.OnlineChangeRoomDoorDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineKickedQuitRoomDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.function.Consumer;
-
-import protobuf.dto.OnlineChangeRoomDoorDTO;
-import protobuf.dto.OnlineCoupleDTO;
-import protobuf.dto.OnlineKickedQuitRoomDTO;
-import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     byte roomID;

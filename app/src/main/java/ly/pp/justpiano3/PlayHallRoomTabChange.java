@@ -1,12 +1,6 @@
 package ly.pp.justpiano3;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.pm.ComponentInfo;
-import android.os.Looper;
-import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
-
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 

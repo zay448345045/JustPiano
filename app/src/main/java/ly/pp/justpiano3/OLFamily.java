@@ -9,22 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.google.protobuf.MessageLite;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineUserInfoDialogDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import protobuf.dto.OnlineFamilyDTO;
-import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public class OLFamily extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;

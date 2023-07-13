@@ -3,18 +3,9 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
-
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
@@ -28,19 +19,23 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     @Override
     protected String doInBackground(String... objects) {
         if (!showSongsInfo.get().songID.isEmpty()) {
-            HttpPost httpPost = new HttpPost("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong");
-            List<BasicNameValuePair> arrayList = new ArrayList<>();
-            arrayList.add(new BasicNameValuePair("version", showSongsInfo.get().jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("songID", showSongsInfo.get().songID));
+            // 创建OkHttpClient对象
+            OkHttpClient client = new OkHttpClient();
+            // 创建HttpUrl.Builder对象，用于添加查询参数
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
+            FormBody.Builder builder = new FormBody.Builder();
+            builder.add("version", showSongsInfo.get().jpapplication.getVersion());
+            builder.add("songID", showSongsInfo.get().songID);
+            // 创建Request对象，用于发送请求
+            Request request = new Request.Builder()
+                    .url(urlBuilder.build())
+                    .post(builder.build())
+                    .build();
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
-                HttpResponse execute = new DefaultHttpClient().execute(httpPost);
-                if (execute.getStatusLine().getStatusCode() == 200) {
-                    str = EntityUtils.toString(execute.getEntity());
+                // 同步执行请求，获取Response对象
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    str = response.body().string();
                 }
             } catch (Exception e2) {
                 e2.printStackTrace();
@@ -49,6 +44,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
         }
         return null;
     }
+
 
     @Override
     protected final void onPostExecute(String str) {

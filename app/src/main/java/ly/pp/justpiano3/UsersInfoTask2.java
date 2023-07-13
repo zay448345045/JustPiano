@@ -3,18 +3,10 @@ package ly.pp.justpiano3;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.entity.UrlEncodedFormEntity;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.message.BasicNameValuePair;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
-
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
@@ -65,35 +57,36 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strArr) {
         String str = "";
-        HttpPost httpPost = new HttpPost("http://" + usersInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/ChangeUserMsg");
-        List<BasicNameValuePair> arrayList = new ArrayList<>();
-        arrayList.add(new BasicNameValuePair("head", "0"));
-        arrayList.add(new BasicNameValuePair("version", usersInfo.get().jpapplication.getVersion()));
-        arrayList.add(new BasicNameValuePair("keywords", strArr[0]));
-        arrayList.add(new BasicNameValuePair("userName", usersInfo.get().jpapplication.getAccountName()));
-        if (strArr[1] == null || strArr[2] == null) {
-            arrayList.add(new BasicNameValuePair("msg", usersInfo.get().pSign));
-            arrayList.add(new BasicNameValuePair("age", String.valueOf(usersInfo.get().age)));
-        } else {
-            arrayList.add(new BasicNameValuePair("oldPass", strArr[1]));
-            arrayList.add(new BasicNameValuePair("newPass", strArr[2]));
-            f6010b = strArr[2];
-        }
+        OkHttpClient client = new OkHttpClient();
+        HttpUrl url = new HttpUrl.Builder()
+                .scheme("http")
+                .host(usersInfo.get().jpapplication.getServer())
+                .port(8910)
+                .addPathSegment("JustPianoServer")
+                .addPathSegment("server")
+                .addPathSegment("ChangeUserMsg")
+                .build();
+        RequestBody body = new FormBody.Builder()
+                .add("head", "0")
+                .add("version", usersInfo.get().jpapplication.getVersion())
+                .add("keywords", strArr[0])
+                .add("userName", usersInfo.get().jpapplication.getAccountName())
+                .add("msg", strArr[1] == null ? usersInfo.get().pSign : "")
+                .add("age", strArr[1] == null ? String.valueOf(usersInfo.get().age) : "")
+                .add("oldPass", strArr[1] == null ? "" : strArr[1])
+                .add("newPass", strArr[2] == null ? "" : strArr[2])
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                str = EntityUtils.toString(execute.getEntity());
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                str = response.body().string();
             }
-        } catch (Exception e3) {
-            e3.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return str;
     }

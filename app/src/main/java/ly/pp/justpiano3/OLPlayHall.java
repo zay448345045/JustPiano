@@ -15,36 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.protobuf.MessageLite;
+import protobuf.dto.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import protobuf.dto.OnlineClTestDTO;
-import protobuf.dto.OnlineEnterRoomDTO;
-import protobuf.dto.OnlineHallChatDTO;
-import protobuf.dto.OnlineLoadRoomListDTO;
-import protobuf.dto.OnlineLoadRoomUserListDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlineQuitHallDTO;
+import java.util.*;
 
 public final class OLPlayHall extends BaseActivity implements Callback, OnClickListener {
     public ConnectionService connectionService;

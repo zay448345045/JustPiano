@@ -1,253 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="ly.pp.justpiano3">
-    <uses-permission android:name="android.permission.INTERNET" />
+          xmlns:tools="http://schemas.android.com/tools"
+          package="ly.pp.justpiano3">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission
-        android:name="android.permission.BIND_MIDI_DEVICE_SERVICE"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            android:name="android.permission.BIND_MIDI_DEVICE_SERVICE"
+            tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-feature android:name="android.hardware.usb.host" />
+            android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+            tools:ignore="ScopedStorage"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-feature android:name="android.hardware.usb.host"/>
     <uses-feature
-        android:name="android.software.midi"
-        android:required="true" />
+            android:name="android.software.midi"
+            android:required="true"/>
     <application
-        android:name="ly.pp.justpiano3.JPApplication"
-        android:requestLegacyExternalStorage="true"
-        android:allowBackup="false"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:icon="@drawable/icon"
-        android:label="@string/app_name"
-        android:isGame="true"
-        android:screenOrientation="sensorLandscape"
-        android:theme="@style/JustPianoTheme"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="m">
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <activity
-            android:name="ly.pp.justpiano3.JustPiano"
+            android:name="ly.pp.justpiano3.JPApplication"
+            android:requestLegacyExternalStorage="true"
+            android:allowBackup="false"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:icon="@drawable/icon"
             android:label="@string/app_name"
+            android:isGame="true"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"
-            android:exported="true">
+            android:theme="@style/JustPianoTheme"
+            android:usesCleartextTraffic="true"
+            tools:targetApi="m">
+        <activity
+                android:name="ly.pp.justpiano3.JustPiano"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"
+                android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="ly.pp.justpiano3.MainMode"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.MainMode"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.About"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.About"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.PopUserInfo"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.PopUserInfo"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.SettingsMode"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/SettingTheme"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.SettingsMode"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:theme="@style/SettingTheme"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.RecordFiles"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.RecordFiles"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.PlayModeSelect"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.PlayModeSelect"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.Login"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.Login"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.ChangeServer"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.ChangeServer"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.Register"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.Register"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLMelodySelect"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLMelodySelect"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.SearchSongs"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.SearchSongs"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLMainMode"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLMainMode"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.ShowTopInfo"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.ShowTopInfo"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.ShowSongsInfo"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.ShowSongsInfo"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.UsersInfo"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.UsersInfo"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLTopUser"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLTopUser"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLPlayHall"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLPlayHall"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLPlayRoom"
-            android:label="@string/app_name"
-            android:screenOrientation="userLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLPlayRoom"
+                android:label="@string/app_name"
+                android:screenOrientation="userLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLPlayKeyboardRoom"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLPlayKeyboardRoom"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLPlayHallRoom"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLPlayHallRoom"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLPlayDressRoom"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLPlayDressRoom"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLSongsPage"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLSongsPage"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.MelodySelect"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustNothing|adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.MelodySelect"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustNothing|adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.PianoPlay"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.PianoPlay"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.KeyBoard"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.KeyBoard"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.PlayFinish"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.PlayFinish"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.PianoHelper"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.PianoHelper"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.FriendMailPage"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.FriendMailPage"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.SkinDownload"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.SkinDownload"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.SoundDownload"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.SoundDownload"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.ChatFiles"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
-        <activity android:name=".BaseActivity" />
+                android:name="ly.pp.justpiano3.ChatFiles"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
+        <activity android:name=".BaseActivity"/>
         <activity
-            android:name="ly.pp.justpiano3.OLChallenge"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLChallenge"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
-            android:name="ly.pp.justpiano3.OLFamily"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+                android:name="ly.pp.justpiano3.OLFamily"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/app_name"
+                android:screenOrientation="sensorLandscape"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
 
         <service
-            android:name="ly.pp.justpiano3.ConnectionService"
-            android:enabled="true" />
+                android:name="ly.pp.justpiano3.ConnectionService"
+                android:enabled="true"/>
 
     </application>
 </manifest>

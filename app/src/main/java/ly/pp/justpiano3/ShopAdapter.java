@@ -6,7 +6,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import protobuf.dto.OnlineShopDTO;
 
 public final class ShopAdapter extends BaseAdapter {

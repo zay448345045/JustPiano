@@ -2,7 +2,6 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 final class AddFriendsClick implements OnClickListener {

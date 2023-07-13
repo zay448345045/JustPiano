@@ -3,7 +3,6 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
-
 import protobuf.dto.OnlineSendMailDTO;
 
 final class AddFriendsMailClick implements OnClickListener {
