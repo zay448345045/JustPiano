@@ -1,0 +1,54 @@
+package ly.pp.justpiano3.utils;
+
+import android.app.ActivityManager;
+import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+/**
+ * DeviceUtils
+ * 设备工具
+ *
+ * @author Jhpz
+ * @since create(2023 / 7 / 26)
+ **/
+public class DeviceUtils {
+    /**
+     * 获取设备的AndroidId
+     *
+     * @param context 上下文
+     * @return AndroidId
+     */
+    public static String getAndroidId(Context context) {
+        String androidId;
+        try {
+            androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+            androidId = "Exception: "+e.getMessage();
+        }
+        return androidId;
+    }
+
+    /**
+     * 获取设备的Android版本号
+     *
+     * @return Android版本号
+     */
+    public static String getAndroidVersion() {
+        return Build.VERSION.RELEASE;
+    }
+
+    /**
+     * 获取设备的制造商和型号
+     *
+     * @return 设备制造商和型号
+     */
+    public static String getDeviceBrandAndModel() {
+        return Build.MANUFACTURER + " " + Build.MODEL;
+    }
+
+}

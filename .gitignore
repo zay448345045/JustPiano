@@ -9,3 +9,5 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/java/ly/pp/justpiano3/protobuf/
+/.idea/

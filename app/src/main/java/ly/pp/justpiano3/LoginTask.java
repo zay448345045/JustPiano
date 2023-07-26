@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 
+import ly.pp.justpiano3.utils.DeviceUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -43,6 +44,12 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             arrayList.add(new BasicNameValuePair("username", login.accountX));
             arrayList.add(new BasicNameValuePair("password", login.password));
             arrayList.add(new BasicNameValuePair("local", login.jpapplication.getVersion()));
+            arrayList.add(new BasicNameValuePair("system",
+                    DeviceUtils.getAndroidId(login.getApplicationContext()) + "," +
+                    DeviceUtils.getAndroidVersion() + "," +
+                    DeviceUtils.getDeviceBrandAndModel()
+            ));
+
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
                 DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
