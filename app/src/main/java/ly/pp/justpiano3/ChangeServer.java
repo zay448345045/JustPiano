@@ -28,9 +28,9 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.server1:
                 SharedPreferences.Editor edit2 = sharedPreferences.edit();
-                edit2.putString("ip", "120.25.100.169");
+                edit2.putString("ip", "server.justpiano.fun");
                 edit2.apply();
-                jpapplication.setServer("120.25.100.169");
+                jpapplication.setServer("server.justpiano.fun");
                 Intent intent = new Intent();
                 intent.putExtra("no_auto", false);
                 intent.setClass(this, Login.class);
@@ -39,9 +39,9 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
                 return;
             case R.id.server2:
                 edit2 = sharedPreferences.edit();
-                edit2.putString("ip", "120.25.100.134");
+                edit2.putString("ip", "test.justpiano.fun");
                 edit2.commit();
-                jpapplication.setServer("120.25.100.134");
+                jpapplication.setServer("test.justpiano.fun");
                 intent = new Intent();
                 intent.putExtra("no_auto", false);
                 intent.setClass(this, Login.class);

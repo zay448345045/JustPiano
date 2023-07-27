@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/selector_ol_orange"
-                android:text="极品一服\n(120.25.100.169)"
+                android:text="极品一服\n(server.justpiano.fun)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
@@ -50,7 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/selector_ol_blue"
-                android:text="极品二服\n(120.25.100.134)"
+                android:text="极品二服\n(test.justpiano.fun)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
         </LinearLayout>

@@ -85,7 +85,7 @@ public final class JPApplication extends Application {
     private String accountName = "";
     private String password = "";
     private String nowSongsName = "";
-    private String server = "120.25.100.169";
+    private String server = "server.justpiano.fun";
     private boolean keyboardPrefer;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
