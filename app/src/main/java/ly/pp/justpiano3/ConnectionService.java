@@ -22,6 +22,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import ly.pp.justpiano3.utils.DeviceUtils;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
