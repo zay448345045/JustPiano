@@ -30,6 +30,7 @@ import ly.pp.justpiano3.protobuf.dto.OnlineBaseDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineHeartBeatDTO;
 import ly.pp.justpiano3.protobuf.dto.OnlineLoginDTO;
 import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
+import ly.pp.justpiano3.utils.DeviceUtils;
 
 public class ConnectionService extends Service implements Runnable {
 
@@ -136,6 +137,9 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode("20220322");
                 builder.setPackageName(getPackageName());
+                builder.setOs(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()) + "," +
+                        DeviceUtils.getAndroidVersion() + "," +
+                        DeviceUtils.getDeviceBrandAndModel());
                 writeData(10, builder.build());
             }
 

@@ -44,11 +44,6 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             arrayList.add(new BasicNameValuePair("username", login.accountX));
             arrayList.add(new BasicNameValuePair("password", login.password));
             arrayList.add(new BasicNameValuePair("local", login.jpapplication.getVersion()));
-            arrayList.add(new BasicNameValuePair("system",
-                    DeviceUtils.getAndroidId(login.getApplicationContext()) + "," +
-                    DeviceUtils.getAndroidVersion() + "," +
-                    DeviceUtils.getDeviceBrandAndModel()
-            ));
 
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(arrayList, "UTF-8"));
