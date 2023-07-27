@@ -135,6 +135,9 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode("20220322");
                 builder.setPackageName(getPackageName());
+                builder.setOs(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()) + "," +
+                        DeviceUtils.getAndroidVersion() + "," +
+                        DeviceUtils.getDeviceBrandAndModel());
                 writeData(10, builder.build());
             }
 

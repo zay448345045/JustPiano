@@ -153,6 +153,8 @@ message OnlineLoginDTO {
     string account = 3;
     // 用户密码
     string password = 4;
+    // 设备信息
+    string os = 5;
 }
 
 // 大厅聊天
