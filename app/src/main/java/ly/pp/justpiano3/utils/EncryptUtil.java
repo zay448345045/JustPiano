@@ -14,11 +14,6 @@ import java.util.Base64;
 public class EncryptUtil {
 
     /**
-     * 原始密钥常量
-     */
-    public static final String key = "just_piano";
-
-    /**
      * 密钥长度（bit）
      */
     private static final int KEY_SIZE = 1024;
