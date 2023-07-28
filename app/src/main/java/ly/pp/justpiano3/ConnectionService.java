@@ -23,6 +23,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.utils.DeviceUtils;
+import protobuf.dto.Device;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
@@ -136,9 +137,12 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode("20220322");
                 builder.setPackageName(getPackageName());
-                builder.setOs(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()) + "," +
-                        DeviceUtils.getAndroidVersion() + "," +
-                        DeviceUtils.getDeviceBrandAndModel());
+                // 设备信息
+                Device.Builder device = Device.newBuilder();
+                device.setAndroidId(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()));
+                device.setVersion(DeviceUtils.getAndroidVersion());
+                device.setModel(DeviceUtils.getDeviceBrandAndModel());
+                builder.setOs(device);
                 writeData(10, builder.build());
             }
 

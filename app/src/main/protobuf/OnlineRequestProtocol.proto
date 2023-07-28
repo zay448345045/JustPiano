@@ -7,92 +7,92 @@ option java_outer_classname = "OnlineRequest";
 
 // 服务器接收协议
 message OnlineBaseDTO {
-    reserved 1, 11, 17, 20, 22, 24, 27;
-    // 消息体
-    oneof request {
-        // 查看用户个人资料对话框
-        OnlineUserInfoDialogDTO user_info_dialog = 2;
-        // 开始弹奏
-        OnlinePlayStartDTO play_start = 3;
-        // 用户房间中状态变化
-        OnlineChangeRoomUserStatusDTO change_room_user_status = 4;
-        // 弹奏成绩判定
-        OnlinePlayFinishDTO play_finish = 5;
-        // 创建房间
-        OnlineCreateRoomDTO create_room = 6;
-        // 进入房间
-        OnlineEnterRoomDTO enter_room = 7;
-        // 退出房间
-        OnlineQuitRoomDTO quit_room = 8;
-        // 被踢出房间
-        OnlineKickedQuitRoomDTO kicked_quit_room = 9;
-        // 用户登录对战
-        OnlineLoginDTO login = 10;
-        // 大厅聊天
-        OnlineHallChatDTO hall_chat = 12;
-        // 房间聊天
-        OnlineRoomChatDTO room_chat = 13;
-        // 改变房间信息
-        OnlineChangeRoomInfoDTO change_room_info = 14;
-        // 播放曲谱
-        OnlinePlaySongDTO play_song = 15;
-        // 每日挑战
-        OnlineChallengeDTO challenge = 16;
-        // 家族
-        OnlineFamilyDTO family = 18;
-        // 进入大厅后加载房间列表
-        OnlineLoadRoomListDTO load_room = 19;
-        // 房间内初次加载所有用户数据
-        OnlineLoadRoomPositionDTO load_room_position = 21;
-        // 房间开始弹奏后加载用户
-        OnlineLoadPlayUserDTO load_play_user = 23;
-        // 弹奏界面左上角成绩条
-        OnlineMiniGradeDTO mini_grade = 25;
-        // 商店
-        OnlineShopDTO shop = 26;
-        // 主界面加载用户信息及大厅列表
-        OnlineLoadUserDTO load_user = 28;
-        // 进入大厅
-        OnlineEnterHallDTO enter_hall = 29;
-        // 退出大厅
-        OnlineQuitHallDTO quit_hall = 30;
-        // 增删好友、解除搭档、设置祝语
-        OnlineSetUserInfoDTO set_user_info = 31;
-        // 显示/隐藏弹奏界面左上角成绩条
-        OnlineSetMiniGradeDTO set_mini_grade = 32;
-        // 更换服装
-        OnlineChangeClothesDTO change_clothes = 33;
-        // 查看好友、私信和主界面查看搭档
-        OnlineLoadUserInfoDTO load_user_info = 34;
-        // 发送私信
-        OnlineSendMailDTO send_mail = 35;
-        // 大厅加载用户列表或房间加载邀请列表
-        OnlineLoadUserListDTO load_user_list = 36;
-        // 找Ta或邀请对话框
-        OnlineDialogDTO dialog = 37;
-        // 每日奖励
-        OnlineDailyDTO daily = 38;
-        // 键盘模式传输音符数据
-        OnlineKeyboardNoteDTO keyboard_note = 39;
-        // 等级考试
-        OnlineClTestDTO cl_test = 40;
-        // 心跳检测
-        OnlineHeartBeatDTO heart_beat = 41;
-        // 打开/关闭空位
-        OnlineChangeRoomDoorDTO change_room_door = 42;
-        // 大厅中显示房间内成员信息
-        OnlineLoadRoomUserListDTO load_room_user_list = 43;
-        // 改变左右手
-        OnlineChangeRoomHandDTO change_room_hand = 44;
-        // 搭档、祝福
-        OnlineCoupleDTO couple = 45;
-    }
+  reserved 1, 11, 17, 20, 22, 24, 27;
+  // 消息体
+  oneof request {
+    // 查看用户个人资料对话框
+    OnlineUserInfoDialogDTO user_info_dialog = 2;
+    // 开始弹奏
+    OnlinePlayStartDTO play_start = 3;
+    // 用户房间中状态变化
+    OnlineChangeRoomUserStatusDTO change_room_user_status = 4;
+    // 弹奏成绩判定
+    OnlinePlayFinishDTO play_finish = 5;
+    // 创建房间
+    OnlineCreateRoomDTO create_room = 6;
+    // 进入房间
+    OnlineEnterRoomDTO enter_room = 7;
+    // 退出房间
+    OnlineQuitRoomDTO quit_room = 8;
+    // 被踢出房间
+    OnlineKickedQuitRoomDTO kicked_quit_room = 9;
+    // 用户登录对战
+    OnlineLoginDTO login = 10;
+    // 大厅聊天
+    OnlineHallChatDTO hall_chat = 12;
+    // 房间聊天
+    OnlineRoomChatDTO room_chat = 13;
+    // 改变房间信息
+    OnlineChangeRoomInfoDTO change_room_info = 14;
+    // 播放曲谱
+    OnlinePlaySongDTO play_song = 15;
+    // 每日挑战
+    OnlineChallengeDTO challenge = 16;
+    // 家族
+    OnlineFamilyDTO family = 18;
+    // 进入大厅后加载房间列表
+    OnlineLoadRoomListDTO load_room = 19;
+    // 房间内初次加载所有用户数据
+    OnlineLoadRoomPositionDTO load_room_position = 21;
+    // 房间开始弹奏后加载用户
+    OnlineLoadPlayUserDTO load_play_user = 23;
+    // 弹奏界面左上角成绩条
+    OnlineMiniGradeDTO mini_grade = 25;
+    // 商店
+    OnlineShopDTO shop = 26;
+    // 主界面加载用户信息及大厅列表
+    OnlineLoadUserDTO load_user = 28;
+    // 进入大厅
+    OnlineEnterHallDTO enter_hall = 29;
+    // 退出大厅
+    OnlineQuitHallDTO quit_hall = 30;
+    // 增删好友、解除搭档、设置祝语
+    OnlineSetUserInfoDTO set_user_info = 31;
+    // 显示/隐藏弹奏界面左上角成绩条
+    OnlineSetMiniGradeDTO set_mini_grade = 32;
+    // 更换服装
+    OnlineChangeClothesDTO change_clothes = 33;
+    // 查看好友、私信和主界面查看搭档
+    OnlineLoadUserInfoDTO load_user_info = 34;
+    // 发送私信
+    OnlineSendMailDTO send_mail = 35;
+    // 大厅加载用户列表或房间加载邀请列表
+    OnlineLoadUserListDTO load_user_list = 36;
+    // 找Ta或邀请对话框
+    OnlineDialogDTO dialog = 37;
+    // 每日奖励
+    OnlineDailyDTO daily = 38;
+    // 键盘模式传输音符数据
+    OnlineKeyboardNoteDTO keyboard_note = 39;
+    // 等级考试
+    OnlineClTestDTO cl_test = 40;
+    // 心跳检测
+    OnlineHeartBeatDTO heart_beat = 41;
+    // 打开/关闭空位
+    OnlineChangeRoomDoorDTO change_room_door = 42;
+    // 大厅中显示房间内成员信息
+    OnlineLoadRoomUserListDTO load_room_user_list = 43;
+    // 改变左右手
+    OnlineChangeRoomHandDTO change_room_hand = 44;
+    // 搭档、祝福
+    OnlineCoupleDTO couple = 45;
+  }
 }
 
 // 查看用户个人资料对话框
 message OnlineUserInfoDialogDTO {
-    // 用户名称
-    string name = 1;
+  // 用户名称
+  string name = 1;
 }
 
 // 开始弹奏
@@ -102,34 +102,34 @@ message OnlinePlayStartDTO {
 
 // 用户房间中状态变化
 message OnlineChangeRoomUserStatusDTO {
-    // 新状态
-    string status = 1;
+  // 新状态
+  string status = 1;
 }
 
 // 弹奏成绩判定
 message OnlinePlayFinishDTO {
-    // 加密时间戳
-    uint64 code = 1;
-    // 弹奏状态数组
-    string status_array = 2;
+  // 加密时间戳
+  uint64 code = 1;
+  // 弹奏状态数组
+  string status_array = 2;
 }
 
 // 创建房间
 message OnlineCreateRoomDTO {
-    // 房间名称
-    string room_name = 1;
-    // 房间模式
-    uint32 room_mode = 2;
-    // 房间密码
-    string password = 3;
+  // 房间名称
+  string room_name = 1;
+  // 房间模式
+  uint32 room_mode = 2;
+  // 房间密码
+  string password = 3;
 }
 
 // 进入房间
 message OnlineEnterRoomDTO {
-    // 房间id
-    uint32 room_id = 1;
-    // 房间密码
-    string password = 2;
+  // 房间id
+  uint32 room_id = 1;
+  // 房间密码
+  string password = 2;
 }
 
 // 退出房间
@@ -139,84 +139,94 @@ message OnlineQuitRoomDTO {
 
 // 被踢出房间
 message OnlineKickedQuitRoomDTO {
-    // 被踢用户的房间位置
-    uint32 room_position = 1;
+  // 被踢用户的房间位置
+  uint32 room_position = 1;
 }
 
 // 用户登录对战
 message OnlineLoginDTO {
-    // 安卓应用包名
-    string package_name = 1;
-    // 日期版本号
-    string version_code = 2;
-    // 用户账号
-    string account = 3;
-    // 用户密码
-    string password = 4;
-    // 设备信息
-    string os = 5;
+  // 安卓应用包名
+  string package_name = 1;
+  // 日期版本号
+  string version_code = 2;
+  // 用户账号
+  string account = 3;
+  // 用户密码
+  string password = 4;
+  // 设备信息
+  Device os = 5;
+}
+
+// 设备
+message Device {
+  // 安卓Id
+  string android_id = 1;
+  // 安卓版本
+  string version = 2;
+  // 厂商和型号
+  string model = 3;
 }
 
 // 大厅聊天
 message OnlineHallChatDTO {
-    // 私聊用户名称
-    string user_name = 1;
-    // 消息内容
-    string message = 2;
+  // 私聊用户名称
+  string user_name = 1;
+  // 消息内容
+  string message = 2;
 }
 
 // 房间聊天
 message OnlineRoomChatDTO {
-    // 私聊用户名称
-    string user_name = 1;
-    // 消息内容
-    string message = 2;
-    // 消息文字颜色
-    uint32 color = 3;
+  // 私聊用户名称
+  string user_name = 1;
+  // 消息内容
+  string message = 2;
+  // 消息文字颜色
+  uint32 color = 3;
 }
 
 // 改变房间信息
 message OnlineChangeRoomInfoDTO {
-    // 新房间名称
-    string room_name = 1;
-    // 新房间密码
-    string room_password = 2;
+  // 新房间名称
+  string room_name = 1;
+  // 新房间密码
+  string room_password = 2;
 }
 
 // 播放曲谱
 message OnlinePlaySongDTO {
-    // 曲谱路径
-    string song_path = 1;
-    // 曲谱移调值
-    int32 tune = 2;
+  // 曲谱路径
+  string song_path = 1;
+  // 曲谱移调值
+  int32 tune = 2;
 }
 
 // 每日挑战
 message OnlineChallengeDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 加密时间戳
-    optional uint64 code = 2;
-    // 弹奏状态数组
-    optional string status_array = 3;
+  // 消息类型
+  uint32 type = 1;
+  // 加密时间戳
+  optional uint64 code = 2;
+  // 弹奏状态数组
+  optional string status_array = 3;
 }
 
 // 家族
 message OnlineFamilyDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 家族id
-    optional uint32 family_id = 2;
-    // 家族宣言
-    optional string message = 3;
-    // 列表当前页数
-    optional uint32 page = 4;
-    // 家族名称
-    optional string family_name = 5;
-    // 相关用户名称
-    optional string user_name = 6;
-    // 相关状态
-    optional uint32 status = 7;
+  // 消息类型
+  uint32 type = 1;
+  // 家族id
+  optional uint32 family_id = 2;
+  // 家族宣言
+  optional string message = 3;
+  // 列表当前页数
+  optional uint32 page = 4;
+  // 家族名称
+  optional string family_name = 5;
+  // 相关用户名称
+  optional string user_name = 6;
+  // 相关状态
+  optional uint32 status = 7;
 }
 
 // 进入大厅后加载房间列表
@@ -236,16 +246,16 @@ message OnlineLoadPlayUserDTO {
 
 // 弹奏界面左上角成绩条
 message OnlineMiniGradeDTO {
-    // 弹奏状态数组
-    string status_array = 1;
+  // 弹奏状态数组
+  string status_array = 1;
 }
 
 // 商店
 message OnlineShopDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 商品id
-    optional uint32 product_id = 2;
+  // 消息类型
+  uint32 type = 1;
+  // 商品id
+  optional uint32 product_id = 2;
 }
 
 // 主界面加载用户信息及大厅列表
@@ -255,10 +265,10 @@ message OnlineLoadUserDTO {
 
 // 进入大厅
 message OnlineEnterHallDTO {
-    // 大厅id
-    uint32 hall_id = 1;
-    // 大厅密码（若有）
-    optional string password = 2;
+  // 大厅id
+  uint32 hall_id = 1;
+  // 大厅密码（若有）
+  optional string password = 2;
 }
 
 // 退出大厅
@@ -268,56 +278,56 @@ message OnlineQuitHallDTO {
 
 // 增删好友、解除搭档、设置祝语
 message OnlineSetUserInfoDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 相关用户名
-    string name = 2;
-    // 是否拒绝好友请求
-    optional bool reject = 3;
-    // 祝语
-    optional string declaration = 4;
+  // 消息类型
+  uint32 type = 1;
+  // 相关用户名
+  string name = 2;
+  // 是否拒绝好友请求
+  optional bool reject = 3;
+  // 祝语
+  optional string declaration = 4;
 }
 
 // 显示/隐藏弹奏界面左上角成绩条
 message OnlineSetMiniGradeDTO {
-    // 是否显示左上角成绩条
-    bool mini_grade_on = 1;
+  // 是否显示左上角成绩条
+  bool mini_grade_on = 1;
 }
 
 // 更换服装
 message OnlineChangeClothesDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 购买服装分类编号
-    optional uint32 buy_clothes_type = 2;
-    // 购买服装编号
-    optional uint32 buy_clothes_id = 3;
-    // 头发
-    uint32 hair = 4;
-    // 眼睛
-    uint32 eye = 5;
-    // 上衣
-    uint32 jacket = 6;
-    // 裤子
-    uint32 trousers = 7;
-    // 鞋子
-    uint32 shoes = 8;
+  // 消息类型
+  uint32 type = 1;
+  // 购买服装分类编号
+  optional uint32 buy_clothes_type = 2;
+  // 购买服装编号
+  optional uint32 buy_clothes_id = 3;
+  // 头发
+  uint32 hair = 4;
+  // 眼睛
+  uint32 eye = 5;
+  // 上衣
+  uint32 jacket = 6;
+  // 裤子
+  uint32 trousers = 7;
+  // 鞋子
+  uint32 shoes = 8;
 }
 
 // 查看好友、私信和主界面查看搭档
 message OnlineLoadUserInfoDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 列表当前页数
-    optional int32 page = 2;
+  // 消息类型
+  uint32 type = 1;
+  // 列表当前页数
+  optional int32 page = 2;
 }
 
 // 发送私信
 message OnlineSendMailDTO {
-    // 接收私信用户名称
-    string name = 1;
-    // 私信内容
-    string message = 2;
+  // 接收私信用户名称
+  string name = 1;
+  // 私信内容
+  string message = 2;
 }
 
 // 大厅加载用户列表或房间加载邀请列表
@@ -327,34 +337,34 @@ message OnlineLoadUserListDTO {
 
 // 找Ta或邀请对话框
 message OnlineDialogDTO {
-    // 对话框类型（0为找Ta，1为邀请）
-    uint32 type = 1;
-    // 用户名称
-    string name = 2;
+  // 对话框类型（0为找Ta，1为邀请）
+  uint32 type = 1;
+  // 用户名称
+  string name = 2;
 }
 
 // 每日奖励
 message OnlineDailyDTO {
-    // 消息类型
-    uint32 type = 1;
+  // 消息类型
+  uint32 type = 1;
 }
 
 // 键盘模式传输音符数据
 message OnlineKeyboardNoteDTO {
-    // 传输数据
-    bytes data = 1;
+  // 传输数据
+  bytes data = 1;
 }
 
 // 等级考试
 message OnlineClTestDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 加密时间戳
-    optional uint64 code = 2;
-    // 用户选择的考级曲谱序号（当前等级对于用户的第几首）
-    optional uint32 song_index = 3;
-    // 弹奏状态数组
-    optional string status_array = 4;
+  // 消息类型
+  uint32 type = 1;
+  // 加密时间戳
+  optional uint64 code = 2;
+  // 用户选择的考级曲谱序号（当前等级对于用户的第几首）
+  optional uint32 song_index = 3;
+  // 弹奏状态数组
+  optional string status_array = 4;
 }
 
 // 心跳检测
@@ -364,30 +374,30 @@ message OnlineHeartBeatDTO {
 
 // 打开/关闭空位
 message OnlineChangeRoomDoorDTO {
-    // 房间位置
-    uint32 room_position = 1;
+  // 房间位置
+  uint32 room_position = 1;
 }
 
 // 大厅中显示房间内成员信息
 message OnlineLoadRoomUserListDTO {
-    // 房间id
-    uint32 room_id = 1;
+  // 房间id
+  uint32 room_id = 1;
 }
 
 // 改变左右手
 message OnlineChangeRoomHandDTO {
-    // 左右手
-    uint32 hand = 1;
+  // 左右手
+  uint32 hand = 1;
 }
 
 // 搭档、祝福
 message OnlineCoupleDTO {
-    // 消息类型
-    uint32 type = 1;
-    // 搭档类型
-    optional int32 couple_type = 2;
-    // 搭档对应所在房间位置
-    optional int32 couple_room_position = 3;
-    // 相关房间位置
-    optional int32 room_position = 4;
+  // 消息类型
+  uint32 type = 1;
+  // 搭档类型
+  optional int32 couple_type = 2;
+  // 搭档对应所在房间位置
+  optional int32 couple_room_position = 3;
+  // 相关房间位置
+  optional int32 room_position = 4;
 }

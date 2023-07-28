@@ -1,13 +1,8 @@
 package ly.pp.justpiano3.utils;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * DeviceUtils
@@ -28,7 +23,7 @@ public class DeviceUtils {
         try {
             androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         } catch (Exception e) {
-            androidId = "Exception: "+e.getMessage();
+            androidId = "Exception: " + e.getMessage();
         }
         return androidId;
     }
@@ -39,7 +34,7 @@ public class DeviceUtils {
      * @return Android版本号
      */
     public static String getAndroidVersion() {
-        return Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE + "." + Build.VERSION.INCREMENTAL;
     }
 
     /**
@@ -48,7 +43,7 @@ public class DeviceUtils {
      * @return 设备制造商和型号
      */
     public static String getDeviceBrandAndModel() {
-        return Build.MANUFACTURER + " " + Build.MODEL;
+        return Build.MANUFACTURER + "." + Build.MODEL;
     }
 
 }
