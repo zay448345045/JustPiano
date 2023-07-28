@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
+import ly.pp.justpiano3.utils.EncryptUtil;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +58,8 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         login.accountX = login.accountTextView.getText().toString();
         login.password = login.passwordTextView.getText().toString();
         if (!login.accountX.isEmpty() && !login.password.isEmpty()) {
+            // 更新客户端公钥
+            login.jpapplication.updateDeviceKeyPair();
             String ip = login.jpapplication.getServer();
             // 创建OkHttpClient对象
             OkHttpClient client = new OkHttpClient();
@@ -69,6 +72,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             formBuilder.add("username", login.accountX);
             formBuilder.add("password", login.password);
             formBuilder.add("local", login.jpapplication.getVersion());
+            formBuilder.add("publicKey", EncryptUtil.generatePublicKeyString(login.jpapplication.getDeviceKeyPair().getPublic()));
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder()
                     .url(urlBuilder.build())
@@ -95,11 +99,14 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         Login login = activity.get();
         int i = 3;
         try {
             JSONObject jSONObject = new JSONObject(f5139a);
+            // 记录服务端返回的会话公钥
+            String serverPublicKey = jSONObject.getString("publicKey");
+            login.jpapplication.setServerPublicKey(serverPublicKey);
             i = jSONObject.getInt("is");
             try {
                 message = jSONObject.getString("msg");

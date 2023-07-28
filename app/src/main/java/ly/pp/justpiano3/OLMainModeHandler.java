@@ -43,7 +43,7 @@ final class OLMainModeHandler extends Handler {
             case 4:
                 oLMainMode.jpprogressBar.cancel();
                 Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "账号不存在!!");
+                oLMainMode.addDialog("提示", "确定", "账号不存在，请尝试返回主界面重新登录");
                 Looper.loop();
                 return;
             case 5:

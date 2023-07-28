@@ -15,8 +15,11 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import javazoom.jl.converter.Converter;
+import ly.pp.justpiano3.utils.EncryptUtil;
 
 import java.io.*;
+import java.security.KeyPair;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +94,43 @@ public final class JPApplication extends Application {
     private MidiManager mMidiManager;
     MidiOutputPort midiOutputPort;
 
+    /**
+     * RSA客户端生成密钥存储
+     */
+    private KeyPair keyPair;
+
+    /**
+     * 服务端公钥存储
+     */
+    private PublicKey publicKey;
+
+    /**
+     * 服务端时间
+     */
     public long serverTimeInterval;
+
+    /**
+     * 获取客户端密钥
+     * @return
+     */
+    public KeyPair getDeviceKeyPair() {
+        return keyPair;
+    }
+
+    /**
+     * 更新客户端密钥
+     */
+    public void updateDeviceKeyPair() {
+        keyPair = EncryptUtil.generateRSAKeyPair();
+    }
+
+    public void setServerPublicKey(String publicKeyStr) {
+        this.publicKey = EncryptUtil.generatePublicKey(publicKeyStr);
+    }
+
+    public PublicKey getServerPublicKey() {
+        return publicKey;
+    }
 
     public static native void setupAudioStreamNative(int var1, int var2);
 
@@ -829,13 +868,6 @@ public final class JPApplication extends Application {
                     Looper.loop();
                 }
             }.start();
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e1) {
-//                e1.printStackTrace();
-//            }
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//            System.exit(-1);
         }
     }
 

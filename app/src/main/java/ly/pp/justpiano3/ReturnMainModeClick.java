@@ -12,7 +12,7 @@ final class ReturnMainModeClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         if (baseactivity.activityNum > 0) {
             if (baseactivity instanceof OLPlayRoom) {

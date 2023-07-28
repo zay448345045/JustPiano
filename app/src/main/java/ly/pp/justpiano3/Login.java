@@ -165,7 +165,7 @@ public class Login extends BaseActivity implements OnClickListener {
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);
         Bundle extras = getIntent().getExtras();
-        boolean noAuto = extras.getBoolean("no_auto");
+        boolean noAuto = extras == null || extras.getBoolean("no_auto");
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         Button f4189o = findViewById(R.id.ol_login);
         f4189o.setOnClickListener(this);
@@ -194,8 +194,8 @@ public class Login extends BaseActivity implements OnClickListener {
         }
         jpprogressBar = new JPProgressBar(this);
         jpDialog = new JPDialog(this);
-        account = extras.getString("name");
-        password = extras.getString("password");
+        account = extras == null ? null : extras.getString("name");
+        password = extras == null ? null : extras.getString("password");
         if (account != null && !account.isEmpty() && password != null && !password.isEmpty()) {
             accountTextView.setText(account);
             passwordTextView.setText(password);
