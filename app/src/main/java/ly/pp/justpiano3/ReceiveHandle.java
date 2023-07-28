@@ -1143,7 +1143,7 @@ final class ReceiveHandle {
                         bundle2.putString("S", familyUser.getGender());
                         bundle2.putString("O", String.valueOf(familyUser.getOnline() ? 1 : 0));
                         bundle2.putString("P", String.valueOf(familyUser.getPosition()));
-//                      bundle2.putString("D", familyUser.getLoginDate());
+                        bundle2.putString("D", familyUser.getLoginDate());
                         bundle.putBundle(String.valueOf(i), bundle2);
                         i++;
                     }
