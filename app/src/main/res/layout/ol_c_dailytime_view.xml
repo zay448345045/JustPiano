@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ol_dailytime_layout"
-    android:layout_width="@dimen/dimen_330dp"
+    android:layout_width="@dimen/dimen_560dp"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_list_c"
     android:gravity="center"
@@ -11,21 +11,23 @@
         android:id="@+id/ol_user_name"
         android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
+        android:layout_weight="10"
         android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="start"
         android:textSize="14sp"
         android:textStyle="bold"
+        android:singleLine="true"
         android:textColor="@color/white1" />
 
     <TextView
         android:id="@+id/ol_online_time"
         android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="5"
         android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
         android:textSize="14sp"
+        android:singleLine="true"
         android:textStyle="bold"
         android:textColor="@color/white1" />
 
@@ -33,20 +35,23 @@
         android:id="@+id/ol_dailytime_bonus"
         android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="5"
         android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
         android:textSize="14sp"
+        android:singleLine="true"
         android:textStyle="bold"
         android:textColor="@color/white1" />
 
     <TextView
         android:id="@+id/ol_bonus_get"
-        android:layout_width="@dimen/dimen_34dp"
-        android:layout_height="@dimen/dimen_20dp"
+        android:layout_width="@dimen/dimen_0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
         android:layout_marginStart="@dimen/dimen_3dp"
         android:gravity="center"
         android:textStyle="bold"
+        android:singleLine="true"
         android:textColor="@color/white1" />
 
 </LinearLayout>

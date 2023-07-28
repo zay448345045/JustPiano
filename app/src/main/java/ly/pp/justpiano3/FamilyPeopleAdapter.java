@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import io.netty.util.internal.StringUtil;
 
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         if (name == null) {
             return view;
         }
+        String loginDate = list.get(i).get("D");
         // TODO 家族成员最后一次登录日期（list.get(i).get("D")）显示在哪里
         String contribution = list.get(i).get("C");
         String lv = list.get(i).get("L");
@@ -56,6 +58,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         TextView nameText = view.findViewById(R.id.ol_family_name);
         TextView contributionText = view.findViewById(R.id.ol_family_contribution);
         TextView lvText = view.findViewById(R.id.ol_family_count);
+        TextView dateText = view.findViewById(R.id.ol_family_date);
         ImageView sex = view.findViewById(R.id.ol_family_pic);
         if (list.get(i).get("S").equals("m")) {
             sex.setImageResource(R.drawable.m);
@@ -66,7 +69,9 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         }
         lvText.setText(lv);
         nameText.setText(name);
+        dateText.setText(loginDate);
         contributionText.setText(contribution);
+
         final String position = list.get(i).get("P");
         switch (position) {
             case "0":
@@ -87,12 +92,15 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
             positionText.setTextColor(jpApplication.getResources().getColor(R.color.white));
             contributionText.setTextColor(jpApplication.getResources().getColor(R.color.white));
             lvText.setTextColor(jpApplication.getResources().getColor(R.color.white));
+            dateText.setTextColor(jpApplication.getResources().getColor(R.color.white));
         } else {
             nameText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
             positionText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
             contributionText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
             lvText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
+            dateText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
         }
+
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
             PopupWindow a = family.loadInfoPopupWindow(name, position);
