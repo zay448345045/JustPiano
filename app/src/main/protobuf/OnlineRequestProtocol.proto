@@ -154,11 +154,13 @@ message OnlineLoginDTO {
   // 用户密码
   string password = 4;
   // 设备信息
-  Device os = 5;
+  OnlineDeviceDTO device_info = 5;
+  // 公钥信息
+  string public_key = 6;
 }
 
 // 设备
-message Device {
+message OnlineDeviceDTO {
   // 安卓Id
   string android_id = 1;
   // 安卓版本

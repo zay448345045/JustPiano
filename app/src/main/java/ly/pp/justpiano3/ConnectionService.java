@@ -24,8 +24,9 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.utils.DeviceUtils;
-import protobuf.dto.Device;
+import ly.pp.justpiano3.utils.EncryptUtil;
 import protobuf.dto.OnlineBaseDTO;
+import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
@@ -158,12 +159,13 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode(ONLINE_VERSION);
                 builder.setPackageName(getPackageName());
+                builder.setPublicKey(EncryptUtil.generatePublicKeyString(jpapplication.getDeviceKeyPair().getPublic()));
                 // 设备信息
-                Device.Builder device = Device.newBuilder();
-                device.setAndroidId(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()));
-                device.setVersion(DeviceUtils.getAndroidVersion());
-                device.setModel(DeviceUtils.getDeviceBrandAndModel());
-                builder.setOs(device);
+                OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
+                deviceInfoBuilder.setAndroidId(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()));
+                deviceInfoBuilder.setVersion(DeviceUtils.getAndroidVersion());
+                deviceInfoBuilder.setModel(DeviceUtils.getDeviceBrandAndModel());
+                builder.setDeviceInfo(deviceInfoBuilder);
                 writeData(10, builder.build());
             }
 
@@ -203,6 +205,8 @@ public class ConnectionService extends Service implements Runnable {
 
     @Override
     public void run() {
+        // 更新客户端公钥
+        jpapplication.updateDeviceKeyPair();
         initNetty();
         mNetty.connect(jpapplication.getServer(), 8908);
     }
