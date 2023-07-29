@@ -37,11 +37,6 @@ import java.util.concurrent.TimeUnit;
 public class ConnectionService extends Service implements Runnable {
 
     /**
-     * 对战服务版本
-     */
-    public static final String ONLINE_VERSION = "20220322";
-
-    /**
      * 对战服务端口
      */
     public static final Integer ONLINE_PORT = 8908;
@@ -150,14 +145,14 @@ public class ConnectionService extends Service implements Runnable {
                         });
             }
         }, false);
-        mNetty.setOnConnectListener(new Netty.OnConnectListener() {
 
+        mNetty.setOnConnectListener(new Netty.OnConnectListener() {
             @Override
             public void onSuccess() {
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
                 builder.setPassword(jpapplication.getPassword());
-                builder.setVersionCode(ONLINE_VERSION);
+                builder.setVersionCode(DeviceUtil.getVersionName(jpapplication));
                 builder.setPackageName(getPackageName());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(jpapplication.getDeviceKeyPair().getPublic()));
                 // 设备信息
@@ -208,7 +203,7 @@ public class ConnectionService extends Service implements Runnable {
         // 更新客户端公钥
         jpapplication.updateDeviceKeyPair();
         initNetty();
-        mNetty.connect(jpapplication.getServer(), 8908);
+        mNetty.connect(jpapplication.getServer(), ONLINE_PORT);
     }
 
     private void outLineAndDialog() {
