@@ -23,7 +23,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
-import ly.pp.justpiano3.utils.DeviceUtils;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
@@ -162,9 +162,9 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(jpapplication.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
-                deviceInfoBuilder.setAndroidId(DeviceUtils.getAndroidId(jpapplication.getApplicationContext()));
-                deviceInfoBuilder.setVersion(DeviceUtils.getAndroidVersion());
-                deviceInfoBuilder.setModel(DeviceUtils.getDeviceBrandAndModel());
+                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication.getApplicationContext()));
+                deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
+                deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
                 writeData(10, builder.build());
             }

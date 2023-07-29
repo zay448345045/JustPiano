@@ -1,7 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
-import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,8 +23,6 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
 
     public static void main(String[] args) {
         String ip = "server.justpiano.fun";
-        // 创建OkHttpClient对象
-        OkHttpClient client = new OkHttpClient();
         // 创建HttpUrl.Builder对象，用于添加查询参数
         HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
         FormBody.Builder formBuilder = new FormBody.Builder();
@@ -42,7 +40,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                 .build();
         try {
             // 同步执行请求，获取Response对象
-            Response response = client.newCall(request).execute();
+            Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 String string = response.body().string();
             }
@@ -59,8 +57,6 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         login.password = login.passwordTextView.getText().toString();
         if (!login.accountX.isEmpty() && !login.password.isEmpty()) {
             String ip = login.jpapplication.getServer();
-            // 创建OkHttpClient对象
-            OkHttpClient client = new OkHttpClient();
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
@@ -77,7 +73,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                     .build();
             try {
                 // 同步执行请求，获取Response对象
-                Response response = client.newCall(request).execute();
+                Response response = OkHttpUtil.client().newCall(request).execute();
                 if (response.isSuccessful()) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream(), StandardCharsets.UTF_8));
                     String line;

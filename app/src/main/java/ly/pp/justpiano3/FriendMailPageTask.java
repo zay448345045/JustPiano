@@ -2,7 +2,11 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.ListView;
-import okhttp3.*;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -20,8 +24,6 @@ public final class FriendMailPageTask extends AsyncTask<String, Void, String> {
         if (friendMailPage.get().f4024f.isEmpty()) {
             return str;
         }
-        // 创建OkHttpClient对象
-        OkHttpClient client = new OkHttpClient();
         // 创建HttpUrl.Builder对象，用于添加查询参数
         HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + friendMailPage.get().jpApplication.getServer() + ":8910/JustPianoServer/server/" + strArr[1]).newBuilder();
         // 创建FormBody.Builder对象，用于添加查询参数
@@ -36,7 +38,7 @@ public final class FriendMailPageTask extends AsyncTask<String, Void, String> {
                 .build();
         try {
             // 同步执行请求，获取Response对象
-            Response response = client.newCall(request).execute();
+            Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 String entityUtils = response.body().string();
                 str = GZIP.ZIPTo(new JSONObject(entityUtils).getString("L"));

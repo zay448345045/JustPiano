@@ -1,8 +1,8 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -22,8 +22,6 @@ final class FriendMailPageTask2 extends AsyncTask<String, Void, String> {
         if (strArr[0].isEmpty()) {
             return str;
         }
-        // 创建OkHttpClient对象
-        OkHttpClient client = new OkHttpClient();
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("head", "2")
@@ -38,7 +36,7 @@ final class FriendMailPageTask2 extends AsyncTask<String, Void, String> {
                 .build();
         try {
             // 发送请求并获取响应
-            Response response = client.newCall(request).execute();
+            Response response = OkHttpUtil.client().newCall(request).execute();
             return response.isSuccessful() ? response.body().string() : str;
         } catch (IOException e) {
             e.printStackTrace();

@@ -3,15 +3,14 @@ package ly.pp.justpiano3;
 import android.os.AsyncTask;
 import android.widget.ListAdapter;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.TimeUnit;
 
 public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowTopInfo> showTopInfo;
@@ -24,11 +23,6 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String str = "";
         if (!showTopInfo.get().f4988d.isEmpty()) {
-            // 创建OkHttpClient对象
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时时间
-                    .readTimeout(10, TimeUnit.SECONDS) // 设置读取超时时间
-                    .build();
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", String.valueOf(showTopInfo.get().head))
@@ -46,7 +40,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
                     .build();
             try {
                 // 发送请求并获取响应
-                Response response = okHttpClient.newCall(request).execute();
+                Response response = OkHttpUtil.client().newCall(request).execute();
                 if (response.isSuccessful()) { // 判断响应是否成功
                     try {
                         str = response.body().string(); // 获取响应内容

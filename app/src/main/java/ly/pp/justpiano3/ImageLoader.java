@@ -9,8 +9,8 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -32,8 +32,8 @@ public class ImageLoader {
     private static final int MESSAGE_POST_RESULT = 1;
     private static final int CPU_COUNT = Runtime.getRuntime()
             .availableProcessors();// cup count
-    private static final int CORE_POOL_SIZE = CPU_COUNT + 1; //核心池
-    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;//最大池
+    private static final int CORE_POOL_SIZE = CPU_COUNT + 1; // 核心池
+    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;// 最大池
     private static final long KEEP_ALIVE = 10L;// 保活时间
     // 线程工厂
     private static final ThreadFactory sThreadFactory = new ThreadFactory() {
@@ -77,13 +77,13 @@ public class ImageLoader {
     private ImageLoader(Context context, String cacheName) {
         mContext = context.getApplicationContext();
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);// 当前进程最大内存（kb）
-        int cacheSize = maxMemory / 8;//缓存的最大值，当前进程可用内存的1/8
+        int cacheSize = maxMemory / 8;// 缓存的最大值，当前进程可用内存的1/8
         // 内存缓存初始化
-        //位图的内存大小计算（参看Bitmap的api）
+        // 位图的内存大小计算（参看Bitmap的api）
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(@NonNull String key, @NonNull Bitmap value) {
-                return value.getRowBytes() * value.getHeight() / 1024;//位图的内存大小计算（参看Bitmap的api）
+                return value.getRowBytes() * value.getHeight() / 1024;// 位图的内存大小计算（参看Bitmap的api）
             }
         };
         // 磁盘缓存的初始化工作
@@ -91,11 +91,11 @@ public class ImageLoader {
         if (!diskCacheDir.exists()) {
             diskCacheDir.mkdirs();
         }
-        //当指定目录的可用空间大于指定缓存的最大值时开始初始化
+        // 当指定目录的可用空间大于指定缓存的最大值时开始初始化
         if (getUsableSpace(diskCacheDir) > DISK_CACHE_SIZE) {
             try {
                 mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, DISK_CACHE_SIZE);
-                mIsDiskLruCacheCreated = true;//标记 此处表示磁盘缓存建立
+                mIsDiskLruCacheCreated = true;// 标记 此处表示磁盘缓存建立
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -168,7 +168,7 @@ public class ImageLoader {
             mImageResizer = new ImageResizer(mContext);
             bitmap = mImageResizer.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
             if (bitmap != null) {
-                //读取磁盘缓存时 往内存中放一份
+                // 读取磁盘缓存时 往内存中放一份
                 addBitmapToMemoryCache(key, bitmap);
             }
             fileInputStream.close();
@@ -306,8 +306,6 @@ public class ImageLoader {
      */
     private boolean downloadUrlToStream(String urlString, OutputStream outputStream) {
         String response = "";
-        // 创建OkHttpClient对象
-        OkHttpClient client = new OkHttpClient();
         // 创建请求对象
         Request request = new Request.Builder()
                 .url(urlString)
@@ -316,7 +314,7 @@ public class ImageLoader {
         BufferedOutputStream out = null;
         try {
             // 发送请求并获取响应
-            Response execute = client.newCall(request).execute();
+            Response execute = OkHttpUtil.client().newCall(request).execute();
             if (execute.isSuccessful()) {
                 response = execute.body().string();
                 out = new BufferedOutputStream(outputStream, 8 * 1024);
@@ -345,8 +343,6 @@ public class ImageLoader {
      */
     private Bitmap downloadBitmapFromUrl(String urlString) {
         String response = "";
-        // 创建OkHttpClient对象
-        OkHttpClient client = new OkHttpClient();
         // 创建请求对象
         Request request = new Request.Builder()
                 .url(urlString)
@@ -354,7 +350,7 @@ public class ImageLoader {
                 .build();
         try {
             // 发送请求并获取响应
-            Response execute = client.newCall(request).execute();
+            Response execute = OkHttpUtil.client().newCall(request).execute();
             if (execute.isSuccessful()) {
                 response = execute.body().string();
             }

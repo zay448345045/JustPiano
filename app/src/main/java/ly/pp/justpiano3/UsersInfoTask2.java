@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -57,7 +58,6 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strArr) {
         String str = "";
-        OkHttpClient client = new OkHttpClient();
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
                 .host(usersInfo.get().jpapplication.getServer())
@@ -81,7 +81,7 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
                 .post(body)
                 .build();
         try {
-            Response response = client.newCall(request).execute();
+            Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 str = response.body().string();
             }

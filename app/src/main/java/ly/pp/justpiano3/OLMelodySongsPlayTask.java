@@ -3,8 +3,8 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -39,8 +39,6 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
 
     @Override
     protected String doInBackground(String... objects) {
-        // 创建OkHttpClient对象
-        OkHttpClient client = new OkHttpClient();
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("version", olMelodySelect.get().jpapplication.getVersion())
@@ -53,7 +51,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
                 .build();
         try {
             // 发送请求并获取响应
-            Response response = client.newCall(request).execute();
+            Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 str = response.body().string();
             }

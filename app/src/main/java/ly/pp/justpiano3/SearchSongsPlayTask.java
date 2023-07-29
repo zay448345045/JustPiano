@@ -2,7 +2,11 @@ package ly.pp.justpiano3;
 
 import android.content.Intent;
 import android.widget.Toast;
-import okhttp3.*;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -27,8 +31,6 @@ public final class SearchSongsPlayTask {
             if (!searchSongs.get().songID.isEmpty()) {
                 String url = "http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong";
 
-                OkHttpClient client = new OkHttpClient();
-
                 FormBody.Builder formBuilder = new FormBody.Builder();
                 formBuilder.add("version", searchSongs.get().jpapplication.getVersion());
                 formBuilder.add("songID", searchSongs.get().songID);
@@ -39,7 +41,7 @@ public final class SearchSongsPlayTask {
                         .post(requestBody)
                         .build();
 
-                try (Response response = client.newCall(request).execute()) {
+                try (Response response = OkHttpUtil.client().newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         str = response.body().string();
                     }

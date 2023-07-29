@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +21,6 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
     @Override
     protected String doInBackground(Void... v) {
         String response = "";
-        OkHttpClient client = new OkHttpClient();
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
                 .host(register.get().jpapplication.getServer())
@@ -40,7 +40,7 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
                 .post(body)
                 .build();
         try {
-            Response execute = client.newCall(request).execute();
+            Response execute = OkHttpUtil.client().newCall(request).execute();
             if (execute.isSuccessful()) {
                 int read = new DataInputStream(new ByteArrayInputStream(execute.body().bytes())).read();
                 response = String.valueOf(read);

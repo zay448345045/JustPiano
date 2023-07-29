@@ -11,7 +11,7 @@ import android.provider.Settings;
  * @author Jhpz
  * @since create(2023 / 7 / 26)
  **/
-public class DeviceUtils {
+public class DeviceUtil {
     /**
      * 获取设备的AndroidId
      *

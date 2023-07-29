@@ -2,8 +2,8 @@ package ly.pp.justpiano3;
 
 import android.app.Activity;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -27,8 +27,6 @@ public final class AcceptFavorThread extends Thread {
         if (!StringUtil.isNullOrEmpty(userName)) {
             String url = "http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/AcceptFavorIn";
 
-            OkHttpClient client = new OkHttpClient();
-
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("version", jpapplication.getVersion());
             formBuilder.add("type", type);
@@ -41,7 +39,7 @@ public final class AcceptFavorThread extends Thread {
                     .post(requestBody)
                     .build();
             try {
-                client.newCall(request).execute();
+                OkHttpUtil.client().newCall(request).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }

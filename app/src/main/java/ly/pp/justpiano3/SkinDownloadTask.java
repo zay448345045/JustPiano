@@ -1,6 +1,6 @@
 package ly.pp.justpiano3;
 
-import okhttp3.OkHttpClient;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
@@ -27,13 +27,11 @@ public final class SkinDownloadTask {
                 skinDownload.get().getLocalSkinList();
                 String url = "http://" + skinDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSkinList";
 
-                OkHttpClient client = new OkHttpClient();
-
                 Request request = new Request.Builder()
                         .url(url)
                         .build();
 
-                try (Response response = client.newCall(request).execute()) {
+                try (Response response = OkHttpUtil.client().newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         return response.body().string();
                     }

@@ -3,7 +3,11 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import okhttp3.*;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.lang.ref.WeakReference;
 
@@ -19,8 +23,6 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     @Override
     protected String doInBackground(String... objects) {
         if (!showSongsInfo.get().songID.isEmpty()) {
-            // 创建OkHttpClient对象
-            OkHttpClient client = new OkHttpClient();
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
             FormBody.Builder builder = new FormBody.Builder();
@@ -33,7 +35,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
                     .build();
             try {
                 // 同步执行请求，获取Response对象
-                Response response = client.newCall(request).execute();
+                Response response = OkHttpUtil.client().newCall(request).execute();
                 if (response.isSuccessful()) {
                     str = response.body().string();
                 }

@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -18,7 +19,6 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         String str = "";
         if (!playFinish.get().jpapplication.getAccountName().isEmpty()) {
-            OkHttpClient client = new OkHttpClient();
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
                     .host(playFinish.get().jpapplication.getServer())
@@ -38,7 +38,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
                     .post(body)
                     .build();
             try {
-                Response response = client.newCall(request).execute();
+                Response response = OkHttpUtil.client().newCall(request).execute();
                 if (response.isSuccessful()) {
                     str = response.body().string();
                 }

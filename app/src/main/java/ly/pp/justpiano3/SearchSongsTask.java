@@ -2,8 +2,8 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
@@ -30,8 +30,6 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
                 str = "GetListByKeywords";
                 str2 = "0";
             }
-            // 创建OkHttpClient对象
-            OkHttpClient client = new OkHttpClient();
             // 创建FormBody对象，添加请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("version", searchSongs.get().jpapplication.getVersion())
@@ -46,7 +44,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
                     .build();
             try {
                 // 发送请求并获取响应
-                Response response = client.newCall(request).execute();
+                Response response = OkHttpUtil.client().newCall(request).execute();
                 if (response.isSuccessful()) {
                     s = response.body().string();
                 }

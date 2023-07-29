@@ -2,7 +2,11 @@ package ly.pp.justpiano3;
 
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
-import okhttp3.*;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -27,7 +31,6 @@ public final class FeedbackTask {
     public void execute(String... objects) {
         String url = "http://" + mainMode.get().jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback";
 
-        OkHttpClient client = new OkHttpClient();
 
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder.add("version", mainMode.get().jpApplication.getVersion());
@@ -41,7 +44,7 @@ public final class FeedbackTask {
                 .build();
 
         future = executorService.submit(() -> {
-            try (Response response = client.newCall(request).execute()) {
+            try (Response response = OkHttpUtil.client().newCall(request).execute()) {
                 if (response.isSuccessful()) {
                     return response.body().string();
                 }

@@ -2,7 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.Handler;
 import android.os.Looper;
-import okhttp3.OkHttpClient;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -13,7 +13,6 @@ import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public class SoundDownloadTask {
     private final WeakReference<SoundDownload> soundDownload;
@@ -38,15 +37,11 @@ public class SoundDownloadTask {
     private String doInBackground(String... strArr) {
         try {
             soundDownload.get().getLocalSoundList();
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)  // 连接超时
-                    .readTimeout(10, TimeUnit.SECONDS)  // 读取超时
-                    .build();
             Request request = new Request.Builder()
                     .url("http://" + soundDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSoundList")
                     .post(RequestBody.create("", null))
                     .build();
-            Response response = client.newCall(request).execute();
+            Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.code() != 200) {
                 return "err001";
             }
