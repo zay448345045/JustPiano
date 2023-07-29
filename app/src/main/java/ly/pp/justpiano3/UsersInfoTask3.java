@@ -18,7 +18,7 @@ public final class UsersInfoTask3 extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (str.equals("0")) {
             userInfo.get().jpprogressBar.cancel();
             Toast.makeText(userInfo.get(), "修改成功!", Toast.LENGTH_LONG).show();

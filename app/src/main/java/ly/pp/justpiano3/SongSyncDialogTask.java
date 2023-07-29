@@ -44,7 +44,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         try {
             int i;
             String message = null;

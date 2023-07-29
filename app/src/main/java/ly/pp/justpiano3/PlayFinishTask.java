@@ -50,7 +50,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         switch (str) {
             case "0":
                 playFinish.get().jpprogressBar.dismiss();

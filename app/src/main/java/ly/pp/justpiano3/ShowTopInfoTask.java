@@ -56,7 +56,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (str.length() > 3) {
             try {
                 showTopInfo.get().f4985a = showTopInfo.get().m3877a(GZIP.ZIPTo(new JSONObject(str).getString("L")));

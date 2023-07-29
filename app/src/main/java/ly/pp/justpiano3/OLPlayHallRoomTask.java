@@ -44,7 +44,7 @@ final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         olPlayHallRoom.get().jpprogressBar.cancel();
     }
 

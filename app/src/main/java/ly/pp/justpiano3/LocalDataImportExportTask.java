@@ -85,7 +85,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (activity.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) activity.get();
             melodySelect.jpprogressBar.dismiss();

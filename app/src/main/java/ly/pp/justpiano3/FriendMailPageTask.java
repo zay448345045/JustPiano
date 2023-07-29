@@ -50,7 +50,7 @@ public final class FriendMailPageTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         ListView b = friendMailPage.get().f4019a;
         FriendMailPage.m3506a(friendMailPage.get(), b, str);
         friendMailPage.get().jpProgressBar.cancel();

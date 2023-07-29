@@ -29,7 +29,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, String
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         skinListPreference.jpProgressBar.cancel();
         Toast.makeText(skinListPreference.context, "皮肤设置成功!", Toast.LENGTH_SHORT).show();
     }

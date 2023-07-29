@@ -47,7 +47,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (str.length() > 3) {
             showSongsInfo.get().mo2977a(str, showSongsInfo.get().songsListView);
             showSongsInfo.get().songsListView.setCacheColorHint(0);

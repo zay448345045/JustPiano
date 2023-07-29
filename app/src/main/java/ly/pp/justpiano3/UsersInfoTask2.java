@@ -18,7 +18,7 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         switch (str) {
             case "0":
                 usersInfo.get().jpprogressBar.cancel();

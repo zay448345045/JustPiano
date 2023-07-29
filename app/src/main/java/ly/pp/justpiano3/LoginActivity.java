@@ -283,7 +283,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         fos.write(buf, 0, len);
                         sum += len;
                         int progress = (int) (sum * 1.0f / length * 100);
-                        String detail = String.format("下载进度：%.2fM / %.2fM（%d%%）", sum / 1000000f, length / 1000000f, progress);
+                        String detail = String.format("下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
                         // 回到主线程操纵界面
                         runOnUiThread(() -> {
                             jpprogressBar.setText(detail);

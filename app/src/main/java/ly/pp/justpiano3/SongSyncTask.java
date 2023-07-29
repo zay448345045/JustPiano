@@ -89,7 +89,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (activity.get() instanceof OLMainMode) {
             ((OLMainMode) activity.get()).loginOnline();
         } else if (activity.get() instanceof MelodySelect) {

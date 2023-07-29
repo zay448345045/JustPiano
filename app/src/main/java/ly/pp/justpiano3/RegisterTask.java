@@ -54,7 +54,7 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         register.get().jpprogressBar.dismiss();
         switch (Integer.parseInt(str)) {
             case 0:

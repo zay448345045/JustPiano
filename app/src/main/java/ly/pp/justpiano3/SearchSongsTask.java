@@ -60,7 +60,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (str.length() > 3) {
             if (searchSongs.get().headType < 2) {
                 searchSongs.get().mo2963a(str, searchSongs.get().songsListView);

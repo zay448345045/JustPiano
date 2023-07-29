@@ -63,7 +63,7 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (str.length() > 4) {
             olMelodySelect.get().m3643a(olMelodySelect.get().pageNum);
             olMelodySelect.get().popupWindowSelectAdapter.notifyDataSetChanged();

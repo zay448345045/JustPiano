@@ -48,7 +48,7 @@ final class PopUserInfoTask extends AsyncTask<String, Void, String> {
 
 
     @Override
-    protected final void onPostExecute(String str) {
+    protected void onPostExecute(String str) {
         if (popUserInfo.get().headType != 1) {
             popUserInfo.get().jpprogressBar.cancel();
             Toast.makeText(popUserInfo.get(), "发送成功!", Toast.LENGTH_SHORT).show();
