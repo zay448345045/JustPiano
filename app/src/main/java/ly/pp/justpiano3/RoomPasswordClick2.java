@@ -17,7 +17,7 @@ final class RoomPasswordClick2 implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f5378b.getText());
         OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
         builder.setRoomId(f5379c);

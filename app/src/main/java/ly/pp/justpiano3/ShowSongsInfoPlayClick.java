@@ -20,7 +20,7 @@ final class ShowSongsInfoPlayClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         showSongsInfoAdapter.showSongsInfo.songName = f5892b;
         showSongsInfoAdapter.showSongsInfo.songID = songID;
         showSongsInfoAdapter.showSongsInfo.score = f5894d;

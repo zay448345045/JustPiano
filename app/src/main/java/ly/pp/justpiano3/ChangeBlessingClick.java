@@ -30,7 +30,7 @@ final class ChangeBlessingClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         String valueOf = String.valueOf(f5458b.getText());
         if (valueOf.isEmpty() || valueOf.equals("'")) {

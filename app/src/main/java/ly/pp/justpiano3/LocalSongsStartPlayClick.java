@@ -25,7 +25,7 @@ final class LocalSongsStartPlayClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         int i = 0;
         if (localSongsAdapter.melodyselect.playSongs != null) {
             localSongsAdapter.melodyselect.playSongs.isPlayingSongs = false;

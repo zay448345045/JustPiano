@@ -27,7 +27,7 @@ public final class JPProgressBar extends ProgressDialog {
     }
 
     @Override
-    public final void onBackPressed() {
+    public void onBackPressed() {
         super.onBackPressed();
         if (cancelWillOutline) {
             try {
@@ -45,17 +45,17 @@ public final class JPProgressBar extends ProgressDialog {
     }
 
     @Override
-    protected final void onCreate(Bundle bundle) {
+    protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
     }
 
     @Override
-    public final void onStart() {
+    public void onStart() {
         super.onStart();
     }
 
     @Override
-    public final void show() {
+    public void show() {
         super.show();
         setContentView(R.layout.prgdialog);
         Window window = getWindow();

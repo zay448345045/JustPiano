@@ -17,7 +17,7 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.setClass(this, Login.class);
+        intent.setClass(this, LoginActivity.class);
         intent.putExtra("no_auto", true);
         startActivity(intent);
         finish();
@@ -28,12 +28,12 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.server1:
                 SharedPreferences.Editor edit2 = sharedPreferences.edit();
-                edit2.putString("ip", "server.justpiano.fun");
+                edit2.putString("ip", JPApplication.ONLINE_SERVER_URL);
                 edit2.apply();
-                jpapplication.setServer("server.justpiano.fun");
+                jpapplication.setServer(JPApplication.ONLINE_SERVER_URL);
                 Intent intent = new Intent();
                 intent.putExtra("no_auto", false);
-                intent.setClass(this, Login.class);
+                intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return;
@@ -44,7 +44,7 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
                 jpapplication.setServer("test.justpiano.fun");
                 intent = new Intent();
                 intent.putExtra("no_auto", false);
-                intent.setClass(this, Login.class);
+                intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return;
@@ -57,7 +57,7 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
                 jpapplication.setServer(ip);
                 intent = new Intent();
                 intent.putExtra("no_auto", false);
-                intent.setClass(this, Login.class);
+                intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return;

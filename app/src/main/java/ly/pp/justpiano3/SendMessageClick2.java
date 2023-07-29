@@ -18,7 +18,7 @@ final class SendMessageClick2 implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(textview.getText());
         if (valueOf.isEmpty() || valueOf.equals("'")) {
             Toast.makeText(olPlayHall, "请输入信件内容!", Toast.LENGTH_SHORT).show();

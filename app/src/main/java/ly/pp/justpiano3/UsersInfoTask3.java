@@ -29,7 +29,7 @@ public final class UsersInfoTask3 extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         userInfo.get().jpprogressBar.setCancelable(true);
         userInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         userInfo.get().jpprogressBar.show();

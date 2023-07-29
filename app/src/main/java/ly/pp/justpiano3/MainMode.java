@@ -51,7 +51,7 @@ public class MainMode extends Activity implements OnClickListener {
                 finish();
                 return;
             case R.id.online_game:
-                intent.setClass(this, Login.class);
+                intent.setClass(this, LoginActivity.class);
                 intent.putExtra("result", "");
                 startActivity(intent);
                 finish();

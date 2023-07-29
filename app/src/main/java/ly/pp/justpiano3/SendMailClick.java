@@ -31,7 +31,7 @@ final class SendMailClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f6046b.getText());
         JSONObject jSONObject = new JSONObject();
         try {

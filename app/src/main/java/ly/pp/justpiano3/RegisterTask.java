@@ -63,7 +63,7 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
                 intent.putExtra("name", register.get().account);
                 intent.putExtra("password", register.get().password);
                 intent.putExtra("no_auto", true);
-                intent.setClass(register.get(), Login.class);
+                intent.setClass(register.get(), LoginActivity.class);
                 register.get().startActivity(intent);
                 register.get().finish();
                 break;
@@ -84,7 +84,7 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         register.get().jpprogressBar.setMessage("正在连接....");
         register.get().jpprogressBar.show();
     }

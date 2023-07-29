@@ -19,7 +19,7 @@ final class OLAddFavorClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         ContentValues contentValues = new ContentValues();
         if (f5592b == 0) {
             contentValues.put("isfavo", 1);

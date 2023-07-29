@@ -11,7 +11,7 @@ final class ShowTitleClick implements OnClickListener {
         olMelodySelect = oLMelodySelect;
     }
 
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (olMelodySelect.f4330s) {
             olMelodySelect.f4328q.setVisibility(View.GONE);
             olMelodySelect.f4330s = false;

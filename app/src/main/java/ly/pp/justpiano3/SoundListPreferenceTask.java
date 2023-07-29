@@ -42,7 +42,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         soundListPreference.jpProgressBar.show();
     }
 }

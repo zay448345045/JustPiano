@@ -96,7 +96,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         if (activity.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) activity.get();
             melodySelect.jpprogressBar.setCancelable(false);

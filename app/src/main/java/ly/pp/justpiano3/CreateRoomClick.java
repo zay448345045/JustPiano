@@ -23,7 +23,7 @@ final class CreateRoomClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         int i2 = 0;
         String roomName = String.valueOf(roomNameText.getText());
         String password = String.valueOf(passwordText.getText());

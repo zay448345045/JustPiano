@@ -51,7 +51,7 @@ final class FriendMailPageTask2 extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         friendMailPage.get().f4023e.setCancelable(true);
         friendMailPage.get().f4023e.setOnCancelListener(dialog -> cancel(true));
         friendMailPage.get().f4023e.show();

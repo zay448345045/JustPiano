@@ -65,7 +65,7 @@ final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         popUserInfo.get().jpprogressBar.setMessage("正在查询,请稍后...");
         popUserInfo.get().jpprogressBar.setCancelable(true);
         popUserInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));

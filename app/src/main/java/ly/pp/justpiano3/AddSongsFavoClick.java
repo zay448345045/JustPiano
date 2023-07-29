@@ -22,7 +22,7 @@ final class AddSongsFavoClick implements OnClickListener {
         songsName = cursor.getString(cursor.getColumnIndexOrThrow("name"));
     }
 
-    public final void onClick(View view) {
+    public void onClick(View view) {
         int i = 0;
         ContentValues contentValues = new ContentValues();
         try {

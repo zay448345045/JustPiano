@@ -15,7 +15,7 @@ final class AddFriendsMailClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (family.jpapplication.getConnectionService() == null) {
             return;
         }

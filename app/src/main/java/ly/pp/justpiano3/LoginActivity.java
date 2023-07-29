@@ -1,23 +1,41 @@
 package ly.pp.justpiano3;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import androidx.core.content.FileProvider;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.listener.VersionUpdateClick;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Login extends BaseActivity implements OnClickListener {
+public class LoginActivity extends BaseActivity implements OnClickListener {
+
+    /**
+     * apk安装的请求码
+     */
+    public static final int REQUEST_CODE_INSTALL_APP = 999;
+
     public JPApplication jpapplication;
     public String password;
     String kitiName = "";
@@ -128,7 +146,8 @@ public class Login extends BaseActivity implements OnClickListener {
                         }
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
-                        JPDialog.JDialog b = new JPDialog(this).setTitle("切换账号").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                        JPDialog.JDialog b = new JPDialog(this).setTitle("切换账号").loadInflate(inflate)
+                                .setFirstButton("取消", new DialogDismissClick()).createJDialog();
                         listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
                         b.show();
                     }
@@ -158,7 +177,7 @@ public class Login extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
-        jpapplication.setServer(s.getString("ip", "server.justpiano.fun"));
+        jpapplication.setServer(s.getString("ip", JPApplication.ONLINE_SERVER_URL));
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         setPackageAndVersion();
         JPStack.clear();
@@ -211,5 +230,104 @@ public class Login extends BaseActivity implements OnClickListener {
             }
             new LoginTask(this).execute();
         }
+    }
+
+    final void addVersionUpdateDialog(String str3, String newVersion) {
+        JPDialog jpdialog = new JPDialog(this);
+        jpdialog.setTitle("版本更新");
+        jpdialog.setMessage(str3);
+        jpdialog.setFirstButton("确定", new VersionUpdateClick(newVersion, this));
+        jpdialog.setSecondButton("取消", new DialogDismissClick());
+        jpdialog.showDialog();
+    }
+
+
+    private String getApkUrlByVersion(String version) {
+        return "https://" + JPApplication.WEBSITE_URL + "/res/" + getApkFileName(version);
+    }
+
+    private String getApkFileName(String version) {
+        return "justpiano_" + version.replace(".", "") + ".apk";
+    }
+
+    public void downloadApk(String version) {
+        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/" + getApkFileName(version));
+        if (file.exists()) {
+            file.delete();
+        }
+        runOnUiThread(() -> {
+            jpprogressBar.setCancelable(false);
+            jpprogressBar.show();
+            Toast.makeText(LoginActivity.this, version + "版本开始下载，请稍候", Toast.LENGTH_SHORT).show();
+        });
+
+        OkHttpClient client = new OkHttpClient();
+        // 创建一个GET方式的请求结构
+        Request request = new Request.Builder().url(getApkUrlByVersion(version)).build();
+        Call call = client.newCall(request); // 根据请求结构创建调用对象
+        // 加入HTTP请求队列。异步调用，并设置接口应答的回调方法
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) { // 请求失败
+                // 回到主线程操纵界面
+                runOnUiThread(() -> {
+                    jpprogressBar.dismiss();
+                    Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) { // 请求成功
+                long length = response.body().contentLength();
+                // 下面从返回的输入流中读取字节数据并保存为本地文件
+                try (InputStream is = response.body().byteStream();
+                     FileOutputStream fos = new FileOutputStream(file)) {
+                    byte[] buf = new byte[100 * 1024];
+                    int sum = 0, len;
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                        sum += len;
+                        int progress = (int) (sum * 1.0f / length * 100);
+                        String detail = String.format("文件大小：%d，下载进度：%d%%", length, progress);
+                        // 回到主线程操纵界面
+//                        runOnUiThread(() -> {
+//                            tv_progress.setText(detail);
+//                        });
+                    }
+                    installApk(LoginActivity.this, file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    runOnUiThread(() -> {
+                        jpprogressBar.dismiss();
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * 启动安装apk
+     *
+     * @param context
+     * @param appFile
+     */
+    private void installApk(Context context, File appFile) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // 区别于 FLAG_GRANT_READ_URI_PERMISSION 跟 FLAG_GRANT_WRITE_URI_PERMISSION， URI权限会持久存在即使重启，直到明确的用 revokeUriPermission(Uri, int) 撤销。
+            // 这个flag只提供可能持久授权。但是接收的应用必须调用ContentResolver的takePersistableUriPermission(Uri, int)方法实现
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        }
+        Uri fileUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // 确保authority 与AndroidManifest.xml中android:authorities="包名.fileProvider"所有字符一致
+            fileUri = FileProvider.getUriForFile(context, getPackageName() + ".fileProvider", appFile);
+            intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(appFile), "application/vnd.android.package-archive");
+        }
+        context.startActivity(intent);
     }
 }

@@ -16,7 +16,7 @@ final class SendZhufuClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         try {
             if (olPlayRoomInterface instanceof OLPlayRoom) {
                 OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;

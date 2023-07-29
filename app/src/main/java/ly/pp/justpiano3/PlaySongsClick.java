@@ -21,7 +21,7 @@ final class PlaySongsClick implements OnClickListener {
         songsName = cursor.getString(cursor.getColumnIndexOrThrow("name"));
     }
 
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (localSongsAdapter.melodyselect.playSongs != null) {
             localSongsAdapter.melodyselect.playSongs.isPlayingSongs = false;
             localSongsAdapter.melodyselect.playSongs = null;

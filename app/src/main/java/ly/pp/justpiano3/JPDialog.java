@@ -137,13 +137,13 @@ public final class JPDialog {
         return editText.getText().toString();
     }
 
-    public final JPDialog setSecondButton(String str, OnClickListener onClickListener) {
+    public JPDialog setSecondButton(String str, OnClickListener onClickListener) {
         negativeText = str;
         listener = onClickListener;
         return this;
     }
 
-    public final void showDialog() {
+    public void showDialog() {
         try {
             JDialog dia = createJDialog();
             if (!dia.isShowing()) {

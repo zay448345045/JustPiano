@@ -19,7 +19,7 @@ final class GoToFamilyCenterClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         Intent intent = new Intent();
         intent.setClass(fa.olPlayHallRoom, OLFamily.class);
         intent.putExtra("familyID", id);

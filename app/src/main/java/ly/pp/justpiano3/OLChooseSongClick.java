@@ -15,7 +15,7 @@ final class OLChooseSongClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         String str1 = string.substring(6, string.length() - 3);
         olRoomSongsAdapter.olPlayRoom.jpapplication.setNowSongsName(str1);
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();

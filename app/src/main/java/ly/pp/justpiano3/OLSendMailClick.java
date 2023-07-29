@@ -15,7 +15,7 @@ final class OLSendMailClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (!(mainGameAdapter.activity instanceof OLPlayHallRoom)) {
             return;
         }

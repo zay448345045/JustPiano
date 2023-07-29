@@ -15,7 +15,7 @@ final class ExpressClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (expressAdapter.popupWindow != null && expressAdapter.popupWindow.isShowing()) {
             expressAdapter.popupWindow.dismiss();
             if (expressAdapter.connectionService != null) {
