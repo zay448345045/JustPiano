@@ -22,7 +22,7 @@ final class SkinDownloadClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         int i2 = 0;
         dialogInterface.dismiss();
         switch (type) {

@@ -15,7 +15,7 @@ final class ChangeRecommandSongClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         Message obtainMessage = ((OLPlayRoom) chattingAdapter.activity).getHandler().obtainMessage();
         Bundle bundle = new Bundle();
         bundle.putString("S", songPath);

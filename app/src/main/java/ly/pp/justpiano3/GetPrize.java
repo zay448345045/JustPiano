@@ -14,7 +14,7 @@ final class GetPrize implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (challenge.jpapplication.getConnectionService() != null) {
             OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
             builder.setType(6);

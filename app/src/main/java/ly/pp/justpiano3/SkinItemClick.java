@@ -19,7 +19,7 @@ final class SkinItemClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (skinDownloadAdapter.skinDownload.list.contains(name)) {
             skinDownloadAdapter.skinDownload.mo2992a(1, name, "", 0, "");
         } else {

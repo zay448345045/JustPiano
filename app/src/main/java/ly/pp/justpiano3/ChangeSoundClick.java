@@ -16,7 +16,7 @@ final class ChangeSoundClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         switch (f5990b) {
             case "original":
                 new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute("original");

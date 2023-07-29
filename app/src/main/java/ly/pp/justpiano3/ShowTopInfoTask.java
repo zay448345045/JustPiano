@@ -85,7 +85,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         showTopInfo.get().jpprogressBar.setMessage("正在查询,请稍后...");
         showTopInfo.get().jpprogressBar.setCancelable(true);
         showTopInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));

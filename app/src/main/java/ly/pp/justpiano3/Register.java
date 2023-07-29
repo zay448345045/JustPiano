@@ -30,7 +30,7 @@ public class Register extends Activity implements OnClickListener {
         jpprogressBar.dismiss();
         Intent intent = new Intent();
         intent.putExtra("no_auto", true);
-        intent.setClass(this, Login.class);
+        intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -40,7 +40,7 @@ public class Register extends Activity implements OnClickListener {
         if (view == backButton) {
             Intent intent = new Intent();
             intent.putExtra("no_auto", true);
-            intent.setClass(this, Login.class);
+            intent.setClass(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else if (view == registerButton) {

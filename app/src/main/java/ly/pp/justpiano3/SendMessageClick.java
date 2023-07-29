@@ -21,7 +21,7 @@ final class SendMessageClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(textView.getText());
         JSONObject jSONObject = new JSONObject();
         try {

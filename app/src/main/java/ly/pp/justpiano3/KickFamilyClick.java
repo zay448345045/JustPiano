@@ -12,7 +12,7 @@ final class KickFamilyClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(6);
         builder.setUserName(olFamily.peopleNow);

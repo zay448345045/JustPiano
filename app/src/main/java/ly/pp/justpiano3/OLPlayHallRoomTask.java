@@ -51,7 +51,7 @@ final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         olPlayHallRoom.get().jpprogressBar.setCancelable(true);
         olPlayHallRoom.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         olPlayHallRoom.get().jpprogressBar.show();

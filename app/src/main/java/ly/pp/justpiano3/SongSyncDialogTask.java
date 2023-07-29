@@ -77,7 +77,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         olMainMode.get().jpprogressBar.setCancelable(true);
         olMainMode.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         olMainMode.get().jpprogressBar.show();

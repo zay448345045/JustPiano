@@ -15,7 +15,7 @@ final class DeleteRecordFiles implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         recordfiles.remove(f5798b, f5799c);
     }

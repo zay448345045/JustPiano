@@ -14,7 +14,7 @@ final class ReturnHallClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (olPlayRoomInterface instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             olPlayRoom.jpapplication.setPlaySongsMode(0);

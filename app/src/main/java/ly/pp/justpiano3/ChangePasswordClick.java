@@ -24,7 +24,7 @@ final class ChangePasswordClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f5998b.getText());
         String valueOf2 = String.valueOf(f5999c.getText());
         String valueOf3 = String.valueOf(f6000d.getText());

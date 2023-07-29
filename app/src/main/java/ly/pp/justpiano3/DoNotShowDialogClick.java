@@ -14,7 +14,7 @@ final class DoNotShowDialogClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         Editor edit = melodySelect.sharedPreferences.edit();
         switch (f5160b) {

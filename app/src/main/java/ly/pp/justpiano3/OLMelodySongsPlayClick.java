@@ -20,7 +20,7 @@ final class OLMelodySongsPlayClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         olMelodtsa2.olMelodySelect.songName = songName;
         OLMelodySelect.songID = songID;
         olMelodtsa2.olMelodySelect.topScore = topScore;

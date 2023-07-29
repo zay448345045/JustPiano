@@ -23,7 +23,7 @@ final class ChangeDeclarationClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(f5458b.getText());
         if (StringUtil.isNullOrEmpty(valueOf) || "'".equals(valueOf)) {
             Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();

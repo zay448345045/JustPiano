@@ -40,3 +40,4 @@ java.lang.Object readResolve();
  *;
 }
 -keepattributes InnerClasses
+-keep class com.xuexiang.xupdate.entity.** { *; }

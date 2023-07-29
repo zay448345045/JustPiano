@@ -14,6 +14,7 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import androidx.multidex.MultiDex;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.utils.EncryptUtil;
 
@@ -26,6 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 public final class JPApplication extends Application {
+
+    /**
+     * 官网地址
+     */
+    public static final String WEBSITE_URL = "i.justpiano.fun";
+
+    /**
+     * 对战服务器地址
+     */
+    public static final String ONLINE_SERVER_URL = "server.justpiano.fun";
 
     private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
@@ -67,7 +78,7 @@ public final class JPApplication extends Application {
     private String accountName = "";
     private String password = "";
     private String nowSongsName = "";
-    private String server = "server.justpiano.fun";
+    private String server = ONLINE_SERVER_URL;
     private boolean keyboardPrefer;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -111,6 +122,7 @@ public final class JPApplication extends Application {
 
     /**
      * 获取客户端密钥
+     *
      * @return
      */
     public KeyPair getDeviceKeyPair() {
@@ -881,5 +893,11 @@ public final class JPApplication extends Application {
             unbindService(serviceConnection);
             setIsBindService(false);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context context){
+        super.attachBaseContext(context);
+        MultiDex.install(this);
     }
 }

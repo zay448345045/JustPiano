@@ -20,7 +20,7 @@ final class CpRequestClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (f5515b == 1 || f5515b == 2) {
             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
             builder.setType(f5515b + 1);

@@ -6,19 +6,19 @@ import android.content.Intent;
 import android.widget.Toast;
 
 final class LoginSuccessClick implements OnClickListener {
-    private final Login login;
+    private final LoginActivity loginActivity;
 
-    LoginSuccessClick(Login login) {
-        this.login = login;
+    LoginSuccessClick(LoginActivity loginActivity) {
+        this.loginActivity = loginActivity;
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         Intent intent = new Intent();
-        intent.setClass(login, OLMainMode.class);
-        Toast.makeText(login, "登陆成功!欢迎回来:" + login.kitiName + "!", Toast.LENGTH_SHORT).show();
-        login.startActivity(intent);
+        intent.setClass(loginActivity, OLMainMode.class);
+        Toast.makeText(loginActivity, "登陆成功!欢迎回来:" + loginActivity.kitiName + "!", Toast.LENGTH_SHORT).show();
+        loginActivity.startActivity(intent);
         dialogInterface.dismiss();
-        login.finish();
+        loginActivity.finish();
     }
 }

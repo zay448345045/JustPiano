@@ -88,7 +88,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         searchSongs.get().jpprogressBar.setMessage("正在搜索曲库,请稍后...");
         searchSongs.get().jpprogressBar.setCancelable(true);
         searchSongs.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));

@@ -112,7 +112,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         if (activity.get() instanceof OLMainMode) {
             OLMainMode olMainMode = (OLMainMode) activity.get();
             Toast.makeText(olMainMode, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();

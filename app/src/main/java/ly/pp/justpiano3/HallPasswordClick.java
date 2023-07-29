@@ -17,7 +17,7 @@ final class HallPasswordClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         String valueOf = String.valueOf(textView.getText());
         OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
         builder.setHallId(f5274c);

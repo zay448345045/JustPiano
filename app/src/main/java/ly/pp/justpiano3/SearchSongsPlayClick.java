@@ -20,7 +20,7 @@ final class SearchSongsPlayClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         searchSongsAdapter.searchSongs.f4949d = f5865b;
         searchSongsAdapter.searchSongs.songID = songID;
         searchSongsAdapter.searchSongs.f4954i = f5867d;

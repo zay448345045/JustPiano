@@ -11,7 +11,7 @@ final class InOutFamilyClick implements OnClickListener {
         this.olFamily = olFamily;
     }
 
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(5);
         builder.setFamilyId(Integer.parseInt(olFamily.familyID));

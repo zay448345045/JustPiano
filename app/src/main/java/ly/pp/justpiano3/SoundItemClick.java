@@ -19,7 +19,7 @@ final class SoundItemClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (soundDownloadAdapter.soundDownload.list.contains(name)) {  //已经下载过了，传参1
             soundDownloadAdapter.soundDownload.mo3005a(1, name, "", 0, "");
         } else {

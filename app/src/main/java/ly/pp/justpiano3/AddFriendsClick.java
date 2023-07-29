@@ -26,7 +26,7 @@ final class AddFriendsClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (olPlayRoomInterface != null) {
             if (olPlayRoomInterface instanceof OLPlayRoom) {
                 OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;

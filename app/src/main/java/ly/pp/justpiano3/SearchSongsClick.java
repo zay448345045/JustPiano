@@ -14,7 +14,7 @@ final class SearchSongsClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (keyWords.isEmpty()) {
             Toast.makeText(melodySelect, "请输入曲谱的关键字!", Toast.LENGTH_SHORT).show();
         } else if (keyWords.contains("'")) {

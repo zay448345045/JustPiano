@@ -13,7 +13,7 @@ final class ShowOrHideMiniGradeClick implements OnClickListener {
     }
 
     @Override
-    public final void onClick(View view) {
+    public void onClick(View view) {
         if (pianoPlay.horizontalListView.getVisibility() == View.VISIBLE) {
             OnlineSetMiniGradeDTO.Builder builder = OnlineSetMiniGradeDTO.newBuilder();
             builder.setMiniGradeOn(false);

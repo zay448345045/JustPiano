@@ -14,16 +14,16 @@ import org.json.JSONObject;
 import java.util.List;
 
 public final class ChangeAccountAdapter extends BaseAdapter {
-    private final Login login;
+    private final LoginActivity loginActivity;
     private final List<String> list;
     private final LayoutInflater li;
     private final JPDialog.JDialog dialog;
     private final JSONObject jsonObject;
 
-    ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, Login login, JPDialog.JDialog dialog, JSONObject jsonObject) {
+    ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialog.JDialog dialog, JSONObject jsonObject) {
         this.list = list;
         li = layoutInflater;
-        this.login = login;
+        this.loginActivity = loginActivity;
         this.dialog = dialog;
         this.jsonObject = jsonObject;
     }
@@ -53,8 +53,8 @@ public final class ChangeAccountAdapter extends BaseAdapter {
         accountName.setText(account);
         accountName.setOnClickListener(v -> {
             try {
-                login.accountTextView.setText(account);
-                login.passwordTextView.setText(jsonObject.getString(account));
+                loginActivity.accountTextView.setText(account);
+                loginActivity.passwordTextView.setText(jsonObject.getString(account));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -63,7 +63,7 @@ public final class ChangeAccountAdapter extends BaseAdapter {
         Button accountDelete = view.findViewById(R.id.account_delete);
         accountDelete.setOnClickListener(v -> {
             jsonObject.remove(account);
-            SharedPreferences.Editor edit = login.sharedPreferences.edit();
+            SharedPreferences.Editor edit = loginActivity.sharedPreferences.edit();
             edit.putString("accountList", jsonObject.toString());
             edit.apply();
             list.remove(account);

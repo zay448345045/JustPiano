@@ -35,7 +35,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, String
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         skinListPreference.jpProgressBar.show();
     }
 }

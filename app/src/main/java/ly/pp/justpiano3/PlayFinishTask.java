@@ -67,7 +67,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final void onPreExecute() {
+    protected void onPreExecute() {
         playFinish.get().jpprogressBar.setMessage("正在上传您的成绩,请稍后...");
         playFinish.get().jpprogressBar.setCancelable(true);
         playFinish.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));

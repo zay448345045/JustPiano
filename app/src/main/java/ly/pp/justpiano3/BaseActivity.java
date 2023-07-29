@@ -15,7 +15,7 @@ public class BaseActivity extends Activity {
 
     static void returnMainMode(BaseActivity baseActivity) {
         Intent intent = new Intent();
-        intent.setClass(baseActivity, Login.class);
+        intent.setClass(baseActivity, LoginActivity.class);
         baseActivity.startActivity(intent);
         baseActivity.finish();
     }
