@@ -32,7 +32,7 @@ final class OLPlayHallRoomHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) weakReference.get();
         if (olPlayHallRoom != null) {
             switch (message.what) {

@@ -14,7 +14,7 @@ final class BaseActivityHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         final BaseActivity baseActivity = (BaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {

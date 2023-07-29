@@ -19,7 +19,7 @@ final class FamilyHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(final Message message) {
+    public void handleMessage(final Message message) {
         final OLFamily family = (OLFamily) weakReference.get();
         try {
             switch (message.what) {

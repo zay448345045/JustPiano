@@ -16,7 +16,7 @@ final class OLMainModeHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         OLMainMode oLMainMode = (OLMainMode) weakReference.get();
         Intent intent = new Intent(oLMainMode, OLPlayHallRoom.class);
         switch (message.what) {

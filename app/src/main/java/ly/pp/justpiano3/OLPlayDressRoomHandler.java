@@ -16,7 +16,7 @@ final class OLPlayDressRoomHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(final Message message) {
+    public void handleMessage(final Message message) {
         final OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) weakReference.get();
         try {
             switch (message.what) {

@@ -17,7 +17,7 @@ final class PianoPlayHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(final Message message) {
+    public void handleMessage(final Message message) {
         final PianoPlay pianoPlay = (PianoPlay) weakReference.get();
         switch (message.what) {
             case 1:

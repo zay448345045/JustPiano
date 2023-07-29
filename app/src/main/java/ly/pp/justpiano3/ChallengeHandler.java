@@ -17,7 +17,7 @@ final class ChallengeHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         OLChallenge challenge = (OLChallenge) weakReference.get();
         try {
             switch (message.what) {

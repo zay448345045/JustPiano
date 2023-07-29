@@ -29,7 +29,7 @@ final class OLPlayKeyboardRoomHandler extends Handler {
     }
 
     @Override
-    public final void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) weakReference.get();
         try {
             switch (message.what) {
