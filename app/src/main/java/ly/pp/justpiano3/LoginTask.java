@@ -41,8 +41,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             formBuilder.add("versionCode", String.valueOf(loginActivity.versionNum));
             formBuilder.add("username", loginActivity.accountX);
             formBuilder.add("password", loginActivity.password);
-//            formBuilder.add("local", loginActivity.jpapplication.getVersion());
-            formBuilder.add("local", "4.5");
+            formBuilder.add("local", loginActivity.jpapplication.getVersion());
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder()
                     .url(urlBuilder.build())
