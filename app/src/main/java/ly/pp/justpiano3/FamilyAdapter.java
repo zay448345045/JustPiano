@@ -25,27 +25,27 @@ public final class FamilyAdapter extends BaseAdapter {
         this.olPlayHallRoom = olPlayHallRoom;
     }
 
-    final void upDateList(List<HashMap> list) {
+    void upDateList(List<HashMap> list) {
         this.list = list;
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return list.size();
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
     @Override
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             view = li.inflate(R.layout.ol_o_family_view, null);
         }

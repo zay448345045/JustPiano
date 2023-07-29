@@ -42,12 +42,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -294,7 +289,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    public final void sendMsg(int type, MessageLite msg) {
+    public void sendMsg(int type, MessageLite msg) {
         if (connectionService != null) {
             connectionService.writeData(type, msg);
         } else {
@@ -302,11 +297,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    public final void putJPhashMap(byte b, User User) {
+    public void putJPhashMap(byte b, User User) {
         jpapplication.getHashmap().put(b, User);
     }
 
-    protected final void mo2860a(int i, String str, int i2, byte b) {
+    protected void mo2860a(int i, String str, int i2, byte b) {
         String str5 = "情意绵绵的情侣";
         switch (i2) {
             case 0:
@@ -330,7 +325,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    public final void mo2861a(GridView gridView, Bundle bundle) {
+    public void mo2861a(GridView gridView, Bundle bundle) {
         playerList.clear();
         if (bundle != null) {
             int size = bundle.size() - 2;
@@ -364,7 +359,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    public final void mo2862a(boolean showChatTime) {
+    public void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
         msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
         System.out.println("位置" + posi);
@@ -375,14 +370,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
-    public final void mo2863a(ListView listView, List<Bundle> list, int i) {
+    public void mo2863a(ListView listView, List<Bundle> list, int i) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
         listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
     }
 
-    final void sendMail(String str) {
+    void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -393,7 +388,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate).setFirstButton("发送", new SendMailClick2(this, textView, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    public final void mo2867c(String str) {
+    public void mo2867c(String str) {
         userTo = "@" + str + ":";
         if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
             sendText.setText(userTo);
@@ -423,26 +418,26 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
-                edit.putInt("ol_keyboard_white_key_num", keyboard1WhiteKeyNum);
                 keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_count_up:
                 keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() + 1;
-                edit.putInt("ol_keyboard_white_key_num", keyboard1WhiteKeyNum);
                 keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_move_left:
                 int keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() - 1;
-                edit.putInt("ol_keyboard_white_key_offset", keyboard1WhiteKeyOffset);
                 keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
             case R.id.keyboard_move_right:
                 keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() + 1;
-                edit.putInt("ol_keyboard_white_key_offset", keyboard1WhiteKeyOffset);
                 keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
             default:
@@ -894,7 +889,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             }
             roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView tv = roomTabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            ((TextView) tv).setTextColor(0xffffffff);
+            tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

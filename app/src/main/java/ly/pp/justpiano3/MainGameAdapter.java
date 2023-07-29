@@ -46,27 +46,27 @@ public final class MainGameAdapter extends BaseAdapter {
         new JPDialog(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new HallPasswordClick(mainGameAdapter, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void updateList(List<Bundle> list) {
+    void updateList(List<Bundle> list) {
         this.list = list;
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return list.size();
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
     @Override
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         boolean z = true;
         int i2;
         int i3;

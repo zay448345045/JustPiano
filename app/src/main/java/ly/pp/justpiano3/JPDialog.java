@@ -29,32 +29,32 @@ public final class JPDialog {
         this.context = context;
     }
 
-    public final JPDialog loadInflate(View view) {
+    public JPDialog loadInflate(View view) {
         this.view = view;
         return this;
     }
 
-    public final JPDialog setMessage(String str) {
+    public JPDialog setMessage(String str) {
         message = str;
         return this;
     }
 
-    public final JPDialog setFirstButton(String str, OnClickListener onClickListener) {
+    public JPDialog setFirstButton(String str, OnClickListener onClickListener) {
         positiveText = str;
         listener2 = onClickListener;
         return this;
     }
 
-    public final JPDialog setFirstButtonDisabled(boolean disabled) {
+    public JPDialog setFirstButtonDisabled(boolean disabled) {
         positiveButtonDisabled = disabled;
         return this;
     }
 
-    final void setCancelableFalse() {
+    void setCancelableFalse() {
         cancelable = false;
     }
 
-    final JDialog createJDialog() {
+    JDialog createJDialog() {
         if (inflate == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             inflate = layoutInflater.inflate(R.layout.mydialog, null);
@@ -93,7 +93,7 @@ public final class JPDialog {
         return jDialog;
     }
 
-    public final JPDialog setTitle(String str) {
+    public JPDialog setTitle(String str) {
         title = str;
         return this;
     }

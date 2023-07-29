@@ -30,12 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
-
-    /**
-     * apk安装的请求码
-     */
-    public static final int REQUEST_CODE_INSTALL_APP = 999;
-
     public JPApplication jpapplication;
     public String password;
     String kitiName = "";

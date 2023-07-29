@@ -22,27 +22,27 @@ public final class RoomTitleAdapter extends BaseAdapter {
         this.olPlayHall = olPlayHall;
     }
 
-    final void updateList(List<Bundle> list) {
+    void updateList(List<Bundle> list) {
         this.list = list;
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return list.size();
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
     @Override
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.ol_room_view, null);
         }

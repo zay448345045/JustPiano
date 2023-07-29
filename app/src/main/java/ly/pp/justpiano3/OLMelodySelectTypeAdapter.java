@@ -13,22 +13,22 @@ public final class OLMelodySelectTypeAdapter extends BaseAdapter {
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return Consts.items.length - 1;
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
     @Override
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         View inflate = olMelodySelect.layoutInflater1.inflate(R.layout.ol_f_view, null);
         inflate.setKeepScreenOn(true);
         TextView textView = inflate.findViewById(R.id.ol_s_p);

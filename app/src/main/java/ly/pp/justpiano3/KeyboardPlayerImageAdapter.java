@@ -181,22 +181,31 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return playerList.size();
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
     @Override
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        try {
+            return doGetView(i, view, viewGroup);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return view;
+        }
+    }
+
+    private View doGetView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.ol_keyboard_player_view, null);
         } else if (viewGroup.getChildCount() != i || i >= playerList.size()) {

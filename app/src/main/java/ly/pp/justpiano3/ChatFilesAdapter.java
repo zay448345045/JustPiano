@@ -24,22 +24,22 @@ public final class ChatFilesAdapter extends BaseAdapter {
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return list.size();
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
     @Override
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             view = LayoutInflater.from(chatfiles).inflate(R.layout.fileimageandtext, null);
         }

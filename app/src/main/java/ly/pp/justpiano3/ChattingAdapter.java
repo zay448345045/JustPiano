@@ -31,21 +31,21 @@ public final class ChattingAdapter extends BaseAdapter {
     }
 
     @Override
-    public final int getCount() {
+    public int getCount() {
         return msgList.size();
     }
 
     @Override
-    public final Object getItem(int i) {
+    public Object getItem(int i) {
         return i;
     }
 
-    public final long getItemId(int i) {
+    public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public final View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         TextView textView;
         View inflate = layoutInflater.inflate(R.layout.ol_msg_view, null);
         inflate.setKeepScreenOn(true);
