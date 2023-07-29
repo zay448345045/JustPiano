@@ -47,13 +47,13 @@ final class FriendMailPageTask2 extends AsyncTask<String, Void, String> {
 
     @Override
     protected final void onPostExecute(String str) {
-        friendMailPage.get().f4023e.cancel();
+        friendMailPage.get().jpProgressBar.cancel();
     }
 
     @Override
     protected void onPreExecute() {
-        friendMailPage.get().f4023e.setCancelable(true);
-        friendMailPage.get().f4023e.setOnCancelListener(dialog -> cancel(true));
-        friendMailPage.get().f4023e.show();
+        friendMailPage.get().jpProgressBar.setCancelable(true);
+        friendMailPage.get().jpProgressBar.setOnCancelListener(dialog -> cancel(true));
+        friendMailPage.get().jpProgressBar.show();
     }
 }

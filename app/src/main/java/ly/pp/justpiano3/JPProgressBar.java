@@ -4,15 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
+import android.widget.TextView;
+import io.netty.util.internal.StringUtil;
 
 public final class JPProgressBar extends ProgressDialog {
 
     private final boolean cancelWillOutline;
     private JPApplication jpApplication;
     private ConnectionService connectionService;
+    private String text;
 
     public JPProgressBar(Context context) {
         super(context);
@@ -24,6 +28,18 @@ public final class JPProgressBar extends ProgressDialog {
         cancelWillOutline = true;
         jpApplication = jPApplication;
         connectionService = jPApplication.getConnectionService();
+    }
+
+    public void setText(String text) {
+        this.text = text;
+        final TextView textView = findViewById(R.id.loading_text);
+        if (!StringUtil.isNullOrEmpty(text)) {
+            textView.setText(text);
+            textView.setVisibility(View.VISIBLE);
+        } else {
+            textView.setVisibility(View.GONE);
+        }
+        textView.invalidate();
     }
 
     @Override
@@ -63,6 +79,13 @@ public final class JPProgressBar extends ProgressDialog {
         attributes.dimAmount = 0.5f;
         window.setAttributes(attributes);
         final ImageView imageView = findViewById(R.id.loading_img);
+        final TextView textView = findViewById(R.id.loading_text);
+        if (!StringUtil.isNullOrEmpty(text)) {
+            textView.setText(text);
+            textView.setVisibility(View.VISIBLE);
+        } else {
+            textView.setVisibility(View.GONE);
+        }
         imageView.setImageResource(R.drawable.animation);
         imageView.post(() -> {
             AnimationDrawable animationDrawable = (AnimationDrawable) imageView.getDrawable();

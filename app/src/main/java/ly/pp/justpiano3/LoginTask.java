@@ -41,7 +41,8 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             formBuilder.add("versionCode", String.valueOf(loginActivity.versionNum));
             formBuilder.add("username", loginActivity.accountX);
             formBuilder.add("password", loginActivity.password);
-            formBuilder.add("local", loginActivity.jpapplication.getVersion());
+//            formBuilder.add("local", loginActivity.jpapplication.getVersion());
+            formBuilder.add("local", "4.5");
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder()
                     .url(urlBuilder.build())
@@ -78,7 +79,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             String serverPublicKey = jSONObject.getString("publicKey");
             loginActivity.jpapplication.setServerPublicKey(serverPublicKey);
             try {
-                newVersion = jSONObject.getString("newVersion");
+                newVersion = jSONObject.getString("version");
             } catch (JSONException ignored) {
             }
             i = jSONObject.getInt("is");

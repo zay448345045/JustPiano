@@ -22,7 +22,7 @@ public class FriendMailPage extends Activity implements Callback {
     public ListView f4019a;
     public List<JSONObject> f4021c;
     public JPApplication jpApplication;
-    public JPProgressBar f4023e;
+    public JPProgressBar jpProgressBar;
     public String f4024f = "F";
     public FriendMailPageAdapter f4025g;
     private SharedPreferences sharedPreferences = null;
@@ -157,7 +157,7 @@ public class FriendMailPage extends Activity implements Callback {
             sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
             //f4028j = sharedPreferences.edit();
         }
-        f4023e = new JPProgressBar(this);
+        jpProgressBar = new JPProgressBar(this);
         new FriendMailPageTask(this).execute(f4024f, "GetSocialInfo");
     }
 }

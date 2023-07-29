@@ -230,7 +230,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         JPDialog jpdialog = new JPDialog(this);
         jpdialog.setTitle("版本更新");
         jpdialog.setMessage(str3);
-        jpdialog.setFirstButton("确定", new VersionUpdateClick(newVersion, this));
+        jpdialog.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
         jpdialog.setSecondButton("取消", new DialogDismissClick());
         jpdialog.showDialog();
     }
@@ -251,8 +251,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         }
         runOnUiThread(() -> {
             jpprogressBar.setCancelable(false);
+            jpprogressBar.setText(version + "版本准备开始下载，请稍候");
             jpprogressBar.show();
-            Toast.makeText(LoginActivity.this, version + "版本开始下载，请稍候", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
         });
 
         OkHttpClient client = new OkHttpClient();
@@ -282,11 +283,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         fos.write(buf, 0, len);
                         sum += len;
                         int progress = (int) (sum * 1.0f / length * 100);
-                        String detail = String.format("文件大小：%d，下载进度：%d%%", length, progress);
+                        String detail = String.format("下载进度：%.2fM / %.2fM（%d%%）", sum / 1000000f, length / 1000000f, progress);
                         // 回到主线程操纵界面
-//                        runOnUiThread(() -> {
-//                            tv_progress.setText(detail);
-//                        });
+                        runOnUiThread(() -> {
+                            jpprogressBar.setText(detail);
+                        });
                     }
                     installApk(LoginActivity.this, file);
                 } catch (Exception e) {
