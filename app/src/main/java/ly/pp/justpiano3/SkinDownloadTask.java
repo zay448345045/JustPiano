@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
@@ -29,6 +30,7 @@ public final class SkinDownloadTask {
 
                 Request request = new Request.Builder()
                         .url(url)
+                        .post(new FormBody.Builder().build())
                         .build();
 
                 try (Response response = OkHttpUtil.client().newCall(request).execute()) {
