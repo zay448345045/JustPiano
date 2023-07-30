@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:id="@+id/dialog"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,9 +31,9 @@
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
-            <requestFocus />
+            <requestFocus/>
         </LinearLayout>
     </LinearLayout>
 
@@ -57,15 +57,15 @@
                 android:layout_weight="1"
                 android:ems="10"
 
-                android:hint="输入密码"
+                android:hint="输入密码(可留空)"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
-            <requestFocus />
+            <requestFocus/>
         </LinearLayout>
     </LinearLayout>
 
@@ -87,28 +87,28 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
 
-                android:text="@string/create_room_n" />
+                android:text="@string/create_room_n"/>
 
             <RadioButton
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:text="@string/create_room_g" />
+                android:text="@string/create_room_g"/>
 
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:text="@string/create_room_k" />
+                android:text="@string/create_room_k"/>
 
             <RadioButton
                 android:id="@+id/couple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:text="@string/create_room_c" />
+                android:text="@string/create_room_c"/>
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>

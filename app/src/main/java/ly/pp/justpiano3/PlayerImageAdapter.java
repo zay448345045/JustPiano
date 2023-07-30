@@ -1,10 +1,6 @@
 package ly.pp.justpiano3;
 
-import static ly.pp.justpiano3.BaseActivity.dp2px;
-import static ly.pp.justpiano3.BaseActivity.px2dp;
-
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
@@ -18,20 +14,14 @@ import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineKickedQuitRoomDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import static ly.pp.justpiano3.BaseActivity.px2dp;
 
 public final class PlayerImageAdapter extends BaseAdapter {
     byte roomID;
@@ -408,12 +398,12 @@ public final class PlayerImageAdapter extends BaseAdapter {
         textView = view.findViewById(R.id.ol_player_hand);
         switch (olPlayRoom.getMode()) {
             case 0:
-                //   textView.setBackgroundResource(Consts.groupModeColor[0]);
+                textView.setBackgroundResource(Consts.groupModeColor[0]);
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") + 12) % 2]);
                 break;
             case 1:
                 textView.setText(Consts.groups[(playerList.get(i).getInt("GR")) - 1]);
-                //    textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
+                textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
                 break;
             case 2:
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") % 2)]);
