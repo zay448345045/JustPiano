@@ -31,6 +31,13 @@ android {
             keyAlias 'as2134u'
             keyPassword 'as2134.@u'
         }
+
+        release {
+            storeFile file('../key.jks')
+            storePassword 'as2134.@u'
+            keyAlias 'as2134u'
+            keyPassword 'as2134.@u'
+        }
     }
 
     buildTypes {
@@ -38,6 +45,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {

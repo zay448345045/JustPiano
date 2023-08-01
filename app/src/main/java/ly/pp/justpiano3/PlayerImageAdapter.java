@@ -288,10 +288,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     break;
             }
             olPlayRoom.user = olPlayRoom.jpapplication.getHashmap().get(b);
-            if (olPlayRoom.playerKind.equals("H")) {
+            if ("H".equals(olPlayRoom.playerKind)) {
                 olPlayRoom.playButton.setText("开始");
                 olPlayRoom.playButton.setTextSize(20);
-            } else if (string3.equals("R")) {
+            } else if ("R".equals(string3)) {
                 olPlayRoom.playButton.setText("取消");
                 olPlayRoom.playButton.setTextSize(20);
             } else {
@@ -321,28 +321,28 @@ public final class PlayerImageAdapter extends BaseAdapter {
         }
         if (!string4.equals("H")) {
             if ("R".equals(string3)) {
-                textView2.setText("🆗");
-                //         textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setText("准备");
+                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
-                //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
             }
         } else {
-            textView2.setText("⭐");
-            //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.exit));
+            textView2.setText("房主");
+            textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.exit));
         }
         switch (string3) {
             case "P":
                 textView2.setText("弹奏中");
-                //    textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
                 break;
             case "F":
                 textView2.setText("查看成绩");
-                //    textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
                 break;
             case "B":
                 textView2.setText("后台");
-                //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
+                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
                 break;
         }
         try {

@@ -129,8 +129,8 @@
             android:id="@+id/ol_player_hand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/ol_ready_text"
-            android:layout_alignBottom="@+id/ol_player_mod"
+            android:layout_above="@+id/ol_ready_text"
+            android:layout_alignStart="@+id/ol_player_mod"
             android:textStyle="bold"
             android:textColor="@color/white1"
             android:textSize="12sp" />

@@ -290,20 +290,20 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             }
         }
 
-        if (!string4.equals("H")) {
+        if (!"H".equals(string4)) {
             if ("R".equals(string3)) {
-                textView2.setText("🆗");
+                textView2.setText("准备");
                 textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
                 textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
             }
         } else {
-            textView2.setText("⭐");
+            textView2.setText("房主");
             textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.exit));
         }
         if ("B".equals(string3)) {
-            textView2.setText("☕");
+            textView2.setText("后台");
             textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.green_y));
         }
         try {

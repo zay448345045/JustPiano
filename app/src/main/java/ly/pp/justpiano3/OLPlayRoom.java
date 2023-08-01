@@ -12,7 +12,6 @@ import android.os.Handler.Callback;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,15 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import com.google.protobuf.MessageLite;
 import org.json.JSONObject;
@@ -57,6 +47,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     PopupWindow commonModeGroup = null;
     TabHost roomTabs;
     boolean isOnStart = true;
+    // 防止横竖屏切换时，玩家前后台状态错误
+    private boolean isChangeScreen = false;
     String userTo = "";
     String online_1 = "online = 1";
     ListView playerListView;
@@ -937,6 +929,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     private void changeScreenOrientation() {
+        isChangeScreen = true;
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
@@ -1268,11 +1261,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     @Override
     protected void onStop() {
         super.onStop();
-        if (isOnStart) {
+        // 确定从前台切换到后台才会调用下面的代码，防止玩家手动横竖屏切换，导致后台状态错乱
+        if (isOnStart && !isChangeScreen) {
+            isOnStart = false;
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("B");
             sendMsg(4, builder1.build());
         }
-        isOnStart = false;
     }
 }
