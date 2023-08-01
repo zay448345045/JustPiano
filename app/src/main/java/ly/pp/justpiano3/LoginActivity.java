@@ -45,7 +45,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     private CheckBox autoLogin;
     private String account;
 
-    public final void loginSuccess(int i, String str, String str2) {
+    public final void loginSuccess(int i, String message, String title) {
         Intent intent = new Intent();
         intent.setClass(this, OLMainMode.class);
         String string = sharedPreferences.getString("accountList", "");
@@ -82,10 +82,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case 4:
-                jpDialog.setTitle(str2).setMessage(str).setFirstButton("知道了", new LoginSuccessClick(this)).showDialog();
+                jpDialog.setTitle(title).setMessage(message).setFirstButton("知道了", new LoginSuccessClick(this)).showDialog();
                 return;
             case 5:
-                jpDialog.setTitle(str2).setMessage(str).setFirstButton("确定", new DialogDismissClick()).showDialog();
+                jpDialog.setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).showDialog();
                 return;
             default:
         }
