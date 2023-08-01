@@ -333,15 +333,15 @@ public final class PlayerImageAdapter extends BaseAdapter {
         }
         switch (string3) {
             case "P":
-                textView2.setText("🎹");
+                textView2.setText("弹奏中");
                 //    textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
                 break;
             case "F":
-                textView2.setText("🏁");
+                textView2.setText("查看成绩");
                 //    textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
                 break;
             case "B":
-                textView2.setText("☕");
+                textView2.setText("后台");
                 //      textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
                 break;
         }
