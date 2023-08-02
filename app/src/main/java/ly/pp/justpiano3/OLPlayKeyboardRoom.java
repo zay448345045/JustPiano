@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 
 public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, OnClickListener, View.OnTouchListener, OLPlayRoomInterface, MidiConnectionListener {
 
-    public static final int NOTES_SEND_INTERVAL = 10;
+    public static final int NOTES_SEND_INTERVAL = 120;
     public int lv;
     public int cl;
     // 当前用户楼号 - 1
@@ -792,7 +792,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             @Override
             public void onKeyDown(int pitch, int volume) {
                 if (hasAnotherUser()) {
-                    notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
+                    byte[] notes = new byte[4];
+                    // 字节数组开头，存入是否开启midi键盘和楼号
+                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
+                    notes[1] = (byte) 0;
+                    notes[2] = (byte) pitch;
+                    notes[3] = (byte) volume;
+                    OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+                    builder.setData(ByteString.copyFrom(notes));
+                    sendMsg(39, builder.build());
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
@@ -810,7 +818,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             @Override
             public void onKeyUp(int pitch) {
                 if (hasAnotherUser()) {
-                    notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+                    byte[] notes = new byte[4];
+                    // 字节数组开头，存入是否开启midi键盘和楼号
+                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
+                    notes[1] = (byte) 0;
+                    notes[2] = (byte) pitch;
+                    notes[3] = (byte) 0;
+                    OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+                    builder.setData(ByteString.copyFrom(notes));
+                    sendMsg(39, builder.build());
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
@@ -846,6 +862,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 jpapplication.addMidiConnectionListener(this);
             }
         }
+
         int i = 0;
         while (true) {
             int intValue = i;
@@ -865,6 +882,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
             i = intValue + 1;
         }
+
     }
 
     @Override
@@ -1106,6 +1124,16 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
+                if (olKeyboardStates[roomPositionSub1].isPlaying()) {
+                    olKeyboardStates[roomPositionSub1].setPlaying(false);
+                    runOnUiThread(() -> {
+                        if (playerGrid.getAdapter() != null) {
+                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                        }
+                    });
+                }
+                /*
+
                 // 时间戳和size尽量严格放在一起
                 long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
@@ -1164,8 +1192,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     e.printStackTrace();
                 } finally {
                     lastNoteScheduleTime = scheduleTimeNow;
-                }
-            }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.NANOSECONDS);
+                } */
+            }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
 
