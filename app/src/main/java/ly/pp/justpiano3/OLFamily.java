@@ -314,7 +314,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         button3.setText("移出家族");
         inflate.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);

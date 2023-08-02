@@ -20,35 +20,35 @@
 
             <ImageView
                 android:id="@+id/ol_couple_mod"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true" />
 
             <ImageView
                 android:id="@+id/ol_couple_shoes"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_couple_trousers"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_couple_hair"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_couple_eye"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_couple_jacket"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -134,35 +134,35 @@
 
             <ImageView
                 android:id="@+id/ol_player_mod"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true" />
 
             <ImageView
                 android:id="@+id/ol_player_eye"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_player_hair"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_player_shoes"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_player_trousers"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <ImageView
                 android:id="@+id/ol_player_jacket"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp" />
+                android:layout_width="@dimen/dimen_120dp"
+                android:layout_height="@dimen/dimen_120dp" />
 
             <TextView
                 android:id="@+id/ol_player_name"
