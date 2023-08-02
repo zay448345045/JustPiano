@@ -5,59 +5,29 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
-import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
+import android.os.*;
 import android.os.Handler.Callback;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
-
 import org.json.JSONObject;
+import protobuf.dto.*;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import protobuf.dto.OnlineKeyboardNoteDTO;
-import protobuf.dto.OnlineLoadRoomPositionDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlineRoomChatDTO;
+import java.util.concurrent.*;
 
 public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, OnClickListener, View.OnTouchListener, OLPlayRoomInterface, MidiConnectionListener {
 
-    public static final int NOTES_SEND_INTERVAL = 120;
+    public static final int NOTES_SEND_INTERVAL = 10;
     public int lv;
     public int cl;
     // 当前用户楼号 - 1
@@ -228,7 +198,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             } else {
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_s" + (User2.getShoes() - 1) + ".png")));
             }
-            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:"+String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1195,7 +1165,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 } finally {
                     lastNoteScheduleTime = scheduleTimeNow;
                 }
-            }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
+            }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.NANOSECONDS);
         }
     }
 
