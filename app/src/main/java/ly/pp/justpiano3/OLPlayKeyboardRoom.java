@@ -1013,7 +1013,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardView.fireKeyDown(pitch, data[2], kuang, false);
             if (hasAnotherUser()) {
-                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, data[2]));
+                byte[] notes = new byte[4];
+                // 字节数组开头，存入是否开启midi键盘和楼号
+                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
+                notes[1] = (byte) 0;
+                notes[2] = (byte) pitch;
+                notes[3] = (byte) data[2];
+                OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+                builder.setData(ByteString.copyFrom(notes));
+                sendMsg(39, builder.build());
             }
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].isMuted()) {
@@ -1032,7 +1040,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
             keyboardView.fireKeyUp(pitch, false);
             if (hasAnotherUser()) {
-                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, 0));
+                byte[] notes = new byte[4];
+                // 字节数组开头，存入是否开启midi键盘和楼号
+                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
+                notes[1] = (byte) 0;
+                notes[2] = (byte) pitch;
+                notes[3] = (byte) 0;
+                OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+                builder.setData(ByteString.copyFrom(notes));
+                sendMsg(39, builder.build());
             }
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
