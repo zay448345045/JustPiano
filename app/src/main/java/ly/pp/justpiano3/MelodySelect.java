@@ -342,10 +342,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             f4245a.setOnItemClickListener((parent, view, position, id) -> {
                 Cursor query;
                 f4264t = position;
-                if (f4261q != null) {
-                    f4261q.setBackgroundResource(R.color.top_background);
-                }
-                view.setBackgroundResource(R.color.translent);
+                view.setSelected(true);
                 if (position == 0) {
                     f4231H = "";
                     query = sqlitedatabase.query("jp_data", null, "isfavo = 1 AND " + f4238O, null, null, null, sortStr);
