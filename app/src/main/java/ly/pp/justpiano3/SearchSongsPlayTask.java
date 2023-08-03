@@ -50,11 +50,12 @@ public final class SearchSongsPlayTask {
                 }
                 songBytes = GZIP.ZIPToArray(str);
             }
+            // Handle the result in onPostExecute
+            handleResult();
             return null;
         });
 
-        // Handle the result in onPostExecute
-        handleResult();
+
     }
 
     public void cancel() {
