@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@drawable/ground"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:id="@+id/layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:background="@drawable/ground"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:text="@string/finish"
                 android:textColor="@color/white1"
-                android:textSize="26sp" />
+                android:textSize="26sp"/>
 
         </LinearLayout>
 
@@ -76,7 +76,7 @@
                     android:gravity="center"
                     android:text="@string/finish_count"
                     android:textColor="@color/white1"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/TextView07"
@@ -87,7 +87,7 @@
                     android:gravity="center"
                     android:text="@string/finish_score"
                     android:textColor="@color/white1"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
@@ -107,7 +107,7 @@
                     android:gravity="center"
                     android:text="@string/finish_perfect"
                     android:textColor="@color/white1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/perfect"
@@ -191,7 +191,7 @@
                     android:gravity="center"
                     android:text="@string/finish_great"
                     android:textColor="@color/white1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/great"
@@ -233,7 +233,7 @@
                     android:gravity="center"
                     android:text="@string/finish_bad"
                     android:textColor="@color/white1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/bad"
@@ -381,7 +381,7 @@
                     android:gravity="center"
                     android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
@@ -400,7 +400,7 @@
                 android:textStyle="bold"
                 android:text="@string/finish_uget"
                 android:textColor="@color/white1"
-                android:textSize="16sp" />
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/totlescore"
@@ -429,7 +429,7 @@
 
                 android:text="@string/finish_hscore"
                 android:textColor="@color/white1"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/highscore"
@@ -459,7 +459,7 @@
                 android:gravity="center"
                 android:text="@string/finish_win"
                 android:textColor="@color/yellow_c"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
@@ -479,9 +479,9 @@
 
                 <Button
                     android:id="@+id/share_score"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#00000000" />
+                    android:background="#00000000"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -494,7 +494,7 @@
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:src="@drawable/share" />
+                        android:src="@drawable/share"/>
 
                     <TextView
                         android:layout_width="@dimen/dimen_0dp"
@@ -504,7 +504,7 @@
                         android:gravity="center"
                         android:text="@string/finish_share"
                         android:textColor="#ffffffff"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
 
@@ -517,11 +517,11 @@
 
                 <ImageButton
                     android:id="@+id/retry"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/translent"
                     android:scaleType="centerInside"
-                    android:src="#00000000" />
+                    android:src="#00000000"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -534,7 +534,7 @@
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:src="@drawable/retry" />
+                        android:src="@drawable/retry"/>
 
                     <TextView
                         android:layout_width="@dimen/dimen_0dp"
@@ -544,7 +544,7 @@
                         android:gravity="center"
                         android:text="@string/finish_retry"
                         android:textColor="#ffffffff"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
 
@@ -557,9 +557,9 @@
 
                 <ImageButton
                     android:id="@+id/ok"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/translent" />
+                    android:background="@color/translent"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -572,7 +572,7 @@
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:src="@drawable/back" />
+                        android:src="@drawable/back"/>
 
                     <TextView
                         android:layout_width="@dimen/dimen_0dp"
@@ -582,7 +582,7 @@
                         android:gravity="center"
                         android:text="@string/finish_back"
                         android:textColor="#fffff394"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
             </RelativeLayout>
