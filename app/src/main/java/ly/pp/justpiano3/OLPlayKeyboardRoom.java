@@ -17,6 +17,7 @@ import android.widget.*;
 import android.widget.TabHost.TabSpec;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
+import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
 import org.json.JSONObject;
 import protobuf.dto.*;
 
@@ -41,6 +42,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     MidiReceiver midiFramer;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long lastNoteScheduleTime;
+    /**
+     * 键盘房间同步模式(默认编排模式)
+     */
+    private KeyboardSyncModeEnum keyboardSyncMode = KeyboardSyncModeEnum.ORCHESTRATE;
     protected String hallName;
     List<Bundle> friendPlayerList = new ArrayList<>();
     boolean canNotNextPage;
@@ -265,6 +270,30 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void broadNote(int pitch, int volume) {
+        switch (keyboardSyncMode) {
+
+            case ORCHESTRATE:
+                // 编排模式
+                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
+                break;
+
+            case CONCERTO:
+                // 协奏模式
+                byte[] notes = new byte[4];
+                // 字节数组开头，存入是否开启midi键盘和楼号
+                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
+                notes[1] = (byte) 0;
+                notes[2] = (byte) pitch;
+                notes[3] = (byte) volume;
+                OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+                builder.setData(ByteString.copyFrom(notes));
+                sendMsg(39, builder.build());
+                break;
+        }
+
     }
 
     public void putJPhashMap(byte b, User User) {
@@ -543,14 +572,22 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 inflate2.findViewById(R.id.sound_up_tune).setOnClickListener(this);
                 inflate2.findViewById(R.id.skin_setting).setOnClickListener(this);
                 inflate2.findViewById(R.id.sound_setting).setOnClickListener(this);
+                inflate2.findViewById(R.id.keyboard_sync_mode_concerto).setOnClickListener(this);
+                inflate2.findViewById(R.id.keyboard_sync_mode_text).setOnClickListener(this);
+                inflate2.findViewById(R.id.keyboard_sync_mode_orchestrate).setOnClickListener(this);
                 popupWindow2.setFocusable(true);
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
                 popupWindow2.setContentView(inflate2);
+                // 键盘声调回显
                 TextView midiTune = inflate2.findViewById(R.id.midi_tune);
                 midiTune.setText(String.valueOf(jpapplication.getMidiKeyboardTune()));
+                // 声调回显
                 TextView soundTune = inflate2.findViewById(R.id.sound_tune);
                 soundTune.setText(String.valueOf(jpapplication.getKeyboardSoundTune()));
+                // 同步模式回显
+                TextView syncModeText = inflate2.findViewById(R.id.keyboard_sync_mode_text);
+                syncModeText.setText(keyboardSyncMode.getDesc());
                 keyboardSettingPopup = popupWindow2;
                 popupWindow2.showAtLocation(keyboardSetting, Gravity.CENTER, 0, 0);
                 return;
@@ -658,6 +695,23 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             default:
         }
+
+        /* 使用gradle 8以上的推荐写法 有空把上面也优化了 TODO */
+        int viewId = view.getId();
+        if (viewId == R.id.keyboard_sync_mode_text) {
+            new JPDialog(this).setTitle(getString(R.string.msg_this_is_what)).setMessage(getString(R.string.ol_keyboard_sync_mode_help)).setFirstButton("确定", new DialogDismissClick()).createJDialog().show();
+        } else if (viewId == R.id.keyboard_sync_mode_orchestrate) {
+            keyboardSyncMode = KeyboardSyncModeEnum.ORCHESTRATE;
+            if (keyboardSettingPopup != null) {
+                keyboardSettingPopup.dismiss();
+            }
+        } else if (viewId == R.id.keyboard_sync_mode_concerto) {
+            keyboardSyncMode = KeyboardSyncModeEnum.CONCERTO;
+            if (keyboardSettingPopup != null) {
+                keyboardSettingPopup.dismiss();
+            }
+        }
+
     }
 
     private void changeChatColor(int lv, int colorNum, int color) {
@@ -792,15 +846,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             @Override
             public void onKeyDown(int pitch, int volume) {
                 if (hasAnotherUser()) {
-                    byte[] notes = new byte[4];
-                    // 字节数组开头，存入是否开启midi键盘和楼号
-                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
-                    notes[1] = (byte) 0;
-                    notes[2] = (byte) pitch;
-                    notes[3] = (byte) volume;
-                    OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                    builder.setData(ByteString.copyFrom(notes));
-                    sendMsg(39, builder.build());
+                    broadNote(pitch, volume);
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
@@ -818,15 +864,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             @Override
             public void onKeyUp(int pitch) {
                 if (hasAnotherUser()) {
-                    byte[] notes = new byte[4];
-                    // 字节数组开头，存入是否开启midi键盘和楼号
-                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
-                    notes[1] = (byte) 0;
-                    notes[2] = (byte) pitch;
-                    notes[3] = (byte) 0;
-                    OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                    builder.setData(ByteString.copyFrom(notes));
-                    sendMsg(39, builder.build());
+                    broadNote(pitch, 0);
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
@@ -1013,15 +1051,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardView.fireKeyDown(pitch, data[2], kuang, false);
             if (hasAnotherUser()) {
-                byte[] notes = new byte[4];
-                // 字节数组开头，存入是否开启midi键盘和楼号
-                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
-                notes[1] = (byte) 0;
-                notes[2] = (byte) pitch;
-                notes[3] = (byte) data[2];
-                OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                builder.setData(ByteString.copyFrom(notes));
-                sendMsg(39, builder.build());
+                broadNote(pitch, data[2]);
             }
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].isMuted()) {
@@ -1040,15 +1070,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
             keyboardView.fireKeyUp(pitch, false);
             if (hasAnotherUser()) {
-                byte[] notes = new byte[4];
-                // 字节数组开头，存入是否开启midi键盘和楼号
-                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
-                notes[1] = (byte) 0;
-                notes[2] = (byte) pitch;
-                notes[3] = (byte) 0;
-                OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                builder.setData(ByteString.copyFrom(notes));
-                sendMsg(39, builder.build());
+                broadNote(pitch, 0);
             }
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
@@ -1140,16 +1162,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
-                if (olKeyboardStates[roomPositionSub1].isPlaying()) {
-                    olKeyboardStates[roomPositionSub1].setPlaying(false);
-                    runOnUiThread(() -> {
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        }
-                    });
-                }
-                /*
-
                 // 时间戳和size尽量严格放在一起
                 long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
@@ -1208,7 +1220,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     e.printStackTrace();
                 } finally {
                     lastNoteScheduleTime = scheduleTimeNow;
-                } */
+                }
             }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }

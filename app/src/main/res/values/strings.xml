@@ -8,6 +8,7 @@
         1、界面UI修改优化，聊天页面支持横竖屏切换(听闻提供)\n
         2、支持展示家族成员最近一次登录日期\n
         3、增加聊天提示音设置，修复已知问题\n
+        4、增加键盘房间同步模式\n
         感谢各位新老用户的支持！\n\n
         鸣谢所有参与开发合作的朋友们：\n
         程序启发与数据传输协议解读：喵喵\n
@@ -76,6 +77,7 @@
     <string name="main_mode_fb">问题反馈</string>
     <string name="main_mode_sound">音源下载</string>
     <string name="main_mode_wrn">此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除</string>
+    <string name="msg_this_is_what">这是什么?</string>
     <string name="create_room_n">普通</string>
     <string name="create_room_g">组队</string>
     <string name="create_room_k">键盘</string>
@@ -309,4 +311,18 @@
     <string name="family_date">最后登录日期</string>
     <string name="family_lv">等级</string>
     <string name="family_co">贡献</string>
+    <string name="ol_keyboard_sync_mode_orchestrate">编排模式</string>
+    <string name="ol_keyboard_sync_mode_concerto">协奏模式</string>
+    <string name="ol_keyboard_sync_mode_text">编排</string>
+    <string name="ol_keyboard_sync_mode_help">
+        编排模式：\n
+        \t\t在一个周期内弹奏的音符会被排列，固定延迟同步给大家\n
+        \t\t适用于保证演奏效果或弱网络下，大部分音符不会被网络所耽误\n
+        \t\t总结：延迟高，同步效率低，不会被延迟打乱演奏效果，适合单人演奏\n
+        协奏模式：\n
+        \t\t当键盘被按下或放开时，立即同步给大家，不做任何处理\n
+        \t\t适用于网络效率好的情况下，保证超高的同步率\n
+        \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
+    </string>
+
 </resources>
