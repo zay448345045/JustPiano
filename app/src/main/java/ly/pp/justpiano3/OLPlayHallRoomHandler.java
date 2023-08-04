@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.DialogUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +67,7 @@ final class OLPlayHallRoomHandler extends Handler {
                         if (!olPlayHallRoom.familyID.equals("0")) {
                             File file = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
                             if (file.exists()) {
-                                try (InputStream inputStream = new FileInputStream(file)){
+                                try (InputStream inputStream = new FileInputStream(file)) {
                                     int length = (int) file.length();
                                     byte[] pic = new byte[length];
                                     inputStream.read(pic);
@@ -226,6 +227,8 @@ final class OLPlayHallRoomHandler extends Handler {
                             jpdialog.setMessage(string2);
                             jpdialog.setFirstButton(str, new DialogDismissClick());
                         }
+                        DialogUtil.handleGoldSend(olPlayHallRoom, olPlayHallRoom.jpApplication, jpdialog,
+                                data.getInt("T"), data.getString("N"), string2);
                         try {
                             jpdialog.showDialog();
                         } catch (Exception ignored) {

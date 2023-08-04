@@ -68,7 +68,7 @@ message OnlineBaseDTO {
     OnlineSendMailDTO send_mail = 35;
     // 大厅加载用户列表或房间加载邀请列表
     OnlineLoadUserListDTO load_user_list = 36;
-    // 找Ta或邀请对话框
+    // 找Ta、邀请对话框、赠送音符
     OnlineDialogDTO dialog = 37;
     // 每日奖励
     OnlineDailyDTO daily = 38;
@@ -337,12 +337,14 @@ message OnlineLoadUserListDTO {
 
 }
 
-// 找Ta或邀请对话框
+// 找Ta、邀请对话框、赠送音符
 message OnlineDialogDTO {
-  // 对话框类型（0为找Ta，1为邀请）
+  // 对话框类型（0-找Ta，1-邀请、2-赠送音符提示框、3-触发赠送音符）
   uint32 type = 1;
   // 用户名称
   string name = 2;
+  // 赠送音符数量
+  optional uint32 gold = 3;
 }
 
 // 每日奖励

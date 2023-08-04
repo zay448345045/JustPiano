@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineQuitRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
@@ -341,6 +342,8 @@ final class OLPlayRoomHandler extends Handler {
                         jpdialog.setTitle(string);
                         jpdialog.setMessage(string2);
                         jpdialog.setFirstButton("确定", new DialogDismissClick());
+                        DialogUtil.handleGoldSend(olPlayRoom, olPlayRoom.jpapplication, jpdialog,
+                                data.getInt("T"), data.getString("N"), string2);
                         jpdialog.showDialog();
                     });
                     return;

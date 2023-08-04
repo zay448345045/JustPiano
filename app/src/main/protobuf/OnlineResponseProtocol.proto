@@ -760,10 +760,10 @@ message OnlineUserVO {
     uint32 room_id = 4;
 }
 
-// 找Ta或邀请对话框
+// 找Ta、邀请对话框、赠送音符
 message OnlineDialogVO {
-    // 对话框类型（0为找Ta，1为邀请）
-    uint32 type = 1;
+    // 对话框类型（0-找Ta，1-邀请），普通对话框展示时此值非必填
+    optional uint32 type = 1;
     // 相关用户名称（找Ta时为被找人名称，邀请时为发出邀请的用户）
     string name = 2;
     // 对话框标题

@@ -70,8 +70,9 @@ android {
 
         sourceSets {
             main {
-                java.srcDir('src/main/java')
-                java.srcDir('$buildDir/generated/source/proto')
+                java {
+                    srcDirs += ['src/main/java', 'build/generated/source/proto']
+                }
                 proto {
                     srcDir 'src/main/protobuf'
                     include '**/*.proto'

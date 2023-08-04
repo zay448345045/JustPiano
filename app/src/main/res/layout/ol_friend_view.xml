@@ -76,33 +76,6 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/ol_friend_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_toEndOf="@+id/ol_friend_chat"
-            android:background="@drawable/selector_ol_button"
-
-            android:text="@string/ol_friend_view_find"
-            android:textColor="@color/white1"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/ol_friend_dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_toEndOf="@+id/ol_friend_game"
-            android:background="@drawable/selector_ol_button"
-
-            android:text="@string/friend_view_info"
-            android:textColor="@color/white1"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <Button
             android:id="@+id/ol_friend_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,13 +88,49 @@
             android:textSize="18sp" />
 
         <Button
+            android:id="@+id/ol_friend_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_friend_chat"
+            android:background="@drawable/selector_ol_button"
+            android:text="@string/ol_friend_view_find"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/ol_friend_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_friend_game"
+            android:background="@drawable/selector_ol_button"
+            android:text="@string/friend_view_info"
+            android:textColor="@color/white1"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/ol_friend_gold_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_friend_dialog"
+            android:background="@drawable/selector_ol_button"
+            android:text="@string/ol_btn_lv_gold_send"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <Button
             android:id="@+id/ol_friend_dele"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/selector_ol_button_login"
-
             android:text="@string/account_name_del"
             android:textColor="@color/white1"
             android:textSize="18sp" />

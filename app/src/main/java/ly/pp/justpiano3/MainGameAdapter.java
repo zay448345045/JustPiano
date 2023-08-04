@@ -89,8 +89,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 hallNameView.setBackgroundResource(R.drawable._none);
                 if ((float) i2 / i3 >= 0.8f) {
                     ((TextView) hallNameView).setTextColor(0xFFCD064B);
-                }
-                else {
+                } else {
                     ((TextView) hallNameView).setTextColor(0xFFFFBB40);
                 }
                 if (i2 < i3) {
@@ -138,6 +137,14 @@ public final class MainGameAdapter extends BaseAdapter {
                 view.findViewById(R.id.ol_friend_room).setVisibility(View.GONE);
                 Button button2 = view.findViewById(R.id.ol_friend_game);
                 Button dialogButton = view.findViewById(R.id.ol_friend_dialog);
+                Button goldSendButton = view.findViewById(R.id.ol_friend_gold_send);
+                goldSendButton.setOnClickListener(v -> {
+                    relativeLayout2.setVisibility(View.GONE);
+                    OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
+                    builder.setType(2);
+                    builder.setName(string2);
+                    connectionService.writeData(37, builder.build());
+                });
                 dialogButton.setVisibility(View.VISIBLE);
                 dialogButton.setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);

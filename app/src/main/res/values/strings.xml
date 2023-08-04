@@ -5,10 +5,10 @@
     <string name="app_name">极品钢琴</string>
     <string name="about">极品钢琴V4.7 浴火重生版\n
         更新日志：\n
-        1、界面UI修改优化，聊天页面支持横竖屏切换(听闻提供)\n
-        2、支持展示家族成员最近一次登录日期\n
-        3、增加聊天提示音设置，修复已知问题\n
-        4、增加键盘房间同步模式\n
+        1、界面UI修改优化，房间聊天页面支持横竖屏切换(听闻提供)\n
+        2、增加好友赠送音符功能，家族成员支持展示最近登录日期\n
+        3、支持设置聊天提示音，支持设置屏蔽用户聊天\n
+        4、增加键盘房间同步模式，修复已知问题\n
         感谢各位新老用户的支持！\n\n
         鸣谢所有参与开发合作的朋友们：\n
         程序启发与数据传输协议解读：喵喵\n
@@ -128,6 +128,7 @@
     <string name="message_send_name">房名:</string>
     <string name="ol_btn_lv_info">查看资料</string>
     <string name="ol_btn_lv_pm">私聊</string>
+    <string name="ol_btn_lv_gold_send">赠送音符</string>
     <string name="ol_btn_lv_cp">搭档信息</string>
     <string name="ol_btn_lv_kick">移出房间</string>
     <string name="ol_btn_lv_cls">关闭空位</string>

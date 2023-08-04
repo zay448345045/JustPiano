@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
@@ -252,6 +253,7 @@ final class OLPlayHallHandler extends Handler {
                                 olPlayHall.jpapplication.setIsShowDialog(false);
                             });
                         }
+                        DialogUtil.handleGoldSend(olPlayHall, olPlayHall.jpapplication, jpdialog, i, data14.getString("N"), string);
                         jpdialog.showDialog();
                         olPlayHall.jpapplication.setIsShowDialog(true);
                     }

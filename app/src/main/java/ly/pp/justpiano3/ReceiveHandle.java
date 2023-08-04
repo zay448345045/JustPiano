@@ -341,19 +341,11 @@ final class ReceiveHandle {
                             handler = ((OLPlayHall) JPStack.top()).olPlayHallHandler;
                             message.what = 9;
                             break;
-                        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                            handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
-                            message.what = 9;
-                            break;
                         }
                         return;
                     case 2:
                         if (JPStack.top() instanceof OLPlayHallRoom) {
                             handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
-                            message.what = 5;
-                            break;
-                        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                            handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                             message.what = 5;
                             break;
                         }
@@ -369,6 +361,7 @@ final class ReceiveHandle {
                         bundle.putInt("C", dialog.getCanEnter() ? 1 : 0);
                         bundle.putInt("H", dialog.getHallId());
                         bundle.putInt("R", dialog.getRoomId());
+                        bundle.putString("N", dialog.getName());
                         message.setData(bundle);
                         handler.handleMessage(message);
                     }
