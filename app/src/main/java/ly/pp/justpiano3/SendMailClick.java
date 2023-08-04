@@ -51,15 +51,15 @@ final class SendMailClick implements OnClickListener {
                     jSONObject2.put("type", 1);
                     JSONArray jSONArray = new JSONArray();
                     jSONArray.put(jSONObject2);
-                    ListView b = friendmailpage.f4019a;
+                    ListView b = friendmailpage.listView;
                     format = jSONArray.toString();
                     FriendMailPage.m3506a(friendmailpage, b, format);
                 }
             } else if (f6047c == 2) {
-                friendmailpage.f4021c.remove(f6049e);
-                if (friendmailpage.f4025g != null) {
-                    friendmailpage.f4025g.mo3634a(friendmailpage.f4021c);
-                    friendmailpage.f4025g.notifyDataSetChanged();
+                friendmailpage.list.remove(f6049e);
+                if (friendmailpage.friendMailPageAdapter != null) {
+                    friendmailpage.friendMailPageAdapter.mo3634a(friendmailpage.list);
+                    friendmailpage.friendMailPageAdapter.notifyDataSetChanged();
                 }
             }
             jSONObject.put("H", f6047c);

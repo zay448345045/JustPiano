@@ -28,7 +28,7 @@ final class ChangeSoundClick implements OnClickListener {
                 soundListAdapter.context.startActivity(intent);
                 break;
             default:
-                new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(f5990b, String.valueOf(soundListAdapter.f5984c[f5991c]));
+                new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(f5990b, String.valueOf(soundListAdapter.soundKeyList[f5991c]));
                 break;
         }
     }

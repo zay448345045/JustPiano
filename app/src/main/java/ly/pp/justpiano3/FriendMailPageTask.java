@@ -21,7 +21,7 @@ public final class FriendMailPageTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strArr) {
         String str = "";
-        if (friendMailPage.get().f4024f.isEmpty()) {
+        if (friendMailPage.get().type.isEmpty()) {
             return str;
         }
         // 创建HttpUrl.Builder对象，用于添加查询参数
@@ -51,7 +51,7 @@ public final class FriendMailPageTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String str) {
-        ListView b = friendMailPage.get().f4019a;
+        ListView b = friendMailPage.get().listView;
         FriendMailPage.m3506a(friendMailPage.get(), b, str);
         friendMailPage.get().jpProgressBar.cancel();
     }

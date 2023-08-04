@@ -97,11 +97,19 @@
             android:layout_centerVertical="true">
 
             <Button
+                    android:id="@+id/ol_chatblack_b"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="#40000000"
+                    android:text="@string/olmainmode_bi"
+                    android:textColor="@color/online"
+                    android:textSize="18sp" />
+
+            <Button
                 android:id="@+id/ol_finduser_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#10293535"
-
                 android:text="@string/olmainmode_fi"
                 android:textColor="#fffff66b"
                 android:textSize="18sp" />

@@ -19,42 +19,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendMailPage extends Activity implements Callback {
-    public ListView f4019a;
-    public List<JSONObject> f4021c;
+    public ListView listView;
+    public List<JSONObject> list;
     public JPApplication jpApplication;
     public JPProgressBar jpProgressBar;
-    public String f4024f = "F";
-    public FriendMailPageAdapter f4025g;
+    public String type = "B";
+    public FriendMailPageAdapter friendMailPageAdapter;
     private SharedPreferences sharedPreferences = null;
-    private final Editor f4028j = null;
+    private final Editor editor = null;
 
     static void m3506a(FriendMailPage friendMailPage, ListView listView, String str) {
         int i = 0;
         try {
             int i2;
             JSONArray jSONArray = new JSONArray(str);
-            friendMailPage.f4021c = new ArrayList<>();
+            friendMailPage.list = new ArrayList<>();
             int length = jSONArray.length();
             for (i2 = 0; i2 < length; i2++) {
-                friendMailPage.f4021c.add(jSONArray.getJSONObject(i2));
+                friendMailPage.list.add(jSONArray.getJSONObject(i2));
             }
-            if (friendMailPage.sharedPreferences != null && friendMailPage.f4028j != null) {
+            if (friendMailPage.sharedPreferences != null && friendMailPage.editor != null) {
                 jSONArray = new JSONArray(friendMailPage.sharedPreferences.getString("mailsString", "[]"));
                 length = jSONArray.length();
                 for (i2 = 0; i2 < length; i2++) {
-                    friendMailPage.f4021c.add(jSONArray.getJSONObject(i2));
+                    friendMailPage.list.add(jSONArray.getJSONObject(i2));
                 }
-                i2 = friendMailPage.f4021c.size();
+                i2 = friendMailPage.list.size();
                 jSONArray = new JSONArray();
                 while (i < i2) {
-                    jSONArray.put(friendMailPage.f4021c.get(i));
+                    jSONArray.put(friendMailPage.list.get(i));
                     i++;
                 }
-                friendMailPage.f4028j.putString("mailsString", jSONArray.toString());
-                friendMailPage.f4028j.commit();
+                friendMailPage.editor.putString("mailsString", jSONArray.toString());
+                friendMailPage.editor.commit();
             }
-            friendMailPage.f4025g = new FriendMailPageAdapter(friendMailPage, friendMailPage.f4021c);
-            listView.setAdapter(friendMailPage.f4025g);
+            friendMailPage.friendMailPageAdapter = new FriendMailPageAdapter(friendMailPage, friendMailPage.list);
+            listView.setAdapter(friendMailPage.friendMailPageAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -115,20 +115,20 @@ public class FriendMailPage extends Activity implements Callback {
                         return;
                 }
             case 4:
-                f4021c.remove(i2);
-                if (f4025g != null) {
-                    f4025g.mo3634a(f4021c);
-                    f4025g.notifyDataSetChanged();
+                list.remove(i2);
+                if (friendMailPageAdapter != null) {
+                    friendMailPageAdapter.mo3634a(list);
+                    friendMailPageAdapter.notifyDataSetChanged();
                 }
-                if (f4028j != null) {
-                    int size = f4021c.size();
+                if (editor != null) {
+                    int size = list.size();
                     JSONArray jSONArray = new JSONArray();
                     while (i3 < size) {
-                        jSONArray.put(f4021c.get(i3));
+                        jSONArray.put(list.get(i3));
                         i3++;
                     }
-                    f4028j.putString("mailsString", jSONArray.toString());
-                    f4028j.commit();
+                    editor.putString("mailsString", jSONArray.toString());
+                    editor.commit();
                     return;
                 }
                 return;
@@ -142,22 +142,31 @@ public class FriendMailPage extends Activity implements Callback {
     }
 
     @Override
+    public void onBackPressed() {
+        jpProgressBar.dismiss();
+        Intent intent = new Intent();
+        intent.setClass(this, OLMainMode.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         jpApplication = (JPApplication) getApplication();
-        f4024f = getIntent().getStringExtra("type");
+        type = getIntent().getStringExtra("type");
         setContentView(R.layout.friendmailpage);
-        f4019a = findViewById(R.id.list_view);
-        f4019a.setCacheColorHint(0);
-        TextView f4026h = findViewById(R.id.ol_top_title);
-        if (f4024f.equals("F")) {
-            f4026h.setText("-好友列表-");
-        } else if (f4024f.endsWith("M")) {
-            f4026h.setText("-邮件列表-");
+        listView = findViewById(R.id.list_view);
+        listView.setCacheColorHint(0);
+        TextView textView = findViewById(R.id.ol_top_title);
+        if (type.equals("B")) {
+            textView.setText("聊天屏蔽用户名单");
+        } else if (type.endsWith("M")) {
+            textView.setText("-邮件列表-");
             sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
             //f4028j = sharedPreferences.edit();
         }
         jpProgressBar = new JPProgressBar(this);
-        new FriendMailPageTask(this).execute(f4024f, "GetSocialInfo");
+        new FriendMailPageTask(this).execute(type, "GetSocialInfo");
     }
 }

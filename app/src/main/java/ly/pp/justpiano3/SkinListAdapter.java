@@ -11,24 +11,24 @@ import android.widget.TextView;
 final class SkinListAdapter extends BaseAdapter {
     final SkinListPreference skinListPreference;
     Context context;
-    private CharSequence[] f5938b;
-    private CharSequence[] f5939c;
+    private CharSequence[] skinNameList;
+    private CharSequence[] skinKeyList;
 
-    SkinListAdapter(SkinListPreference skinListPreference, Context context, CharSequence[] charSequenceArr, CharSequence[] charSequenceArr2) {
+    SkinListAdapter(SkinListPreference skinListPreference, Context context, CharSequence[] skinNameList, CharSequence[] skinKeyList) {
         this.skinListPreference = skinListPreference;
         this.context = context;
-        f5938b = charSequenceArr;
-        f5939c = charSequenceArr2;
+        this.skinNameList = skinNameList;
+        this.skinKeyList = skinKeyList;
     }
 
-    final void mo3544a(CharSequence[] charSequenceArr, CharSequence[] charSequenceArr2) {
-        f5938b = charSequenceArr;
-        f5939c = charSequenceArr2;
+    final void mo3544a(CharSequence[] skinNameList, CharSequence[] skinKeyList) {
+        this.skinNameList = skinNameList;
+        this.skinKeyList = skinKeyList;
     }
 
     @Override
     public int getCount() {
-        return f5938b.length;
+        return skinNameList.length;
     }
 
     @Override
@@ -46,23 +46,23 @@ final class SkinListAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.ol_skin_view, null);
         }
-        String valueOf = String.valueOf(f5939c[i]);
-        ((TextView) view.findViewById(R.id.skin_name)).setText(f5938b[i]);
+        String skinKey = String.valueOf(skinKeyList[i]);
+        ((TextView) view.findViewById(R.id.skin_name_view)).setText(skinNameList[i]);
         Button button = view.findViewById(R.id.skin_dele);
-        if (valueOf.equals("original") || valueOf.equals("more")) {
-            button.setVisibility(View.GONE);
+        if (skinKey.equals("original") || skinKey.equals("more")) {
+            button.setVisibility(View.INVISIBLE);
         } else {
             button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(v -> skinListPreference.deleteFiles(valueOf));
+            button.setOnClickListener(v -> skinListPreference.deleteFiles(skinKey));
         }
         button = view.findViewById(R.id.set_skin);
-        if (valueOf.equals("more")) {
+        if (skinKey.equals("more")) {
             button.setText("点击获取更多皮肤");
         } else {
             button.setText("设置皮肤");
         }
-        button.setOnClickListener(new ChangeSkinClick(this, valueOf));
-        skinListPreference.str1 = valueOf;
+        button.setOnClickListener(new ChangeSkinClick(this, skinKey));
+        skinListPreference.skinKey = skinKey;
         return view;
     }
 }

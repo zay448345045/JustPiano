@@ -47,7 +47,7 @@ final class FriendMailPageAdapter extends BaseAdapter {
         TextView textView2;
         Button button;
         Button button2;
-        if (friendMailPage.f4024f.equals("F")) {
+        if (friendMailPage.type.equals("F")) {
             if (view == null) {
                 view = friendMailPage.getLayoutInflater().inflate(R.layout.friend_view, null);
             }
@@ -73,7 +73,7 @@ final class FriendMailPageAdapter extends BaseAdapter {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else if (friendMailPage.f4024f.equals("M")) {
+        } else if (friendMailPage.type.equals("M")) {
             if (view == null) {
                 view = friendMailPage.getLayoutInflater().inflate(R.layout.ol_mail_view, null);
             }

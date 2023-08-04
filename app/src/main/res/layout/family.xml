@@ -31,6 +31,7 @@
                 android:layout_marginStart="@dimen/dimen_3dp"
                 android:layout_weight="2.5"
                 android:gravity="center"
+                android:text="@string/family_position"
                 android:textColor="@color/songname"
                 android:textSize="14sp"
                 android:textStyle="bold" />

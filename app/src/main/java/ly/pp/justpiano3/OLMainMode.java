@@ -72,6 +72,12 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 startActivity(intent);
                 finish();
                 return;
+            case R.id.ol_chatblack_b:
+                intent.putExtra("type", "B");
+                intent.setClass(this, FriendMailPage.class);
+                startActivity(intent);
+                finish();
+                return;
             case R.id.ol_finduser_b:
                 intent.putExtra("head", 6);
                 intent.setClass(this, SearchSongs.class);
@@ -104,6 +110,8 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         Button webButton = findViewById(R.id.ol_web_b);
         webButton.setOnClickListener(this);
         webButton.setVisibility(View.VISIBLE);
+        Button chatBlackButton = findViewById(R.id.ol_chatblack_b);
+        chatBlackButton.setOnClickListener(this);
         Button findUserButton = findViewById(R.id.ol_finduser_b);
         findUserButton.setOnClickListener(this);
         try {

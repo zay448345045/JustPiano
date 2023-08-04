@@ -11,24 +11,24 @@ import android.widget.TextView;
 final class SoundListAdapter extends BaseAdapter {
     final SoundListPreference soundListPreference;
     Context context;
-    CharSequence[] f5984c;
-    private CharSequence[] f5983b;
+    CharSequence[] soundKeyList;
+    private CharSequence[] soundNameList;
 
-    SoundListAdapter(SoundListPreference soundListPreference, Context context, CharSequence[] charSequenceArr, CharSequence[] charSequenceArr2) {
+    SoundListAdapter(SoundListPreference soundListPreference, Context context, CharSequence[] soundNameList, CharSequence[] soundKeyList) {
         this.soundListPreference = soundListPreference;
         this.context = context;
-        f5983b = charSequenceArr;
-        f5984c = charSequenceArr2;
+        this.soundNameList = soundNameList;
+        this.soundKeyList = soundKeyList;
     }
 
-    final void mo3583a(CharSequence[] charSequenceArr, CharSequence[] charSequenceArr2) {
-        f5983b = charSequenceArr;
-        f5984c = charSequenceArr2;
+    final void mo3583a(CharSequence[] soundNameList, CharSequence[] soundKeyList) {
+        this.soundNameList = soundNameList;
+        this.soundKeyList = soundKeyList;
     }
 
     @Override
     public int getCount() {
-        return f5983b.length;
+        return soundNameList.length;
     }
 
     @Override
@@ -46,23 +46,23 @@ final class SoundListAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.ol_skin_view, null);
         }
-        String valueOf = String.valueOf(f5984c[i]);
-        ((TextView) view.findViewById(R.id.skin_name)).setText(f5983b[i]);
+        String soundKey = String.valueOf(soundKeyList[i]);
+        ((TextView) view.findViewById(R.id.skin_name_view)).setText(soundNameList[i]);
         Button button = view.findViewById(R.id.skin_dele);
-        if (valueOf.equals("original") || valueOf.equals("more")) {
-            button.setVisibility(View.GONE);
+        if (soundKey.equals("original") || soundKey.equals("more")) {
+            button.setVisibility(View.INVISIBLE);
         } else {
             button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(v -> soundListPreference.deleteFiles(valueOf));
+            button.setOnClickListener(v -> soundListPreference.deleteFiles(soundKey));
         }
         button = view.findViewById(R.id.set_skin);
-        if (valueOf.equals("more")) {
+        if (soundKey.equals("more")) {
             button.setText("点击获取更多音源");
         } else {
             button.setText("设置音源");
         }
-        button.setOnClickListener(new ChangeSoundClick(this, valueOf, i));
-        soundListPreference.str1 = valueOf;
+        button.setOnClickListener(new ChangeSoundClick(this, soundKey, i));
+        soundListPreference.soundKey = soundKey;
         return view;
     }
 }
