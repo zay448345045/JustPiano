@@ -10,5 +10,4 @@
 /captures
 .externalNativeBuild
 /app/src/main/generated/protobuf/
-/.idea/
-/.idea/
+.idea
