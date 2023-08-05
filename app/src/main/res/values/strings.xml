@@ -318,7 +318,7 @@
     <string name="ol_keyboard_sync_mode_concerto">协奏同步</string>
     <string name="ol_keyboard_sync_mode_text">编排</string>
     <string name="ol_keyboard_sync_mode_help">
-        编排同步：\n
+        编排同步(暂未完成)：\n
         \t\t在一个周期内弹奏的音符会被排列，固定延迟同步给大家\n
         \t\t适用于保证演奏效果或弱网络下，大部分音符不会被网络所耽误\n
         \t\t总结：延迟高，同步效率低，不会被延迟打乱演奏效果，适合单人演奏\n

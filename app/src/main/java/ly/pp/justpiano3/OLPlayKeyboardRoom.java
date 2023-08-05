@@ -45,7 +45,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     /**
      * 键盘房间同步模式(默认编排模式)
      */
-    private KeyboardSyncModeEnum keyboardSyncMode = KeyboardSyncModeEnum.ORCHESTRATE;
+    private KeyboardSyncModeEnum keyboardSyncMode = KeyboardSyncModeEnum.CONCERTO;
     protected String hallName;
     List<Bundle> friendPlayerList = new ArrayList<>();
     boolean canNotNextPage;
@@ -1165,18 +1165,19 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 // 时间戳和size尽量严格放在一起
                 long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
+                // 刷新玩家弹奏闪烁（删除闪烁）
+                if (olKeyboardStates[roomPositionSub1].isPlaying()) {
+                    olKeyboardStates[roomPositionSub1].setPlaying(false);
+                    runOnUiThread(() -> {
+                        if (playerGrid.getAdapter() != null) {
+                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                        }
+                    });
+                }
                 // 房间里没有其他人，停止发任何消息，清空弹奏队列（因为可能刚刚变为房间没人的状态，队列可能有遗留
                 if (!hasAnotherUser()) {
                     notesQueue.clear();
                     lastNoteScheduleTime = scheduleTimeNow;
-                    if (olKeyboardStates[roomPositionSub1].isPlaying()) {
-                        olKeyboardStates[roomPositionSub1].setPlaying(false);
-                        runOnUiThread(() -> {
-                            if (playerGrid.getAdapter() != null) {
-                                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                            }
-                        });
-                    }
                     return;
                 }
                 // 未检测到这段间隔有弹奏音符，或者房间里没有其他人，就不发消息给服务器，直接返回并记录此次定时任务执行时间点

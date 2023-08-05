@@ -94,6 +94,9 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                 case 5:
                     post(() -> {
                         byte[] notes = message.getData().getByteArray("NOTES");
+                        if (notes.length == 0) {
+                            return;
+                        }
                         int roomPositionSub1 = (byte) (notes[0] & 0xF);
                         User user = olPlayKeyboardRoom.jpapplication.getHashmap().get((byte) (roomPositionSub1 + 1));
                         if (user == null) {
