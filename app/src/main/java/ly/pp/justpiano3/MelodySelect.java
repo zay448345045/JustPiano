@@ -157,7 +157,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         radioButton.setHeight(100);
                         jpdialog.addRadioButton(radioButton);
                         radioButton = new RadioButton(this);
-                        radioButton.setText("导入SD卡\\JustPiano\\local_data.db中的数据至APP(导入后将清除当前数据)");
+                        radioButton.setText("导入SD卡\\JustPiano\\local_data.db数据至APP(导入会清除当前数据)");
                         radioButton.setTextSize(13);
                         radioButton.setTag(2);
                         radioButton.setHeight(100);
@@ -429,7 +429,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
             listView.setAdapter(popupWindowSelectAdapter);
             listView.setDivider(null);
-            menuPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 10, -2, true);
+            menuPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
             menuPopupwindow.setOutsideTouchable(true);
             menuPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
             firstLoadFocusFinish = true;

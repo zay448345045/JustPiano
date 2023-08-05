@@ -12,10 +12,11 @@
         android:layout_marginTop="@dimen/dimen_2dp"
         android:layout_marginEnd="@dimen/dimen_3dp"
         android:layout_marginBottom="@dimen/dimen_2dp"
+        android:maxLines="1"
         android:background="@drawable/selector_ol_button"
         android:textStyle="bold"
         android:gravity="center"
         android:text="@string/f_view"
         android:textColor="@color/white1"
-        android:textSize="18sp"/>
+        android:textSize="16sp"/>
 </LinearLayout>

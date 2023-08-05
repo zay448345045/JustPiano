@@ -141,7 +141,7 @@
 
             <ImageView
                 android:id="@+id/search_fast"
-                android:layout_width="@dimen/dimen_55dp"
+                android:layout_width="@dimen/dimen_40dp"
                 android:layout_height="@dimen/dimen_0dp"
                 android:layout_weight="0.25"
                 android:background="@drawable/selector_ol_button"
