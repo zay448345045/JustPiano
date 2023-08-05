@@ -30,7 +30,7 @@
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
 
@@ -40,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-
             android:text="@string/register_name"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -61,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/id"
             android:layout_alignStart="@+id/id"
-
             android:text="@string/register_sex"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -72,7 +70,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/age"
             android:layout_alignParentStart="true"
-
             android:text="@string/user_info_ts"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -83,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/score"
             android:layout_alignStart="@+id/score"
-
             android:text="@string/user_info_w"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -94,7 +90,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/num"
             android:layout_alignParentStart="true"
-
             android:text="@string/user_info_si"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -105,7 +100,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/name"
             android:layout_alignStart="@+id/name"
-
             android:text="@string/login_acc_label"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -127,7 +121,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/sign"
             android:layout_toEndOf="@+id/num"
-
             android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -160,7 +153,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/num"
             android:layout_toEndOf="@+id/score"
-
             android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -174,7 +166,6 @@
             android:layout_toEndOf="@+id/age"
             android:background="@color/blue_translent"
             android:inputType="number"
-
             android:text="@string/user_info_1990"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -182,7 +173,7 @@
         <ScrollView
             android:id="@+id/ScrollView01"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_80dp"
             android:layout_below="@+id/sign"
             android:layout_alignStart="@+id/sign">
 
@@ -190,9 +181,8 @@
                 style="@style/ShadowText"
                 android:id="@+id/users_info_msg"
                 android:layout_width="@dimen/dimen_240dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/blue_translent"
-
                 android:textColor="@color/green_r"
                 android:textSize="20sp" />
         </ScrollView>
@@ -203,7 +193,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/user_score"
             android:layout_toEndOf="@+id/user_age"
-
             android:text="@string/user_info_year"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
@@ -211,17 +200,16 @@
         <TextView
             android:id="@+id/app_size"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_below="@+id/user_face"
-
             android:layout_alignEnd="@+id/user_face"/>
         <!--            android:text="(点击头像设置)"-->
-
 
         <ImageView
             android:id="@+id/user_face"
             android:layout_width="@dimen/dimen_160dp"
             android:layout_height="@dimen/dimen_160dp"
+            android:layout_marginStart="@dimen/dimen_72dp"
             android:layout_toEndOf="@+id/ScrollView01"
             android:layout_alignTop="@+id/user_kitiname"
             android:background="@drawable/ol_rectangle_orange"
@@ -232,9 +220,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/app_size"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/selector_orange_button"
             android:layout_alignEnd="@+id/app_size"
-
             android:text="@string/user_info_mod_pass"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -246,7 +235,6 @@
             android:layout_below="@+id/password_button"
             android:layout_alignStart="@+id/password_button"
             android:background="@drawable/selector_orange_button"
-
             android:text="@string/user_info_confirm"
             android:textColor="@color/white1"
             android:textSize="24sp" />
