@@ -11,7 +11,6 @@ import java.lang.ref.WeakReference;
 
 public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
-    private String f6010b = "";
 
     UsersInfoTask2(UsersInfo usersInfo) {
         this.usersInfo = new WeakReference<>(usersInfo);
@@ -35,16 +34,16 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
             case "6":
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "密码修改成功!", Toast.LENGTH_LONG).show();
-                Editor edit = JPApplication.sharedpreferences.edit();
-                if (usersInfo.get().f5059c) {
+                Editor edit = JPApplication.accountListSharedPreferences.edit();
+                if (usersInfo.get().rememberNewPassword) {
                     edit.putString("name", usersInfo.get().jpapplication.getAccountName());
-                    edit.putString("password", f6010b);
-                    edit.putBoolean("chec_psw", usersInfo.get().f5059c);
-                    edit.putBoolean("chec_autologin", usersInfo.get().f5058b);
+                    edit.putString("password", "");
+                    edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);
+                    edit.putBoolean("chec_autologin", usersInfo.get().autoLogin);
                 } else {
                     edit.putString("password", "");
-                    edit.putBoolean("chec_psw", usersInfo.get().f5059c);
-                    edit.putBoolean("chec_autologin", usersInfo.get().f5059c);
+                    edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);
+                    edit.putBoolean("chec_autologin", usersInfo.get().rememberNewPassword);
                 }
                 edit.apply();
                 break;

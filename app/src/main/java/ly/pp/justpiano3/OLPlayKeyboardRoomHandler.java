@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
@@ -53,10 +54,18 @@ final class OLPlayKeyboardRoomHandler extends Handler {
                             time = new SimpleDateFormat("HH:mm", Locale.CHINESE).format(new Date(olPlayKeyboardRoom.jpapplication.getServerTime()));
                         }
                         message.getData().putString("TIME", time);
-                        olPlayKeyboardRoom.msgList.add(message.getData());
+
+                        // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
+                        if (!ChatBlackUserUtil.isUserInChatBlackList(olPlayKeyboardRoom.jpapplication.getChatBlackList(), message.getData().getString("U"))) {
+                            olPlayKeyboardRoom.msgList.add(message.getData());
+                        }
+
+                        // 聊天音效播放
                         if (olPlayKeyboardRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayKeyboardRoom.jpapplication.getKitiName())) {
                             olPlayKeyboardRoom.jpapplication.playChatSound();
                         }
+
+                        // 聊天记录存储
                         if (ds.getBoolean("save_chats", false)) {
                             try {
                                 File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");

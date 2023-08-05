@@ -53,19 +53,19 @@ public class User implements Serializable {
         this.shoes = shoes;
     }
 
-    final String getPlayerName() {
+    public final String getPlayerName() {
         return playerName;
     }
 
-    final void setPlayerName(String str) {
+    public final void setPlayerName(String str) {
         playerName = str;
     }
 
-    final String getSex() {
+    public final String getSex() {
         return sex;
     }
 
-    final String getStatus() {
+    public final String getStatus() {
         return status;
     }
 
@@ -73,43 +73,43 @@ public class User implements Serializable {
         status = str;
     }
 
-    final void setOpenPosition() {
+    public final void setOpenPosition() {
         ishost = "OPEN";
     }
 
-    final String getIsHost() {
+    public final String getIsHost() {
         return ishost;
     }
 
-    final byte getPosition() {
+    public final byte getPosition() {
         return position;
     }
 
-    final String getScore() {
+    public final String getScore() {
         return String.valueOf(score);
     }
 
-    final void setScore(int i) {
+    public final void setScore(int i) {
         score = i;
     }
 
-    final int getKuang() {
+    public final int getKuang() {
         return kuang;
     }
 
-    final int getLevel() {
+    public final int getLevel() {
         return level;
     }
 
-    final int getTrousers() {
+    public final int getTrousers() {
         return trousers;
     }
 
-    final int getJacket() {
+    public final int getJacket() {
         return jacket;
     }
 
-    final int getHair() {
+    public final int getHair() {
         return hair;
     }
 
@@ -121,35 +121,35 @@ public class User implements Serializable {
         this.eye = eye;
     }
 
-    final int getCLevel() {
+    public final int getCLevel() {
         return clevel;
     }
 
-    final int getHand() {
+    public final int getHand() {
         return hand;
     }
 
-    final int getCpKind() {
+    public final int getCpKind() {
         return cpKind;
     }
 
-    final int getShoes() {
+    public final int getShoes() {
         return shoes;
     }
 
-    final int getCombo() {
+    public final int getCombo() {
         return combo;
     }
 
-    final void setCombo(int i) {
+    public final void setCombo(int i) {
         combo = i;
     }
 
-    final String getFamilyID() {
+    public final String getFamilyID() {
         return familyID;
     }
 
-    final void setFamilyID(String familyID) {
+    public final void setFamilyID(String familyID) {
         this.familyID = familyID;
     }
 }

@@ -73,8 +73,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case R.id.ol_chatblack_b:
-                intent.putExtra("type", "B");
-                intent.setClass(this, FriendMailPage.class);
+                intent.setClass(this, UserListPage.class);
                 startActivity(intent);
                 finish();
                 return;

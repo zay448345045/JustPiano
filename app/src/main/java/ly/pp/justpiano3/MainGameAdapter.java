@@ -138,6 +138,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 Button button2 = view.findViewById(R.id.ol_friend_game);
                 Button dialogButton = view.findViewById(R.id.ol_friend_dialog);
                 Button goldSendButton = view.findViewById(R.id.ol_friend_gold_send);
+                goldSendButton.setVisibility(View.VISIBLE);
                 goldSendButton.setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
                     OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();

@@ -14,10 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-
         android:text="@string/ol_btn_lv_info"
         android:textColor="@color/white1"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/ol_chat_b"
@@ -25,10 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-
         android:text="@string/ol_btn_lv_pm"
         android:textColor="@color/white1"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/ol_couple_b"
@@ -36,10 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-
         android:text="@string/ol_btn_lv_cp"
         android:textColor="@color/white1"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/ol_kickout_b"
@@ -47,10 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_15dp"
         android:background="@drawable/selector_ol_button_login"
-
         android:text="@string/ol_btn_lv_kick"
         android:textColor="@color/white1"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/ol_closepos_b"
@@ -58,10 +54,30 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-
         android:text="@string/ol_btn_lv_cls"
         android:textColor="@color/white1"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/ol_chat_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_6dp"
+        android:background="@drawable/selector_ol_button_login"
+        android:text="@string/ol_btn_chat_b"
+        android:textColor="@color/white1"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/ol_chat_black_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_6dp"
+        android:background="@drawable/selector_ol_button"
+        android:text="@string/ol_btn_chat_b_c"
+        android:textColor="@color/white1"
+        android:visibility="gone"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/ol_sound_b"
@@ -69,9 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_6dp"
         android:background="@drawable/selector_ol_button"
-
         android:text="@string/ol_btn_lv_mute"
         android:textColor="@color/white1"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:visibility="gone" />
 </LinearLayout>

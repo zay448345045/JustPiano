@@ -133,6 +133,8 @@
     <string name="ol_btn_lv_kick">移出房间</string>
     <string name="ol_btn_lv_cls">关闭空位</string>
     <string name="ol_btn_lv_mute">静音</string>
+    <string name="ol_btn_chat_b">屏蔽聊天</string>
+    <string name="ol_btn_chat_b_c">取消屏蔽</string>
     <string name="ol_c_challenge_view">(空)</string>
     <string name="ol_c_finish_view">用户</string>
     <string name="ol_c_view_name">曲目名称</string>

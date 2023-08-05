@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.utils;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.widget.Toast;
 import ly.pp.justpiano3.DialogDismissClick;
@@ -32,6 +31,7 @@ public class DialogUtil {
                     return;
                 }
                 dialog.dismiss();
+                jpApplication.setIsShowDialog(false);
                 OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                 builder.setType(3);
                 builder.setName(userName);

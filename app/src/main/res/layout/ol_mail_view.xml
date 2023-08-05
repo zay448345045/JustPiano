@@ -25,7 +25,6 @@
             android:layout_marginBottom="@dimen/dimen_5dp"
             android:background="@drawable/ol_rectangle_white"
             android:text="@string/f_view"
-
             android:textSize="18sp" />
 
         <TextView
@@ -36,7 +35,6 @@
             android:layout_toEndOf="@+id/fromTo"
             android:background="@drawable/selector_ol_button"
             android:text="@string/file_name"
-
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="12sp" />
 
@@ -47,7 +45,6 @@
             android:layout_alignBaseline="@+id/ol_from_user"
             android:layout_alignBottom="@+id/ol_from_user"
             android:layout_alignParentStart="true"
-
             android:background="@drawable/ol_rectangle_blue"
             android:text="@string/ol_mail_view_from"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -60,7 +57,6 @@
             android:layout_alignBottom="@id/ol_from_user"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-
             android:background="@drawable/selector_ol_button"
             android:text="@string/account_name_del"
             android:textColor="@color/white1"
@@ -72,7 +68,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ol_from_user"
             android:layout_alignParentTop="true"
-
             android:layout_toStartOf="@+id/mail_dele"
             android:background="@drawable/selector_ol_button"
             android:text="@string/ol_mail_view_re"
@@ -89,7 +84,6 @@
             android:background="@drawable/selector_ol_button"
             android:text="@string/ol_mail_view_re"
             android:textColor="@color/white1"
-
             android:textSize="12sp" />
 
         <TextView
@@ -99,7 +93,6 @@
             android:layout_alignEnd="@+id/ol_mail_msg"
             android:layout_alignBottom="@+id/ol_mail_msg"
             android:text="@string/ol_mail_view_time"
-
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="10sp" />
     </RelativeLayout>

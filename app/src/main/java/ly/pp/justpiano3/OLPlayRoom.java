@@ -461,7 +461,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView3.setVisibility(View.GONE);
         textView2.setText("内容:");
-        new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate).setFirstButton("发送", new SendMailClick2(this, textView, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate).setFirstButton("发送", new SendMailClick(this, textView, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     public final void mo2867c(String str) {

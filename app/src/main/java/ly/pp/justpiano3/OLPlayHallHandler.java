@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
@@ -52,10 +53,18 @@ final class OLPlayHallHandler extends Handler {
                         time = new SimpleDateFormat("HH:mm", Locale.CHINESE).format(new Date(olPlayHall.jpapplication.getServerTime()));
                     }
                     message.getData().putString("TIME", time);
-                    olPlayHall.msgList.add(message.getData());
+
+                    // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
+                    if (!ChatBlackUserUtil.isUserInChatBlackList(olPlayHall.jpapplication.getChatBlackList(), message.getData().getString("U"))) {
+                        olPlayHall.msgList.add(message.getData());
+                    }
+
+                    // 聊天音效播放
                     if (olPlayHall.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
                         olPlayHall.jpapplication.playChatSound();
                     }
+
+                    // 聊天记录存储
                     if (ds.getBoolean("save_chats", false)) {
                         try {
                             String date = new SimpleDateFormat("yyyy-MM-dd聊天记录", Locale.CHINESE).format(new Date(System.currentTimeMillis()));

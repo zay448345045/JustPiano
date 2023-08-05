@@ -15,32 +15,44 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.multidex.MultiDex;
+import io.netty.util.internal.StringUtil;
 import javazoom.jl.converter.Converter;
+import ly.pp.justpiano3.entity.SimpleUser;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.security.KeyPair;
 import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class JPApplication extends Application {
 
     /**
      * 官网地址
      */
-    public static final String WEBSITE_URL = "i.justpiano.fun";
+    public static final String WEBSITE_URL = "justpiano.fun";
+
+    /**
+     * apk资源下载地址
+     */
+    public static final String RESOURCE_WEBSITE_URL = "i.justpiano.fun";
 
     /**
      * 对战服务器地址
      */
     public static final String ONLINE_SERVER_URL = "server.justpiano.fun";
 
+    /**
+     * 测试对战服务器地址
+     */
+    public static final String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
+
     private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
-    static SharedPreferences sharedpreferences;
+    static SharedPreferences accountListSharedPreferences;
     private static Context context;
     public static int SETTING_MODE_CODE = 122;
 
@@ -77,6 +89,7 @@ public final class JPApplication extends Application {
     private final Map<Byte, User> hashMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
+    private List<SimpleUser> chatBlackList;
     private String nowSongsName = "";
     private String server = ONLINE_SERVER_URL;
     private boolean keyboardPrefer;
@@ -386,7 +399,7 @@ public final class JPApplication extends Application {
 
     public String getAccountName() {
         if (accountName.isEmpty()) {
-            accountName = sharedpreferences.getString("name", "");
+            accountName = accountListSharedPreferences.getString("name", "");
         }
         return accountName;
     }
@@ -397,7 +410,7 @@ public final class JPApplication extends Application {
 
     public String getPassword() {
         if (password.isEmpty()) {
-            password = sharedpreferences.getString("password", "");
+            password = accountListSharedPreferences.getString("password", "");
         }
         return password;
     }
@@ -416,9 +429,38 @@ public final class JPApplication extends Application {
 
     public String getKitiName() {
         if (kitiName.isEmpty()) {
-            kitiName = sharedpreferences.getString("userKitiName", "");
+            kitiName = accountListSharedPreferences.getString("userKitiName", "");
         }
         return kitiName;
+    }
+
+    public List<SimpleUser> getChatBlackList() {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(accountListSharedPreferences);
+        }
+        return chatBlackList;
+    }
+
+    public void chatBlackListAddUser(SimpleUser simpleUser) {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(accountListSharedPreferences);
+        }
+        chatBlackList.add(simpleUser);
+        ChatBlackUserUtil.saveChatBlackList(accountListSharedPreferences, chatBlackList);
+    }
+
+    public void chatBlackListRemoveUser(String userName) {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(accountListSharedPreferences);
+        }
+        List<SimpleUser> simpleUserList = new ArrayList<>();
+        for (SimpleUser simpleUser : chatBlackList) {
+            if (!Objects.equals(simpleUser.getName(), userName)) {
+                simpleUserList.add(simpleUser);
+            }
+        }
+        chatBlackList = simpleUserList;
+        ChatBlackUserUtil.saveChatBlackList(accountListSharedPreferences, chatBlackList);
     }
 
     public void setKitiName(String str) {
@@ -629,7 +671,7 @@ public final class JPApplication extends Application {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         context = getApplicationContext();
-        sharedpreferences = getSharedPreferences("account_list", MODE_PRIVATE);
+        accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 midiConnectionListeners = new ArrayList<>();

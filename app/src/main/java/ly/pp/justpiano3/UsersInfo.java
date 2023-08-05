@@ -23,8 +23,8 @@ import java.net.URL;
 
 public class UsersInfo extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;
-    boolean f5058b = false;
-    boolean f5059c = false;
+    boolean autoLogin = false;
+    boolean rememberNewPassword = false;
     JPProgressBar jpprogressBar;
     String pSign;
     int age;
@@ -249,17 +249,18 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
 //                }
             case R.id.password_button:
                 View inflate = getLayoutInflater().inflate(R.layout.password_change, findViewById(R.id.dialog));
-                TextView textView = inflate.findViewById(R.id.original_password);
-                TextView textView2 = inflate.findViewById(R.id.new_password);
-                TextView textView3 = inflate.findViewById(R.id.confirm_password);
-                CheckBox checkBox = inflate.findViewById(R.id.auto_login);
-                checkBox.setChecked(JPApplication.sharedpreferences.getBoolean("chec_autologin", false));
-                CheckBox checkBox2 = inflate.findViewById(R.id.re_password);
-                checkBox2.setChecked(JPApplication.sharedpreferences.getBoolean("chec_psw", false));
+                TextView originalPasswordTextView = inflate.findViewById(R.id.original_password);
+                TextView newPasswordTextView = inflate.findViewById(R.id.new_password);
+                TextView confirmPasswordTextView = inflate.findViewById(R.id.confirm_password);
+                CheckBox autoLoginCheckBox = inflate.findViewById(R.id.auto_login);
+                autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
+                CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
+                remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog
                         .setTitle("修改密码").loadInflate(inflate)
-                        .setFirstButton("确定", new ChangePasswordClick(this, textView, textView2, textView3, checkBox, checkBox2))
+                        .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
+                                newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
                         .setSecondButton("取消", new DialogDismissClick())
                         .showDialog();
                 return;
@@ -291,10 +292,10 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.user_info);
         accountText = findViewById(R.id.user_name);
-        Button f5076t = findViewById(R.id.modify_button);
-        f5076t.setOnClickListener(this);
-        Button f5077u = findViewById(R.id.password_button);
-        f5077u.setOnClickListener(this);
+        Button modifyButton = findViewById(R.id.modify_button);
+        modifyButton.setOnClickListener(this);
+        Button passwordButton = findViewById(R.id.password_button);
+        passwordButton.setOnClickListener(this);
         nameText = findViewById(R.id.user_kitiname);
         sexText = findViewById(R.id.user_sex);
         winnerNumText = findViewById(R.id.user_num);
@@ -304,8 +305,8 @@ public class UsersInfo extends Activity implements Callback, OnClickListener {
         faceImage.setOnClickListener(this);
         ageText = findViewById(R.id.user_age);
         jpprogressBar = new JPProgressBar(this);
-        Handler f5056B = new Handler(this);
-        pictureHandle = new PictureHandle(f5056B, 1);
+        Handler pictureHandler = new Handler(this);
+        pictureHandle = new PictureHandle(pictureHandler, 1);
         new UsersInfoTask(this).execute();
     }
 }

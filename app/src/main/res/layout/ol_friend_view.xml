@@ -121,6 +121,7 @@
             android:layout_toEndOf="@+id/ol_friend_dialog"
             android:background="@drawable/selector_ol_button"
             android:text="@string/ol_btn_lv_gold_send"
+            android:visibility="gone"
             android:textColor="@color/white1"
             android:textSize="18sp" />
 

@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
+import ly.pp.justpiano3.entity.SimpleUser;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineKickedQuitRoomDTO;
@@ -18,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     byte roomID;
@@ -37,19 +40,21 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     private PopupWindow m4034a(User user) {
         PopupWindow popupWindow = new PopupWindow(olPlayKeyboardRoom);
         View inflate = LayoutInflater.from(olPlayKeyboardRoom).inflate(R.layout.ol_buttonlist_view, null);
-        Button button = inflate.findViewById(R.id.ol_showinfo_b);
-        Button button2 = inflate.findViewById(R.id.ol_chat_b);
-        Button button3 = inflate.findViewById(R.id.ol_kickout_b);
-        Button button4 = inflate.findViewById(R.id.ol_closepos_b);
-        Button button5 = inflate.findViewById(R.id.ol_couple_b);
-        Button button6 = inflate.findViewById(R.id.ol_sound_b);
-        button6.setVisibility(View.VISIBLE);
+        Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);
+        Button privateChatButton = inflate.findViewById(R.id.ol_chat_b);
+        Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);
+        Button closePositionButton = inflate.findViewById(R.id.ol_closepos_b);
+        Button showCoupleDialogButton = inflate.findViewById(R.id.ol_couple_b);
+        Button chatBlackButton = inflate.findViewById(R.id.ol_chat_black);
+        Button chatBlackCancelButton = inflate.findViewById(R.id.ol_chat_black_cancel);
+        Button soundMuteButton = inflate.findViewById(R.id.ol_sound_b);
+        soundMuteButton.setVisibility(View.VISIBLE);
         if (olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted()) {
-            button6.setText("取消静音");
+            soundMuteButton.setText("取消静音");
         } else {
-            button6.setText("静音");
+            soundMuteButton.setText("静音");
         }
-        button6.setOnClickListener(v -> {
+        soundMuteButton.setOnClickListener(v -> {
             olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted());
             notifyDataSetChanged();
             if (popupWindow.isShowing()) {
@@ -65,10 +70,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         popupWindow.setOutsideTouchable(true);
         if (!user.getPlayerName().equals(JPApplication.kitiName)) {
             if (user.getCpKind() <= 0 || user.getCpKind() > 3) {
-                button5.setVisibility(View.GONE);
+                showCoupleDialogButton.setVisibility(View.GONE);
             } else {
-                button5.setText(Consts.coupleType[user.getCpKind() - 1]);
-                button5.setOnClickListener(v -> {
+                showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);
+                showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (connectionService != null) {
@@ -81,9 +86,9 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 });
             }
             if (user.getIsHost().equals("C") || user.getIsHost().equals("O")) {
-                button2.setVisibility(View.GONE);
+                privateChatButton.setVisibility(View.GONE);
             } else {
-                button2.setOnClickListener(v -> {
+                privateChatButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         Bundle bundle = new Bundle();
@@ -96,12 +101,12 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                 });
             }
             if (!olPlayKeyboardRoom.playerKind.equals("H")) {
-                button3.setVisibility(View.GONE);
-                button4.setVisibility(View.GONE);
+                kickOutButton.setVisibility(View.GONE);
+                closePositionButton.setVisibility(View.GONE);
             } else if (user.getIsHost().equals("C")) {
-                button4.setText("打开空位");
-                button3.setVisibility(View.GONE);
-                button4.setOnClickListener(v -> {
+                closePositionButton.setText("打开空位");
+                kickOutButton.setVisibility(View.GONE);
+                closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
@@ -112,9 +117,9 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     }
                 });
             } else if (user.getIsHost().equals("O")) {
-                button4.setText("关闭空位");
-                button3.setVisibility(View.GONE);
-                button4.setOnClickListener(v -> {
+                closePositionButton.setText("关闭空位");
+                kickOutButton.setVisibility(View.GONE);
+                closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
@@ -125,8 +130,8 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     }
                 });
             } else {
-                button4.setVisibility(View.GONE);
-                button3.setOnClickListener(v -> {
+                closePositionButton.setVisibility(View.GONE);
+                kickOutButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
@@ -142,10 +147,14 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     }
                 });
             }
+
+            // 屏蔽聊天按钮处理
+            ChatBlackUserUtil.chatBlackButtonHandle(user, olPlayKeyboardRoom.jpapplication,
+                    chatBlackButton, chatBlackCancelButton, popupWindow);
         } else {
             if (user.getCpKind() > 0 && user.getCpKind() <= 3) {
-                button5.setText(Consts.coupleType[user.getCpKind() - 1]);
-                button5.setOnClickListener(v -> {
+                showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);
+                showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         if (connectionService != null) {
@@ -157,16 +166,20 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     }
                 });
             } else {
-                button5.setVisibility(View.GONE);
+                showCoupleDialogButton.setVisibility(View.GONE);
             }
-            button2.setVisibility(View.GONE);
-            button3.setVisibility(View.GONE);
-            button4.setVisibility(View.GONE);
+            privateChatButton.setVisibility(View.GONE);
+            kickOutButton.setVisibility(View.GONE);
+            closePositionButton.setVisibility(View.GONE);
+            chatBlackButton.setVisibility(View.GONE);
+            chatBlackCancelButton.setVisibility(View.GONE);
         }
         if (user.getIsHost().equals("C") || user.getIsHost().equals("O")) {
-            button.setVisibility(View.GONE);
+            showUserInfoDialogButton.setVisibility(View.GONE);
+            chatBlackButton.setVisibility(View.GONE);
+            chatBlackCancelButton.setVisibility(View.GONE);
         } else {
-            button.setOnClickListener(v -> {
+            showUserInfoDialogButton.setOnClickListener(v -> {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                     if (connectionService != null) {
@@ -277,7 +290,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         if (!familyID.equals("0")) {
             File file = new File(olPlayKeyboardRoom.getFilesDir(), familyID + ".jpg");
             if (file.exists()) {
-                try (InputStream inputStream = new FileInputStream(file)){
+                try (InputStream inputStream = new FileInputStream(file)) {
                     int length = (int) file.length();
                     byte[] pic = new byte[length];
                     inputStream.read(pic);
