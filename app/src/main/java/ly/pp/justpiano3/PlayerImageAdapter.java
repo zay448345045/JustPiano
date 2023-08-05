@@ -230,13 +230,13 @@ public final class PlayerImageAdapter extends BaseAdapter {
         DisplayMetrics dm = olPlayRoom.getResources().getDisplayMetrics();
         if (ori == Configuration.ORIENTATION_PORTRAIT) {
             if (px2dp(olPlayRoom, dm.widthPixels) <= 360) {
-                imageView.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView1.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView2.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView3.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView4.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView5.getLayoutParams().width = (int) (dm.widthPixels) / 3;
-                imageView5e.getLayoutParams().width = (int) (dm.widthPixels) / 3;
+                imageView.getLayoutParams().width = dm.widthPixels / 3;
+                imageView1.getLayoutParams().width = dm.widthPixels / 3;
+                imageView2.getLayoutParams().width = dm.widthPixels / 3;
+                imageView3.getLayoutParams().width = dm.widthPixels / 3;
+                imageView4.getLayoutParams().width = dm.widthPixels / 3;
+                imageView5.getLayoutParams().width = dm.widthPixels / 3;
+                imageView5e.getLayoutParams().width = dm.widthPixels / 3;
                 imageView.getLayoutParams().height = imageView.getLayoutParams().width;
                 imageView1.getLayoutParams().height = imageView1.getLayoutParams().width;
                 imageView2.getLayoutParams().height = imageView2.getLayoutParams().width;
@@ -245,13 +245,13 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView5.getLayoutParams().height = imageView5.getLayoutParams().width;
                 imageView5e.getLayoutParams().height = imageView5e.getLayoutParams().width;
             } else {
-                imageView.getLayoutParams().height = (int) (dm.widthPixels) / 6;
-                imageView1.getLayoutParams().height = (int) (dm.widthPixels) / 6;
-                imageView2.getLayoutParams().height = (int) (dm.widthPixels) / 6;
-                imageView3.getLayoutParams().height = (int) (dm.widthPixels) / 6;
-                imageView4.getLayoutParams().height = (int) (dm.widthPixels) / 6;
-                imageView5.getLayoutParams().height = (int) (dm.widthPixels) / 6;
-                imageView5e.getLayoutParams().height = (int) (dm.widthPixels) / 6;
+                imageView.getLayoutParams().height = dm.widthPixels / 6;
+                imageView1.getLayoutParams().height = dm.widthPixels / 6;
+                imageView2.getLayoutParams().height = dm.widthPixels / 6;
+                imageView3.getLayoutParams().height = dm.widthPixels / 6;
+                imageView4.getLayoutParams().height = dm.widthPixels / 6;
+                imageView5.getLayoutParams().height = dm.widthPixels / 6;
+                imageView5e.getLayoutParams().height = dm.widthPixels / 6;
             }
         }
 

@@ -306,12 +306,13 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     PopupWindow loadInfoPopupWindow(String name, String positionStr) {
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_buttonlist_view, null);
-        Button button = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
-        Button button2 = inflate.findViewById(R.id.ol_chat_b);  //私信
-        Button button3 = inflate.findViewById(R.id.ol_kickout_b);  //移出家族
-        Button button4 = inflate.findViewById(R.id.ol_couple_b);  //提升/撤职副族长
-        button2.setText("发送私信");
-        button3.setText("移出家族");
+        Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
+        Button mailSendButton = inflate.findViewById(R.id.ol_chat_b);  //私信
+        Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);  //移出家族
+        Button positionChangeButton = inflate.findViewById(R.id.ol_couple_b);  //提升/撤职副族长
+        inflate.findViewById(R.id.ol_chat_black).setVisibility(View.GONE);
+        mailSendButton.setText("发送私信");
+        kickOutButton.setText("移出家族");
         inflate.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
@@ -321,35 +322,35 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(true);
         if (position > 1 || (position == 1 && !positionStr.equals("2"))) {
-            button3.setVisibility(View.GONE);
+            kickOutButton.setVisibility(View.GONE);
         }
         if (name.equals(jpapplication.getKitiName())) {
-            button3.setVisibility(View.GONE);
-            button2.setVisibility(View.GONE);
+            kickOutButton.setVisibility(View.GONE);
+            mailSendButton.setVisibility(View.GONE);
         }
         if (position > 0) {
-            button4.setVisibility(View.GONE);
+            positionChangeButton.setVisibility(View.GONE);
         } else {
             switch (positionStr) {
                 case "1":
-                    button4.setText("撤职副族长");
+                    positionChangeButton.setText("撤职副族长");
                     break;
                 case "2":
-                    button4.setText("晋升副族长");
+                    positionChangeButton.setText("晋升副族长");
                     break;
                 default:
-                    button4.setVisibility(View.GONE);
+                    positionChangeButton.setVisibility(View.GONE);
                     break;
             }
-            button4.setOnClickListener(this);
+            positionChangeButton.setOnClickListener(this);
         }
         if (position > 2) {
-            button.setVisibility(View.GONE);
-            button2.setVisibility(View.GONE);
+            showInfoButton.setVisibility(View.GONE);
+            mailSendButton.setVisibility(View.GONE);
         }
-        button2.setOnClickListener(this);
-        button.setOnClickListener(this);
-        button3.setOnClickListener(this);
+        mailSendButton.setOnClickListener(this);
+        showInfoButton.setOnClickListener(this);
+        kickOutButton.setOnClickListener(this);
         peopleNow = name;
         infoWindow = popupWindow;
         return popupWindow;

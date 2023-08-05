@@ -48,7 +48,6 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
             return view;
         }
         String loginDate = list.get(i).get("D");
-        // TODO 家族成员最后一次登录日期（list.get(i).get("D")）显示在哪里
         String contribution = list.get(i).get("C");
         String lv = list.get(i).get("L");
         if (!StringUtil.isNullOrEmpty(lv)) {
