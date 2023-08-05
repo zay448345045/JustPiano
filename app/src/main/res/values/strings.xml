@@ -128,7 +128,7 @@
     <string name="message_send_name">房名:</string>
     <string name="ol_btn_lv_info">查看资料</string>
     <string name="ol_btn_lv_pm">私聊</string>
-    <string name="ol_btn_lv_gold_send">赠送音符</string>
+    <string name="ol_btn_lv_gold_send">赠送</string>
     <string name="ol_btn_lv_cp">搭档信息</string>
     <string name="ol_btn_lv_kick">移出房间</string>
     <string name="ol_btn_lv_cls">关闭空位</string>
