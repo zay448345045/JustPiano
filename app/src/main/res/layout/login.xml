@@ -173,7 +173,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:background="@drawable/selector_ol_button_login"
-
             android:text="@string/login_button"
             android:textColor="#ffffffff"
             android:textSize="22sp" />
@@ -189,7 +188,6 @@
             android:layout_marginRight="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/ol_login"
             android:background="@drawable/selector_ol_button"
-
             android:text="@string/reg_button"
             android:textColor="@color/white1"
             android:textSize="22sp" />
