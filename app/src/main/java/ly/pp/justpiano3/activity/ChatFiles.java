@@ -9,13 +9,13 @@ import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.adapter.ChatFilesAdapter;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.ChatFilesAdapter;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.utils.DateUtil;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ChatFiles extends Activity {
@@ -43,7 +43,7 @@ public class ChatFiles extends Activity {
                 hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
-                hashMap.put("time", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINESE).format(new Date(f4924i[i].lastModified())));
+                hashMap.put("time", DateUtil.format(new Date(f4924i[i].lastModified())));
                 hashMap.put("timelong", f4924i[i].lastModified());
                 f4917b.add(hashMap);
             }

@@ -6,15 +6,14 @@ import android.os.Message;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import protobuf.vo.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 final class ReceiveHandle {
 
@@ -645,7 +644,7 @@ final class ReceiveHandle {
                             Bundle bundle6 = new Bundle();
                             bundle6.putString("F", mail.getUserFrom());
                             bundle6.putString("M", mail.getMessage());
-                            String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE).format(new Date(mail.getTime()));
+                            String dateTime = DateUtil.format(new Date(mail.getTime()));
                             bundle6.putString("T", dateTime);
                             bundle6.putInt("type", 0);
                             bundle.putBundle(String.valueOf(i), bundle6);
@@ -1145,8 +1144,7 @@ final class ReceiveHandle {
                         i++;
                     }
                     bundle.putString("D", family.getFamilyEnter().getDeclaration());
-                    String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                            Locale.CHINESE).format(new Date(family.getFamilyEnter().getCreateDate()));
+                    String dateTime = DateUtil.format(new Date(family.getFamilyEnter().getCreateDate()));
                     bundle.putString("T", dateTime);
                     bundle.putString("Z", family.getFamilyEnter().getLeader());
                     bundle.putString("N", family.getFamilyEnter().getName());

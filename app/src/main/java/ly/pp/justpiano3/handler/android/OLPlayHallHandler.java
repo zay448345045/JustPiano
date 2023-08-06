@@ -17,6 +17,7 @@ import ly.pp.justpiano3.JPDialog;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
@@ -26,9 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -54,7 +53,7 @@ public final class OLPlayHallHandler extends Handler {
                     boolean showTime = ds.getBoolean("chats_time_show", false);
                     String time = "";
                     if (showTime) {
-                        time = new SimpleDateFormat("HH:mm", Locale.CHINESE).format(new Date(olPlayHall.jpapplication.getServerTime()));
+                        time = DateUtil.format(new Date(olPlayHall.jpapplication.getServerTime()), "HH:mm");
                     }
                     message.getData().putString("TIME", time);
 
@@ -71,7 +70,7 @@ public final class OLPlayHallHandler extends Handler {
                     // 聊天记录存储
                     if (ds.getBoolean("save_chats", false)) {
                         try {
-                            String date = new SimpleDateFormat("yyyy-MM-dd聊天记录", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
                             file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats/" + date + ".txt");
                             if (!file.exists()) {
                                 file.createNewFile();

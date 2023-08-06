@@ -9,13 +9,14 @@ import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.listener.DeleteRecordFilesClick;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.utils.DateUtil;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RecordFiles extends Activity {
@@ -43,7 +44,7 @@ public class RecordFiles extends Activity {
                 hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
-                hashMap.put("time", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINESE).format(new Date(f4924i[i].lastModified())));
+                hashMap.put("time", DateUtil.format(new Date(f4924i[i].lastModified())));
                 hashMap.put("timelong", f4924i[i].lastModified());
                 f4917b.add(hashMap);
             }
@@ -67,7 +68,7 @@ public class RecordFiles extends Activity {
         recordFilesAdapter.notifyDataSetChanged();
     }
 
-    public  final void delete(int i, String str, String str2) {
+    public final void delete(int i, String str, String str2) {
         Builder builder = new Builder(this);
         builder.setMessage("确认删除[" + str + "]吗?");
         builder.setTitle("提示");

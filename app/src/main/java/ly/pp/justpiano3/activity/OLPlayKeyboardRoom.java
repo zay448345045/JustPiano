@@ -30,6 +30,7 @@ import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
+import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.KeyboardModeView;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public int kuang;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[6];
     public Handler handler;
-    public  byte hallID0;
+    public byte hallID0;
     public JPProgressBar jpprogressBar;
     public MidiReceiver midiFramer;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
@@ -60,7 +61,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
      * 键盘房间同步模式(默认编排模式)
      */
     private KeyboardSyncModeEnum keyboardSyncMode = KeyboardSyncModeEnum.CONCERTO;
-    public  String hallName;
+    public String hallName;
     public List<Bundle> friendPlayerList = new ArrayList<>();
     public boolean canNotNextPage;
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler;
@@ -680,7 +681,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
-                            String date = new SimpleDateFormat("yyyy年MM月dd日HH点mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                            String date = DateUtil.format(DateUtil.now());
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
                             recordFileName = date + "录音.wav";
                             JPApplication.setRecordFilePath(recordFilePath);

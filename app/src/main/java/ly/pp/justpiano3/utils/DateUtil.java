@@ -20,7 +20,7 @@ public class DateUtil {
     /**
      * 模板 默认+中文
      */
-    public static final String TEMPLATE_DEFAULT_CHINESE = "yyyy年MM月dd日 HH点mm分ss秒";
+    public static final String TEMPLATE_DEFAULT_CHINESE = "yyyy年MM月dd日HH点mm分ss秒";
 
 
     /**

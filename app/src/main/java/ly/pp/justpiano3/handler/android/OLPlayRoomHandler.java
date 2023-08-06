@@ -20,6 +20,7 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineQuitRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
@@ -28,9 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -95,14 +94,14 @@ public final class OLPlayRoomHandler extends Handler {
                         boolean showTime = ds.getBoolean("chats_time_show", false);
                         String time = "";
                         if (showTime) {
-                            time = new SimpleDateFormat("HH:mm", Locale.CHINESE).format(new Date(olPlayRoom.jpapplication.getServerTime()));
+                            time = DateUtil.format(new Date(olPlayRoom.jpapplication.getServerTime()), "HH:mm");
                         }
                         message.getData().putString("TIME", time);
                         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
                         if (!ChatBlackUserUtil.isUserInChatBlackList(olPlayRoom.jpapplication.getChatBlackList(), message.getData().getString("U"))) {
                             olPlayRoom.msgList.add(message.getData());
                         }
-                        
+
                         // 聊天音效播放
                         if (olPlayRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
                             olPlayRoom.jpapplication.playChatSound();
@@ -115,7 +114,7 @@ public final class OLPlayRoomHandler extends Handler {
                                 if (!file.exists()) {
                                     file.mkdirs();
                                 }
-                                String date = new SimpleDateFormat("yyyy-MM-dd聊天记录", Locale.CHINESE).format(new Date(System.currentTimeMillis()));
+                                String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
                                 file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats/" + date + ".txt");
                                 if (!file.exists()) {
                                     file.createNewFile();

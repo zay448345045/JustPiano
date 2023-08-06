@@ -10,9 +10,6 @@ import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * 分享Util
@@ -27,7 +24,7 @@ public class ShareUtil {
         Bitmap bitmap = Bitmap.createBitmap(rootView.getWidth(), rootView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         rootView.draw(canvas);
-        String fileName = new SimpleDateFormat("yyyy年MM月dd日HH点mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis())) + JPG_SUFFIX;
+        String fileName = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE) + JPG_SUFFIX;
         saveBitmapToJPG(bitmap, fileName);
         shareImage(activity, fileName);
     }
