@@ -59,9 +59,62 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
+                <RelativeLayout
+                        android:id="@+id/relativeLayout1"
+                        android:layout_width="@dimen/dimen_0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                    <ImageButton
+                            android:id="@+id/ol_share"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:background="#00000000" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shape_corner"
+                            android:layout_marginTop="@dimen/dimen_minus_6dp"
+                            android:orientation="horizontal">
+
+                        <View
+                                android:layout_width="@dimen/dimen_1dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
+
+                        <ImageView
+                                android:layout_width="@dimen/dimen_0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.5"
+                                android:src="@drawable/share" />
+
+                        <View
+                                android:layout_width="@dimen/dimen_0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
+
+                        <TextView
+                                android:layout_width="@dimen/dimen_0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2.5"
+
+                                android:gravity="center"
+                                android:text="@string/finish_share"
+                                android:textColor="#ffffffff"
+                                android:textSize="16sp" />
+
+                        <View
+                                android:layout_width="@dimen/dimen_1dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
+
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayout1"
+                    android:id="@+id/relativeLayout2"
                     android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
@@ -120,7 +173,6 @@
                     android:layout_weight="1" />
 
             </LinearLayout>
-
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
@@ -255,7 +307,5 @@
                     android:textSize="14sp" />
             </RelativeLayout>
         </RelativeLayout>
-
-
     </RelativeLayout>
 </LinearLayout>

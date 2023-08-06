@@ -53,7 +53,7 @@ final class UserListPageAdapter extends BaseAdapter {
         }
         deleteButton.setOnClickListener(v -> new JPDialog(userListPage)
                 .setTitle("删除用户")
-                .setMessage("从聊天屏蔽名单中刪除用户\"" + simpleUser.getName() + "\"?")
+                .setMessage("从聊天屏蔽名单中刪除用户[" + simpleUser.getName() + "]?")
                 .setFirstButton("确定", (dialogInterface, i1) -> {
                     userListPage.jpApplication.chatBlackListRemoveUser(simpleUser.getName());
                     userListPage.listView.setAdapter(new UserListPageAdapter(userListPage, userListPage.jpApplication.getChatBlackList()));

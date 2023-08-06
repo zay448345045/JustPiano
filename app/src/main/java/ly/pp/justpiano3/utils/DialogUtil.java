@@ -17,7 +17,7 @@ public class DialogUtil {
      */
     public static void handleGoldSend(Context context, JPApplication jpApplication, JPDialog jpDialog, int messageType, String userName, String message) {
         if (messageType == 2) {
-            jpDialog.setVisibleEditText(true);
+            jpDialog.setVisibleEditText(true, "请填写赠送音符数量");
             jpDialog.setSecondButton("取消", new DialogDismissClick());
             jpDialog.setFirstButton("确定", ((dialog, which) -> {
                 int goldNum;

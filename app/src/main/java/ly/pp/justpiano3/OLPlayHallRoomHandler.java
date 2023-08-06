@@ -261,7 +261,7 @@ final class OLPlayHallRoomHandler extends Handler {
                         jpdialog.setTitle("创建家族");
                         jpdialog.setMessage(string2);
                         if (b > 0) {
-                            jpdialog.setVisibleEditText(true);
+                            jpdialog.setVisibleEditText(true, "请填写家族名称");
                             jpdialog.setFirstButton("创建家族", (dialog, which) -> {
                                 String name = jpdialog.getEditTextString();
                                 if (name.isEmpty()) {

@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import ly.pp.justpiano3.utils.ShareUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,8 +55,6 @@ public class PlayFinish extends Activity implements OnClickListener {
     private int greatScore;
     private int badScore;
     private int missScore;
-
-    private static final String JPG_SUFFIX = ".jpg";
 
     @Override
     public void onBackPressed() {
@@ -106,45 +105,8 @@ public class PlayFinish extends Activity implements OnClickListener {
                 default:
             }
         } else if (view == shareButton) {
-            share();
+            ShareUtil.share(this);
         }
-    }
-
-    public void share() {
-        View rootView = getWindow().getDecorView().getRootView();
-        // 这是在API小于26的情况下的备用方案
-        Bitmap bitmap = Bitmap.createBitmap(rootView.getWidth(), rootView.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        rootView.draw(canvas);
-        String fileName = new SimpleDateFormat("yyyy年MM月dd日HH点mm分ss秒", Locale.CHINESE).format(new Date(System.currentTimeMillis())) + JPG_SUFFIX;
-        saveBitmapToJPG(bitmap, fileName);
-        shareImage(fileName);
-    }
-
-    public void saveBitmapToJPG(Bitmap bitmap, String filename) {
-        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/JustPiano/share/"); // 替换为你自己的目录
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        File file = new File(dir, filename);
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void shareImage(String filename) {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/JustPiano/share/", filename); // 同上
-        Uri uri = Uri.fromFile(file);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(intent, "😘分享给小伙伴们吧~"));
     }
 
     @Override

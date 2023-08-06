@@ -98,12 +98,13 @@ public final class JPDialog {
         return this;
     }
 
-    public void setVisibleEditText(boolean visibleEditText) {
+    public void setVisibleEditText(boolean visibleEditText, String hint) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.mydialog, null);
         if (visibleEditText) {
             editText = (inflate.findViewById(R.id.Etext));
             editText.setVisibility(View.VISIBLE);
+            editText.setHint(hint);
         }
     }
 

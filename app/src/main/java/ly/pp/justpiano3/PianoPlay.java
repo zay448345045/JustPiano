@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.*;
 import com.google.protobuf.MessageLite;
+import ly.pp.justpiano3.utils.ShareUtil;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineLoadPlayUserDTO;
@@ -141,13 +142,15 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
                 addContentView(finishView, layoutparams2);
-                ImageButton f4582A = finishView.findViewById(R.id.ol_ok);
-                f4582A.setOnClickListener(v -> {
+                ImageButton finishOkButton = finishView.findViewById(R.id.ol_ok);
+                finishOkButton.setOnClickListener(v -> {
                     Intent intent = new Intent(PianoPlay.this, OLPlayRoom.class);
                     intent.putExtras(roomBundle);
                     startActivity(intent);
                     finish();
                 });
+                ImageButton shareButton = finishView.findViewById(R.id.ol_share);
+                shareButton.setOnClickListener(v -> ShareUtil.share(this));
                 finishView.setVisibility(View.GONE);
                 sendMsg(23, OnlineLoadPlayUserDTO.getDefaultInstance());
                 songName.setOnClickListener(v -> sendMsg(23, OnlineLoadPlayUserDTO.getDefaultInstance()));

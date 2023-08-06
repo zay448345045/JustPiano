@@ -308,6 +308,9 @@
     <string name="user_info_1990">1990</string>
     <string name="user_info_year">年</string>
     <string name="user_info_mod_pass">修改密码</string>
+    <string name="original_pwd">输入原密码</string>
+    <string name="new_pwd">输入新密码</string>
+    <string name="confirm_pwd">确认新密码</string>
     <string name="user_info_confirm">确定修改</string>
     <string name="user_msg_title">设置签名</string>
     <string name="user_msg_set">确 定</string>

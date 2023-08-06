@@ -61,7 +61,7 @@ public class Register extends Activity implements OnClickListener {
                     Toast.makeText(this, "账号只能由字母，数字和下划线组成!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if ((Pattern.compile("['{}/\"\t]").matcher(kitiName).find() ? 1 : 0) != 0) {
+                if ((Pattern.compile("['@{}/\"\t]").matcher(kitiName).find() ? 1 : 0) != 0) {
                     Toast.makeText(this, "昵称请不要使用['@{}/\"]这些字符", Toast.LENGTH_SHORT).show();
                 } else {
                     new RegisterTask(this).execute();

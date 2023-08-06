@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/blue_l"
-
+            android:layout_gravity="center"
             android:gravity="center_vertical"
             android:text="@string/message_send_name"
             android:textColor="@color/white1"
@@ -42,19 +42,12 @@
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-
-
-
                 android:maxLines="5"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
                 android:textSize="16sp" />
-
-
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -65,7 +58,7 @@
             android:id="@+id/title_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_gravity="center"
             android:gravity="center_vertical"
             android:text="@string/login_pwd_label"
             android:textColor="@color/white1"
@@ -83,16 +76,11 @@
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-
-
-
                 android:maxLines="5"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
                 android:textSize="16sp" />
-
-
         </LinearLayout>
 
     </LinearLayout>
