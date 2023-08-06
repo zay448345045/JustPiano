@@ -244,50 +244,50 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             switch (msg.what) {
                 case R.id.keyboard1_count_down:
                     int keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() - 1;
-                    edit.putInt("keyboard1_white_key_num", keyboard1WhiteKeyNum);
                     keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_down:
                     int keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() - 1;
-                    edit.putInt("keyboard2_white_key_num", keyboard2WhiteKeyNum);
                     keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_count_up:
                     keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() + 1;
-                    edit.putInt("keyboard1_white_key_num", keyboard1WhiteKeyNum);
                     keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_up:
                     keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() + 1;
-                    edit.putInt("keyboard2_white_key_num", keyboard2WhiteKeyNum);
                     keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_left:
                     int keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() - 1;
-                    edit.putInt("keyboard1_white_key_offset", keyboard1WhiteKeyOffset);
                     keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_left:
                     int keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() - 1;
-                    edit.putInt("keyboard2_white_key_offset", keyboard2WhiteKeyOffset);
                     keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_right:
                     keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() + 1;
-                    edit.putInt("keyboard1_white_key_offset", keyboard1WhiteKeyOffset);
                     keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_right:
                     keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() + 1;
-                    edit.putInt("keyboard2_white_key_offset", keyboard2WhiteKeyOffset);
                     keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 default:
