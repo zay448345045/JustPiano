@@ -54,9 +54,7 @@ public final class ChattingAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         TextView textView;
-        if (view == null) {
-            view = layoutInflater.inflate(R.layout.ol_msg_view, null);
-        }
+        view = layoutInflater.inflate(R.layout.ol_msg_view, null);
         view.setKeepScreenOn(true);
         Bundle bundle = msgList.get(i);
         String string = bundle.getString("U");
