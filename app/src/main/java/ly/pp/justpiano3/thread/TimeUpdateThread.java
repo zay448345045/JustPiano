@@ -3,7 +3,7 @@ package ly.pp.justpiano3.thread;
 import android.os.Message;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.OLPlayRoomInterface;
+import ly.pp.justpiano3.activity.OLPlayRoomInterface;
 
 public final class TimeUpdateThread extends Thread {
     private final OLPlayRoomInterface olPlayRoomInterface;

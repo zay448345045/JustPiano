@@ -27,8 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.adapter.DressAdapter;
+import ly.pp.justpiano3.adapter.ShopAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.ShopProduct;
+import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
+import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import protobuf.dto.OnlineChangeClothesDTO;
 import protobuf.dto.OnlineShopDTO;

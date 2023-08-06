@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.listener.SendMessageClick;
+import ly.pp.justpiano3.task.PopUserInfoTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -21,6 +21,7 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.view.PlayView;
 
 import java.io.*;
 import java.security.KeyPair;
@@ -62,7 +63,7 @@ public final class JPApplication extends Application {
     public String f4072f = "";
     public String f4073g = "";
     public String f4074h = "";
-    boolean changeNotesColor = true;
+    public boolean changeNotesColor = true;
     private ConnectionService connectionService;
     private int whiteKeyHeight;
     private float blackKeyHeight;

@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.activity.OLTopUser;
+import ly.pp.justpiano3.task.ShowTopInfoTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 

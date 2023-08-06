@@ -15,6 +15,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.listener.ChangePasswordClick;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.task.UsersInfoTask;
+import ly.pp.justpiano3.task.UsersInfoTask2;
+import ly.pp.justpiano3.task.UsersInfoTask3;
 import org.json.JSONException;
 import org.json.JSONObject;
 

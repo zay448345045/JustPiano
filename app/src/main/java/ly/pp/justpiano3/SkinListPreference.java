@@ -12,16 +12,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 import java.io.File;
 import java.util.List;
 
 public class SkinListPreference extends DialogPreference {
-    File f5024d;
-    String skinKey = "";
-    Context context;
-    JPProgressBar jpProgressBar;
+    public File f5024d;
+    public String skinKey = "";
+    public Context context;
+    public JPProgressBar jpProgressBar;
     private CharSequence[] skinNameList;
     private CharSequence[] skinKeyList;
     private SkinListAdapter skinListAdapter;
@@ -48,7 +49,7 @@ public class SkinListPreference extends DialogPreference {
         skinKeyList[size + 1] = "more";
     }
 
-    final void deleteFiles(String str) {
+    public final void deleteFiles(String str) {
         int i = 0;
         File file = new File(str);
         if (file.exists()) {

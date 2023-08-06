@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.View;
-import ly.pp.justpiano3.PlayView;
 
 import java.util.List;
 import java.util.Map;

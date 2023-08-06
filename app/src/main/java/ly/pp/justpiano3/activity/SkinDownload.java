@@ -14,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.listener.SkinDownloadClick;
+import ly.pp.justpiano3.task.SkinDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 

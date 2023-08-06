@@ -11,7 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.handler.android.OLMainModeHandler;
+import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.task.SongSyncDialogTask;
 
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;

@@ -10,6 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.adapter.RecordFilesAdapter;
+import ly.pp.justpiano3.listener.DeleteRecordFilesClick;
+import ly.pp.justpiano3.listener.DialogDismissClick;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

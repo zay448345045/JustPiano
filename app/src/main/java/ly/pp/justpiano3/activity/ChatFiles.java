@@ -9,8 +9,8 @@ import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.ChatFilesAdapter;
-import ly.pp.justpiano3.DialogDismissClick;
+import ly.pp.justpiano3.adapter.ChatFilesAdapter;
+import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 

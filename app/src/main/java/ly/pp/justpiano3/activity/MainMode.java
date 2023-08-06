@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.task.FeedbackTask;
 
 import java.io.File;
 

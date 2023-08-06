@@ -12,7 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.adapter.OLMelodySelectAdapter2;
+import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
+import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.task.OLMelodySelectTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 

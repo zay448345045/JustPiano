@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.adapter.SoundListAdapter;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 import java.io.File;
 import java.util.List;
 
 public class SoundListPreference extends DialogPreference {
-    Context context;
-    String soundKey = "";
-    JPProgressBar jpProgressBar;
+    public Context context;
+    public String soundKey = "";
+    public JPProgressBar jpProgressBar;
     private CharSequence[] soundNameList;
     private CharSequence[] soundKeyList;
     private SoundListAdapter soundListAdapter;
@@ -52,7 +53,7 @@ public class SoundListPreference extends DialogPreference {
         soundKeyList[size + 1] = "more";
     }
 
-    final void deleteFiles(String str) {
+    public final void deleteFiles(String str) {
         File file = new File(str);
         if (file.exists()) {
             file.delete();

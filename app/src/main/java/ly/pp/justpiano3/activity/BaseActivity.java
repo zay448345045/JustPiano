@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.handler.android.BaseActivityHandler;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.listener.ReturnMainModeClick;
 
 public class BaseActivity extends Activity {
     private boolean isOutLine = false;

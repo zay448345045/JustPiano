@@ -20,7 +20,15 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.adapter.LocalSongsAdapter;
+import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
+import ly.pp.justpiano3.adapter.MelodySelectAdapter;
+import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.listener.DoNotShowDialogClick;
+import ly.pp.justpiano3.task.LocalDataImportExportTask;
+import ly.pp.justpiano3.task.SongSyncTask;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

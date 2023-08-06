@@ -6,6 +6,7 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import ly.pp.justpiano3.view.PlayView;
 
 import java.util.HashMap;
 import java.util.Map;

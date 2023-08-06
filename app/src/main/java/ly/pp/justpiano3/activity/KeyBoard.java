@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.MidiConstants;
+import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.view.KeyboardModeView;
 
 import java.io.File;
