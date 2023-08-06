@@ -66,11 +66,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
-
                     android:gravity="center"
                     android:text="@string/play_select_normal"
                     android:textColor="#ffffffff"
-                    android:textSize="21sp" />
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -96,9 +95,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#00000000"
-
                 android:drawablePadding="@dimen/dimen_0dp"
-
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -128,11 +125,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
-
                     android:gravity="center"
                     android:text="@string/play_select_prac"
                     android:textColor="#ffffffff"
-                    android:textSize="21sp" />
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -212,11 +208,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
-
                     android:gravity="center"
                     android:text="@string/play_select_lis"
                     android:textColor="#ffffffff"
-                    android:textSize="21sp" />
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -245,9 +240,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#00000000"
-
                 android:drawablePadding="@dimen/dimen_0dp"
-
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
 
@@ -277,11 +270,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_0dp"
                     android:layout_weight="1.8"
-
                     android:gravity="center"
                     android:text="@string/keyboard_mode_title"
                     android:textColor="#ffffffff"
-                    android:textSize="21sp" />
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="match_parent"

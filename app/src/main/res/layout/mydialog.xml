@@ -3,7 +3,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:background="@drawable/style_dialog"
-              android:minWidth="@dimen/dimen_360dp"
+              android:minWidth="@dimen/dimen_320dp"
               android:orientation="vertical">
 
     <LinearLayout

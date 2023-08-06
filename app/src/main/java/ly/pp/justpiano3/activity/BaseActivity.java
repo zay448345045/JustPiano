@@ -3,6 +3,8 @@ package ly.pp.justpiano3.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.handler.android.BaseActivityHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
@@ -67,6 +69,17 @@ public class BaseActivity extends Activity {
         return (int) (pxValue / fontScale + 0.5f);
     }
 
+    @Override
+    public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
+        Resources resources = super.getResources();
+        if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
+            android.content.res.Configuration configuration = resources.getConfiguration();
+            configuration.fontScale = 1.0f;
+            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        }
+        return resources;
+    }
+
     public void setOutline(boolean value) {
         isOutLine = value;
     }
@@ -74,4 +87,5 @@ public class BaseActivity extends Activity {
     public boolean isOutLine() {
         return isOutLine;
     }
+
 }

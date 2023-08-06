@@ -5,6 +5,7 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.midi.MidiDeviceInfo;
@@ -939,5 +940,19 @@ public final class JPApplication extends Application {
     protected void attachBaseContext(Context context){
         super.attachBaseContext(context);
         MultiDex.install(this);
+    }
+
+    /**
+     * 重写 getResource 方法，防止系统字体影响
+     */
+    @Override
+    public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
+        Resources resources = super.getResources();
+        if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
+            android.content.res.Configuration configuration = resources.getConfiguration();
+            configuration.fontScale = 1.0f;
+            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        }
+        return resources;
     }
 }
