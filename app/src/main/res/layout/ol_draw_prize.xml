@@ -26,7 +26,7 @@
                 android:layout_marginStart="@dimen/dimen_68dp"
                 android:src="@drawable/pointer" />
 
-            <ly.pp.justpiano3.DrawPrize
+            <ly.pp.justpiano3.view.DrawPrizeView
                 android:id="@+id/ol_draw_prize_pan"
                 android:layout_width="@dimen/dimen_160dp"
                 android:layout_height="@dimen/dimen_160dp" />

@@ -8,7 +8,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ly.pp.justpiano3.ScrollText
+    <ly.pp.justpiano3.view.ScrollText
         android:id="@+id/skin_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

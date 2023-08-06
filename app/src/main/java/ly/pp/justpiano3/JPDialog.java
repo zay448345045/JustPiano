@@ -50,11 +50,11 @@ public final class JPDialog {
         return this;
     }
 
-    void setCancelableFalse() {
+    public void setCancelableFalse() {
         cancelable = false;
     }
 
-    JDialog createJDialog() {
+    public JDialog createJDialog() {
         if (inflate == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             inflate = layoutInflater.inflate(R.layout.mydialog, null);
@@ -159,7 +159,7 @@ public final class JPDialog {
         }
     }
 
-    static class JDialog extends Dialog {
+    public static class JDialog extends Dialog {
 
         JDialog(Context context) {
             super(context, R.style.Dialog);

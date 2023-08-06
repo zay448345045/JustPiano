@@ -338,12 +338,12 @@
         android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.25">
 
-        <ly.pp.justpiano3.KeyboardModeView
+        <ly.pp.justpiano3.view.KeyboardModeView
             android:id="@+id/keyboard_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:keepScreenOn="true"
             app:whiteKeyNum="15"
-            app:whiteKeyOffset="14"></ly.pp.justpiano3.KeyboardModeView>
+            app:whiteKeyOffset="14"></ly.pp.justpiano3.view.KeyboardModeView>
     </LinearLayout>
 </LinearLayout>

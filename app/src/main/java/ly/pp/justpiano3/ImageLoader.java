@@ -9,6 +9,8 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageResizerUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -52,7 +54,7 @@ public class ImageLoader {
     private boolean mIsDiskLruCacheCreated = false;
     private final LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache = null;
-    private ImageResizer mImageResizer;
+    private ImageResizerUtil mImageResizerUtil;
     // Handler
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -165,8 +167,8 @@ public class ImageLoader {
         if (snapShot != null) {
             FileInputStream fileInputStream = (FileInputStream) snapShot.getInputStream(DISK_CACHE_INDEX);
             FileDescriptor fileDescriptor = fileInputStream.getFD();
-            mImageResizer = new ImageResizer(mContext);
-            bitmap = mImageResizer.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
+            mImageResizerUtil = new ImageResizerUtil(mContext);
+            bitmap = mImageResizerUtil.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
             if (bitmap != null) {
                 // 读取磁盘缓存时 往内存中放一份
                 addBitmapToMemoryCache(key, bitmap);
@@ -318,7 +320,7 @@ public class ImageLoader {
             if (execute.isSuccessful()) {
                 response = execute.body().string();
                 out = new BufferedOutputStream(outputStream, 8 * 1024);
-                byte[] array = GZIP.ZIPToArray(response);
+                byte[] array = GZIPUtil.ZIPToArray(response);
                 if (array != null && array.length > 0) {
                     out.write(array);
                 }
@@ -357,7 +359,7 @@ public class ImageLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        byte[] array = GZIP.ZIPToArray(response);
+        byte[] array = GZIPUtil.ZIPToArray(response);
         return BitmapFactory.decodeByteArray(array, 0, array.length);
     }
 

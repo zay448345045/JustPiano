@@ -15,7 +15,7 @@ public final class JustPianoCursorWrapper extends CursorWrapper {
     private int f5949c = 0;
     private final Comparator f5952f = Collator.getInstance(java.util.Locale.CHINESE);
 
-    JustPianoCursorWrapper(Cursor cursor, String str, boolean z) {
+    public JustPianoCursorWrapper(Cursor cursor, String str, boolean z) {
         super(cursor);
         int i = 0;
         this.cursor = cursor;

@@ -2,18 +2,19 @@ package ly.pp.justpiano3;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import ly.pp.justpiano3.view.PlayView;
 
-final class PlayNote {
-    boolean hideNote;
-    boolean unPassed;
-    int noteValue;
-    int trackValue;
-    int volumeValue;
-    Bitmap noteImage = null;
-    int noteXPosition;
-    int posiAdd15AddAnim;
-    int noteDiv12;
-    int handValue;
+public final class PlayNote {
+    public boolean hideNote;
+    public boolean unPassed;
+    public int noteValue;
+    public int trackValue;
+    public int volumeValue;
+    public Bitmap noteImage = null;
+    public int noteXPosition;
+    public int posiAdd15AddAnim;
+    public int noteDiv12;
+    public int handValue;
     private int playNote;
     private final PlayView playView;
     private final JPApplication jpapplication;
@@ -21,7 +22,7 @@ final class PlayNote {
     private boolean newNote = true;
     private final int posiAdd15;
 
-    PlayNote(JPApplication jPApplication, PlayView playView, int i, int i2, int f, int f2, int i3, boolean z, int i4) {
+    public PlayNote(JPApplication jPApplication, PlayView playView, int i, int i2, int f, int f2, int i3, boolean z, int i4) {
         handValue = i4;
         jpapplication = jPApplication;
         this.playView = playView;
@@ -97,11 +98,11 @@ final class PlayNote {
         }
     }
 
-    float getHalfWidth() {
+    public float getHalfWidth() {
         return halfWidth;
     }
 
-    float mo3107b(Canvas canvas) {    // 联网模式
+    public float mo3107b(Canvas canvas) {    // 联网模式
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && hideNote) {
@@ -119,7 +120,7 @@ final class PlayNote {
         return posiAdd15AddAnim;
     }
 
-    float mo3108c(Canvas canvas) {
+    public float mo3108c(Canvas canvas) {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (jpapplication.getAutoPlay()) {
@@ -147,7 +148,7 @@ final class PlayNote {
         return posiAdd15AddAnim;
     }
 
-    void noCompatibleMode(Canvas canvas) {  // 欣赏模式
+    public void noCompatibleMode(Canvas canvas) {  // 欣赏模式
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && jpapplication.getOpenChord()) {

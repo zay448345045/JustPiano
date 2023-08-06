@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 /**
  * 监听midi键盘连接和断开连接
  */
-interface MidiConnectionListener {
+public interface MidiConnectionListener {
 
     /**
      * midi键盘连接

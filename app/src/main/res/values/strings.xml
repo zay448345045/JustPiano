@@ -311,7 +311,7 @@
     <string name="original_pwd">输入原密码</string>
     <string name="new_pwd">输入新密码</string>
     <string name="confirm_pwd">确认新密码</string>
-    <string name="user_info_confirm">确定修改</string>
+    <string name="user_info_confirm">信息保存</string>
     <string name="user_msg_title">设置签名</string>
     <string name="user_msg_set">确 定</string>
     <string name="family_position">职位</string>

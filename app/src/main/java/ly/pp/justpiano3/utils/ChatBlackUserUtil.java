@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.User;
+import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.entity.SimpleUser;
 import org.json.JSONArray;
 import org.json.JSONObject;

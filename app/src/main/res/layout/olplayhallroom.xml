@@ -705,7 +705,7 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <ly.pp.justpiano3.FamilyListView
+                            <ly.pp.justpiano3.view.FamilyListView
                                 android:id="@+id/ol_family_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"

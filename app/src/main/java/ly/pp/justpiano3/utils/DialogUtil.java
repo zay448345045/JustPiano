@@ -2,7 +2,7 @@ package ly.pp.justpiano3.utils;
 
 import android.content.Context;
 import android.widget.Toast;
-import ly.pp.justpiano3.DialogDismissClick;
+import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.JPDialog;
 import protobuf.dto.OnlineDialogDTO;

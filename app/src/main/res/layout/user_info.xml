@@ -164,7 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/score"
             android:layout_toEndOf="@+id/age"
-            android:background="@color/blue_translent"
+            android:background="@color/local"
             android:inputType="number"
             android:text="@string/user_info_1990"
             android:textColor="@color/white1"
@@ -182,7 +182,7 @@
                 android:id="@+id/users_info_msg"
                 android:layout_width="@dimen/dimen_240dp"
                 android:layout_height="match_parent"
-                android:background="@color/blue_translent"
+                android:background="@color/local"
                 android:textColor="@color/green_r"
                 android:textSize="20sp" />
         </ScrollView>
@@ -224,6 +224,7 @@
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/selector_orange_button"
             android:layout_alignEnd="@+id/app_size"
+            android:layout_alignStart="@+id/user_face"
             android:text="@string/user_info_mod_pass"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -233,7 +234,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/password_button"
-            android:layout_alignStart="@+id/password_button"
+            android:layout_alignEnd="@+id/app_size"
+            android:layout_alignStart="@+id/user_face"
             android:background="@drawable/selector_orange_button"
             android:text="@string/user_info_confirm"
             android:textColor="@color/white1"
