@@ -6,8 +6,8 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.entity.SimpleUser;
+import ly.pp.justpiano3.entity.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -44,7 +44,7 @@ public class ChatBlackUserUtil {
             chatBlackButton.setOnClickListener(v -> {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
-                    jpApplication.chatBlackListAddUser(new SimpleUser(user.getSex(), user.getPlayerName(), user.getLevel()));
+                    jpApplication.chatBlackListAddUser(new SimpleUser(user.getSex(), user.getPlayerName(), user.getLevel(), DateUtil.now()));
                 }
             });
         }
@@ -71,7 +71,7 @@ public class ChatBlackUserUtil {
             for (SimpleUser user : chatBlackList) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("gender", user.getGender());
-                jsonObject.put("lv", user.getLv());
+                jsonObject.put("time", DateUtil.format(user.getDate()));
                 jsonObject.put("name", user.getName());
                 jsonArray.put(jsonObject);
             }
@@ -95,7 +95,7 @@ public class ChatBlackUserUtil {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     SimpleUser simpleUser = new SimpleUser(jsonObject.getString("gender"),
-                            jsonObject.getString("name"), jsonObject.getInt("lv"));
+                            jsonObject.getString("name"), 0, DateUtil.parseDontThrow(jsonObject.getString("time"), DateUtil.TEMPLATE_DEFAULT));
                     chatBlackList.add(simpleUser);
                 }
             }

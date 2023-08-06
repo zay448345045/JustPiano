@@ -4,6 +4,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;

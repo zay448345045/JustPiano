@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.entity;
 
+import java.util.Date;
+
 /**
  * @author as
  */
@@ -20,10 +22,30 @@ public class SimpleUser {
      */
     private Integer lv;
 
+    /**
+     * 某些时间(临时时间存放变量)
+     */
+    private Date date;
+
     public SimpleUser(String gender, String name, Integer lv) {
         this.gender = gender;
         this.name = name;
         this.lv = lv;
+    }
+
+    public SimpleUser(String gender, String name, Integer lv, Date date) {
+        this.gender = gender;
+        this.name = name;
+        this.lv = lv;
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getGender() {

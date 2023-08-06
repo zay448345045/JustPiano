@@ -11,6 +11,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.utils.DateUtil;
 
 import java.util.List;
 
@@ -45,11 +46,12 @@ public final class UserListPageAdapter extends BaseAdapter {
             view = userListPage.getLayoutInflater().inflate(R.layout.friend_view, null);
         }
         TextView nameTextView = view.findViewById(R.id.friend_name);
-        TextView levelTextView = view.findViewById(R.id.friend_level);
+        // 这里使用等级标签显示时间
+        TextView timeTextView = view.findViewById(R.id.friend_level);
         ImageView genderImageView = view.findViewById(R.id.friend_sex);
         Button deleteButton = view.findViewById(R.id.friend_dele);
         nameTextView.setText(simpleUser.getName());
-        levelTextView.setText("LV." + simpleUser.getLv());
+        timeTextView.setText(DateUtil.format(simpleUser.getDate(), DateUtil.TEMPLATE_DEFAULT_CHINESE));
         if (simpleUser.getGender().equals("f")) {
             genderImageView.setImageResource(R.drawable.f);
         } else {
