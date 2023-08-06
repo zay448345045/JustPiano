@@ -332,5 +332,6 @@
         \t\t适用于网络效率好的情况下，保证超高的同步率\n
         \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
     </string>
+    <string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
 
 </resources>

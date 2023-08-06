@@ -38,14 +38,17 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
                 if (usersInfo.get().rememberNewPassword) {
                     edit.putString("name", usersInfo.get().jpapplication.getAccountName());
                     edit.putString("password", "");
+                    edit.putString("current_password", null);
                     edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);
                     edit.putBoolean("chec_autologin", usersInfo.get().autoLogin);
                 } else {
                     edit.putString("password", "");
+                    edit.putString("current_password", null);
                     edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);
                     edit.putBoolean("chec_autologin", usersInfo.get().rememberNewPassword);
                 }
                 edit.apply();
+                outLineAndDialog();
                 break;
             default:
                 usersInfo.get().jpprogressBar.cancel();
@@ -65,16 +68,23 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
                 .addPathSegment("server")
                 .addPathSegment("ChangeUserMsg")
                 .build();
-        RequestBody body = new FormBody.Builder()
+        // 定义处理逻辑
+        FormBodyProcessor processor = (builder) -> {
+            if (strArr[1] == null || strArr[2] == null) {
+                builder.add("msg", strArr[1] == null ? usersInfo.get().pSign : "")
+                        .add("age", strArr[1] == null ? String.valueOf(usersInfo.get().age) : "");
+            } else {
+                builder.add("oldPass", strArr[1])
+                        .add("newPass", strArr[2]);
+            }
+            return builder.build();
+        };
+        RequestBody body = processor.process(new FormBody.Builder()
                 .add("head", "0")
                 .add("version", usersInfo.get().jpapplication.getVersion())
                 .add("keywords", strArr[0])
-                .add("userName", usersInfo.get().jpapplication.getAccountName())
-                .add("msg", strArr[1] == null ? usersInfo.get().pSign : "")
-                .add("age", strArr[1] == null ? String.valueOf(usersInfo.get().age) : "")
-                .add("oldPass", strArr[1] == null ? "" : strArr[1])
-                .add("newPass", strArr[2] == null ? "" : strArr[2])
-                .build();
+                .add("userName", usersInfo.get().jpapplication.getAccountName()));
+        // 请求
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -95,5 +105,14 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
         usersInfo.get().jpprogressBar.setCancelable(true);
         usersInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         usersInfo.get().jpprogressBar.show();
+    }
+
+    @FunctionalInterface
+    public interface FormBodyProcessor {
+        RequestBody process(FormBody.Builder builder);
+    }
+
+    private void outLineAndDialog() {
+        BaseActivity.returnMainMode(usersInfo.get());
     }
 }
