@@ -148,6 +148,10 @@ public final class ChattingAdapter extends BaseAdapter {
                             }
                             break;
                     }
+                } else if (JPStack.top() instanceof OLPlayHall) {
+                    textView.setTextColor(0xffFFFACD);
+                    textView2.setTextColor(0xffFFFACD);
+                    textView3.setTextColor(0xffFFFACD);
                 }
                 textView3.setText(string2);
             } else {
