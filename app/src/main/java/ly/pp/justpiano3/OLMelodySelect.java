@@ -263,7 +263,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     public void onWindowFocusChanged(boolean z) {
         while (!firstLoadFocusFinish) {
             handler = new Handler(this);
-            int width = pageButton.getWidth();
+            int width = pageButton.getWidth() + 40;
             m3643a(pageNum);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);
             ListView listView = inflate.findViewById(R.id.list);

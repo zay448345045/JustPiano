@@ -419,7 +419,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             ListView listView = inflate.findViewById(R.id.list);
             PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 10, -2, true);
+            sortPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
             sortPopupwindow.setOutsideTouchable(true);
             sortPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
             List<String> menuListNames = new ArrayList<>();
