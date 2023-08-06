@@ -13,7 +13,7 @@ public final class UsersInfoTask3 extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected final String doInBackground(String... strArr) {
+    protected String doInBackground(String... strArr) {
         return UsersInfo.m3931b(strArr[0], strArr[1], strArr[2]);
     }
 

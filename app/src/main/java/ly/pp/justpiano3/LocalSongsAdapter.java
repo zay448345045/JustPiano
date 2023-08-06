@@ -39,7 +39,7 @@ public final class LocalSongsAdapter extends CursorAdapter {
     }
 
     @Override
-    public final void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor) {
         view.setTag(cursor.getPosition());
         ImageView imageView = view.findViewById(R.id.play_image);
         ImageView imageView3 = view.findViewById(R.id.favor);
@@ -91,7 +91,7 @@ public final class LocalSongsAdapter extends CursorAdapter {
     }
 
     @Override
-    public final View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View inflate = melodyselect.layoutInflater2.inflate(R.layout.c_view, null);
         inflate.setBackgroundResource(R.drawable.selector_list_c);
         return inflate;

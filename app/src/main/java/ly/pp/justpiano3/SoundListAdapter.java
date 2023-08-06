@@ -21,7 +21,7 @@ final class SoundListAdapter extends BaseAdapter {
         this.soundKeyList = soundKeyList;
     }
 
-    final void mo3583a(CharSequence[] soundNameList, CharSequence[] soundKeyList) {
+    void mo3583a(CharSequence[] soundNameList, CharSequence[] soundKeyList) {
         this.soundNameList = soundNameList;
         this.soundKeyList = soundKeyList;
     }

@@ -27,7 +27,7 @@ final class SoundDownloadClick implements OnClickListener {
                 ThreadPoolUtils.execute(() -> soundDownload.mo3006a(name + ".ss"));
                 break;
             case 2:
-                ThreadPoolUtils.execute(JPApplication::reLoadOriginalSounds);
+                ThreadPoolUtils.execute(() -> JPApplication.reLoadOriginalSounds(soundDownload.getApplicationContext()));
                 break;
         }
     }

@@ -82,7 +82,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private int userEyeIndex;
     private int userShoesIndex;
     String userSex = "f";
-    private Editor editor = null;
     private MainGameAdapter mailListAdapter = null;
     private MainGameAdapter hallListAdapter = null;
     private MainGameAdapter userListAdapter = null;
@@ -93,15 +92,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     private ImageView coupleEyeView;
     private ImageView coupleShoesView;
     String coupleSex;
-    private int coupleTrousersIndex;
-    private int coupleJacketIndex;
-    private int coupleHairIndex;
-    private int coupleEyeIndex;
-    private int coupleShoesIndex;
-    private TextView systemTextView;
-    private ScrollText broadCastTextView;
-    private String systemText = "";
-    private String broadCastText = "";
     private LayoutInflater layoutinflater;
 
     private static Bitmap setDress(Context context, String str, String str2, int i) {
@@ -120,7 +110,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         }
     }
 
-    final void sendMsg(int type, MessageLite message) {
+    void sendMsg(int type, MessageLite message) {
         if (connectionService != null) {
             connectionService.writeData(type, message);
         } else {
@@ -183,24 +173,24 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         }
     }
 
-    final void mo2907b(ListView listView, List<HashMap> list) {
+    void mo2907b(ListView listView, List<HashMap> list) {
         listView.setAdapter(new FamilyAdapter(list, layoutinflater, this));
     }
 
-    public final void mo2905a(FamilyAdapter fa, FamilyListView listView, List<HashMap> list) {
+    public void mo2905a(FamilyAdapter fa, FamilyListView listView, List<HashMap> list) {
         fa.upDateList(list);
         fa.notifyDataSetChanged();
         listView.loadComplete();
     }
 
-    final void mo2840a(int i) {
+    void mo2840a(int i) {
         mailList.remove(i);
         mailListAdapter.updateList(mailList);
         mailListAdapter.notifyDataSetChanged();
         mo2848c();
     }
 
-    final void mo2841a(int i, String str, String str2) {
+    void mo2841a(int i, String str, String str2) {
         if (i == 3) {
             tabHost.setCurrentTab(1);
         }
@@ -215,18 +205,16 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         }
     }
 
-    final void mo2842a(Bundle bundle) {
-        systemText = bundle.getString("U");
-        broadCastText = bundle.getString("M");
-        int i = bundle.getInt("C");
-        int i2 = bundle.getInt("D");
-        systemTextView.setText(systemText);
-        systemTextView.setTextColor(getResources().getColor(i));
-        broadCastTextView.setText(broadCastText);
-        systemTextView.setTextColor(getResources().getColor(i2));
+    void mo2842a(Bundle bundle) {
+//        int i = bundle.getInt("C");
+//        int i2 = bundle.getInt("D");
+//        systemTextView.setText(bundle.getString("U"));
+//        systemTextView.setTextColor(getResources().getColor(i));
+//        broadCastTextView.setText(bundle.getString("M"));
+//        systemTextView.setTextColor(getResources().getColor(i2));
     }
 
-    final void mo2843a(ListView listView, List<Bundle> list) {
+    void mo2843a(ListView listView, List<Bundle> list) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("I"), o2.getByte("I")));
         }
@@ -239,7 +227,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         hallListAdapter.notifyDataSetChanged();
     }
 
-    final void loadDress(int hair, int eye, int jacket, int trousers, int shoes) {
+    void loadDress(int hair, int eye, int jacket, int trousers, int shoes) {
         userTrousersIndex = trousers;
         userJacketIndex = jacket;
         userHairIndex = hair;
@@ -253,7 +241,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
     }
 
-    final void sendMail(String str, int i) {
+    void sendMail(String str, int i) {
         String str2;
         String str3;
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
@@ -275,7 +263,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void mo2846b(ListView listView, List<Bundle> list) {
+    void mo2846b(ListView listView, List<Bundle> list) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
@@ -288,21 +276,16 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         userListAdapter.notifyDataSetChanged();
     }
 
-    final void loadClothes(int hair, int eye, int jacket, int trousers, int shoes) {
-        coupleTrousersIndex = trousers;
-        coupleJacketIndex = jacket;
-        coupleHairIndex = hair;
-        coupleEyeIndex = eye;
-        coupleShoesIndex = shoes;
+    void loadClothes(int hair, int eye, int jacket, int trousers, int shoes) {
         coupleModView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "m", 1));
-        coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", coupleTrousersIndex));
-        coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", coupleJacketIndex));
-        coupleHairView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "h", coupleHairIndex));
-        coupleEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "e", coupleEyeIndex));
-        coupleShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "s", coupleShoesIndex));
+        coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", trousers));
+        coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", jacket));
+        coupleHairView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "h", hair));
+        coupleEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "e", eye));
+        coupleShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "s", shoes));
     }
 
-    final void mo2848c() {
+    void mo2848c() {
         JSONArray jSONArray = new JSONArray();
         for (Bundle aF4473x : mailList) {
             JSONObject jSONObject = new JSONObject();
@@ -318,11 +301,12 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 e.printStackTrace();
             }
         }
+        Editor editor = sharedPreferences.edit();
         editor.putString("mailsString", jSONArray.toString());
-        editor.commit();
+        editor.apply();
     }
 
-    final void mo2849c(ListView listView, List<Bundle> list) {
+    void mo2849c(ListView listView, List<Bundle> list) {
         if (mailListAdapter == null) {
             mailListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 2, this);
             listView.setAdapter(mailListAdapter);
@@ -332,7 +316,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         mailListAdapter.notifyDataSetChanged();
     }
 
-    final void addFriends(String str) {
+    void addFriends(String str) {
         if (!str.isEmpty()) {
             JPDialog jpdialog = new JPDialog(this);
             jpdialog.setTitle("好友请求");
@@ -515,7 +499,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         layoutinflater = LayoutInflater.from(this);
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
-        editor = sharedPreferences.edit();
         jpApplication.loadSettings(true);
         setContentView(R.layout.olplayhallroom);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
@@ -631,7 +614,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         for (int i = 0; i < childCount; i++) {
             tabHost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            ((TextView) tv).setTextColor(0xffffffff);
+            tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

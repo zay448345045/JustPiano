@@ -47,8 +47,10 @@ public final class ChattingAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         TextView textView;
-        View inflate = layoutInflater.inflate(R.layout.ol_msg_view, null);
-        inflate.setKeepScreenOn(true);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.ol_msg_view, null);
+        }
+        view.setKeepScreenOn(true);
         Bundle bundle = msgList.get(i);
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
@@ -59,9 +61,9 @@ public final class ChattingAdapter extends BaseAdapter {
             if (!str1.isEmpty()) {
                 str1 = "songs/" + str1 + ".pm";
                 ((OLPlayRoom) activity).setdiao(bundle.getInt("D"));
-                textView = inflate.findViewById(R.id.ol_user_text);
+                textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[荐]" + string);
-                textView2 = inflate.findViewById(R.id.ol_msg_text);
+                textView2 = view.findViewById(R.id.ol_msg_text);
                 String[] a = ((OLPlayRoom) activity).mo2864a(str1);
                 if (a[0] != null && a[1] != null) {
                     textView2.setText(string2 + a[0] + "[难度:" + a[1]);
@@ -76,10 +78,10 @@ public final class ChattingAdapter extends BaseAdapter {
         } else if (i2 == 1) {
             int id = bundle.getInt("V");
             if (!string2.startsWith("//")) {
-                textView = inflate.findViewById(R.id.ol_user_text);
+                textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
-                textView2 = inflate.findViewById(R.id.ol_user_mao);
-                TextView textView3 = inflate.findViewById(R.id.ol_msg_text);
+                textView2 = view.findViewById(R.id.ol_user_mao);
+                TextView textView3 = view.findViewById(R.id.ol_msg_text);
                 if (JPStack.top() instanceof OLPlayRoom || JPStack.top() instanceof OLPlayKeyboardRoom) {
                     switch (id) {
                         case 1:
@@ -143,119 +145,119 @@ public final class ChattingAdapter extends BaseAdapter {
                 textView3.setText(string2);
             } else {
                 try {
-                    textView = inflate.findViewById(R.id.ol_user_text);
+                    textView = view.findViewById(R.id.ol_user_text);
                     textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
-                    ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
+                    ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
                 } catch (Exception e) {
-                    textView = inflate.findViewById(R.id.ol_user_text);
+                    textView = view.findViewById(R.id.ol_user_text);
                     textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
                     switch (string2) {
                         case "//dalao0":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
                             break;
                         case "//7yxg":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.qiyexingguo);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.qiyexingguo);
                             break;
                         case "//family":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.family);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.family);
                             break;
                         case "//redheart":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_1);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_1);
                             break;
                         case "//greenheart":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_2);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_2);
                             break;
                         case "//purpleheart":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_3);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_3);
                             break;
                         case "//crawl":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.pazou);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.pazou);
                             break;
                         case "//greencircle":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.greenlight);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.greenlight);
                             break;
                         case "//jpgq":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.icon);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.icon);
                             break;
                         case "//soundstop":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.stop);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.stop);
                             break;
                         case "//greensquare":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_down);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_down);
                             break;
                         case "//blacksquare":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_up);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_up);
                             break;
                         case "//rightarrow":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.for_arrow);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.for_arrow);
                             break;
                         case "//leftarrow":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.back_arrow);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.back_arrow);
                             break;
                         case "//music":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.music);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.music);
                             break;
                         case "//bluecircle":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.redlight);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.redlight);
                             break;
                         case "//jpgq1":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.jpgq1);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.jpgq1);
                             break;
                         case "//huaji":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.huaji);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.huaji);
                             break;
                         case "//bugaoxing":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bugaoxing);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bugaoxing);
                             break;
                         case "//yingyingying":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.yingyingying);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.yingyingying);
                             break;
                         case "//...":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.shenglve);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.shenglve);
                             break;
                         case "//momotou":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.momotou);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.momotou);
                             break;
                         case "//heguozhi":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.heguozhi);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.heguozhi);
                             break;
                         case "//hen6":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.hen6);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.hen6);
                             break;
                         case "//buyaozheyang":
-                            ((ImageView) inflate.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.buyaozheyang);
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.buyaozheyang);
                             break;
                         default:
                             textView.setTextColor(0xffffffff);
-                            ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xffffffff);
-                            ((TextView) inflate.findViewById(R.id.ol_msg_text)).setTextColor(0xffffffff);
-                            ((TextView) inflate.findViewById(R.id.ol_msg_text)).setText(string2);
+                            ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffffff);
+                            ((TextView) view.findViewById(R.id.ol_msg_text)).setTextColor(0xffffffff);
+                            ((TextView) view.findViewById(R.id.ol_msg_text)).setText(string2);
                     }
                 }
             }
         } else if (i2 == 2) {
-            textView = inflate.findViewById(R.id.ol_user_text);
+            textView = view.findViewById(R.id.ol_user_text);
             textView.setText((showTime ? bundle.getString("TIME") : "") + "[私]" + string);
             textView.setTextColor(0xff00ff00);
-            textView2 = inflate.findViewById(R.id.ol_msg_text);
-            ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
+            textView2 = view.findViewById(R.id.ol_msg_text);
+            ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
             textView2.setText(string2);
             textView2.setTextColor(0xff00ff00);
         } else if (i2 == 3) {
-            textView = inflate.findViewById(R.id.ol_user_text);
+            textView = view.findViewById(R.id.ol_user_text);
             textView.setText((showTime ? bundle.getString("TIME") : "") + "[系统消息]" + string);
             textView.setTextColor(0xff00ffff);
-            textView2 = inflate.findViewById(R.id.ol_msg_text);
-            ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
+            textView2 = view.findViewById(R.id.ol_msg_text);
+            ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
             textView2.setText(string2);
             textView2.setTextColor(0xff00ffff);
         } else {
             if (i2 == 18) {
-                textView = inflate.findViewById(R.id.ol_user_text);
+                textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[全服消息]" + string);
                 textView.setTextColor(0xff00ffff);
-                textView2 = inflate.findViewById(R.id.ol_msg_text);
-                ((TextView) inflate.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
+                textView2 = view.findViewById(R.id.ol_msg_text);
+                ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
                 textView2.setText(string2);
                 textView2.setTextColor(0xff00ffff);
             }
@@ -278,6 +280,6 @@ public final class ChattingAdapter extends BaseAdapter {
                 }
             });
         }
-        return inflate;
+        return view;
     }
 }

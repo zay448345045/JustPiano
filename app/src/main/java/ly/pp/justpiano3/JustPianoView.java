@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Paint.Align;
+import android.util.AttributeSet;
 import android.view.View;
 
 import java.io.IOException;

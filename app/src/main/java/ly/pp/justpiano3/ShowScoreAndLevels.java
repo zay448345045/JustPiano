@@ -15,7 +15,7 @@ public final class ShowScoreAndLevels extends Thread {
         this.pianoPlay = pianoPlay;
     }
 
-    final void computeScore(ShowTouchNotesLevel showTouchNotesLevel, int i, int i2) {
+    void computeScore(ShowTouchNotesLevel showTouchNotesLevel, int i, int i2) {
         if (showTouchNotesLevelList.size() > 1) {
             showTouchNotesLevelList.remove(0);
         }
@@ -35,7 +35,7 @@ public final class ShowScoreAndLevels extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         while (pianoPlay.isPlayingStart) {
             try {
                 for (ShowTouchNotesLevel showTouchNotesLevel : showTouchNotesLevelList) {

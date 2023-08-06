@@ -14,7 +14,7 @@ final class JacketClick implements OnItemClickListener {
     }
 
     @Override
-    public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
+    public void onItemClick(AdapterView adapterView, View view, int i, long j) {
         if (olPlayDressRoom.jacketUnlock.contains(i) || i == 0) {
             if (i == olPlayDressRoom.jacketNow) {
                 olPlayDressRoom.jacketImage.setImageBitmap(olPlayDressRoom.none);

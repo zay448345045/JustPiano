@@ -154,9 +154,9 @@ public class SoundDownload extends Activity implements Callback {
             JPApplication.teardownAudioStreamNative();
             JPApplication.unloadWavAssetsNative();
             for (i = 108; i >= 24; i--) {
-                JPApplication.preloadSounds(i);
+                JPApplication.preloadSounds(getApplicationContext(), i);
             }
-            JPApplication.confirmLoadSounds();
+            JPApplication.confirmLoadSounds(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }

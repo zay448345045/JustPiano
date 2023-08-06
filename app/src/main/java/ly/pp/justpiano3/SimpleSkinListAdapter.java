@@ -69,12 +69,11 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                 SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
                 if (name.equals("原生主题")) {
                     edit.putString("skin_list", "original");
-                    edit.apply();
                 } else {
                     edit.putString("skin_list", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + fileList.get(index - 1).getName());
                     GZIP.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + fileList.get(index - 1).getName()), dir.toString());
-                    edit.apply();
                 }
+                edit.apply();
                 olPlayKeyboardRoom.runOnUiThread(() -> {
                     olPlayKeyboardRoom.keyboardView.changeImage(olPlayKeyboardRoom);
                     olPlayKeyboardRoom.jpapplication.setBackGround(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));

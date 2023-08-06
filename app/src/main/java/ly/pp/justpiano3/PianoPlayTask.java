@@ -12,7 +12,7 @@ public final class PianoPlayTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected final Void doInBackground(Void... objArr) {
+    protected Void doInBackground(Void... objArr) {
         pianoPlay.get().m3802m();
         return null;
     }

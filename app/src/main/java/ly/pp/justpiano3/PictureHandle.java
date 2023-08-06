@@ -67,7 +67,7 @@ public final class PictureHandle {
         return null;
     }
 
-    final void mo3026a() {
+    void mo3026a() {
         if (map != null) {
             for (Map.Entry<String, SoftReference<Bitmap>> value : map.entrySet()) {
                 Bitmap bitmap = value.getValue().get();
@@ -82,7 +82,7 @@ public final class PictureHandle {
         }
     }
 
-    final void mo3027a(JPApplication jpApplication, ImageView imageView, Bitmap bitmap) {
+    void mo3027a(JPApplication jpApplication, ImageView imageView, Bitmap bitmap) {
         String str = (String) imageView.getTag();
         if (map.containsKey(str)) {
             Bitmap bitmap2 = map.get(str).get();

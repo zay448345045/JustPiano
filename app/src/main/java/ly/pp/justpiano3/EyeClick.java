@@ -13,7 +13,7 @@ final class EyeClick implements OnItemClickListener {
     }
 
     @Override
-    public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
+    public void onItemClick(AdapterView adapterView, View view, int i, long j) {
         if (olPlayDressRoom.eyeUnlock.contains(i) || i == 0) {
             if (i == olPlayDressRoom.eyeNow) {
                 olPlayDressRoom.eyeImage.setImageBitmap(olPlayDressRoom.none);

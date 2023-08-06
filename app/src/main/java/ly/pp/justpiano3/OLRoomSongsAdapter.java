@@ -20,7 +20,7 @@ public final class OLRoomSongsAdapter extends CursorAdapter {
     }
 
     @Override
-    public final void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor) {
         TextView songName = view.findViewById(R.id.song_name);
         songName.setText(cursor.getString(cursor.getColumnIndex("name")));
         songName.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -56,7 +56,7 @@ public final class OLRoomSongsAdapter extends CursorAdapter {
     }
 
     @Override
-    public final View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View inflate = LayoutInflater.from(context).inflate(R.layout.song_view, null);
         inflate.setBackgroundResource(R.drawable.selector_list_c);
         return inflate;

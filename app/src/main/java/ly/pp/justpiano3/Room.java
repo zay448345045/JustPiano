@@ -2,7 +2,7 @@ package ly.pp.justpiano3;
 
 final class Room {
 
-    private final int peopleCapacity = 6;
+    private static final int peopleCapacity = 6;
     private final byte roomID;
     private final String roonName;
     private final int fcount;
@@ -47,43 +47,43 @@ final class Room {
         roomKuang = i5;
     }
 
-    final byte getRoomID() {
+    byte getRoomID() {
         return roomID;
     }
 
-    final String getRoomName() {
+    String getRoomName() {
         return roonName;
     }
 
-    final int getFCount() {
+    int getFCount() {
         return fcount;
     }
 
-    final int getMCount() {
+    int getMCount() {
         return mcount;
     }
 
-    final int getIsPlaying() {
+    int getIsPlaying() {
         return isPlaying;
     }
 
-    final int[] getPeople() {
+    int[] getPeople() {
         return people;
     }
 
-    final boolean getPeopleFull() {
+    boolean getPeopleFull() {
         return peopleFull;
     }
 
-    final int getIsPassword() {
+    int getIsPassword() {
         return isPassword;
     }
 
-    final int getRoomKuang() {
+    int getRoomKuang() {
         return roomKuang;
     }
 
-    final int getRoomMode() {
+    int getRoomMode() {
         return roomMode;
     }
 }

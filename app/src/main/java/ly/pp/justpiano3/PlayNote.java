@@ -97,11 +97,11 @@ final class PlayNote {
         }
     }
 
-    final float getHalfWidth() {
+    float getHalfWidth() {
         return halfWidth;
     }
 
-    final float mo3107b(Canvas canvas) {    // 联网模式
+    float mo3107b(Canvas canvas) {    // 联网模式
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && hideNote) {
@@ -119,7 +119,7 @@ final class PlayNote {
         return posiAdd15AddAnim;
     }
 
-    final float mo3108c(Canvas canvas) {
+    float mo3108c(Canvas canvas) {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (jpapplication.getAutoPlay()) {
@@ -147,7 +147,7 @@ final class PlayNote {
         return posiAdd15AddAnim;
     }
 
-    final void noCompatibleMode(Canvas canvas) {  // 欣赏模式
+    void noCompatibleMode(Canvas canvas) {  // 欣赏模式
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && jpapplication.getOpenChord()) {

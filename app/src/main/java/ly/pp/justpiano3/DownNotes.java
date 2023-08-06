@@ -13,7 +13,7 @@ public final class DownNotes extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         while (pianoPlay.isPlayingStart) {
             while (pianoPlay.playView.startFirstNoteTouching) {
                 try {

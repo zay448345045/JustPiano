@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -283,19 +284,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         fos.write(buf, 0, len);
                         sum += len;
                         int progress = (int) (sum * 1.0f / length * 100);
-                        String detail = String.format("下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
+                        String detail = String.format(Locale.getDefault(), "下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
                         // 回到主线程操纵界面
-                        runOnUiThread(() -> {
-                            jpprogressBar.setText(detail);
-                        });
+                        runOnUiThread(() -> jpprogressBar.setText(detail));
                     }
                     installApk(LoginActivity.this, file);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    runOnUiThread(() -> {
-                        jpprogressBar.dismiss();
-                    });
+                    runOnUiThread(() -> jpprogressBar.dismiss());
                 }
             }
         });

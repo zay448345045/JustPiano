@@ -67,10 +67,10 @@ public final class RoomTitleAdapter extends BaseAdapter {
             button.setText("已满");
         } else if (i5 == 1) {
             button.setText("加密");
-            button.setOnClickListener(v -> olPlayHall.mo2826a(i5, b));
+            button.setOnClickListener(v -> olPlayHall.enterRoomHandle(i5, b));
         } else if (i5 == 0) {
             button.setText("进入");
-            button.setOnClickListener(v -> olPlayHall.mo2826a(i5, b));
+            button.setOnClickListener(v -> olPlayHall.enterRoomHandle(i5, b));
         }
         textView = view.findViewById(R.id.ol_room_mode);
         string = "普通";

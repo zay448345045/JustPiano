@@ -19,7 +19,7 @@ final class PictureHandleThread extends Thread {
         map.put(str, imageView);
     }
 
-    final void mo3067a() {
+    void mo3067a() {
         pictureHandle.f5083a = false;
         map.clear();
         if (f5147c) {
@@ -29,7 +29,7 @@ final class PictureHandleThread extends Thread {
         }
     }
 
-    final void mo3068a(ImageView imageView, String str) {
+    void mo3068a(ImageView imageView, String str) {
         map.remove(imageView);
         if (str.endsWith(pictureHandle.f5088f)) {
             map.put(str, imageView);
@@ -42,7 +42,7 @@ final class PictureHandleThread extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         while (map.size() > 0 && pictureHandle.f5083a) {
             f5147c = false;
             String str = map.keySet().iterator().next();

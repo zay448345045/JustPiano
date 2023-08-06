@@ -66,11 +66,6 @@ public final class JPProgressBar extends ProgressDialog {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void show() {
         super.show();
         setContentView(R.layout.prgdialog);

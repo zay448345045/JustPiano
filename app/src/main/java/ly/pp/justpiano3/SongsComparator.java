@@ -16,7 +16,7 @@ final class SongsComparator implements Comparator<HashMap> {
     }
 
     @Override
-    public final int compare(HashMap obj, HashMap obj2) {
+    public int compare(HashMap obj, HashMap obj2) {
         switch (f5334c) {
             case 0:
                 return olMelodySelect.f4331t ? 0 - ((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));

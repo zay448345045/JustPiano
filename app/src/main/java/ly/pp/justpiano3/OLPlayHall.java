@@ -8,7 +8,6 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -54,13 +53,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     private ShowTimeThread showTimeThread;
     private TextView timeTextView;
 
-    final void loadInRoomUserInfo(byte b) {
+    void loadInRoomUserInfo(byte b) {
         OnlineLoadRoomUserListDTO.Builder builder = OnlineLoadRoomUserListDTO.newBuilder();
         builder.setRoomId(b);
         connectionService.writeData(43, builder.build());
     }
 
-    final void sendMsg(int type, MessageLite message) {
+    void sendMsg(int type, MessageLite message) {
         if (connectionService != null) {
             connectionService.writeData(type, message);
         } else {
@@ -68,7 +67,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    final void mo2825a(byte b, Room room) {
+    void putRoomToMap(byte b, Room room) {
         roomTitleMap.put(b, room);
     }
 
@@ -127,7 +126,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    final void mo2826a(int i, byte b) {
+    void enterRoomHandle(int i, byte b) {
         switch (i) {
             case 0:
                 OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
@@ -149,7 +148,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    final void mo2827a(Bundle bundle) {
+    void mo2827a(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.room_info, findViewById(R.id.dialog));
         ListView listView = inflate.findViewById(R.id.playerlist);
         Bundle bundle2 = bundle.getBundle("L");
@@ -164,13 +163,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         listView.setCacheColorHint(0);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle(String.valueOf(i2)+"房"+" 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+        new JPDialog(this).setTitle(i2 +"房"+" 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
-            mo2826a(bundle.getInt("P"), (byte) i2);
+            enterRoomHandle(bundle.getInt("P"), (byte) i2);
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
+    void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
         int posi = listView.getFirstVisiblePosition();
         listView.setAdapter(new ChattingAdapter(list, layoutInflater1, showChatTime));
         if (posi > 0) {
@@ -180,14 +179,14 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    final void mo2829a(ListView listView, List<Bundle> list, int i, boolean z) {
+    void mo2829a(ListView listView, List<Bundle> list, int i, boolean z) {
         if (z && list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
         listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
     }
 
-    final void sendMail(String str) {
+    void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -198,7 +197,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate).setFirstButton("发送", new SendMessageClick2(this, textView, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    final void mo2831b(ListView listView, List<Bundle> list) {
+    void mo2831b(ListView listView, List<Bundle> list) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("I"), o2.getByte("I")));
         }
@@ -211,7 +210,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         roomTitleAdapter.notifyDataSetChanged();
     }
 
-    final void mo2832b(String str) {
+    void mo2832b(String str) {
         sendTo = "@" + str + ":";
         if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
             sendTextView.setText(sendTo);
@@ -416,7 +415,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         for (int i = 0; i < 3; i++) {
             tabHost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            ((TextView) tv).setTextColor(0xffffffff);
+            tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

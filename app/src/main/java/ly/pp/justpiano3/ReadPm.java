@@ -180,7 +180,7 @@ final class ReadPm {
         }
     }
 
-    final void loadWithSongPath(Context context, String str) {
+    void loadWithSongPath(Context context, String str) {
         try {
             inputstream = context.getResources().getAssets().open(str);
         } catch (Exception e) {
@@ -204,7 +204,7 @@ final class ReadPm {
         }
     }
 
-    final void loadWithInputStream(InputStream inputstream) {
+    void loadWithInputStream(InputStream inputstream) {
         try {
             this.inputstream = inputstream;
             int pmSize = inputstream.available();
@@ -240,39 +240,39 @@ final class ReadPm {
         }
     }
 
-    final byte[] getNoteArray() {
+    byte[] getNoteArray() {
         return noteArray;
     }
 
-    final byte[] getTickArray() {
+    byte[] getTickArray() {
         return tickArray;
     }
 
-    final byte[] getTrackArray() {
+    byte[] getTrackArray() {
         return trackArray;
     }
 
-    final byte[] getVolumeArray() {
+    byte[] getVolumeArray() {
         return volumeArray;
     }
 
-    final int getPm_2() {
+    int getPm_2() {
         return pm_2;
     }
 
-    final float getLeftNandu() {
+    float getLeftNandu() {
         return leftNandu;
     }
 
-    final float getNandu() {
+    float getNandu() {
         return nandu;
     }
 
-    final String getSongName() {
+    String getSongName() {
         return songName;
     }
 
-    final int getSongTime() {
+    int getSongTime() {
         return songTime;
     }
 }

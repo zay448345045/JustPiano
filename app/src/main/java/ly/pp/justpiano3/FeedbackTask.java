@@ -66,9 +66,7 @@ public final class FeedbackTask {
         executorService.execute(() -> {
             try {
                 final String str = future.get();
-                mainMode.get().runOnUiThread(() -> {
-                    Toast.makeText(mainMode.get(), StringUtil.isNullOrEmpty(str) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show();
-                });
+                mainMode.get().runOnUiThread(() -> Toast.makeText(mainMode.get(), StringUtil.isNullOrEmpty(str) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
                 e.printStackTrace();
             }

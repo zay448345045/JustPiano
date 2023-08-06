@@ -11,17 +11,15 @@ package ly.pp.justpiano3.enums;
  **/
 public enum KeyboardSyncModeEnum {
 
-
     ORCHESTRATE(1, "编排"),
     CONCERTO(2, "协奏"),
-
 
     ;
 
     private final int id;
     private final String desc;
 
-    private KeyboardSyncModeEnum(int id, String desc) {
+    KeyboardSyncModeEnum(int id, String desc) {
         this.id = id;
         this.desc = desc;
     }

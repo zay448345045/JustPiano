@@ -446,7 +446,7 @@ final class ReceiveHandle {
                 Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                         roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
                         roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
-                olPlayHall.mo2825a(room.getRoomID(), room);
+                olPlayHall.putRoomToMap(room.getRoomID(), room);
                 bundle2.putByte("I", room.getRoomID());
                 bundle2.putString("N", room.getRoomName());
                 bundle2.putIntArray("UA", room.getPeople());
@@ -764,7 +764,7 @@ final class ReceiveHandle {
             if (room.getFCount() + room.getMCount() == 0) {
                 olPlayHall.roomTitleMap.remove(room.getRoomID());
             } else {
-                olPlayHall.mo2825a(room.getRoomID(), room);
+                olPlayHall.putRoomToMap(room.getRoomID(), room);
             }
             Iterator it = olPlayHall.roomTitleMap.values().iterator();
             int i = 0;

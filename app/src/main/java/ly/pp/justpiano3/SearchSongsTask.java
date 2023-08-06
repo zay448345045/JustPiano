@@ -56,7 +56,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected final void onCancelled() {
+    protected void onCancelled() {
     }
 
     @Override
@@ -94,6 +94,6 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected final void onProgressUpdate(Void... params) {
+    protected void onProgressUpdate(Void... params) {
     }
 }

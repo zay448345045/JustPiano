@@ -19,7 +19,7 @@ public final class RecordFilesAdapter extends BaseAdapter {
         recordfiles = rs;
     }
 
-    final void mo3422a(List<HashMap> list) {
+    void mo3422a(List<HashMap> list) {
         this.list = list;
     }
 

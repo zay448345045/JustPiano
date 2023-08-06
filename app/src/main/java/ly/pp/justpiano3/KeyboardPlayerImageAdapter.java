@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
-import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -20,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     byte roomID;

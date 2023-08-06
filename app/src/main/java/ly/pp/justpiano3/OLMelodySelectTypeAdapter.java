@@ -29,11 +29,13 @@ public final class OLMelodySelectTypeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View inflate = olMelodySelect.layoutInflater1.inflate(R.layout.ol_f_view, null);
-        inflate.setKeepScreenOn(true);
-        TextView textView = inflate.findViewById(R.id.ol_s_p);
+        if (view == null) {
+            view = olMelodySelect.layoutInflater1.inflate(R.layout.ol_f_view, null);
+        }
+        view.setKeepScreenOn(true);
+        TextView textView = view.findViewById(R.id.ol_s_p);
         textView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         textView.setText(Consts.items[i + 1]);
-        return inflate;
+        return view;
     }
 }

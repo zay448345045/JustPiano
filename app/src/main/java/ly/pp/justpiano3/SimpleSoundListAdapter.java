@@ -57,7 +57,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
             olPlayKeyboardRoom.jpprogressBar.show();
             ThreadPoolUtils.execute(() -> {
                 if (name.equals("原生音源")) {
-                    JPApplication.reLoadOriginalSounds();
+                    JPApplication.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
                     edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName());
@@ -77,9 +77,9 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         JPApplication.teardownAudioStreamNative();
                         JPApplication.unloadWavAssetsNative();
                         for (i = 108; i >= 24; i--) {
-                            JPApplication.preloadSounds(i);
+                            JPApplication.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
                         }
-                        JPApplication.confirmLoadSounds();
+                        JPApplication.confirmLoadSounds(olPlayKeyboardRoom.getApplicationContext());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

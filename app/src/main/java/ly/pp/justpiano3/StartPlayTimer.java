@@ -18,7 +18,7 @@ final class StartPlayTimer extends TimerTask {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         msg.arg1 = seconds;
         pianoPlay.pianoPlayHandler.handleMessage(msg);
         if (seconds == 0) {

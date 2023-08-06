@@ -248,7 +248,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         for (int i = 0; i < 6; i++) {
             tabhost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 512;
             TextView tv = tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            ((TextView) tv).setTextColor(0xffffffff);
+            tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

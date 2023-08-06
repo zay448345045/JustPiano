@@ -107,10 +107,9 @@ public class SkinDownload extends Activity implements Callback {
     }
 
     public final void getLocalSkinList() {
-        List<File> a = SkinAndSoundFileHandle.getLocalSkinList(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
-        int size = a.size();
-        for (int i = 0; i < size; i++) {
-            String name = a.get(i).getName();
+        List<File> fileList = SkinAndSoundFileHandle.getLocalSkinList(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
+        for (File file : fileList) {
+            String name = file.getName();
             list.add(name.substring(0, name.lastIndexOf('.')));
         }
     }

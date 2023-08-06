@@ -21,7 +21,7 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         songsList = list;
     }
 
-    final void mo3500a(List<HashMap> list) {
+    void mo3500a(List<HashMap> list) {
         songsList = list;
     }
 

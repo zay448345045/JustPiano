@@ -470,7 +470,7 @@ public final class PlayView extends SurfaceView implements Callback {
         return returnNoteValue;
     }
 
-    final int eventPositionToTouchNoteNum(float f, float f2) {
+    int eventPositionToTouchNoteNum(float f, float f2) {
         int i = 1;
         float w = jpapplication.getWhiteKeyHeight() + jpapplication.getBlackKeyHeight();
         if (f2 >= jpapplication.getWhiteKeyHeight()) {
@@ -523,7 +523,7 @@ public final class PlayView extends SurfaceView implements Callback {
         return -1;
     }
 
-    final void judgeAndPlaySound(int i) {
+    void judgeAndPlaySound(int i) {
         int noteOctaveOffset = noteMod12 * 12;
         judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
@@ -531,14 +531,14 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    final int midiJudgeAndPlaySound(int i) {
+    int midiJudgeAndPlaySound(int i) {
         int noteOctaveOffset = noteMod12 * 12;
         int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
         jpapplication.playSound(trueNote + noteOctaveOffset, volume0);
         return trueNote;
     }
 
-    final void mo2929a(Canvas canvas) {
+    void mo2929a(Canvas canvas) {
         int size = (noteCounts - notesList.size()) * (jpapplication.getWidthPixels() - 2) / noteCounts;
         if (canvas != null) {
             f4773bE.set(0, 0, progressBarWidth, progressBarHight);
@@ -634,7 +634,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    final void mo2930b(Canvas canvas) {
+    void mo2930b(Canvas canvas) {
         int E;
         int i;
         int i2;
@@ -780,7 +780,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    final void mo2931c(Canvas canvas) {
+    void mo2931c(Canvas canvas) {
         newNote = true;
         tempNotesArray.clear();
         for (PlayNote currentPlayNote : notesList) {

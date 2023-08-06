@@ -10,7 +10,7 @@ final class ShowTimeThread extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         do {
             try {
                 Message message = Message.obtain(olPlayHall.showTimeHandler);

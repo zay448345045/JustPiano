@@ -203,7 +203,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             } else {
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_s" + (User2.getShoes() - 1) + ".png")));
             }
-            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + jSONObject4.getInt("P"), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }

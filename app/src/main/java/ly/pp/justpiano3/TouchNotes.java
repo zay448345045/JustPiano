@@ -33,7 +33,7 @@ final class TouchNotes implements OnTouchListener {
     }
 
     @Override
-    public final boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouch(View view, MotionEvent event) {
         if (playView.startFirstNoteTouching) {
             int action = event.getActionMasked();
             // Track individual fingers.

@@ -10,7 +10,7 @@ public final class TimeUpdateThread extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         if (olPlayRoomInterface instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             do {

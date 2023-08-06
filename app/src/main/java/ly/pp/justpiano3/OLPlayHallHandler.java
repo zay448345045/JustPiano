@@ -243,7 +243,7 @@ final class OLPlayHallHandler extends Handler {
                                 dialog.dismiss();
                                 olPlayHall.jpapplication.setIsShowDialog(false);
                                 if (i == 0) {
-                                    olPlayHall.mo2826a(data14.getInt("P"), b);
+                                    olPlayHall.enterRoomHandle(data14.getInt("P"), b);
                                 } else if (i == 1) {
                                     OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
                                     builder.setRoomId(b);

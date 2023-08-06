@@ -23,6 +23,7 @@ import protobuf.dto.OnlineQuitRoomDTO;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
@@ -197,8 +198,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             case 0:    //本地模式
                 String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                localRNandu = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
-                localLNandu = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+                localRNandu = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localLNandu = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 localSongsTime = extras.getInt("songstime");
                 score = extras.getInt("score");
                 isOpenRecord = extras.getBoolean("isrecord");
@@ -208,7 +209,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 break;
             case 1:    //在线曲库
                 songsName = extras.getString("songName");
-                nandu = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+                nandu = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
                 byte[] byteArray = extras.getByteArray("songBytes");
@@ -282,12 +283,12 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         JPApplication.teardownAudioStreamNative();
         JPApplication.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(i);
+            JPApplication.preloadSounds(getApplicationContext(), i);
         }
-        JPApplication.confirmLoadSounds();
+        JPApplication.confirmLoadSounds(getApplicationContext());
     }
 
-    public final void sendMsg(int type, MessageLite msg) {
+    public void sendMsg(int type, MessageLite msg) {
         if (connectionService != null) {
             connectionService.writeData(type, msg);
         } else {
@@ -295,7 +296,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
     }
 
-    public final void mo2905a(HorizontalListView listView, List<Bundle> list) {
+    public void mo2905a(HorizontalListView listView, List<Bundle> list) {
         MiniScoreAdapter c1209io = (MiniScoreAdapter) listView.getAdapter();
         List<Bundle> a = m3783a(list, "M");
         if (c1209io == null) {
@@ -303,11 +304,11 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             listView.setAdapter(c1209io2);
             return;
         }
-        c1209io.mo3332a(a);
+        c1209io.changeList(a);
         c1209io.notifyDataSetChanged();
     }
 
-    public final void mo2906a(boolean hasTimer) {
+    public void mo2906a(boolean hasTimer) {
         progressbar.setVisibility(View.GONE);
         Message obtainMessage = pianoPlayHandler.obtainMessage();
         if (hasTimer) {  // 联网模式发321倒计时器
@@ -327,7 +328,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
     }
 
-    public final void mo2907b(ListView listView, List<Bundle> list) {
+    public void mo2907b(ListView listView, List<Bundle> list) {
         String str = "SC";
         if (roomMode > 0) {
             str = "E";
@@ -335,7 +336,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         listView.setAdapter(new FinishScoreAdapter(m3783a(list, str), layoutinflater, roomMode));
     }
 
-    final void recordFinish() {
+    void recordFinish() {
         if (recordStart) {
             isOpenRecord = false;
             JPApplication.setRecord(false);

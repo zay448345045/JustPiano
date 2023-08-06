@@ -35,9 +35,9 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         JPApplication.teardownAudioStreamNative();
         JPApplication.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(i);
+            JPApplication.preloadSounds(soundListPreference.context, i);
         }
-        JPApplication.confirmLoadSounds();
+        JPApplication.confirmLoadSounds(soundListPreference.context);
         return null;
     }
 

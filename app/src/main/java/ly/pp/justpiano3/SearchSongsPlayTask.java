@@ -18,7 +18,7 @@ public final class SearchSongsPlayTask {
     private final WeakReference<SearchSongs> searchSongs;
     private byte[] songBytes = null;
     private String str = "";
-    private ExecutorService executorService;
+    private final ExecutorService executorService;
     private Future<Void> future;
 
     SearchSongsPlayTask(SearchSongs searchSongs) {

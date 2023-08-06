@@ -82,7 +82,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                     contentvalues.put("online", 1);
                                     contentvalues.put("count", originalPmVersion + 1);
                                     sQLiteDatabase.update("jp_data", contentvalues, "path = '" + pmPathMap.get(aList3.substring(1)) + "'", null);
-                                    contentvalues.clear();
                                 } else {
                                     info = "加入曲目" + h + "..." + songCount + "";
                                     contentvalues.put("name", h);
@@ -101,8 +100,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                     contentvalues.put("length", l);
                                     contentvalues.put("Lscore", 0);
                                     sQLiteDatabase.insertOrThrow("jp_data", null, contentvalues);
-                                    contentvalues.clear();
                                 }
+                                contentvalues.clear();
                                 Message obtainMessage = handler.obtainMessage();
                                 obtainMessage.what = 0;
                                 handler.sendMessage(obtainMessage);
@@ -242,7 +241,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
         // 载入音源之前，先生成设备UUID到数据库中
         generateDeviceUUID(sqliteDataBase);
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(i);
+            JPApplication.preloadSounds(getApplicationContext(), i);
             progress++;
             loading = "此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除，正在载入声音资源..." + progress + "/85";
             Message obtainMessage2 = handler.obtainMessage();
@@ -250,7 +249,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
             handler.sendMessage(obtainMessage2);
         }
 
-        JPApplication.confirmLoadSounds();
+        JPApplication.confirmLoadSounds(getApplicationContext());
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);

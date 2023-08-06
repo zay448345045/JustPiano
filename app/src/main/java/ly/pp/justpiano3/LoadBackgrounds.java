@@ -44,7 +44,7 @@ public final class LoadBackgrounds extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         while (pianoPlay.isPlayingStart) {
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);

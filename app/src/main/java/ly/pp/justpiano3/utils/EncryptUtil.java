@@ -6,7 +6,7 @@ import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
+import android.util.Base64;
 
 /**
  * @author as
@@ -43,7 +43,7 @@ public class EncryptUtil {
      */
     public static PublicKey generatePublicKey(String publicKeyStr) {
         try {
-            byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
+            byte[] publicKeyBytes = Base64.decode(publicKeyStr, Base64.DEFAULT);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKeyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePublic(spec);
@@ -60,7 +60,7 @@ public class EncryptUtil {
      * @return
      */
     public static String generatePublicKeyString(PublicKey publicKey) {
-        return Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        return Base64.encodeToString(publicKey.getEncoded(), Base64.DEFAULT);
     }
 
     /**

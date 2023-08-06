@@ -15,13 +15,10 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.multidex.MultiDex;
-import io.netty.util.internal.StringUtil;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.security.KeyPair;
@@ -53,7 +50,6 @@ public final class JPApplication extends Application {
     private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
     static SharedPreferences accountListSharedPreferences;
-    private static Context context;
     public static int SETTING_MODE_CODE = 122;
 
     static {
@@ -171,17 +167,17 @@ public final class JPApplication extends Application {
 
     public static native void setRecordFilePath(String recordFilePath);
 
-    public static void preloadSounds(int i) {
+    public static void preloadSounds(Context context, int i) {
         try {
             Converter converter = new Converter();
             converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
-            loadWavInputStreamByIndex(i);
+            loadWavInputStreamByIndex(context, i);
         } catch (Exception e1) {
             try {
                 AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");
                 Converter converter = new Converter();
                 converter.convert(assetFD.createInputStream(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav", null, null);
-                loadWavInputStreamByIndex(i);
+                loadWavInputStreamByIndex(context, i);
                 assetFD.close();
             } catch (Exception e2) {
                 e2.printStackTrace();
@@ -189,7 +185,7 @@ public final class JPApplication extends Application {
         }
     }
 
-    private static void loadWavInputStreamByIndex(int index) throws IOException {
+    private static void loadWavInputStreamByIndex(Context context, int index) throws IOException {
         FileInputStream dataStream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Sounds/" + index + ".wav");
         int dataLen = dataStream.available();
         byte[] dataBytes = new byte[dataLen];
@@ -198,7 +194,7 @@ public final class JPApplication extends Application {
         dataStream.close();
     }
 
-    private static void loadChatWav() throws IOException {
+    private static void loadChatWav(Context context) throws IOException {
         AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("chat_b5.wav");
         FileInputStream dataStream = assetFD.createInputStream();
         int dataLen = dataStream.available();
@@ -237,7 +233,7 @@ public final class JPApplication extends Application {
         return true;
     }
 
-    public static void reLoadOriginalSounds() {
+    public static void reLoadOriginalSounds(Context context) {
         File dir = new File(context.getFilesDir(), "Sounds");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
@@ -250,17 +246,17 @@ public final class JPApplication extends Application {
         teardownAudioStreamNative();
         unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
-            preloadSounds(i);
+            preloadSounds(context, i);
         }
-        confirmLoadSounds();
+        confirmLoadSounds(context);
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();
     }
 
-    public static void confirmLoadSounds() {
+    public static void confirmLoadSounds(Context context) {
         try {
-            loadChatWav();
+            loadChatWav(context);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -269,7 +265,7 @@ public final class JPApplication extends Application {
         setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
     }
 
-    public static void initSettings() {
+    public static void initSettings(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("down_speed", "6");
@@ -670,7 +666,6 @@ public final class JPApplication extends Application {
         crashHandler.init();
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-        context = getApplicationContext();
         accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
@@ -691,7 +686,7 @@ public final class JPApplication extends Application {
                                         break;
                                     }
                                 }
-                                Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "MIDI设备已连接", Toast.LENGTH_SHORT).show();
                             }
                         }, new Handler(Looper.getMainLooper()));
                     }
@@ -704,9 +699,9 @@ public final class JPApplication extends Application {
                         try {
                             if (midiOutputPort != null) {
                                 midiOutputPort.close();
-                                Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "MIDI设备已断开", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(context, "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -728,7 +723,7 @@ public final class JPApplication extends Application {
                                     break;
                                 }
                             }
-                            Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "MIDI设备已连接", Toast.LENGTH_SHORT).show();
                         }
                     }, new Handler(Looper.getMainLooper()));
                 }
@@ -904,7 +899,7 @@ public final class JPApplication extends Application {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(byteArrayOutputStream));
             final String errorLog = byteArrayOutputStream.toString();
-            ClipboardManager myClipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+            ClipboardManager myClipboard = (ClipboardManager) getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
             ClipData myClip = ClipData.newPlainText("errorLog", errorLog);
             myClipboard.setPrimaryClip(myClip);
             if (connectionService != null) {
@@ -918,7 +913,7 @@ public final class JPApplication extends Application {
                 @Override
                 public void run() {
                     Looper.prepare();
-                    Toast.makeText(context, "很抱歉，极品钢琴出现异常，错误信息已复制，可粘贴至主界面问题反馈并发送", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，错误信息已复制，可粘贴至主界面问题反馈并发送", Toast.LENGTH_LONG).show();
                     Looper.loop();
                 }
             }.start();

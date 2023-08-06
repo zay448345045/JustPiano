@@ -12,7 +12,7 @@ import java.util.List;
 
 final class UserListPageAdapter extends BaseAdapter {
     private final UserListPage userListPage;
-    private List<SimpleUser> userList;
+    private final List<SimpleUser> userList;
 
     UserListPageAdapter(UserListPage userListPage, List<SimpleUser> userList) {
         this.userListPage = userListPage;

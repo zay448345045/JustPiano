@@ -93,6 +93,7 @@ public final class PlaySongs {
                     if (olPlayRoom.sqlitedatabase != null) {
                         Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "diff >= " + 0 + " AND diff < " + 20 + str0, null, null, null, null);
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
+                        query.close();
                         String str1 = str0.substring(6, str0.length() - 3);
                         jpapplication.setNowSongsName(str1);
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
@@ -112,6 +113,7 @@ public final class PlaySongs {
                     if (olPlayRoom.sqlitedatabase != null) {
                         Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "isfavo > 0" + str0, null, null, null, null);
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
+                        query.close();
                         if (str0.isEmpty()) {
                             return;
                         }

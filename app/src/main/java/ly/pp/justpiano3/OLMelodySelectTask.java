@@ -14,7 +14,6 @@ import java.lang.ref.WeakReference;
 
 public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
-    private String str = "";
 
     OLMelodySelectTask(OLMelodySelect oLMelodySelect) {
         olMelodySelect = new WeakReference<>(oLMelodySelect);

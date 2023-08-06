@@ -1,7 +1,6 @@
 package ly.pp.justpiano3;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
@@ -43,7 +42,7 @@ public final class SQLiteHelper extends SQLiteOpenHelper {
             JustPiano.updateSQL = true;
         }
         if (sQLiteDatabase.getVersion() < 40) {
-            JPApplication.initSettings();
+            JPApplication.initSettings(context);
             File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
             if (file.isDirectory()) {
                 File[] files = file.listFiles(pathname -> {

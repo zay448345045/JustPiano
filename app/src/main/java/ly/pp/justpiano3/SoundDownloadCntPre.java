@@ -17,7 +17,7 @@ public final class SoundDownloadCntPre extends Thread {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         try {
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + soundDownload.jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSound").newBuilder();

@@ -19,7 +19,7 @@ public final class ChatFilesAdapter extends BaseAdapter {
         chatfiles = cs;
     }
 
-    final void mo3422a(List<HashMap> list) {
+    void mo3422a(List<HashMap> list) {
         this.list = list;
     }
 

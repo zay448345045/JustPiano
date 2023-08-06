@@ -21,9 +21,7 @@ final class OLPlayDressRoomHandler extends Handler {
         try {
             switch (message.what) {
                 case 0:  // 保存服装
-                    post(() -> {
-                        Toast.makeText(olPlayDressRoom, message.getData().getString("I"), Toast.LENGTH_SHORT).show();
-                    });
+                    post(() -> Toast.makeText(olPlayDressRoom, message.getData().getString("I"), Toast.LENGTH_SHORT).show());
                     break;
                 case 1:  // 进入换衣间加载音符和解锁情况
                     post(() -> {

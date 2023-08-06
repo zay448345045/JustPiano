@@ -226,7 +226,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 imageView10.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User2.getSex() + "_s" + (User2.getShoes() - 1) + ".png")));
             }
             JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + String.valueOf(jSONObject4.getInt("P")), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            jpdialog.setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + jSONObject4.getInt("P"), new SendZhufuClick(this, jSONObject4)).setSecondButton("取消", new DialogDismissClick()).showDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -334,7 +334,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public final void sendMsg(int type, MessageLite msg) {
+    public void sendMsg(int type, MessageLite msg) {
         if (connectionService != null) {
             connectionService.writeData(type, msg);
         } else {
@@ -342,11 +342,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public final void putJPhashMap(byte b, User User) {
+    public void putJPhashMap(byte b, User User) {
         jpapplication.getHashmap().put(b, User);
     }
 
-    protected final void mo2860a(int i, String str, int i2, byte b) {
+    protected void mo2860a(int i, String str, int i2, byte b) {
         String str2 = "";
         String str3 = "";
         String str4 = "";
@@ -392,7 +392,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         jpdialog.setTitle(str3).setMessage(str).setFirstButton(str4, new CpRequestClick(this, i, b, i2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    public final void mo2861a(GridView gridView, Bundle bundle) {
+    public void mo2861a(GridView gridView, Bundle bundle) {
         playerList.clear();
         if (bundle != null) {
             int size = bundle.size() - 6;
@@ -407,7 +407,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public final void mo2862a(boolean showChatTime) {
+    public void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
         msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
         if (posi > 0) {
@@ -417,14 +417,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public final void mo2863a(ListView listView, List<Bundle> list, int i) {
+    public void mo2863a(ListView listView, List<Bundle> list, int i) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
         listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
     }
 
-    public final String[] mo2864a(String str) {
+    public String[] mo2864a(String str) {
         Cursor cursor = null;
         String[] strArr = new String[2];
         Cursor query;
@@ -453,7 +453,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         return strArr;
     }
 
-    final void sendMail(String str) {
+    void sendMail(String str) {
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -464,7 +464,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate).setFirstButton("发送", new SendMailClick(this, textView, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    public final void mo2867c(String str) {
+    public void mo2867c(String str) {
         userTo = "@" + str + ":";
         if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
             sendText.setText(userTo);
@@ -475,15 +475,15 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public final Handler getHandler() {
+    public Handler getHandler() {
         return handler;
     }
 
-    public final String getPlayerKind() {
+    public String getPlayerKind() {
         return playerKind;
     }
 
-    public final int getMode() {
+    public int getMode() {
         return roomMode;
     }
 
@@ -1178,13 +1178,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 960;
                 if (px2dp(this, displayMetrics.widthPixels) <= 360) {
-                    int height = (int) (sp2px(this, 20) + dp2px(this, 224) + dm.widthPixels / 3);
-                    RelativeLayout rs = (RelativeLayout) this.findViewById(R.id.RelativeLayout1);
+                    int height = sp2px(this, 20) + dp2px(this, 224) + dm.widthPixels / 3;
+                    RelativeLayout rs = this.findViewById(R.id.RelativeLayout1);
                     rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(3);
                 } else {
-                    int height = (int) (sp2px(this, 20) + dp2px(this, 76) + dm.widthPixels / 6);
-                    RelativeLayout rs = (RelativeLayout) this.findViewById(R.id.RelativeLayout1);
+                    int height = sp2px(this, 20) + dp2px(this, 76) + dm.widthPixels / 6;
+                    RelativeLayout rs = this.findViewById(R.id.RelativeLayout1);
                     rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(6);
                 }
@@ -1192,7 +1192,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             }
             TextView tv = roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title);
-            ((TextView) tv).setTextColor(0xffffffff);
+            tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
