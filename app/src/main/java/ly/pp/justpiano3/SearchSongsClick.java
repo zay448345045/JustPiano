@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.MelodySelect;
 
 final class SearchSongsClick implements OnClickListener {
     private final MelodySelect melodySelect;

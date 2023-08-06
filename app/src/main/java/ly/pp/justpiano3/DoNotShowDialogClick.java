@@ -3,12 +3,13 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
+import ly.pp.justpiano3.activity.MelodySelect;
 
-final class DoNotShowDialogClick implements OnClickListener {
+public final class DoNotShowDialogClick implements OnClickListener {
     private final MelodySelect melodySelect;
     private final int f5160b;
 
-    DoNotShowDialogClick(MelodySelect melodySelect, int i) {
+    public DoNotShowDialogClick(MelodySelect melodySelect, int i) {
         this.melodySelect = melodySelect;
         f5160b = i;
     }

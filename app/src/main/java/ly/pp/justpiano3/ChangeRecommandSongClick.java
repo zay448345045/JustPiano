@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 
 final class ChangeRecommandSongClick implements OnClickListener {
     private final ChattingAdapter chattingAdapter;

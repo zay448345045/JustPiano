@@ -2,6 +2,8 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -15,7 +17,7 @@ import java.lang.ref.WeakReference;
 public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
 
-    OLMelodySelectTask(OLMelodySelect oLMelodySelect) {
+    public OLMelodySelectTask(OLMelodySelect oLMelodySelect) {
         olMelodySelect = new WeakReference<>(oLMelodySelect);
     }
 
@@ -50,7 +52,7 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
             JSONObject jSONObject;
             try {
                 jSONObject = new JSONObject(string);
-                string = GZIP.ZIPTo(jSONObject.getString("L"));
+                string = GZIPUtil.ZIPTo(jSONObject.getString("L"));
                 if (olMelodySelect.get().index == 0) {
                     olMelodySelect.get().pageNum = jSONObject.getInt("P");
                 }

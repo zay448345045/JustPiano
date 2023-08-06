@@ -13,7 +13,7 @@ public final class ChallengeListAdapter extends BaseAdapter {
     private final List<HashMap> list;
     private final LayoutInflater li;
 
-    ChallengeListAdapter(List<HashMap> list, LayoutInflater layoutInflater) {
+    public ChallengeListAdapter(List<HashMap> list, LayoutInflater layoutInflater) {
         this.list = list;
         li = layoutInflater;
     }

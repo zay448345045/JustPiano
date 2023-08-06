@@ -8,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-final class SkinListAdapter extends BaseAdapter {
+public final class SkinListAdapter extends BaseAdapter {
     final SkinListPreference skinListPreference;
     Context context;
     private CharSequence[] skinNameList;
     private CharSequence[] skinKeyList;
 
-    SkinListAdapter(SkinListPreference skinListPreference, Context context, CharSequence[] skinNameList, CharSequence[] skinKeyList) {
+    public SkinListAdapter(SkinListPreference skinListPreference, Context context, CharSequence[] skinNameList, CharSequence[] skinKeyList) {
         this.skinListPreference = skinListPreference;
         this.context = context;
         this.skinNameList = skinNameList;

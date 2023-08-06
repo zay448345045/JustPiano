@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 import java.io.File;
 import java.util.List;
@@ -36,7 +37,7 @@ public class SoundListPreference extends DialogPreference {
 
     private void m3922a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
-        List<File> f5048c = SkinAndSoundFileHandle.getLocalSoundList(str);
+        List<File> f5048c = SkinAndSoundFileUtil.getLocalSoundList(str);
         int size = f5048c.size();
         soundNameList = new CharSequence[(size + 2)];
         soundKeyList = new CharSequence[(size + 2)];

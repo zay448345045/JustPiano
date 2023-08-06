@@ -2,15 +2,17 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 import org.json.JSONException;
 import org.json.JSONObject;
 import protobuf.dto.OnlineCoupleDTO;
 
-final class SendZhufuClick implements OnClickListener {
+public final class SendZhufuClick implements OnClickListener {
     private final OLPlayRoomInterface olPlayRoomInterface;
     private final JSONObject f5512b;
 
-    SendZhufuClick(OLPlayRoomInterface olPlayRoomInterface, JSONObject jSONObject) {
+    public SendZhufuClick(OLPlayRoomInterface olPlayRoomInterface, JSONObject jSONObject) {
         this.olPlayRoomInterface = olPlayRoomInterface;
         f5512b = jSONObject;
     }

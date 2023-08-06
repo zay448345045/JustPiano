@@ -4,16 +4,17 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.PopUserInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-final class SendMessageClick implements OnClickListener {
+public final class SendMessageClick implements OnClickListener {
     private final PopUserInfo popUserInfo;
     private final TextView textView;
     private final String f5775c;
     private final String f5776d;
 
-    SendMessageClick(PopUserInfo popUserInfo, TextView textView, String str, String str2) {
+    public SendMessageClick(PopUserInfo popUserInfo, TextView textView, String str, String str2) {
         this.popUserInfo = popUserInfo;
         this.textView = textView;
         f5775c = str;

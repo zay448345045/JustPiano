@@ -8,6 +8,9 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.entity.LocalSongData;
+import ly.pp.justpiano3.utils.StreamUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -18,7 +21,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
     private final WeakReference<Activity> activity;
     private final int type;
 
-    LocalDataImportExportTask(Activity activity, int type) {
+    public LocalDataImportExportTask(Activity activity, int type) {
         this.activity = new WeakReference<>(activity);
         this.type = type;
     }

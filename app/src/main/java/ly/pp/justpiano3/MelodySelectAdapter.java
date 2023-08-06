@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.MelodySelect;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class MelodySelectAdapter extends CursorAdapter {
     private final MelodySelect melodySelect;
 
-    MelodySelectAdapter(Context context, Cursor cursor, MelodySelect melodySelect) {
+    public MelodySelectAdapter(Context context, Cursor cursor, MelodySelect melodySelect) {
         super(context, cursor, true);
         this.melodySelect = melodySelect;
     }

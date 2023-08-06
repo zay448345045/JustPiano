@@ -3,6 +3,8 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.activity.Register;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
@@ -14,7 +16,7 @@ import java.lang.ref.WeakReference;
 public final class RegisterTask extends AsyncTask<Void, Integer, String> {
     private final WeakReference<Register> register;
 
-    RegisterTask(Register register) {
+    public RegisterTask(Register register) {
         this.register = new WeakReference<>(register);
     }
 

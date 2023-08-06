@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -10,10 +11,10 @@ import okhttp3.Response;
 
 import java.lang.ref.WeakReference;
 
-final class PopUserInfoTask extends AsyncTask<String, Void, String> {
+public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     private final WeakReference<PopUserInfo> popUserInfo;
 
-    PopUserInfoTask(PopUserInfo popUserInfo) {
+    public PopUserInfoTask(PopUserInfo popUserInfo) {
         this.popUserInfo = new WeakReference<>(popUserInfo);
     }
 

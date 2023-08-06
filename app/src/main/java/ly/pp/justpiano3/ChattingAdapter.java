@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private final LayoutInflater layoutInflater;
     private final boolean showTime;
 
-    ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater, boolean showTime) {
+    public ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater, boolean showTime) {
         msgList = list;
         this.layoutInflater = layoutInflater;
         this.showTime = showTime;

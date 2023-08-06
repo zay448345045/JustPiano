@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public final class DressAdapter extends BaseAdapter {
     private final OLPlayDressRoom olPlayDressRoom;
     private final int type;  // 0,1,2,3,4表示头发、眼睛，衣服、裤子、鞋子
 
-    DressAdapter(List<Bitmap> arrayList, OLPlayDressRoom oLPlayDressRoom, int type) {
+    public DressAdapter(List<Bitmap> arrayList, OLPlayDressRoom oLPlayDressRoom, int type) {
         this.olPlayDressRoom = oLPlayDressRoom;
         layoutInflater = oLPlayDressRoom.getLayoutInflater();
         list = arrayList;

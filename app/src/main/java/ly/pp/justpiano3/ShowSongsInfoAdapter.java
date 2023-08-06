@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.activity.ShowSongsInfo;
+import ly.pp.justpiano3.thread.AcceptFavorThread;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +19,12 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
     final ShowSongsInfo showSongsInfo;
     private List<HashMap> songsList;
 
-    ShowSongsInfoAdapter(ShowSongsInfo showSongsInfo, List<HashMap> list) {
+    public ShowSongsInfoAdapter(ShowSongsInfo showSongsInfo, List<HashMap> list) {
         this.showSongsInfo = showSongsInfo;
         songsList = list;
     }
 
-    void mo3500a(List<HashMap> list) {
+    public void mo3500a(List<HashMap> list) {
         songsList = list;
     }
 

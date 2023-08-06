@@ -10,6 +10,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.PlayFinish;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineMiniGradeDTO;
@@ -29,21 +32,21 @@ public final class PlayView extends SurfaceView implements Callback {
     Bitmap fireImage;
     Bitmap longKeyboardImage;
     int noteMod12 = 4;
-    boolean startFirstNoteTouching;
+    public boolean startFirstNoteTouching;
     SurfaceHolder surfaceholder;
     PianoPlay pianoPlay;
-    PlayNote currentPlayNote;
+    public PlayNote currentPlayNote;
     int screenWidth;
-    JPApplication jpapplication;
+    public JPApplication jpapplication;
     boolean isTouchRightNote = true;
-    Bitmap keyboardImage;
+    public Bitmap keyboardImage;
     Bitmap nullImage;
     byte[] noteArray;
     byte[] volumeArray;
     int arrayLength;
     Bitmap backgroundImage;
     Bitmap barImage;
-    float posiAdd15AddAnim;
+    public float posiAdd15AddAnim;
     int f4813n;
     Bitmap missImage;
     Bitmap perfectImage;
@@ -61,7 +64,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private Bitmap progressBarBaseImage;
     private int volume0;
     private int score;
-    private DownNotes downNotes;
+    private DownNotesThread downNotesThread;
     private LoadBackgrounds loadbackgrounds;
     private boolean hideNote;
     private boolean newNote = true;
@@ -132,7 +135,7 @@ public final class PlayView extends SurfaceView implements Callback {
         super(context);
     }
 
-    PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int diao) {
+    public PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int diao) {
         super(context);
         jpapplication = jPApplication;
         this.pianoPlay = pianoPlay;
@@ -153,7 +156,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    PlayView(JPApplication jPApplication, Context context, byte[] bArr, PianoPlay pianoPlay, double d, int i, int kind, int i3, String songId) {
+    public PlayView(JPApplication jPApplication, Context context, byte[] bArr, PianoPlay pianoPlay, double d, int i, int kind, int i3, String songId) {
         super(context);
         jpapplication = jPApplication;
         this.pianoPlay = pianoPlay;
@@ -463,14 +466,14 @@ public final class PlayView extends SurfaceView implements Callback {
                 return returnNoteValue;
             }
             OnlineMiniGradeDTO.Builder builder = OnlineMiniGradeDTO.newBuilder();
-            builder.setStatusArray(GZIP.arrayToZIP(uploadTimeArray));
+            builder.setStatusArray(GZIPUtil.arrayToZIP(uploadTimeArray));
             pianoPlay.sendMsg(25, builder.build());
             uploadNoteIndex = 0;
         }
         return returnNoteValue;
     }
 
-    int eventPositionToTouchNoteNum(float f, float f2) {
+    public int eventPositionToTouchNoteNum(float f, float f2) {
         int i = 1;
         float w = jpapplication.getWhiteKeyHeight() + jpapplication.getBlackKeyHeight();
         if (f2 >= jpapplication.getWhiteKeyHeight()) {
@@ -523,7 +526,7 @@ public final class PlayView extends SurfaceView implements Callback {
         return -1;
     }
 
-    void judgeAndPlaySound(int i) {
+    public void judgeAndPlaySound(int i) {
         int noteOctaveOffset = noteMod12 * 12;
         judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
@@ -531,14 +534,14 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    int midiJudgeAndPlaySound(int i) {
+    public int midiJudgeAndPlaySound(int i) {
         int noteOctaveOffset = noteMod12 * 12;
         int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
         jpapplication.playSound(trueNote + noteOctaveOffset, volume0);
         return trueNote;
     }
 
-    void mo2929a(Canvas canvas) {
+    public void mo2929a(Canvas canvas) {
         int size = (noteCounts - notesList.size()) * (jpapplication.getWidthPixels() - 2) / noteCounts;
         if (canvas != null) {
             f4773bE.set(0, 0, progressBarWidth, progressBarHight);
@@ -563,7 +566,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                     builder1.setType(4);
-                    builder1.setStatusArray(GZIP.arrayToZIP(bArr));
+                    builder1.setStatusArray(GZIPUtil.arrayToZIP(bArr));
                     long x = pianoPlay.times * serialID;
                     long time = jpapplication.getServerTime();
                     long crypt = (time >>> 12 | time << 52) ^ x;
@@ -578,7 +581,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                     builder.setType(3);
-                    builder.setStatusArray(GZIP.toZIP(new String(bArr, StandardCharsets.UTF_8)));
+                    builder.setStatusArray(GZIPUtil.toZIP(new String(bArr, StandardCharsets.UTF_8)));
                     x = pianoPlay.times * serialID;
                     time = jpapplication.getServerTime();
                     crypt = (time >>> 12 | time << 52) ^ x;
@@ -595,7 +598,7 @@ public final class PlayView extends SurfaceView implements Callback {
                         bArr[size] = uploadTouchStatusList.get(size);
                     }
                     OnlinePlayFinishDTO.Builder builder2 = OnlinePlayFinishDTO.newBuilder();
-                    builder2.setStatusArray(GZIP.arrayToZIP(bArr));
+                    builder2.setStatusArray(GZIPUtil.arrayToZIP(bArr));
                     x = pianoPlay.roomBundle.getByte("ID") * serialID;
                     time = jpapplication.getServerTime();
                     crypt = (time >>> 12 | time << 52) ^ x;
@@ -634,7 +637,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    void mo2930b(Canvas canvas) {
+    public void mo2930b(Canvas canvas) {
         int E;
         int i;
         int i2;
@@ -780,7 +783,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    void mo2931c(Canvas canvas) {
+    public void mo2931c(Canvas canvas) {
         newNote = true;
         tempNotesArray.clear();
         for (PlayNote currentPlayNote : notesList) {
@@ -810,8 +813,8 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        downNotes = new DownNotes(jpapplication, notesDownSpeed, pianoPlay);
-        downNotes.start();
+        downNotesThread = new DownNotesThread(jpapplication, notesDownSpeed, pianoPlay);
+        downNotesThread.start();
         loadbackgrounds = new LoadBackgrounds(jpapplication, this, pianoPlay);
         loadbackgrounds.start();
         showScoreAndLevels = new ShowScoreAndLevels(touchNotesList, pianoPlay);
@@ -845,8 +848,8 @@ public final class PlayView extends SurfaceView implements Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         if (pianoPlay.isBack) {
-            if (downNotes != null) {
-                while (downNotes.isAlive()) {
+            if (downNotesThread != null) {
+                while (downNotesThread.isAlive()) {
                     pianoPlay.isPlayingStart = false;
                     startFirstNoteTouching = false;
                 }

@@ -3,6 +3,10 @@ package ly.pp.justpiano3;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.entity.Room;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import protobuf.vo.*;
@@ -572,7 +576,7 @@ final class ReceiveHandle {
                         break;
                     case 1:  // 进入换衣间加载音符和解锁情况
                         bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                        bundle5.putByteArray("U", GZIP.ZIPToArray(changeClothes.getUnlock()));
+                        bundle5.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
                         break;
                     case 2:  // 购买服装
                         bundle5.putString("I", changeClothes.getMessage());
@@ -1073,7 +1077,7 @@ final class ReceiveHandle {
                     Bundle bundle = new Bundle();
                     bundle.putInt("R", challenge.getChallengeDialog().getAllowed() ? 1 : 0);
                     bundle.putString("I", challenge.getChallengeDialog().getMessage());
-                    bundle.putString("P", GZIP.ZIPTo(challenge.getChallengeDialog().getSongContent()));
+                    bundle.putString("P", GZIPUtil.ZIPTo(challenge.getChallengeDialog().getSongContent()));
                     message.setData(bundle);
                     olChallenge.challengeHandler.handleMessage(message);
                 }
@@ -1167,7 +1171,7 @@ final class ReceiveHandle {
                         bundle2.putString("T", String.valueOf(familyInfo.getCapacity()));
                         bundle2.putString("U", String.valueOf(familyInfo.getSize()));
                         bundle2.putString("I", String.valueOf(familyInfo.getFamilyId()));
-                        bundle2.putByteArray("J", GZIP.ZIPToArray(familyInfo.getPicture()));
+                        bundle2.putByteArray("J", GZIPUtil.ZIPToArray(familyInfo.getPicture()));
                         bundle.putBundle(String.valueOf(i), bundle2);
                         i++;
                     }
@@ -1177,7 +1181,7 @@ final class ReceiveHandle {
                     bundle.putString("T", String.valueOf(family.getFamilyList().getCapacity()));
                     bundle.putString("U", String.valueOf(family.getFamilyList().getSize()));
                     bundle.putString("I", String.valueOf(family.getFamilyList().getFamilyId()));
-                    bundle.putByteArray("J", GZIP.ZIPToArray(family.getFamilyList().getPicture()));
+                    bundle.putByteArray("J", GZIPUtil.ZIPToArray(family.getFamilyList().getPicture()));
                     message.setData(bundle);
                     olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
                 }

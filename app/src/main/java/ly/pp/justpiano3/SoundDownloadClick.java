@@ -2,14 +2,16 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
 
-final class SoundDownloadClick implements OnClickListener {
+public final class SoundDownloadClick implements OnClickListener {
     private final SoundDownload soundDownload;
     private final int type;
     private final String url;
     private final String name;
 
-    SoundDownloadClick(SoundDownload soundDownload, int i, String str, String str2) {
+    public SoundDownloadClick(SoundDownload soundDownload, int i, String str, String str2) {
         this.soundDownload = soundDownload;
         type = i;
         url = str;

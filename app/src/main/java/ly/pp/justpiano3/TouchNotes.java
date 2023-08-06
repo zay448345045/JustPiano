@@ -10,11 +10,11 @@ import android.view.View.OnTouchListener;
 import java.util.HashMap;
 import java.util.Map;
 
-final class TouchNotes implements OnTouchListener {
+public final class TouchNotes implements OnTouchListener {
     private final PlayView playView;
     private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
-    TouchNotes(PlayView playView) {
+    public TouchNotes(PlayView playView) {
         this.playView = playView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {

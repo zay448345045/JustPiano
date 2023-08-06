@@ -6,13 +6,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.lang.ref.WeakReference;
 
-final class PianoPlayHandler extends Handler {
+public final class PianoPlayHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    PianoPlayHandler(PianoPlay pianoPlay) {
+    public PianoPlayHandler(PianoPlay pianoPlay) {
         weakReference = new WeakReference<>(pianoPlay);
     }
 
@@ -154,7 +155,7 @@ final class PianoPlayHandler extends Handler {
             case 21:
                 post(() -> {
                     Toast.makeText(pianoPlay, "您已掉线,请检查您的网络再重新登录!", Toast.LENGTH_SHORT).show();
-                    pianoPlay.isOutLine = true;
+                    pianoPlay.setOutline(true);
                     pianoPlay.finish();
                 });
                 return;

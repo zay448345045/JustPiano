@@ -3,13 +3,14 @@ package ly.pp.justpiano3;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import ly.pp.justpiano3.activity.BaseActivity;
 
 import java.lang.ref.WeakReference;
 
-final class BaseActivityHandler extends Handler {
+public final class BaseActivityHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    BaseActivityHandler(BaseActivity baseActivity) {
+    public BaseActivityHandler(BaseActivity baseActivity) {
         weakReference = new WeakReference<>(baseActivity);
     }
 
@@ -18,7 +19,7 @@ final class BaseActivityHandler extends Handler {
         final BaseActivity baseActivity = (BaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {
-                baseActivity.isOutLine = true;
+                baseActivity.setOutline(true);
                 baseActivity.outLine();
             });
         }

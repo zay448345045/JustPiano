@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.ChatFiles;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +15,12 @@ public final class ChatFilesAdapter extends BaseAdapter {
     private List<HashMap> list;
     private final ChatFiles chatfiles;
 
-    ChatFilesAdapter(List<HashMap> list, ChatFiles cs) {
+    public ChatFilesAdapter(List<HashMap> list, ChatFiles cs) {
         this.list = list;
         chatfiles = cs;
     }
 
-    void mo3422a(List<HashMap> list) {
+    public void mo3422a(List<HashMap> list) {
         this.list = list;
     }
 

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import ly.pp.justpiano3.activity.LoginActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +21,7 @@ public final class ChangeAccountAdapter extends BaseAdapter {
     private final JPDialog.JDialog dialog;
     private final JSONObject jsonObject;
 
-    ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialog.JDialog dialog, JSONObject jsonObject) {
+    public ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialog.JDialog dialog, JSONObject jsonObject) {
         this.list = list;
         li = layoutInflater;
         this.loginActivity = loginActivity;

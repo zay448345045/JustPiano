@@ -4,14 +4,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLPlayHall;
 import protobuf.dto.OnlineSendMailDTO;
 
-final class SendMessageClick2 implements OnClickListener {
+public final class SendMessageClick2 implements OnClickListener {
     private final OLPlayHall olPlayHall;
     private final TextView textview;
     private final String str;
 
-    SendMessageClick2(OLPlayHall olPlayHall, TextView textView, String string) {
+    public SendMessageClick2(OLPlayHall olPlayHall, TextView textView, String string) {
         this.olPlayHall = olPlayHall;
         textview = textView;
         str = string;

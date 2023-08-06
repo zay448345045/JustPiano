@@ -6,15 +6,16 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
 
 import java.util.List;
 
-final class UserListPageAdapter extends BaseAdapter {
+public final class UserListPageAdapter extends BaseAdapter {
     private final UserListPage userListPage;
     private final List<SimpleUser> userList;
 
-    UserListPageAdapter(UserListPage userListPage, List<SimpleUser> userList) {
+    public UserListPageAdapter(UserListPage userListPage, List<SimpleUser> userList) {
         this.userListPage = userListPage;
         this.userList = userList;
     }

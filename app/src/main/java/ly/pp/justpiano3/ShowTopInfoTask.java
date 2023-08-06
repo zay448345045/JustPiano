@@ -3,6 +3,8 @@ package ly.pp.justpiano3;
 import android.os.AsyncTask;
 import android.widget.ListAdapter;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.ShowTopInfo;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -15,7 +17,7 @@ import java.lang.ref.WeakReference;
 public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowTopInfo> showTopInfo;
 
-    ShowTopInfoTask(ShowTopInfo showTopInfo) {
+    public ShowTopInfoTask(ShowTopInfo showTopInfo) {
         this.showTopInfo = new WeakReference<>(showTopInfo);
     }
 
@@ -59,7 +61,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             try {
-                showTopInfo.get().f4985a = showTopInfo.get().m3877a(GZIP.ZIPTo(new JSONObject(str).getString("L")));
+                showTopInfo.get().f4985a = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
                 ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().f4985a);
                 if (showTopInfo.get().f4989e != null) {
                     showTopInfo.get().f4989e.setAdapter(topUserAdapter);

@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-final class AddSongsFavoClick implements OnClickListener {
+public final class AddSongsFavoClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;
     private final Cursor cursor;
     private final Context context;
     private final String songsPath;
     private final String songsName;
 
-    AddSongsFavoClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, Context context) {
+    public AddSongsFavoClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, Context context) {
         this.localSongsAdapter = localSongsAdapter;
         this.cursor = cursor;
         this.context = context;

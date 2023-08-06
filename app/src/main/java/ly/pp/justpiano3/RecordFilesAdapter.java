@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.RecordFiles;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +15,12 @@ public final class RecordFilesAdapter extends BaseAdapter {
     private List<HashMap> list;
     private final RecordFiles recordfiles;
 
-    RecordFilesAdapter(List<HashMap> list, RecordFiles rs) {
+    public RecordFilesAdapter(List<HashMap> list, RecordFiles rs) {
         this.list = list;
         recordfiles = rs;
     }
 
-    void mo3422a(List<HashMap> list) {
+    public void mo3422a(List<HashMap> list) {
         this.list = list;
     }
 

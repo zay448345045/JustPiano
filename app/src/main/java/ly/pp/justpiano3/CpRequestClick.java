@@ -3,16 +3,17 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
+import ly.pp.justpiano3.activity.OLPlayRoom;
 import protobuf.dto.OnlineCoupleDTO;
 
-final class CpRequestClick implements OnClickListener {
+public final class CpRequestClick implements OnClickListener {
 
     private final OLPlayRoom olPlayRoom;
     private final int f5515b;
     private final byte f5516c;
     private final int f5517d;
 
-    CpRequestClick(OLPlayRoom olPlayRoom, int i, byte b, int i2) {
+    public CpRequestClick(OLPlayRoom olPlayRoom, int i, byte b, int i2) {
         this.olPlayRoom = olPlayRoom;
         f5515b = i;
         f5516c = b;

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public final class FinishScoreAdapter extends BaseAdapter {
     private final LayoutInflater li;
     private final int type;
 
-    FinishScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
+    public FinishScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
         this.list = list;
         li = layoutInflater;
         type = i;

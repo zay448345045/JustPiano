@@ -3,12 +3,14 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.constant.Consts;
 import protobuf.dto.OnlineChangeClothesDTO;
 
-final class HairClick implements OnItemClickListener {
+public final class HairClick implements OnItemClickListener {
     private final OLPlayDressRoom olPlayDressRoom;
 
-    HairClick(OLPlayDressRoom oLPlayDressRoom) {
+    public HairClick(OLPlayDressRoom oLPlayDressRoom) {
         olPlayDressRoom = oLPlayDressRoom;
     }
 

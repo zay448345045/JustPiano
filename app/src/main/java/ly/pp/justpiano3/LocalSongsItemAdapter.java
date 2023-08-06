@@ -4,11 +4,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.constant.Consts;
 
 public final class LocalSongsItemAdapter extends BaseAdapter {
     private final MelodySelect melodySelect;
 
-    LocalSongsItemAdapter(MelodySelect melodySelect) {
+    public LocalSongsItemAdapter(MelodySelect melodySelect) {
         this.melodySelect = melodySelect;
     }
 

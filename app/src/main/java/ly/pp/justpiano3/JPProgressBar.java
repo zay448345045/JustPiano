@@ -10,6 +10,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.service.ConnectionService;
 
 public final class JPProgressBar extends ProgressDialog {
 

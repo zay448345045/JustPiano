@@ -2,14 +2,19 @@ package ly.pp.justpiano3;
 
 import android.os.Bundle;
 import android.os.Message;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import protobuf.vo.OnlineBaseVO;
 import protobuf.vo.OnlineClTestVO;
 import protobuf.vo.OnlineEnterHallVO;
 import protobuf.vo.OnlineHallChatVO;
 
-final class Receive {
+public final class Receive {
 
-    static void receive(int msgType, OnlineBaseVO msg) {
+    public static void receive(int msgType, OnlineBaseVO msg) {
         try {
             OLPlayHall olPlayHall;
             Message message;
@@ -162,7 +167,7 @@ final class Receive {
                                 assert olPlayHall != null;
                                 olPlayHall.jpprogressBar.dismiss();
                                 bundle.putInt("songsID", clTest.getClTestSong().getCl());
-                                bundle.putString("songBytes", GZIP.ZIPTo(clTest.getClTestSong().getSongContent()));
+                                bundle.putString("songBytes", GZIPUtil.ZIPTo(clTest.getClTestSong().getSongContent()));
                                 bundle.putInt("hand", clTest.getClTestSong().getHand());
                                 message.setData(bundle);
                                 message.what = 13;

@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -21,7 +22,7 @@ public final class FeedbackTask {
     private final ExecutorService executorService;
     private Future<String> future;
 
-    FeedbackTask(MainMode mainMode, String userName, String message) {
+    public FeedbackTask(MainMode mainMode, String userName, String message) {
         this.mainMode = new WeakReference<>(mainMode);
         this.userName = userName;
         this.message = message;

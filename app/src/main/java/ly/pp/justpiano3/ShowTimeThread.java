@@ -1,11 +1,12 @@
 package ly.pp.justpiano3;
 
 import android.os.Message;
+import ly.pp.justpiano3.activity.OLPlayHall;
 
-final class ShowTimeThread extends Thread {
+public final class ShowTimeThread extends Thread {
     private final OLPlayHall olPlayHall;
 
-    ShowTimeThread(OLPlayHall olPlayHall) {
+    public ShowTimeThread(OLPlayHall olPlayHall) {
         this.olPlayHall = olPlayHall;
     }
 

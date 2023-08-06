@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.ShowSongsInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -12,7 +13,7 @@ import java.lang.ref.WeakReference;
 public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
 
-    ShowSongsInfoTask(ShowSongsInfo showSongsInfo) {
+    public ShowSongsInfoTask(ShowSongsInfo showSongsInfo) {
         this.showSongsInfo = new WeakReference<>(showSongsInfo);
     }
 

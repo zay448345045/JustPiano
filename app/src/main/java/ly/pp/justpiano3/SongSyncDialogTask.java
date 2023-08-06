@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -14,7 +15,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMainMode> olMainMode;
     private String maxSongId = "";
 
-    SongSyncDialogTask(OLMainMode olMainMode, String maxSongId) {
+    public SongSyncDialogTask(OLMainMode olMainMode, String maxSongId) {
         this.olMainMode = new WeakReference<>(olMainMode);
         this.maxSongId = maxSongId;
     }

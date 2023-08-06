@@ -2,12 +2,13 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import ly.pp.justpiano3.activity.OLFamily;
 import protobuf.dto.OnlineFamilyDTO;
 
-final class KickFamilyClick implements OnClickListener {
+public final class KickFamilyClick implements OnClickListener {
     private final OLFamily olFamily;
 
-    KickFamilyClick(OLFamily olFamily) {
+    public KickFamilyClick(OLFamily olFamily) {
         this.olFamily = olFamily;
     }
 

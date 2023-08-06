@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.OLFamily;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
     private final LayoutInflater li;
     private final OLFamily family;
 
-    FamilyPeopleAdapter(List<HashMap<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
+    public FamilyPeopleAdapter(List<HashMap<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.jpApplication = jpApplication;
         this.list = list;
         li = layoutInflater;

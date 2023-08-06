@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,13 +20,13 @@ public final class FamilyAdapter extends BaseAdapter {
     private List<HashMap> list;
     private final LayoutInflater li;
 
-    FamilyAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
+    public FamilyAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
         this.list = list;
         li = layoutInflater;
         this.olPlayHallRoom = olPlayHallRoom;
     }
 
-    void upDateList(List<HashMap> list) {
+    public void upDateList(List<HashMap> list) {
         this.list = list;
     }
 

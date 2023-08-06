@@ -20,7 +20,7 @@
         android:textColor="@color/more"
         android:textSize="12sp" />
 
-    <ly.pp.justpiano3.HorizontalListView
+    <ly.pp.justpiano3.view.HorizontalListView
         android:id="@+id/ol_score_list"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_30dp"

@@ -2,6 +2,8 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -13,7 +15,7 @@ import java.lang.ref.WeakReference;
 public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<SearchSongs> searchSongs;
 
-    SearchSongsTask(SearchSongs searchSongs) {
+    public SearchSongsTask(SearchSongs searchSongs) {
         this.searchSongs = new WeakReference<>(searchSongs);
     }
 
@@ -68,7 +70,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
-                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().m3841b(GZIP.ZIPTo(new JSONObject(str).getString("L")))));
+                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().m3841b(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
                         searchSongs.get().songsListView.setCacheColorHint(0x00000000);
                     }
                 } catch (Exception e) {

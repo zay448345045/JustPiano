@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-final class PlayNote {
+public final class PlayNote {
     boolean hideNote;
     boolean unPassed;
     int noteValue;
@@ -11,7 +11,7 @@ final class PlayNote {
     int volumeValue;
     Bitmap noteImage = null;
     int noteXPosition;
-    int posiAdd15AddAnim;
+    public int posiAdd15AddAnim;
     int noteDiv12;
     int handValue;
     private int playNote;

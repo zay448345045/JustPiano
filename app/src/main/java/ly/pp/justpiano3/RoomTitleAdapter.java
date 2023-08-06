@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
 
@@ -16,13 +18,13 @@ public final class RoomTitleAdapter extends BaseAdapter {
     private final LayoutInflater layoutInflater;
     private final OLPlayHall olPlayHall;
 
-    RoomTitleAdapter(List<Bundle> list, LayoutInflater layoutInflater, OLPlayHall olPlayHall) {
+    public RoomTitleAdapter(List<Bundle> list, LayoutInflater layoutInflater, OLPlayHall olPlayHall) {
         this.list = list;
         this.layoutInflater = layoutInflater;
         this.olPlayHall = olPlayHall;
     }
 
-    void updateList(List<Bundle> list) {
+    public void updateList(List<Bundle> list) {
         this.list = list;
     }
 

@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.view.ScrollText;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +16,7 @@ public final class SoundDownloadAdapter extends BaseAdapter {
     private final JSONArray jsonArray;
     private final ImageLoader imageLoader;
 
-    SoundDownloadAdapter(SoundDownload soundDownload, JSONArray jSONArray) {
+    public SoundDownloadAdapter(SoundDownload soundDownload, JSONArray jSONArray) {
         this.soundDownload = soundDownload;
         jsonArray = jSONArray;
         imageLoader = ImageLoader.build(soundDownload, "sound_pic");

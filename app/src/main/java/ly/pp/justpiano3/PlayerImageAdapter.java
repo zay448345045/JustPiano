@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -22,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static ly.pp.justpiano3.BaseActivity.px2dp;
+import static ly.pp.justpiano3.activity.BaseActivity.px2dp;
 
 public final class PlayerImageAdapter extends BaseAdapter {
     byte roomID;
@@ -31,7 +35,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
     private final List<Bundle> playerList;
     private final LayoutInflater layoutInflater;
 
-    PlayerImageAdapter(List<Bundle> list, OLPlayRoom olPlayRoom) {
+    public PlayerImageAdapter(List<Bundle> list, OLPlayRoom olPlayRoom) {
         layoutInflater = olPlayRoom.getLayoutInflater();
         roomID = olPlayRoom.roomID0;
         playerList = list;

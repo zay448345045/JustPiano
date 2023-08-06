@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-final class SearchSongsPlayClick implements OnClickListener {
+public final class SearchSongsPlayClick implements OnClickListener {
 
     private final SearchSongsAdapter searchSongsAdapter;
     private final String f5865b;
@@ -11,7 +11,7 @@ final class SearchSongsPlayClick implements OnClickListener {
     private final int f5867d;
     private final double f5868e;
 
-    SearchSongsPlayClick(SearchSongsAdapter searchSongsAdapter, String str, String l, int i, double d) {
+    public SearchSongsPlayClick(SearchSongsAdapter searchSongsAdapter, String str, String l, int i, double d) {
         this.searchSongsAdapter = searchSongsAdapter;
         f5865b = str;
         songID = l;

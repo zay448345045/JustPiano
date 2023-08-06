@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.DialogUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,10 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-final class OLPlayHallRoomHandler extends Handler {
+public final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    OLPlayHallRoomHandler(OLPlayHallRoom olPlayHallRoom) {
+    public OLPlayHallRoomHandler(OLPlayHallRoom olPlayHallRoom) {
         weakReference = new WeakReference<>(olPlayHallRoom);
     }
 

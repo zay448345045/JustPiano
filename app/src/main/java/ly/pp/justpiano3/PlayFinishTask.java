@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
@@ -11,7 +12,7 @@ import java.lang.ref.WeakReference;
 public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     private final WeakReference<PlayFinish> playFinish;
 
-    PlayFinishTask(PlayFinish playFinish) {
+    public PlayFinishTask(PlayFinish playFinish) {
         this.playFinish = new WeakReference<>(playFinish);
     }
 

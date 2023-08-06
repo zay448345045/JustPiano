@@ -7,6 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.thread.AcceptFavorThread;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +18,7 @@ public final class SearchSongsAdapter extends BaseAdapter {
     final SearchSongs searchSongs;
     private final List<HashMap> songsList;
 
-    SearchSongsAdapter(SearchSongs searchSongs, int i, List<HashMap> list) {
+    public SearchSongsAdapter(SearchSongs searchSongs, int i, List<HashMap> list) {
         this.searchSongs = searchSongs;
         songsList = list;
     }

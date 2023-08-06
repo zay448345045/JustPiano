@@ -2,14 +2,14 @@ package ly.pp.justpiano3;
 
 import android.graphics.Bitmap;
 
-final class ShowTouchNotesLevel {
+public final class ShowTouchNotesLevel {
     int screenWidth;
     int screenHeight;
     int comboNum;
     PlayView playView;
     Bitmap levelImage;
 
-    ShowTouchNotesLevel(int i, PlayView playView, int i2, int i3, int i4) {
+    public ShowTouchNotesLevel(int i, PlayView playView, int i2, int i3, int i4) {
         screenWidth = i3 / 2;
         screenHeight = i4 / 4;
         this.playView = playView;

@@ -1,13 +1,14 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
+import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.lang.ref.WeakReference;
 
 public final class PianoPlayTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<PianoPlay> pianoPlay;
 
-    PianoPlayTask(PianoPlay pianoPlay) {
+    public PianoPlayTask(PianoPlay pianoPlay) {
         this.pianoPlay = new WeakReference<>(pianoPlay);
     }
 

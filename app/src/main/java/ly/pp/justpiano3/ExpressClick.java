@@ -5,11 +5,11 @@ import android.view.View.OnClickListener;
 import protobuf.dto.OnlineHallChatDTO;
 import protobuf.dto.OnlineRoomChatDTO;
 
-final class ExpressClick implements OnClickListener {
+public final class ExpressClick implements OnClickListener {
     private final ExpressAdapter expressAdapter;
     private final int expressID;
 
-    ExpressClick(ExpressAdapter expressAdapter, int i) {
+    public ExpressClick(ExpressAdapter expressAdapter, int i) {
         this.expressAdapter = expressAdapter;
         expressID = i;
     }

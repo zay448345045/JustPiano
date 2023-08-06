@@ -11,6 +11,10 @@ import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineQuitRoomDTO;
@@ -24,10 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-final class OLPlayRoomHandler extends Handler {
+public final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    OLPlayRoomHandler(OLPlayRoom olPlayRoom) {
+    public OLPlayRoomHandler(OLPlayRoom olPlayRoom) {
         weakReference = new WeakReference<>(olPlayRoom);
     }
 

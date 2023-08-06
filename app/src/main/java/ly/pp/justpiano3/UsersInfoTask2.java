@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
@@ -12,7 +13,7 @@ import java.lang.ref.WeakReference;
 public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
 
-    UsersInfoTask2(UsersInfo usersInfo) {
+    public UsersInfoTask2(UsersInfo usersInfo) {
         this.usersInfo = new WeakReference<>(usersInfo);
     }
 
@@ -65,16 +66,19 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
                 .addPathSegment("server")
                 .addPathSegment("ChangeUserMsg")
                 .build();
-        RequestBody body = new FormBody.Builder()
+        FormBody.Builder bodyBuilder = new FormBody.Builder()
                 .add("head", "0")
                 .add("version", usersInfo.get().jpapplication.getVersion())
                 .add("keywords", strArr[0])
-                .add("userName", usersInfo.get().jpapplication.getAccountName())
-                .add("msg", strArr[1] == null ? usersInfo.get().pSign : "")
-                .add("age", strArr[1] == null ? String.valueOf(usersInfo.get().age) : "")
-                .add("oldPass", strArr[1] == null ? "" : strArr[1])
-                .add("newPass", strArr[2] == null ? "" : strArr[2])
-                .build();
+                .add("userName", usersInfo.get().jpapplication.getAccountName());
+        if (strArr[1] == null || strArr[2] == null) {
+            bodyBuilder.add("msg", usersInfo.get().pSign)
+                    .add("age", String.valueOf(usersInfo.get().age));
+        } else {
+            bodyBuilder.add("oldPass", strArr[1]).add("newPass", strArr[2]);
+        }
+
+        RequestBody body = bodyBuilder.build();
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)

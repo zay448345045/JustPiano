@@ -5,13 +5,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.entity.ShopProduct;
 
 import java.lang.ref.WeakReference;
 
-final class OLPlayDressRoomHandler extends Handler {
+public final class OLPlayDressRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    OLPlayDressRoomHandler(OLPlayDressRoom olPlayDressRoom) {
+    public OLPlayDressRoomHandler(OLPlayDressRoom olPlayDressRoom) {
         weakReference = new WeakReference<>(olPlayDressRoom);
     }
 

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.activity.SearchSongs;
 
 import java.util.HashMap;
 import java.util.List;

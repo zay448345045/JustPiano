@@ -8,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-final class SoundListAdapter extends BaseAdapter {
+public final class SoundListAdapter extends BaseAdapter {
     final SoundListPreference soundListPreference;
     Context context;
     CharSequence[] soundKeyList;
     private CharSequence[] soundNameList;
 
-    SoundListAdapter(SoundListPreference soundListPreference, Context context, CharSequence[] soundNameList, CharSequence[] soundKeyList) {
+    public SoundListAdapter(SoundListPreference soundListPreference, Context context, CharSequence[] soundNameList, CharSequence[] soundKeyList) {
         this.soundListPreference = soundListPreference;
         this.context = context;
         this.soundNameList = soundNameList;

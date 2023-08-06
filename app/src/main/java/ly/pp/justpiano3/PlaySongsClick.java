@@ -6,14 +6,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-final class PlaySongsClick implements OnClickListener {
+public final class PlaySongsClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;
     private final View view;
     private final Context context;
     private final String songsPath;
     private final String songsName;
 
-    PlaySongsClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, View view, Context ct) {
+    public PlaySongsClick(LocalSongsAdapter localSongsAdapter, Cursor cursor, View view, Context ct) {
         this.localSongsAdapter = localSongsAdapter;
         this.view = view;
         context = ct;

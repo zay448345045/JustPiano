@@ -9,11 +9,13 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.view.ScrollText;
 
 public final class LocalSongsAdapter extends CursorAdapter {
     final MelodySelect melodyselect;
 
-    LocalSongsAdapter(MelodySelect melodySelect, Context context, Cursor cursor) {
+    public LocalSongsAdapter(MelodySelect melodySelect, Context context, Cursor cursor) {
         super(context, cursor, true);
         melodyselect = melodySelect;
     }

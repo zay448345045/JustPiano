@@ -5,16 +5,18 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
 
 import java.io.File;
 
-final class SkinDownloadClick implements OnClickListener {
+public final class SkinDownloadClick implements OnClickListener {
     private final SkinDownload skinDownload;
     private final int type;
     private final String url;
     private final String name;
 
-    SkinDownloadClick(SkinDownload skinDownload, int i, String str, String str2) {
+    public SkinDownloadClick(SkinDownload skinDownload, int i, String str, String str2) {
         this.skinDownload = skinDownload;
         type = i;
         url = str;

@@ -7,6 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.service.ConnectionService;
 import protobuf.dto.OnlineDialogDTO;
 import protobuf.dto.OnlineEnterHallDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
@@ -46,7 +51,7 @@ public final class MainGameAdapter extends BaseAdapter {
         new JPDialog(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new HallPasswordClick(mainGameAdapter, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    void updateList(List<Bundle> list) {
+    public void updateList(List<Bundle> list) {
         this.list = list;
     }
 

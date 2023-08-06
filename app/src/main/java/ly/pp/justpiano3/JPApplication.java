@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.multidex.MultiDex;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.entity.SimpleUser;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 
@@ -49,17 +51,17 @@ public final class JPApplication extends Application {
 
     private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
-    static SharedPreferences accountListSharedPreferences;
+    public static SharedPreferences accountListSharedPreferences;
     public static int SETTING_MODE_CODE = 122;
 
     static {
         System.loadLibrary("soundengine");
     }
 
-    String title = "";
-    String f4072f = "";
-    String f4073g = "";
-    String f4074h = "";
+    public String title = "";
+    public String f4072f = "";
+    public String f4073g = "";
+    public String f4074h = "";
     boolean changeNotesColor = true;
     private ConnectionService connectionService;
     private int whiteKeyHeight;
@@ -112,7 +114,7 @@ public final class JPApplication extends Application {
     private float whiteKeyHeightAdd90;
     private int roughLine;
     private MidiManager mMidiManager;
-    MidiOutputPort midiOutputPort;
+    public MidiOutputPort midiOutputPort;
 
     /**
      * RSA客户端生成密钥存储

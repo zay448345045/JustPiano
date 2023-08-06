@@ -4,12 +4,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 import protobuf.dto.OnlineQuitRoomDTO;
 
-final class ReturnHallClick implements OnClickListener {
+public final class ReturnHallClick implements OnClickListener {
     private final OLPlayRoomInterface olPlayRoomInterface;
 
-    ReturnHallClick(OLPlayRoomInterface olPlayRoomInterface) {
+    public ReturnHallClick(OLPlayRoomInterface olPlayRoomInterface) {
         this.olPlayRoomInterface = olPlayRoomInterface;
     }
 

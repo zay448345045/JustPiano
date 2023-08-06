@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
 
@@ -30,7 +31,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
             }
         }
         if (!objects[0].equals("original")) {
-            GZIP.ZIPFileTo(new File(objects[1]), dir.toString());
+            GZIPUtil.ZIPFileTo(new File(objects[1]), dir.toString());
         }
         JPApplication.teardownAudioStreamNative();
         JPApplication.unloadWavAssetsNative();

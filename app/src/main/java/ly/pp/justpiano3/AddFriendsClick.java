@@ -2,25 +2,29 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
-final class AddFriendsClick implements OnClickListener {
+public final class AddFriendsClick implements OnClickListener {
     private OLPlayRoomInterface olPlayRoomInterface = null;
     private OLPlayHall olPlayHall = null;
     private OLPlayHallRoom olPlayHallRoom = null;
     private final String name;
 
-    AddFriendsClick(OLPlayRoomInterface olPlayRoomInterface, String name) {
+    public AddFriendsClick(OLPlayRoomInterface olPlayRoomInterface, String name) {
         this.olPlayRoomInterface = olPlayRoomInterface;
         this.name = name;
     }
 
-    AddFriendsClick(OLPlayHall olPlayHall, String name) {
+    public AddFriendsClick(OLPlayHall olPlayHall, String name) {
         this.olPlayHall = olPlayHall;
         this.name = name;
     }
 
-    AddFriendsClick(OLPlayHallRoom olPlayHallRoom, String name) {
+    public AddFriendsClick(OLPlayHallRoom olPlayHallRoom, String name) {
         this.olPlayHallRoom = olPlayHallRoom;
         this.name = name;
     }

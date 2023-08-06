@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.utils.DeviceUtil;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public final class SQLiteHelper extends SQLiteOpenHelper {
      * 4.7版本后，数据库的版本号为app的versionCode
      * 4.6版本 数据库版本号为44
      */
-    SQLiteHelper(Context context, String str) {
+    public SQLiteHelper(Context context, String str) {
         super(context, str, null, DeviceUtil.getVersionCode(context));
         this.context = context;
     }

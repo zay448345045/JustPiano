@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.MainMode;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -22,7 +27,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     private final String maxSongId;
     private int count = 0;
 
-    SongSyncTask(Activity activity, String maxSongId) {
+    public SongSyncTask(Activity activity, String maxSongId) {
         this.activity = new WeakReference<>(activity);
         this.maxSongId = maxSongId;
     }
@@ -48,7 +53,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
                 fileOutputStream.write(bytes, 0, bytes.length);
                 fileOutputStream.close();
-                List<File> files = GZIP.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
+                List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
                 SQLiteHelper SQLiteHelper = new SQLiteHelper(activity.get(), "data");
                 SQLiteDatabase sqliteDataBase = SQLiteHelper.getWritableDatabase();

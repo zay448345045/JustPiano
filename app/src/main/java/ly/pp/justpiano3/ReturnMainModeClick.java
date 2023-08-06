@@ -2,12 +2,14 @@ package ly.pp.justpiano3;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 
-final class ReturnMainModeClick implements OnClickListener {
+public final class ReturnMainModeClick implements OnClickListener {
 
     private final BaseActivity baseactivity;
 
-    ReturnMainModeClick(BaseActivity baseActivity) {
+    public ReturnMainModeClick(BaseActivity baseActivity) {
         baseactivity = baseActivity;
     }
 

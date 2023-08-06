@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineClTestDTO;
@@ -26,10 +27,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-final class OLPlayHallHandler extends Handler {
+public final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    OLPlayHallHandler(OLPlayHall ol) {
+    public OLPlayHallHandler(OLPlayHall ol) {
         weakReference = new WeakReference<>(ol);
     }
 

@@ -5,14 +5,16 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 import protobuf.dto.OnlineChangeRoomInfoDTO;
 
-final class ChangeRoomNameClick implements OnClickListener {
+public final class ChangeRoomNameClick implements OnClickListener {
     private final OLPlayRoomInterface olPlayRoomInterface;
     private final EditText name;
     private final EditText password;
 
-    ChangeRoomNameClick(OLPlayRoomInterface olPlayRoomInterface, EditText name, EditText password) {
+    public ChangeRoomNameClick(OLPlayRoomInterface olPlayRoomInterface, EditText name, EditText password) {
         this.olPlayRoomInterface = olPlayRoomInterface;
         this.name = name;
         this.password = password;

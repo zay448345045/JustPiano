@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceHolder;
+import ly.pp.justpiano3.activity.PianoPlay;
 
 public final class LoadBackgrounds extends Thread {
     private final PlayView playView;

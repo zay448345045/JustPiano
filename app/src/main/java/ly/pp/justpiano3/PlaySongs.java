@@ -3,11 +3,14 @@ package ly.pp.justpiano3;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.Consts;
 import protobuf.dto.OnlinePlaySongDTO;
 
 public final class PlaySongs {
     public JPApplication jpapplication;
-    boolean isPlayingSongs;
+    public boolean isPlayingSongs;
     private final MelodySelect melodyselect;
     private final OLPlayRoom olPlayRoom;
     private final int position;
@@ -16,7 +19,7 @@ public final class PlaySongs {
     private final byte[] noteArray;
     private final byte[] volumeArray;
 
-    PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
+    public PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
         jpapplication = jPApplication;
         melodyselect = melodySelect;
         position = i;

@@ -3,13 +3,14 @@ package ly.pp.justpiano3;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLFamily;
 import protobuf.dto.OnlineSendMailDTO;
 
-final class AddFriendsMailClick implements OnClickListener {
+public final class AddFriendsMailClick implements OnClickListener {
     private final OLFamily family;
     private final String name;
 
-    AddFriendsMailClick(OLFamily family, String name) {
+    public AddFriendsMailClick(OLFamily family, String name) {
         this.family = family;
         this.name = name;
     }

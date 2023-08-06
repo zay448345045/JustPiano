@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/wait_back">
 
-                <ly.pp.justpiano3.ScrollText
+                <ly.pp.justpiano3.view.ScrollText
                     android:id="@+id/s_n"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -1,13 +1,14 @@
 package ly.pp.justpiano3;
 
 import android.widget.TabHost.OnTabChangeListener;
+import ly.pp.justpiano3.activity.OLPlayHall;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineLoadUserListDTO;
 
-final class PlayHallTabChange implements OnTabChangeListener {
+public final class PlayHallTabChange implements OnTabChangeListener {
     private final OLPlayHall olPlayHall;
 
-    PlayHallTabChange(OLPlayHall olPlayHall) {
+    public PlayHallTabChange(OLPlayHall olPlayHall) {
         this.olPlayHall = olPlayHall;
     }
 

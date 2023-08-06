@@ -2,6 +2,10 @@ package ly.pp.justpiano3;
 
 import android.content.Intent;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -48,7 +52,7 @@ public final class SearchSongsPlayTask {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                songBytes = GZIP.ZIPToArray(str);
+                songBytes = GZIPUtil.ZIPToArray(str);
             }
             // Handle the result in onPostExecute
             handleResult();

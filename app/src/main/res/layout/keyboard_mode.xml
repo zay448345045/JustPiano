@@ -172,13 +172,13 @@
             android:layout_weight="0.5"
             android:background="@drawable/selector_ol_button">
 
-            <ly.pp.justpiano3.KeyboardModeView
+            <ly.pp.justpiano3.view.KeyboardModeView
                 android:id="@+id/keyboard1_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="21"></ly.pp.justpiano3.KeyboardModeView>
+                app:whiteKeyOffset="21"></ly.pp.justpiano3.view.KeyboardModeView>
         </LinearLayout>
 
         <LinearLayout
@@ -188,13 +188,13 @@
             android:layout_weight="0.5"
             android:background="@drawable/selector_orange_button">
 
-            <ly.pp.justpiano3.KeyboardModeView
+            <ly.pp.justpiano3.view.KeyboardModeView
                 android:id="@+id/keyboard2_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="14"></ly.pp.justpiano3.KeyboardModeView>
+                app:whiteKeyOffset="14"></ly.pp.justpiano3.view.KeyboardModeView>
         </LinearLayout>
     </LinearLayout>
 

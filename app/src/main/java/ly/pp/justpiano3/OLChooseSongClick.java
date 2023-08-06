@@ -5,11 +5,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import protobuf.dto.OnlinePlaySongDTO;
 
-final class OLChooseSongClick implements OnClickListener {
+public final class OLChooseSongClick implements OnClickListener {
     private final OLRoomSongsAdapter olRoomSongsAdapter;
     private final String string;
 
-    OLChooseSongClick(OLRoomSongsAdapter olRoomSongsAdapter, String str) {
+    public OLChooseSongClick(OLRoomSongsAdapter olRoomSongsAdapter, String str) {
         this.olRoomSongsAdapter = olRoomSongsAdapter;
         string = str;
     }

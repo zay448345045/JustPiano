@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.view.ScrollText;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

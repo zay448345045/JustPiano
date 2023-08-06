@@ -6,15 +6,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import protobuf.dto.OnlineFamilyDTO;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-final class FamilyHandler extends Handler {
+public final class FamilyHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    FamilyHandler(OLFamily family) {
+    public FamilyHandler(OLFamily family) {
         weakReference = new WeakReference<>(family);
     }
 

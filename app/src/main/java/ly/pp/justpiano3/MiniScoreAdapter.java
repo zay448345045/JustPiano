@@ -16,13 +16,13 @@ public final class MiniScoreAdapter extends BaseAdapter {
     private final int[] originalRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name};
     private final int[] teamRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
 
-    MiniScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
+    public MiniScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
         this.list = list;
         layoutInfalter = layoutInflater;
         roomMode = i;
     }
 
-    void changeList(List<Bundle> list) {
+    public void changeList(List<Bundle> list) {
         this.list = list;
     }
 

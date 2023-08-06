@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.thread.AcceptFavorThread;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +20,7 @@ public final class OLMelodySelectAdapter2 extends BaseAdapter {
     private final int length;
     private final List<HashMap> songsList;
 
-    OLMelodySelectAdapter2(OLMelodySelect oLMelodySelect, int i, List<HashMap> list) {
+    public OLMelodySelectAdapter2(OLMelodySelect oLMelodySelect, int i, List<HashMap> list) {
         olMelodySelect = oLMelodySelect;
         length = i;
         songsList = list;

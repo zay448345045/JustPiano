@@ -3,7 +3,7 @@ package ly.pp.justpiano3;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-final class ShowSongsInfoPlayClick implements OnClickListener {
+public final class ShowSongsInfoPlayClick implements OnClickListener {
 
     private final ShowSongsInfoAdapter showSongsInfoAdapter;
     private final String f5892b;
@@ -11,7 +11,7 @@ final class ShowSongsInfoPlayClick implements OnClickListener {
     private final int f5894d;
     private final double f5895e;
 
-    ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String str, String l, int i, double d) {
+    public ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String str, String l, int i, double d) {
         this.showSongsInfoAdapter = showSongsInfoAdapter;
         f5892b = str;
         songID = l;

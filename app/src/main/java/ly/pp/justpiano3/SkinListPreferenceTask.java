@@ -3,6 +3,7 @@ package ly.pp.justpiano3;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
 
@@ -24,7 +25,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, String
                 }
             }
         }
-        GZIP.ZIPFileTo(skinListPreference.f5024d, dir.toString());
+        GZIPUtil.ZIPFileTo(skinListPreference.f5024d, dir.toString());
         return null;
     }
 

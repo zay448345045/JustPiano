@@ -5,17 +5,18 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.OLFamily;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSendMailDTO;
 
-final class ChangeDeclarationClick implements OnClickListener {
+public final class ChangeDeclarationClick implements OnClickListener {
 
     private final OLFamily family;
     private final TextView f5458b;
     private final int f5459c;
     private final String f5460d;
 
-    ChangeDeclarationClick(OLFamily family, TextView textView, int i, String str) {
+    public ChangeDeclarationClick(OLFamily family, TextView textView, int i, String str) {
         this.family = family;
         f5458b = textView;
         f5459c = i;

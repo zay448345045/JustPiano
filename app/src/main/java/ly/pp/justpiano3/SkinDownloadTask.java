@@ -1,5 +1,7 @@
 package ly.pp.justpiano3;
 
+import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -17,7 +19,7 @@ public final class SkinDownloadTask {
     private final ExecutorService executorService;
     private Future<String> future;
 
-    SkinDownloadTask(SkinDownload skinDownload) {
+    public SkinDownloadTask(SkinDownload skinDownload) {
         this.skinDownload = new WeakReference<>(skinDownload);
         executorService = Executors.newSingleThreadExecutor();
     }
@@ -60,7 +62,7 @@ public final class SkinDownloadTask {
             skinDownload.get().gridView.setAdapter(new SkinDownloadAdapter(skinDownload.get(), new JSONArray()));
             try {
                 String str = future.get();
-                skinDownload.get().gridView.setAdapter(new SkinDownloadAdapter(skinDownload.get(), new JSONArray(GZIP.ZIPTo(new JSONObject(str).getString("L")))));
+                skinDownload.get().gridView.setAdapter(new SkinDownloadAdapter(skinDownload.get(), new JSONArray(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
             } catch (Exception e) {
                 e.printStackTrace();
             }

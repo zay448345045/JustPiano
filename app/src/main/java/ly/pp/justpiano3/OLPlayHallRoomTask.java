@@ -1,6 +1,7 @@
 package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -9,10 +10,10 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
+public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLPlayHallRoom> olPlayHallRoom;
 
-    OLPlayHallRoomTask(OLPlayHallRoom olPlayHallRoom) {
+    public OLPlayHallRoomTask(OLPlayHallRoom olPlayHallRoom) {
         this.olPlayHallRoom = new WeakReference<>(olPlayHallRoom);
     }
 

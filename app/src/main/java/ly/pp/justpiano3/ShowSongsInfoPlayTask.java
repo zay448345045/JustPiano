@@ -3,6 +3,10 @@ package ly.pp.justpiano3;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.ShowSongsInfo;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -42,7 +46,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
-            songBytes = GZIP.ZIPToArray(str);
+            songBytes = GZIPUtil.ZIPToArray(str);
         }
         return null;
     }

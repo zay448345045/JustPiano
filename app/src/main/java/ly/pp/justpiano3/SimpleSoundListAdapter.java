@@ -10,6 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
 import java.util.List;
@@ -21,7 +24,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
     private final LayoutInflater li;
     private final JPDialog.JDialog dialog;
 
-    SimpleSoundListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
+    public SimpleSoundListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
         this.list = list;
         this.fileList = file;
         li = layoutInflater;
@@ -72,7 +75,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                                 }
                             }
                         }
-                        GZIP.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());
+                        GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());
                         edit.apply();
                         JPApplication.teardownAudioStreamNative();
                         JPApplication.unloadWavAssetsNative();

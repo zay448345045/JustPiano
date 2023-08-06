@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -27,7 +31,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     private final List<Bundle> playerList;
     private final LayoutInflater layoutInflater;
 
-    KeyboardPlayerImageAdapter(List<Bundle> list, OLPlayKeyboardRoom olPlayKeyboardRoom) {
+    public KeyboardPlayerImageAdapter(List<Bundle> list, OLPlayKeyboardRoom olPlayKeyboardRoom) {
         layoutInflater = olPlayKeyboardRoom.getLayoutInflater();
         roomID = olPlayKeyboardRoom.roomID0;
         playerList = list;

@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.activity.OLMainMode;
 
-final class LoginSuccessClick implements OnClickListener {
+public final class LoginSuccessClick implements OnClickListener {
     private final LoginActivity loginActivity;
 
-    LoginSuccessClick(LoginActivity loginActivity) {
+    public LoginSuccessClick(LoginActivity loginActivity) {
         this.loginActivity = loginActivity;
     }
 

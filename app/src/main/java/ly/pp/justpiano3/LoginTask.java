@@ -2,6 +2,7 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.LoginActivity;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -21,7 +22,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
     private String message = "";
     private String title = "";
 
-    LoginTask(LoginActivity loginActivity) {
+    public LoginTask(LoginActivity loginActivity) {
         this.activity = new WeakReference<>(loginActivity);
     }
 
@@ -36,9 +37,9 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
-            formBuilder.add("versionName", loginActivity.versionStr);
-            formBuilder.add("packageNames", loginActivity.packageName);
-            formBuilder.add("versionCode", String.valueOf(loginActivity.versionNum));
+            formBuilder.add("versionName", "4.3");
+            formBuilder.add("packageNames", loginActivity.getPackageName());
+            formBuilder.add("versionCode", String.valueOf(41));
             formBuilder.add("username", loginActivity.accountX);
             formBuilder.add("password", loginActivity.password);
             formBuilder.add("local", loginActivity.jpapplication.getVersion());

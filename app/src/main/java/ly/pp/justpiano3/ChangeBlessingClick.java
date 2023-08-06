@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,14 +16,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-final class ChangeBlessingClick implements OnClickListener {
+public final class ChangeBlessingClick implements OnClickListener {
 
     private final OLPlayHallRoom olPlayHallRoom;
     private final TextView f5458b;
     private final int f5459c;
     private final String f5460d;
 
-    ChangeBlessingClick(OLPlayHallRoom olPlayHallRoom, TextView textView, int i, String str) {
+    public ChangeBlessingClick(OLPlayHallRoom olPlayHallRoom, TextView textView, int i, String str) {
         this.olPlayHallRoom = olPlayHallRoom;
         f5458b = textView;
         f5459c = i;

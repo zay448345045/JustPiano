@@ -11,6 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
 import java.util.List;
@@ -22,7 +25,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
     private final LayoutInflater li;
     private final JPDialog.JDialog dialog;
 
-    SimpleSkinListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
+    public SimpleSkinListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
         this.list = list;
         this.fileList = file;
         li = layoutInflater;
@@ -71,7 +74,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                     edit.putString("skin_list", "original");
                 } else {
                     edit.putString("skin_list", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + fileList.get(index - 1).getName());
-                    GZIP.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + fileList.get(index - 1).getName()), dir.toString());
+                    GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + fileList.get(index - 1).getName()), dir.toString());
                 }
                 edit.apply();
                 olPlayKeyboardRoom.runOnUiThread(() -> {

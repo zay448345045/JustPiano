@@ -2,6 +2,8 @@ package ly.pp.justpiano3;
 
 import android.os.Handler;
 import android.os.Looper;
+import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -18,7 +20,7 @@ public class SoundDownloadTask {
     private final WeakReference<SoundDownload> soundDownload;
     private Future<?> future;
 
-    SoundDownloadTask(SoundDownload soundDownload) {
+    public SoundDownloadTask(SoundDownload soundDownload) {
         this.soundDownload = new WeakReference<>(soundDownload);
     }
 
@@ -55,7 +57,7 @@ public class SoundDownloadTask {
     private void onPostExecute(String str) {
         soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray()));
         try {
-            soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray(GZIP.ZIPTo(new JSONObject(str).getString("L")))));
+            soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
         } catch (Exception e) {
             e.printStackTrace();
         }

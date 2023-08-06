@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import ly.pp.justpiano3.service.ConnectionService;
 
 public final class ExpressAdapter extends BaseAdapter {
     PopupWindow popupWindow;
@@ -14,7 +15,7 @@ public final class ExpressAdapter extends BaseAdapter {
     private final Context context;
     private final Integer[] f6033b;
 
-    ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, int b) {
+    public ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, int b) {
         this.context = context;
         f6033b = numArr;
         this.popupWindow = popupWindow;

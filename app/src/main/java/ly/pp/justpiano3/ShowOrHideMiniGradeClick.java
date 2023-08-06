@@ -2,13 +2,14 @@ package ly.pp.justpiano3;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+import ly.pp.justpiano3.activity.PianoPlay;
 import protobuf.dto.OnlineSetMiniGradeDTO;
 
-final class ShowOrHideMiniGradeClick implements OnClickListener {
+public final class ShowOrHideMiniGradeClick implements OnClickListener {
 
     private final PianoPlay pianoPlay;
 
-    ShowOrHideMiniGradeClick(PianoPlay pianoPlay) {
+    public ShowOrHideMiniGradeClick(PianoPlay pianoPlay) {
         this.pianoPlay = pianoPlay;
     }
 

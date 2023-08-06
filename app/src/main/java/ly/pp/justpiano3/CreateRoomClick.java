@@ -7,15 +7,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.OLPlayHall;
 import protobuf.dto.OnlineCreateRoomDTO;
 
-final class CreateRoomClick implements OnClickListener {
+public final class CreateRoomClick implements OnClickListener {
     private final OLPlayHall olPlayHall;
     private final TextView roomNameText;
     private final TextView passwordText;
     private final RadioGroup roomModeRadioGroup;
 
-    CreateRoomClick(OLPlayHall olPlayHall, TextView textView, TextView textView2, RadioGroup radioGroup) {
+    public CreateRoomClick(OLPlayHall olPlayHall, TextView textView, TextView textView2, RadioGroup radioGroup) {
         this.olPlayHall = olPlayHall;
         roomNameText = textView;
         passwordText = textView2;

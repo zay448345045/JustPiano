@@ -10,11 +10,12 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 
 public final class OLRoomSongsAdapter extends CursorAdapter {
     final OLPlayRoom olPlayRoom;
 
-    OLRoomSongsAdapter(OLPlayRoom om, Context context, Cursor cursor) {
+    public OLRoomSongsAdapter(OLPlayRoom om, Context context, Cursor cursor) {
         super(context, cursor, false);
         olPlayRoom = om;
     }

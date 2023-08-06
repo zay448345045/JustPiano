@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 import java.io.File;
 import java.util.List;
@@ -32,7 +33,7 @@ public class SkinListPreference extends DialogPreference {
 
     private void m3906a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-        List<File> localSkinList = SkinAndSoundFileHandle.getLocalSkinList(str);
+        List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(str);
         int size = localSkinList.size();
         skinNameList = new CharSequence[(size + 2)];
         skinKeyList = new CharSequence[(size + 2)];

@@ -2,13 +2,14 @@ package ly.pp.justpiano3;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.activity.UsersInfo;
 
 import java.lang.ref.WeakReference;
 
 public final class UsersInfoTask3 extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
 
-    UsersInfoTask3(UsersInfo usersInfo) {
+    public UsersInfoTask3(UsersInfo usersInfo) {
         userInfo = new WeakReference<>(usersInfo);
     }
 
