@@ -40,14 +40,17 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
                 if (usersInfo.get().rememberNewPassword) {
                     edit.putString("name", usersInfo.get().jpapplication.getAccountName());
                     edit.putString("password", "");
+                    edit.putString("current_password", null);
                     edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);
                     edit.putBoolean("chec_autologin", usersInfo.get().autoLogin);
                 } else {
                     edit.putString("password", "");
+                    edit.putString("current_password", null);
                     edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);
                     edit.putBoolean("chec_autologin", usersInfo.get().rememberNewPassword);
                 }
                 edit.apply();
+                outLineAndDialog();
                 break;
             default:
                 usersInfo.get().jpprogressBar.cancel();
@@ -100,5 +103,9 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
         usersInfo.get().jpprogressBar.setCancelable(true);
         usersInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         usersInfo.get().jpprogressBar.show();
+    }
+
+    private void outLineAndDialog() {
+        BaseActivity.returnMainMode(usersInfo.get());
     }
 }
