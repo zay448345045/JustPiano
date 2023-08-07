@@ -8,6 +8,7 @@ import android.os.Message;
 import android.widget.Toast;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
 
 import java.lang.ref.WeakReference;
@@ -87,7 +88,7 @@ public final class FamilyHandler extends Handler {
                         if (info.equals("您所在的家族已解散")) {
                             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                             builder.setType(0);
-                            family.sendMsg(18, builder.build());
+                            family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
                             Intent intent = new Intent(family, OLPlayHallRoom.class);
                             intent.putExtra("HEAD", 16);
                             family.startActivity(intent);
@@ -96,7 +97,7 @@ public final class FamilyHandler extends Handler {
                             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                             builder.setType(1);
                             builder.setFamilyId(Integer.parseInt(family.familyID));
-                            family.sendMsg(18, builder.build());
+                            family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
                         }
                     });
                     return;

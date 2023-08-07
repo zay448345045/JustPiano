@@ -7,6 +7,7 @@ import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.JPDialog;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChangeClothesDTO;
 
 public final class EyeClick implements OnItemClickListener {
@@ -36,7 +37,7 @@ public final class EyeClick implements OnItemClickListener {
                 builder.setType(2);
                 builder.setBuyClothesType(1);
                 builder.setBuyClothesId(i);
-                olPlayDressRoom.sendMsg(33, builder.build());
+                olPlayDressRoom.sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
                 dialog.dismiss();
             });
             if (olPlayDressRoom.eyeTry.contains(i)) {

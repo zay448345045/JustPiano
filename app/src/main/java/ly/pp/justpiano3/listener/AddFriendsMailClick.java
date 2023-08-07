@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
 import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineSendMailDTO;
 
 public final class AddFriendsMailClick implements OnClickListener {
@@ -23,7 +24,7 @@ public final class AddFriendsMailClick implements OnClickListener {
         OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
         builder.setMessage("");
         builder.setName(name);
-        family.sendMsg(35, builder.build());
+        family.sendMsg(OnlineProtocolType.SEND_MAIL, builder.build());
         dialogInterface.dismiss();
         Toast.makeText(family, "已向对方发送私信，请等待对方同意!", Toast.LENGTH_SHORT).show();
     }

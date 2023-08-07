@@ -26,9 +26,11 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.JPStack;
 import ly.pp.justpiano3.Receive;
 import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
@@ -71,6 +73,7 @@ public class ConnectionService extends Service implements Runnable {
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
         if (mNetty != null && mNetty.isConnected()) {
+            OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
             mNetty.sendMessage(builder);
         } else {
             outLineAndDialog();
@@ -141,7 +144,7 @@ public class ConnectionService extends Service implements Runnable {
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
                                     if (IdleState.WRITER_IDLE.equals(event.state())) {
-                                        writeData(41, OnlineHeartBeatDTO.getDefaultInstance());
+                                        writeData(OnlineProtocolType.HEART_BEAT, OnlineHeartBeatDTO.getDefaultInstance());
                                     }
                                 }
                             }
@@ -164,7 +167,7 @@ public class ConnectionService extends Service implements Runnable {
                 deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
                 deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
-                writeData(10, builder.build());
+                writeData(OnlineProtocolType.LOGIN, builder.build());
             }
 
             @Override

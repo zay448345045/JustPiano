@@ -20,6 +20,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.FinishScoreAdapter;
 import ly.pp.justpiano3.adapter.MiniScoreAdapter;
 import ly.pp.justpiano3.constant.MidiConstants;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
@@ -165,8 +166,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 ImageButton shareButton = finishView.findViewById(R.id.ol_share);
                 shareButton.setOnClickListener(v -> ShareUtil.share(this));
                 finishView.setVisibility(View.GONE);
-                sendMsg(23, OnlineLoadPlayUserDTO.getDefaultInstance());
-                songName.setOnClickListener(v -> sendMsg(23, OnlineLoadPlayUserDTO.getDefaultInstance()));
+                sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance());
+                songName.setOnClickListener(v -> sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance()));
                 return;
             case 3:    //考级
                 songName.setText("请稍后...");
@@ -180,7 +181,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 f4592K.setVisibility(View.VISIBLE);
                 OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                 builder.setType(2);
-                sendMsg(40, builder.build());
+                sendMsg(OnlineProtocolType.CL_TEST, builder.build());
                 return;
             case 4:    //挑战
                 songName.setText("请稍后...");
@@ -194,7 +195,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 f4592K.setVisibility(View.VISIBLE);
                 OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                 builder1.setType(3);
-                sendMsg(16, builder1.build());
+                sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
                 return;
             default:
         }
@@ -536,7 +537,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     }
                     isPlayingStart = false;
                     isBack = true;
-                    sendMsg(8, OnlineQuitRoomDTO.getDefaultInstance());
+                    sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
                     if (!isOutLine()) {
                         intent = new Intent(this, OLPlayHall.class);
                         bundle.putString("hallName", hallBundle.getString("hallName"));

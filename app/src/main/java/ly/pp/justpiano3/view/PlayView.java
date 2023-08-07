@@ -13,6 +13,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.PlayFinish;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.thread.DownNotesThread;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
@@ -471,7 +472,7 @@ public final class PlayView extends SurfaceView implements Callback {
             }
             OnlineMiniGradeDTO.Builder builder = OnlineMiniGradeDTO.newBuilder();
             builder.setStatusArray(GZIPUtil.arrayToZIP(uploadTimeArray));
-            pianoPlay.sendMsg(25, builder.build());
+            pianoPlay.sendMsg(OnlineProtocolType.MINI_GRADE, builder.build());
             uploadNoteIndex = 0;
         }
         return returnNoteValue;
@@ -575,7 +576,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     long time = jpapplication.getServerTime();
                     long crypt = (time >>> 12 | time << 52) ^ x;
                     builder1.setCode(crypt);
-                    pianoPlay.sendMsg(16, builder1.build());
+                    pianoPlay.sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
                     break;
                 case 3:
                     size2 = uploadTouchStatusList.size();
@@ -590,7 +591,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     time = jpapplication.getServerTime();
                     crypt = (time >>> 12 | time << 52) ^ x;
                     builder.setCode(crypt);
-                    pianoPlay.sendMsg(40, builder.build());
+                    pianoPlay.sendMsg(OnlineProtocolType.CL_TEST, builder.build());
                     break;
                 case 2:
                     message = Message.obtain(pianoPlay.pianoPlayHandler);
@@ -607,7 +608,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     time = jpapplication.getServerTime();
                     crypt = (time >>> 12 | time << 52) ^ x;
                     builder2.setCode(crypt);
-                    pianoPlay.sendMsg(5, builder2.build());
+                    pianoPlay.sendMsg(OnlineProtocolType.PLAY_FINISH, builder2.build());
                     break;
                 default:
                     Intent intent = new Intent();

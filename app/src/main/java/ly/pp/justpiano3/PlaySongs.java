@@ -6,6 +6,7 @@ import android.os.Message;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlinePlaySongDTO;
 
 public final class PlaySongs {
@@ -83,7 +84,7 @@ public final class PlaySongs {
                     OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                     builder.setTune(olPlayRoom.getdiao());
                     builder.setSongPath(jpapplication.getNowSongsName());
-                    olPlayRoom.sendMsg(15, builder.build());
+                    olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
                     Message obtainMessage1 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                     obtainMessage1.what = 12;
                     olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage1);
@@ -102,7 +103,7 @@ public final class PlaySongs {
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
                         builder1.setSongPath(str1);
-                        olPlayRoom.sendMsg(15, builder1.build());
+                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);
@@ -125,7 +126,7 @@ public final class PlaySongs {
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
                         builder1.setSongPath(str1);
-                        olPlayRoom.sendMsg(15, builder1.build());
+                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);

@@ -7,6 +7,7 @@ import android.widget.Toast;
 import ly.pp.justpiano3.activity.OLPlayRoomInterface;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineSendMailDTO;
 
 public final class SendMailClick implements OnClickListener {
@@ -34,7 +35,7 @@ public final class SendMailClick implements OnClickListener {
                 builder.setName(f5509c);
                 builder.setMessage(valueOf);
                 if (!f5509c.isEmpty()) {
-                    olPlayRoom.connectionService.writeData(35, builder.build());
+                    olPlayRoom.connectionService.writeData(OnlineProtocolType.SEND_MAIL, builder.build());
                 }
                 dialogInterface.dismiss();
                 Toast.makeText(olPlayRoom, "发送成功!", Toast.LENGTH_SHORT).show();
@@ -51,7 +52,7 @@ public final class SendMailClick implements OnClickListener {
                 builder.setMessage(valueOf);
                 builder.setName(f5509c);
                 if (!f5509c.isEmpty()) {
-                    olPlayKeyboardRoom.connectionService.writeData(35, builder.build());
+                    olPlayKeyboardRoom.connectionService.writeData(OnlineProtocolType.SEND_MAIL, builder.build());
                 }
                 dialogInterface.dismiss();
                 Toast.makeText(olPlayKeyboardRoom, "发送成功!", Toast.LENGTH_SHORT).show();

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.JPDialog;
 import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
@@ -182,7 +183,7 @@ public final class OLPlayHallHandler extends Handler {
                                     builder.setType(1);
                                     builder.setName(finalString);
                                     builder.setReject(false);
-                                    olPlayHall.sendMsg(31, builder.build());
+                                    olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                 });
                                 jpdialog.setSecondButton("拒绝", (dialog, which) -> {
                                     dialog.dismiss();
@@ -190,7 +191,7 @@ public final class OLPlayHallHandler extends Handler {
                                     builder.setType(1);
                                     builder.setName(finalString);
                                     builder.setReject(true);
-                                    olPlayHall.sendMsg(31, builder.build());
+                                    olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                 });
                                 jpdialog.showDialog();
                             }
@@ -251,7 +252,7 @@ public final class OLPlayHallHandler extends Handler {
                                     OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
                                     builder.setRoomId(b);
                                     builder.setPassword(data14.getString("P"));
-                                    olPlayHall.sendMsg(7, builder.build());
+                                    olPlayHall.sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                                 }
                             });
                             jpdialog.setSecondButton("取消", (dialog, which) -> {
@@ -278,7 +279,7 @@ public final class OLPlayHallHandler extends Handler {
                     builder.setType(2);
                     builder.setName(data12.getString("F"));
                     olPlayHall.friendList.remove(message.arg1);
-                    olPlayHall.sendMsg(31, builder.build());
+                    olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                     olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                 });
                 return;
@@ -322,7 +323,7 @@ public final class OLPlayHallHandler extends Handler {
                                 builder.setType(1);
                                 builder.setSongIndex(checkedId);
                                 olPlayHall.jpprogressBar.show();
-                                olPlayHall.sendMsg(40, builder.build());
+                                olPlayHall.sendMsg(OnlineProtocolType.CL_TEST, builder.build());
                             }
                         }
                     });

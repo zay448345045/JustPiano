@@ -7,6 +7,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class AddFriendsClick implements OnClickListener {
@@ -41,7 +42,7 @@ public final class AddFriendsClick implements OnClickListener {
                 OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                 builder.setType(0);
                 builder.setName(name);
-                olPlayRoom.jpapplication.getConnectionService().writeData(31, builder.build());
+                olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialogInterface.dismiss();
             } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
                 OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
@@ -51,7 +52,7 @@ public final class AddFriendsClick implements OnClickListener {
                 OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                 builder.setType(0);
                 builder.setName(name);
-                olPlayKeyboardRoom.jpapplication.getConnectionService().writeData(31, builder.build());
+                olPlayKeyboardRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialogInterface.dismiss();
             }
         } else if (olPlayHall != null) {
@@ -61,7 +62,7 @@ public final class AddFriendsClick implements OnClickListener {
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(0);
             builder.setName(name);
-            olPlayHall.jpapplication.getConnectionService().writeData(31, builder.build());
+            olPlayHall.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
             dialogInterface.dismiss();
         } else if (olPlayHallRoom != null) {
             if (olPlayHallRoom.jpApplication.getConnectionService() == null) {
@@ -70,7 +71,7 @@ public final class AddFriendsClick implements OnClickListener {
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(0);
             builder.setName(name);
-            olPlayHallRoom.jpApplication.getConnectionService().writeData(31, builder.build());
+            olPlayHallRoom.jpApplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
             dialogInterface.dismiss();
         }
     }

@@ -2,6 +2,7 @@ package ly.pp.justpiano3.utils;
 
 import android.content.Context;
 import android.widget.Toast;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.JPDialog;
@@ -36,7 +37,7 @@ public class DialogUtil {
                 builder.setType(3);
                 builder.setName(userName);
                 builder.setGold(goldNum);
-                jpApplication.getConnectionService().writeData(37, builder.build());
+                jpApplication.getConnectionService().writeData(OnlineProtocolType.DIALOG, builder.build());
             }));
         }
     }

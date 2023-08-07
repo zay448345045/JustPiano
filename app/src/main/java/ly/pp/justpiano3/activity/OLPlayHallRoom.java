@@ -18,6 +18,7 @@ import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
 import ly.pp.justpiano3.listener.AddFriendsClick;
@@ -409,12 +410,12 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 jpprogressBar.show();
                 OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();
                 builder2.setType(1);
-                sendMsg(38, builder2.build());
+                sendMsg(OnlineProtocolType.DAILY, builder2.build());
                 return;
             case R.id.create_family:
                 OnlineFamilyDTO.Builder builder1 = OnlineFamilyDTO.newBuilder();
                 builder1.setType(3);
-                sendMsg(18, builder1.build());
+                sendMsg(OnlineProtocolType.FAMILY, builder1.build());
                 return;
             case R.id.pre_button:
                 pageNum -= 20;
@@ -425,13 +426,13 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(pageNum);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.online_button:
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.next_button:
                 if (!pageIsEnd) {
@@ -440,7 +441,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                         builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(pageNum);
-                        sendMsg(34, builder.build());
+                        sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                     }
                     return;
                 }
@@ -484,7 +485,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                 builder.setName(String.valueOf(flag));
                 builder.setType(3);
-                sendMsg(31, builder.build());
+                sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialog.dismiss();
             }).setSecondButton("取消", new DialogDismissClick());
             try {
@@ -500,7 +501,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         builder.setType(6);
         builder.setStatus(0);
         builder.setUserName(name);
-        sendMsg(18, builder.build());
+        sendMsg(OnlineProtocolType.FAMILY, builder.build());
     }
 
     @Override
@@ -527,7 +528,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(2);
             builder.setPage(familyPageNum);
-            sendMsg(18, builder.build());
+            sendMsg(OnlineProtocolType.FAMILY, builder.build());
         }));
         mailListView = findViewById(R.id.ol_mail_list);
         mailListView.setCacheColorHint(0);
@@ -662,7 +663,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 }
                 break;
         }
-        sendMsg(28, OnlineLoadUserDTO.getDefaultInstance());
+        sendMsg(OnlineProtocolType.LOAD_USER, OnlineLoadUserDTO.getDefaultInstance());
     }
 
     @Override

@@ -8,6 +8,7 @@ import ly.pp.justpiano3.activity.OLPlayRoomInterface;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineQuitRoomDTO;
 
 public final class ReturnHallClick implements OnClickListener {
@@ -23,7 +24,7 @@ public final class ReturnHallClick implements OnClickListener {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             olPlayRoom.jpapplication.setPlaySongsMode(0);
             olPlayRoom.isOnStart = false;
-            olPlayRoom.sendMsg(8, OnlineQuitRoomDTO.getDefaultInstance());
+            olPlayRoom.sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
             if (olPlayRoom.playSongs != null) {
                 olPlayRoom.playSongs.isPlayingSongs = false;
                 olPlayRoom.playSongs = null;
@@ -38,7 +39,7 @@ public final class ReturnHallClick implements OnClickListener {
             olPlayRoom.finish();
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
             OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
-            olPlayKeyboardRoom.sendMsg(8, OnlineQuitRoomDTO.getDefaultInstance());
+            olPlayKeyboardRoom.sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
             Intent intent = new Intent(olPlayKeyboardRoom, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", olPlayKeyboardRoom.hallName);

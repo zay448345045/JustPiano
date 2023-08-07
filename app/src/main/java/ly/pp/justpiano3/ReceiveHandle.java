@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.DateUtil;
@@ -61,7 +62,7 @@ final class ReceiveHandle {
         Bundle bundle3;
         Handler handler;
         switch (i) {
-            case 2:
+            case OnlineProtocolType.USER_INFO_DIALOG:
                 OnlineUserInfoDialogVO userInfoDialog = msg.getUserInfoDialog();
                 message.what = 23;
                 bundle.putString("U", userInfoDialog.getName());
@@ -91,7 +92,7 @@ final class ReceiveHandle {
                     ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                 }
                 break;
-            case 3:
+            case OnlineProtocolType.PLAY_START:
                 message.what = 5;
                 bundle2 = new Bundle();
                 bundle2.putString("S", msg.getPlayStart().getSongPath());
@@ -105,7 +106,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 5:
+            case OnlineProtocolType.PLAY_FINISH:
                 message.what = 3;
                 OnlinePlayFinishVO playFinish = msg.getPlayFinish();
                 for (OnlinePlayGradeVO playGrade : playFinish.getPlayGradeList()) {
@@ -130,7 +131,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 9:
+            case OnlineProtocolType.KICKED_QUIT_ROOM:
                 message.what = 8;
                 if (JPStack.top() instanceof OLPlayRoom) {
                     ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
@@ -139,7 +140,7 @@ final class ReceiveHandle {
                     ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
                 return;
-            case 13:
+            case OnlineProtocolType.ROOM_CHAT:
                 OnlineRoomChatVO roomChat = msg.getRoomChat();
                 message.what = 2;
                 bundle.putString("U", roomChat.getUserName());
@@ -157,7 +158,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 14:
+            case OnlineProtocolType.CHANGE_ROOM_INFO:
                 message.what = 10;
                 bundle.putString("R", msg.getChangeRoomInfo().getRoomName());
                 message.setData(bundle);
@@ -169,7 +170,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 15:
+            case OnlineProtocolType.PLAY_SONG:
                 try {
                     message.what = 3;
                     bundle2 = new Bundle();
@@ -187,7 +188,7 @@ final class ReceiveHandle {
                     e.printStackTrace();
                 }
                 return;
-            case 17:
+            case OnlineProtocolType.BROADCAST:
 //                try {
 //                    jSONObject3 = new JSONObject(str);
 //                    if (JPStack.top() instanceof OLPlayHallRoom) {
@@ -213,7 +214,7 @@ final class ReceiveHandle {
 //                    return;
 //                }
                 return;
-            case 23:
+            case OnlineProtocolType.LOAD_PLAY_USER:
                 message.what = 1;
                 message.arg1 = 0;
                 OnlineLoadPlayUserVO loadPlayUser = msg.getLoadPlayUser();
@@ -231,7 +232,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 27:
+            case OnlineProtocolType.RECOMMEND_SONG:
                 message.what = 4;
                 bundle.putString("U", msg.getRecommendSong().getName());
                 bundle.putString("M", "推荐歌曲:");
@@ -247,7 +248,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 31:
+            case OnlineProtocolType.SET_USER_INFO:
                 OnlineSetUserInfoVO setUserInfo = msg.getSetUserInfo();
                 int type = setUserInfo.getType();
                 if (type == 3 || type == 4) {
@@ -306,7 +307,7 @@ final class ReceiveHandle {
                     }
                 }
                 break;
-            case 32:
+            case OnlineProtocolType.SET_MINI_GRADE:
                 message.what = 1;
                 message.arg1 = 1;
                 OnlineSetMiniGradeVO setMiniGrade = msg.getSetMiniGrade();
@@ -323,7 +324,7 @@ final class ReceiveHandle {
                     ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                 }
                 break;
-            case 37:
+            case OnlineProtocolType.DIALOG:
                 OnlineDialogVO dialog = msg.getDialog();
                 type = dialog.getType();
                 handler = null;
@@ -370,7 +371,7 @@ final class ReceiveHandle {
                     }
                 }
                 break;
-            case 45:
+            case OnlineProtocolType.COUPLE:
                 message.what = 22;
                 OnlineCoupleVO couple = msg.getCouple();
                 switch (couple.getType()) {
@@ -524,7 +525,7 @@ final class ReceiveHandle {
         int i2;
         Bundle bundle2;
         switch (b) {
-            case 28:
+            case OnlineProtocolType.LOAD_USER:
                 bundle = new Bundle();
                 Bundle bundle3 = new Bundle();
                 message.what = 0;
@@ -564,7 +565,7 @@ final class ReceiveHandle {
                     e.printStackTrace();
                     return;
                 }
-            case 33:
+            case OnlineProtocolType.CHANGE_CLOTHES:
                 OnlineChangeClothesVO changeClothes = msg.getChangeClothes();
                 int type = changeClothes.getType();
                 message.what = type;
@@ -589,7 +590,7 @@ final class ReceiveHandle {
                     ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
                 }
                 return;
-            case 34:
+            case OnlineProtocolType.LOAD_USER_INFO:
                 bundle = new Bundle();
                 OnlineLoadUserInfoVO loadUserInfo = msg.getLoadUserInfo();
                 type = loadUserInfo.getType();
@@ -680,7 +681,7 @@ final class ReceiveHandle {
                     default:
                         return;
                 }
-            case 36:
+            case OnlineProtocolType.LOAD_USER_LIST:
                 bundle = new Bundle();
                 OnlineLoadUserListVO loadUserList = msg.getLoadUserList();
                 try {

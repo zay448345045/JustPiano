@@ -23,6 +23,7 @@ import ly.pp.justpiano3.adapter.ExpressAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 import ly.pp.justpiano3.adapter.RoomTitleAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLPlayHallHandler;
@@ -69,7 +70,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     public void loadInRoomUserInfo(byte b) {
         OnlineLoadRoomUserListDTO.Builder builder = OnlineLoadRoomUserListDTO.newBuilder();
         builder.setRoomId(b);
-        connectionService.writeData(43, builder.build());
+        connectionService.writeData(OnlineProtocolType.LOAD_ROOM_USER_LIST, builder.build());
     }
 
     public void sendMsg(int type, MessageLite message) {
@@ -145,7 +146,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
                 builder.setRoomId(b);
                 builder.setPassword("");
-                sendMsg(7, builder.build());
+                sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                 return;
             case 1:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
@@ -250,7 +251,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        sendMsg(30, OnlineQuitHallDTO.getDefaultInstance());
+        sendMsg(OnlineProtocolType.QUIT_HALL, OnlineQuitHallDTO.getDefaultInstance());
         startActivity(new Intent(this, OLPlayHallRoom.class));
         finish();
     }
@@ -282,7 +283,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
                 builder2.setType(0);
                 jpprogressBar.show();
-                sendMsg(40, builder2.build());
+                sendMsg(OnlineProtocolType.CL_TEST, builder2.build());
                 return;
             case R.id.ol_challenge_b:
                 Intent intent = new Intent();
@@ -301,13 +302,13 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(pageNum);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.online_button:
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.next_button:
                 if (!pageIsEnd) {
@@ -316,7 +317,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                         builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(pageNum);
-                        sendMsg(34, builder.build());
+                        sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                         return;
                     }
                     return;
@@ -336,7 +337,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 sendTextView.setText("");
                 sendTo = "";
                 if (!valueOf.isEmpty()) {
-                    sendMsg(12, builder1.build());
+                    sendMsg(OnlineProtocolType.HALL_CHAT, builder1.build());
                 }
                 sendTextView.setText("");
                 sendTo = "";
@@ -435,7 +436,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         tabHost.setOnTabChangedListener(new PlayHallTabChange(this));
         tabHost.setCurrentTab(1);
         OnlineLoadRoomListDTO.Builder builder = OnlineLoadRoomListDTO.newBuilder();
-        sendMsg(19, builder.build());
+        sendMsg(OnlineProtocolType.LOAD_ROOM_LIST, builder.build());
         isTimeShowing = true;
         showTimeThread = new ShowTimeThread(this);
         showTimeThread.start();

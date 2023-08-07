@@ -15,6 +15,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.HallPasswordClick;
 import ly.pp.justpiano3.listener.OLSendMailClick;
@@ -121,7 +122,7 @@ public final class MainGameAdapter extends BaseAdapter {
                     } else {
                         OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
                         builder.setHallId(b);
-                        connectionService.writeData(29, builder.build());
+                        connectionService.writeData(OnlineProtocolType.ENTER_HALL, builder.build());
                     }
                 });
                 break;
@@ -156,14 +157,14 @@ public final class MainGameAdapter extends BaseAdapter {
                     OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                     builder.setType(2);
                     builder.setName(string2);
-                    connectionService.writeData(37, builder.build());
+                    connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                 });
                 dialogButton.setVisibility(View.VISIBLE);
                 dialogButton.setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
                     OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
                     builder.setName(string2);
-                    connectionService.writeData(2, builder.build());
+                    connectionService.writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
                 });
                 TextView textView2 = view.findViewById(R.id.ol_friend_name);
                 ImageView imageView = view.findViewById(R.id.ol_friend_sex);
@@ -187,7 +188,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                         builder.setName(string2);
                         builder.setType(0);
-                        connectionService.writeData(37, builder.build());
+                        connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                     });
                     button.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
@@ -390,7 +391,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                         builder.setType(0);
                         builder.setName(string7);
-                        connectionService.writeData(37, builder.build());
+                        connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                     });
                 } else if (activity instanceof OLPlayRoom || activity instanceof OLPlayKeyboardRoom) {
                     textView.setText("邀请");
@@ -399,7 +400,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                         builder.setType(1);
                         builder.setName(string7);
-                        connectionService.writeData(37, builder.build());
+                        connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                     });
                 }
                 ((TextView) view.findViewById(R.id.ol_friend_name)).setText(string7);
@@ -425,7 +426,7 @@ public final class MainGameAdapter extends BaseAdapter {
                     if (connectionService != null && !string7.isEmpty()) {
                         OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
                         builder.setName(string7);
-                        connectionService.writeData(2, builder.build());
+                        connectionService.writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
                     }
                 });
                 break;

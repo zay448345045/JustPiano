@@ -5,6 +5,7 @@ import ly.pp.justpiano3.activity.OLPlayRoomInterface;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineLoadUserListDTO;
 
@@ -33,7 +34,7 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                     OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                     builder.setType(1);
                     builder.setPage(olPlayRoom.page);
-                    olPlayRoom.sendMsg(34, builder.build());
+                    olPlayRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                     break;
                 case "tab2":
                     if (olPlayRoom.msgListView != null && olPlayRoom.msgListView.getAdapter() != null) {
@@ -41,7 +42,7 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                     }
                     break;
                 case "tab4":
-                    olPlayRoom.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
+                    olPlayRoom.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
                     break;
             }
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
@@ -60,7 +61,7 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                     OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                     builder.setType(1);
                     builder.setPage(olPlayKeyboardRoom.page);
-                    olPlayKeyboardRoom.sendMsg(34, builder.build());
+                    olPlayKeyboardRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                     break;
                 case "tab2":
                     if (olPlayKeyboardRoom.msgListView != null && olPlayKeyboardRoom.msgListView.getAdapter() != null) {
@@ -68,7 +69,7 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                     }
                     break;
                 case "tab3":
-                    olPlayKeyboardRoom.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
+                    olPlayKeyboardRoom.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
                     break;
             }
         }

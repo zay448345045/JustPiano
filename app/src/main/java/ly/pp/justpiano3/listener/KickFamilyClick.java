@@ -3,6 +3,7 @@ package ly.pp.justpiano3.listener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
 
 public final class KickFamilyClick implements OnClickListener {
@@ -18,7 +19,7 @@ public final class KickFamilyClick implements OnClickListener {
         builder.setType(6);
         builder.setUserName(olFamily.peopleNow);
         builder.setStatus(1);
-        olFamily.sendMsg(18, builder.build());
+        olFamily.sendMsg(OnlineProtocolType.FAMILY, builder.build());
         dialogInterface.dismiss();
         olFamily.jpprogressBar.show();
     }

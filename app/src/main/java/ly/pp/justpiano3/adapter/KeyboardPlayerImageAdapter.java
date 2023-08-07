@@ -12,6 +12,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
@@ -84,7 +85,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             builder.setType(4);
-                            connectionService.writeData(45, builder.build());
+                            connectionService.writeData(OnlineProtocolType.COUPLE, builder.build());
                         }
                     }
                 });
@@ -116,7 +117,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
-                            connectionService.writeData(42, builder.build());
+                            connectionService.writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
                         }
                     }
                 });
@@ -129,7 +130,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                         if (olPlayKeyboardRoom.playerKind.equals("H") && connectionService != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
-                            connectionService.writeData(42, builder.build());
+                            connectionService.writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
                         }
                     }
                 });
@@ -144,7 +145,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                             } else {
                                 OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
                                 builder.setRoomPosition(user.getPosition());
-                                connectionService.writeData(9, builder.build());
+                                connectionService.writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
                                 olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
                             }
                         }
@@ -165,7 +166,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             builder.setType(4);
-                            connectionService.writeData(45, builder.build());
+                            connectionService.writeData(OnlineProtocolType.COUPLE, builder.build());
                         }
                     }
                 });
@@ -189,7 +190,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     if (connectionService != null) {
                         OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
                         builder.setName(user.getPlayerName());
-                        connectionService.writeData(2, builder.build());
+                        connectionService.writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
                     }
                 }
             });

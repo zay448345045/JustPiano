@@ -24,6 +24,7 @@ import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.listener.*;
@@ -121,7 +122,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
         builder.setTune(diao);
         builder.setSongPath(str1);
-        sendMsg(15, builder.build());
+        sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
         query.close();
         if (moreSongs != null) {
             moreSongs.dismiss();
@@ -131,7 +132,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public void setGroupOrHand(int i, PopupWindow popupWindow) {
         OnlineChangeRoomHandDTO.Builder builder = OnlineChangeRoomHandDTO.newBuilder();
         builder.setHand(i);
-        sendMsg(44, builder.build());
+        sendMsg(OnlineProtocolType.CHANGE_ROOM_HAND, builder.build());
         if (popupWindow != null) {
             popupWindow.dismiss();
         }
@@ -513,7 +514,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                 builder.setTune(diao);
                 builder.setSongPath(data.getString("S"));
-                sendMsg(15, builder.build());
+                sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
                 break;
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
@@ -672,13 +673,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(page);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.online_button:
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.next_button:
                 if (!canNotNextPage) {
@@ -687,7 +688,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                         builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(page);
-                        sendMsg(34, builder.build());
+                        sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                         return;
                     }
                     return;
@@ -707,7 +708,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 sendText.setText("");
                 builder2.setColor(colorNum);
                 if (!str.isEmpty()) {
-                    sendMsg(13, builder2.build());
+                    sendMsg(OnlineProtocolType.ROOM_CHAT, builder2.build());
                 }
                 userTo = "";
                 return;
@@ -798,9 +799,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 if (playerKind.equals("G")) {
                     OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
                     builder1.setStatus("R");
-                    sendMsg(4, builder1.build());
+                    sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
                 } else {
-                    sendMsg(3, OnlinePlayStartDTO.getDefaultInstance());
+                    sendMsg(OnlineProtocolType.PLAY_START, OnlinePlayStartDTO.getDefaultInstance());
                 }
                 return;
             case R.id.room_title:
@@ -864,7 +865,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                     builder1.setTune(diao);
                     builder1.setSongPath(jpapplication.getNowSongsName());
-                    sendMsg(15, builder1.build());
+                    sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
                     olPlayRoomHandler.handleMessage(obtainMessage);
@@ -885,7 +886,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                     builder1.setTune(diao);
                     builder1.setSongPath(jpapplication.getNowSongsName());
-                    sendMsg(15, builder1.build());
+                    sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
                     olPlayRoomHandler.handleMessage(obtainMessage);
@@ -1042,7 +1043,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         songNameText.setFocusableInTouchMode(true);
         songNameText.setOnClickListener(this);
         songsList.setAdapter(olRoomSongsAdapter);
-        sendMsg(21, OnlineLoadRoomPositionDTO.getDefaultInstance());
+        sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
         msgList.clear();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
@@ -1247,7 +1248,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         if (!isOnStart) {
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("N");
-            sendMsg(4, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
         isOnStart = true;
     }
@@ -1258,7 +1259,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         if (!isOnStart) {
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("N");
-            sendMsg(4, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
                 msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
@@ -1275,7 +1276,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             isOnStart = false;
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("B");
-            sendMsg(4, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
     }
 }

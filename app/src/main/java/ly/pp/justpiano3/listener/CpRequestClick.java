@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineCoupleDTO;
 
 public final class CpRequestClick implements OnClickListener {
@@ -27,7 +28,7 @@ public final class CpRequestClick implements OnClickListener {
             builder.setType(f5515b + 1);
             builder.setCoupleType(f5517d);
             builder.setCoupleRoomPosition(f5516c);
-            olPlayRoom.sendMsg(45, builder.build());
+            olPlayRoom.sendMsg(OnlineProtocolType.COUPLE, builder.build());
         }
         dialogInterface.dismiss();
     }

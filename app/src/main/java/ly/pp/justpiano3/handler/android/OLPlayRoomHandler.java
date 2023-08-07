@@ -18,6 +18,7 @@ import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
@@ -183,7 +184,7 @@ public final class OLPlayRoomHandler extends Handler {
                         }
                         String str1 = message.getData().getString("S");
                         if (!olPlayRoom.isOnStart) {
-                            olPlayRoom.jpapplication.getConnectionService().writeData(8, OnlineQuitRoomDTO.getDefaultInstance());
+                            olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);
@@ -258,7 +259,7 @@ public final class OLPlayRoomHandler extends Handler {
                                         builder.setType(1);
                                         builder.setReject(false);
                                         builder.setName(finalString);
-                                        olPlayRoom.sendMsg(31, builder.build());
+                                        olPlayRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                         dialog.dismiss();
                                     });
                                     jpdialog.setSecondButton("拒绝", (dialog, which) -> {
@@ -266,7 +267,7 @@ public final class OLPlayRoomHandler extends Handler {
                                         builder.setType(1);
                                         builder.setReject(true);
                                         builder.setName(finalString);
-                                        olPlayRoom.sendMsg(31, builder.build());
+                                        olPlayRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                         dialog.dismiss();
                                     });
                                     jpdialog.showDialog();
@@ -382,7 +383,7 @@ public final class OLPlayRoomHandler extends Handler {
                         builder.setType(2);
                         builder.setName(data.getString("F"));
                         olPlayRoom.friendPlayerList.remove(message.arg1);
-                        olPlayRoom.sendMsg(31, builder.build());
+                        olPlayRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
                     });
                     return;

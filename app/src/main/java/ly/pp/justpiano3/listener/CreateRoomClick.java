@@ -9,6 +9,7 @@ import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineCreateRoomDTO;
 
 public final class CreateRoomClick implements OnClickListener {
@@ -50,7 +51,7 @@ public final class CreateRoomClick implements OnClickListener {
                 builder.setRoomName(roomName);
                 builder.setPassword(password);
                 builder.setRoomMode(i2);
-                olPlayHall.sendMsg(6, builder.build());
+                olPlayHall.sendMsg(OnlineProtocolType.CREATE_ROOM, builder.build());
                 dialogInterface.dismiss();
             } else {
                 Toast.makeText(olPlayHall, "确定密码在8个字之内!", Toast.LENGTH_SHORT).show();

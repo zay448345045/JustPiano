@@ -17,6 +17,7 @@ import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
@@ -196,7 +197,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                         builder.setType(1);
                                         builder.setReject(false);
                                         builder.setName(finalString);
-                                        olPlayKeyboardRoom.sendMsg(31, builder.build());
+                                        olPlayKeyboardRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                         dialog.dismiss();
                                     });
                                     jpdialog.setSecondButton("拒绝", (dialog, which) -> {
@@ -204,7 +205,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                         builder.setType(1);
                                         builder.setReject(true);
                                         builder.setName(finalString);
-                                        olPlayKeyboardRoom.sendMsg(31, builder.build());
+                                        olPlayKeyboardRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                         dialog.dismiss();
                                     });
                                     jpdialog.showDialog();
@@ -318,7 +319,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         builder.setType(2);
                         builder.setName(data.getString("F"));
                         olPlayKeyboardRoom.friendPlayerList.remove(message.arg1);
-                        olPlayKeyboardRoom.sendMsg(31, builder.build());
+                        olPlayKeyboardRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         olPlayKeyboardRoom.mo2863a(olPlayKeyboardRoom.friendsListView, olPlayKeyboardRoom.friendPlayerList, 1);
                     });
                     return;

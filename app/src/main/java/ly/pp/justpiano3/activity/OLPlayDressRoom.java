@@ -30,6 +30,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
 import ly.pp.justpiano3.listener.*;
@@ -165,7 +166,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                     builder.setJacket(jacketNow + 1);
                     builder.setTrousers(trousersNow + 1);
                     builder.setShoes(shoesNow + 1);
-                    sendMsg(33, builder.build());
+                    sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
                     Intent intent = new Intent(this, OLPlayHallRoom.class);
                     intent.putExtra("T", trousersNow + 1);
                     intent.putExtra("J", jacketNow + 1);
@@ -275,7 +276,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                 jpprogressBar.show();
                 OnlineShopDTO.Builder builder = OnlineShopDTO.newBuilder();
                 builder.setType(1);
-                sendMsg(26, builder.build());
+                sendMsg(OnlineProtocolType.SHOP, builder.build());
             }
         });
         tabhost.setCurrentTab(2);
@@ -375,7 +376,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         shoesGridView.setOnItemClickListener(new ShoesClick(this));
         OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
         builder.setType(1);
-        sendMsg(33, builder.build());
+        sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
     }
 
     @Override

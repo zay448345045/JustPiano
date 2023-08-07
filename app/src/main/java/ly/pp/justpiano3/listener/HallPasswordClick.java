@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineEnterHallDTO;
 
 public final class HallPasswordClick implements OnClickListener {
@@ -23,7 +24,7 @@ public final class HallPasswordClick implements OnClickListener {
         OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
         builder.setHallId(f5274c);
         builder.setPassword(valueOf);
-        mainGameAdapter.connectionService.writeData(29, builder.build());
+        mainGameAdapter.connectionService.writeData(OnlineProtocolType.ENTER_HALL, builder.build());
         dialogInterface.dismiss();
     }
 }

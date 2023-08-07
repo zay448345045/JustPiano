@@ -8,6 +8,7 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.OLPlayRoomInterface;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChangeRoomInfoDTO;
 
 public final class ChangeRoomNameClick implements OnClickListener {
@@ -35,7 +36,7 @@ public final class ChangeRoomNameClick implements OnClickListener {
                 OnlineChangeRoomInfoDTO.Builder builder = OnlineChangeRoomInfoDTO.newBuilder();
                 builder.setRoomName(name);
                 builder.setRoomPassword(password);
-                olPlayRoom.sendMsg(14, builder.build());
+                olPlayRoom.sendMsg(OnlineProtocolType.CHANGE_ROOM_INFO, builder.build());
                 dialogInterface.dismiss();
             }
         } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
@@ -50,7 +51,7 @@ public final class ChangeRoomNameClick implements OnClickListener {
                 OnlineChangeRoomInfoDTO.Builder builder = OnlineChangeRoomInfoDTO.newBuilder();
                 builder.setRoomName(name);
                 builder.setRoomPassword(password);
-                olPlayKeyboardRoom.sendMsg(14, builder.build());
+                olPlayKeyboardRoom.sendMsg(OnlineProtocolType.CHANGE_ROOM_INFO, builder.build());
                 dialogInterface.dismiss();
             }
         }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import ly.pp.justpiano3.JPDialog;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import protobuf.dto.OnlineShopDTO;
@@ -65,7 +66,7 @@ public final class ShopAdapter extends BaseAdapter {
                 OnlineShopDTO.Builder builder = OnlineShopDTO.newBuilder();
                 builder.setType(2);
                 builder.setProductId(shopProduct.getId());
-                olPlayDressRoom.sendMsg(26, builder.build());
+                olPlayDressRoom.sendMsg(OnlineProtocolType.SHOP, builder.build());
             });
             jpdialog.setSecondButton("取消", new DialogDismissClick());
             jpdialog.showDialog();

@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import ly.pp.justpiano3.activity.OLPlayRoomInterface;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import org.json.JSONException;
 import org.json.JSONObject;
 import protobuf.dto.OnlineCoupleDTO;
@@ -28,14 +29,14 @@ public final class SendZhufuClick implements OnClickListener {
 
                 builder.setRoomPosition(f5512b.getInt("I"));
 
-                olPlayRoom.sendMsg(45, builder.build());
+                olPlayRoom.sendMsg(OnlineProtocolType.COUPLE, builder.build());
                 dialogInterface.dismiss();
             } else if (olPlayRoomInterface instanceof OLPlayKeyboardRoom) {
                 OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) olPlayRoomInterface;
                 OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                 builder.setType(5);
                 builder.setRoomPosition(f5512b.getInt("I"));
-                olPlayKeyboardRoom.sendMsg(45, builder.build());
+                olPlayKeyboardRoom.sendMsg(OnlineProtocolType.COUPLE, builder.build());
                 dialogInterface.dismiss();
             }
         } catch (JSONException e) {

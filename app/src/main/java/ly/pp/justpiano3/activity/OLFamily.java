@@ -13,6 +13,7 @@ import android.widget.*;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.*;
@@ -178,7 +179,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         }
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(0);
-        sendMsg(18, builder.build());
+        sendMsg(OnlineProtocolType.FAMILY, builder.build());
         Intent intent = new Intent(this, OLPlayHallRoom.class);
         intent.putExtra("HEAD", 16);
         intent.putExtra("pageNum", familyPageNum);
@@ -201,7 +202,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                 builder.setType(8);
                 builder.setFamilyId(Integer.parseInt(familyID));
-                sendMsg(18, builder.build());
+                sendMsg(OnlineProtocolType.FAMILY, builder.build());
                 break;
             case R.id.in_out:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -236,7 +237,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 if (cs != null) {
                     OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
                     builder1.setName(peopleNow);
-                    sendMsg(2, builder1.build());
+                    sendMsg(OnlineProtocolType.USER_INFO_DIALOG, builder1.build());
                 }
                 break;
             case R.id.ol_couple_b:  //提升/撤职副族长
@@ -247,7 +248,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 builder = OnlineFamilyDTO.newBuilder();
                 builder.setType(7);
                 builder.setUserName(peopleNow);
-                sendMsg(18, builder.build());
+                sendMsg(OnlineProtocolType.FAMILY, builder.build());
                 break;
             case R.id.ol_family_changedecl:
                 showSendDialog(" ", 1);
@@ -267,7 +268,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             case R.id.ol_family_levelup:
                 builder = OnlineFamilyDTO.newBuilder();
                 builder.setType(10);
-                sendMsg(18, builder.build());
+                sendMsg(OnlineProtocolType.FAMILY, builder.build());
                 break;
         }
     }
@@ -298,7 +299,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));
-        sendMsg(18, builder.build());
+        sendMsg(OnlineProtocolType.FAMILY, builder.build());
         inOut = findViewById(R.id.in_out);
         inOut.setOnClickListener(this);
         manageFamily = findViewById(R.id.manage_family);

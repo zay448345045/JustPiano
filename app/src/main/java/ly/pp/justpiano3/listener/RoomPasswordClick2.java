@@ -4,26 +4,27 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineEnterRoomDTO;
 
 public final class RoomPasswordClick2 implements OnClickListener {
-    private final OLPlayHall f5377a;
-    private final TextView f5378b;
-    private final byte f5379c;
+    private final OLPlayHall olPlayHall;
+    private final TextView textView;
+    private final byte roomId;
 
     public RoomPasswordClick2(OLPlayHall olPlayHall, TextView textView, byte b) {
-        f5377a = olPlayHall;
-        f5378b = textView;
-        f5379c = b;
+        this.olPlayHall = olPlayHall;
+        this.textView = textView;
+        roomId = b;
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        String valueOf = String.valueOf(f5378b.getText());
+        String valueOf = String.valueOf(textView.getText());
         OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
-        builder.setRoomId(f5379c);
+        builder.setRoomId(roomId);
         builder.setPassword(valueOf);
-        f5377a.sendMsg(7, builder.build());
+        olPlayHall.sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
         dialogInterface.dismiss();
     }
 }

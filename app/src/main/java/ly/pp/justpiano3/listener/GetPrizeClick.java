@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
 
 import ly.pp.justpiano3.activity.OLChallenge;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChallengeDTO;
 
 public final class GetPrizeClick implements OnClickListener {
@@ -19,7 +20,7 @@ public final class GetPrizeClick implements OnClickListener {
         if (challenge.jpapplication.getConnectionService() != null) {
             OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
             builder.setType(6);
-            challenge.jpapplication.getConnectionService().writeData(16, builder.build());
+            challenge.jpapplication.getConnectionService().writeData(OnlineProtocolType.CHALLENGE, builder.build());
             Toast.makeText(challenge, "领取奖励成功!", Toast.LENGTH_SHORT).show();
             dialogInterface.dismiss();
         }

@@ -4,6 +4,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 
@@ -32,18 +33,18 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(olPlayHallRoom.pageNum);
-                olPlayHallRoom.sendMsg(34, builder.build());
+                olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 break;
             case "tab4":
                 olPlayHallRoom.mailCountsView.setText("");
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(2);
-                olPlayHallRoom.sendMsg(34, builder.build());
+                olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 break;
             case "tab3":
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(3);
-                olPlayHallRoom.sendMsg(34, builder.build());
+                olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 break;
             case "tab5":
                 if (olPlayHallRoom.familyList == null) {
@@ -54,7 +55,7 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
                     builder1.setType(2);
                     builder1.setPage(0);
                     olPlayHallRoom.jpprogressBar.show();
-                    olPlayHallRoom.sendMsg(18, builder1.build());
+                    olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder1.build());
                 } else {
                     FamilyAdapter fa = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
                     if (fa == null) {

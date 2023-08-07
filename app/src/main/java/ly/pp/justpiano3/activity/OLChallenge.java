@@ -11,6 +11,7 @@ import android.widget.*;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.GetPrizeClick;
@@ -47,7 +48,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         }
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(0);
-        sendMsg(16, builder.build());
+        sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
         Intent intent = new Intent(this, OLPlayHall.class);
         intent.putExtra("hallName", hallName);
         intent.putExtra("hallID", hallID);
@@ -62,12 +63,12 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
                 jpprogressBar.show();
                 OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
                 builder.setType(2);
-                sendMsg(16, builder.build());
+                sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
                 return;
             case R.id.drawPrize:
                 builder = OnlineChallengeDTO.newBuilder();
                 builder.setType(5);
-                sendMsg(16, builder.build());
+                sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
                 return;
             case R.id.viewChallenge:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -94,7 +95,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         cs = jpapplication.getConnectionService();
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
-        sendMsg(16, builder.build());
+        sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");

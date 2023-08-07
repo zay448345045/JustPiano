@@ -3,6 +3,7 @@ package ly.pp.justpiano3.listener.tab;
 import android.widget.TabHost.OnTabChangeListener;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineLoadUserListDTO;
 
@@ -28,9 +29,9 @@ public final class PlayHallTabChange implements OnTabChangeListener {
             OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
             builder.setType(1);
             builder.setPage(olPlayHall.pageNum);
-            olPlayHall.sendMsg(34, builder.build());
+            olPlayHall.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
         } else if (str.equals("tab3")) {
-            olPlayHall.sendMsg(36, OnlineLoadUserListDTO.getDefaultInstance());
+            olPlayHall.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
         }
     }
 }

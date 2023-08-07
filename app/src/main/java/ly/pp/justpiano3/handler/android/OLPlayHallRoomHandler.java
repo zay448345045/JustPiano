@@ -19,6 +19,7 @@ import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.DailyTimeAdapter;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.DialogUtil;
 import org.json.JSONArray;
@@ -230,7 +231,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                                 dialog.dismiss();
                                 OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
                                 builder.setHallId(b);
-                                olPlayHallRoom.sendMsg(29, builder.build());
+                                olPlayHallRoom.sendMsg(OnlineProtocolType.ENTER_HALL, builder.build());
                             });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
@@ -255,7 +256,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         builder.setType(2);
                         builder.setName(data.getString("F"));
                         olPlayHallRoom.friendList.remove(message.arg1);
-                        olPlayHallRoom.sendMsg(31, builder.build());
+                        olPlayHallRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     });
                     return;
@@ -283,7 +284,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                                     OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                                     builder.setType(4);
                                     builder.setFamilyName(name);
-                                    olPlayHallRoom.sendMsg(18, builder.build());
+                                    olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder.build());
                                 }
                             });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
@@ -307,7 +308,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                                 builder.setPage(0);
                                 olPlayHallRoom.familyPageNum = 0;
                                 olPlayHallRoom.familyList.clear();
-                                olPlayHallRoom.sendMsg(18, builder.build());
+                                olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder.build());
                                 break;
                             case 1:
                                 Toast.makeText(olPlayHallRoom, "家族创建失败!", Toast.LENGTH_SHORT).show();
@@ -354,7 +355,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                                     olPlayHallRoom.jpprogressBar.show();
                                     OnlineDailyDTO.Builder builder = OnlineDailyDTO.newBuilder();
                                     builder.setType(2);
-                                    olPlayHallRoom.sendMsg(38, builder.build());
+                                    olPlayHallRoom.sendMsg(OnlineProtocolType.DAILY, builder.build());
                                 });
                         listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
                         jpDialog.showDialog();

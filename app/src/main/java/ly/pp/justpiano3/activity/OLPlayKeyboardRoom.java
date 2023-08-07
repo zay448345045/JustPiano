@@ -21,6 +21,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.MidiConstants;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
 import ly.pp.justpiano3.entity.User;
@@ -305,7 +306,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 notes[3] = (byte) volume;
                 OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
                 builder.setData(ByteString.copyFrom(notes));
-                sendMsg(39, builder.build());
+                sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
                 break;
         }
 
@@ -486,13 +487,13 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(page);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.online_button:
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(-1);
-                sendMsg(34, builder.build());
+                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 return;
             case R.id.next_button:
                 if (!canNotNextPage) {
@@ -501,7 +502,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         builder = OnlineLoadUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setPage(page);
-                        sendMsg(34, builder.build());
+                        sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                         return;
                     }
                     return;
@@ -521,7 +522,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 sendText.setText("");
                 builder2.setColor(colorNum);
                 if (!str.isEmpty()) {
-                    sendMsg(13, builder2.build());
+                    sendMsg(OnlineProtocolType.ROOM_CHAT, builder2.build());
                 }
                 userTo = "";
                 return;
@@ -786,7 +787,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
         handler = new Handler(this);
-        sendMsg(21, OnlineLoadRoomPositionDTO.getDefaultInstance());
+        sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
         msgList.clear();
         jpprogressBar = new JPProgressBar(this);
         PopupWindow popupWindow = new PopupWindow(this);
@@ -979,7 +980,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             openNotesSchedule();
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("N");
-            sendMsg(4, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
         isOnStart = true;
 
@@ -992,7 +993,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             openNotesSchedule();
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("N");
-            sendMsg(4, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
                 msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
@@ -1009,7 +1010,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             stopNotesSchedule();
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("B");
-            sendMsg(4, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
         isOnStart = false;
     }
@@ -1222,7 +1223,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                     }
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
                     builder.setData(ByteString.copyFrom(notes));
-                    sendMsg(39, builder.build());
+                    sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
                     if (olKeyboardStates[roomPositionSub1].isPlaying()) {
                         olKeyboardStates[roomPositionSub1].setPlaying(false);
                         runOnUiThread(() -> {
