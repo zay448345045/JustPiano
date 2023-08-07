@@ -30,7 +30,7 @@
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
 
             <requestFocus />
         </LinearLayout>
@@ -61,7 +61,7 @@
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
 
             <requestFocus />
         </LinearLayout>
@@ -86,28 +86,28 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/create_room_n"
-                android:layout_marginEnd="@dimen/dimen_6dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
 
             <RadioButton
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/create_room_g"
-                android:layout_marginEnd="@dimen/dimen_6dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
 
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/create_room_k"
-                android:layout_marginEnd="@dimen/dimen_6dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
 
             <RadioButton
                 android:id="@+id/couple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/create_room_c"
-                android:layout_marginEnd="@dimen/dimen_6dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>
