@@ -71,11 +71,13 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if (msg instanceof ByteBuf) {
             ByteBuf byteBuf = (ByteBuf) msg;
+            // 使用CompositeByteBuf进行组装，减少内存拷贝，提升性能
+            CompositeByteBuf compositeByteBuf = Unpooled.compositeBuffer(2);
             // 判断消息是否需要加密
             if (NOT_ENCRYPT_MSG_TYPE.contains(OnlineUtil.getMsgTypeByChannel(ctx.channel()))) {
                 // 无需加密：在ByteBuf数据开头加入false标记，然后发送
-                byteBuf.writeBoolean(false);
-                ctx.writeAndFlush(byteBuf, promise);
+                compositeByteBuf.addComponent(true, Unpooled.buffer(1).writeBoolean(false));
+                compositeByteBuf.addComponent(true, Unpooled.wrappedBuffer(byteBuf));
             } else {
                 // 读取消息内容
                 byte[] bytes = new byte[byteBuf.readableBytes()];
@@ -83,12 +85,10 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
                 // 执行RSA加密
                 byte[] encryptedBytes = EncryptUtil.cipherHandle(Cipher.ENCRYPT_MODE, RSAEncryptCipher, bytes);
                 // 在数据开头加入true标记表示加密，组装后执行发送
-                // 使用CompositeByteBuf进行组装，减少内存拷贝，提升性能
-                CompositeByteBuf compositeByteBuf = Unpooled.compositeBuffer(2)
-                        .addComponent(Unpooled.buffer(1).writeBoolean(true))
-                        .addComponent(Unpooled.wrappedBuffer(flipBytes(encryptedBytes)));
-                ctx.writeAndFlush(compositeByteBuf, promise);
+                compositeByteBuf.addComponent(true, Unpooled.buffer(1).writeBoolean(true));
+                compositeByteBuf.addComponent(true, Unpooled.wrappedBuffer(flipBytes(encryptedBytes)));
             }
+            ctx.writeAndFlush(compositeByteBuf, promise);
         } else {
             ctx.writeAndFlush(msg, promise);
         }
