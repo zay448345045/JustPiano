@@ -333,5 +333,8 @@
         \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
     </string>
     <string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
+    <string name="ol_screen_change">
+        切换横竖屏会导致信息以及音乐重新加载，并清空曲库播放模式
+    </string>
 
 </resources>
