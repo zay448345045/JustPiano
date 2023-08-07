@@ -601,7 +601,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 groupButton.setText("右" + groupButton.getText().toString().substring(1));
                 return;
             case R.id.changeScreenOrientation:
-                changeScreenOrientation();
+                new JPDialog(this)
+                        .setTitle(getString(R.string.msg_this_is_what))
+                        .setMessage(getString(R.string.ol_screen_change))
+                        .setFirstButton("旋转",(dialogInterface, num) -> runOnUiThread(this::changeScreenOrientation))
+                        .setSecondButton("取消", new DialogDismissClick())
+                        .showDialog();
                 return;
             case R.id.rand_0:
                 m3744a(2, 4);
