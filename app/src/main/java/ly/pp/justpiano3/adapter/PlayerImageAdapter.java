@@ -274,8 +274,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_close.png")));
                 return view;
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -286,12 +285,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;
             textView3.setTextColor(olPlayRoom.getResources().getColor(R.color.yellow));
-            //  imageView1.setBackgroundResource(R.drawable._self);
-            try {
-                imageView1.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_self.png")));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                imageView1.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_self.png")));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             switch (olPlayRoom.getMode()) {
                 case 2:
                     olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;
@@ -404,8 +402,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             } else {
                 imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_e" + i8e + ".png")));
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -434,6 +431,4 @@ public final class PlayerImageAdapter extends BaseAdapter {
         imageView.setBackgroundResource(Consts.filledKuang[i2]);
         return view;
     }
-
-
 }

@@ -604,7 +604,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 new JPDialog(this)
                         .setTitle(getString(R.string.msg_this_is_what))
                         .setMessage(getString(R.string.ol_screen_change))
-                        .setFirstButton("旋转",(dialogInterface, num) -> runOnUiThread(this::changeScreenOrientation))
+                        .setFirstButton("确定",(dialogInterface, num) -> runOnUiThread(this::changeScreenOrientation))
                         .setSecondButton("取消", new DialogDismissClick())
                         .showDialog();
                 return;
@@ -627,11 +627,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("isfavo", 1);
                 int result = sqlitedatabase.update("jp_data", contentValues, "path = '" + songPath + "'", null);
+                if (result > 0) {
+                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
+                }
                 contentValues.clear();
                 moreSongs.dismiss();
                 m3756h();
-                Toast.makeText(this, result > 0 ? String.format("已将[%s]添加进本地收藏", songNameText.getText())
-                        : String.format("您已添加[%s]收藏，无需再次添加", songNameText.getText()), Toast.LENGTH_SHORT).show();
                 return;
             case R.id.type_l:
                 m3749b(1);
