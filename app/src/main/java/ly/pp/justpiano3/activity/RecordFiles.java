@@ -50,7 +50,7 @@ public class RecordFiles extends Activity {
             }
             i++;
         }
-        Collections.sort(f4917b, (o1, o2) -> (int) ((long) (o2.get("timelong")) - (long) (o1.get("timelong"))));
+        Collections.sort(f4917b, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
         recordFilesAdapter = new RecordFilesAdapter(f4917b, this);
         f4919d.setAdapter(recordFilesAdapter);
         if (f4917b.size() == 0) {

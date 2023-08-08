@@ -49,7 +49,7 @@ public class ChatFiles extends Activity {
             }
             i++;
         }
-        Collections.sort(f4917b, (o1, o2) -> (int) ((long) (o2.get("timelong")) - (long) (o1.get("timelong"))));
+        Collections.sort(f4917b, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
         chatFilesAdapter = new ChatFilesAdapter(f4917b, this);
         f4919d.setAdapter(chatFilesAdapter);
         if (f4917b.size() == 0) {

@@ -477,7 +477,11 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             autoctv.setOnFocusChangeListener((v, hasFocus) -> {
                 AutoCompleteTextView view = (AutoCompleteTextView) v;
                 if (hasFocus) {
-                    view.showDropDown();
+                    try {
+                        view.showDropDown();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

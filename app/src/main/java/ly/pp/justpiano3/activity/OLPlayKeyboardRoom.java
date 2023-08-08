@@ -640,37 +640,45 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 return;
             case R.id.skin_setting:
-                String path = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-                List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(path);
-                List<String> skinList = new ArrayList<>();
-                skinList.add("原生主题");
-                for (File file : localSkinList) {
-                    skinList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
-                }
-                View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
-                ListView listView = inflate.findViewById(R.id.account_list);
-                JPDialog.JDialog b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
-                listView.setAdapter(new SimpleSkinListAdapter(skinList, localSkinList, layoutInflater, this, b));
-                b.show();
-                if (keyboardSettingPopup != null) {
-                    keyboardSettingPopup.dismiss();
+                try {
+                    String path = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
+                    List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(path);
+                    List<String> skinList = new ArrayList<>();
+                    skinList.add("原生主题");
+                    for (File file : localSkinList) {
+                        skinList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
+                    }
+                    View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
+                    ListView listView = inflate.findViewById(R.id.account_list);
+                    JPDialog.JDialog b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                    listView.setAdapter(new SimpleSkinListAdapter(skinList, localSkinList, layoutInflater, this, b));
+                    b.show();
+                    if (keyboardSettingPopup != null) {
+                        keyboardSettingPopup.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return;
             case R.id.sound_setting:
-                path = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
-                List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(path);
-                List<String> soundList = new ArrayList<>();
-                soundList.add("原生音源");
-                for (File file : localSoundList) {
-                    soundList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
-                }
-                inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
-                listView = inflate.findViewById(R.id.account_list);
-                b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
-                listView.setAdapter(new SimpleSoundListAdapter(soundList, localSoundList, layoutInflater, this, b));
-                b.show();
-                if (keyboardSettingPopup != null) {
-                    keyboardSettingPopup.dismiss();
+                try {
+                    String path = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
+                    List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(path);
+                    List<String> soundList = new ArrayList<>();
+                    soundList.add("原生音源");
+                    for (File file : localSoundList) {
+                        soundList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
+                    }
+                    View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
+                    ListView listView = inflate.findViewById(R.id.account_list);
+                    JPDialog.JDialog b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                    listView.setAdapter(new SimpleSoundListAdapter(soundList, localSoundList, layoutInflater, this, b));
+                    b.show();
+                    if (keyboardSettingPopup != null) {
+                        keyboardSettingPopup.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return;
             case R.id.keyboard_record:
@@ -715,7 +723,13 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         /* 使用gradle 8以上的推荐写法 有空把上面也优化了 TODO */
         int viewId = view.getId();
         if (viewId == R.id.keyboard_sync_mode_text) {
-            new JPDialog(this).setTitle(getString(R.string.msg_this_is_what)).setMessage(getString(R.string.ol_keyboard_sync_mode_help)).setFirstButton("确定", new DialogDismissClick()).createJDialog().show();
+            try {
+                new JPDialog(this).setTitle(getString(R.string.msg_this_is_what))
+                        .setMessage(getString(R.string.ol_keyboard_sync_mode_help))
+                        .setFirstButton("确定", new DialogDismissClick()).createJDialog().show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if (viewId == R.id.keyboard_sync_mode_orchestrate) {
             keyboardSyncMode = KeyboardSyncModeEnum.ORCHESTRATE;
             if (keyboardSettingPopup != null) {
