@@ -31,8 +31,6 @@ public final class FeedbackTask {
 
     public void execute(String... objects) {
         String url = "http://" + mainMode.get().jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback";
-
-
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder.add("version", mainMode.get().jpApplication.getVersion());
         formBuilder.add("userName", userName);

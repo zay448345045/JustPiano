@@ -51,7 +51,7 @@ public final class UserListPageAdapter extends BaseAdapter {
         ImageView genderImageView = view.findViewById(R.id.friend_sex);
         Button deleteButton = view.findViewById(R.id.friend_dele);
         nameTextView.setText(simpleUser.getName());
-        timeTextView.setText(DateUtil.format(simpleUser.getDate(), DateUtil.TEMPLATE_DEFAULT_CHINESE));
+        timeTextView.setText("屏蔽时间：" + DateUtil.format(simpleUser.getDate(), DateUtil.TEMPLATE_DEFAULT));
         if (simpleUser.getGender().equals("f")) {
             genderImageView.setImageResource(R.drawable.f);
         } else {

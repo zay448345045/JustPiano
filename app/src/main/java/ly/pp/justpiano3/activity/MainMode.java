@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.task.FeedbackTask;
@@ -114,8 +115,14 @@ public class MainMode extends Activity implements OnClickListener {
                 jpdialog.setTitle("反馈");
                 jpdialog.loadInflate(inflate);
                 jpdialog.setFirstButton("提交", (dialog, which) -> {
+                    String userName = textView.getText().toString();
+                    String message = textView2.getText().toString();
+                    if (StringUtil.isNullOrEmpty(userName) || StringUtil.isNullOrEmpty(message)) {
+                        Toast.makeText(this, "昵称或内容不可为空", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     dialog.dismiss();
-                    new FeedbackTask(this, textView.getText().toString(), textView2.getText().toString()).execute();
+                    new FeedbackTask(this, userName, message).execute();
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.showDialog();
