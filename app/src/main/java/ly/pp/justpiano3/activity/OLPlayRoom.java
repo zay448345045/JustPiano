@@ -43,9 +43,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public int cl;
     public SQLiteDatabase sqlitedatabase;
     public Handler handler;
-    public  byte hallID0;
-    public  String hallName;
-    public  String nandu = "";
+    public byte hallID0;
+    public String hallName;
+    public String songPath = "";
     public List<Bundle> friendPlayerList = new ArrayList<>();
     public boolean canNotNextPage;
     public OLPlayRoomHandler olPlayRoomHandler;
@@ -435,7 +435,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
     }
 
-    public String[] mo2864a(String str) {
+    public String[] querySongNameAndDiffByPath(String str) {
         Cursor cursor = null;
         String[] strArr = new String[2];
         Cursor query;
@@ -626,10 +626,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.add_favor:
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("isfavo", 1);
-                sqlitedatabase.update("jp_data", contentValues, "path = '" + nandu + "'", null);
+                int result = sqlitedatabase.update("jp_data", contentValues, "path = '" + songPath + "'", null);
                 contentValues.clear();
                 moreSongs.dismiss();
                 m3756h();
+                Toast.makeText(this, result > 0 ? String.format("已将[%s]添加进本地收藏", songNameText.getText())
+                        : String.format("您已添加[%s]收藏，无需再次添加", songNameText.getText()), Toast.LENGTH_SHORT).show();
                 return;
             case R.id.type_l:
                 m3749b(1);
@@ -1036,7 +1038,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         olRoomSongsAdapter = new OLRoomSongsAdapter(this, this, cursor);
         songNameText = findViewById(R.id.ol_songlist_b);
         if (!jpapplication.getNowSongsName().isEmpty()) {
-            songNameText.setText(mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + mo2864a("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
+            songNameText.setText(querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
         jpapplication.setPlaySongsMode(0);
         // songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());

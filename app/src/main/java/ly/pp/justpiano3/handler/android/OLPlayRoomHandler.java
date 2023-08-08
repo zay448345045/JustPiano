@@ -47,14 +47,13 @@ public final class OLPlayRoomHandler extends Handler {
                 case 1:
                     post(() -> {
                         olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
-                        String str1;
-                        str1 = message.getData().getString("SI");
+                        String str1 = message.getData().getString("SI");
                         if (!str1.isEmpty()) {
                             olPlayRoom.jpapplication.setNowSongsName(str1);
                             int diao = message.getData().getInt("diao");
                             olPlayRoom.setdiao(diao);
                             str1 = "songs/" + str1 + ".pm";
-                            String[] a = olPlayRoom.mo2864a(str1);
+                            String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];
                             if (string != null) {
@@ -70,7 +69,7 @@ public final class OLPlayRoomHandler extends Handler {
                                         }
                                     }
                                     olPlayRoom.playSongs = new PlaySongs(olPlayRoom.jpapplication, str1, null, olPlayRoom, 0, olPlayRoom.getdiao());
-                                    olPlayRoom.nandu = str2;
+                                    olPlayRoom.songPath = str1;
                                 } catch (Exception e) {
                                     return;
                                 }
@@ -150,7 +149,7 @@ public final class OLPlayRoomHandler extends Handler {
                         if (!str1.isEmpty()) {
                             olPlayRoom.jpapplication.setNowSongsName(str1);
                             str1 = "songs/" + str1 + ".pm";
-                            String[] a = olPlayRoom.mo2864a(str1);
+                            String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];
                             if (string != null) {
@@ -169,7 +168,7 @@ public final class OLPlayRoomHandler extends Handler {
                                 }
                                 try {
                                     olPlayRoom.playSongs = new PlaySongs(olPlayRoom.jpapplication, str1, null, olPlayRoom, 0, diao);
-                                    olPlayRoom.nandu = str1;
+                                    olPlayRoom.songPath = str1;
                                 } catch (Exception ignored) {
                                 }
                             }
@@ -195,7 +194,7 @@ public final class OLPlayRoomHandler extends Handler {
                         } else if (!str1.isEmpty()) {
                             olPlayRoom.setdiao(message.getData().getInt("D"));
                             str1 = "songs/" + str1 + ".pm";
-                            String str = olPlayRoom.mo2864a(str1)[0];
+                            String str = olPlayRoom.querySongNameAndDiffByPath(str1)[0];
                             if (str != null) {
                                 olPlayRoom.isOnStart = false;
                                 Intent intent2 = new Intent(olPlayRoom, PianoPlay.class);

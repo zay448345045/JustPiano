@@ -69,7 +69,7 @@ public final class ChattingAdapter extends BaseAdapter {
                 textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[荐]" + string);
                 textView2 = view.findViewById(R.id.ol_msg_text);
-                String[] a = ((OLPlayRoom) activity).mo2864a(str1);
+                String[] a = ((OLPlayRoom) activity).querySongNameAndDiffByPath(str1);
                 if (a[0] != null && a[1] != null) {
                     textView2.setText(string2 + a[0] + "[难度:" + a[1]);
                     textView2.setTextColor(0xffff0000);
