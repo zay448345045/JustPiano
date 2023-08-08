@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.IPUtil;
 
 public class ChangeServer extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -51,8 +53,12 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case R.id.ip_confirm:
-                edit2 = sharedPreferences.edit();
                 String ip = et.getText().toString().trim();
+                if (!IPUtil.isValidIP(ip)) {
+                    Toast.makeText(this, "请填写合法的ip地址", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                edit2 = sharedPreferences.edit();
                 edit2.putString("ip", ip);
                 edit2.putString("ipText", ip);
                 edit2.commit();

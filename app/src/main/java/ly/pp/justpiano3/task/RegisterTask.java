@@ -60,7 +60,7 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
         register.get().jpprogressBar.dismiss();
         switch (Integer.parseInt(str)) {
             case 0:
-                Toast.makeText(register.get(), "注册成功!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(register.get(), "注册成功", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra("name", register.get().account);
                 intent.putExtra("password", register.get().password);
@@ -70,16 +70,17 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
                 register.get().finish();
                 break;
             case 1:
-                Toast.makeText(register.get(), "注册失败,账号已存在!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(register.get(), "注册失败，账号已存在", Toast.LENGTH_SHORT).show();
                 break;
+            case -1:
             case 2:
-                Toast.makeText(register.get(), "注册失败,填写的信息中含有系统无法识别的特殊字符!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(register.get(), "注册失败，填写的信息中含有系统无法识别的特殊字符", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
-                Toast.makeText(register.get(), "注册失败,网络错误!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(register.get(), "注册失败，网络错误", Toast.LENGTH_SHORT).show();
                 break;
             case 4:
-                Toast.makeText(register.get(), "注册失败,昵称已存在!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(register.get(), "注册失败，昵称已存在", Toast.LENGTH_SHORT).show();
                 break;
         }
         register.get().jpprogressBar.dismiss();

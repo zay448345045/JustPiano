@@ -50,9 +50,9 @@ public class Register extends Activity implements OnClickListener {
         } else if (view == registerButton) {
             account = accountTextView.getText().toString();
             password = password1TextView.getText().toString();
-            String f4931e = password2TextView.getText().toString();
+            String confirmPassword = password2TextView.getText().toString();
             kitiName = kitiNameTextView.getText().toString();
-            if (account.isEmpty() || password.isEmpty() || f4931e.isEmpty() || kitiName.isEmpty() || sex.isEmpty()) {
+            if (account.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || kitiName.isEmpty() || sex.isEmpty()) {
                 Toast.makeText(this, "请将资料填写完整!", Toast.LENGTH_SHORT).show();
             } else if (account.length() < 3 || account.length() > 12) {
                 Toast.makeText(this, "账号应在3到12个字符之间", Toast.LENGTH_SHORT).show();
@@ -60,12 +60,10 @@ public class Register extends Activity implements OnClickListener {
                 Toast.makeText(this, "昵称应在2到8个字符之间", Toast.LENGTH_SHORT).show();
             } else if (password.length() < 5) {
                 Toast.makeText(this, "密码应大于5个字符", Toast.LENGTH_SHORT).show();
-            } else if (password.equals(f4931e)) {
-                if ((account.replaceAll("[a-z]*[A-Z]*\\d*-*_*\\s*", "").length() == 0 ? 1 : 0) == 0) {
+            } else if (password.equals(confirmPassword)) {
+                if (!account.replaceAll("[a-z]*[A-Z]*\\d*_*", "").isEmpty()) {
                     Toast.makeText(this, "账号只能由字母，数字和下划线组成!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if ((Pattern.compile("['@{}/\"\t]").matcher(kitiName).find() ? 1 : 0) != 0) {
+                } else if (Pattern.compile("['@{}/\"\t]").matcher(kitiName).find()) {
                     Toast.makeText(this, "昵称请不要使用['@{}/\"]这些字符", Toast.LENGTH_SHORT).show();
                 } else {
                     new RegisterTask(this).execute();
