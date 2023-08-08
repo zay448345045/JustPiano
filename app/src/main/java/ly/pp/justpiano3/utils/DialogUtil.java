@@ -28,7 +28,7 @@ public class DialogUtil {
                         throw new RuntimeException();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(context, "请填写合法的正数!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请填写合法的正整数!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialog.dismiss();
