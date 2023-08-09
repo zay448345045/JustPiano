@@ -447,19 +447,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     private void initAutoComplete(AutoCompleteTextView autoCompleteTextView) {
         String valueOf = autoCompleteTextView.getText().toString();
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf.replace("'", "\\'") + "%' AND " + onlineCondition, null, null, null, sortStr);
-        MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
-            AutoCompleteTextView view = (AutoCompleteTextView) v;
-            if (hasFocus) {
-                try {
-                    view.showDropDown();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf.replace("'", "''") + "%' AND " + onlineCondition, null, null, null, sortStr);
+        autoCompleteTextHandle(autoCompleteTextView);
     }
 
     @Override
@@ -472,7 +461,11 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     @Override
     public void afterTextChanged(Editable s) {
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString().replace("'", "\\'") + "%' AND " + onlineCondition, null, null, null, sortStr);
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString().replace("'", "''") + "%' AND " + onlineCondition, null, null, null, sortStr);
+        autoCompleteTextHandle(autoctv);
+    }
+
+    private void autoCompleteTextHandle(AutoCompleteTextView autoctv) {
         MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
         autoctv.setAdapter(adapter);
         autoctv.setOnFocusChangeListener((v, hasFocus) -> {

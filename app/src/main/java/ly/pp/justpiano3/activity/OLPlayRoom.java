@@ -653,7 +653,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.ol_search_b:
                 String valueOf = String.valueOf(searchText.getText());
                 searchText.setText("");
-                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf.replace("'", "\\'") + "%'" +
+                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf.replace("'", "''") + "%'" +
                         (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
                 int count = cursor.getCount();
                 if (valueOf.isEmpty()) {

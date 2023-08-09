@@ -1,12 +1,14 @@
 package ly.pp.justpiano3.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,6 +51,11 @@ public class DataSelectView extends LinearLayout {
      * 选择下一个数据 按钮
      */
     private ImageView nextButton;
+
+    /**
+     * 默认展示名称
+     */
+    private String defaultName;
 
     /**
      * 值是否只能为数字
@@ -111,6 +118,10 @@ public class DataSelectView extends LinearLayout {
     }
 
     public DataSelectView setDefaultName(String defaultName) {
+        this.defaultName = defaultName;
+        if (dataEditText != null) {
+            dataEditText.setText(defaultName);
+        }
         List<String> dataNameList = new ArrayList<>(dataNameValueMap.keySet());
         if (TextUtils.isEmpty(defaultName) || !dataNameList.contains(defaultName)) {
             dataListIterator = dataNameList.listIterator();
@@ -191,6 +202,8 @@ public class DataSelectView extends LinearLayout {
 
     private void initView(Context context) {
         setOrientation(LinearLayout.HORIZONTAL);
+        // 指定图片按钮高度
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
 
         // 切换上一个值按钮
         if (preButton == null) {
@@ -198,17 +211,8 @@ public class DataSelectView extends LinearLayout {
         }
         preButton.setImageResource(R.drawable.back_arrow);
         preButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
-        preButton.setOnClickListener(v -> dataEditText.setText(getPreviousDataValue()));
-        addView(preButton, new LayoutParams(0, getMeasuredHeight(), 1));
-
-        // 切换下一个值按钮
-        if (nextButton == null) {
-            nextButton = new ImageView(context);
-        }
-        nextButton.setImageResource(R.drawable.for_arrow);
-        nextButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
-        nextButton.setOnClickListener(v -> dataEditText.setText(getNextDataValue()));
-        addView(nextButton, new LayoutParams(0, getMeasuredHeight(), 1));
+        preButton.setOnClickListener(v -> dataEditText.setText(getPreviousDataName()));
+        addView(preButton, new LayoutParams(0, height, 1));
 
         // 文本框
         if (dataEditText == null) {
@@ -219,6 +223,8 @@ public class DataSelectView extends LinearLayout {
         dataEditText.setClickable(dataEditable);
         dataEditText.setGravity(Gravity.CENTER);
         dataEditText.setTextSize(dataTextSize);
+        dataEditText.setText(defaultName);
+        dataEditText.setPadding(0, 0, 0, 0);
         dataEditText.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
         dataEditText.setTextColor(ContextCompat.getColor(context, R.color.white1));
         dataEditText.addTextChangedListener(new TextWatcher() {
@@ -246,38 +252,45 @@ public class DataSelectView extends LinearLayout {
                 }
             }
         });
-        addView(dataEditText, new LayoutParams(0, getMeasuredHeight(), 2));
+        addView(dataEditText, new LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+        // 切换下一个值按钮
+        if (nextButton == null) {
+            nextButton = new ImageView(context);
+        }
+        nextButton.setImageResource(R.drawable.for_arrow);
+        nextButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
+        nextButton.setOnClickListener(v -> dataEditText.setText(getNextDataName()));
+        addView(nextButton, new LayoutParams(0, height, 1));
     }
 
-    private String getPreviousDataValue() {
+    private String getPreviousDataName() {
         if (dataListIterator.hasPrevious()) {
             return dataListIterator.previous();
         } else if (dataListIterator.hasNext()) {
-            String current = dataListIterator.next();
+            String currentData = dataListIterator.next();
             dataListIterator.previous();
-            return current;
+            return currentData;
         } else {
             return StringUtil.EMPTY_STRING;
         }
     }
 
-    private String getNextDataValue() {
+    private String getNextDataName() {
         if (dataListIterator.hasNext()) {
-            return dataListIterator.next();
+            String currentData = dataListIterator.next();
+            if (dataListIterator.hasNext()) {
+                String nextData = dataListIterator.next();
+                dataListIterator.previous();
+                return nextData;
+            } else {
+                dataListIterator.previous();
+                return currentData;
+            }
         } else if (dataListIterator.hasPrevious()) {
-            String current = dataListIterator.previous();
-            dataListIterator.next();
-            return current;
+            return dataListIterator.previous();
         } else {
             return StringUtil.EMPTY_STRING;
         }
-    }
-
-    public String getCurrentDataName() {
-        return dataEditText.toString();
-    }
-
-    public String getCurrentDataValue() {
-        return dataNameValueMap.containsKey(dataEditText.toString()) ? dataNameValueMap.get(dataEditText.toString()) : dataEditText.toString();
     }
 }
