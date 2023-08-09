@@ -581,8 +581,18 @@ final class ReceiveHandle {
                     case 2:  // 购买服装
                         bundle5.putString("I", changeClothes.getMessage());
                         bundle5.putString("G", String.valueOf(changeClothes.getGold()));
+                        // todo 为什么这个Key是一样的
                         bundle5.putInt("U_T", changeClothes.getBuyClothesType());
                         bundle5.putInt("U_I", changeClothes.getBuyClothesId());
+                        break;
+                    case 3:  // 服务器下发服装价格
+                        message.what = 5;
+                        int[] priseArr = new int[changeClothes.getBuyClothesPricesCount()];
+                        for (int y = 0; y < changeClothes.getBuyClothesPricesCount(); y++) {
+                            priseArr[y] = changeClothes.getBuyClothesPricesList().get(y);
+                        }
+                        bundle5.putInt("C_T", changeClothes.getBuyClothesType());
+                        bundle5.putIntArray("P", priseArr);
                         break;
                 }
                 message.setData(bundle5);

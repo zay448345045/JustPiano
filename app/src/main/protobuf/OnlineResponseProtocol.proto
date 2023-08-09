@@ -669,6 +669,8 @@ message OnlineChangeClothesVO {
     optional uint32 buy_clothes_type = 5;
     // 新购买解锁的服装编号
     optional uint32 buy_clothes_id = 6;
+    // 当前选择编号的价格
+    repeated uint32 buy_clothes_prices = 7;
 }
 
 // 查看好友、私信和主界面查看搭档

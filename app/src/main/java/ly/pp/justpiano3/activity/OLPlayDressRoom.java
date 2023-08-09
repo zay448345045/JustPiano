@@ -29,7 +29,6 @@ import java.util.List;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
@@ -81,6 +80,19 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public int shoesNow = -1;
     private Bitmap body;
     private ConnectionService connectionservice;
+
+    // <editor-fold desc="服装价格常量" defaultstate="collapsed">
+    public static int[] fHair = new int[0];
+    public static int[] mHair = new int[0];
+    public static int[] fEye = new int[0];
+    public static int[] mEye = new int[0];
+    public static  int[] fJacket = new int[0];
+    public static int[] mJacket = new int[0];
+    public static int[] fTrousers = new int[0];
+    public static int[] mTrousers =new int[0];
+    public static int[] fShoes = new int[0];
+    public static int[] mShoes = new int[0];
+    // </editor-fold>
 
     private void setDressAdapter(GridView gridView, List<Bitmap> arrayList, int type) {
         gridView.setAdapter(new DressAdapter(arrayList, this, type));
@@ -253,12 +265,18 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                     tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
                 }
             }
+
             // 商品标签
+            jpprogressBar.show();
             if (intValue == childCount - 1) {
-                jpprogressBar.show();
                 OnlineShopDTO.Builder builder = OnlineShopDTO.newBuilder();
                 builder.setType(1);
                 sendMsg(OnlineProtocolType.SHOP, builder.build());
+            } else {
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
+                builder.setType(3);
+                builder.setBuyClothesType(intValue);
+                sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
             }
         });
         tabhost.setCurrentTab(2);
@@ -283,7 +301,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         do {
             try {
                 bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_h" + count + ".png"));
-                if(bitmap.getByteCount() > 0 ){
+                if (bitmap.getByteCount() > 0) {
                     hairArray.add(bitmap);
                     count++;
                 }
@@ -297,7 +315,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         do {
             try {
                 bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_e" + count + ".png"));
-                if(bitmap.getByteCount() > 0 ){
+                if (bitmap.getByteCount() > 0) {
                     eyeArray.add(bitmap);
                     count++;
                 }
@@ -310,7 +328,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         do {
             try {
                 bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_j" + count + ".png"));
-                if(bitmap.getByteCount() > 0 ){
+                if (bitmap.getByteCount() > 0) {
                     jacketArray.add(bitmap);
                     count++;
                 }
@@ -323,7 +341,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         do {
             try {
                 bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_t" + count + ".png"));
-                if(bitmap.getByteCount() > 0 ){
+                if (bitmap.getByteCount() > 0) {
                     trousersArray.add(bitmap);
                     count++;
                 }
@@ -336,7 +354,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         do {
             try {
                 bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_s" + count + ".png"));
-                if(bitmap.getByteCount() > 0 ){
+                if (bitmap.getByteCount() > 0) {
                     shoesArray.add(bitmap);
                     count++;
                 }

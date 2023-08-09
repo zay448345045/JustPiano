@@ -9,6 +9,7 @@ import ly.pp.justpiano3.JPDialog;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 
@@ -91,6 +92,42 @@ public final class OLPlayDressRoomHandler extends Handler {
                             jpdialog.showDialog();
                         } catch (Exception e) {
                             e.printStackTrace();
+                        }
+                    });
+                    break;
+                case 5:  // 接收服务器下发的服装价格
+                    post(() -> {
+                        olPlayDressRoom.jpprogressBar.dismiss();
+                        Bundle data = message.getData();
+                        int[] prices = data.getIntArray("P");
+                        int clothesType = data.getInt("C_T");
+                        boolean isFemale = "f".equals(olPlayDressRoom.sex);
+                        switch (clothesType) {
+                            case 0:
+                                OLPlayDressRoom.fHair = isFemale ? prices : OLPlayDressRoom.fHair;
+                                OLPlayDressRoom.mHair = !isFemale ? prices : OLPlayDressRoom.mHair;
+                                ((DressAdapter) olPlayDressRoom.hairGridView.getAdapter()).notifyDataSetChanged();
+                                break;
+                            case 1:
+                                OLPlayDressRoom.fEye = isFemale ? prices : OLPlayDressRoom.fEye;
+                                OLPlayDressRoom.mEye = !isFemale ? prices : OLPlayDressRoom.mEye;
+                                ((DressAdapter) olPlayDressRoom.eyeGridView.getAdapter()).notifyDataSetChanged();
+                                break;
+                            case 2:
+                                OLPlayDressRoom.fJacket = isFemale ? prices : OLPlayDressRoom.fJacket;
+                                OLPlayDressRoom.mJacket = !isFemale ? prices : OLPlayDressRoom.mJacket;
+                                ((DressAdapter) olPlayDressRoom.jacketGridView.getAdapter()).notifyDataSetChanged();
+                                break;
+                            case 3:
+                                OLPlayDressRoom.fTrousers = isFemale ? prices : OLPlayDressRoom.fTrousers;
+                                OLPlayDressRoom.mTrousers = !isFemale ? prices : OLPlayDressRoom.mTrousers;
+                                ((DressAdapter) olPlayDressRoom.trousersGridView.getAdapter()).notifyDataSetChanged();
+                                break;
+                            case 4:
+                                OLPlayDressRoom.fShoes = isFemale ? prices : OLPlayDressRoom.fShoes;
+                                OLPlayDressRoom.mShoes = !isFemale ? prices : OLPlayDressRoom.mShoes;
+                                ((DressAdapter) olPlayDressRoom.shoesGridView.getAdapter()).notifyDataSetChanged();
+                                break;
                         }
                     });
                     break;

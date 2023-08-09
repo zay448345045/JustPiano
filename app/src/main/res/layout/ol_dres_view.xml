@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="@string/finish_zero"
+            android:text="@string/finish_infinity"
             android:textColor="@color/white1"
             android:textSize="16sp" />
 

@@ -95,6 +95,7 @@
     <string name="finish_score">分数</string>
     <string name="finish_perfect">暴击</string>
     <string name="finish_zero">0</string>
+    <string name="finish_infinity">∞</string>
     <string name="finish_cool">很棒</string>
     <string name="finish_great">完美</string>
     <string name="finish_bad">一般</string>

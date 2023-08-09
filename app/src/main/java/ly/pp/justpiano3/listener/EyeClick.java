@@ -28,18 +28,23 @@ public final class EyeClick implements OnItemClickListener {
             olPlayDressRoom.eyeImage.setImageBitmap(olPlayDressRoom.eyeArray.get(i));
             olPlayDressRoom.eyeNow = i;
         } else {
+            int[] priceArr = "f".equals(olPlayDressRoom.sex) ? OLPlayDressRoom.fEye : OLPlayDressRoom.mEye;
             JPDialog jpdialog = new JPDialog(olPlayDressRoom);
             jpdialog.setTitle("解锁服装");
-            jpdialog.setMessage("确定花费" + (olPlayDressRoom.sex.equals("f")
-                    ? Consts.fEye[i] : Consts.mEye[i]) + "音符购买此服装吗?");
-            jpdialog.setFirstButton("购买", (dialog, which) -> {
-                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
-                builder.setType(2);
-                builder.setBuyClothesType(1);
-                builder.setBuyClothesId(i);
-                olPlayDressRoom.sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
-                dialog.dismiss();
-            });
+            // 如果为获取到价格，则只允许试穿
+            if (priceArr.length - 1 < i) {
+                jpdialog.setMessage("当前服装无法购买，只能试穿");
+            } else {
+                jpdialog.setMessage("确定花费" + (priceArr[i]) + "音符购买此服装吗?");
+                jpdialog.setFirstButton("购买", (dialog, which) -> {
+                    OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
+                    builder.setType(2);
+                    builder.setBuyClothesType(1);
+                    builder.setBuyClothesId(i);
+                    olPlayDressRoom.sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
+                    dialog.dismiss();
+                });
+            }
             if (olPlayDressRoom.eyeTry.contains(i)) {
                 jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
                     dialog.dismiss();
