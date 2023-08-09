@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,42 +91,19 @@
             android:textSize="28sp"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orientation"
-        android:layout_alignStart="@id/orientation"
-        android:layout_alignEnd="@id/orientation"
-        android:layout_marginTop="@dimen/dimen_9dp"
-        android:background="@drawable/selector_ol_button">
-
-        <ImageView
-            android:id="@+id/note_speed_0"
-            android:layout_width="@dimen/dimen_0dp"
-            android:layout_height="@dimen/dimen_40dp"
-            android:layout_weight="1"
-            android:background="@color/translent"
-            android:src="@drawable/back_arrow"/>
-
-        <TextView
+    <ly.pp.justpiano3.view.DataSelectView
             android:id="@+id/note_speed"
-            android:layout_width="@dimen/dimen_0dp"
-            android:layout_height="@dimen/dimen_40dp"
-            android:layout_weight="2"
-            android:background="@color/translent"
-            android:gravity="center"
-            android:text="@string/ol_hand_list_medium"
-            android:textColor="@color/white1"
-            android:textSize="28sp"/>
-
-        <ImageView
-            android:id="@+id/note_speed_1"
-            android:layout_width="@dimen/dimen_0dp"
-            android:layout_height="@dimen/dimen_40dp"
-            android:layout_weight="1"
-            android:background="@color/translent"
-            android:src="@drawable/for_arrow"/>
-
-    </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/orientation"
+            android:layout_alignStart="@id/orientation"
+            android:layout_alignEnd="@id/orientation"
+            android:layout_marginTop="@dimen/dimen_9dp"
+            android:background="@drawable/selector_ol_button"
+            app:dataEditable="false"
+            app:dataTextSize="28"
+            app:dataNameList="@array/down_entries"
+            app:dataValueList="@array/down_value">
+    </ly.pp.justpiano3.view.DataSelectView>
 
 </RelativeLayout>

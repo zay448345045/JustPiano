@@ -27,7 +27,7 @@ public final class LocalSongsAdapter extends CursorAdapter {
     public static void m3966a(LocalSongsAdapter LocalSongsAdapter, int i) {
         switch (i) {
             case 0:
-                LocalSongsAdapter.melodyselect.mo2784a(LocalSongsAdapter.melodyselect.sqlitedatabase.query("jp_data", null, "isfavo = 1 AND " + LocalSongsAdapter.melodyselect.f4238O + " AND ishot=0 AND " + LocalSongsAdapter.melodyselect.f4238O, null, null, null, LocalSongsAdapter.melodyselect.sortStr));
+                LocalSongsAdapter.melodyselect.mo2784a(LocalSongsAdapter.melodyselect.sqlitedatabase.query("jp_data", null, "isfavo = 1 AND " + LocalSongsAdapter.melodyselect.onlineCondition + " AND ishot=0 AND " + LocalSongsAdapter.melodyselect.onlineCondition, null, null, null, LocalSongsAdapter.melodyselect.sortStr));
                 return;
             case 1:
             case 4:
@@ -35,10 +35,10 @@ public final class LocalSongsAdapter extends CursorAdapter {
             case 6:
             case 5:
             case 3:
-                LocalSongsAdapter.melodyselect.mo2784a(LocalSongsAdapter.melodyselect.sqlitedatabase.query("jp_data", null, "ishot = 0 AND " + LocalSongsAdapter.melodyselect.f4238O + " AND item=?", new String[]{LocalSongsAdapter.melodyselect.f4263s}, null, null, LocalSongsAdapter.melodyselect.sortStr));
+                LocalSongsAdapter.melodyselect.mo2784a(LocalSongsAdapter.melodyselect.sqlitedatabase.query("jp_data", null, "ishot = 0 AND " + LocalSongsAdapter.melodyselect.onlineCondition + " AND item=?", new String[]{LocalSongsAdapter.melodyselect.f4263s}, null, null, LocalSongsAdapter.melodyselect.sortStr));
                 return;
             case 7:
-                LocalSongsAdapter.melodyselect.mo2784a(LocalSongsAdapter.melodyselect.sqlitedatabase.query("jp_data", null, "ishot = 1 AND " + LocalSongsAdapter.melodyselect.f4238O + " AND isfavo=0", new String[]{LocalSongsAdapter.melodyselect.f4263s}, null, null, LocalSongsAdapter.melodyselect.sortStr));
+                LocalSongsAdapter.melodyselect.mo2784a(LocalSongsAdapter.melodyselect.sqlitedatabase.query("jp_data", null, "ishot = 1 AND " + LocalSongsAdapter.melodyselect.onlineCondition + " AND isfavo=0", new String[]{LocalSongsAdapter.melodyselect.f4263s}, null, null, LocalSongsAdapter.melodyselect.sortStr));
                 return;
             default:
         }
@@ -88,11 +88,11 @@ public final class LocalSongsAdapter extends CursorAdapter {
         ratingBar2.setNumStars(5);
         ratingBar2.setClickable(false);
         ratingBar2.setRating(j / 2);
-        melodyselect.f4228E = view.findViewById(R.id.is_new);
+        melodyselect.isNewImageView = view.findViewById(R.id.is_new);
         if (i2 == 1) {
-            melodyselect.f4228E.setImageResource(R.drawable.s_new);
+            melodyselect.isNewImageView.setImageResource(R.drawable.s_new);
         } else {
-            melodyselect.f4228E.setImageResource(R.drawable.null_pic);
+            melodyselect.isNewImageView.setImageResource(R.drawable.null_pic);
         }
     }
 

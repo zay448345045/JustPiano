@@ -118,7 +118,7 @@ public class MainMode extends Activity implements OnClickListener {
                     String userName = textView.getText().toString();
                     String message = textView2.getText().toString();
                     if (StringUtil.isNullOrEmpty(userName) || StringUtil.isNullOrEmpty(message)) {
-                        Toast.makeText(this, "昵称或内容不可为空", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "昵称及内容不可为空", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     dialog.dismiss();

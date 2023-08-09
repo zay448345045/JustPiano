@@ -12,7 +12,6 @@ public interface Consts extends BaseColumns {
     String[] sortNames = new String[]{"名称升序", "名称降序", "最新曲目", "近期弹奏", "难度升序", "难度降序", "得分升序", "得分降序", "时长升序", "时长降序"};
     String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "数据导出", "录音文件"};
     String[] sortSyntax = new String[]{"name asc", "name desc", "isnew desc", "date desc", "diff asc", "diff desc", "score asc", "score desc", "length asc", "length desc"};
-    String[] noteSpeed = new String[]{"神快", "神快", "超快", "很快", "快", "中", "中"};
     String[] hand = new String[]{"右手", "左手"};
     String[] groups = new String[]{"蓝队", "黄队", "红队"};
     String[] coupleType = new String[]{"情侣证书", "基友证书", "百合证书"};

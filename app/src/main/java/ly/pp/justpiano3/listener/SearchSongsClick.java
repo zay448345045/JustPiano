@@ -18,11 +18,9 @@ final class SearchSongsClick implements OnClickListener {
     public void onClick(DialogInterface dialogInterface, int i) {
         if (keyWords.isEmpty()) {
             Toast.makeText(melodySelect, "请输入曲谱的关键字!", Toast.LENGTH_SHORT).show();
-        } else if (keyWords.contains("'")) {
-            Toast.makeText(melodySelect, "关键词中请勿输入单引号!", Toast.LENGTH_SHORT).show();
         } else {
             dialogInterface.dismiss();
-            melodySelect.cursor = melodySelect.sqlitedatabase.query("jp_data", null, "name like '%" + keyWords + "%' AND " + melodySelect.f4238O, null, null, null, melodySelect.sortStr);
+            melodySelect.cursor = melodySelect.sqlitedatabase.query("jp_data", null, "name like '%" + keyWords.replace("'", "\\'") + "%' AND " + melodySelect.onlineCondition, null, null, null, melodySelect.sortStr);
             int count = melodySelect.cursor.getCount();
             if (melodySelect.cursor.getCount() == 0) {
                 Toast.makeText(melodySelect, "未搜索到与 " + keyWords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
