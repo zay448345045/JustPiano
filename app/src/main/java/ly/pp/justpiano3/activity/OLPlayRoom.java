@@ -31,6 +31,7 @@ import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
+import ly.pp.justpiano3.view.DataSelectView;
 import ly.pp.justpiano3.view.ScrollText;
 import org.json.JSONObject;
 import protobuf.dto.*;
@@ -651,13 +652,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_search_b:
                 String valueOf = String.valueOf(searchText.getText());
-                if (valueOf.contains("'")) {
-                    Toast.makeText(this, "关键词中请勿输入单引号!", Toast.LENGTH_SHORT).show();
-                    searchText.setText("");
-                    return;
-                }
                 searchText.setText("");
-                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf + "%'" + (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
+                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf.replace("'", "\\'") + "%'" +
+                        (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
                 int count = cursor.getCount();
                 if (valueOf.isEmpty()) {
                     olRoomSongsAdapter.changeCursor(cursor);
@@ -836,15 +833,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     inflate2.findViewById(R.id.right_hand).setOnClickListener(this);
                     inflate2.findViewById(R.id.shengdiao).setOnClickListener(this);
                     inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
-                    inflate2.findViewById(R.id.note_speed_0).setOnClickListener(this);
-                    inflate2.findViewById(R.id.note_speed_1).setOnClickListener(this);
                     inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
                     popupWindow2.setFocusable(true);
                     popupWindow2.setTouchable(true);
                     popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
-                    TextView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
-                    noteSpeed.setText(Consts.noteSpeed[jpapplication.getDownSpeed()]);
+                    DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
+                    noteSpeed.setDefaultValue(String.valueOf(jpapplication.getDownSpeed()));
+                    noteSpeed.addDataChangeListener((name, value) -> jpapplication.setDownSpeed(Integer.parseInt(value)));
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;
@@ -900,44 +896,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     olPlayRoomHandler.handleMessage(obtainMessage);
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
-                }
-                if (commonModeGroup != null) {
-                    commonModeGroup.dismiss();
-                }
-                return;
-            case R.id.note_speed_0:
-                switch (jpapplication.getDownSpeed()) {
-                    case 1:
-                        jpapplication.setDownSpeed(2);
-                        break;
-                    case 2:
-                        jpapplication.setDownSpeed(3);
-                        break;
-                    case 3:
-                        jpapplication.setDownSpeed(4);
-                        break;
-                    case 4:
-                        jpapplication.setDownSpeed(6);
-                        break;
-                }
-                if (commonModeGroup != null) {
-                    commonModeGroup.dismiss();
-                }
-                return;
-            case R.id.note_speed_1:
-                switch (jpapplication.getDownSpeed()) {
-                    case 2:
-                        jpapplication.setDownSpeed(1);
-                        break;
-                    case 3:
-                        jpapplication.setDownSpeed(2);
-                        break;
-                    case 4:
-                        jpapplication.setDownSpeed(3);
-                        break;
-                    case 6:
-                        jpapplication.setDownSpeed(4);
-                        break;
                 }
                 if (commonModeGroup != null) {
                     commonModeGroup.dismiss();

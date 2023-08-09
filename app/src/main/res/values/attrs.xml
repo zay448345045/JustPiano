@@ -4,4 +4,13 @@
         <attr name="whiteKeyNum" format="integer" />
         <attr name="whiteKeyOffset" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="DataSelectView">
+        <attr name="dataEditable" format="boolean" />
+        <attr name="dataTextSize" format="integer" />
+        <attr name="dataNameList" format="reference" />
+        <attr name="dataValueList" format="reference" />
+        <attr name="dataDefaultName" format="string" />
+        <attr name="dataOnlyNumber" format="boolean" />
+    </declare-styleable>
 </resources>

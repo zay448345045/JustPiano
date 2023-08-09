@@ -34,24 +34,24 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MelodySelect extends Activity implements Callback, TextWatcher, OnClickListener {
+    public final String onlineCondition = "online = 1";
+
     public Handler handler;
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
     public JPProgressBar jpprogressBar;
-    public ImageView f4228E;
-    public String f4231H = "";
-    public String f4238O = "online = 1";
+    public ImageView isNewImageView;
+    public String songItem = "";
     public String songsPath = "";
     public CheckBox isRecord;
     public CheckBox isFollowPlay;
     public CheckBox isLeftHand;
     public AutoCompleteTextView autoctv;
-    public Button f4249e;
+    public Button showOrHideTitleButton;
     public SQLiteDatabase sqlitedatabase;
-    public boolean f4255k;
+    public boolean showTitle;
     public String sortStr = null;
-    public View f4261q;
     public PlaySongs playSongs;
     public String f4263s = "";
     public int f4264t;
@@ -63,8 +63,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     private boolean firstLoadFocusFinish;
     private PopupWindow sortPopupwindow = null;
     private PopupWindow menuPopupwindow = null;
-    private TextView f4237N;
-    private int f4244U;
+    private TextView timeText;
+    private int intentFlag;
     private ListView songListView;
     private LocalSongsAdapter songListAdapter;
     public ly.pp.justpiano3.SQLiteHelper SQLiteHelper;
@@ -135,8 +135,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 int i = data.getInt("selIndex");
                 sortButton.setText(sortNamesList.get(i));
                 sortStr = Consts.sortSyntax[i];
-                if (!f4231H.isEmpty() && songListAdapter != null && sqlitedatabase != null) {
-                    mo2784a(sqlitedatabase.query("jp_data", null, "ishot = 0 and " + f4238O + " and item=?", new String[]{f4231H}, null, null, sortStr));
+                if (!songItem.isEmpty() && songListAdapter != null && sqlitedatabase != null) {
+                    mo2784a(sqlitedatabase.query("jp_data", null, "ishot = 0 and " + onlineCondition + " and item=?", new String[]{songItem}, null, null, sortStr));
                 }
                 sortPopupwindow.dismiss();
                 break;
@@ -187,8 +187,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 break;
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
-                if (f4237N != null) {
-                    f4237N.setText(format);
+                if (timeText != null) {
+                    timeText.setText(format);
                     break;
                 }
                 break;
@@ -227,7 +227,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             playSongs = null;
         }
         Intent intent;
-        if (f4244U == 10) {
+        if (intentFlag == 10) {
             intent = new Intent();
             intent.setClass(this, MainMode.class);
             startActivity(intent);
@@ -249,7 +249,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 return;
             case R.id.search_fast:
                 autoctv.clearFocus();
-                cursor = sqlitedatabase.query("jp_data", null, "name like '%" + autoctv.getText().toString() + "%' AND " + f4238O, null, null, null, sortStr);
+                cursor = sqlitedatabase.query("jp_data", null, "name like '%" + autoctv.getText().toString() + "%' AND " + onlineCondition, null, null, null, sortStr);
                 mo2784a(cursor);
                 try {
                     ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -269,7 +269,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        f4244U = getIntent().getFlags();
+        intentFlag = getIntent().getFlags();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         sortStr = Consts.sortSyntax[0];
         jpapplication = (JPApplication) getApplication();
@@ -280,7 +280,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             layoutInflater2 = LayoutInflater.from(this);
             SQLiteHelper = new SQLiteHelper(this, "data");
             sqlitedatabase = SQLiteHelper.getWritableDatabase();
-            cursor = sqlitedatabase.query("jp_data", null, f4238O, null, null, null, null);
+            cursor = sqlitedatabase.query("jp_data", null, onlineCondition, null, null, null, null);
             while (cursor.moveToNext()) {
                 score += cursor.getInt(cursor.getColumnIndexOrThrow("score"));
             }
@@ -314,7 +314,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             autoctv.addTextChangedListener(this);
             initAutoComplete(autoctv);
             isRecord = findViewById(R.id.check_record);
-            if (f4244U == 10) {
+            if (intentFlag == 10) {
                 isRecord.setVisibility(View.GONE);
             } else {
                 isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -324,7 +324,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 });
             }
             isFollowPlay = findViewById(R.id.check_play);
-            if (f4244U == 10) {
+            if (intentFlag == 10) {
                 isFollowPlay.setVisibility(View.GONE);
             } else {
                 isFollowPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -334,7 +334,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 });
             }
             isLeftHand = findViewById(R.id.check_hand);
-            if (f4244U == 10) {
+            if (intentFlag == 10) {
                 isLeftHand.setVisibility(View.GONE);
             } else {
                 isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -354,32 +354,31 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 f4264t = position;
                 view.setSelected(true);
                 if (position == 0) {
-                    f4231H = "";
-                    query = sqlitedatabase.query("jp_data", null, "isfavo = 1 AND " + f4238O, null, null, null, sortStr);
+                    songItem = "";
+                    query = sqlitedatabase.query("jp_data", null, "isfavo = 1 AND " + onlineCondition, null, null, null, sortStr);
                 } else {
-                    f4231H = Consts.items[position];
-                    query = sqlitedatabase.query("jp_data", null, "ishot = 0 AND " + f4238O + " AND item=?", new String[]{f4231H}, null, null, sortStr);
+                    songItem = Consts.items[position];
+                    query = sqlitedatabase.query("jp_data", null, "ishot = 0 AND " + onlineCondition + " AND item=?", new String[]{songItem}, null, null, sortStr);
                 }
                 mo2784a(query);
                 f4263s = Consts.items[position];
-                f4261q = view;
             });
             titleTextView = findViewById(R.id.title_bar);
             titleTextView.setVisibility(View.GONE);
-            f4237N = findViewById(R.id.time_text);
-            if (f4255k) {
+            timeText = findViewById(R.id.time_text);
+            if (showTitle) {
                 titleTextView.setVisibility(View.VISIBLE);
             }
-            f4249e.setOnClickListener(v -> {
-                if (f4255k) {
+            showOrHideTitleButton.setOnClickListener(v -> {
+                if (showTitle) {
                     titleTextView.setVisibility(View.GONE);
-                    f4255k = false;
-                    f4249e.setText("显示标题");
+                    showTitle = false;
+                    showOrHideTitleButton.setText("显示标题");
                     return;
                 }
                 titleTextView.setVisibility(View.GONE);
-                f4255k = true;
-                f4249e.setText("隐藏标题");
+                showTitle = true;
+                showOrHideTitleButton.setText("隐藏标题");
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -448,14 +447,17 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     private void initAutoComplete(AutoCompleteTextView autoCompleteTextView) {
         String valueOf = autoCompleteTextView.getText().toString();
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf + "%' AND " + f4238O, null, null, null, sortStr);
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf.replace("'", "\\'") + "%' AND " + onlineCondition, null, null, null, sortStr);
         MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
             AutoCompleteTextView view = (AutoCompleteTextView) v;
             if (hasFocus) {
-
-                view.showDropDown();
+                try {
+                    view.showDropDown();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -470,26 +472,24 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (!autoctv.getText().toString().contains("'")) {
-            cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString() + "%' AND " + f4238O, null, null, null, sortStr);
-            MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
-            autoctv.setAdapter(adapter);
-            autoctv.setOnFocusChangeListener((v, hasFocus) -> {
-                AutoCompleteTextView view = (AutoCompleteTextView) v;
-                if (hasFocus) {
-                    try {
-                        view.showDropDown();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString().replace("'", "\\'") + "%' AND " + onlineCondition, null, null, null, sortStr);
+        MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
+        autoctv.setAdapter(adapter);
+        autoctv.setOnFocusChangeListener((v, hasFocus) -> {
+            AutoCompleteTextView view = (AutoCompleteTextView) v;
+            if (hasFocus) {
+                try {
+                    view.showDropDown();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+            }
+        });
     }
 
     public Cursor search(String str) {
         str = str.replace("'", "''");
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + str + "%' AND " + f4238O, null, null, null, sortStr);
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + str + "%' AND " + onlineCondition, null, null, null, sortStr);
         return cursor;
     }
 }

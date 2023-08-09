@@ -10,7 +10,7 @@
         <ListPreference
             android:defaultValue="6"
             android:dialogTitle="音块下落速率"
-            android:entries="@array/down_nentries"
+            android:entries="@array/down_entries"
             android:entryValues="@array/down_value"
             android:key="down_speed"
             android:summary="设置音块的滑落速度，会影响弹奏难度，可根据个人习惯进行调整"
