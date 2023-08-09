@@ -79,12 +79,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public int jacketNow = -1;
     public int trousersNow = -1;
     public int shoesNow = -1;
-    public int hairNum = 0;
-    public int eyeNum = 0;
-    public int jacketNum = 0;
     private Bitmap body;
-    private int trousersNum = 0;
-    private int shoesNum = 0;
     private ConnectionService connectionservice;
 
     private void setDressAdapter(GridView gridView, List<Bitmap> arrayList, int type) {
@@ -206,19 +201,6 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         level = extras.getInt("Lv");
         shoesNow = extras.getInt("O");
         sex = extras.getString("S");
-        if (sex.equals("f")) {
-            hairNum = Consts.fHair.length;
-            eyeNum = Consts.fEye.length;
-            trousersNum = Consts.fTrousers.length;
-            jacketNum = Consts.fJacket.length;
-            shoesNum = Consts.fShoes.length;
-        } else {
-            hairNum = Consts.mHair.length;
-            eyeNum = Consts.mEye.length;
-            trousersNum = Consts.mTrousers.length;
-            jacketNum = Consts.mJacket.length;
-            shoesNum = Consts.mShoes.length;
-        }
         setContentView(R.layout.olplaydressroom);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
         Button dressOK = findViewById(R.id.ol_dress_ok);
@@ -295,43 +277,75 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         }
         dressMod.setImageBitmap(body);
         dressMod.setColorFilter(-1, Mode.MULTIPLY);
-        int i2 = 0;
-        while (i2 < hairNum) {
+
+        Bitmap bitmap;
+        int count = 0;
+        do {
             try {
-                hairArray.add(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_h" + i2 + ".png")));
-                i2++;
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        }
-        for (i2 = 0; i2 < eyeNum; i2++) {
-            try {
-                eyeArray.add(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_e" + i2 + ".png")));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_h" + count + ".png"));
+                if(bitmap.getByteCount() > 0 ){
+                    hairArray.add(bitmap);
+                    count++;
+                }
             } catch (IOException e) {
+                bitmap = null;
                 e.printStackTrace();
             }
-        }
-        for (i2 = 0; i2 < jacketNum; i2++) {
+        } while (bitmap != null && bitmap.getByteCount() > 0);
+
+        count = 0;
+        do {
             try {
-                jacketArray.add(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_j" + i2 + ".png")));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_e" + count + ".png"));
+                if(bitmap.getByteCount() > 0 ){
+                    eyeArray.add(bitmap);
+                    count++;
+                }
             } catch (IOException e) {
+                bitmap = null;
                 e.printStackTrace();
             }
-        }
-        for (i2 = 0; i2 < trousersNum; i2++) {
+        } while (bitmap != null && bitmap.getByteCount() > 0);
+        count = 0;
+        do {
             try {
-                trousersArray.add(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_t" + i2 + ".png")));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_j" + count + ".png"));
+                if(bitmap.getByteCount() > 0 ){
+                    jacketArray.add(bitmap);
+                    count++;
+                }
             } catch (IOException e) {
+                bitmap = null;
                 e.printStackTrace();
             }
-        }
-        for (i2 = 0; i2 < shoesNum; i2++) {
+        } while (bitmap != null && bitmap.getByteCount() > 0);
+        count = 0;
+        do {
             try {
-                shoesArray.add(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_s" + i2 + ".png")));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_t" + count + ".png"));
+                if(bitmap.getByteCount() > 0 ){
+                    trousersArray.add(bitmap);
+                    count++;
+                }
             } catch (IOException e) {
+                bitmap = null;
                 e.printStackTrace();
             }
-        }
+        } while (bitmap != null && bitmap.getByteCount() > 0);
+        count = 0;
+        do {
+            try {
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_s" + count + ".png"));
+                if(bitmap.getByteCount() > 0 ){
+                    shoesArray.add(bitmap);
+                    count++;
+                }
+            } catch (IOException e) {
+                bitmap = null;
+                e.printStackTrace();
+            }
+        } while (bitmap != null && bitmap.getByteCount() > 0);
+
         hairGridView = findViewById(R.id.ol_hair_grid);
         eyeGridView = findViewById(R.id.ol_eye_grid);
         jacketGridView = findViewById(R.id.ol_jacket_grid);
@@ -381,29 +395,31 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        int i;
-        int i2 = 0;
-        for (i = 0; i < hairNum; i++) {
-            hairArray.get(i).recycle();
+        for (Bitmap bitmap : hairArray) {
+            bitmap.recycle();
         }
         hairArray.clear();
-        for (i = 0; i < eyeNum; i++) {
-            eyeArray.get(i).recycle();
+
+        for (Bitmap bitmap : eyeArray) {
+            bitmap.recycle();
         }
         eyeArray.clear();
-        for (i = 0; i < jacketNum; i++) {
-            jacketArray.get(i).recycle();
+
+        for (Bitmap bitmap : jacketArray) {
+            bitmap.recycle();
         }
         jacketArray.clear();
-        for (i = 0; i < trousersNum; i++) {
-            trousersArray.get(i).recycle();
+
+        for (Bitmap bitmap : trousersArray) {
+            bitmap.recycle();
         }
         trousersArray.clear();
-        while (i2 < shoesNum) {
-            shoesArray.get(i2).recycle();
-            i2++;
+
+        for (Bitmap bitmap : shoesArray) {
+            bitmap.recycle();
         }
         shoesArray.clear();
+
         body.recycle();
         JPStack.pop(this);
         super.onDestroy();
