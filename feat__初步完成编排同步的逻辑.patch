@@ -1,0 +1,88 @@
+Subject: [PATCH] feat: 初步完成编排同步的逻辑
+---
+Index: app/src/main/java/ly/pp/justpiano3/activity/OLPlayKeyboardRoom.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ly/pp/justpiano3/activity/OLPlayKeyboardRoom.java b/app/src/main/java/ly/pp/justpiano3/activity/OLPlayKeyboardRoom.java
+--- a/app/src/main/java/ly/pp/justpiano3/activity/OLPlayKeyboardRoom.java	(revision cdebc5732029da226cb0b9e8fd4e17be1e7bea5c)
++++ b/app/src/main/java/ly/pp/justpiano3/activity/OLPlayKeyboardRoom.java	(date 1691662184453)
+@@ -41,6 +41,7 @@
+ import java.text.SimpleDateFormat;
+ import java.util.*;
+ import java.util.concurrent.*;
++import java.util.stream.Collectors;
+ 
+ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, OnClickListener, View.OnTouchListener, OLPlayRoomInterface, MidiConnectionListener {
+ 
+@@ -298,14 +299,15 @@
+ 
+             case CONCERTO:
+                 // 协奏模式
+-                byte[] notes = new byte[4];
++                List<Long> notes = new ArrayList<>();
+                 // 字节数组开头，存入是否开启midi键盘和楼号
+-                notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
+-                notes[1] = (byte) 0;
+-                notes[2] = (byte) pitch;
+-                notes[3] = (byte) volume;
++                notes.add((long) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1));
++                // 如果是协奏模式则给-1标志位
++                notes.add(-1L);
++                notes.add((long) pitch);
++                notes.add((long) volume);
+                 OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+-                builder.setData(ByteString.copyFrom(notes));
++                builder.addAllData(notes);
+                 sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
+                 break;
+         }
+@@ -1216,9 +1218,9 @@
+                 }
+                 try {
+                     long timeLast = lastNoteScheduleTime;
+-                    byte[] notes = new byte[size * 3 + 1];
++                    List<Long> notes = new ArrayList<>();
+                     // 字节数组开头，存入是否开启midi键盘和楼号
+-                    notes[0] = (byte) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1);
++                    notes.add((long) (((midiFramer == null ? 0 : 1) << 4) + roomPositionSub1));
+                     int i = 1;
+                     int pollIndex = size;
+                     // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
+@@ -1229,14 +1231,14 @@
+                             break;
+                         }
+                         // 记录并发问题：到下面i++时触发越界，可见队列size已经在并发环境下变化，必须在里面再判断一次size
+-                        notes[i++] = (byte) (olNote.getAbsoluteTime() - timeLast);
+-                        notes[i++] = (byte) olNote.getPitch();
+-                        notes[i++] = (byte) olNote.getVolume();
++                        notes.add((olNote.getAbsoluteTime() - timeLast));
++                        notes.add((long) olNote.getPitch());
++                        notes.add((long) olNote.getVolume());
+                         // 切换时间点
+                         timeLast = olNote.getAbsoluteTime();
+                     }
+                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+-                    builder.setData(ByteString.copyFrom(notes));
++                    builder.addAllData(notes);
+                     sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
+                     if (olKeyboardStates[roomPositionSub1].isPlaying()) {
+                         olKeyboardStates[roomPositionSub1].setPlaying(false);
+Index: app/src/main/protobuf/OnlineRequestProtocol.proto
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/protobuf/OnlineRequestProtocol.proto b/app/src/main/protobuf/OnlineRequestProtocol.proto
+--- a/app/src/main/protobuf/OnlineRequestProtocol.proto	(revision cdebc5732029da226cb0b9e8fd4e17be1e7bea5c)
++++ b/app/src/main/protobuf/OnlineRequestProtocol.proto	(date 1691660647991)
+@@ -356,7 +356,7 @@
+ // 键盘模式传输音符数据
+ message OnlineKeyboardNoteDTO {
+   // 传输数据
+-  bytes data = 1;
++  repeated sint64 data = 1;
+ }
+ 
+ // 等级考试
