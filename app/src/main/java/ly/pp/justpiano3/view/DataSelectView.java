@@ -283,7 +283,7 @@ public class DataSelectView extends LinearLayout {
             dataListIterator.previous();
             return currentData;
         } else {
-            return StringUtil.EMPTY_STRING;
+            return defaultName;
         }
     }
 
@@ -304,7 +304,7 @@ public class DataSelectView extends LinearLayout {
         } else if (dataListIterator.hasPrevious()) {
             return dataListIterator.previous();
         } else {
-            return StringUtil.EMPTY_STRING;
+            return defaultName;
         }
     }
 }
