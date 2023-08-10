@@ -81,7 +81,7 @@
             android:layout_below="@id/right_hand"
             android:layout_alignStart="@id/right_hand"
             android:layout_alignEnd="@id/right_hand"
-            android:layout_marginTop="@dimen/dimen_9dp"
+            android:layout_marginTop="@dimen/dimen_3dp"
             android:layout_marginBottom="@dimen/dimen_3dp"
             android:layout_toEndOf="@+id/jiangdiao"
             android:background="@drawable/selector_ol_button"
@@ -94,16 +94,17 @@
     <ly.pp.justpiano3.view.DataSelectView
             android:id="@+id/note_speed"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_40dp"
             android:layout_below="@id/orientation"
             android:layout_alignStart="@id/orientation"
             android:layout_alignEnd="@id/orientation"
-            android:layout_marginTop="@dimen/dimen_9dp"
+            android:layout_marginTop="@dimen/dimen_3dp"
             android:background="@drawable/selector_ol_button"
             app:dataEditable="false"
-            app:dataTextSize="28"
+            app:dataTextSize="26"
+            app:dataTextColor="@color/white1"
+            app:dataDefaultName="中"
             app:dataNameList="@array/down_entries"
-            app:dataValueList="@array/down_value">
-    </ly.pp.justpiano3.view.DataSelectView>
+            app:dataValueList="@array/down_value"/>
 
 </RelativeLayout>

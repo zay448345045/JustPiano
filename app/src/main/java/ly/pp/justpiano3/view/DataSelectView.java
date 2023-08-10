@@ -1,21 +1,18 @@
 package ly.pp.justpiano3.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 
 import java.util.*;
@@ -68,7 +65,7 @@ public class DataSelectView extends LinearLayout {
     private EditText dataEditText;
 
     /**
-     * 是否可编辑文本框
+     * 文本框是否可编辑
      */
     private boolean dataEditable;
 
@@ -78,6 +75,11 @@ public class DataSelectView extends LinearLayout {
     private int dataTextSize;
 
     /**
+     * 文字展示颜色
+     */
+    private int dataTextColor;
+
+    /**
      * 数据变化 监听器
      */
     public interface DataChangeListener {
@@ -85,52 +87,93 @@ public class DataSelectView extends LinearLayout {
         /**
          * 数值改变时调用
          */
-        void onDataChange(String name, String value);
+        void onDataChange(DataSelectView view, String name, String value);
     }
 
     /**
-     * 监听器列表
+     * 触发调整到上一个数据 监听器
      */
-    private final List<DataChangeListener> dataChangeListenerList = new ArrayList<>();
+    public interface DataChangePreListener {
+        /**
+         * 数值改变时调用
+         */
+        void onDataChangePre(DataSelectView view, String name, String value);
+    }
+
+    /**
+     * 触发调整到下一个数据 监听器
+     */
+    public interface DataChangeNextListener {
+        /**
+         * 数值改变时调用
+         */
+        void onDataChangeNext(DataSelectView view, String name, String value);
+    }
+
+    /**
+     * 值改变时的监听器
+     */
+    private DataChangeListener dataChangeListener;
 
     /**
      * 添加监听器
      */
-    public void addDataChangeListener(DataChangeListener dataChangeListener) {
-        dataChangeListenerList.add(dataChangeListener);
+    public void setDataChangeListener(DataChangeListener dataChangeListener) {
+        this.dataChangeListener = dataChangeListener;
+    }
+
+    public DataSelectView setDataChangePreListener(DataChangePreListener dataChangePreListener) {
+        if (preButton != null) {
+            preButton.setOnClickListener(v -> dataChangePreListener.onDataChangePre(this, getCurrentDataName(), getDataValue()));
+        }
+        return this;
+    }
+
+    public DataSelectView setDataChangeNextListener(DataChangeNextListener dataChangeNextListener) {
+        if (nextButton != null) {
+            nextButton.setOnClickListener(v -> dataChangeNextListener.onDataChangeNext(this, getCurrentDataName(), getDataValue()));
+        }
+        return this;
     }
 
     /**
      * 设置数据
-     * 如果数据顺序要求严格，请保证入参Map有序，如使用LinkedHashMap
      */
     public DataSelectView setDataNameAndValue(Map<String, String> dataNameValueMap) {
         return setDataNameAndValue(dataNameValueMap, null);
     }
 
-    /**
-     * 设置数据
-     * 如果数据顺序要求严格，请保证入参Map有序，如使用LinkedHashMap
-     */
+    public DataSelectView setCurrentDataName(List<String> dataNameList) {
+        return setCurrentDataName(dataNameList, null);
+    }
+
+    public String getCurrentDataName() {
+        return dataEditText.getText().toString();
+    }
+
+    public String getDataValue() {
+        if (dataNameValueMap == null) {
+            dataNameValueMap = Collections.emptyMap();
+        }
+        return dataNameValueMap.containsKey(getCurrentDataName()) ? dataNameValueMap.get(getCurrentDataName()) : getCurrentDataName();
+    }
+
     public DataSelectView setDataNameAndValue(Map<String, String> dataNameValueMap, String defaultName) {
         this.dataNameValueMap = dataNameValueMap;
         return setDefaultName(defaultName);
     }
 
+    public DataSelectView setCurrentDataName(List<String> dataNameList, String defaultName) {
+        Map<String, String> dataNameValueMap = new LinkedHashMap<>();
+        for (String name : dataNameList) {
+            dataNameValueMap.put(name, name);
+        }
+        return setDataNameAndValue(dataNameValueMap, defaultName);
+    }
+
     public DataSelectView setDefaultName(String defaultName) {
         this.defaultName = defaultName;
-        if (dataEditText != null) {
-            dataEditText.setText(defaultName);
-        }
-        if (dataNameValueMap == null) {
-            dataNameValueMap = Collections.emptyMap();
-        }
-        List<String> dataNameList = new ArrayList<>(dataNameValueMap.keySet());
-        if (TextUtils.isEmpty(defaultName) || !dataNameList.contains(defaultName)) {
-            dataListIterator = dataNameList.listIterator();
-        } else {
-            dataListIterator = dataNameList.listIterator(dataNameList.indexOf(defaultName));
-        }
+        setCurrentDataName(defaultName);
         return this;
     }
 
@@ -151,6 +194,20 @@ public class DataSelectView extends LinearLayout {
      */
     public DataSelectView setDataTextSize(int dataTextSize) {
         this.dataTextSize = dataTextSize;
+        if (dataEditText != null) {
+            dataEditText.setTextSize(dataTextSize);
+        }
+        return this;
+    }
+
+    /**
+     * 设置字体颜色
+     */
+    public DataSelectView setDataTextColor(int dataTextColor) {
+        this.dataTextColor = dataTextColor;
+        if (dataEditText != null) {
+            dataEditText.setTextColor(dataTextColor);
+        }
         return this;
     }
 
@@ -159,11 +216,32 @@ public class DataSelectView extends LinearLayout {
      */
     public DataSelectView setDataEditable(boolean dataEditable) {
         this.dataEditable = dataEditable;
+        if (dataEditText != null) {
+            dataEditText.setFocusable(dataEditable);
+            dataEditText.setFocusableInTouchMode(dataEditable);
+            dataEditText.setClickable(dataEditable);
+        }
         return this;
     }
 
     public DataSelectView setDataOnlyNumber(boolean dataOnlyNumber) {
         this.dataOnlyNumber = dataOnlyNumber;
+        return this;
+    }
+
+    public DataSelectView setCurrentDataName(String dataName) {
+        if (dataEditText != null) {
+            dataEditText.setText(dataName);
+        }
+        if (dataNameValueMap == null) {
+            dataNameValueMap = Collections.emptyMap();
+        }
+        List<String> dataNameList = new ArrayList<>(dataNameValueMap.keySet());
+        if (TextUtils.isEmpty(dataName) || !dataNameList.contains(dataName)) {
+            dataListIterator = dataNameList.listIterator();
+        } else {
+            dataListIterator = dataNameList.listIterator(dataNameList.indexOf(dataName));
+        }
         return this;
     }
 
@@ -188,6 +266,7 @@ public class DataSelectView extends LinearLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DataSelectView);
         setDataEditable(typedArray.getBoolean(R.styleable.DataSelectView_dataEditable, Boolean.FALSE));
         setDataTextSize(typedArray.getInteger(R.styleable.DataSelectView_dataTextSize, DEFAULT_TEXT_SIZE));
+        setDataTextColor(typedArray.getColor(R.styleable.DataSelectView_dataTextColor, Color.WHITE));
         setDataOnlyNumber(typedArray.getBoolean(R.styleable.DataSelectView_dataOnlyNumber, Boolean.FALSE));
         String dataDefaultName = typedArray.getString(R.styleable.DataSelectView_dataDefaultName);
         int dataValueResourceId = typedArray.getResourceId(R.styleable.DataSelectView_dataValueList, -1);
@@ -208,70 +287,69 @@ public class DataSelectView extends LinearLayout {
 
     private void initView(Context context) {
         setOrientation(LinearLayout.HORIZONTAL);
-        // 指定图片按钮高度
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
 
         // 切换上一个值按钮
         if (preButton == null) {
             preButton = new ImageView(context);
+            preButton.setImageResource(R.drawable.back_arrow);
+            preButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
+            setDataChangePreListener((view, name, value) -> view.setCurrentDataName(getPreviousDataName()));
+            addView(preButton, new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
         }
-        preButton.setImageResource(R.drawable.back_arrow);
-        preButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
-        preButton.setOnClickListener(v -> dataEditText.setText(getPreviousDataName()));
-        addView(preButton, new LayoutParams(0, height, 1));
 
         // 文本框
         if (dataEditText == null) {
             dataEditText = new EditText(context);
+            setDataEditable(dataEditable);
+            dataEditText.setGravity(Gravity.CENTER);
+            setDataTextSize(dataTextSize);
+            setDataTextColor(dataTextColor);
+            setCurrentDataName(defaultName);
+            dataEditText.setPadding(0, 0, 0, 0);
+            dataEditText.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
+            dataEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // 文字改变前的操作
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // 文字改变中的操作
+                    if (dataOnlyNumber && !TextUtils.isEmpty(s) && !TextUtils.isDigitsOnly(s)) {
+                        dataEditText.setText(s.toString().replaceAll("\\D+", ""));
+                        dataEditText.setSelection(dataEditText.getText().length());
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    // 文字改变后的操作
+                    if (dataNameValueMap == null) {
+                        dataNameValueMap = Collections.emptyMap();
+                    }
+                    if (dataChangeListener != null) {
+                        dataChangeListener.onDataChange(DataSelectView.this, editable.toString(),
+                                dataNameValueMap.containsKey(editable.toString()) ? dataNameValueMap.get(editable.toString()) : editable.toString());
+                    }
+                }
+            });
+            addView(dataEditText, new LayoutParams(0, LayoutParams.MATCH_PARENT, 2));
         }
-        dataEditText.setFocusable(dataEditable);
-        dataEditText.setFocusableInTouchMode(dataEditable);
-        dataEditText.setClickable(dataEditable);
-        dataEditText.setGravity(Gravity.CENTER);
-        dataEditText.setTextSize(dataTextSize);
-        dataEditText.setText(defaultName);
-        dataEditText.setPadding(0, 0, 0, 0);
-        dataEditText.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
-        dataEditText.setTextColor(ContextCompat.getColor(context, R.color.white1));
-        dataEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // 文字改变前的操作
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // 文字改变中的操作
-                if (dataOnlyNumber && !TextUtils.isEmpty(s) && !TextUtils.isDigitsOnly(s)) {
-                    dataEditText.setText(s.toString().replaceAll("\\D+", ""));
-                    dataEditText.setSelection(dataEditText.getText().length());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (dataNameValueMap == null) {
-                    dataNameValueMap = Collections.emptyMap();
-                }
-                // 文字改变后的操作
-                for (DataChangeListener dataChangeListener : dataChangeListenerList) {
-                    dataChangeListener.onDataChange(editable.toString(), dataNameValueMap.containsKey(editable.toString())
-                            ? dataNameValueMap.get(editable.toString()) : editable.toString());
-                }
-            }
-        });
-        addView(dataEditText, new LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
 
         // 切换下一个值按钮
         if (nextButton == null) {
             nextButton = new ImageView(context);
+            nextButton.setImageResource(R.drawable.for_arrow);
+            nextButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
+            setDataChangeNextListener((view, name, value) -> view.setCurrentDataName(getNextDataName()));
+            addView(nextButton, new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
         }
-        nextButton.setImageResource(R.drawable.for_arrow);
-        nextButton.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
-        nextButton.setOnClickListener(v -> dataEditText.setText(getNextDataName()));
-        addView(nextButton, new LayoutParams(0, height, 1));
     }
 
+    /**
+     * 根据当前迭代器获取前一个元素
+     */
     private String getPreviousDataName() {
         if (dataListIterator == null) {
             dataListIterator = Collections.emptyListIterator();
@@ -287,6 +365,9 @@ public class DataSelectView extends LinearLayout {
         }
     }
 
+    /**
+     * 根据当前迭代器获取后一个元素
+     */
     private String getNextDataName() {
         if (dataListIterator == null) {
             dataListIterator = Collections.emptyListIterator();

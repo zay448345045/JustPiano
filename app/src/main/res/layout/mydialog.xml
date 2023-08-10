@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+              android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@drawable/style_dialog"
               android:minWidth="@dimen/dimen_330dp"
               android:orientation="vertical">
@@ -41,7 +41,6 @@
                     android:textSize="14sp"/>
         </ScrollView>
 
-
         <EditText
                 android:id="@+id/Etext"
                 android:layout_width="match_parent"
@@ -54,6 +53,16 @@
                 android:textSize="14sp"
                 android:textColor="@color/white1"
                 android:visibility="gone"/>
+
+        <ly.pp.justpiano3.view.GoldConvertView
+                android:id="@+id/gold_convert"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_80dp"
+                android:visibility="gone"
+                app:stepChangeValue="2"
+                app:defaultValue="0"
+                app:topGoldConvertText="消耗音符:"
+                app:bottomGoldConvertText="好友获得:"/>
 
         <RadioGroup
                 android:id="@+id/Rgroup"

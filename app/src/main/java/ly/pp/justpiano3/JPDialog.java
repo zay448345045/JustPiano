@@ -9,9 +9,11 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.*;
+import ly.pp.justpiano3.view.GoldConvertView;
 
 public final class JPDialog {
     private EditText editText;
+    private GoldConvertView goldConvertView;
     private RadioGroup radioGroup;
     private View inflate;
     private final Context context;
@@ -138,6 +140,10 @@ public final class JPDialog {
         return editText.getText().toString();
     }
 
+    public GoldConvertView getGoldConvertView() {
+        return goldConvertView;
+    }
+
     public JPDialog setSecondButton(String str, OnClickListener onClickListener) {
         negativeText = str;
         listener = onClickListener;
@@ -156,6 +162,15 @@ public final class JPDialog {
                 clearFocusNotAle(window);
             }
         } catch (Exception ignore) {
+        }
+    }
+
+    public void setVisibleGoldConvertView(boolean visible) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        if (visible) {
+            goldConvertView = (inflate.findViewById(R.id.gold_convert));
+            goldConvertView.setVisibility(View.VISIBLE);
         }
     }
 
