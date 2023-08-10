@@ -122,6 +122,9 @@ public class DataSelectView extends LinearLayout {
         if (dataEditText != null) {
             dataEditText.setText(defaultName);
         }
+        if (dataNameValueMap == null) {
+            dataNameValueMap = Collections.emptyMap();
+        }
         List<String> dataNameList = new ArrayList<>(dataNameValueMap.keySet());
         if (TextUtils.isEmpty(defaultName) || !dataNameList.contains(defaultName)) {
             dataListIterator = dataNameList.listIterator();
@@ -132,6 +135,9 @@ public class DataSelectView extends LinearLayout {
     }
 
     public DataSelectView setDefaultValue(String defaultValue) {
+        if (dataNameValueMap == null) {
+            dataNameValueMap = Collections.emptyMap();
+        }
         for (Map.Entry<String, String> nameValueEntry : dataNameValueMap.entrySet()) {
             if (Objects.equals(nameValueEntry.getValue(), defaultValue)) {
                 return setDefaultName(nameValueEntry.getKey());
@@ -244,7 +250,9 @@ public class DataSelectView extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i("afterTextChanged", "afterTextChanged: " + editable.toString());
+                if (dataNameValueMap == null) {
+                    dataNameValueMap = Collections.emptyMap();
+                }
                 // 文字改变后的操作
                 for (DataChangeListener dataChangeListener : dataChangeListenerList) {
                     dataChangeListener.onDataChange(editable.toString(), dataNameValueMap.containsKey(editable.toString())
