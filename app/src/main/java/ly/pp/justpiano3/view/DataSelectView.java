@@ -273,6 +273,9 @@ public class DataSelectView extends LinearLayout {
     }
 
     private String getPreviousDataName() {
+        if (dataListIterator == null) {
+            dataListIterator = Collections.emptyListIterator();
+        }
         if (dataListIterator.hasPrevious()) {
             return dataListIterator.previous();
         } else if (dataListIterator.hasNext()) {
@@ -285,6 +288,9 @@ public class DataSelectView extends LinearLayout {
     }
 
     private String getNextDataName() {
+        if (dataListIterator == null) {
+            dataListIterator = Collections.emptyListIterator();
+        }
         if (dataListIterator.hasNext()) {
             String currentData = dataListIterator.next();
             if (dataListIterator.hasNext()) {
