@@ -238,8 +238,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             jpdialog.setMessage(string2);
                             jpdialog.setFirstButton(str, new DialogDismissClick());
                         }
-                        DialogUtil.handleGoldSend(olPlayHallRoom, olPlayHallRoom.jpApplication, jpdialog,
-                                data.getInt("T"), data.getString("N"), string2);
+                        DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
                         try {
                             jpdialog.showDialog();
                         } catch (Exception ignored) {

@@ -294,8 +294,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         jpdialog.setTitle(string);
                         jpdialog.setMessage(string2);
                         jpdialog.setFirstButton("确定", new DialogDismissClick());
-                        DialogUtil.handleGoldSend(olPlayKeyboardRoom, olPlayKeyboardRoom.jpapplication, jpdialog,
-                                data.getInt("T"), data.getString("N"), string2);
+                        DialogUtil.handleGoldSend(olPlayKeyboardRoom.jpapplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
                         jpdialog.showDialog();
                     });
                     return;

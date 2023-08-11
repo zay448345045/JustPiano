@@ -357,8 +357,7 @@ public final class OLPlayRoomHandler extends Handler {
                         jpdialog.setTitle(string);
                         jpdialog.setMessage(string2);
                         jpdialog.setFirstButton("确定", new DialogDismissClick());
-                        DialogUtil.handleGoldSend(olPlayRoom, olPlayRoom.jpapplication, jpdialog,
-                                data.getInt("T"), data.getString("N"), string2);
+                        DialogUtil.handleGoldSend(olPlayRoom.jpapplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
                         jpdialog.showDialog();
                     });
                     return;

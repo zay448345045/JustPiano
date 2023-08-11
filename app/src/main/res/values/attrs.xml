@@ -9,6 +9,7 @@
         <attr name="dataEditable" format="boolean" />
         <attr name="dataTextSize" format="integer" />
         <attr name="dataTextColor" format="color" />
+        <attr name="dataTextBackground" format="reference" />
         <attr name="dataNameList" format="reference" />
         <attr name="dataValueList" format="reference" />
         <attr name="dataDefaultName" format="string" />
@@ -16,6 +17,7 @@
     </declare-styleable>
 
     <declare-styleable name="GoldConvertView">
+        <attr name="textBackground" format="reference" />
         <attr name="stepChangeValue" format="float" />
         <attr name="topGoldConvertText" format="string" />
         <attr name="bottomGoldConvertText" format="string" />

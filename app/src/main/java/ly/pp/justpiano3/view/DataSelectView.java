@@ -80,6 +80,11 @@ public class DataSelectView extends LinearLayout {
     private int dataTextColor;
 
     /**
+     * 文本框背景
+     */
+    private int dataTextBackground;
+
+    /**
      * 数据变化 监听器
      */
     public interface DataChangeListener {
@@ -212,6 +217,17 @@ public class DataSelectView extends LinearLayout {
     }
 
     /**
+     * 设置文本框背景
+     */
+    public DataSelectView setDataTextBackground(int dataTextBackground) {
+        this.dataTextBackground = dataTextBackground;
+        if (dataEditText != null) {
+            dataEditText.setBackgroundResource(dataTextBackground);
+        }
+        return this;
+    }
+
+    /**
      * 设置数据是否可编辑
      */
     public DataSelectView setDataEditable(boolean dataEditable) {
@@ -269,6 +285,10 @@ public class DataSelectView extends LinearLayout {
         setDataTextColor(typedArray.getColor(R.styleable.DataSelectView_dataTextColor, Color.WHITE));
         setDataOnlyNumber(typedArray.getBoolean(R.styleable.DataSelectView_dataOnlyNumber, Boolean.FALSE));
         String dataDefaultName = typedArray.getString(R.styleable.DataSelectView_dataDefaultName);
+        int dataTextBackgroundResId = typedArray.getResourceId(R.styleable.DataSelectView_dataTextBackground, -1);
+        if (dataTextBackgroundResId != -1) {
+            setDataTextBackground(dataTextBackgroundResId);
+        }
         int dataValueResourceId = typedArray.getResourceId(R.styleable.DataSelectView_dataValueList, -1);
         int dataNameResourceId = typedArray.getResourceId(R.styleable.DataSelectView_dataNameList, -1);
         if (dataValueResourceId != -1 && dataNameResourceId != -1) {
@@ -305,8 +325,8 @@ public class DataSelectView extends LinearLayout {
             setDataTextSize(dataTextSize);
             setDataTextColor(dataTextColor);
             setCurrentDataName(defaultName);
+            setDataTextBackground(dataTextBackground);
             dataEditText.setPadding(0, 0, 0, 0);
-            dataEditText.setBackgroundColor(ContextCompat.getColor(context, R.color.translent));
             dataEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {

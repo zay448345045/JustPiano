@@ -782,6 +782,8 @@ message OnlineDialogVO {
     string password = 8;
     // 是否可进入大厅
     bool can_enter = 9;
+    // 业务自定义数据
+    string biz_data = 10;
 }
 
 // 每日奖励

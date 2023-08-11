@@ -48,6 +48,11 @@ public class GoldConvertView extends LinearLayout {
     private Pair<String, String> goldConvertText;
 
     /**
+     * 转换器文本框背景
+     */
+    private int textBackground;
+
+    /**
      * 监听开启开关
      */
     private Pair<AtomicBoolean, AtomicBoolean> listenerEnable;
@@ -73,8 +78,7 @@ public class GoldConvertView extends LinearLayout {
         BigDecimal convertToActual(BigDecimal showValue);
     }
 
-    public static class DefaultGoldValueConvertRule implements GoldValueConvertRule {
-
+    public static final GoldValueConvertRule DEFAULT_GOLD_VALUE_CONVERT_RULE_INSTANCE = new GoldValueConvertRule() {
         @Override
         public BigDecimal convertToShow(BigDecimal actualValue) {
             return actualValue;
@@ -84,9 +88,7 @@ public class GoldConvertView extends LinearLayout {
         public BigDecimal convertToActual(BigDecimal showValue) {
             return showValue;
         }
-    }
-
-    public static final DefaultGoldValueConvertRule DEFAULT_GOLD_VALUE_CONVERT_RULE_INSTANCE = new DefaultGoldValueConvertRule();
+    };
 
     public GoldConvertView setStepChangeValue(float stepChangeValue) {
         this.stepChangeValue = new BigDecimal(stepChangeValue);
@@ -173,6 +175,15 @@ public class GoldConvertView extends LinearLayout {
         return this;
     }
 
+    public GoldConvertView setTextBackground(int textBackground) {
+        this.textBackground = textBackground;
+        if (goldSelectViewPair != null) {
+            goldSelectViewPair.first.setDataTextBackground(textBackground);
+            goldSelectViewPair.second.setDataTextBackground(textBackground);
+        }
+        return this;
+    }
+
     public GoldConvertView(Context context) {
         this(context, null);
     }
@@ -196,6 +207,10 @@ public class GoldConvertView extends LinearLayout {
         setDefaultActualValue(typedArray.getFloat(R.styleable.GoldConvertView_defaultValue, 0));
         setGoldConvertText(typedArray.getString(R.styleable.GoldConvertView_topGoldConvertText),
                 typedArray.getString(R.styleable.GoldConvertView_bottomGoldConvertText));
+        int textBackgroundResId = typedArray.getResourceId(R.styleable.GoldConvertView_textBackground, -1);
+        if (textBackgroundResId != -1) {
+            setTextBackground(textBackgroundResId);
+        }
         typedArray.recycle();
     }
 
@@ -209,7 +224,7 @@ public class GoldConvertView extends LinearLayout {
             addView(createGoldSelectLayout(context, goldSelectViewPair.second, false), new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
         }
         if (listenerEnable == null) {
-            listenerEnable = Pair.create(new AtomicBoolean(Boolean.FALSE), new AtomicBoolean(Boolean.FALSE));
+            listenerEnable = Pair.create(new AtomicBoolean(Boolean.TRUE), new AtomicBoolean(Boolean.TRUE));
         }
 
         // 初始化货币默认转换规则
@@ -231,7 +246,7 @@ public class GoldConvertView extends LinearLayout {
     }
 
     private DataSelectView createGoldSelectView(Context context) {
-        return new DataSelectView(context).setDataTextColor(ContextCompat.getColor(context, R.color.white1))
+        return new DataSelectView(context).setDataTextColor(ContextCompat.getColor(context, R.color.white1)).setDataTextBackground(textBackground)
                 .setDataTextSize(26).setDataEditable(true).setDataOnlyNumber(true).setDefaultName(defaultActualValue.toString());
     }
 }
