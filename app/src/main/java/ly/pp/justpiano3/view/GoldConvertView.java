@@ -53,9 +53,14 @@ public class GoldConvertView extends LinearLayout {
     private int textBackground;
 
     /**
-     * 监听开启开关
+     * 监听开启开关，防止互相监听导致死循环
      */
     private Pair<AtomicBoolean, AtomicBoolean> listenerEnable;
+
+    /**
+     * 是否为根据按钮修改值
+     */
+    private Pair<AtomicBoolean, AtomicBoolean> valueChangeByButton;
 
     /**
      * 操纵货币数值选择范围的按钮时，改变的货币数量
@@ -113,34 +118,56 @@ public class GoldConvertView extends LinearLayout {
 
         // 配置货币转换监听
         goldSelectViewPair.first.setDataChangeListener((view, name, value) -> {
-            if (!listenerEnable.first.get()) {
-                listenerEnable.first.set(Boolean.TRUE);
+            // 防止两个文本框互相监听导致死循环，需要原子锁来控制
+            if (listenerEnable.first.compareAndSet(Boolean.FALSE, Boolean.TRUE)) {
                 return;
             }
-            actualValue = goldValueConvertRulePair.first.convertToActual(StringUtil.isNullOrEmpty(name) ? defaultActualValue : new BigDecimal(name));
-            Log.i("stepPlusActualValue", "actualValue: " + actualValue);
-            updateConvertShow(goldSelectViewPair.second, goldValueConvertRulePair.second, listenerEnable.second);
-            listenerEnable.second.set(Boolean.FALSE);
+            listenerEnable.second.compareAndSet(Boolean.TRUE, Boolean.FALSE);
+
+            // 如果是通过按下按钮改变的文字值，则直接取按下按钮后更新好的实际值
+            // 如果是通过输入文本改变的文字值，则需要根据文本内容重新计算实际值
+            if (valueChangeByButton.first.compareAndSet(Boolean.TRUE, Boolean.FALSE)) {
+                goldSelectViewPair.second.setCurrentDataName(goldValueConvertRulePair.second.convertToShow(GoldConvertView.this.actualValue).toString());
+            } else {
+                BigDecimal actualValue = goldValueConvertRulePair.first.convertToActual(StringUtil.isNullOrEmpty(name) ? defaultActualValue : new BigDecimal(name));
+                goldSelectViewPair.second.setCurrentDataName(goldValueConvertRulePair.second.convertToShow(actualValue).toString());
+                this.actualValue = actualValue;
+            }
         });
-        goldSelectViewPair.first.setDataChangePreListener((view, name, value) ->
-                view.setCurrentDataName(goldValueConvertRule1.convertToShow(stepMinusActualValue()).toString()));
-        goldSelectViewPair.first.setDataChangeNextListener((view, name, value) ->
-                view.setCurrentDataName(goldValueConvertRule1.convertToShow(stepPlusActualValue()).toString()));
+        goldSelectViewPair.first.setDataChangePreListener((view, name, value) -> {
+            valueChangeByButton.first.compareAndSet(Boolean.FALSE, Boolean.TRUE);
+            view.setCurrentDataName(goldValueConvertRule1.convertToShow(stepMinusActualValue()).toString());
+        });
+        goldSelectViewPair.first.setDataChangeNextListener((view, name, value) -> {
+            valueChangeByButton.first.compareAndSet(Boolean.FALSE, Boolean.TRUE);
+            view.setCurrentDataName(goldValueConvertRule1.convertToShow(stepPlusActualValue()).toString());
+        });
 
         goldSelectViewPair.second.setDataChangeListener((view, name, value) -> {
-            if (!listenerEnable.second.get()) {
-                listenerEnable.second.set(Boolean.TRUE);
+            // 防止两个文本框互相监听导致死循环，需要原子锁来控制
+            if (listenerEnable.second.compareAndSet(Boolean.FALSE, Boolean.TRUE)) {
                 return;
             }
-            actualValue = goldValueConvertRulePair.second.convertToActual(StringUtil.isNullOrEmpty(name) ? defaultActualValue : new BigDecimal(name));
-            Log.i("stepPlusActualValue", "actualValue: " + actualValue);
-            updateConvertShow(goldSelectViewPair.first, goldValueConvertRulePair.first, listenerEnable.first);
-            listenerEnable.first.set(Boolean.FALSE);
+            listenerEnable.first.compareAndSet(Boolean.TRUE, Boolean.FALSE);
+
+            // 如果是通过按下按钮改变的文字值，则直接取按下按钮后更新好的实际值
+            // 如果是通过输入文本改变的文字值，则需要根据文本内容重新计算实际值
+            if (valueChangeByButton.second.compareAndSet(Boolean.TRUE, Boolean.FALSE)) {
+                goldSelectViewPair.first.setCurrentDataName(goldValueConvertRulePair.first.convertToShow(GoldConvertView.this.actualValue).toString());
+            } else {
+                BigDecimal actualValue = goldValueConvertRulePair.second.convertToActual(StringUtil.isNullOrEmpty(name) ? defaultActualValue : new BigDecimal(name));
+                goldSelectViewPair.first.setCurrentDataName(goldValueConvertRulePair.first.convertToShow(actualValue).toString());
+                this.actualValue = actualValue;
+            }
         });
-        goldSelectViewPair.second.setDataChangePreListener((view, name, value) ->
-                view.setCurrentDataName(goldValueConvertRule2.convertToShow(stepMinusActualValue()).toString()));
-        goldSelectViewPair.second.setDataChangeNextListener((view, name, value) ->
-                view.setCurrentDataName(goldValueConvertRule2.convertToShow(stepPlusActualValue()).toString()));
+        goldSelectViewPair.second.setDataChangePreListener((view, name, value) -> {
+            valueChangeByButton.second.compareAndSet(Boolean.FALSE, Boolean.TRUE);
+            view.setCurrentDataName(goldValueConvertRule2.convertToShow(stepMinusActualValue()).toString());
+        });
+        goldSelectViewPair.second.setDataChangeNextListener((view, name, value) -> {
+            valueChangeByButton.second.compareAndSet(Boolean.FALSE, Boolean.TRUE);
+            view.setCurrentDataName(goldValueConvertRule2.convertToShow(stepPlusActualValue()).toString());
+        });
         return this;
     }
 
@@ -151,7 +178,9 @@ public class GoldConvertView extends LinearLayout {
         if (actualValue == null) {
             actualValue = defaultActualValue;
         }
-        return actualValue.add(stepChangeValue);
+        BigDecimal result = actualValue.add(stepChangeValue);
+        this.actualValue = result;
+        return result;
     }
 
     private BigDecimal stepMinusActualValue() {
@@ -162,12 +191,9 @@ public class GoldConvertView extends LinearLayout {
             actualValue = defaultActualValue;
         }
         BigDecimal subtract = actualValue.subtract(stepChangeValue);
-        return subtract.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : subtract;
-    }
-
-    private void updateConvertShow(DataSelectView view, GoldValueConvertRule rule, AtomicBoolean atomicBoolean) {
-        atomicBoolean.set(Boolean.FALSE);
-        view.setCurrentDataName(rule.convertToShow(actualValue).toString());
+        BigDecimal result = subtract.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : subtract;
+        this.actualValue = result;
+        return result;
     }
 
     public GoldConvertView setDefaultActualValue(float defaultActualValue) {
@@ -225,6 +251,9 @@ public class GoldConvertView extends LinearLayout {
         }
         if (listenerEnable == null) {
             listenerEnable = Pair.create(new AtomicBoolean(Boolean.TRUE), new AtomicBoolean(Boolean.TRUE));
+        }
+        if (valueChangeByButton == null) {
+            valueChangeByButton = Pair.create(new AtomicBoolean(Boolean.FALSE), new AtomicBoolean(Boolean.FALSE));
         }
 
         // 初始化货币默认转换规则

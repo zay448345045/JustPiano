@@ -58,6 +58,7 @@
                 android:id="@+id/gold_convert"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_80dp"
+                android:visibility="gone"
                 app:stepChangeValue="1"
                 app:defaultValue="0"
                 app:topGoldConvertText="消耗音符:"
