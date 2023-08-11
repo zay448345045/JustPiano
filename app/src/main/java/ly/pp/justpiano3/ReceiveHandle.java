@@ -54,7 +54,7 @@ final class ReceiveHandle {
         }
     }
 
-    static void m3949a(int i, OnlineBaseVO msg) throws JSONException {
+    static void m3949a(int i, OnlineBaseVO msg) {
         int i2 = 0;
         Message message = Message.obtain();
         Bundle bundle = new Bundle();
@@ -366,7 +366,10 @@ final class ReceiveHandle {
                         bundle.putInt("H", dialog.getHallId());
                         bundle.putInt("R", dialog.getRoomId());
                         bundle.putString("N", dialog.getName());
-                        bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
+                        try {
+                            bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
+                        } catch (Exception ignore) {
+                        }
                         message.setData(bundle);
                         handler.handleMessage(message);
                     }
