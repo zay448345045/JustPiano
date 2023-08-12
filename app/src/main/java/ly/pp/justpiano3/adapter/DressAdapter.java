@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
-import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
 
@@ -56,11 +55,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
                 } else {
                     int[] arrays = isFemale ? OLPlayDressRoom.fHair : OLPlayDressRoom.mHair;
-                    if (arrays.length - 1 >= i) {
-                        ((TextView) view.findViewById(R.id.ol_dress_price)).setText(String.valueOf(arrays[i]));
-                    }
-                    view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
+                    setPrice(i, view, arrays);
                     if (olPlayDressRoom.hairTry.contains(i)) {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
                     } else {
@@ -75,11 +70,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
                 } else {
                     int[] arrays = isFemale ? OLPlayDressRoom.fEye : OLPlayDressRoom.mEye;
-                    if (arrays.length - 1 >= i) {
-                        ((TextView) view.findViewById(R.id.ol_dress_price)).setText(String.valueOf(arrays[i]));
-                    }
-                    view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
+                    setPrice(i, view, arrays);
                     if (olPlayDressRoom.eyeTry.contains(i)) {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
                     } else {
@@ -94,11 +85,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
                 } else {
                     int[] arrays = isFemale ? OLPlayDressRoom.fJacket : OLPlayDressRoom.mJacket;
-                    if (arrays.length - 1 >= i) {
-                        ((TextView) view.findViewById(R.id.ol_dress_price)).setText(String.valueOf(arrays[i]));
-                    }
-                    view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
+                    setPrice(i, view, arrays);
                     if (olPlayDressRoom.jacketTry.contains(i)) {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
                     } else {
@@ -113,11 +100,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
                 } else {
                     int[] arrays = isFemale ? OLPlayDressRoom.fTrousers : OLPlayDressRoom.mTrousers;
-                    if (arrays.length - 1 >= i) {
-                        ((TextView) view.findViewById(R.id.ol_dress_price)).setText(String.valueOf(arrays[i]));
-                    }
-                    view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
+                    setPrice(i, view, arrays);
                     if (olPlayDressRoom.trousersTry.contains(i)) {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
                     } else {
@@ -132,11 +115,7 @@ public final class DressAdapter extends BaseAdapter {
                     view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_msg);
                 } else {
                     int[] arrays = isFemale ? OLPlayDressRoom.fShoes : OLPlayDressRoom.mShoes;
-                    if (arrays.length - 1 >= i) {
-                        ((TextView) view.findViewById(R.id.ol_dress_price)).setText(String.valueOf(arrays[i]));
-                    }
-                    view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
+                    setPrice(i, view, arrays);
                     if (olPlayDressRoom.shoesTry.contains(i)) {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar_red);
                     } else {
@@ -146,5 +125,15 @@ public final class DressAdapter extends BaseAdapter {
                 break;
         }
         return view;
+    }
+
+    private void setPrice(int index, View view, int[] price) {
+        if (price.length - 1 >= index) {
+            ((TextView) view.findViewById(R.id.ol_dress_price)).setText(String.valueOf(price[index]));
+        } else {
+            ((TextView) view.findViewById(R.id.ol_dress_price)).setText(R.string.finish_infinity);
+        }
+        view.findViewById(R.id.ol_dress_price).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.VISIBLE);
     }
 }
