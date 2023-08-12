@@ -3,6 +3,7 @@ package ly.pp.justpiano3.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -129,7 +130,7 @@ public class GoldConvertView extends LinearLayout {
             if (valueChangeByButton.first.compareAndSet(Boolean.TRUE, Boolean.FALSE)) {
                 goldSelectViewPair.second.setCurrentDataName(goldValueConvertRulePair.second.convertToShow(GoldConvertView.this.actualValue).toString());
             } else {
-                BigDecimal actualValue = goldValueConvertRulePair.first.convertToActual(StringUtil.isNullOrEmpty(name) ? defaultActualValue : new BigDecimal(name));
+                BigDecimal actualValue = goldValueConvertRulePair.first.convertToActual(parseNumberValue(name));
                 goldSelectViewPair.second.setCurrentDataName(goldValueConvertRulePair.second.convertToShow(actualValue).toString());
                 this.actualValue = actualValue;
             }
@@ -155,7 +156,7 @@ public class GoldConvertView extends LinearLayout {
             if (valueChangeByButton.second.compareAndSet(Boolean.TRUE, Boolean.FALSE)) {
                 goldSelectViewPair.first.setCurrentDataName(goldValueConvertRulePair.first.convertToShow(GoldConvertView.this.actualValue).toString());
             } else {
-                BigDecimal actualValue = goldValueConvertRulePair.second.convertToActual(StringUtil.isNullOrEmpty(name) ? defaultActualValue : new BigDecimal(name));
+                BigDecimal actualValue = goldValueConvertRulePair.second.convertToActual(parseNumberValue(name));
                 goldSelectViewPair.first.setCurrentDataName(goldValueConvertRulePair.first.convertToShow(actualValue).toString());
                 this.actualValue = actualValue;
             }
@@ -194,6 +195,19 @@ public class GoldConvertView extends LinearLayout {
         BigDecimal result = subtract.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : subtract;
         this.actualValue = result;
         return result;
+    }
+
+    private BigDecimal parseNumberValue(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return defaultActualValue;
+        } else {
+            String result = name.replaceAll("\\D+", "");
+            if (TextUtils.isEmpty(result)) {
+                return defaultActualValue;
+            } else {
+                return new BigDecimal(result);
+            }
+        }
     }
 
     public GoldConvertView setDefaultActualValue(float defaultActualValue) {
@@ -269,8 +283,12 @@ public class GoldConvertView extends LinearLayout {
         textView.setText(isFirst ? goldConvertText.first : goldConvertText.second);
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(Color.WHITE);
-        linearLayout.addView(textView, new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
-        linearLayout.addView(goldSelectView, new LayoutParams(0, LayoutParams.MATCH_PARENT, 3));
+        LayoutParams layoutParams1 = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+        layoutParams1.setMargins(0, 10, 0, 10);
+        LayoutParams layoutParams2 = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+        layoutParams2.setMargins(0, 10, 0, 10);
+        linearLayout.addView(textView, layoutParams1);
+        linearLayout.addView(goldSelectView, layoutParams2);
         return linearLayout;
     }
 
