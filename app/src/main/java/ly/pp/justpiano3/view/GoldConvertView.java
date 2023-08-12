@@ -285,7 +285,7 @@ public class GoldConvertView extends LinearLayout {
         textView.setTextColor(Color.WHITE);
         LayoutParams layoutParams1 = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
         layoutParams1.setMargins(0, 10, 0, 10);
-        LayoutParams layoutParams2 = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+        LayoutParams layoutParams2 = new LayoutParams(0, LayoutParams.MATCH_PARENT, 2);
         layoutParams2.setMargins(0, 10, 0, 10);
         linearLayout.addView(textView, layoutParams1);
         linearLayout.addView(goldSelectView, layoutParams2);

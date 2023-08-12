@@ -271,6 +271,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             public void onFailure(@NotNull Call call, @NotNull IOException e) { // 请求失败
                 // 回到主线程操纵界面
                 runOnUiThread(() -> {
+                    jpprogressBar.setText(null);
                     jpprogressBar.dismiss();
                     Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
                 });
@@ -296,7 +297,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    runOnUiThread(() -> jpprogressBar.dismiss());
+                    runOnUiThread(() -> {
+                        jpprogressBar.setText(null);
+                        jpprogressBar.dismiss();
+                    });
                 }
             }
         });
