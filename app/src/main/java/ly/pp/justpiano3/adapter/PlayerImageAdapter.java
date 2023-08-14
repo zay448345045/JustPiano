@@ -284,12 +284,6 @@ public final class PlayerImageAdapter extends BaseAdapter {
             olPlayRoom.lv = i3;
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;
-            textView3.setTextColor(olPlayRoom.getResources().getColor(R.color.yellow));
-//            try {
-//                imageView1.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_self.png")));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
             switch (olPlayRoom.getMode()) {
                 case 2:
                     olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;

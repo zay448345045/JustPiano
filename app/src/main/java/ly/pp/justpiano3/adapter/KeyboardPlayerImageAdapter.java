@@ -286,7 +286,6 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             olPlayKeyboardRoom.lv = i3;
             olPlayKeyboardRoom.cl = i4;
             olPlayKeyboardRoom.playerKind = string4;
-            textView3.setTextColor(olPlayKeyboardRoom.getResources().getColor(R.color.yellow));
         }
         int i5 = playerList.get(i).getInt("CP");
         if (i5 >= 0 && i5 <= 3) {
