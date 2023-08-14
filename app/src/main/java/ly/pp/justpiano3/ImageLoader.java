@@ -98,7 +98,7 @@ public class ImageLoader {
             try {
                 mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, DISK_CACHE_SIZE);
                 mIsDiskLruCacheCreated = true;// 标记 此处表示磁盘缓存建立
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -208,7 +208,7 @@ public class ImageLoader {
             // 3、磁盘没有 从网络加载 并下载到磁盘中
             bitmap = loadBitmapFromHttp(uri);
             Log.d(TAG, "loadBitmapFromHttp,url:" + uri);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (bitmap == null && !mIsDiskLruCacheCreated) {
