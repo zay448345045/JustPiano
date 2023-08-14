@@ -42,7 +42,10 @@ public class DialogUtil {
                     return showValue.divide(BigDecimal.ONE.subtract(new BigDecimal(handlingFee)), 0, RoundingMode.UP);
                 }
             });
-            jpDialog.setSecondButton("取消", new DialogDismissClick());
+            jpDialog.setSecondButton("取消", (dialog, which) -> {
+                dialog.dismiss();
+                jpApplication.setIsShowDialog(false);
+            });
             jpDialog.setFirstButton("确定", ((dialog, which) -> {
                 dialog.dismiss();
                 jpApplication.setIsShowDialog(false);
