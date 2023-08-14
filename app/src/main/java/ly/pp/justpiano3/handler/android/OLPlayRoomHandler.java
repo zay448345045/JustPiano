@@ -302,7 +302,7 @@ public final class OLPlayRoomHandler extends Handler {
                 case 10:
                     post(() -> {
                         String name = message.getData().getString("R");
-                        olPlayRoom.bundle0.putString("R", name);
+                        olPlayRoom.getIntent().putExtra("R", name);
                         olPlayRoom.roomName = name;
                         olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomID0 + "]" + olPlayRoom.roomName);
                     });
