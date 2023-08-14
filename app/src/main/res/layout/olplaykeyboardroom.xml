@@ -296,7 +296,7 @@
                                 android:background="@color/back"
                                 android:ems="10"
                                 android:imeOptions="actionDone"
-                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:scrollHorizontally="true"
                                 android:textColor="@color/white1"
                                 android:textSize="14sp" />
