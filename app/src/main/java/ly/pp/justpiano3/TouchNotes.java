@@ -6,15 +6,16 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import ly.pp.justpiano3.view.PlayView;
 
 import java.util.HashMap;
 import java.util.Map;
 
-final class TouchNotes implements OnTouchListener {
+public final class TouchNotes implements OnTouchListener {
     private final PlayView playView;
     private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
-    TouchNotes(PlayView playView) {
+    public TouchNotes(PlayView playView) {
         this.playView = playView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
@@ -33,7 +34,7 @@ final class TouchNotes implements OnTouchListener {
     }
 
     @Override
-    public final boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouch(View view, MotionEvent event) {
         if (playView.startFirstNoteTouching) {
             int action = event.getActionMasked();
             // Track individual fingers.

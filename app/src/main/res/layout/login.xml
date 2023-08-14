@@ -11,24 +11,37 @@
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_14dp"
         android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/TextView02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" 极品钢琴V4.6 "
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:fontFamily="@font/title"
+            android:text="@string/login_title"
             android:textColor="@color/white1"
-            android:textSize="30sp" />
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/TextView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_6dp"
+            android:fontFamily="@font/title"
+            android:text="@string/login_ver"
+            android:textColor="@color/white1"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/TextView01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="浴火重生版"
+            android:fontFamily="@font/title"
+            android:text="@string/login_subtitle"
             android:textColor="@color/yellow_r"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
             android:typeface="sans" />
     </LinearLayout>
 
@@ -37,80 +50,116 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="3dp">
+        android:paddingStart="@dimen/dimen_25dp"
+        android:paddingBottom="@dimen/dimen_20dp">
 
         <TextView
             android:id="@+id/app_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="账号:"
 
+            android:maxLines="1"
+            android:text="@string/login_acc_label"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="160dp"
+        <LinearLayout
+            style="@style/InputBoxStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/search_box"
-            android:textColor="@color/white1"
-            android:textSize="16sp" />
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/username"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen_200dp"
+                android:layout_height="wrap_content"
+                android:hint="输入账号"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_25dp"
+        android:paddingBottom="@dimen/dimen_16dp">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="密码:"
+
+            android:text="@string/login_pwd_label"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="160dp"
+        <LinearLayout
+            style="@style/InputBoxStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/search_box"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:textColor="@color/white1"
-            android:textSize="16sp" />
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/password"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen_200dp"
+                android:layout_height="wrap_content"
+
+                android:hint="输入密码"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6dp">
 
         <CheckBox
             android:id="@+id/chec_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="记住账号 " />
+
+            android:paddingLeft="@dimen/dimen_8dp"
+            android:paddingRight="@dimen/dimen_8dp"
+            android:text="@string/login_rem_acc" />
 
         <CheckBox
             android:id="@+id/chec_psw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="记住密码 " />
+
+            android:paddingLeft="@dimen/dimen_8dp"
+            android:paddingRight="@dimen/dimen_8dp"
+            android:text="@string/login_rem_pwd" />
 
         <CheckBox
             android:id="@+id/chec_autologin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="自动登录" />
+
+            android:paddingLeft="@dimen/dimen_8dp"
+            android:paddingRight="@dimen/dimen_8dp"
+            android:text="@string/login_auto" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="8dp" />
+        android:layout_height="@dimen/dimen_8dp" />
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -122,12 +171,11 @@
             android:id="@+id/ol_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:background="@drawable/selector_ol_button_login"
-            android:text=" 登录 "
+            android:text="@string/login_button"
             android:textColor="#ffffffff"
-            android:textSize="21sp" />
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/ol_register"
@@ -135,14 +183,14 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/ol_login"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/ol_login"
             android:background="@drawable/selector_ol_button"
-            android:text=" 注册 "
+            android:text="@string/reg_button"
             android:textColor="@color/white1"
-            android:textSize="21sp" />
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/ol_change_account"
@@ -150,14 +198,15 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/ol_login"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_8dp"
             android:layout_toEndOf="@+id/ol_register"
             android:background="@drawable/selector_orange_button"
-            android:text="切换账号"
+
+            android:text="@string/login_sw_acc"
             android:textColor="@color/white1"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/ol_change_server"
@@ -167,8 +216,9 @@
             android:layout_alignBottom="@+id/ol_change_account"
             android:layout_toEndOf="@+id/ol_change_account"
             android:background="@drawable/selector_orange_button"
-            android:text="切换服务器"
+
+            android:text="@string/login_sw_svr"
             android:textColor="@color/white1"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>

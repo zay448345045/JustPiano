@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@id/RelativeLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dimen_540dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/filled_box"
+        android:background="@drawable/list"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -21,12 +21,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_4dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/selector_list_c"
+            android:textStyle="bold"
             android:gravity="center"
-            android:text="曲名"
+            android:text="@string/c_view_name"
             android:textColor="@color/white1"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout3"
@@ -43,84 +45,77 @@
                 android:layout_alignStart="@+id/RelativeLayout1"
                 android:layout_alignEnd="@+id/RelativeLayout1"
                 android:cacheColorHint="#00000000"
-                android:divider="@drawable/divider" />
+                android:divider="@null" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/dimen_56dp"
                 android:layout_below="@+id/ol_finish_list"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:orientation="horizontal">
 
                 <View
-                    android:layout_width="10dp"
+                    android:layout_width="@dimen/dimen_10dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5" />
+                    android:layout_weight="1" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayout32"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <Button
-                        android:id="@+id/share_score"
-                        android:layout_width="match_parent"
+                        android:id="@+id/relativeLayout1"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="1">
 
-                        android:background="@drawable/selector_ol_button"
-                        android:text="分享我的战绩"
-                        android:textColor="@color/white1"
-                        android:visibility="invisible" />
+                    <ImageButton
+                            android:id="@+id/ol_share"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:background="#00000000" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/shape_corner"
-                        android:orientation="horizontal">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shape_corner"
+                            android:layout_marginTop="@dimen/dimen_minus_6dp"
+                            android:orientation="horizontal">
 
                         <View
-                            android:layout_width="10dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
+                                android:layout_width="@dimen/dimen_1dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
 
                         <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.4"
-                            android:src="@drawable/share" />
+                                android:layout_width="@dimen/dimen_0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.5"
+                                android:src="@drawable/share" />
 
                         <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.3" />
+                                android:layout_width="@dimen/dimen_0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="2.5"
-                            android:gravity="center"
+                                android:layout_width="@dimen/dimen_0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2.5"
 
-                            android:text="分享"
-                            android:textColor="#ffffffff"
-                            android:textSize="16sp" />
+                                android:gravity="center"
+                                android:text="@string/finish_share"
+                                android:textColor="#ffffffff"
+                                android:textSize="16sp" />
 
                         <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
+                                android:layout_width="@dimen/dimen_1dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
 
                     </LinearLayout>
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
-
                 <RelativeLayout
                     android:id="@+id/relativeLayout2"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
@@ -135,50 +130,49 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/shape_corner"
+                        android:layout_marginTop="@dimen/dimen_minus_6dp"
                         android:orientation="horizontal">
 
                         <View
-                            android:layout_width="1dp"
+                            android:layout_width="@dimen/dimen_1dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1" />
+                            android:layout_weight="0.5" />
 
                         <ImageView
-                            android:layout_width="0dp"
+                            android:layout_width="@dimen/dimen_0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.4"
+                            android:layout_weight="1.5"
                             android:src="@drawable/back" />
 
                         <View
-                            android:layout_width="0dp"
+                            android:layout_width="@dimen/dimen_0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.3" />
+                            android:layout_weight="0.5" />
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="@dimen/dimen_0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2.5"
-                            android:gravity="center"
 
-                            android:text="完成"
+                            android:gravity="center"
+                            android:text="@string/ol_finish_view_ok"
                             android:textColor="#ffffffff"
                             android:textSize="16sp" />
 
                         <View
-                            android:layout_width="1dp"
+                            android:layout_width="@dimen/dimen_1dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
+                            android:layout_weight="0.5" />
 
                     </LinearLayout>
                 </RelativeLayout>
 
                 <View
-                    android:layout_width="10dp"
+                    android:layout_width="@dimen/dimen_10dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
-
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
@@ -191,113 +185,113 @@
 
                 <TextView
                     android:id="@+id/TextView05"
-                    android:layout_width="48sp"
+                    android:layout_width="@dimen/dimen_48dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/TextView09"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="start"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView02"
-                    android:text="很棒 "
+                    android:textStyle="bold"
+                    android:text="@string/finish_cool"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView01"
-                    android:layout_width="48sp"
+                    android:layout_width="@dimen/dimen_48dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/TextView09"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="start"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView05"
-                    android:text="完美 "
+                    android:textStyle="bold"
+                    android:text="@string/finish_great"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView04"
-                    android:layout_width="48sp"
+                    android:layout_width="@dimen/dimen_48dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/TextView09"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="start"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView01"
-                    android:text="一般 "
+                    android:textStyle="bold"
+                    android:text="@string/finish_bad"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView03"
-                    android:layout_width="48sp"
+                    android:layout_width="@dimen/dimen_48dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/TextView09"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="start"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView04"
-                    android:text="失误 "
+                    android:textStyle="bold"
+                    android:text="@string/finish_miss"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView08"
-                    android:layout_width="48sp"
+                    android:layout_width="@dimen/dimen_48dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/TextView09"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="start"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView03"
-                    android:text="连击 "
+                    android:textStyle="bold"
+                    android:text="@string/finish_combo"
                     android:textColor="@color/exit"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView06"
-                    android:layout_width="60sp"
+                    android:layout_width="@dimen/dimen_60dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/TextView09"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView08"
-                    android:text="总分 "
+                    android:textStyle="bold"
+                    android:text="@string/finish_total"
                     android:textColor="@color/online"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView02"
-                    android:layout_width="48sp"
+                    android:layout_width="@dimen/dimen_48dp"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/TextView09"
                     android:layout_alignBottom="@+id/TextView09"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_toEndOf="@+id/TextView09"
+                    android:textStyle="bold"
                     android:gravity="start"
-                    android:text="暴击 "
+                    android:text="@string/finish_perfect"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView09"
-                    android:layout_width="60sp"
+                    android:layout_width="@dimen/dimen_60dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:textStyle="bold"
                     android:gravity="start"
-                    android:text="用户 "
+                    android:text="@string/ol_finish_view_user"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TextView07"
@@ -306,14 +300,12 @@
                     android:layout_alignBaseline="@+id/TextView06"
                     android:layout_alignBottom="@+id/TextView06"
                     android:layout_toEndOf="@+id/TextView06"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text="经验奖励"
+                    android:text="@string/ol_finish_view_exp"
                     android:textColor="@color/settings"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
             </RelativeLayout>
         </RelativeLayout>
-
-
     </RelativeLayout>
 </LinearLayout>

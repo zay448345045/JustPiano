@@ -14,10 +14,10 @@
         android:layout_gravity="center"
         android:layout_marginStart="3dp"
         android:layout_weight="1.4"
+        android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/white1"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/ol_family_pic"
@@ -33,10 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
         android:layout_weight="6"
+        android:textStyle="bold"
         android:gravity="start"
         android:textColor="@color/white1"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/ol_family_count"
@@ -44,10 +44,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
         android:layout_weight="3"
+        android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/white1"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/ol_family_contribution"
@@ -55,8 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
         android:layout_weight="3"
+        android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/white1"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 </LinearLayout>

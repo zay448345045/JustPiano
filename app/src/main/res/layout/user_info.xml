@@ -14,23 +14,23 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/ol_top_tittle"
+            android:id="@+id/ol_top_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/ol_rectangle_orange"
             android:gravity="center"
+            android:background="@drawable/ol_rectangle_orange"
             android:keepScreenOn="true"
-            android:text="-用户资料-"
-            android:textColor="@color/white1"
-            android:textSize="20sp"
             android:textStyle="bold"
+            android:text="@string/user_info_title"
+            android:textSize="20sp"
+            android:textColor="@color/white1"
             android:typeface="monospace" />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="昵称:"
+            android:text="@string/register_name"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/sex"
             android:layout_alignParentStart="true"
-            android:text="生年:"
+            android:text="@string/user_info_birth"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/id"
             android:layout_alignStart="@+id/id"
-            android:text="性别:"
+            android:text="@string/register_sex"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/age"
             android:layout_alignParentStart="true"
-            android:text="总得分:"
+            android:text="@string/user_info_ts"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/score"
             android:layout_alignStart="@+id/score"
-            android:text="冠军数:"
+            android:text="@string/user_info_w"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/num"
             android:layout_alignParentStart="true"
-            android:text="个性签名:"
+            android:text="@string/user_info_si"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
@@ -100,13 +100,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/name"
             android:layout_alignStart="@+id/name"
-            android:text="账号:"
+            android:text="@string/login_acc_label"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/user_kitiname"
             style="@style/ShadowText"
+            android:id="@+id/user_kitiname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/id"
@@ -115,19 +115,19 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/user_num"
             style="@style/ShadowText"
+            android:id="@+id/user_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/sign"
             android:layout_toEndOf="@+id/num"
-            android:text="0"
+            android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/user_name"
             style="@style/ShadowText"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/sex"
@@ -136,53 +136,53 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/user_sex"
             style="@style/ShadowText"
+            android:id="@+id/user_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/sex"
             android:layout_alignBaseline="@+id/sex"
             android:layout_alignBottom="@+id/sex"
-            android:layout_toEndOf="@+id/sex"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/user_score"
             style="@style/ShadowText"
+            android:id="@+id/user_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/num"
             android:layout_toEndOf="@+id/score"
-            android:text="0"
+            android:text="@string/finish_zero"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/user_age"
             style="@style/ShadowText"
+            android:id="@+id/user_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/score"
             android:layout_toEndOf="@+id/age"
-            android:background="@color/blue_translent"
+            android:background="@color/local"
             android:inputType="number"
-            android:text="1990"
+            android:text="@string/user_info_1990"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <ScrollView
             android:id="@+id/ScrollView01"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_80dp"
             android:layout_below="@+id/sign"
             android:layout_alignStart="@+id/sign">
 
             <EditText
-                android:id="@+id/users_info_msg"
                 style="@style/ShadowText"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:background="@color/blue_translent"
+                android:id="@+id/users_info_msg"
+                android:layout_width="@dimen/dimen_240dp"
+                android:layout_height="match_parent"
+                android:background="@color/local"
                 android:textColor="@color/green_r"
                 android:textSize="20sp" />
         </ScrollView>
@@ -193,26 +193,25 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/user_score"
             android:layout_toEndOf="@+id/user_age"
-            android:text="年"
+            android:text="@string/user_info_year"
             android:textColor="@color/yellow_r"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/app_size"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_0dp"
             android:layout_below="@+id/user_face"
-            android:layout_alignEnd="@+id/user_face"
-            android:text="" />
+            android:layout_alignEnd="@+id/user_face"/>
         <!--            android:text="(点击头像设置)"-->
-
 
         <ImageView
             android:id="@+id/user_face"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_alignTop="@+id/user_kitiname"
+            android:layout_width="@dimen/dimen_160dp"
+            android:layout_height="@dimen/dimen_160dp"
+            android:layout_marginStart="@dimen/dimen_72dp"
             android:layout_toEndOf="@+id/ScrollView01"
+            android:layout_alignTop="@+id/user_kitiname"
             android:background="@drawable/ol_rectangle_orange"
             android:src="@drawable/defaultface" />
 
@@ -221,9 +220,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/app_size"
-            android:layout_alignEnd="@+id/app_size"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/selector_orange_button"
-            android:text="修改密码"
+            android:layout_alignEnd="@+id/app_size"
+            android:layout_alignStart="@+id/user_face"
+            android:text="@string/user_info_mod_pass"
             android:textColor="@color/white1"
             android:textSize="24sp" />
 
@@ -232,9 +234,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/password_button"
-            android:layout_alignStart="@+id/password_button"
+            android:layout_alignEnd="@+id/app_size"
+            android:layout_alignStart="@+id/user_face"
             android:background="@drawable/selector_orange_button"
-            android:text="确定修改"
+            android:text="@string/user_info_confirm"
             android:textColor="@color/white1"
             android:textSize="24sp" />
     </RelativeLayout>

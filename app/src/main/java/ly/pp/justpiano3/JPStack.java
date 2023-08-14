@@ -8,17 +8,17 @@ public final class JPStack {
 
     private static Stack<Activity> stack;
 
-    static void pop(Activity activity) {
+    public static void pop(Activity activity) {
         if (activity != null) {
             stack.remove(activity);
         }
     }
 
-    static Activity top() {
+    public static Activity top() {
         return !stack.empty() ? stack.lastElement() : null;
     }
 
-    static void push(Activity activity) {
+    public static void push(Activity activity) {
         if (activity != null) {
             if (stack == null) {
                 stack = new Stack<>();
@@ -27,7 +27,7 @@ public final class JPStack {
         }
     }
 
-    static void clear() {
+    public static void clear() {
         while (stack != null && !stack.empty()) {
             JPStack.pop(JPStack.top());
         }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-final class ReadPm {
+public final class ReadPm {
     private Context context;
     private InputStream inputstream;
     private byte[] noteArray;
@@ -22,12 +22,12 @@ final class ReadPm {
     private int songNameLength = 0;
     private float nandu = 0;
 
-    ReadPm(Context ct, String str) {
+    public ReadPm(Context ct, String str) {
         context = ct;
         createWithSongPath(str);
     }
 
-    ReadPm(byte[] bArr) {
+    public ReadPm(byte[] bArr) {
         if (bArr == null) {
             return;
         }
@@ -180,7 +180,7 @@ final class ReadPm {
         }
     }
 
-    final void loadWithSongPath(Context context, String str) {
+    public void loadWithSongPath(Context context, String str) {
         try {
             inputstream = context.getResources().getAssets().open(str);
         } catch (Exception e) {
@@ -204,7 +204,7 @@ final class ReadPm {
         }
     }
 
-    final void loadWithInputStream(InputStream inputstream) {
+    public void loadWithInputStream(InputStream inputstream) {
         try {
             this.inputstream = inputstream;
             int pmSize = inputstream.available();
@@ -240,39 +240,39 @@ final class ReadPm {
         }
     }
 
-    final byte[] getNoteArray() {
+    public byte[] getNoteArray() {
         return noteArray;
     }
 
-    final byte[] getTickArray() {
+    public byte[] getTickArray() {
         return tickArray;
     }
 
-    final byte[] getTrackArray() {
+    public byte[] getTrackArray() {
         return trackArray;
     }
 
-    final byte[] getVolumeArray() {
+    public byte[] getVolumeArray() {
         return volumeArray;
     }
 
-    final int getPm_2() {
+    public int getPm_2() {
         return pm_2;
     }
 
-    final float getLeftNandu() {
+    public float getLeftNandu() {
         return leftNandu;
     }
 
-    final float getNandu() {
+    public float getNandu() {
         return nandu;
     }
 
-    final String getSongName() {
+    public String getSongName() {
         return songName;
     }
 
-    final int getSongTime() {
+    public int getSongTime() {
         return songTime;
     }
 }

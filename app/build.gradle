@@ -1,18 +1,20 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.protobuf'
+plugins {
+    id "com.google.protobuf"
+    id 'com.android.application'
+}
 
 android {
     compileSdkVersion 30
-    useLibrary 'org.apache.http.legacy'
-    ndkVersion "25.0.8775105"
-
+    ndkVersion "25.2.9519653"
     defaultConfig {
         applicationId "ly.pp.justpiano3"
         minSdkVersion 19
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
-        versionCode 48
-        versionName "4.6"
-
+        versionCode 50
+        versionName "4.7"
+//        renderscriptTargetApi 18
+//        renderscriptSupportModeEnabled true
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++14"
@@ -20,87 +22,96 @@ android {
             }
         }
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
-        config {
-            keyAlias 'as2134u'
-            keyPassword 'as2134.@u'
+        debug {
             storeFile file('../key.jks')
             storePassword 'as2134.@u'
+            keyAlias 'as2134u'
+            keyPassword 'as2134.@u'
+        }
+
+        release {
+            storeFile file('../key.jks')
+            storePassword 'as2134.@u'
+            keyAlias 'as2134u'
+            keyPassword 'as2134.@u'
         }
     }
 
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.debug
         }
-    }
 
-    externalNativeBuild {
-        cmake {
-            path "src/main/cpp/CMakeLists.txt"
-        }
-    }
-
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    sourceSets {
-        main {
-            java {
-                srcDir 'src/main/java'
-            }
-            proto {
-                srcDir 'src/main/protobuf'
-                include '**/*.proto'
+        externalNativeBuild {
+            cmake {
+                path "src/main/cpp/CMakeLists.txt"
             }
         }
-    }
 
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        sourceSets {
+            main {
+                java {
+                    srcDirs += ['src/main/java', 'build/generated/source/proto']
+                }
+                proto {
+                    srcDir 'src/main/protobuf'
+                    include '**/*.proto'
+                }
+            }
+        }
+        buildToolsVersion '30.0.2'
+
+    }
+    buildToolsVersion '30.0.2'
 }
 
 dependencies {
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.annotation:annotation:1.3.0'
     implementation 'javazoom:jlayer:1.0.1'
     implementation 'com.king.anetty:anetty:1.0.3'
-    implementation 'com.google.protobuf:protobuf-java:3.19.4'
-    implementation 'com.android.support:multidex:1.0.3'
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:2.28.2'
+//    protobuf版本号最好和服务端保持一致，降低序列化问题风险
+    implementation 'com.google.protobuf:protobuf-java:3.23.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.19.4'
+        artifact = 'com.google.protobuf:protoc:3.23.0'
     }
-
-    // 默认路径为 build/generated/source/proto
-    // 该目录下会按 buildType 生成 debug / release 目录
-    generatedFilesBaseDir = "$projectDir/src/main/java"
 
     generateProtoTasks {
         all().each { task ->
+            task.outputs.upToDateWhen { false } // always run the task
             task.builtins {
                 java {
-                    outputSubDir = "../"
+                    outputSubDir = '../' // set the output directory to the parent directory
                 }
             }
         }

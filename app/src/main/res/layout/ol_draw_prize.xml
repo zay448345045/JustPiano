@@ -16,26 +16,24 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/ol_prize_pointer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="68dp"
+                android:layout_marginStart="@dimen/dimen_68dp"
                 android:src="@drawable/pointer" />
 
-            <ly.pp.justpiano3.DrawPrize
+            <ly.pp.justpiano3.view.DrawPrizeView
                 android:id="@+id/ol_draw_prize_pan"
-                android:layout_width="160dp"
-                android:layout_height="160dp" />
-
+                android:layout_width="@dimen/dimen_160dp"
+                android:layout_height="@dimen/dimen_160dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ol_prize_layout"
-            android:layout_width="200dp"
+            android:layout_width="@dimen/dimen_200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical">
@@ -45,14 +43,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="奖励"
+
+                android:text="@string/ol_draw_prize_result"
                 android:textColor="@color/white1"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/ol_prize_color"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="@dimen/dimen_20dp"
                 android:background="@color/white1" />
         </LinearLayout>
     </LinearLayout>

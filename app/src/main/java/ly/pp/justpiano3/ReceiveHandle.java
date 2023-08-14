@@ -3,52 +3,18 @@ package ly.pp.justpiano3;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
+import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.Room;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.GZIPUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
+import protobuf.vo.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
-
-import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineChallengeUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineChallengeVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineChangeClothesVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineChangeRoomPositionVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineCoupleVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineDailyTimeUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineDailyVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineDialogVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineFamilyInfoVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineFamilyUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineFamilyVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineFriendUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineHallVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadPlayUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomListVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomPositionVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomUserListVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadRoomUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserCoupleVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserInfoVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserListVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineLoadUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineMailVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineMiniGradeOnVO;
-import ly.pp.justpiano3.protobuf.vo.OnlinePlayFinishVO;
-import ly.pp.justpiano3.protobuf.vo.OnlinePlayGradeVO;
-import ly.pp.justpiano3.protobuf.vo.OnlinePlayUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineRoomChatVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineRoomPositionUserVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineRoomVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineSetMiniGradeVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineSetUserInfoVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineShopProductVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineShopVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineUserInfoDialogVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineUserVO;
 
 final class ReceiveHandle {
 
@@ -96,7 +62,7 @@ final class ReceiveHandle {
         Bundle bundle3;
         Handler handler;
         switch (i) {
-            case 2:
+            case OnlineProtocolType.USER_INFO_DIALOG:
                 OnlineUserInfoDialogVO userInfoDialog = msg.getUserInfoDialog();
                 message.what = 23;
                 bundle.putString("U", userInfoDialog.getName());
@@ -126,7 +92,7 @@ final class ReceiveHandle {
                     ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler.handleMessage(message);
                 }
                 break;
-            case 3:
+            case OnlineProtocolType.PLAY_START:
                 message.what = 5;
                 bundle2 = new Bundle();
                 bundle2.putString("S", msg.getPlayStart().getSongPath());
@@ -140,7 +106,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 5:
+            case OnlineProtocolType.PLAY_FINISH:
                 message.what = 3;
                 OnlinePlayFinishVO playFinish = msg.getPlayFinish();
                 for (OnlinePlayGradeVO playGrade : playFinish.getPlayGradeList()) {
@@ -165,7 +131,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 9:
+            case OnlineProtocolType.KICKED_QUIT_ROOM:
                 message.what = 8;
                 if (JPStack.top() instanceof OLPlayRoom) {
                     ((OLPlayRoom) JPStack.top()).olPlayRoomHandler.handleMessage(message);
@@ -174,7 +140,7 @@ final class ReceiveHandle {
                     ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
                 return;
-            case 13:
+            case OnlineProtocolType.ROOM_CHAT:
                 OnlineRoomChatVO roomChat = msg.getRoomChat();
                 message.what = 2;
                 bundle.putString("U", roomChat.getUserName());
@@ -192,7 +158,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 14:
+            case OnlineProtocolType.CHANGE_ROOM_INFO:
                 message.what = 10;
                 bundle.putString("R", msg.getChangeRoomInfo().getRoomName());
                 message.setData(bundle);
@@ -204,7 +170,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 15:
+            case OnlineProtocolType.PLAY_SONG:
                 try {
                     message.what = 3;
                     bundle2 = new Bundle();
@@ -222,7 +188,7 @@ final class ReceiveHandle {
                     e.printStackTrace();
                 }
                 return;
-            case 17:
+            case OnlineProtocolType.BROADCAST:
 //                try {
 //                    jSONObject3 = new JSONObject(str);
 //                    if (JPStack.top() instanceof OLPlayHallRoom) {
@@ -248,7 +214,7 @@ final class ReceiveHandle {
 //                    return;
 //                }
                 return;
-            case 23:
+            case OnlineProtocolType.LOAD_PLAY_USER:
                 message.what = 1;
                 message.arg1 = 0;
                 OnlineLoadPlayUserVO loadPlayUser = msg.getLoadPlayUser();
@@ -266,7 +232,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 27:
+            case OnlineProtocolType.RECOMMEND_SONG:
                 message.what = 4;
                 bundle.putString("U", msg.getRecommendSong().getName());
                 bundle.putString("M", "推荐歌曲:");
@@ -282,7 +248,7 @@ final class ReceiveHandle {
                     return;
                 }
                 return;
-            case 31:
+            case OnlineProtocolType.SET_USER_INFO:
                 OnlineSetUserInfoVO setUserInfo = msg.getSetUserInfo();
                 int type = setUserInfo.getType();
                 if (type == 3 || type == 4) {
@@ -341,7 +307,7 @@ final class ReceiveHandle {
                     }
                 }
                 break;
-            case 32:
+            case OnlineProtocolType.SET_MINI_GRADE:
                 message.what = 1;
                 message.arg1 = 1;
                 OnlineSetMiniGradeVO setMiniGrade = msg.getSetMiniGrade();
@@ -358,7 +324,7 @@ final class ReceiveHandle {
                     ((PianoPlay) JPStack.top()).pianoPlayHandler.handleMessage(message);
                 }
                 break;
-            case 37:
+            case OnlineProtocolType.DIALOG:
                 OnlineDialogVO dialog = msg.getDialog();
                 type = dialog.getType();
                 handler = null;
@@ -379,19 +345,11 @@ final class ReceiveHandle {
                             handler = ((OLPlayHall) JPStack.top()).olPlayHallHandler;
                             message.what = 9;
                             break;
-                        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                            handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
-                            message.what = 9;
-                            break;
                         }
                         return;
                     case 2:
                         if (JPStack.top() instanceof OLPlayHallRoom) {
                             handler = ((OLPlayHallRoom) JPStack.top()).olPlayHallRoomHandler;
-                            message.what = 5;
-                            break;
-                        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-                            handler = ((OLPlayKeyboardRoom) JPStack.top()).olPlayKeyboardRoomHandler;
                             message.what = 5;
                             break;
                         }
@@ -407,12 +365,17 @@ final class ReceiveHandle {
                         bundle.putInt("C", dialog.getCanEnter() ? 1 : 0);
                         bundle.putInt("H", dialog.getHallId());
                         bundle.putInt("R", dialog.getRoomId());
+                        bundle.putString("N", dialog.getName());
+                        try {
+                            bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
+                        } catch (Exception ignore) {
+                        }
                         message.setData(bundle);
                         handler.handleMessage(message);
                     }
                 }
                 break;
-            case 45:
+            case OnlineProtocolType.COUPLE:
                 message.what = 22;
                 OnlineCoupleVO couple = msg.getCouple();
                 switch (couple.getType()) {
@@ -491,7 +454,7 @@ final class ReceiveHandle {
                 Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                         roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
                         roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
-                olPlayHall.mo2825a(room.getRoomID(), room);
+                olPlayHall.putRoomToMap(room.getRoomID(), room);
                 bundle2.putByte("I", room.getRoomID());
                 bundle2.putString("N", room.getRoomName());
                 bundle2.putIntArray("UA", room.getPeople());
@@ -566,7 +529,7 @@ final class ReceiveHandle {
         int i2;
         Bundle bundle2;
         switch (b) {
-            case 28:
+            case OnlineProtocolType.LOAD_USER:
                 bundle = new Bundle();
                 Bundle bundle3 = new Bundle();
                 message.what = 0;
@@ -606,7 +569,7 @@ final class ReceiveHandle {
                     e.printStackTrace();
                     return;
                 }
-            case 33:
+            case OnlineProtocolType.CHANGE_CLOTHES:
                 OnlineChangeClothesVO changeClothes = msg.getChangeClothes();
                 int type = changeClothes.getType();
                 message.what = type;
@@ -617,13 +580,23 @@ final class ReceiveHandle {
                         break;
                     case 1:  // 进入换衣间加载音符和解锁情况
                         bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                        bundle5.putByteArray("U", GZIP.ZIPToArray(changeClothes.getUnlock()));
+                        bundle5.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
                         break;
                     case 2:  // 购买服装
                         bundle5.putString("I", changeClothes.getMessage());
                         bundle5.putString("G", String.valueOf(changeClothes.getGold()));
+                        // todo 为什么这个Key是一样的
                         bundle5.putInt("U_T", changeClothes.getBuyClothesType());
                         bundle5.putInt("U_I", changeClothes.getBuyClothesId());
+                        break;
+                    case 3:  // 服务器下发服装价格
+                        message.what = 5;
+                        int[] priseArr = new int[changeClothes.getBuyClothesPricesCount()];
+                        for (int y = 0; y < changeClothes.getBuyClothesPricesCount(); y++) {
+                            priseArr[y] = changeClothes.getBuyClothesPricesList().get(y);
+                        }
+                        bundle5.putInt("C_T", changeClothes.getBuyClothesType());
+                        bundle5.putIntArray("P", priseArr);
                         break;
                 }
                 message.setData(bundle5);
@@ -631,7 +604,7 @@ final class ReceiveHandle {
                     ((OLPlayDressRoom) JPStack.top()).olPlayDressRoomHandler.handleMessage(message);
                 }
                 return;
-            case 34:
+            case OnlineProtocolType.LOAD_USER_INFO:
                 bundle = new Bundle();
                 OnlineLoadUserInfoVO loadUserInfo = msg.getLoadUserInfo();
                 type = loadUserInfo.getType();
@@ -686,7 +659,7 @@ final class ReceiveHandle {
                             Bundle bundle6 = new Bundle();
                             bundle6.putString("F", mail.getUserFrom());
                             bundle6.putString("M", mail.getMessage());
-                            String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE).format(new Date(mail.getTime()));
+                            String dateTime = DateUtil.format(new Date(mail.getTime()));
                             bundle6.putString("T", dateTime);
                             bundle6.putInt("type", 0);
                             bundle.putBundle(String.valueOf(i), bundle6);
@@ -722,7 +695,7 @@ final class ReceiveHandle {
                     default:
                         return;
                 }
-            case 36:
+            case OnlineProtocolType.LOAD_USER_LIST:
                 bundle = new Bundle();
                 OnlineLoadUserListVO loadUserList = msg.getLoadUserList();
                 try {
@@ -809,7 +782,7 @@ final class ReceiveHandle {
             if (room.getFCount() + room.getMCount() == 0) {
                 olPlayHall.roomTitleMap.remove(room.getRoomID());
             } else {
-                olPlayHall.mo2825a(room.getRoomID(), room);
+                olPlayHall.putRoomToMap(room.getRoomID(), room);
             }
             Iterator it = olPlayHall.roomTitleMap.values().iterator();
             int i = 0;
@@ -1118,7 +1091,7 @@ final class ReceiveHandle {
                     Bundle bundle = new Bundle();
                     bundle.putInt("R", challenge.getChallengeDialog().getAllowed() ? 1 : 0);
                     bundle.putString("I", challenge.getChallengeDialog().getMessage());
-                    bundle.putString("P", GZIP.ZIPTo(challenge.getChallengeDialog().getSongContent()));
+                    bundle.putString("P", GZIPUtil.ZIPTo(challenge.getChallengeDialog().getSongContent()));
                     message.setData(bundle);
                     olChallenge.challengeHandler.handleMessage(message);
                 }
@@ -1181,13 +1154,12 @@ final class ReceiveHandle {
                         bundle2.putString("S", familyUser.getGender());
                         bundle2.putString("O", String.valueOf(familyUser.getOnline() ? 1 : 0));
                         bundle2.putString("P", String.valueOf(familyUser.getPosition()));
-//                      bundle2.putString("D", familyUser.getLoginDate());
+                        bundle2.putString("D", familyUser.getLoginDate());
                         bundle.putBundle(String.valueOf(i), bundle2);
                         i++;
                     }
                     bundle.putString("D", family.getFamilyEnter().getDeclaration());
-                    String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                            Locale.CHINESE).format(new Date(family.getFamilyEnter().getCreateDate()));
+                    String dateTime = DateUtil.format(new Date(family.getFamilyEnter().getCreateDate()));
                     bundle.putString("T", dateTime);
                     bundle.putString("Z", family.getFamilyEnter().getLeader());
                     bundle.putString("N", family.getFamilyEnter().getName());
@@ -1212,7 +1184,7 @@ final class ReceiveHandle {
                         bundle2.putString("T", String.valueOf(familyInfo.getCapacity()));
                         bundle2.putString("U", String.valueOf(familyInfo.getSize()));
                         bundle2.putString("I", String.valueOf(familyInfo.getFamilyId()));
-                        bundle2.putByteArray("J", GZIP.ZIPToArray(familyInfo.getPicture()));
+                        bundle2.putByteArray("J", GZIPUtil.ZIPToArray(familyInfo.getPicture()));
                         bundle.putBundle(String.valueOf(i), bundle2);
                         i++;
                     }
@@ -1222,7 +1194,7 @@ final class ReceiveHandle {
                     bundle.putString("T", String.valueOf(family.getFamilyList().getCapacity()));
                     bundle.putString("U", String.valueOf(family.getFamilyList().getSize()));
                     bundle.putString("I", String.valueOf(family.getFamilyList().getFamilyId()));
-                    bundle.putByteArray("J", GZIP.ZIPToArray(family.getFamilyList().getPicture()));
+                    bundle.putByteArray("J", GZIPUtil.ZIPToArray(family.getFamilyList().getPicture()));
                     message.setData(bundle);
                     olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
                 }

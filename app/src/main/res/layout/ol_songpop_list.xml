@@ -23,7 +23,8 @@
             android:layout_below="@+id/rand_all"
             android:layout_centerHorizontal="true"
             android:background="@drawable/filled_box"
-            android:text="二星随机"
+
+            android:text="@string/ol_songpop_list_rand_2"
             android:textColor="@color/settings" />
 
         <Button
@@ -33,7 +34,8 @@
             android:layout_below="@+id/rand_3"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="四星随机"
+
+            android:text="@string/ol_songpop_list_rand_4"
             android:textColor="@color/settings" />
 
         <Button
@@ -43,7 +45,8 @@
             android:layout_below="@+id/rand_5"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="五星随机"
+
+            android:text="@string/ol_songpop_list_rand_5"
             android:textColor="@color/settings" />
 
         <Button
@@ -53,7 +56,8 @@
             android:layout_below="@+id/add_favor"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="一星随机"
+
+            android:text="@string/ol_songpop_list_rand_1"
             android:textColor="@color/settings" />
 
         <Button
@@ -63,7 +67,8 @@
             android:layout_below="@+id/rand_0"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="三星随机"
+
+            android:text="@string/ol_songpop_list_rand_3"
             android:textColor="@color/settings" />
 
         <Button
@@ -73,7 +78,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="加入收藏"
+
+            android:text="@string/ol_songpop_list_add_fa"
             android:textColor="@color/settings" />
     </RelativeLayout>
 
@@ -91,7 +97,8 @@
             android:layout_below="@+id/type_j"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="流行影视"
+
+            android:text="@string/ol_songpop_list_pop"
             android:textColor="@color/settings" />
 
         <Button
@@ -101,7 +108,8 @@
             android:layout_below="@+id/type_d"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="红歌儿歌"
+
+            android:text="@string/ol_songpop_list_red"
             android:textColor="@color/settings" />
 
         <Button
@@ -111,7 +119,8 @@
             android:layout_below="@+id/type_e"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="原创作品"
+
+            android:text="@string/ol_songpop_list_ori"
             android:textColor="@color/settings" />
 
         <Button
@@ -121,7 +130,8 @@
             android:layout_below="@+id/favor"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="经典乐章"
+
+            android:text="@string/ol_songpop_list_classic"
             android:textColor="@color/settings" />
 
         <Button
@@ -131,7 +141,8 @@
             android:layout_below="@+id/type_l"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="动漫游戏"
+
+            android:text="@string/ol_songpop_list_game"
             android:textColor="@color/settings" />
 
         <Button
@@ -141,7 +152,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/selector_list_c"
-            android:text="本地收藏"
+
+            android:text="@string/ol_songpop_list_local_fa"
             android:textColor="@color/settings" />
     </RelativeLayout>
 </RelativeLayout>

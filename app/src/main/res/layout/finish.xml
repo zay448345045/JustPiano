@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@drawable/ground"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:id="@+id/layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:background="@drawable/ground"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
         android:background="@drawable/selector_list_c"
         android:gravity="center"
         android:orientation="vertical">
@@ -31,11 +31,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical|center_horizontal|center"
                 android:background="@drawable/selector_list_c"
+                android:fontFamily="@font/title"
                 android:gravity="center"
-                android:text="完    成"
+                android:text="@string/finish"
                 android:textColor="@color/white1"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="26sp"/>
 
         </LinearLayout>
 
@@ -43,15 +43,15 @@
             android:id="@+id/linearLayout7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginStart="@dimen/dimen_30dp"
+            android:layout_marginEnd="@dimen/dimen_30dp"
             android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/LinearLayout01"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -59,42 +59,41 @@
                 <TextView
                     android:id="@+id/TextView09"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
-
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 类别 "
+                    android:text="@string/finish_cat"
                     android:textColor="@color/white1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/TextView11"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 个数 "
+                    android:text="@string/finish_count"
                     android:textColor="@color/white1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/TextView07"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 分数 "
+                    android:text="@string/finish_score"
                     android:textColor="@color/white1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout9"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -102,41 +101,41 @@
                 <TextView
                     android:id="@+id/TextView02"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 暴击 "
+                    android:text="@string/finish_perfect"
                     android:textColor="@color/white1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/perfect"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/perfect_scr"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout10"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -144,41 +143,41 @@
                 <TextView
                     android:id="@+id/TextView05"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 很棒 "
+                    android:text="@string/finish_cool"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/cool"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/cool_scr"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout11"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -186,41 +185,41 @@
                 <TextView
                     android:id="@+id/TextView01"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 完美 "
+                    android:text="@string/finish_great"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/great"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/great_scr"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout12"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -228,41 +227,41 @@
                 <TextView
                     android:id="@+id/TextView04"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 一般 "
+                    android:text="@string/finish_bad"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/bad"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/bad_scr"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_width="86dp"
+                    android:layout_height="42dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout13"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -270,41 +269,41 @@
                 <TextView
                     android:id="@+id/TextView03"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 失误 "
+                    android:text="@string/finish_miss"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/miss"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/miss_scr"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="41dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout15"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -312,41 +311,41 @@
                 <TextView
                     android:id="@+id/TextView06"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 总分 "
+                    android:text="@string/finish_total"
                     android:textColor="@color/online"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/total"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/total_scr"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout14"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -354,35 +353,35 @@
                 <TextView
                     android:id="@+id/TextView08"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:text=" 连击 "
+                    android:text="@string/finish_combo"
                     android:textColor="@color/exit"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/combo"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/combo_scr"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:layout_gravity="center"
+
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/finish_zero"
                     android:textColor="@color/white1"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
@@ -398,21 +397,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/uget"
+                android:textStyle="bold"
+                android:text="@string/finish_uget"
                 android:textColor="@color/white1"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/totlescore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:text="0"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:textStyle="bold"
+                android:text="@string/finish_zero"
                 android:textColor="@color/white1"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textSize="16sp"/>
 
         </LinearLayout>
 
@@ -427,27 +426,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/hscore"
+
+                android:text="@string/finish_hscore"
                 android:textColor="@color/white1"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/highscore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:text="0"
+                android:layout_marginStart="@dimen/dimen_5dp"
+
+                android:text="@string/finish_zero"
                 android:textColor="@color/white1"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/report_lin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
             android:orientation="vertical">
 
             <TextView
@@ -455,25 +455,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/title"
                 android:gravity="center"
-                android:text="@string/win"
+                android:text="@string/finish_win"
                 android:textColor="@color/yellow_c"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="150dp"
-            android:layout_marginEnd="150dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_marginStart="@dimen/dimen_150dp"
+            android:layout_marginEnd="@dimen/dimen_150dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2">
 
@@ -481,36 +481,37 @@
                     android:id="@+id/share_score"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#00000000" />
+                    android:background="#00000000"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:background="@drawable/shape_corner"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:background="@drawable/selector_ol_button"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4"
-                        android:src="@drawable/share" />
+                        android:layout_weight="2"
+                        android:src="@drawable/share"/>
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2.5"
+                        android:layout_weight="3"
+
                         android:gravity="center"
-                        android:text="分享"
+                        android:text="@string/finish_share"
                         android:textColor="#ffffffff"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2">
 
@@ -520,36 +521,37 @@
                     android:layout_height="match_parent"
                     android:background="@color/translent"
                     android:scaleType="centerInside"
-                    android:src="#00000000" />
+                    android:src="#00000000"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:background="@drawable/shape_corner"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:background="@drawable/selector_orange_button"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4"
-                        android:src="@drawable/retry" />
+                        android:layout_weight="2"
+                        android:src="@drawable/retry"/>
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2.5"
+                        android:layout_weight="3"
+
                         android:gravity="center"
-                        android:text="重试"
+                        android:text="@string/finish_retry"
                         android:textColor="#ffffffff"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2">
 
@@ -557,29 +559,30 @@
                     android:id="@+id/ok"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/translent" />
+                    android:background="@color/translent"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:background="@drawable/shape_corner"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:background="@drawable/selector_ol_button_login"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4"
-                        android:src="@drawable/back" />
+                        android:layout_weight="2"
+                        android:src="@drawable/back"/>
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2.5"
+                        android:layout_weight="3"
+
                         android:gravity="center"
-                        android:text="返回"
+                        android:text="@string/finish_back"
                         android:textColor="#fffff394"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
             </RelativeLayout>

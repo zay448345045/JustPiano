@@ -8,54 +8,6 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/ads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/top_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ly.pp.justpiano3.ScrollText
-            android:id="@+id/broadCastText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/systemText"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="2"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="@color/settings"
-            android:textColorHighlight="@color/blue_d"
-            android:textColorHint="@color/blue_d"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <TextView
-            android:id="@+id/systemText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/broadCastText"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/online"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:ignore="RelativeOverlap" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
@@ -65,7 +17,7 @@
 
         <RelativeLayout
             android:id="@+id/RelativeLayout1"
-            android:layout_width="304dp"
+            android:layout_width="@dimen/dimen_304dp"
             android:layout_height="match_parent"
             android:background="@drawable/filled_bar"
             android:orientation="vertical">
@@ -80,45 +32,59 @@
 
                 <Button
                     android:id="@+id/ol_ready_b"
-                    android:layout_width="80dp"
-                    android:layout_height="45dp"
+                    android:layout_width="@dimen/dimen_64dp"
+                    android:layout_height="@dimen/dimen_45dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
-                    android:text="开始"
+                    android:text="@string/olplayroom_begin"
                     android:textColor="@color/white1"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <ly.pp.justpiano3.ScrollText
-                    android:id="@+id/ol_songlist_b"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/LinearLayout01"
+                    style="@style/InputBoxStyle"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignTop="@+id/ol_ready_b"
-                    android:layout_toStartOf="@+id/ol_group_b"
-                    android:layout_toEndOf="@+id/ol_ready_b"
-                    android:background="@color/back"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="点此随机选择歌曲"
-                    android:textColor="@color/roomtext"
-                    android:textSize="14sp" />
+                    android:layout_marginLeft="@dimen/dimen_66dp"
+                    android:layout_marginTop="@dimen/dimen_1dp"
+                    android:layout_marginRight="@dimen/dimen_66dp"
+                    android:layout_marginBottom="@dimen/dimen_1dp"
+                    android:gravity="center">
+
+                    <ly.pp.justpiano3.view.ScrollText
+                        android:id="@+id/ol_songlist_b"
+                        style="@style/EditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:text="@string/olplayroom_ra"
+                        android:textColor="@color/roomtext"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/ol_group_b"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/ol_songlist_b"
+                    android:layout_width="@dimen/dimen_64dp"
+                    android:layout_height="@dimen/dimen_45dp"
+
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
-                    android:text="队伍"
+                    android:text="@string/olplayroom_team"
                     android:textColor="@color/white1"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <GridView
                 android:id="@+id/ol_player_grid"
-                android:layout_width="304dp"
-                android:layout_height="242dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/room_title"
                 android:layout_alignParentEnd="true"
                 android:listSelector="@color/translent"
@@ -132,10 +98,11 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
                 android:keepScreenOn="true"
-                android:singleLine="true"
-                android:text="房间名称"
+                android:maxLines="1"
+                android:text="@string/ol_room_view_name"
                 android:textColor="@color/roomtext"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/time_text"
@@ -153,7 +120,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@id/RelativeLayout1"
+            android:id="@id/RelativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/filled_bar"
@@ -165,7 +132,6 @@
                 android:layout_height="match_parent">
 
                 <RelativeLayout
-                    android:id="@id/RelativeLayout1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
@@ -214,9 +180,10 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="上一页"
+                                    android:text="@string/olplayhall_b"
                                     android:textColor="@color/white1"
-                                    android:textSize="18sp" />
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
 
                                 <Button
                                     android:id="@+id/online_button"
@@ -225,9 +192,10 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_centerHorizontal="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="显示在线"
+                                    android:text="@string/olplayhall_o"
                                     android:textColor="@color/white1"
-                                    android:textSize="18sp" />
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
 
                                 <Button
                                     android:id="@+id/next_button"
@@ -236,9 +204,10 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:background="@drawable/selector_orange_button"
-                                    android:text="下一页"
+                                    android:text="@string/olplayhall_n"
                                     android:textColor="@color/white1"
-                                    android:textSize="18sp" />
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
                             </RelativeLayout>
                         </RelativeLayout>
 
@@ -256,7 +225,7 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
                                 android:cacheColorHint="#00ffffff"
-                                android:divider="@drawable/divider"
+                                android:divider="@null"
                                 android:listSelector="@color/translent" />
 
                             <EditText
@@ -269,24 +238,24 @@
                                 android:layout_toEndOf="@id/ol_soundstop"
                                 android:background="@color/back"
                                 android:ems="10"
-                                android:singleLine="true"
+                                android:maxLines="1"
                                 android:textColor="@color/white1"
                                 android:textSize="16sp" />
 
                             <Button
                                 android:id="@+id/ol_search_b"
                                 android:layout_width="wrap_content"
-                                android:layout_height="45dp"
+                                android:layout_height="@dimen/dimen_45dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentBottom="true"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="搜索"
+                                android:text="@string/ol_songs_page_search"
                                 android:textColor="@color/white1"
                                 android:textSize="20sp" />
 
                             <ImageView
                                 android:id="@+id/ol_soundstop"
-                                android:layout_width="50dp"
+                                android:layout_width="@dimen/dimen_50dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignTop="@id/ol_search_b"
                                 android:layout_alignParentBottom="true"
@@ -296,13 +265,13 @@
 
                             <Button
                                 android:id="@+id/ol_more_b"
-                                android:layout_width="50dp"
+                                android:layout_width="@dimen/dimen_50dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignTop="@id/ol_search_b"
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentBottom="true"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="模式"
+                                android:text="@string/olplayroom_mode"
                                 android:textColor="@color/white1"
                                 android:textSize="14sp" />
                         </RelativeLayout>
@@ -317,18 +286,18 @@
                             <ListView
                                 android:id="@+id/ol_msg_list"
                                 android:layout_width="match_parent"
-                                android:layout_height="225dp"
+                                android:layout_height="@dimen/dimen_225dp"
                                 android:layout_above="@+id/ol_express_b"
                                 android:layout_alignParentStart="true"
                                 android:layout_alignParentTop="true"
                                 android:background="@color/yellow_l"
                                 android:cacheColorHint="#00ffffff"
-                                android:divider="@drawable/divider"
+                                android:divider="@null"
                                 android:listSelector="@color/translent" />
 
                             <ImageView
                                 android:id="@+id/ol_express_b"
-                                android:layout_width="45dp"
+                                android:layout_width="@dimen/dimen_45dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignTop="@+id/ol_send_text"
                                 android:layout_alignParentStart="true"
@@ -338,7 +307,7 @@
 
                             <ImageView
                                 android:id="@+id/ol_changecolor"
-                                android:layout_width="45dp"
+                                android:layout_width="@dimen/dimen_45dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignTop="@+id/ol_send_text"
                                 android:layout_alignParentBottom="true"
@@ -357,19 +326,19 @@
                                 android:background="@color/back"
                                 android:ems="10"
                                 android:imeOptions="actionDone"
+                                android:maxLines="1"
                                 android:scrollHorizontally="true"
-                                android:singleLine="true"
                                 android:textColor="@color/white1"
                                 android:textSize="14sp" />
 
                             <Button
                                 android:id="@+id/ol_send_b"
                                 android:layout_width="wrap_content"
-                                android:layout_height="45dp"
+                                android:layout_height="@dimen/dimen_45dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentBottom="true"
                                 android:background="@drawable/selector_ol_button"
-                                android:text="发送"
+                                android:text="@string/olplayhall_s"
                                 android:textColor="@color/white1"
                                 android:textSize="20sp" />
                         </RelativeLayout>

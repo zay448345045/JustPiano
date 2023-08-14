@@ -4,36 +4,23 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.os.*;
 import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageResizerUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.Response;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import androidx.annotation.NonNull;
 
 /**
  * Create by SunnyDay on 2019/04/18
@@ -47,8 +34,8 @@ public class ImageLoader {
     private static final int MESSAGE_POST_RESULT = 1;
     private static final int CPU_COUNT = Runtime.getRuntime()
             .availableProcessors();// cup count
-    private static final int CORE_POOL_SIZE = CPU_COUNT + 1; //核心池
-    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;//最大池
+    private static final int CORE_POOL_SIZE = CPU_COUNT + 1; // 核心池
+    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;// 最大池
     private static final long KEEP_ALIVE = 10L;// 保活时间
     // 线程工厂
     private static final ThreadFactory sThreadFactory = new ThreadFactory() {
@@ -67,7 +54,7 @@ public class ImageLoader {
     private boolean mIsDiskLruCacheCreated = false;
     private final LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache = null;
-    private ImageResizer mImageResizer;
+    private ImageResizerUtil mImageResizerUtil;
     // Handler
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -92,13 +79,13 @@ public class ImageLoader {
     private ImageLoader(Context context, String cacheName) {
         mContext = context.getApplicationContext();
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);// 当前进程最大内存（kb）
-        int cacheSize = maxMemory / 8;//缓存的最大值，当前进程可用内存的1/8
+        int cacheSize = maxMemory / 8;// 缓存的最大值，当前进程可用内存的1/8
         // 内存缓存初始化
-        //位图的内存大小计算（参看Bitmap的api）
+        // 位图的内存大小计算（参看Bitmap的api）
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(@NonNull String key, @NonNull Bitmap value) {
-                return value.getRowBytes() * value.getHeight() / 1024;//位图的内存大小计算（参看Bitmap的api）
+                return value.getRowBytes() * value.getHeight() / 1024;// 位图的内存大小计算（参看Bitmap的api）
             }
         };
         // 磁盘缓存的初始化工作
@@ -106,11 +93,11 @@ public class ImageLoader {
         if (!diskCacheDir.exists()) {
             diskCacheDir.mkdirs();
         }
-        //当指定目录的可用空间大于指定缓存的最大值时开始初始化
+        // 当指定目录的可用空间大于指定缓存的最大值时开始初始化
         if (getUsableSpace(diskCacheDir) > DISK_CACHE_SIZE) {
             try {
                 mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, DISK_CACHE_SIZE);
-                mIsDiskLruCacheCreated = true;//标记 此处表示磁盘缓存建立
+                mIsDiskLruCacheCreated = true;// 标记 此处表示磁盘缓存建立
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -180,10 +167,10 @@ public class ImageLoader {
         if (snapShot != null) {
             FileInputStream fileInputStream = (FileInputStream) snapShot.getInputStream(DISK_CACHE_INDEX);
             FileDescriptor fileDescriptor = fileInputStream.getFD();
-            mImageResizer = new ImageResizer(mContext);
-            bitmap = mImageResizer.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
+            mImageResizerUtil = new ImageResizerUtil(mContext);
+            bitmap = mImageResizerUtil.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
             if (bitmap != null) {
-                //读取磁盘缓存时 往内存中放一份
+                // 读取磁盘缓存时 往内存中放一份
                 addBitmapToMemoryCache(key, bitmap);
             }
             fileInputStream.close();
@@ -321,26 +308,24 @@ public class ImageLoader {
      */
     private boolean downloadUrlToStream(String urlString, OutputStream outputStream) {
         String response = "";
-        HttpPost httpPost = new HttpPost(urlString);
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
-        try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                response = EntityUtils.toString(execute.getEntity());
-            }
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url(urlString)
+                .post(new FormBody.Builder().build()) // 空的表单参数
+                .build();
         BufferedOutputStream out = null;
         try {
-            out = new BufferedOutputStream(outputStream, 8 * 1024);
-            byte[] array = GZIP.ZIPToArray(response);
-            if (array != null && array.length > 0) {
-                out.write(array);
+            // 发送请求并获取响应
+            Response execute = OkHttpUtil.client().newCall(request).execute();
+            if (execute.isSuccessful()) {
+                response = execute.body().string();
+                out = new BufferedOutputStream(outputStream, 8 * 1024);
+                byte[] array = GZIPUtil.ZIPToArray(response);
+                if (array != null && array.length > 0) {
+                    out.write(array);
+                }
+                return true;
             }
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -360,19 +345,22 @@ public class ImageLoader {
      */
     private Bitmap downloadBitmapFromUrl(String urlString) {
         String response = "";
-        HttpPost httpPost = new HttpPost(urlString);
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        defaultHttpClient.getParams().setParameter("http.connection.timeout", 10000);
-        defaultHttpClient.getParams().setParameter("http.socket.timeout", 10000);
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url(urlString)
+                .post(new FormBody.Builder().build()) // 空的表单参数
+                .build();
         try {
-            HttpResponse execute = defaultHttpClient.execute(httpPost);
-            if (execute.getStatusLine().getStatusCode() == 200) {
-                response = EntityUtils.toString(execute.getEntity());
+            // 发送请求并获取响应
+            Response execute = OkHttpUtil.client().newCall(request).execute();
+            if (execute.isSuccessful()) {
+                response = execute.body().string();
             }
-        } catch (Exception e3) {
-            e3.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        byte[] array = GZIP.ZIPToArray(response);
+        byte[] array = GZIPUtil.ZIPToArray(response);
         return BitmapFactory.decodeByteArray(array, 0, array.length);
     }
+
 }

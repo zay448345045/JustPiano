@@ -7,88 +7,77 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/dimen_16dp"
+        android:paddingBottom="@dimen/dimen_16dp">
 
-        <TextView
-            android:id="@+id/room_name_title"
+        <LinearLayout
+            style="@style/InputBoxStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/blue_l"
-            android:gravity="center_vertical"
-            android:text="房名:"
-            android:textColor="@color/white1"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:gravity="center">
 
-        <EditText
-            android:id="@+id/room_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/edittext_back"
-            android:ems="10"
-            android:gravity="bottom"
-            android:minWidth="100dp"
-            android:textColor="@color/white1"
-            android:textSize="16sp">
+            <EditText
+                android:id="@+id/room_name"
+                style="@style/EditTextStyle"
+                android:layout_width="@dimen/dimen_256dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="输入房名"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="20sp" />
 
             <requestFocus />
-
-        </EditText>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/room_password_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="密码:"
-            android:textColor="@color/white1"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/room_password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/edittext_back"
-            android:ems="10"
-            android:gravity="bottom"
-            android:minWidth="100dp"
-            android:textColor="@color/white1"
-            android:textSize="16sp">
-
-            <requestFocus />
-
-        </EditText>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_12dp">
 
-        <TextView
-            android:id="@+id/mode"
+        <LinearLayout
+            style="@style/InputBoxStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/blue_l"
-            android:gravity="center_vertical"
-            android:text="模式:"
-            android:textColor="@color/white1"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/room_password"
+                style="@style/EditTextStyle"
+                android:layout_width="263dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="输入密码(可留空)"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dimen_3dp"
+                android:paddingBottom="@dimen/dimen_3dp"
+                android:textColor="@color/white1"
+                android:textSize="20sp" />
+
+            <requestFocus />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <RadioGroup
             android:id="@+id/room_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_4dp"
             android:orientation="horizontal">
 
             <RadioButton
@@ -96,25 +85,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="普通" />
+                android:text="@string/create_room_n"
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
 
             <RadioButton
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="组队" />
-
-            <RadioButton
-                android:id="@+id/couple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="双人" />
+                android:text="@string/create_room_g"
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
 
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="键盘" />
+                android:text="@string/create_room_k"
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
+
+            <RadioButton
+                android:id="@+id/couple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_room_c"
+                android:layout_marginEnd="@dimen/dimen_4dp"/>
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>

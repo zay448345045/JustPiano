@@ -16,60 +16,61 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/ol_user_mod"
-                android:layout_width="100dp"
-                android:layout_height="200dp"
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_200dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true" />
 
             <ImageView
                 android:id="@+id/ol_user_eye"
-                android:layout_width="100dp"
-                android:layout_height="200dp" />
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_200dp" />
 
             <ImageView
                 android:id="@+id/ol_user_hair"
-                android:layout_width="100dp"
-                android:layout_height="200dp" />
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_200dp" />
 
             <ImageView
                 android:id="@+id/ol_user_shoes"
-                android:layout_width="100dp"
-                android:layout_height="200dp" />
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_200dp" />
 
             <ImageView
                 android:id="@+id/ol_user_trousers"
-                android:layout_width="100dp"
-                android:layout_height="200dp" />
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_200dp" />
 
             <ImageView
                 android:id="@+id/ol_user_jacket"
-                android:layout_width="100dp"
-                android:layout_height="200dp" />
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_200dp" />
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/dimen_minus_6dp"
         android:layout_gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/user_info"
-            android:layout_width="230dp"
+            android:layout_width="@dimen/dimen_234dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white1" />
 
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@drawable/ol_rectangle_blue"
+            android:layout_height="@dimen/dimen_84dp"
+            android:background="@drawable/list"
             android:scrollbars="none">
 
             <LinearLayout
@@ -80,6 +81,7 @@
                     android:id="@+id/user_psign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:textColor="@color/white1" />
             </LinearLayout>
         </ScrollView>

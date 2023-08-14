@@ -18,10 +18,10 @@ package ly.pp.justpiano3;
 
 import android.media.midi.MidiReceiver;
 import android.os.Build;
+import androidx.annotation.RequiresApi;
+import ly.pp.justpiano3.constant.MidiConstants;
 
 import java.io.IOException;
-
-import androidx.annotation.RequiresApi;
 
 /**
  * Convert stream of arbitrary MIDI bytes into discrete messages.

@@ -3,7 +3,7 @@
     android:id="@id/RelativeLayout1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/ol_rectangle_orange"
+    android:background="@drawable/list"
     android:orientation="vertical">
 
     <Button
@@ -13,7 +13,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/selector_ol_button"
-        android:text="单次播放"
+        android:textStyle="bold"
+        android:text="@string/ol_playsongs_single"
         android:textColor="@color/white1"
         android:textSize="14sp" />
 
@@ -21,10 +22,11 @@
         android:id="@+id/circulateplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:layout_toEndOf="@id/onetimeplay"
+        android:layout_marginStart="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
-        android:text="单曲循环"
+        android:textStyle="bold"
+        android:text="@string/ol_playsongs_cycle"
         android:textColor="@color/white1"
         android:textSize="14sp" />
 
@@ -33,9 +35,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/onetimeplay"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
-        android:text="曲库随机"
+        android:textStyle="bold"
+        android:text="@string/ol_playsongs_rand"
         android:textColor="@color/white1"
         android:textSize="14sp" />
 
@@ -44,11 +47,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/circulateplay"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/randomplay"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
-        android:text="收藏随机"
+        android:textStyle="bold"
+        android:text="@string/ol_playsongs_rand_fa"
         android:textColor="@color/white1"
         android:textSize="14sp" />
 

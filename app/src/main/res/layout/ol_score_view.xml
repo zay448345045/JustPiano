@@ -13,20 +13,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:background="@drawable/filled_bar"
+
         android:gravity="start"
-        android:text="隐藏成绩"
+        android:text="@string/ol_score_view_hide"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/more"
         android:textSize="12sp" />
 
-    <ly.pp.justpiano3.HorizontalListView
+    <ly.pp.justpiano3.view.HorizontalListView
         android:id="@+id/ol_score_list"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="@dimen/dimen_30dp"
         android:layout_alignParentTop="true"
         android:layout_gravity="end"
-        android:layout_marginStart="70dp"
-        android:divider="@drawable/divider"
+        android:layout_marginStart="@dimen/dimen_70dp"
+        android:divider="@null"
+
         android:listSelector="@color/translent"
         android:visibility="gone" />
 

@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/user_face"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
+            android:layout_width="@dimen/dimen_240dp"
+            android:layout_height="@dimen/dimen_240dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/defaultface" />
@@ -24,9 +24,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_face"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:background="@drawable/selector_orange_button"
-            android:text="加为好友"
+
+            android:text="@string/popuserinfo_add"
             android:textColor="@color/white1" />
 
         <Button
@@ -37,18 +38,20 @@
             android:layout_alignEnd="@+id/user_face"
             android:layout_alignBottom="@+id/add_friend"
             android:background="@drawable/selector_orange_button"
-            android:text="私信Ta"
+
+            android:text="@string/popuserinfo_pm"
             android:textColor="@color/white1" />
 
         <TextView
             android:id="@+id/user_msg"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/dimen_120dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/user_face"
             android:layout_alignEnd="@+id/user_face"
             android:layout_alignBottom="@+id/user_face"
             android:background="@drawable/filled_box"
-            android:text="该用户暂未设置个性签名"
+
+            android:text="@string/popuserinfo_si"
             android:textColor="@color/white1"
             android:textColorLink="@color/white1"
             android:textSize="12sp" />
@@ -60,7 +63,8 @@
             android:layout_alignTop="@+id/user_face"
             android:layout_toStartOf="@+id/user_sex"
             android:background="@drawable/filled_box"
-            android:singleLine="true"
+
+            android:maxLines="1"
             android:textColor="@color/white1" />
 
         <TextView
@@ -71,8 +75,8 @@
             android:layout_alignEnd="@+id/user_face"
             android:layout_alignBottom="@+id/user_age"
             android:background="@drawable/filled_box"
-            android:text=""
-            android:singleLine="true"
+
+            android:maxLines="1"
             android:textColor="@color/white1" />
 
         <TextView
@@ -82,8 +86,9 @@
             android:layout_alignStart="@+id/user_face"
             android:layout_alignTop="@+id/user_face"
             android:background="@drawable/filled_box"
+
             android:gravity="center"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/yellow"
             android:textSize="16sp" />
     </RelativeLayout>

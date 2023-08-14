@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:orientation="vertical">
@@ -24,20 +24,21 @@
 
                 <TextView
                     android:id="@+id/song_name"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
+
                     android:gravity="start"
-                    android:singleLine="true"
-                    android:text="曲名"
+                    android:maxLines="1"
+                    android:text="@string/c_view_name"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/white1"
                     android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/song_favor"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/dimen_0dp"
+                    android:layout_height="@dimen/dimen_30dp"
                     android:layout_weight="1" />
             </LinearLayout>
 
@@ -50,7 +51,8 @@
                     android:id="@+id/ol_sound_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00:00"
+
+                    android:text="@string/c_view_length"
                     android:textColor="@color/white1"
                     android:textSize="12sp" />
 
@@ -58,7 +60,8 @@
                     android:id="@+id/nandu_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="右手"
+
+                    android:text="@string/ol_hand_list_r"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white1"
                     android:textSize="12sp" />
@@ -69,13 +72,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp" />
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:numStars="5" />
 
                 <TextView
                     android:id="@+id/nandu_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="左手"
+
+                    android:text="@string/melodylist1_hand"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white1"
                     android:textSize="12sp" />
@@ -86,8 +91,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:numStars="1" />
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:numStars="5" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

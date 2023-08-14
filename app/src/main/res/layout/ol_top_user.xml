@@ -12,7 +12,9 @@
         android:id="@+id/app_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="排行榜"
+        android:layout_marginBottom="@dimen/dimen_8dp"
+        android:fontFamily="@font/title"
+        android:text="@string/ol_top_usr_title"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white1" />
 
@@ -20,60 +22,61 @@
         android:id="@+id/LinearLayout01"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
         android:gravity="center">
 
         <Button
             android:id="@+id/ol_class_b"
-            android:layout_width="80dp"
+            android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
-            android:text="考级榜"
+            android:text="@string/ol_top_usr_cl"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/ol_level_b"
-            android:layout_width="80dp"
+            android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10293535"
-            android:text="等级榜"
+            android:text="@string/ol_top_usr_lv"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/ol_topUsers_b"
-            android:layout_width="80dp"
+            android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
-            android:text="冠军榜"
+            android:text="@string/ol_top_usr_w"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/ol_topScore_b"
-            android:layout_width="80dp"
+            android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10293535"
-            android:text="总分榜"
+            android:text="@string/ol_top_usr_s"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/ol_bless"
-            android:layout_width="80dp"
-            android:layout_height="180dp"
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="@dimen/dimen_180dp"
             android:background="#10c6ffe9"
-            android:text="祝福榜"
+            android:text="@string/ol_top_usr_p"
             android:textColor="@color/white1"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/ol_contribution"
-            android:layout_width="80dp"
+            android:layout_width="@dimen/dimen_80dp"
             android:layout_height="match_parent"
             android:background="#10293535"
-            android:text="贡献榜"
+            android:text="@string/ol_top_usr_c"
             android:textColor="@color/white1"
             android:textSize="20sp" />
     </LinearLayout>

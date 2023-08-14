@@ -19,10 +19,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/title"
             android:paddingTop="20dp"
             android:text=" 选择服务器 "
             android:textColor="@color/white1"
-            android:textSize="24sp" />
+            android:textSize="31sp" />
 
         <LinearLayout
             android:id="@+id/linearLayout6"
@@ -36,21 +37,23 @@
 
             <Button
                 android:id="@+id/server1"
-                android:layout_width="250dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/selector_ol_orange"
-                android:text="极品一服\n(120.25.100.169)"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_orange_button"
+                android:fontFamily="@font/title"
+                android:text="正式服\n(普通的服务器普通的用)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/server2"
-                android:layout_width="250dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/selector_ol_blue"
-                android:text="极品二服\n(120.25.100.134)"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/selector_ol_button"
+                android:fontFamily="@font/title"
+                android:text="测试服\n(测试用途或故障时备用)"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -59,32 +62,39 @@
             android:id="@+id/linearLayout8"
             android:layout_width="500dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:layout_marginBottom="20dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center_horizontal"
-            android:layout_marginTop="50dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="157dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="其他服务器(填写ip):"
-                android:textSize="15sp" />
+            <LinearLayout
+                style="@style/InputBoxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
-            <EditText
-                android:id="@+id/server_ip"
-                android:layout_width="243dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/search_box"
-                android:textColor="@color/white1" />
+                <EditText
+                    android:id="@+id/server_ip"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_260dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/title"
+                    android:hint="其他服务器(填写域名或IP):"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dimen_3dp"
+                    android:paddingBottom="@dimen/dimen_3dp"
+                    android:textColor="@color/white1"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/ip_confirm"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/selector_ol_green"
+                android:background="@drawable/selector_ol_button_login"
+                android:fontFamily="@font/title"
                 android:text="确认"
                 android:textSize="15sp" />
 

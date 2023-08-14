@@ -14,15 +14,15 @@
 
         <TextView
             android:id="@+id/ol_friend_level"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_64dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="LV.36"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:text="@string/friend_view_lv"
             android:textColor="@color/settings"
             android:textSize="18sp"
-            android:textStyle="bold"
             tools:ignore="RtlCompat" />
 
         <ImageView
@@ -38,26 +38,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="@dimen/dimen_3dp"
             android:layout_toEndOf="@+id/ol_friend_sex"
+            android:textStyle="bold"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/f_view"
             android:textColor="@color/white1"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/ol_friend_room"
-            android:layout_width="40sp"
+            android:layout_width="@dimen/dimen_64dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_toStartOf="@+id/ol_friend_level"
+            android:textStyle="bold"
             android:gravity="center"
-            android:text="大厅"
+            android:text="@string/ol_friend_view_location"
             android:textColor="@color/online"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -71,32 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:background="@drawable/selector_ol_button"
-            android:text="私信"
-            android:textColor="@color/white1"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/ol_friend_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/ol_friend_chat"
-            android:background="@drawable/selector_ol_button"
-            android:text="找Ta"
-            android:textColor="@color/white1"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/ol_friend_dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/ol_friend_game"
-            android:background="@drawable/selector_ol_button"
-            android:visibility="gone"
-            android:text="资料"
+            android:text="@string/friend_view_pm"
             android:textColor="@color/white1"
             android:textSize="18sp" />
 
@@ -105,10 +80,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/ol_friend_send"
             android:background="@drawable/selector_ol_button"
-            android:text="私聊"
+            android:text="@string/ol_btn_lv_pm"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/ol_friend_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_friend_chat"
+            android:background="@drawable/selector_ol_button"
+            android:text="@string/ol_friend_view_find"
+            android:textColor="@color/white1"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/ol_friend_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_friend_game"
+            android:background="@drawable/selector_ol_button"
+            android:text="@string/friend_view_info"
+            android:textColor="@color/white1"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/ol_friend_gold_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_toEndOf="@+id/ol_friend_dialog"
+            android:background="@drawable/selector_ol_button"
+            android:text="@string/ol_btn_lv_gold_send"
+            android:visibility="gone"
             android:textColor="@color/white1"
             android:textSize="18sp" />
 
@@ -118,8 +131,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/selector_orange_button"
-            android:text="删除"
+            android:background="@drawable/selector_ol_button_login"
+            android:text="@string/account_name_del"
             android:textColor="@color/white1"
             android:textSize="18sp" />
     </RelativeLayout>

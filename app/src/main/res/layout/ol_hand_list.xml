@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/filled_bar"
-    android:gravity="center"
-    android:keepScreenOn="true"
-    android:orientation="vertical">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/translent"
+                android:gravity="center"
+                android:keepScreenOn="true"
+                android:orientation="vertical">
 
     <TextView
         android:id="@+id/left_hand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/back_puased"
-        android:text="左手"
+        android:layout_marginRight="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:background="@drawable/selector_ol_button"
+        android:gravity="center"
+        android:text="@string/melodylist1_hand"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp"/>
 
     <TextView
         android:id="@+id/right_hand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
         android:layout_toEndOf="@+id/left_hand"
-        android:background="@drawable/back_puased"
-        android:text="右手"
+        android:background="@drawable/selector_ol_button"
+        android:gravity="center"
+        android:text="@string/ol_hand_list_r"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp"/>
 
     <TextView
         android:id="@+id/jiangdiao"
@@ -35,10 +42,13 @@
         android:layout_below="@+id/left_hand"
         android:layout_alignStart="@id/left_hand"
         android:layout_alignEnd="@id/left_hand"
-        android:background="@drawable/selector_ol_green"
-        android:text="降调"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:background="@drawable/selector_ol_button"
+        android:gravity="center"
+        android:text="@string/ol_hand_list_flat"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp"/>
 
     <TextView
         android:id="@+id/shengdiao"
@@ -47,46 +57,54 @@
         android:layout_below="@id/right_hand"
         android:layout_alignStart="@id/right_hand"
         android:layout_alignEnd="@id/right_hand"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
         android:layout_toEndOf="@+id/jiangdiao"
-        android:background="@drawable/selector_ol_green"
-        android:text="升调"
+        android:background="@drawable/selector_ol_button"
+        android:gravity="center"
+        android:text="@string/ol_hand_list_sharp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textSize="28sp"/>
 
     <LinearLayout
+        android:id="@+id/orientation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/jiangdiao"
         android:layout_alignStart="@id/jiangdiao"
         android:layout_alignEnd="@id/shengdiao">
 
-        <ImageView
-            android:id="@+id/note_speed_0"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@drawable/back_arrow"
-            android:background="@drawable/selector_ol_orange" />
-
         <TextView
-            android:id="@+id/note_speed"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="2"
-            android:background="@color/white1"
+            android:id="@+id/changeScreenOrientation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/right_hand"
+            android:layout_alignStart="@id/right_hand"
+            android:layout_alignEnd="@id/right_hand"
+            android:layout_marginTop="@dimen/dimen_3dp"
+            android:layout_marginBottom="@dimen/dimen_3dp"
+            android:layout_toEndOf="@+id/jiangdiao"
+            android:background="@drawable/selector_ol_button"
             android:gravity="center"
-            android:text="中"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/note_speed_1"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@drawable/for_arrow"
-            android:background="@drawable/selector_ol_orange" />
-
+            android:text="@string/ol_hand_list_rotate"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="28sp"/>
     </LinearLayout>
+
+    <ly.pp.justpiano3.view.DataSelectView
+            android:id="@+id/note_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_below="@id/orientation"
+            android:layout_alignStart="@id/orientation"
+            android:layout_alignEnd="@id/orientation"
+            android:layout_marginTop="@dimen/dimen_3dp"
+            android:background="@drawable/selector_ol_button"
+            app:dataEditable="false"
+            app:dataTextSize="26"
+            app:dataTextColor="@color/white1"
+            app:dataDefaultName="中"
+            app:dataNameList="@array/down_entries"
+            app:dataValueList="@array/down_value"/>
 
 </RelativeLayout>

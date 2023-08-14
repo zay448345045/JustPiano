@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout7"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
         android:layout_weight="6"
         android:orientation="vertical">
@@ -23,44 +23,44 @@
             <TextView
                 android:id="@+id/ol_s_n"
                 style="@style/ShadowText"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                android:textStyle="bold"
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="曲目名称"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_name"
                 android:textColor="@color/white1"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/ol_topuser"
                 style="@style/ShadowText"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:textStyle="bold"
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="冠军:"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_winner"
                 android:textColor="@color/yellow"
                 android:textColorHighlight="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/ol_topscore"
                 style="@style/ShadowText"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
                 android:layout_weight="2"
+                android:textStyle="bold"
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="高分:"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_hs"
                 android:textColor="@color/white1"
                 android:textColorHighlight="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,9 +73,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
+
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="难度"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_d"
                 android:textColor="@color/white1"
                 android:textColorHighlight="@color/black"
                 android:textSize="12sp" />
@@ -83,11 +84,12 @@
             <TextView
                 android:id="@+id/ol_items"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dimen_5dp"
+
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="分类"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_item"
                 android:textColor="@color/white1"
                 android:textSize="12sp" />
 
@@ -95,10 +97,11 @@
                 android:id="@+id/ol_length"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
+
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="长度"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_length"
                 android:textColor="@color/white1"
                 android:textColorHighlight="@color/black"
                 android:textSize="12sp" />
@@ -107,10 +110,11 @@
                 android:id="@+id/ol_playcount"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
+
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="播放量"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_count"
                 android:textColor="@color/white1"
                 android:textColorHighlight="@color/black"
                 android:textSize="12sp" />
@@ -119,10 +123,11 @@
                 android:id="@+id/ol_update"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
+
                 android:gravity="start"
-                android:singleLine="true"
-                android:text="冠军时间"
+                android:maxLines="1"
+                android:text="@string/ol_c_view_time"
                 android:textColor="@color/white1"
                 android:textColorHighlight="@color/black"
                 android:textSize="12sp" />
@@ -132,7 +137,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout8"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="end|center_vertical|center_horizontal|center"
@@ -142,15 +147,15 @@
             android:id="@+id/ol_favor_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
             android:background="@color/translent"
             android:src="@drawable/selector_favor_background" />
 
         <ImageView
             android:id="@+id/ol_play_button"
-            android:layout_width="30dp"
+            android:layout_width="@dimen/dimen_30dp"
             android:layout_height="wrap_content"
             android:background="@color/translent"
-            android:src="@drawable/selector_child_paly" />
+            android:src="@drawable/selector_child_play" />
     </LinearLayout>
 </LinearLayout>

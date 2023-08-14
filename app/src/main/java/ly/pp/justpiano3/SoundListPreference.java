@@ -12,16 +12,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.adapter.SoundListAdapter;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 import java.io.File;
 import java.util.List;
 
 public class SoundListPreference extends DialogPreference {
-    Context context;
-    String str1 = "";
-    JPProgressBar jpProgressBar;
-    private CharSequence[] f5046a;
-    private CharSequence[] f5047b;
+    public Context context;
+    public String soundKey = "";
+    public JPProgressBar jpProgressBar;
+    private CharSequence[] soundNameList;
+    private CharSequence[] soundKeyList;
     private SoundListAdapter soundListAdapter;
 
     public SoundListPreference(Context context, AttributeSet attributeSet) {
@@ -36,22 +38,22 @@ public class SoundListPreference extends DialogPreference {
 
     private void m3922a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
-        List<File> f5048c = SkinAndSoundFileHandle.getLocalSoundList(str);
+        List<File> f5048c = SkinAndSoundFileUtil.getLocalSoundList(str);
         int size = f5048c.size();
-        f5046a = new CharSequence[(size + 2)];
-        f5047b = new CharSequence[(size + 2)];
+        soundNameList = new CharSequence[(size + 2)];
+        soundKeyList = new CharSequence[(size + 2)];
         for (int i = 0; i < size; i++) {
             str = f5048c.get(i).getName();
-            f5046a[i] = str.subSequence(0, str.lastIndexOf('.'));
-            f5047b[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + f5048c.get(i).getName();
+            soundNameList[i] = str.subSequence(0, str.lastIndexOf('.'));
+            soundKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + f5048c.get(i).getName();
         }
-        f5046a[size] = "原生音源";
-        f5047b[size] = "original";
-        f5046a[size + 1] = "更多音源...";
-        f5047b[size + 1] = "more";
+        soundNameList[size] = "原生音源";
+        soundKeyList[size] = "original";
+        soundNameList[size + 1] = "更多音源...";
+        soundKeyList[size + 1] = "more";
     }
 
-    final void deleteFiles(String str) {
+    public final void deleteFiles(String str) {
         File file = new File(str);
         if (file.exists()) {
             file.delete();
@@ -69,14 +71,14 @@ public class SoundListPreference extends DialogPreference {
             }
         }
         m3922a();
-        soundListAdapter.mo3583a(f5046a, f5047b);
+        soundListAdapter.mo3583a(soundNameList, soundKeyList);
         soundListAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
-        persistString(str1);
+        persistString(soundKey);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class SoundListPreference extends DialogPreference {
         f5052g.setBackgroundColor(-1);
         ListView f5051f = new ListView(context);
         f5051f.setDivider(null);
-        soundListAdapter = new SoundListAdapter(this, context, f5046a, f5047b);
+        soundListAdapter = new SoundListAdapter(this, context, soundNameList, soundKeyList);
         f5051f.setAdapter(soundListAdapter);
         f5052g.addView(f5051f);
         builder.setView(f5052g);

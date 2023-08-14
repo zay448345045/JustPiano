@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ly.pp.justpiano3.protobuf.vo;
+package protobuf.vo;
 
 option java_multiple_files = true;
 option java_outer_classname = "OnlineResponse";
@@ -669,6 +669,8 @@ message OnlineChangeClothesVO {
     optional uint32 buy_clothes_type = 5;
     // 新购买解锁的服装编号
     optional uint32 buy_clothes_id = 6;
+    // 当前选择编号的价格
+    repeated uint32 buy_clothes_prices = 7;
 }
 
 // 查看好友、私信和主界面查看搭档
@@ -760,10 +762,10 @@ message OnlineUserVO {
     uint32 room_id = 4;
 }
 
-// 找Ta或邀请对话框
+// 找Ta、邀请对话框、赠送音符
 message OnlineDialogVO {
-    // 对话框类型（0为找Ta，1为邀请）
-    uint32 type = 1;
+    // 对话框类型（0-找Ta，1-邀请），普通对话框展示时此值非必填
+    optional uint32 type = 1;
     // 相关用户名称（找Ta时为被找人名称，邀请时为发出邀请的用户）
     string name = 2;
     // 对话框标题
@@ -780,6 +782,8 @@ message OnlineDialogVO {
     string password = 8;
     // 是否可进入大厅
     bool can_enter = 9;
+    // 业务自定义数据
+    string biz_data = 10;
 }
 
 // 每日奖励

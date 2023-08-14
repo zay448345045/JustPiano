@@ -12,17 +12,19 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.adapter.SkinListAdapter;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 import java.io.File;
 import java.util.List;
 
 public class SkinListPreference extends DialogPreference {
-    File f5024d;
-    String str1 = "";
-    Context context;
-    JPProgressBar jpProgressBar;
-    private CharSequence[] f5021a;
-    private CharSequence[] f5022b;
+    public File f5024d;
+    public String skinKey = "";
+    public Context context;
+    public JPProgressBar jpProgressBar;
+    private CharSequence[] skinNameList;
+    private CharSequence[] skinKeyList;
     private SkinListAdapter skinListAdapter;
 
     public SkinListPreference(Context context, AttributeSet attributeSet) {
@@ -32,22 +34,22 @@ public class SkinListPreference extends DialogPreference {
 
     private void m3906a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-        List<File> localSkinList = SkinAndSoundFileHandle.getLocalSkinList(str);
+        List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(str);
         int size = localSkinList.size();
-        f5021a = new CharSequence[(size + 2)];
-        f5022b = new CharSequence[(size + 2)];
+        skinNameList = new CharSequence[(size + 2)];
+        skinKeyList = new CharSequence[(size + 2)];
         for (int i = 0; i < size; i++) {
             str = localSkinList.get(i).getName();
-            f5021a[i] = str.subSequence(0, str.lastIndexOf('.'));
-            f5022b[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + localSkinList.get(i).getName();
+            skinNameList[i] = str.subSequence(0, str.lastIndexOf('.'));
+            skinKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + localSkinList.get(i).getName();
         }
-        f5021a[size] = "原生主题";
-        f5022b[size] = "original";
-        f5021a[size + 1] = "更多主题...";
-        f5022b[size + 1] = "more";
+        skinNameList[size] = "原生主题";
+        skinKeyList[size] = "original";
+        skinNameList[size + 1] = "更多主题...";
+        skinKeyList[size + 1] = "more";
     }
 
-    final void deleteFiles(String str) {
+    public final void deleteFiles(String str) {
         int i = 0;
         File file = new File(str);
         if (file.exists()) {
@@ -67,14 +69,14 @@ public class SkinListPreference extends DialogPreference {
             }
         }
         m3906a();
-        skinListAdapter.mo3544a(f5021a, f5022b);
+        skinListAdapter.mo3544a(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
-        persistString(str1);
+        persistString(skinKey);
     }
 
     @Override
@@ -89,7 +91,7 @@ public class SkinListPreference extends DialogPreference {
         linearLayout.setBackgroundColor(-1);
         ListView skinListView = new ListView(context);
         skinListView.setDivider(null);
-        skinListAdapter = new SkinListAdapter(this, context, f5021a, f5022b);
+        skinListAdapter = new SkinListAdapter(this, context, skinNameList, skinKeyList);
         skinListView.setAdapter(skinListAdapter);
         linearLayout.addView(skinListView);
         builder.setView(linearLayout);

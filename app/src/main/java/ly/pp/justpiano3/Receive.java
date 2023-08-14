@@ -2,43 +2,48 @@ package ly.pp.justpiano3;
 
 import android.os.Bundle;
 import android.os.Message;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import protobuf.vo.OnlineBaseVO;
+import protobuf.vo.OnlineClTestVO;
+import protobuf.vo.OnlineEnterHallVO;
+import protobuf.vo.OnlineHallChatVO;
 
-import ly.pp.justpiano3.protobuf.vo.OnlineBaseVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineClTestVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineEnterHallVO;
-import ly.pp.justpiano3.protobuf.vo.OnlineHallChatVO;
+public final class Receive {
 
-final class Receive {
-
-    static void receive(int msgType, OnlineBaseVO msg) {
+    public static void receive(int msgType, OnlineBaseVO msg) {
         try {
             OLPlayHall olPlayHall;
             Message message;
             Bundle bundle;
             switch (msgType) {
-                case 2:
-                case 3:
-                case 5:
-                case 9:
-                case 13:
-                case 14:
-                case 15:
-                case 17:
-                case 23:
-                case 27:
-                case 31:
-                case 32:
-                case 37:
-                case 45:
+                case OnlineProtocolType.USER_INFO_DIALOG:
+                case OnlineProtocolType.PLAY_START:
+                case OnlineProtocolType.PLAY_FINISH:
+                case OnlineProtocolType.KICKED_QUIT_ROOM:
+                case OnlineProtocolType.ROOM_CHAT:
+                case OnlineProtocolType.CHANGE_ROOM_INFO:
+                case OnlineProtocolType.PLAY_SONG:
+                case OnlineProtocolType.BROADCAST:
+                case OnlineProtocolType.LOAD_PLAY_USER:
+                case OnlineProtocolType.RECOMMEND_SONG:
+                case OnlineProtocolType.SET_USER_INFO:
+                case OnlineProtocolType.SET_MINI_GRADE:
+                case OnlineProtocolType.DIALOG:
+                case OnlineProtocolType.COUPLE:
                     ReceiveHandle.m3949a(msgType, msg);
                     return;
-                case 6:
+                case OnlineProtocolType.CREATE_ROOM:
                     ReceiveHandle.m3951a(msg, "H");
                     return;
-                case 7:
+                case OnlineProtocolType.ENTER_ROOM:
                     ReceiveHandle.m3951a(msg, "G");
                     return;
-                case 10:
+                case OnlineProtocolType.LOGIN:
                     if (JPStack.top() instanceof OLMainMode) {
                         OLMainMode oLMainMode = (OLMainMode) JPStack.top();
                         Message message2 = Message.obtain(oLMainMode.olMainModeHandler);
@@ -63,7 +68,7 @@ final class Receive {
                         return;
                     }
                     return;
-                case 12:
+                case OnlineProtocolType.HALL_CHAT:
                     if (JPStack.top() instanceof OLPlayHall) {
                         olPlayHall = (OLPlayHall) JPStack.top();
                         OnlineHallChatVO hallChat = msg.getHallChat();
@@ -82,37 +87,37 @@ final class Receive {
                         return;
                     }
                     return;
-                case 16:
+                case OnlineProtocolType.CHALLENGE:
                     ReceiveHandle.challenge(msg);
                     return;
-                case 18:
+                case OnlineProtocolType.FAMILY:
                     ReceiveHandle.family(msg);
                     return;
-                case 19:
+                case OnlineProtocolType.LOAD_ROOM_LIST:
                     ReceiveHandle.loadRoomList(msg);
                     return;
-                case 20:
+                case OnlineProtocolType.CHANGE_ROOM_POSITION:
                     ReceiveHandle.changeRoomPosition(msg);
                     return;
-                case 21:
+                case OnlineProtocolType.LOAD_ROOM_POSITION:
                     ReceiveHandle.loadRoomPosition(msg);
                     return;
-                case 22:
+                case OnlineProtocolType.CHANGE_ROOM_LIST:
                     ReceiveHandle.changeRoomList(msg);
                     return;
-                case 25:
+                case OnlineProtocolType.MINI_GRADE:
                     ReceiveHandle.miniGrade(msg);
                     return;
-                case 26:
+                case OnlineProtocolType.SHOP:
                     ReceiveHandle.shop(msg);
                     return;
-                case 28:
-                case 33:
-                case 34:
-                case 36:
+                case OnlineProtocolType.LOAD_USER:
+                case OnlineProtocolType.CHANGE_CLOTHES:
+                case OnlineProtocolType.LOAD_USER_INFO:
+                case OnlineProtocolType.LOAD_USER_LIST:
                     ReceiveHandle.m3953b(msgType, msg);
                     return;
-                case 29:
+                case OnlineProtocolType.ENTER_HALL:
                     OnlineEnterHallVO enterHall = msg.getEnterHall();
                     bundle = new Bundle();
                     if (enterHall.getAllowed()) {
@@ -132,13 +137,13 @@ final class Receive {
                         return;
                     }
                     return;
-                case 38:
+                case OnlineProtocolType.DAILY:
                     ReceiveHandle.daily(msg);
                     return;
-                case 39:
+                case OnlineProtocolType.KEYBOARD:
                     ReceiveHandle.keyboardNotes(msg);
                     return;
-                case 40:
+                case OnlineProtocolType.CL_TEST:
                     OnlineClTestVO clTest = msg.getClTest();
                     bundle = new Bundle();
                     message = Message.obtain();
@@ -163,7 +168,7 @@ final class Receive {
                                 assert olPlayHall != null;
                                 olPlayHall.jpprogressBar.dismiss();
                                 bundle.putInt("songsID", clTest.getClTestSong().getCl());
-                                bundle.putString("songBytes", GZIP.ZIPTo(clTest.getClTestSong().getSongContent()));
+                                bundle.putString("songBytes", GZIPUtil.ZIPTo(clTest.getClTestSong().getSongContent()));
                                 bundle.putInt("hand", clTest.getClTestSong().getHand());
                                 message.setData(bundle);
                                 message.what = 13;
@@ -197,7 +202,7 @@ final class Receive {
                             return;
                     }
                     return;
-                case 43:
+                case OnlineProtocolType.LOAD_ROOM_USER_LIST:
                     ReceiveHandle.m3954b(msg);
                     return;
                 default:

@@ -15,8 +15,6 @@
         <item name="android:colorBackgroundCacheHint">#00000000</item> <!-- 背景缓存色透明，避免拖动全黑 -->
     </style>
 
-    <style name="perference_set_activity" />
-
     <style name="Transparent">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
@@ -57,7 +55,7 @@
     </style>
 
     <style name="Dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@color/translent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
     </style>
@@ -83,11 +81,18 @@
     </style>
 
     <style name="AutoCompleteStyle">
-        <item name="android:popupBackground">@drawable/searchsongs</item>
+        <item name="android:popupBackground">@drawable/selector_ol_button</item>
+        <item name="android:dropDownVerticalOffset">20dip</item>
         <item name="android:dropDownHorizontalOffset">-25dip</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:background">@null</item>
         <item name="android:maxHeight">200dip</item>
         <item name="android:maxWidth">250dip</item>
-        <item name="android:divider">#ff0000</item>
+        <item name="android:divider">@color/translent</item>
+        <item name="android:dividerHeight">0sp</item>
     </style>
 
     <style name="Theme.UMDialog" parent="@android:style/Theme.Dialog">
@@ -96,5 +101,22 @@
     </style>
 
     <style name="Theme.UMDefault" parent="@android:style/Theme.NoTitleBar" />
+
+    <style name="InputBoxStyle">
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginLeft">18dp</item>
+        <item name="android:layout_marginRight">18dp</item>
+        <item name="android:background">@drawable/border_input_box</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:background">@null</item>
+    </style>
 
 </resources>

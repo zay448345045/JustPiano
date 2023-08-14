@@ -1,22 +1,24 @@
 package ly.pp.justpiano3;
 
+import ly.pp.justpiano3.activity.OLMelodySelect;
+
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
-final class SongsComparator implements Comparator<HashMap> {
+public final class SongsComparator implements Comparator<HashMap> {
     private final OLMelodySelect olMelodySelect;
     private final int f5334c;
     private final Comparator comparator = Collator.getInstance(Locale.CHINA);
 
-    SongsComparator(OLMelodySelect oLMelodySelect, int i) {
+    public SongsComparator(OLMelodySelect oLMelodySelect, int i) {
         olMelodySelect = oLMelodySelect;
         f5334c = i;
     }
 
     @Override
-    public final int compare(HashMap obj, HashMap obj2) {
+    public int compare(HashMap obj, HashMap obj2) {
         switch (f5334c) {
             case 0:
                 return olMelodySelect.f4331t ? 0 - ((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));

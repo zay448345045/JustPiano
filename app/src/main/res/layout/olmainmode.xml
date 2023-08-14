@@ -13,7 +13,9 @@
         android:id="@+id/app_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="联网模式"
+        android:layout_marginBottom="@dimen/dimen_8dp"
+        android:fontFamily="@font/title"
+        android:text="@string/main_mode_ol"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white1" />
 
@@ -21,56 +23,59 @@
         android:id="@+id/LinearLayout01"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginBottom="@dimen/dimen_8dp"
         android:gravity="center">
 
         <Button
             android:id="@+id/ol_web_b"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dimen_100dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/about"
-            android:text="官网"
+            android:text="@string/olmainmode_about"
             android:textColor="@color/white1"
             android:textSize="24sp" />
 
         <Button
             android:id="@+id/ol_songs_b"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dimen_100dp"
             android:layout_height="match_parent"
             android:background="#10293535"
             android:drawableTop="@drawable/music"
-            android:text="曲库"
+
+            android:text="@string/olmainmode_songs"
             android:textColor="@color/white1"
             android:textSize="24sp" />
 
         <Button
             android:id="@+id/ol_playhall_b"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dimen_100dp"
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/friends"
-            android:text="对战"
+
+            android:text="@string/olmainmode_ol"
             android:textColor="#ffff4664"
             android:textSize="24sp" />
 
         <Button
             android:id="@+id/ol_top_b"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dimen_100dp"
             android:layout_height="match_parent"
             android:background="#10293535"
             android:drawableTop="@drawable/ranking"
-            android:text="排行"
+            android:text="@string/olmainmode_li"
             android:textColor="@color/white1"
             android:textSize="24sp" />
 
         <Button
             android:id="@+id/ol_users_b"
-            android:layout_width="100dp"
-            android:layout_height="160dp"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_160dp"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/mine"
-            android:text="用户"
+            android:text="@string/ol_msg_view_usr"
             android:textColor="@color/white1"
             android:textSize="24sp" />
     </LinearLayout>
@@ -78,32 +83,35 @@
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_6dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true">
 
             <Button
-                android:id="@+id/ol_bindmail_b"
-                android:layout_width="100dp"
+                android:id="@+id/ol_chatblack_b"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#40000000"
-                android:text="绑定邮箱"
-                android:textColor="@color/online"
+                android:layout_marginRight="@dimen/dimen_6dp"
+                android:background="@drawable/selector_ol_button_login"
+                android:text="@string/olmainmode_bi"
+                android:textColor="@color/white1"
                 android:textSize="18sp" />
 
             <Button
                 android:id="@+id/ol_finduser_b"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#40000000"
-                android:text="查找用户"
-                android:textColor="#fffff66b"
+                android:layout_marginLeft="@dimen/dimen_6dp"
+                android:background="@drawable/selector_ol_button"
+                android:text="@string/olmainmode_fi"
+                android:textColor="@color/white1"
                 android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>

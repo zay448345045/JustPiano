@@ -6,15 +6,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.*;
+import ly.pp.justpiano3.view.GoldConvertView;
 
 public final class JPDialog {
     private EditText editText;
+    private GoldConvertView goldConvertView;
     private RadioGroup radioGroup;
     private View inflate;
     private final Context context;
@@ -32,32 +31,32 @@ public final class JPDialog {
         this.context = context;
     }
 
-    public final JPDialog loadInflate(View view) {
+    public JPDialog loadInflate(View view) {
         this.view = view;
         return this;
     }
 
-    public final JPDialog setMessage(String str) {
+    public JPDialog setMessage(String str) {
         message = str;
         return this;
     }
 
-    public final JPDialog setFirstButton(String str, OnClickListener onClickListener) {
+    public JPDialog setFirstButton(String str, OnClickListener onClickListener) {
         positiveText = str;
         listener2 = onClickListener;
         return this;
     }
 
-    public final JPDialog setFirstButtonDisabled(boolean disabled) {
+    public JPDialog setFirstButtonDisabled(boolean disabled) {
         positiveButtonDisabled = disabled;
         return this;
     }
 
-    final void setCancelableFalse() {
+    public void setCancelableFalse() {
         cancelable = false;
     }
 
-    final JDialog createJDialog() {
+    public JDialog createJDialog() {
         if (inflate == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             inflate = layoutInflater.inflate(R.layout.mydialog, null);
@@ -96,17 +95,18 @@ public final class JPDialog {
         return jDialog;
     }
 
-    public final JPDialog setTitle(String str) {
+    public JPDialog setTitle(String str) {
         title = str;
         return this;
     }
 
-    public void setVisibleEditText(boolean visibleEditText) {
+    public void setVisibleEditText(boolean visibleEditText, String hint) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.mydialog, null);
         if (visibleEditText) {
             editText = (inflate.findViewById(R.id.Etext));
             editText.setVisibility(View.VISIBLE);
+            editText.setHint(hint);
         }
     }
 
@@ -140,23 +140,41 @@ public final class JPDialog {
         return editText.getText().toString();
     }
 
-    public final JPDialog setSecondButton(String str, OnClickListener onClickListener) {
+    public GoldConvertView getGoldConvertView() {
+        return goldConvertView;
+    }
+
+    public JPDialog setSecondButton(String str, OnClickListener onClickListener) {
         negativeText = str;
         listener = onClickListener;
         return this;
     }
 
-    public final void showDialog() {
+    public void showDialog() {
         try {
             JDialog dia = createJDialog();
             if (!dia.isShowing()) {
+                Window window = dia.getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                focusNotAle(window);
                 dia.show();
+                hideNavigationBar(window);
+                clearFocusNotAle(window);
             }
         } catch (Exception ignore) {
         }
     }
 
-    static class JDialog extends Dialog {
+    public void setVisibleGoldConvertView(boolean visible) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        if (visible) {
+            goldConvertView = (inflate.findViewById(R.id.gold_convert));
+            goldConvertView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static class JDialog extends Dialog {
 
         JDialog(Context context) {
             super(context, R.style.Dialog);
@@ -166,5 +184,29 @@ public final class JPDialog {
         public final void setCancelable(boolean z) {
             super.setCancelable(z);
         }
+    }
+
+    public void hideNavigationBar(Window window) {
+ //     window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        window.getDecorView().setOnSystemUiVisibilityChangeListener(visibility -> {
+            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                    //布局位于状态栏下方
+ //                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                    //全屏
+                    View.SYSTEM_UI_FLAG_FULLSCREEN |
+                    //隐藏导航栏
+ //                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            window.getDecorView().setSystemUiVisibility(uiOptions);
+        });
+    }
+
+    public void focusNotAle(Window window) {
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+    }
+
+    public void clearFocusNotAle(Window window) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 }

@@ -29,7 +29,7 @@
         <item>8</item>
         <item>12</item>
     </string-array>
-    <string-array name="down_nentries">
+    <string-array name="down_entries">
         <item>神快</item>
         <item>超快</item>
         <item>很快</item>

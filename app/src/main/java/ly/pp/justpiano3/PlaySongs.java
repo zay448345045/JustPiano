@@ -3,12 +3,15 @@ package ly.pp.justpiano3;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
-
-import ly.pp.justpiano3.protobuf.dto.OnlinePlaySongDTO;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import protobuf.dto.OnlinePlaySongDTO;
 
 public final class PlaySongs {
     public JPApplication jpapplication;
-    boolean isPlayingSongs;
+    public boolean isPlayingSongs;
     private final MelodySelect melodyselect;
     private final OLPlayRoom olPlayRoom;
     private final int position;
@@ -17,7 +20,7 @@ public final class PlaySongs {
     private final byte[] noteArray;
     private final byte[] volumeArray;
 
-    PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
+    public PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
         jpapplication = jPApplication;
         melodyselect = melodySelect;
         position = i;
@@ -81,7 +84,7 @@ public final class PlaySongs {
                     OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                     builder.setTune(olPlayRoom.getdiao());
                     builder.setSongPath(jpapplication.getNowSongsName());
-                    olPlayRoom.sendMsg(15, builder.build());
+                    olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
                     Message obtainMessage1 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                     obtainMessage1.what = 12;
                     olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage1);
@@ -94,12 +97,13 @@ public final class PlaySongs {
                     if (olPlayRoom.sqlitedatabase != null) {
                         Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "diff >= " + 0 + " AND diff < " + 20 + str0, null, null, null, null);
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
+                        query.close();
                         String str1 = str0.substring(6, str0.length() - 3);
                         jpapplication.setNowSongsName(str1);
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
                         builder1.setSongPath(str1);
-                        olPlayRoom.sendMsg(15, builder1.build());
+                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);
@@ -113,6 +117,7 @@ public final class PlaySongs {
                     if (olPlayRoom.sqlitedatabase != null) {
                         Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "isfavo > 0" + str0, null, null, null, null);
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
+                        query.close();
                         if (str0.isEmpty()) {
                             return;
                         }
@@ -121,7 +126,7 @@ public final class PlaySongs {
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
                         builder1.setSongPath(str1);
-                        olPlayRoom.sendMsg(15, builder1.build());
+                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);

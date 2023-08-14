@@ -15,61 +15,61 @@
         android:orientation="vertical">
 
         <ImageView
+                android:id="@+id/ol_player_playing"
+                android:layout_width="@dimen/dimen_100dp"
+                android:layout_height="@dimen/dimen_100dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/filled_bar_playing"
+                android:visibility="invisible" />
+
+        <ImageView
             android:id="@+id/ol_player_mod"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/filled_msg" />
 
         <ImageView
-            android:id="@+id/ol_player_playing"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:visibility="invisible"
-            android:background="@drawable/filled_bar_playing" />
-
-        <ImageView
             android:id="@+id/ol_player_eye"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp" />
 
         <ImageView
             android:id="@+id/ol_player_hair"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp" />
 
         <ImageView
             android:id="@+id/ol_player_shoes"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp" />
 
         <ImageView
             android:id="@+id/ol_player_trousers"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp" />
 
         <ImageView
             android:id="@+id/ol_player_jacket"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp" />
 
         <TextView
             android:id="@+id/ol_player_name"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/dimen_20dp"
             android:layout_below="@+id/ol_player_mod"
             android:layout_alignEnd="@+id/ol_player_mod"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
+            android:layout_marginStart="@dimen/dimen_0dp"
+            android:layout_marginTop="@dimen/dimen_0dp"
+            android:layout_marginEnd="@dimen/dimen_0dp"
             android:background="@drawable/back_puased"
+
             android:gravity="center"
-            android:text=""
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/white1"
             android:textSize="12sp" />
 
@@ -79,12 +79,13 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/ol_player_name"
             android:layout_alignEnd="@+id/ol_player_mod"
+
             android:gravity="start"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/green_r"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:textStyle="bold"
+
             android:typeface="sans" />
 
         <TextView
@@ -93,6 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/ol_player_mod"
             android:layout_alignParentStart="true"
+
             android:gravity="center"
             android:textColor="@color/white1"
             android:textColorHint="@color/yellow_r"
@@ -104,12 +106,13 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/ol_player_level"
             android:layout_alignEnd="@+id/ol_player_mod"
+
             android:gravity="start"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/yellow"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:textStyle="bold"
+
             android:typeface="sans" />
 
         <TextView
@@ -119,45 +122,45 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/filled_classname"
+
             android:gravity="center"
             android:maxEms="1"
             android:textColor="@color/white1"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:textStyle="normal|bold|italic"
             android:typeface="monospace" />
 
         <ImageView
             android:id="@+id/ol_player_midi"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="@dimen/dimen_14dp"
+            android:layout_height="@dimen/dimen_14dp"
             android:layout_above="@+id/ol_ready_text"
-            android:visibility="invisible"
             android:layout_alignStart="@+id/ol_player_mod"
-            android:src="@drawable/midi_usb" />
+            android:src="@drawable/midi_usb"
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/ol_player_couple"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/dimen_20dp"
+            android:layout_height="@dimen/dimen_20dp"
             android:layout_alignEnd="@+id/ol_player_mod"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginEnd="@dimen/dimen_5dp" />
 
         <ImageView
             android:id="@+id/ol_player_family"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/dimen_20dp"
+            android:layout_height="@dimen/dimen_20dp"
             android:layout_alignEnd="@+id/ol_player_mod"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_5dp" />
 
         <ImageView
             android:id="@+id/ol_player_sound"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/dimen_20dp"
+            android:layout_height="@dimen/dimen_20dp"
             android:layout_alignEnd="@+id/ol_player_mod"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginTop="@dimen/dimen_40dp"
+            android:layout_marginEnd="@dimen/dimen_5dp" />
     </RelativeLayout>
 </LinearLayout>

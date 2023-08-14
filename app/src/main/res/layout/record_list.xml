@@ -20,6 +20,6 @@
         android:id="@+id/listFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/divider"
+        android:divider="@null"
         android:listSelector="@android:color/transparent" />
 </LinearLayout>

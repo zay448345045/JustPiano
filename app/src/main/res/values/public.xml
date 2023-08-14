@@ -698,7 +698,7 @@
     <public name="friend_info" id="2131427416" type="id" />
     <public name="friend_level" id="2131427417" type="id" />
     <public name="ads" id="2131427418" type="id" />
-    <public name="ol_top_tittle" id="2131427419" type="id" />
+    <public name="ol_top_title" id="2131427419" type="id" />
     <public name="list_view" id="2131427420" type="id" />
     <public name="layout" id="2131427421" type="id" />
     <public name="username" id="2131427422" type="id" />
@@ -921,7 +921,7 @@
     <public name="ol_shoes_grid" id="2131427641" type="id" />
     <public name="broadCastText" id="2131427642" type="id" />
     <public name="systemText" id="2131427643" type="id" />
-    <public name="ol_playhall_tittle" id="2131427644" type="id" />
+    <public name="ol_playhall_title" id="2131427644" type="id" />
     <public name="ol_room_list" id="2131427645" type="id" />
     <public name="ol_testroom_b" id="2131427646" type="id" />
     <public name="time_text" id="2131427647" type="id" />
