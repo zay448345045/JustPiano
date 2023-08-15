@@ -72,7 +72,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
                 return;
             case R.id.viewChallenge:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://justpiano.fun/pages/challenge.html"));
+                intent.setData(Uri.parse("https://" + JPApplication.WEBSITE_URL + "/pages/challenge.html"));
                 startActivity(intent);
                 return;
         }

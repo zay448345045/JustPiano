@@ -37,9 +37,9 @@ public final class JPApplication extends Application {
     public static final String WEBSITE_URL = "justpiano.fun";
 
     /**
-     * apk资源下载地址
+     * 官网地址
      */
-    public static final String RESOURCE_WEBSITE_URL = "i.justpiano.fun";
+    public static final String INSIDE_WEBSITE_URL = "i.justpiano.fun";
 
     /**
      * 对战服务器地址
@@ -355,7 +355,7 @@ public final class JPApplication extends Application {
         widthPixels = i;
     }
 
-    public boolean hasKeyboardPerfer() {
+    public boolean hasKeyboardPrefer() {
         return keyboardPrefer;
     }
 

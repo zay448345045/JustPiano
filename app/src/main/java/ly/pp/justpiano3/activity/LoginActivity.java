@@ -244,7 +244,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 
     private String getApkUrlByVersion(String version) {
-        return "https://" + JPApplication.RESOURCE_WEBSITE_URL + "/res/" + getApkFileName(version);
+        return "https://" + JPApplication.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
     }
 
     private String getApkFileName(String version) {
