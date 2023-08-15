@@ -12,7 +12,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
         versionCode 50
-        versionName "4.7"
+        versionName "4.71"
 //        renderscriptTargetApi 18
 //        renderscriptSupportModeEnabled true
         externalNativeBuild {
