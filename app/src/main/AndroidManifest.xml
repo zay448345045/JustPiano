@@ -148,7 +148,7 @@
         <activity
                 android:name="ly.pp.justpiano3.activity.OLPlayRoom"
                 android:label="@string/app_name"
-                android:screenOrientation="userLandscape"
+                android:screenOrientation="sensorLandscape"
                 android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
         <activity
                 android:name="ly.pp.justpiano3.activity.OLPlayKeyboardRoom"
