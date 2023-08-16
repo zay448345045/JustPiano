@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.ReadPm;
 import ly.pp.justpiano3.SQLiteHelper;
 import ly.pp.justpiano3.activity.MainMode;

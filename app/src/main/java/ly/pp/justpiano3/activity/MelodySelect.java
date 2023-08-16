@@ -29,7 +29,8 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
-import ly.pp.justpiano3.thread.PlaySongs;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

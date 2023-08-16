@@ -14,6 +14,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
 import ly.pp.justpiano3.task.ShowSongsInfoTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -13,7 +13,7 @@ import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;

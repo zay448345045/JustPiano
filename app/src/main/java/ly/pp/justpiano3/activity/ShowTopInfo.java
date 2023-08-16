@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
+import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -38,7 +39,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public int f4996l = 0;
     public int f4997m = 0;
     public String f4999o = "";
-    public PictureHandle f5001q;
+    public PictureHandle pictureHandle;
     public Handler handler;
     private TextView f4993i;
     private final int f4998n = 20;
@@ -185,8 +186,8 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
 
     @Override
     protected void onDestroy() {
-        if (f5001q != null) {
-            f5001q.mo3026a();
+        if (pictureHandle != null) {
+            pictureHandle.mo3026a();
         }
         super.onDestroy();
     }

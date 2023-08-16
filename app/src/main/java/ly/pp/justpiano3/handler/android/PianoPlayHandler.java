@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.lang.ref.WeakReference;

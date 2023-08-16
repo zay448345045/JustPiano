@@ -4,9 +4,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import ly.pp.justpiano3.adapter.DressAdapter;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChangeClothesDTO;
 

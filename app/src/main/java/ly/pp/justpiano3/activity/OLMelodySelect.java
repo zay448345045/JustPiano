@@ -17,6 +17,7 @@ import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
+import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 

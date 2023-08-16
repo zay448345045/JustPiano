@@ -14,6 +14,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.File;
 import java.util.List;

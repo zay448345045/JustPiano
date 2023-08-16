@@ -15,6 +15,9 @@ import ly.pp.justpiano3.handler.android.OLMainModeHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;

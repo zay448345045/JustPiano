@@ -34,6 +34,9 @@ import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
 import protobuf.dto.OnlineShopDTO;
 

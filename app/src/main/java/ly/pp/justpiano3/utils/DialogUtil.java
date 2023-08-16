@@ -1,9 +1,8 @@
 package ly.pp.justpiano3.utils;
 
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.view.GoldConvertView;
 import protobuf.dto.OnlineDialogDTO;
 

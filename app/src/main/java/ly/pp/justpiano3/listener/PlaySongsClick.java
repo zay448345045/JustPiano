@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 import ly.pp.justpiano3.adapter.LocalSongsAdapter;
-import ly.pp.justpiano3.thread.PlaySongs;
 
 public final class PlaySongsClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;

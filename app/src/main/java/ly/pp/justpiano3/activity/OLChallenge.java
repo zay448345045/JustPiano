@@ -16,7 +16,10 @@ import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.GetPrizeClick;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.DrawPrizeView;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChallengeDTO;
 
 import java.text.DateFormat;

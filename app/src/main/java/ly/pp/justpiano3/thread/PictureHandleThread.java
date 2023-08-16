@@ -33,7 +33,7 @@ public final class PictureHandleThread extends Thread {
 
     public void mo3068a(ImageView imageView, String str) {
         map.remove(imageView);
-        if (str.endsWith(pictureHandle.f5088f)) {
+        if (str.endsWith(pictureHandle.JPG_SUFFIX)) {
             map.put(str, imageView);
             if (f5147c) {
                 synchronized (this) {

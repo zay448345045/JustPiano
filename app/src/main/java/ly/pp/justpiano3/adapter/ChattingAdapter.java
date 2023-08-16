@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ly.pp.justpiano3.listener.ChangeRecommandSongClick;
-import ly.pp.justpiano3.JPStack;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;

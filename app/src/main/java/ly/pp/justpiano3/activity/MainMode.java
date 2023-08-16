@@ -21,6 +21,8 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.File;
 
