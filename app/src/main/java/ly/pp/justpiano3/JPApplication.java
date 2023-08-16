@@ -17,9 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.multidex.MultiDex;
 import javazoom.jl.converter.Converter;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.view.PlayView;
@@ -93,6 +96,7 @@ public final class JPApplication extends Application {
     private String nowSongsName = "";
     private String server = ONLINE_SERVER_URL;
     private boolean keyboardPrefer;
+    private PlaySongs playSongs;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -155,6 +159,29 @@ public final class JPApplication extends Application {
 
     public PublicKey getServerPublicKey() {
         return publicKey;
+    }
+
+    public void startPlaySongLocal(String songPath, MelodySelect melodySelect, int position) {
+        stopPlaySong();
+        this.playSongs = new PlaySongs(this, songPath, melodySelect, null, position, 0);
+    }
+
+    public void startPlaySongOnline(String songPath, OLPlayRoom olPlayRoom, int tune) {
+        stopPlaySong();
+        this.playSongs = new PlaySongs(this, songPath, null, olPlayRoom, 0, tune);
+    }
+
+    public boolean stopPlaySong() {
+        if (this.playSongs != null) {
+            this.playSongs.isPlayingSongs = false;
+            this.playSongs = null;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isPlayingSong() {
+        return this.playSongs != null && this.playSongs.isPlayingSongs;
     }
 
     public static native void setupAudioStreamNative(int var1, int var2);

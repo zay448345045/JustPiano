@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 import ly.pp.justpiano3.adapter.LocalSongsAdapter;
-import ly.pp.justpiano3.PlaySongs;
+import ly.pp.justpiano3.thread.PlaySongs;
 
 public final class PlaySongsClick implements OnClickListener {
     private final LocalSongsAdapter localSongsAdapter;
@@ -24,17 +24,12 @@ public final class PlaySongsClick implements OnClickListener {
     }
 
     public void onClick(View view) {
-        if (localSongsAdapter.melodyselect.playSongs != null) {
-            localSongsAdapter.melodyselect.playSongs.isPlayingSongs = false;
-            localSongsAdapter.melodyselect.playSongs = null;
-            return;
-        }
         if (songsPath.equals(localSongsAdapter.melodyselect.songsPath)) {
             localSongsAdapter.melodyselect.songsPath = "";
             return;
         }
         localSongsAdapter.melodyselect.songsPath = songsPath;
-        localSongsAdapter.melodyselect.playSongs = new PlaySongs(localSongsAdapter.melodyselect.jpapplication, songsPath, localSongsAdapter.melodyselect, null, (Integer) this.view.getTag(), 0);
+        localSongsAdapter.melodyselect.jpapplication.startPlaySongLocal(songsPath, localSongsAdapter.melodyselect, (Integer) this.view.getTag());
         Toast.makeText(context, "正在播放:《" + songsName + "》", Toast.LENGTH_SHORT).show();
     }
 }

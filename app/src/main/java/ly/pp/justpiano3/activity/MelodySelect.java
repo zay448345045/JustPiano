@@ -29,6 +29,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
+import ly.pp.justpiano3.thread.PlaySongs;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,7 +53,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     public SQLiteDatabase sqlitedatabase;
     public boolean showTitle;
     public String sortStr = null;
-    public PlaySongs playSongs;
     public String f4263s = "";
     public int f4264t;
     public TextView titleTextView;
@@ -142,10 +142,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 break;
             case 2:
                 menuPopupwindow.dismiss();
-                if (playSongs != null) {
-                    playSongs.isPlayingSongs = false;
-                    playSongs = null;
-                }
+                jpapplication.stopPlaySong();
                 Intent intent = new Intent();
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
@@ -195,12 +192,11 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             case 4:
                 Cursor cursor = songListAdapter.getCursor();
                 int i2 = data.getInt("position") + 1;
-                playSongs = null;
                 songsPath = "";
                 if (cursor.moveToPosition(i2)) {
                     String string = cursor.getString(cursor.getColumnIndexOrThrow("path"));
                     String string2 = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                    playSongs = new PlaySongs(jpapplication, string, this, null, i2, 0);
+                    jpapplication.startPlaySongLocal(string, this, i2);
                     Toast.makeText(this, "正在播放:《" + string2 + "》", Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -222,10 +218,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         if (sqlitedatabase.isOpen()) {
             sqlitedatabase.close();
         }
-        if (playSongs != null) {
-            playSongs.isPlayingSongs = false;
-            playSongs = null;
-        }
+        jpapplication.stopPlaySong();
         Intent intent;
         if (intentFlag == 10) {
             intent = new Intent();
@@ -275,7 +268,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
         try {
-            LayoutInflater f4265u = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
             SQLiteHelper = new SQLiteHelper(this, "data");
@@ -289,7 +282,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 cursor.close();
                 cursor = null;
             }
-            LinearLayout linearLayout = (LinearLayout) f4265u.inflate(R.layout.melodylist1, null);
+            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
             setContentView(linearLayout);
             linearLayout.setOnTouchListener((v, event) -> {
                 if (null != getCurrentFocus()) {
@@ -390,10 +383,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     @Override
     protected void onDestroy() {
-        if (playSongs != null) {
-            playSongs.isPlayingSongs = false;
-            playSongs = null;
-        }
+        jpapplication.stopPlaySong();
         handler = null;
         if (songListAdapter != null && songListAdapter.getCursor() != null) {
             songListAdapter.getCursor().close();

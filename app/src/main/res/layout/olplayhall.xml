@@ -230,7 +230,7 @@
                                 android:layout_toEndOf="@+id/ol_express_b"
                                 android:background="@color/back"
                                 android:ems="10"
-                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:textColor="@color/white1"
                                 android:textSize="12sp" />
 

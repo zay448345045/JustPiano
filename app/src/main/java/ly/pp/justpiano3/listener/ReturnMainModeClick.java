@@ -18,10 +18,7 @@ public final class ReturnMainModeClick implements OnClickListener {
         dialogInterface.dismiss();
         if (baseactivity instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) baseactivity;
-            if (olPlayRoom.playSongs != null) {
-                olPlayRoom.playSongs.isPlayingSongs = false;
-                olPlayRoom.playSongs = null;
-            }
+            olPlayRoom.jpapplication.stopPlaySong();
         }
         BaseActivity.returnMainMode(baseactivity);
     }
