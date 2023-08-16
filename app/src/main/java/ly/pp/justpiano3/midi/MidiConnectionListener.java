@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.midi;
 
 /**
  * 监听midi键盘连接和断开连接

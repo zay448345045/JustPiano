@@ -1,9 +1,10 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.thread;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.widget.ImageView;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.thread.PictureHandleThread;
 
 import java.io.InputStream;

@@ -3,7 +3,7 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.SoundListPreference;
+import ly.pp.justpiano3.view.SoundListPreference;
 import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;

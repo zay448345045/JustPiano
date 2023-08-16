@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Handler;

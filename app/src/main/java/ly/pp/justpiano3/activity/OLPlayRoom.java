@@ -27,6 +27,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
+import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
@@ -96,7 +97,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private PopupWindow changeColor = null;
     private PopupWindow playSongsMode = null;
     private OLRoomSongsAdapter olRoomSongsAdapter;
-    private SQLiteHelper SQLiteHelper;
+    private ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
     private Cursor cursor;
     private TextView timeTextView;
     private String sqlWhere = "";

@@ -21,6 +21,7 @@ import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;

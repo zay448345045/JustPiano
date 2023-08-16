@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
+import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -25,12 +25,14 @@ import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
 import ly.pp.justpiano3.adapter.MelodySelectAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
+import ly.pp.justpiano3.wrapper.JustPianoCursorWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -68,7 +70,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     private int intentFlag;
     private ListView songListView;
     private LocalSongsAdapter songListAdapter;
-    public ly.pp.justpiano3.SQLiteHelper SQLiteHelper;
+    public ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
     private int score;
     private final List<String> sortNamesList = new ArrayList<>();
 

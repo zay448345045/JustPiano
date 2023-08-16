@@ -3,7 +3,6 @@ package ly.pp.justpiano3.thread;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.PictureHandle;
 
 import java.lang.ref.SoftReference;
 import java.util.LinkedHashMap;

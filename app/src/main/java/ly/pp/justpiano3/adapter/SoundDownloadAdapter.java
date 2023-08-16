@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.ImageLoader;
+import ly.pp.justpiano3.utils.ImageLoader;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.SoundDownload;
 import ly.pp.justpiano3.listener.SoundItemClick;

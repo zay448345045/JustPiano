@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.midi;
 
 import android.media.midi.MidiReceiver;
 import android.os.Build;

@@ -12,8 +12,10 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.view.JustPianoView;
+import ly.pp.justpiano3.view.play.ReadPm;
 
 import java.io.File;
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
     private boolean isPause;
     private boolean loadFinish;
     private int songCount;
-    private SQLiteHelper SQLiteHelper;
+    private ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
     private SQLiteDatabase sqliteDataBase;
     private ContentValues contentvalues;
     private JustPianoView justpianoview;

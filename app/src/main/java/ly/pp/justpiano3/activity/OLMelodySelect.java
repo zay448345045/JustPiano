@@ -21,10 +21,8 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.text.Collator;
+import java.util.*;
 
 public class OLMelodySelect extends Activity implements Callback, OnClickListener {
     public static byte[] songBytes = null;
@@ -59,6 +57,36 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     private Handler handler;
     private boolean firstLoadFocusFinish = false;
     private List<HashMap> songList = null;
+
+    public static final class SongsComparator implements Comparator<HashMap> {
+        private final OLMelodySelect olMelodySelect;
+        private final int type;
+        private final Comparator comparator = Collator.getInstance(Locale.CHINA);
+
+        public SongsComparator(OLMelodySelect oLMelodySelect, int i) {
+            olMelodySelect = oLMelodySelect;
+            type = i;
+        }
+
+        @Override
+        public int compare(HashMap obj, HashMap obj2) {
+            switch (type) {
+                case 0:
+                    return olMelodySelect.f4331t ? 0 - ((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));
+                case 1:
+                    return olMelodySelect.f4332u ? ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree")) : 0 - ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree"));
+                case 2:
+                    return olMelodySelect.f4333v ? comparator.compare(obj.get("songName"), obj2.get("songName")) : 0 - comparator.compare(obj.get("songName"), obj2.get("songName"));
+                case 3:
+                    return olMelodySelect.f4334w ? comparator.compare(obj.get("items"), obj2.get("items")) : 0 - comparator.compare(obj.get("items"), obj2.get("items"));
+                case 4:
+                    return olMelodySelect.f4335x ? 0 - comparator.compare(obj.get("playCount"), obj2.get("playCount")) : comparator.compare(obj.get("playCount"), obj2.get("playCount"));
+                default:
+                    return 0;
+            }
+        }
+    }
+
 
     public void m3643a(int i) {
         pageList.clear();

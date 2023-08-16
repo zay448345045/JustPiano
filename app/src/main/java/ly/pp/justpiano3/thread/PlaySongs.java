@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.ReadPm;
+import ly.pp.justpiano3.view.play.ReadPm;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;

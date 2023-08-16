@@ -19,6 +19,7 @@ import android.widget.Toast;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsTask;
+import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;

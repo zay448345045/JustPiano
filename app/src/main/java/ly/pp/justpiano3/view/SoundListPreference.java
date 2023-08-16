@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.view;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SoundListAdapter;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;

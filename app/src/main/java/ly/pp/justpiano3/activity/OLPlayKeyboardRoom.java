@@ -29,6 +29,8 @@ import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.DateUtil;

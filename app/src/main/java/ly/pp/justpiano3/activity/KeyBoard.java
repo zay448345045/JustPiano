@@ -17,6 +17,8 @@ import androidx.annotation.RequiresApi;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.KeyboardModeView;

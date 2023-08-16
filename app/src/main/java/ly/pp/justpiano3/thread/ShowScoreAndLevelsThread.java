@@ -1,6 +1,6 @@
 package ly.pp.justpiano3.thread;
 
-import ly.pp.justpiano3.ShowTouchNotesLevel;
+import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
 import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.util.List;

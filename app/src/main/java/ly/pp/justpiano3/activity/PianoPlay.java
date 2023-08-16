@@ -24,6 +24,8 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimer;

@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,9 +9,6 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageResizerUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -71,6 +68,18 @@ public class ImageLoader {
             }
         }
     };
+
+    public static class LoaderResult {
+        public Bitmap bitmap;
+        ImageView imageView;
+        String uri;
+
+        public LoaderResult(ImageView imageView, String uri, Bitmap bitmap) {
+            this.imageView = imageView;
+            this.uri = uri;
+            this.bitmap = bitmap;
+        }
+    }
 
     /**
      * @param context 上下文

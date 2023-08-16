@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.wrapper;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
