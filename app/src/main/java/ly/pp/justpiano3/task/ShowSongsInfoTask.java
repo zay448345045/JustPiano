@@ -58,7 +58,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
             Toast.makeText(showSongsInfo.get(), "获取列表出错!", Toast.LENGTH_SHORT).show();
         } else {
             showSongsInfo.get().jpprogressBar.cancel();
-            Toast.makeText(showSongsInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+            Toast.makeText(showSongsInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
         }
     }
 

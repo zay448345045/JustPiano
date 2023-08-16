@@ -56,7 +56,7 @@ public final class UsersInfoTask extends AsyncTask<String, Void, String> {
             Toast.makeText(userInfo.get(), "数据出错!", Toast.LENGTH_SHORT).show();
         } else {
             userInfo.get().jpprogressBar.cancel();
-            Toast.makeText(userInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+            Toast.makeText(userInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
         }
     }
 

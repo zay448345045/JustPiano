@@ -72,7 +72,7 @@ public final class SearchSongsPlayTask {
         searchSongs.get().runOnUiThread(() -> {
             if (songBytes == null || songBytes.length <= 3) {
                 searchSongs.get().jpprogressBar.cancel();
-                Toast.makeText(searchSongs.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+                Toast.makeText(searchSongs.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
                 return;
             }
             OLMelodySelect.songBytes = songBytes;

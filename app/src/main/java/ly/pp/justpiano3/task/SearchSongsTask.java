@@ -84,7 +84,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             Toast.makeText(searchSongs.get(), "没有找到与[" + searchSongs.get().f4948c + "]相关的信息", Toast.LENGTH_SHORT).show();
         } else {
             searchSongs.get().jpprogressBar.cancel();
-            Toast.makeText(searchSongs.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+            Toast.makeText(searchSongs.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
         }
     }
 
