@@ -930,8 +930,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
+                    jpapplication.addMidiConnectionListener(this);
                 }
-                jpapplication.addMidiConnectionListener(this);
             }
         }
 

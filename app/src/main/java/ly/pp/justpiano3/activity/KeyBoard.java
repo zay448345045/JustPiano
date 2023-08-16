@@ -134,8 +134,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
+                    jpapplication.addMidiConnectionListener(this);
                 }
-                jpapplication.addMidiConnectionListener(this);
             }
         }
     }

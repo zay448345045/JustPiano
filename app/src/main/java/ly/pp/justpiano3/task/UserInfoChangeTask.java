@@ -12,10 +12,10 @@ import okhttp3.*;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
+public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
 
-    public UsersInfoTask2(UsersInfo usersInfo) {
+    public UserInfoChangeTask(UsersInfo usersInfo) {
         this.usersInfo = new WeakReference<>(usersInfo);
     }
 

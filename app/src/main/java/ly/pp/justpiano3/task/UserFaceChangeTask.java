@@ -6,10 +6,10 @@ import ly.pp.justpiano3.activity.UsersInfo;
 
 import java.lang.ref.WeakReference;
 
-public final class UsersInfoTask3 extends AsyncTask<String, Void, String> {
+public final class UserFaceChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
 
-    public UsersInfoTask3(UsersInfo usersInfo) {
+    public UserFaceChangeTask(UsersInfo usersInfo) {
         userInfo = new WeakReference<>(usersInfo);
     }
 

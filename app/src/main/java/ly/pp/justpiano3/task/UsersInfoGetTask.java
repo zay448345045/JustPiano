@@ -10,10 +10,10 @@ import okhttp3.Response;
 
 import java.lang.ref.WeakReference;
 
-public final class UsersInfoTask extends AsyncTask<String, Void, String> {
+public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
 
-    public UsersInfoTask(UsersInfo usersInfo) {
+    public UsersInfoGetTask(UsersInfo usersInfo) {
         userInfo = new WeakReference<>(usersInfo);
     }
 

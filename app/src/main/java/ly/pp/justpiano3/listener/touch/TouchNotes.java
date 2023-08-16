@@ -28,8 +28,8 @@ public final class TouchNotes implements OnTouchListener {
                         }
                     });
                     playView.pianoPlay.jpapplication.midiOutputPort.connect(playView.pianoPlay.midiFramer);
+                    playView.pianoPlay.jpapplication.addMidiConnectionListener(playView.pianoPlay);
                 }
-                playView.pianoPlay.jpapplication.addMidiConnectionListener(playView.pianoPlay);
             }
         }
     }
