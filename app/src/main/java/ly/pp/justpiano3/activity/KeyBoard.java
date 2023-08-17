@@ -20,6 +20,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.KeyboardModeView;
@@ -127,15 +128,15 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
+                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                     midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
                             midiConnectHandle(data);
                         }
                     });
-                    jpapplication.midiOutputPort.connect(midiFramer);
-                    jpapplication.addMidiConnectionListener(this);
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                    MidiUtil.addMidiConnectionListener(this);
                 }
             }
         }
@@ -145,12 +146,12 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
+                if (MidiUtil.getMidiOutputPort() != null) {
                     if (midiFramer != null) {
-                        jpapplication.midiOutputPort.disconnect(midiFramer);
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
                         midiFramer = null;
                     }
-                    jpapplication.removeMidiConnectionStart(this);
+                    MidiUtil.removeMidiConnectionStart(this);
                 }
             }
         }
@@ -303,14 +304,14 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public void onMidiConnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
+                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                     midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
                             midiConnectHandle(data);
                         }
                     });
-                    jpapplication.midiOutputPort.connect(midiFramer);
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
                 }
             }
         }
@@ -321,7 +322,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (midiFramer != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
                     midiFramer = null;
                 }
             }

@@ -30,6 +30,7 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimer;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.*;
@@ -501,12 +502,12 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
+                if (MidiUtil.getMidiOutputPort() != null) {
                     if (midiFramer != null) {
-                        jpapplication.midiOutputPort.disconnect(midiFramer);
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
                         midiFramer = null;
                     }
-                    jpapplication.removeMidiConnectionStart(this);
+                    MidiUtil.removeMidiConnectionStart(this);
                 }
             }
         }
@@ -611,7 +612,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public void onMidiConnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
+                if (MidiUtil.getMidiOutputPort() != null) {
                     if (midiFramer == null) {
                         midiFramer = new MidiFramer(new MidiReceiver() {
                             @Override
@@ -620,7 +621,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                             }
                         });
                     }
-                    jpapplication.midiOutputPort.connect(midiFramer);
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
                 }
             }
         }
@@ -631,7 +632,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (midiFramer != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
                     midiFramer = null;
                 }
             }

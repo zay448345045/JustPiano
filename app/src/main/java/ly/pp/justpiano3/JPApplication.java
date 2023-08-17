@@ -2,15 +2,13 @@ package ly.pp.justpiano3;
 
 import android.app.Application;
 import android.content.*;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.midi.MidiDeviceInfo;
-import android.media.midi.MidiManager;
-import android.media.midi.MidiOutputPort;
-import android.os.*;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,10 +19,10 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
 
 import java.io.ByteArrayOutputStream;
@@ -34,11 +32,9 @@ import java.util.*;
 
 public final class JPApplication extends Application {
 
-    private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
     public static SharedPreferences accountListSharedPreferences;
     public static int SETTING_MODE_CODE = 122;
-
     public String title = "";
     public String f4072f = "";
     public String f4073g = "";
@@ -66,8 +62,6 @@ public final class JPApplication extends Application {
     private float halfHeightSub20;
     private float halfHeightSub10;
     private float whiteKeyHeightAdd90;
-    private MidiManager mMidiManager;
-    public MidiOutputPort midiOutputPort;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -442,79 +436,9 @@ public final class JPApplication extends Application {
         loadSettings(false);
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
         accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                midiConnectionListeners = new ArrayList<>();
-                mMidiManager = (MidiManager) getSystemService(MIDI_SERVICE);
-                mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
-                    @Override
-                    public void onDeviceAdded(MidiDeviceInfo info) {
-                        mMidiManager.openDevice(info, device -> {
-                            if (device != null) {
-                                MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
-                                for (MidiDeviceInfo.PortInfo port : ports) {
-                                    if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
-                                        midiOutputPort = device.openOutputPort(port.getPortNumber());
-                                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                                            midiConnectionListener.onMidiConnect();
-                                        }
-                                        break;
-                                    }
-                                }
-                                Toast.makeText(getApplicationContext(), "MIDI设备已连接", Toast.LENGTH_SHORT).show();
-                            }
-                        }, new Handler(Looper.getMainLooper()));
-                    }
-
-                    @Override
-                    public void onDeviceRemoved(MidiDeviceInfo info) {
-                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                            midiConnectionListener.onMidiDisconnect();
-                        }
-                        try {
-                            if (midiOutputPort != null) {
-                                midiOutputPort.close();
-                                Toast.makeText(getApplicationContext(), "MIDI设备已断开", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } finally {
-                            midiOutputPort = null;
-                        }
-                    }
-                }, new Handler(Looper.getMainLooper()));
-                for (MidiDeviceInfo info : mMidiManager.getDevices()) {
-                    mMidiManager.openDevice(info, device -> {
-                        if (device != null) {
-                            MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
-                            for (MidiDeviceInfo.PortInfo port : ports) {
-                                if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
-                                    midiOutputPort = device.openOutputPort(port.getPortNumber());
-                                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                                        midiConnectionListener.onMidiConnect();
-                                    }
-                                    break;
-                                }
-                            }
-                            Toast.makeText(getApplicationContext(), "MIDI设备已连接", Toast.LENGTH_SHORT).show();
-                        }
-                    }, new Handler(Looper.getMainLooper()));
-                }
-            }
-        }
-    }
-
-    public void addMidiConnectionListener(MidiConnectionListener midiConnectionListener) {
-        midiConnectionListeners.add(midiConnectionListener);
-    }
-
-    public void removeMidiConnectionStart(MidiConnectionListener midiConnectionListener) {
-        midiConnectionListeners.remove(midiConnectionListener);
+        MidiUtil.initMidiDevice(this);
     }
 
     public void setMidiKeyboardTune(int midiKeyboardTune) {

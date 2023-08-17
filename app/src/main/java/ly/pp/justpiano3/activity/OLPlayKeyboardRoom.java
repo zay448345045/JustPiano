@@ -33,10 +33,7 @@ import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardModeView;
@@ -923,15 +920,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
+                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                     midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
                             midiConnectHandle(data);
                         }
                     });
-                    jpapplication.midiOutputPort.connect(midiFramer);
-                    jpapplication.addMidiConnectionListener(this);
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                    MidiUtil.addMidiConnectionListener(this);
                 }
             }
         }
@@ -972,12 +969,12 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         JPStack.pop(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
+                if (MidiUtil.getMidiOutputPort() != null) {
                     if (midiFramer != null) {
-                        jpapplication.midiOutputPort.disconnect(midiFramer);
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
                         midiFramer = null;
                     }
-                    jpapplication.removeMidiConnectionStart(this);
+                    MidiUtil.removeMidiConnectionStart(this);
                 }
             }
         }
@@ -1039,14 +1036,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public void onMidiConnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
+                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                     midiFramer = new MidiFramer(new MidiReceiver() {
                         @Override
                         public void onSend(byte[] data, int offset, int count, long timestamp) {
                             midiConnectHandle(data);
                         }
                     });
-                    jpapplication.midiOutputPort.connect(midiFramer);
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
                     runOnUiThread(() -> {
                         if (playerGrid.getAdapter() != null) {
@@ -1065,7 +1062,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 if (midiFramer != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
                     midiFramer = null;
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
                     runOnUiThread(() -> {
