@@ -14,6 +14,9 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.SendMessageClick;
 import ly.pp.justpiano3.task.PopUserInfoTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 

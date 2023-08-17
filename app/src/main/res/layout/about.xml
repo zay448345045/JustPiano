@@ -11,19 +11,29 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/black"
                 android:keepScreenOn="true"
-                android:text="@string/about"
                 android:textSize="16sp"
                 />
+
+            <TextView
+                    android:id="@+id/text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/black"
+                    android:keepScreenOn="true"
+                    android:text="@string/about"
+                    android:textSize="16sp"
+            />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

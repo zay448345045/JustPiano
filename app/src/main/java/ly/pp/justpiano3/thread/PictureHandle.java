@@ -1,9 +1,10 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.thread;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.widget.ImageView;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.thread.PictureHandleThread;
 
 import java.io.InputStream;
@@ -17,22 +18,22 @@ public final class PictureHandle {
     public boolean f5083a = true;
     public Map<String, SoftReference<Bitmap>> map = new HashMap<>();
     public Handler handler;
-    public String f5088f = ".jpg";
-    private PictureHandleThread f5084b;
-    private final int f5087e;
+    public static final  String JPG_SUFFIX = ".jpg";
+    private PictureHandleThread pictureHandleThread;
+    private final int picType;
 
     public PictureHandle(Handler handler, int i) {
         this.handler = handler;
-        f5087e = i;
+        picType = i;
     }
 
     public Bitmap m3938b(JPApplication jpApplication, String str) {
-        if (!str.endsWith(f5088f)) {
+        if (!str.endsWith(JPG_SUFFIX)) {
             return null;
         }
         try {
             URL url;
-            switch (f5087e) {
+            switch (picType) {
                 case 0:
                     url = new URL("http://" + jpApplication.getServer() + ":8910/file/NailImage/" + str);
                     break;
@@ -78,8 +79,8 @@ public final class PictureHandle {
             }
             map.clear();
         }
-        if (f5084b != null) {
-            f5084b.mo3067a();
+        if (pictureHandleThread != null) {
+            pictureHandleThread.mo3067a();
         }
     }
 
@@ -97,11 +98,11 @@ public final class PictureHandle {
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
         }
-        if (f5084b == null) {
-            f5084b = new PictureHandleThread(jpApplication, this, imageView, str);
-            f5084b.start();
+        if (pictureHandleThread == null) {
+            pictureHandleThread = new PictureHandleThread(jpApplication, this, imageView, str);
+            pictureHandleThread.start();
             return;
         }
-        f5084b.mo3068a(imageView, str);
+        pictureHandleThread.mo3068a(imageView, str);
     }
 }

@@ -17,7 +17,10 @@ import androidx.annotation.RequiresApi;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.KeyboardModeView;
 
 import java.io.File;
@@ -131,8 +134,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
+                    jpapplication.addMidiConnectionListener(this);
                 }
-                jpapplication.addMidiConnectionListener(this);
             }
         }
     }

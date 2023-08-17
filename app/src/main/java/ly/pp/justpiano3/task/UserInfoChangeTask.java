@@ -12,10 +12,10 @@ import okhttp3.*;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
+public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
 
-    public UsersInfoTask2(UsersInfo usersInfo) {
+    public UserInfoChangeTask(UsersInfo usersInfo) {
         this.usersInfo = new WeakReference<>(usersInfo);
     }
 
@@ -55,7 +55,7 @@ public final class UsersInfoTask2 extends AsyncTask<String, Void, String> {
                 break;
             default:
                 usersInfo.get().jpprogressBar.cancel();
-                Toast.makeText(usersInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+                Toast.makeText(usersInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

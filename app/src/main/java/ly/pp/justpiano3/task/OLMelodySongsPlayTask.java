@@ -25,7 +25,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     protected void onPostExecute(String str) {
         if (OLMelodySelect.songBytes == null || OLMelodySelect.songBytes.length <= 3) {
             olMelodySelect.get().jpprogressBar.cancel();
-            Toast.makeText(olMelodySelect.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+            Toast.makeText(olMelodySelect.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent();

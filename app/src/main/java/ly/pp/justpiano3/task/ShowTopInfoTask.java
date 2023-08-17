@@ -78,7 +78,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
             Toast.makeText(showTopInfo.get(), "数据出错!", Toast.LENGTH_SHORT).show();
         } else {
             showTopInfo.get().jpprogressBar.cancel();
-            Toast.makeText(showTopInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+            Toast.makeText(showTopInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
         }
     }
 

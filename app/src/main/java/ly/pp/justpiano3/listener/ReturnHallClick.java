@@ -25,10 +25,7 @@ public final class ReturnHallClick implements OnClickListener {
             olPlayRoom.jpapplication.setPlaySongsMode(0);
             olPlayRoom.isOnStart = false;
             olPlayRoom.sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
-            if (olPlayRoom.playSongs != null) {
-                olPlayRoom.playSongs.isPlayingSongs = false;
-                olPlayRoom.playSongs = null;
-            }
+            olPlayRoom.jpapplication.stopPlaySong();
             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", olPlayRoom.hallName);

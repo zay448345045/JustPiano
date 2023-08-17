@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.utils;
 
 import java.io.*;
 import java.lang.reflect.Array;

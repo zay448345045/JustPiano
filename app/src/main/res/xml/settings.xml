@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/settings_name">
     <PreferenceCategory android:title="弹奏音块与界面">
-        <ly.pp.justpiano3.SkinListPreference
+        <ly.pp.justpiano3.view.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
             android:persistent="true"
@@ -91,7 +91,7 @@
             android:title="自动弹奏(仅本地模式有效)" />
     </PreferenceCategory>
     <PreferenceCategory android:title="声音">
-        <ly.pp.justpiano3.SoundListPreference
+        <ly.pp.justpiano3.view.SoundListPreference
             android:dialogTitle="设置管理音源"
             android:key="sound_list"
             android:persistent="true"

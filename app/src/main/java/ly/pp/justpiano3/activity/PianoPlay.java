@@ -24,13 +24,14 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimer;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ShareUtil;
-import ly.pp.justpiano3.view.HorizontalListView;
-import ly.pp.justpiano3.view.KeyBoardView;
-import ly.pp.justpiano3.view.PlayView;
+import ly.pp.justpiano3.view.*;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineLoadPlayUserDTO;
@@ -657,7 +658,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     }
 
     public void updateKeyboardPrefer() {
-        if (jpapplication.hasKeyboardPerfer()) {
+        if (jpapplication.hasKeyboardPrefer()) {
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);

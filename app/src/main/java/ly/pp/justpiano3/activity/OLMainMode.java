@@ -12,9 +12,13 @@ import android.widget.Button;
 import android.widget.Toast;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
+import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
@@ -40,12 +44,12 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             case R.id.ol_web_b:
                 JPDialog jpdialog = new JPDialog(this);
                 jpdialog.setTitle("提示");
-                jpdialog.setMessage("官网访问方式：在浏览器中输入网址" + JPApplication.WEBSITE_URL + "\n" +
+                jpdialog.setMessage("官网访问方式：在浏览器中输入网址" + JPApplication.INSIDE_WEBSITE_URL + "\n" +
                         "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
                 jpdialog.setFirstButton("访问官网", (dialog, which) -> {
                     dialog.dismiss();
                     Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("https://" + JPApplication.WEBSITE_URL));
+                    intent1.setData(Uri.parse("https://" + JPApplication.INSIDE_WEBSITE_URL));
                     startActivity(intent1);
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());

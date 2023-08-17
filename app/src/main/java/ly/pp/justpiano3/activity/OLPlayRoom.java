@@ -27,11 +27,14 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
+import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.DataSelectView;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.ScrollText;
 import org.json.JSONObject;
 import protobuf.dto.*;
@@ -75,7 +78,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public String playerKind = "";
     public Button groupButton;
     public Button playButton;
-    public PlaySongs playSongs;
     public ConnectionService connectionService;
     public Bundle bundle0;
     public Bundle bundle2;
@@ -95,7 +97,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private PopupWindow changeColor = null;
     private PopupWindow playSongsMode = null;
     private OLRoomSongsAdapter olRoomSongsAdapter;
-    private SQLiteHelper SQLiteHelper;
+    private ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
     private Cursor cursor;
     private TextView timeTextView;
     private String sqlWhere = "";
@@ -721,9 +723,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 expressWindow.showAtLocation(express, Gravity.CENTER, 0, 0);
                 return;
             case R.id.ol_soundstop:
-                if (playSongs != null) {
-                    playSongs.isPlayingSongs = false;
-                    playSongs = null;
+                if (jpapplication.stopPlaySong()) {
                     Toast.makeText(this, "当前曲目已停止播放", Toast.LENGTH_SHORT).show();
                 }
                 return;
@@ -765,37 +765,37 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 changeChatColor(50, 9, 0xFF000000);
                 return;
             case R.id.onetimeplay:
-                if (playSongs != null && playSongs.isPlayingSongs && playSongs.jpapplication.getPlaySongsMode() != 0 && playerKind.equals("H")) {
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 0 && playerKind.equals("H")) {
                     jpapplication.setPlaySongsMode(0);
                     Toast.makeText(this, "单次播放已开启", Toast.LENGTH_SHORT).show();
-                } else if (playSongs != null && !playerKind.equals("H")) {
+                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.circulateplay:
-                if (playSongs != null && playSongs.isPlayingSongs && playSongs.jpapplication.getPlaySongsMode() != 1 && playerKind.equals("H")) {
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 1 && playerKind.equals("H")) {
                     jpapplication.setPlaySongsMode(1);
                     Toast.makeText(this, "单曲循环已开启", Toast.LENGTH_SHORT).show();
-                } else if (playSongs != null && !playerKind.equals("H")) {
+                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.randomplay:
-                if (playSongs != null && playSongs.isPlayingSongs && playSongs.jpapplication.getPlaySongsMode() != 2 && playerKind.equals("H")) {
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 2 && playerKind.equals("H")) {
                     jpapplication.setPlaySongsMode(2);
                     Toast.makeText(this, "乐曲将随机播放", Toast.LENGTH_SHORT).show();
-                } else if (playSongs != null && !playerKind.equals("H")) {
+                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.favorplay:
-                if (playSongs != null && playSongs.isPlayingSongs && playSongs.jpapplication.getPlaySongsMode() != 3 && playerKind.equals("H")) {
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 3 && playerKind.equals("H")) {
                     jpapplication.setPlaySongsMode(3);
                     Toast.makeText(this, "乐曲将选择收藏夹内曲目随机播放", Toast.LENGTH_SHORT).show();
-                } else if (playSongs != null && !playerKind.equals("H")) {
+                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
@@ -1178,10 +1178,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
 
     @Override
     protected void onDestroy() {
-        if (playSongs != null) {
-            playSongs.isPlayingSongs = false;
-            playSongs = null;
-        }
+        jpapplication.stopPlaySong();
         timeUpdateRunning = false;
         try {
             timeUpdateThread.interrupt();

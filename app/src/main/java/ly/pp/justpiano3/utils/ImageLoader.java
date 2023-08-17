@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,9 +9,6 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageResizerUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -72,6 +69,18 @@ public class ImageLoader {
         }
     };
 
+    public static class LoaderResult {
+        public Bitmap bitmap;
+        ImageView imageView;
+        String uri;
+
+        public LoaderResult(ImageView imageView, String uri, Bitmap bitmap) {
+            this.imageView = imageView;
+            this.uri = uri;
+            this.bitmap = bitmap;
+        }
+    }
+
     /**
      * @param context 上下文
      * @function 调用构造函数时完成主要完成磁盘缓存、内存缓存的初始化工作
@@ -98,7 +107,7 @@ public class ImageLoader {
             try {
                 mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, DISK_CACHE_SIZE);
                 mIsDiskLruCacheCreated = true;// 标记 此处表示磁盘缓存建立
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -208,7 +217,7 @@ public class ImageLoader {
             // 3、磁盘没有 从网络加载 并下载到磁盘中
             bitmap = loadBitmapFromHttp(uri);
             Log.d(TAG, "loadBitmapFromHttp,url:" + uri);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (bitmap == null && !mIsDiskLruCacheCreated) {

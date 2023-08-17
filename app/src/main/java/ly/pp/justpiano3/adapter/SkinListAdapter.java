@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.SkinListPreference;
+import ly.pp.justpiano3.view.SkinListPreference;
 import ly.pp.justpiano3.listener.ChangeSkinClick;
 
 public final class SkinListAdapter extends BaseAdapter {

@@ -25,12 +25,11 @@
             android:textSize="34sp" />
 
         <TextView
-            android:id="@+id/TextView20"
+            android:id="@+id/app_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_6dp"
             android:fontFamily="@font/title"
-            android:text="@string/login_ver"
             android:textColor="@color/white1"
             android:textSize="24sp" />
 

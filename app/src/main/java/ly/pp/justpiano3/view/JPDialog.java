@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.*;
-import ly.pp.justpiano3.view.GoldConvertView;
+import ly.pp.justpiano3.R;
 
 public final class JPDialog {
     private EditText editText;

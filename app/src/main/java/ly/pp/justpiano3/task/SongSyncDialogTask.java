@@ -2,7 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -72,7 +72,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 jpdialog.showDialog();
             }
         } catch (Exception e) {
-            Toast.makeText(olMainMode.get(), "网络连接失败，无法检查曲库同步", Toast.LENGTH_SHORT).show();
+            Toast.makeText(olMainMode.get(), "无法检查曲库同步，请尝试重新登录", Toast.LENGTH_SHORT).show();
             olMainMode.get().jpprogressBar.dismiss();
         }
     }

@@ -56,7 +56,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     protected void onPostExecute(String str) {
         if (songBytes == null || songBytes.length <= 3) {
             showSongsInfo.get().jpprogressBar.dismiss();
-            Toast.makeText(showSongsInfo.get(), "连接有错!请再试一遍", Toast.LENGTH_SHORT).show();
+            Toast.makeText(showSongsInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
             return;
         }
         OLMelodySelect.songBytes = songBytes;

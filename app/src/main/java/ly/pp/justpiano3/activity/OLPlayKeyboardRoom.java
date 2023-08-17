@@ -29,10 +29,15 @@ import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardModeView;
 import org.json.JSONObject;
 import protobuf.dto.*;
@@ -780,15 +785,15 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         playerGrid = findViewById(R.id.ol_player_grid);
         playerGrid.setCacheColorHint(0);
         playerList.clear();
-        Button f4483H = findViewById(R.id.ol_send_b);
-        f4483H.setOnClickListener(this);
+        Button sendBotton = findViewById(R.id.ol_send_b);
+        sendBotton.setOnClickListener(this);
         timeTextView = findViewById(R.id.time_text);
-        Button f4519ar = findViewById(R.id.pre_button);
-        Button f4520as = findViewById(R.id.next_button);
-        Button f4521at = findViewById(R.id.online_button);
-        f4519ar.setOnClickListener(this);
-        f4520as.setOnClickListener(this);
-        f4521at.setOnClickListener(this);
+        Button preButton = findViewById(R.id.pre_button);
+        Button nextButton = findViewById(R.id.next_button);
+        Button onlineButton = findViewById(R.id.online_button);
+        preButton.setOnClickListener(this);
+        nextButton.setOnClickListener(this);
+        onlineButton.setOnClickListener(this);
         friendsListView = findViewById(R.id.ol_friend_list);
         friendsListView.setCacheColorHint(0);
         sendText = findViewById(R.id.ol_send_text);
@@ -925,8 +930,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         }
                     });
                     jpapplication.midiOutputPort.connect(midiFramer);
+                    jpapplication.addMidiConnectionListener(this);
                 }
-                jpapplication.addMidiConnectionListener(this);
             }
         }
 

@@ -18,6 +18,8 @@ import ly.pp.justpiano3.listener.SoundDownloadClick;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.*;
 import java.net.HttpURLConnection;

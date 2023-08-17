@@ -18,17 +18,16 @@ import java.util.List;
  **/
 public class OkHttpCookiesHandler implements CookieJar {
 
-    private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+    private final List<Cookie> cookieStoreList = new ArrayList<>();
 
     @Override
     public void saveFromResponse(@NotNull HttpUrl url, @NotNull List<Cookie> cookies) {
-        cookieStore.put(url, cookies);
+        cookieStoreList.addAll(cookies);
     }
 
     @NotNull
     @Override
     public List<Cookie> loadForRequest(@NotNull HttpUrl url) {
-        List<Cookie> cookies = cookieStore.get(url);
-        return cookies != null ? cookies : new ArrayList<Cookie>();
+        return cookieStoreList;
     }
 }

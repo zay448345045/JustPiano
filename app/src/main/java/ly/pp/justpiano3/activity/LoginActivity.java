@@ -21,6 +21,9 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.LoginSuccessClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -185,14 +188,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         Bundle extras = getIntent().getExtras();
         boolean noAuto = extras == null || extras.getBoolean("no_auto");
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        Button f4189o = findViewById(R.id.ol_login);
-        f4189o.setOnClickListener(this);
-        Button f4192r = findViewById(R.id.ol_change_server);
-        f4192r.setOnClickListener(this);
-        Button f4190p = findViewById(R.id.ol_register);
-        f4190p.setOnClickListener(this);
-        Button f4191q = findViewById(R.id.ol_change_account);
-        f4191q.setOnClickListener(this);
+        Button loginButton = findViewById(R.id.ol_login);
+        loginButton.setOnClickListener(this);
+        Button changeServerButton = findViewById(R.id.ol_change_server);
+        changeServerButton.setOnClickListener(this);
+        Button registerButton = findViewById(R.id.ol_register);
+        registerButton.setOnClickListener(this);
+        Button changeAccountButton = findViewById(R.id.ol_change_account);
+        changeAccountButton.setOnClickListener(this);
+        TextView appVersionTextView = findViewById(R.id.app_version);
+        appVersionTextView.setText(jpapplication.getVersion());
         accountTextView = findViewById(R.id.username);
         passwordTextView = findViewById(R.id.password);
         rememAccount = findViewById(R.id.chec_name);
@@ -242,7 +247,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 
     private String getApkUrlByVersion(String version) {
-        return "https://" + JPApplication.RESOURCE_WEBSITE_URL + "/res/" + getApkFileName(version);
+        return "https://" + JPApplication.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
     }
 
     private String getApkFileName(String version) {

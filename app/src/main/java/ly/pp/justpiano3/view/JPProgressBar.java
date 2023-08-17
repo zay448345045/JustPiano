@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.service.ConnectionService;
 
 public final class JPProgressBar extends ProgressDialog {

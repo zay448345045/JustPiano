@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 

@@ -3,7 +3,6 @@ package ly.pp.justpiano3.thread;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.PictureHandle;
 
 import java.lang.ref.SoftReference;
 import java.util.LinkedHashMap;
@@ -33,7 +32,7 @@ public final class PictureHandleThread extends Thread {
 
     public void mo3068a(ImageView imageView, String str) {
         map.remove(imageView);
-        if (str.endsWith(pictureHandle.f5088f)) {
+        if (str.endsWith(pictureHandle.JPG_SUFFIX)) {
             map.put(str, imageView);
             if (f5147c) {
                 synchronized (this) {

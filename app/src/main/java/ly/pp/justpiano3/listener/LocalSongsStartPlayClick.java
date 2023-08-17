@@ -29,10 +29,7 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
     @Override
     public void onClick(View view) {
         int i = 0;
-        if (localSongsAdapter.melodyselect.playSongs != null) {
-            localSongsAdapter.melodyselect.playSongs.isPlayingSongs = false;
-            localSongsAdapter.melodyselect.playSongs = null;
-        }
+        localSongsAdapter.melodyselect.jpapplication.stopPlaySong();
         Intent intent = new Intent();
         intent.putExtra("head", 0);
         intent.putExtra("path", path);

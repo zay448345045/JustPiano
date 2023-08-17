@@ -3,8 +3,7 @@
     <string name="null0">
     </string>
     <string name="app_name">极品钢琴</string>
-    <string name="about">极品钢琴V4.7 浴火重生版\n
-        更新日志：\n
+    <string name="about">更新日志：\n
         1、界面UI修改优化，房间聊天页面支持横竖屏切换(听闻提供)\n
         2、增加好友赠送音符功能，家族成员支持展示最近登录日期\n
         3、支持设置接收聊天提示音，支持设置屏蔽指定用户聊天\n
@@ -42,7 +41,6 @@
     <string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果。</string>
     <string name="thanks"></string>
     <string name="login_title">极品钢琴</string>
-    <string name="login_ver">v4.7</string>
     <string name="login_subtitle">浴火重生版</string>
     <string name="login_acc_label">账号:</string>
     <string name="login_pwd_label">密码:</string>

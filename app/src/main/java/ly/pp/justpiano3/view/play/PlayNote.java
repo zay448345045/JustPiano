@@ -1,7 +1,8 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.view.play;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.view.PlayView;
 
 public final class PlayNote {

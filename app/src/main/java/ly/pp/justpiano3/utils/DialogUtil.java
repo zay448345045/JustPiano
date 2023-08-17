@@ -1,9 +1,8 @@
 package ly.pp.justpiano3.utils;
 
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.JPDialog;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.view.GoldConvertView;
 import protobuf.dto.OnlineDialogDTO;
 
@@ -42,7 +41,10 @@ public class DialogUtil {
                     return showValue.divide(BigDecimal.ONE.subtract(new BigDecimal(handlingFee)), 0, RoundingMode.UP);
                 }
             });
-            jpDialog.setSecondButton("取消", new DialogDismissClick());
+            jpDialog.setSecondButton("取消", (dialog, which) -> {
+                dialog.dismiss();
+                jpApplication.setIsShowDialog(false);
+            });
             jpDialog.setFirstButton("确定", ((dialog, which) -> {
                 dialog.dismiss();
                 jpApplication.setIsShowDialog(false);

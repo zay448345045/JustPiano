@@ -1,4 +1,4 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Message;
@@ -7,7 +7,6 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.utils.GZIPUtil;
 import protobuf.vo.OnlineBaseVO;
 import protobuf.vo.OnlineClTestVO;
 import protobuf.vo.OnlineEnterHallVO;

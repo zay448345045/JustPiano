@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.UserListPageAdapter;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class UserListPage extends Activity {
     public ListView listView;

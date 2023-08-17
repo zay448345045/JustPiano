@@ -16,9 +16,12 @@ import android.widget.*;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.listener.ChangePasswordClick;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.task.UsersInfoTask;
-import ly.pp.justpiano3.task.UsersInfoTask2;
-import ly.pp.justpiano3.task.UsersInfoTask3;
+import ly.pp.justpiano3.task.UsersInfoGetTask;
+import ly.pp.justpiano3.task.UserInfoChangeTask;
+import ly.pp.justpiano3.task.UserFaceChangeTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -186,7 +189,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                                 fileOutputStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg);
                                 try {
                                     bitmap.compress(CompressFormat.JPEG, 80, fileOutputStream);
-                                    new UsersInfoTask3(this).execute("http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/UpLoadFace", Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg, accountJpg);
+                                    new UserFaceChangeTask(this).execute("http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/UpLoadFace", Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg, accountJpg);
                                     try {
                                         fileOutputStream.close();
                                     } catch (IOException e2) {
@@ -284,7 +287,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                     Toast.makeText(this, "确定字数在五百字之内!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    new UsersInfoTask2(this).execute("M", null, null);
+                    new UserInfoChangeTask(this).execute("M", null, null);
                     return;
                 }
             default:
@@ -312,6 +315,6 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
         jpprogressBar = new JPProgressBar(this);
         Handler pictureHandler = new Handler(this);
         pictureHandle = new PictureHandle(pictureHandler, 1);
-        new UsersInfoTask(this).execute();
+        new UsersInfoGetTask(this).execute();
     }
 }

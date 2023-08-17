@@ -19,6 +19,8 @@ import ly.pp.justpiano3.listener.SkinDownloadClick;
 import ly.pp.justpiano3.task.SkinDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.*;
 import java.net.HttpURLConnection;

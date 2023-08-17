@@ -1,9 +1,10 @@
-package ly.pp.justpiano3;
+package ly.pp.justpiano3.helper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.utils.DeviceUtil;
 

@@ -5,7 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.task.UsersInfoTask2;
+import ly.pp.justpiano3.task.UserInfoChangeTask;
 import ly.pp.justpiano3.activity.UsersInfo;
 
 public final class ChangePasswordClick implements OnClickListener {
@@ -38,7 +38,7 @@ public final class ChangePasswordClick implements OnClickListener {
         } else if (newPassword.equals(confirmPassword)) {
             userInfo.autoLogin = autoLoginCheckBox.isChecked();
             userInfo.rememberNewPassword = remNewPasswordCheckBox.isChecked();
-            new UsersInfoTask2(userInfo).execute("P", originalPassword, confirmPassword);
+            new UserInfoChangeTask(userInfo).execute("P", originalPassword, confirmPassword);
             dialogInterface.dismiss();
         } else {
             Toast.makeText(userInfo, "两次输入密码不一致", Toast.LENGTH_SHORT).show();

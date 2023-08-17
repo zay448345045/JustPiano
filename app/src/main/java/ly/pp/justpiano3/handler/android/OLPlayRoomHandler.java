@@ -12,8 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.JPDialog;
-import ly.pp.justpiano3.PlaySongs;
+import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
@@ -68,7 +67,7 @@ public final class OLPlayRoomHandler extends Handler {
                                             olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
                                         }
                                     }
-                                    olPlayRoom.playSongs = new PlaySongs(olPlayRoom.jpapplication, str1, null, olPlayRoom, 0, olPlayRoom.getdiao());
+                                    olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, olPlayRoom.getdiao());
                                     olPlayRoom.songPath = str1;
                                 } catch (Exception e) {
                                     return;
@@ -162,12 +161,8 @@ public final class OLPlayRoomHandler extends Handler {
                                     olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "0" + diao);
                                 }
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
-                                if (olPlayRoom.playSongs != null) {
-                                    olPlayRoom.playSongs.isPlayingSongs = false;
-                                    olPlayRoom.playSongs = null;
-                                }
                                 try {
-                                    olPlayRoom.playSongs = new PlaySongs(olPlayRoom.jpapplication, str1, null, olPlayRoom, 0, diao);
+                                    olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, diao);
                                     olPlayRoom.songPath = str1;
                                 } catch (Exception ignored) {
                                 }
@@ -177,10 +172,7 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 case 5:
                     post(() -> {
-                        if (olPlayRoom.playSongs != null) {
-                            olPlayRoom.playSongs.isPlayingSongs = false;
-                            olPlayRoom.playSongs = null;
-                        }
+                        olPlayRoom.jpapplication.stopPlaySong();
                         String str1 = message.getData().getString("S");
                         if (!olPlayRoom.isOnStart) {
                             olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
@@ -225,10 +217,7 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 case 8:
                     post(() -> {
-                        if (olPlayRoom.playSongs != null) {
-                            olPlayRoom.playSongs.isPlayingSongs = false;
-                            olPlayRoom.playSongs = null;
-                        }
+                        olPlayRoom.jpapplication.stopPlaySong();
                         JPDialog jpdialog = new JPDialog(olPlayRoom);
                         jpdialog.setCancelableFalse();
                         jpdialog.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
@@ -302,7 +291,7 @@ public final class OLPlayRoomHandler extends Handler {
                 case 10:
                     post(() -> {
                         String name = message.getData().getString("R");
-                        olPlayRoom.bundle0.putString("R", name);
+                        olPlayRoom.getIntent().putExtra("R", name);
                         olPlayRoom.roomName = name;
                         olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomID0 + "]" + olPlayRoom.roomName);
                     });
