@@ -27,7 +27,7 @@ final class ReceiveHandle {
             User User = (User) pianoPlay.userMap.get((byte) msg.getMiniGrade().getRoomPosition());
             Bundle bundle = new Bundle();
             Bundle bundle2;
-            User User2;
+            User user2;
             int i2 = msg.getMiniGrade().getScore();
             int i3 = msg.getMiniGrade().getCombo();
             if (i2 < 0) {
@@ -38,13 +38,13 @@ final class ReceiveHandle {
                 User.setCombo(i3);
             }
             for (byte ba = 1; ba <= 6; ba++) {
-                User2 = (User) pianoPlay.userMap.get(ba);
-                if (!User2.getPlayerName().isEmpty()) {
+                user2 = (User) pianoPlay.userMap.get(ba);
+                if (!user2.getPlayerName().isEmpty()) {
                     bundle2 = new Bundle();
-                    bundle2.putString("G", String.valueOf(User2.getHand()));
-                    bundle2.putString("U", User2.getPlayerName());
-                    bundle2.putString("M", User2.getScore());
-                    bundle2.putString("T", User2.getCombo() + "");
+                    bundle2.putString("G", String.valueOf(user2.getHand()));
+                    bundle2.putString("U", user2.getPlayerName());
+                    bundle2.putString("M", String.valueOf(user2.getScore()));
+                    bundle2.putString("T", user2.getCombo() + "");
                     bundle.putBundle(String.valueOf(i), bundle2);
                     i++;
                 }
@@ -459,7 +459,7 @@ final class ReceiveHandle {
                 bundle2.putByte("I", room.getRoomID());
                 bundle2.putString("N", room.getRoomName());
                 bundle2.putIntArray("UA", room.getPeople());
-                bundle2.putBoolean("IF", room.getPeopleFull());
+                bundle2.putBoolean("IF", room.isPeopleFull());
                 bundle2.putInt("IP", room.getIsPlaying());
                 bundle2.putInt("PA", room.getIsPassword());
                 bundle2.putInt("V", room.getRoomKuang());
@@ -780,7 +780,7 @@ final class ReceiveHandle {
             Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                     roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
                     roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
-            if (room.getFCount() + room.getMCount() == 0) {
+            if (room.getFcount() + room.getMcount() == 0) {
                 olPlayHall.roomTitleMap.remove(room.getRoomID());
             } else {
                 olPlayHall.putRoomToMap(room.getRoomID(), room);
@@ -795,7 +795,7 @@ final class ReceiveHandle {
                     bundle2.putByte("I", room.getRoomID());
                     bundle2.putString("N", room.getRoomName());
                     bundle2.putIntArray("UA", room.getPeople());
-                    bundle2.putBoolean("IF", room.getPeopleFull());
+                    bundle2.putBoolean("IF", room.isPeopleFull());
                     bundle2.putInt("IP", room.getIsPlaying());
                     bundle2.putInt("PA", room.getIsPassword());
                     bundle2.putInt("V", room.getRoomKuang());
@@ -849,7 +849,7 @@ final class ReceiveHandle {
                     bundle2.putString("N", user.getPlayerName());
                     bundle2.putString("S", user.getSex());
                     bundle2.putString("IR", user.getStatus());
-                    bundle2.putString("IH", user.getIsHost());
+                    bundle2.putString("IH", user.getIshost());
                     bundle2.putInt("IV", user.getKuang());
                     bundle2.putInt("LV", user.getLevel());
                     bundle2.putInt("TR", user.getTrousers());
@@ -857,7 +857,7 @@ final class ReceiveHandle {
                     bundle2.putInt("EY", user.getEye());
                     bundle2.putInt("HA", user.getHair());
                     bundle2.putInt("SH", user.getShoes());
-                    bundle2.putInt("CL", user.getCLevel());
+                    bundle2.putInt("CL", user.getClevel());
                     bundle2.putInt("GR", user.getHand());
                     bundle2.putInt("CP", user.getCpKind());
                     bundle2.putString("I", user.getFamilyID());
@@ -909,7 +909,7 @@ final class ReceiveHandle {
                     bundle2.putString("N", user.getPlayerName());
                     bundle2.putString("S", user.getSex());
                     bundle2.putString("IR", user.getStatus());
-                    bundle2.putString("IH", user.getIsHost());
+                    bundle2.putString("IH", user.getIshost());
                     bundle2.putInt("IV", user.getKuang());
                     bundle2.putInt("LV", user.getLevel());
                     bundle2.putInt("TR", user.getTrousers());
@@ -917,7 +917,7 @@ final class ReceiveHandle {
                     bundle2.putInt("EY", user.getEye());
                     bundle2.putInt("HA", user.getHair());
                     bundle2.putInt("SH", user.getShoes());
-                    bundle2.putInt("CL", user.getCLevel());
+                    bundle2.putInt("CL", user.getClevel());
                     bundle2.putInt("GR", user.getHand());
                     bundle2.putInt("CP", user.getCpKind());
                     bundle2.putString("I", user.getFamilyID());
@@ -964,7 +964,7 @@ final class ReceiveHandle {
                 bundle2.putString("N", user.getPlayerName());
                 bundle2.putString("S", user.getSex());
                 bundle2.putString("IR", user.getStatus());
-                bundle2.putString("IH", user.getIsHost());
+                bundle2.putString("IH", user.getIshost());
                 bundle2.putInt("IV", user.getKuang());
                 bundle2.putInt("LV", user.getLevel());
                 bundle2.putInt("TR", user.getTrousers());
@@ -972,7 +972,7 @@ final class ReceiveHandle {
                 bundle2.putInt("EY", user.getEye());
                 bundle2.putInt("HA", user.getHair());
                 bundle2.putInt("SH", user.getShoes());
-                bundle2.putInt("CL", user.getCLevel());
+                bundle2.putInt("CL", user.getClevel());
                 bundle2.putInt("GR", user.getHand());
                 bundle2.putInt("CP", user.getCpKind());
                 bundle2.putString("I", user.getFamilyID());
@@ -1016,7 +1016,7 @@ final class ReceiveHandle {
                 bundle2.putString("N", user.getPlayerName());
                 bundle2.putString("S", user.getSex());
                 bundle2.putString("IR", user.getStatus());
-                bundle2.putString("IH", user.getIsHost());
+                bundle2.putString("IH", user.getIshost());
                 bundle2.putInt("IV", user.getKuang());
                 bundle2.putInt("LV", user.getLevel());
                 bundle2.putInt("TR", user.getTrousers());
@@ -1024,7 +1024,7 @@ final class ReceiveHandle {
                 bundle2.putInt("EY", user.getEye());
                 bundle2.putInt("HA", user.getHair());
                 bundle2.putInt("SH", user.getShoes());
-                bundle2.putInt("CL", user.getCLevel());
+                bundle2.putInt("CL", user.getClevel());
                 bundle2.putInt("GR", user.getHand());
                 bundle2.putInt("CP", user.getCpKind());
                 bundle2.putString("I", user.getFamilyID());

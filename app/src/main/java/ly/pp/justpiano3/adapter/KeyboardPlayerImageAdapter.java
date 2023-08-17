@@ -90,7 +90,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                     }
                 });
             }
-            if (user.getIsHost().equals("C") || user.getIsHost().equals("O")) {
+            if (user.getIshost().equals("C") || user.getIshost().equals("O")) {
                 privateChatButton.setVisibility(View.GONE);
             } else {
                 privateChatButton.setOnClickListener(v -> {
@@ -108,7 +108,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             if (!olPlayKeyboardRoom.playerKind.equals("H")) {
                 kickOutButton.setVisibility(View.GONE);
                 closePositionButton.setVisibility(View.GONE);
-            } else if (user.getIsHost().equals("C")) {
+            } else if (user.getIshost().equals("C")) {
                 closePositionButton.setText("打开空位");
                 kickOutButton.setVisibility(View.GONE);
                 closePositionButton.setOnClickListener(v -> {
@@ -121,7 +121,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
                         }
                     }
                 });
-            } else if (user.getIsHost().equals("O")) {
+            } else if (user.getIshost().equals("O")) {
                 closePositionButton.setText("关闭空位");
                 kickOutButton.setVisibility(View.GONE);
                 closePositionButton.setOnClickListener(v -> {
@@ -179,7 +179,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             chatBlackButton.setVisibility(View.GONE);
             chatBlackCancelButton.setVisibility(View.GONE);
         }
-        if (user.getIsHost().equals("C") || user.getIsHost().equals("O")) {
+        if (user.getIshost().equals("C") || user.getIshost().equals("O")) {
             showUserInfoDialogButton.setVisibility(View.GONE);
             chatBlackButton.setVisibility(View.GONE);
             chatBlackCancelButton.setVisibility(View.GONE);

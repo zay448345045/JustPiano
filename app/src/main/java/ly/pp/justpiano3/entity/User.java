@@ -1,7 +1,10 @@
 package ly.pp.justpiano3.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class User implements Serializable {
     private String playerName = "";
     private String sex = "";
@@ -53,103 +56,7 @@ public class User implements Serializable {
         this.shoes = shoes;
     }
 
-    public final String getPlayerName() {
-        return playerName;
-    }
-
-    public final void setPlayerName(String str) {
-        playerName = str;
-    }
-
-    public final String getSex() {
-        return sex;
-    }
-
-    public final String getStatus() {
-        return status;
-    }
-
-    public final void setStatus(String str) {
-        status = str;
-    }
-
     public final void setOpenPosition() {
         ishost = "OPEN";
-    }
-
-    public final String getIsHost() {
-        return ishost;
-    }
-
-    public final byte getPosition() {
-        return position;
-    }
-
-    public final String getScore() {
-        return String.valueOf(score);
-    }
-
-    public final void setScore(int i) {
-        score = i;
-    }
-
-    public final int getKuang() {
-        return kuang;
-    }
-
-    public final int getLevel() {
-        return level;
-    }
-
-    public final int getTrousers() {
-        return trousers;
-    }
-
-    public final int getJacket() {
-        return jacket;
-    }
-
-    public final int getHair() {
-        return hair;
-    }
-
-    public int getEye() {
-        return eye;
-    }
-
-    public void setEye(int eye) {
-        this.eye = eye;
-    }
-
-    public final int getCLevel() {
-        return clevel;
-    }
-
-    public final int getHand() {
-        return hand;
-    }
-
-    public final int getCpKind() {
-        return cpKind;
-    }
-
-    public final int getShoes() {
-        return shoes;
-    }
-
-    public final int getCombo() {
-        return combo;
-    }
-
-    public final void setCombo(int i) {
-        combo = i;
-    }
-
-    public final String getFamilyID() {
-        return familyID;
-    }
-
-    public final void setFamilyID(String familyID) {
-        this.familyID = familyID;
     }
 }

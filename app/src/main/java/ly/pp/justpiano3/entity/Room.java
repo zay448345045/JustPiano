@@ -1,10 +1,13 @@
 package ly.pp.justpiano3.entity;
 
+import lombok.Data;
+
+@Data
 public final class Room {
 
     private static final int peopleCapacity = 6;
     private final byte roomID;
-    private final String roonName;
+    private final String roomName;
     private final int fcount;
     private final int mcount;
     private final int isPlaying;
@@ -18,7 +21,7 @@ public final class Room {
         peopleFull = false;
         int notEmptyPositionNum;
         roomID = b;
-        roonName = str;
+        roomName = str;
         mcount = i2;
         fcount = i;
         isPlaying = i3;
@@ -45,45 +48,5 @@ public final class Room {
             }
         }
         roomKuang = i5;
-    }
-
-    public byte getRoomID() {
-        return roomID;
-    }
-
-    public String getRoomName() {
-        return roonName;
-    }
-
-    public int getFCount() {
-        return fcount;
-    }
-
-    public int getMCount() {
-        return mcount;
-    }
-
-    public int getIsPlaying() {
-        return isPlaying;
-    }
-
-    public int[] getPeople() {
-        return people;
-    }
-
-    public boolean getPeopleFull() {
-        return peopleFull;
-    }
-
-    public int getIsPassword() {
-        return isPassword;
-    }
-
-    public int getRoomKuang() {
-        return roomKuang;
-    }
-
-    public int getRoomMode() {
-        return roomMode;
     }
 }

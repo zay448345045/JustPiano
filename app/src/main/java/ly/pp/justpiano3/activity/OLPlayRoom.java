@@ -179,12 +179,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             ImageView imageView11 = inflate.findViewById(R.id.couple_type);
             ((TextView) inflate.findViewById(R.id.ol_player_name)).setText(User.getPlayerName());
             textView.setText("LV." + User.getLevel());
-            textView2.setText("CL." + User.getCLevel());
-            textView3.setText(Consts.nameCL[User.getCLevel()]);
+            textView2.setText("CL." + User.getClevel());
+            textView3.setText(Consts.nameCL[User.getClevel()]);
             textView4.setText(User2.getPlayerName());
             textView5.setText("LV." + User2.getLevel());
-            textView6.setText("CL." + User2.getCLevel());
-            textView7.setText(Consts.nameCL[User2.getCLevel()]);
+            textView6.setText("CL." + User2.getClevel());
+            textView7.setText(Consts.nameCL[User2.getClevel()]);
             textView8.setText(jSONObject4.getString("B"));
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
@@ -839,7 +839,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
                     DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
-                    noteSpeed.setDefaultValue(String.valueOf(jpapplication.getDownSpeed()));
+                    noteSpeed.setDefaultValue(String.valueOf(jpapplication.getSetting().getNotesDownSpeed()));
                     noteSpeed.setDataChangeListener((dataSelectView, name, value) -> jpapplication.setDownSpeed(Integer.parseInt(value)));
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);

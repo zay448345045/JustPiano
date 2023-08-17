@@ -45,7 +45,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                         ContentValues contentvalues = new ContentValues();
                         contentvalues.put("isfavo", localSongData.getIsfavo());
                         contentvalues.put("score", localSongData.getScore());
-                        contentvalues.put("Lscore", localSongData.getlScore());
+                        contentvalues.put("Lscore", localSongData.getLScore());
                         count += writableDatabase.update("jp_data", contentvalues, "path = '" + localSongData.getPath() + "'", null);
                     }
                     writableDatabase.setTransactionSuccessful();

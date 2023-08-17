@@ -107,7 +107,7 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && hideNote) {
-                playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getChordVolume()));
+                playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
@@ -124,14 +124,14 @@ public final class PlayNote {
     public float mo3108c(Canvas canvas) {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
-            if (jpapplication.getAutoPlay()) {
-                if (newNote && ((trackValue != handValue || hideNote) && jpapplication.getOpenChord())) {
-                    playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getChordVolume()));
+            if (jpapplication.getSetting().getAutoPlay()) {
+                if (newNote && ((trackValue != handValue || hideNote) && jpapplication.getSetting().getIsOpenChord())) {
+                    playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
-            } else if (newNote && trackValue != handValue && jpapplication.getOpenChord()) {
-                playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getChordVolume()));
+            } else if (newNote && trackValue != handValue && jpapplication.getSetting().getIsOpenChord()) {
+                playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             }
@@ -139,7 +139,7 @@ public final class PlayNote {
                 playView.jpapplication.stopSongs(playNote);
             }
         }
-        if (jpapplication.getAutoPlay()) {
+        if (jpapplication.getSetting().getAutoPlay()) {
             if (canvas != null && trackValue == handValue && !hideNote) {
                 canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
             }
@@ -152,7 +152,7 @@ public final class PlayNote {
     public void noCompatibleMode(Canvas canvas) {  // 欣赏模式
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
-            if (newNote && jpapplication.getOpenChord()) {
+            if (newNote && jpapplication.getSetting().getIsOpenChord()) {
                 if (trackValue == handValue) {
                     jpapplication.drawFire(playView, canvas, noteValue % 12);
                 }

@@ -658,7 +658,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     }
 
     public void updateKeyboardPrefer() {
-        if (jpapplication.hasKeyboardPrefer()) {
+        if (jpapplication.getSetting().getKeyboardPrefer()) {
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);

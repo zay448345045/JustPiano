@@ -1,8 +1,13 @@
 package ly.pp.justpiano3.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * 商店商品
  */
+@Data
+@AllArgsConstructor
 public class ShopProduct {
 
     /**
@@ -29,52 +34,4 @@ public class ShopProduct {
      * 商品描述
      */
     private String description;
-
-    public ShopProduct(int id, String name, String picture, int price, String description) {
-        this.id = id;
-        this.name = name;
-        this.picture = picture;
-        this.price = price;
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

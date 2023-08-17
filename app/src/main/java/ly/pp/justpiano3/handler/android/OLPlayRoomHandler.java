@@ -102,7 +102,7 @@ public final class OLPlayRoomHandler extends Handler {
                         }
 
                         // 聊天音效播放
-                        if (olPlayRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
+                        if (olPlayRoom.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
                             olPlayRoom.jpapplication.playChatSound();
                         }
 

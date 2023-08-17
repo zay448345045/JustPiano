@@ -164,12 +164,12 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             ImageView imageView11 = inflate.findViewById(R.id.couple_type);
             ((TextView) inflate.findViewById(R.id.ol_player_name)).setText(User.getPlayerName());
             textView.setText("LV." + User.getLevel());
-            textView2.setText("CL." + User.getCLevel());
-            textView3.setText(Consts.nameCL[User.getCLevel()]);
+            textView2.setText("CL." + User.getClevel());
+            textView3.setText(Consts.nameCL[User.getClevel()]);
             textView4.setText(User2.getPlayerName());
             textView5.setText("LV." + User2.getLevel());
-            textView6.setText("CL." + User2.getCLevel());
-            textView7.setText(Consts.nameCL[User2.getCLevel()]);
+            textView6.setText("CL." + User2.getClevel());
+            textView7.setText(Consts.nameCL[User2.getClevel()]);
             textView8.setText(jSONObject4.getString("B"));
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
@@ -438,25 +438,25 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_count_up:
                 keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() + 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_move_left:
                 int keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() - 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
             case R.id.keyboard_move_right:
                 keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() + 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
@@ -602,10 +602,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 popupWindow2.setContentView(inflate2);
                 // 键盘声调回显
                 TextView midiTune = inflate2.findViewById(R.id.midi_tune);
-                midiTune.setText(String.valueOf(jpapplication.getMidiKeyboardTune()));
+                midiTune.setText(String.valueOf(jpapplication.getSetting().getMidiKeyboardTune()));
                 // 声调回显
                 TextView soundTune = inflate2.findViewById(R.id.sound_tune);
-                soundTune.setText(String.valueOf(jpapplication.getKeyboardSoundTune()));
+                soundTune.setText(String.valueOf(jpapplication.getSetting().getKeyboardSoundTune()));
                 // 同步模式回显
                 TextView syncModeText = inflate2.findViewById(R.id.keyboard_sync_mode_text);
                 syncModeText.setText(keyboardSyncMode.getDesc());
@@ -613,32 +613,32 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 popupWindow2.showAtLocation(keyboardSetting, Gravity.CENTER, 0, 0);
                 return;
             case R.id.midi_down_tune:
-                if (jpapplication.getMidiKeyboardTune() > -6) {
-                    jpapplication.setMidiKeyboardTune(jpapplication.getMidiKeyboardTune() - 1);
+                if (jpapplication.getSetting().getMidiKeyboardTune() > -6) {
+                    jpapplication.setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() - 1);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
                 return;
             case R.id.midi_up_tune:
-                if (jpapplication.getMidiKeyboardTune() < 6) {
-                    jpapplication.setMidiKeyboardTune(jpapplication.getMidiKeyboardTune() + 1);
+                if (jpapplication.getSetting().getMidiKeyboardTune() < 6) {
+                    jpapplication.setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() + 1);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
                 return;
             case R.id.sound_down_tune:
-                if (jpapplication.getKeyboardSoundTune() > -6) {
-                    jpapplication.setKeyboardSoundTune(jpapplication.getKeyboardSoundTune() - 1);
+                if (jpapplication.getSetting().getKeyboardSoundTune() > -6) {
+                    jpapplication.setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() - 1);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
                 return;
             case R.id.sound_up_tune:
-                if (jpapplication.getKeyboardSoundTune() < 6) {
-                    jpapplication.setKeyboardSoundTune(jpapplication.getKeyboardSoundTune() + 1);
+                if (jpapplication.getSetting().getKeyboardSoundTune() < 6) {
+                    jpapplication.setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() + 1);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -884,7 +884,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                        jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
+                        jpapplication.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
                     }
                     if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
                         olKeyboardStates[roomPositionSub1].setPlaying(true);
@@ -1081,7 +1081,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int pitch = data[1] + jpapplication.getMidiKeyboardTune();
+        int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardView.fireKeyDown(pitch, data[2], kuang, false);
             if (hasAnotherUser()) {

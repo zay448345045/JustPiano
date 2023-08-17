@@ -67,7 +67,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         }
 
                         // 聊天音效播放
-                        if (olPlayKeyboardRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayKeyboardRoom.jpapplication.getKitiName())) {
+                        if (olPlayKeyboardRoom.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayKeyboardRoom.jpapplication.getKitiName())) {
                             olPlayKeyboardRoom.jpapplication.playChatSound();
                         }
 

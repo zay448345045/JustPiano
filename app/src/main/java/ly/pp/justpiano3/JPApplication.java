@@ -19,6 +19,7 @@ import androidx.multidex.MultiDex;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
@@ -68,35 +69,21 @@ public final class JPApplication extends Application {
     public String f4072f = "";
     public String f4073g = "";
     public String f4074h = "";
-    public boolean changeNotesColor = true;
+    private Setting setting;
     private ConnectionService connectionService;
     private int whiteKeyHeight;
     private float blackKeyHeight;
     private float blackKeyWidth;
-    private float chordVolume = 0.8f;
-    private int notesDownSpeed = 6;
     private boolean isBindService;
     private int gameMode;
-    private int midiKeyboardTune;
-    private int keyboardSoundTune;
-    private boolean keyboardAnim;
-    private boolean isOpenChord = true;
-    private boolean showTouchNotesLevel = true;
-    private boolean autoPlay = true;
-    private boolean showLine = true;
-    private boolean loadLongKeyboard;
     private boolean isShowDialog;
-    private boolean noteDismiss = true;
-    private boolean chatSound;
     private int playSongsMode;
-    private float noteSize = 1;
     private final Map<Byte, User> hashMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
     private List<SimpleUser> chatBlackList;
     private String nowSongsName = "";
     private String server = ONLINE_SERVER_URL;
-    private boolean keyboardPrefer;
     private PlaySongs playSongs;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -113,13 +100,10 @@ public final class JPApplication extends Application {
     private int widthPixels;
     private int heightPixels;
     private int animPosition;
-    private int animFrame = 8;
-    private float tempSpeed = 1;
     private float widthDiv8;
     private float halfHeightSub20;
     private float halfHeightSub10;
     private float whiteKeyHeightAdd90;
-    private int roughLine;
     private MidiManager mMidiManager;
     public MidiOutputPort midiOutputPort;
 
@@ -383,10 +367,6 @@ public final class JPApplication extends Application {
         widthPixels = i;
     }
 
-    public boolean hasKeyboardPrefer() {
-        return keyboardPrefer;
-    }
-
     public String getVersion() {
         String str = "";
         try {
@@ -415,10 +395,6 @@ public final class JPApplication extends Application {
 
     public void setIsBindService(boolean z) {
         isBindService = z;
-    }
-
-    public float getNoteSize() {
-        return noteSize;
     }
 
     public Map<Byte, User> getHashmap() {
@@ -615,7 +591,7 @@ public final class JPApplication extends Application {
     }
 
     public void downNote() {
-        animPosition += animFrame;
+        animPosition += setting.getAnimFrame();
     }
 
     public void setBlackKeyHeight(float f) {
@@ -632,63 +608,17 @@ public final class JPApplication extends Application {
 
     public void loadSettings(boolean online) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (online) {
-            tempSpeed = 1;
-            autoPlay = true;
-        } else {
-            autoPlay = sharedPreferences.getBoolean("auto_play", true);
-            tempSpeed = Float.parseFloat(sharedPreferences.getString("temp_speed", "1.0"));
-        }
-        isOpenChord = sharedPreferences.getBoolean("sound_check_box", true);
-        chordVolume = Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8"));
-        animFrame = Integer.parseInt(sharedPreferences.getString("anim_frame", "4"));
-        keyboardPrefer = sharedPreferences.getBoolean("keyboard_perfer", true);
-        showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true);
-        showLine = sharedPreferences.getBoolean("show_line", true);
-        loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false);
-        roughLine = Integer.parseInt(sharedPreferences.getString("rough_line", "1"));
-        midiKeyboardTune = Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0"));
-        keyboardSoundTune = Integer.parseInt(sharedPreferences.getString("keyboard_sound_tune", "0"));
-        keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true);
-        chatSound = sharedPreferences.getBoolean("chats_sound", false);
-        notesDownSpeed = Integer.parseInt(sharedPreferences.getString("down_speed", "6"));
-        noteSize = Float.parseFloat(sharedPreferences.getString("note_size", "1"));
-        noteDismiss = sharedPreferences.getBoolean("note_dismiss", false);
-        changeNotesColor = sharedPreferences.getBoolean("change_color", true);
+        setting = Setting.loadSettings(sharedPreferences, online);
     }
 
-    public void setTempSpeed() {
-        tempSpeed = 1;
-    }
-
-    public float getTempSpeed() {
-        return tempSpeed;
-    }
-
-    public boolean getNoteDismiss() {
-        return noteDismiss;
-    }
-
-    public int getDownSpeed() {
-        return notesDownSpeed;
+    public Setting getSetting() {
+        return setting;
     }
 
     public void setDownSpeed(int speed) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putString("down_speed", String.valueOf(speed)).apply();
-        notesDownSpeed = speed;
-    }
-
-    public boolean getIfLoadLongKeyboard() {
-        return loadLongKeyboard;
-    }
-
-    public int getRoughLine() {
-        return roughLine;
-    }
-
-    public boolean getIsShowLine() {
-        return showLine;
+        setting.setNotesDownSpeed(speed);
     }
 
     @Override
@@ -771,41 +701,16 @@ public final class JPApplication extends Application {
         midiConnectionListeners.remove(midiConnectionListener);
     }
 
-    public int getAnimFrame() {
-        return animFrame;
-    }
-
-    public boolean getIfShowNotesLevel() {
-        return showTouchNotesLevel;
-    }
-
-
-    public int getMidiKeyboardTune() {
-        return midiKeyboardTune;
-    }
-
     public void setMidiKeyboardTune(int midiKeyboardTune) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putString("midi_keyboard_tune", String.valueOf(midiKeyboardTune)).apply();
-        this.midiKeyboardTune = midiKeyboardTune;
-    }
-
-    public int getKeyboardSoundTune() {
-        return keyboardSoundTune;
+        setting.setMidiKeyboardTune(midiKeyboardTune);
     }
 
     public void setKeyboardSoundTune(int keyboardSoundTune) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putString("keyboard_sound_tune", String.valueOf(keyboardSoundTune)).apply();
-        this.keyboardSoundTune = keyboardSoundTune;
-    }
-
-    public boolean isKeyboardAnim() {
-        return keyboardAnim;
-    }
-
-    public void setKeyboardAnim(boolean keyboardAnim) {
-        this.keyboardAnim = keyboardAnim;
+        setting.setKeyboardSoundTune(keyboardSoundTune);
     }
 
     public int getPlaySongsMode() {
@@ -814,18 +719,6 @@ public final class JPApplication extends Application {
 
     public void setPlaySongsMode(int n) {
         playSongsMode = n;
-    }
-
-    public boolean getAutoPlay() {
-        return autoPlay;
-    }
-
-    public float getChordVolume() {
-        return chordVolume;
-    }
-
-    public boolean getOpenChord() {
-        return isOpenChord;
     }
 
     public float getWidthDiv8() {
@@ -878,14 +771,6 @@ public final class JPApplication extends Application {
 
     public void setWhiteKeyHeightAdd90(float f) {
         whiteKeyHeightAdd90 = f;
-    }
-
-    public boolean isChatSound() {
-        return chatSound;
-    }
-
-    public void setChatSound(boolean chatSound) {
-        this.chatSound = chatSound;
     }
 
     public String getServer() {

@@ -1,10 +1,15 @@
 package ly.pp.justpiano3.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author as
  */
+@Data
+@AllArgsConstructor
 public class SimpleUser {
 
     /**
@@ -30,45 +35,6 @@ public class SimpleUser {
     public SimpleUser(String gender, String name, Integer lv) {
         this.gender = gender;
         this.name = name;
-        this.lv = lv;
-    }
-
-    public SimpleUser(String gender, String name, Integer lv, Date date) {
-        this.gender = gender;
-        this.name = name;
-        this.lv = lv;
-        this.date = date;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getLv() {
-        return lv;
-    }
-
-    public void setLv(Integer lv) {
         this.lv = lv;
     }
 }

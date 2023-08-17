@@ -10,7 +10,7 @@ public final class DownNotesThread extends Thread {
 
     public DownNotesThread(JPApplication jPApplication, int downSpeed, PianoPlay pianoPlay) {
         jpapplication = jPApplication;
-        sleepTime = downSpeed * jpapplication.getAnimFrame();
+        sleepTime = downSpeed * jpapplication.getSetting().getAnimFrame();
         this.pianoPlay = pianoPlay;
     }
 

@@ -64,7 +64,7 @@ public final class OLPlayHallHandler extends Handler {
                     }
 
                     // 聊天音效播放
-                    if (olPlayHall.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
+                    if (olPlayHall.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
                         olPlayHall.jpapplication.playChatSound();
                     }
 

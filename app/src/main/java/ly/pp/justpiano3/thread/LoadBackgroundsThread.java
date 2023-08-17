@@ -54,7 +54,7 @@ public final class LoadBackgroundsThread extends Thread {
                 if (canvas != null) {
                     canvas.drawBitmap(playView.backgroundImage, null, f6028n, null);
                     canvas.drawBitmap(playView.barImage, null, f6029o, null);
-                    if (jpapplication.getRoughLine() != 1) {
+                    if (jpapplication.getSetting().getRoughLine() != 1) {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
                 }
@@ -63,7 +63,7 @@ public final class LoadBackgroundsThread extends Thread {
                 } else {
                     playView.mo2931c(canvas);
                 }
-                if (canvas != null && jpapplication.getIfLoadLongKeyboard()) {
+                if (canvas != null && jpapplication.getSetting().getLoadLongKeyboard()) {
                     canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0.0f, 0.0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
                     canvas.drawRoundRect(new RectF((float) (((jpapplication.getWidthPixels() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((jpapplication.getWidthPixels() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
                     switch (playView.currentPlayNote.noteValue % 12) {

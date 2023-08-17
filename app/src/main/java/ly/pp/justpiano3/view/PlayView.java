@@ -219,7 +219,7 @@ public final class PlayView extends SurfaceView implements Callback {
         fireImage = jpapplication.loadImage("fire");
         longKeyboardImage = jpapplication.loadImage("keyboard_long");
         nullImage = jpapplication.loadImage("null");
-        switch (jpapplication.getRoughLine()) {
+        switch (jpapplication.getSetting().getRoughLine()) {
             case 1:
                 roughLineImage = nullImage;
                 break;
@@ -233,7 +233,7 @@ public final class PlayView extends SurfaceView implements Callback {
         progressBarImage = jpapplication.loadImage("progress_bar");
         progressBarBaseImage = jpapplication.loadImage("progress_bar_base");
         Bitmap bitmap = noteImage;
-        float noteSize = jpapplication.getNoteSize();
+        float noteSize = jpapplication.getSetting().getNoteSize();
         matrix.postScale(noteSize, noteSize);
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -244,7 +244,7 @@ public final class PlayView extends SurfaceView implements Callback {
         width = playNoteImage.getWidth();
         height = playNoteImage.getHeight();
         playNoteImage = Bitmap.createBitmap(playNoteImage, 0, 0, width, height, matrix, true);
-        notesDownSpeed = jpapplication.getDownSpeed();
+        notesDownSpeed = jpapplication.getSetting().getNotesDownSpeed();
         jpapplication.setWidthDiv8(jpapplication.getWidthPixels() / 8f);
         jpapplication.setWhiteKeyHeight((int) (jpapplication.getHeightPixels() * 0.49));
         jpapplication.setHalfHeightSub20(jpapplication.getWhiteKeyHeight() - 20);
@@ -280,7 +280,7 @@ public final class PlayView extends SurfaceView implements Callback {
             int i4 = length;
             if (i4 < arrayLength) {
                 tick += tickArray[i4];
-                position = (int) (-tick * pm_2 / jpapplication.getTempSpeed() / notesDownSpeed);
+                position = (int) (-tick * pm_2 / jpapplication.getSetting().getTempSpeed() / notesDownSpeed);
                 if (trackArray[i4] != handValue) {
                     ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
                     notesList.add(ln);
@@ -331,7 +331,7 @@ public final class PlayView extends SurfaceView implements Callback {
             int i3 = i2;
             if (i3 < arrayLength) {
                 tick += tickArray[i3];
-                position = (int) (-tick * pm_2 / jpapplication.getTempSpeed() / notesDownSpeed);
+                position = (int) (-tick * pm_2 / jpapplication.getSetting().getTempSpeed() / notesDownSpeed);
                 if (trackArray[i3] != handValue) {
                     ln = new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue);
                     notesList.add(ln);
@@ -445,7 +445,7 @@ public final class PlayView extends SurfaceView implements Callback {
             }
             hasTouched = true;
             i3 = i4;
-            if (jpapplication.getNoteDismiss()) {
+            if (jpapplication.getSetting().getNoteDismiss()) {
                 judgingNote.noteImage = nullImage;
                 int index = notesList.indexOf(judgingNote);
                 for (int i1 = 0; i1 < notesList.size(); i1++) {
@@ -665,10 +665,10 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (!currentPlayNote.noteImage.equals(nullImage)) {
                         judgingNote = currentPlayNote;
                         if (currentPlayNote.posiAdd15AddAnim > -15f) {
-                            if (jpapplication.getIsShowLine() && canvas != null) {
+                            if (jpapplication.getSetting().getShowLine() && canvas != null) {
                                 canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, jpapplication.getWhiteKeyHeight(), currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, 15 + currentPlayNote.posiAdd15AddAnim, line);
                             }
-                            if (jpapplication.changeNotesColor) {
+                            if (jpapplication.getSetting().getChangeNotesColor()) {
                                 currentPlayNote.noteImage = playNoteImage;
                             } else if (currentPlayNote.posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
                                 currentPlayNote.noteImage = playNoteImage;
@@ -686,7 +686,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (jpapplication.getIfLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
+                if (jpapplication.getSetting().getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
                     f4813n = currentPlayNote.noteValue;
                     f4713V = false;
                 }
@@ -702,7 +702,7 @@ public final class PlayView extends SurfaceView implements Callback {
             }
         }
         notesList.removeAll(tempNotesArray);
-        if (canvas != null && touchNotesList != null && jpapplication.getIfShowNotesLevel()) {
+        if (canvas != null && touchNotesList != null && jpapplication.getSetting().getShowTouchNotesLevel()) {
             try {
                 for (ShowTouchNotesLevel showTouchNotesLevel : touchNotesList) {
                     Rect rect = f4770bB;
@@ -804,7 +804,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (jpapplication.getIfLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
+                if (jpapplication.getSetting().getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
                     f4813n = currentPlayNote.noteValue;
                     f4713V = false;
                 }
