@@ -18,7 +18,9 @@ import ly.pp.justpiano3.listener.touch.TouchNotes;
 import ly.pp.justpiano3.thread.DownNotesThread;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
+import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
 import ly.pp.justpiano3.view.play.ReadPm;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
@@ -539,14 +541,14 @@ public final class PlayView extends SurfaceView implements Callback {
         int noteOctaveOffset = noteMod12 * 12;
         judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
-            jpapplication.playSound(i + noteOctaveOffset, volume0);
+            SoundEngineUtil.playSound(i + noteOctaveOffset, volume0);
         }
     }
 
     public int midiJudgeAndPlaySound(int i) {
         int noteOctaveOffset = noteMod12 * 12;
         int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
-        jpapplication.playSound(trueNote + noteOctaveOffset, volume0);
+        SoundEngineUtil.playSound(trueNote + noteOctaveOffset, volume0);
         return trueNote;
     }
 
@@ -577,7 +579,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     builder1.setType(4);
                     builder1.setStatusArray(GZIPUtil.arrayToZIP(bArr));
                     long x = pianoPlay.times * serialID;
-                    long time = jpapplication.getServerTime();
+                    long time = EncryptUtil.getServerTime();
                     long crypt = (time >>> 12 | time << 52) ^ x;
                     builder1.setCode(crypt);
                     pianoPlay.sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
@@ -592,7 +594,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     builder.setType(3);
                     builder.setStatusArray(GZIPUtil.toZIP(new String(bArr, StandardCharsets.UTF_8)));
                     x = pianoPlay.times * serialID;
-                    time = jpapplication.getServerTime();
+                    time = EncryptUtil.getServerTime();
                     crypt = (time >>> 12 | time << 52) ^ x;
                     builder.setCode(crypt);
                     pianoPlay.sendMsg(OnlineProtocolType.CL_TEST, builder.build());
@@ -609,7 +611,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     OnlinePlayFinishDTO.Builder builder2 = OnlinePlayFinishDTO.newBuilder();
                     builder2.setStatusArray(GZIPUtil.arrayToZIP(bArr));
                     x = pianoPlay.roomBundle.getByte("ID") * serialID;
-                    time = jpapplication.getServerTime();
+                    time = EncryptUtil.getServerTime();
                     crypt = (time >>> 12 | time << 52) ^ x;
                     builder2.setCode(crypt);
                     pianoPlay.sendMsg(OnlineProtocolType.PLAY_FINISH, builder2.build());

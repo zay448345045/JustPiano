@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.multidex.MultiDex;
-import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
@@ -27,12 +25,11 @@ import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.view.PlayView;
 
-import java.io.*;
-import java.security.KeyPair;
-import java.security.PublicKey;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 
 public final class JPApplication extends Application {
@@ -41,10 +38,6 @@ public final class JPApplication extends Application {
     public static String kitiName = "";
     public static SharedPreferences accountListSharedPreferences;
     public static int SETTING_MODE_CODE = 122;
-
-    static {
-        System.loadLibrary("soundengine");
-    }
 
     public String title = "";
     public String f4072f = "";
@@ -66,6 +59,15 @@ public final class JPApplication extends Application {
     private String nowSongsName = "";
     private String server = Consts.ONLINE_SERVER_URL;
     private PlaySongs playSongs;
+    private int widthPixels;
+    private int heightPixels;
+    private int animPosition;
+    private float widthDiv8;
+    private float halfHeightSub20;
+    private float halfHeightSub10;
+    private float whiteKeyHeightAdd90;
+    private MidiManager mMidiManager;
+    public MidiOutputPort midiOutputPort;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -78,54 +80,6 @@ public final class JPApplication extends Application {
             setConnectionService(null);
         }
     };
-    private int widthPixels;
-    private int heightPixels;
-    private int animPosition;
-    private float widthDiv8;
-    private float halfHeightSub20;
-    private float halfHeightSub10;
-    private float whiteKeyHeightAdd90;
-    private MidiManager mMidiManager;
-    public MidiOutputPort midiOutputPort;
-
-    /**
-     * RSA客户端生成密钥存储
-     */
-    private KeyPair keyPair;
-
-    /**
-     * 服务端公钥存储
-     */
-    private PublicKey publicKey;
-
-    /**
-     * 服务端时间
-     */
-    public long serverTimeInterval;
-
-    /**
-     * 获取客户端密钥
-     *
-     * @return
-     */
-    public KeyPair getDeviceKeyPair() {
-        return keyPair;
-    }
-
-    /**
-     * 更新客户端密钥
-     */
-    public void updateDeviceKeyPair() {
-        keyPair = EncryptUtil.generateRSAKeyPair();
-    }
-
-    public void setServerPublicKey(String publicKeyStr) {
-        this.publicKey = EncryptUtil.generatePublicKey(publicKeyStr);
-    }
-
-    public PublicKey getServerPublicKey() {
-        return publicKey;
-    }
 
     public void startPlaySongLocal(String songPath, MelodySelect melodySelect, int position) {
         stopPlaySong();
@@ -148,118 +102,6 @@ public final class JPApplication extends Application {
 
     public boolean isPlayingSong() {
         return this.playSongs != null && this.playSongs.isPlayingSongs;
-    }
-
-    public static native void setupAudioStreamNative(int var1, int var2);
-
-    public static native void teardownAudioStreamNative();
-
-    public static native void loadWavAssetNative(byte[] var1, int var2, float var3);
-
-    public static native void unloadWavAssetsNative();
-
-    public static native void trigger(int var1, int var2);
-
-    public static native void setRecord(boolean record);
-
-    public static native void setRecordFilePath(String recordFilePath);
-
-    public static void preloadSounds(Context context, int i) {
-        try {
-            Converter converter = new Converter();
-            converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
-            loadWavInputStreamByIndex(context, i);
-        } catch (Exception e1) {
-            try {
-                AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");
-                Converter converter = new Converter();
-                converter.convert(assetFD.createInputStream(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav", null, null);
-                loadWavInputStreamByIndex(context, i);
-                assetFD.close();
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-    }
-
-    private static void loadWavInputStreamByIndex(Context context, int index) throws IOException {
-        FileInputStream dataStream = new FileInputStream(context.getFilesDir().getAbsolutePath() + "/Sounds/" + index + ".wav");
-        int dataLen = dataStream.available();
-        byte[] dataBytes = new byte[dataLen];
-        dataStream.read(dataBytes, 0, dataLen);
-        loadWavAssetNative(dataBytes, index, 0);
-        dataStream.close();
-    }
-
-    private static void loadChatWav(Context context) throws IOException {
-        AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("chat_b5.wav");
-        FileInputStream dataStream = assetFD.createInputStream();
-        int dataLen = dataStream.available();
-        byte[] dataBytes = new byte[dataLen];
-        dataStream.read(dataBytes, 0, dataLen);
-        loadWavAssetNative(dataBytes, 0, 0);
-        assetFD.close();
-        dataStream.close();
-    }
-
-    /**
-     * 移动文件到新文件的位置（拷贝流）
-     *
-     * @param src 源文件对象
-     * @param des 目标文件对象
-     */
-    public static boolean moveFile(File src, File des) {
-        if (!src.exists()) {
-            return false;
-        }
-        if (des.exists()) {
-            des.delete();
-        }
-        try (BufferedInputStream reader = new BufferedInputStream(new FileInputStream(src)); BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(des))) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, length);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            src.delete();
-        }
-        return true;
-    }
-
-    public static void reLoadOriginalSounds(Context context) {
-        File dir = new File(context.getFilesDir(), "Sounds");
-        if (dir.isDirectory()) {
-            File[] listFiles = dir.listFiles();
-            if (listFiles != null && listFiles.length > 0) {
-                for (File delete : listFiles) {
-                    delete.delete();
-                }
-            }
-        }
-        teardownAudioStreamNative();
-        unloadWavAssetsNative();
-        for (int i = 108; i >= 24; i--) {
-            preloadSounds(context, i);
-        }
-        confirmLoadSounds(context);
-        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString("sound_list", "original");
-        edit.apply();
-    }
-
-    public static void confirmLoadSounds(Context context) {
-        try {
-            loadChatWav(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", true);
-        setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
     }
 
     public static void initSettings(Context context) {
@@ -579,14 +421,6 @@ public final class JPApplication extends Application {
         blackKeyHeight = f;
     }
 
-    public void setServerTimeInterval(long serverTime) {
-        this.serverTimeInterval = serverTime - System.currentTimeMillis();
-    }
-
-    public long getServerTime() {
-        return serverTimeInterval + System.currentTimeMillis();
-    }
-
     public void loadSettings(boolean online) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setting = Setting.loadSettings(sharedPreferences, online);
@@ -771,20 +605,9 @@ public final class JPApplication extends Application {
         this.isShowDialog = isShowDialog;
     }
 
-    public int playSound(int note, int volume) {
-        if (note >= 24 && note <= 108 && volume > 3) {
-            trigger(108 - note, volume);
-            return note;
-        }
-        return 0;
-    }
 
     public void stopSongs(int i) {
         // nothing
-    }
-
-    public void playChatSound() {
-        trigger(85, 127);
     }
 
     private class CrashHandler implements Thread.UncaughtExceptionHandler {
@@ -832,7 +655,7 @@ public final class JPApplication extends Application {
     }
 
     @Override
-    protected void attachBaseContext(Context context){
+    protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
         MultiDex.install(this);
     }

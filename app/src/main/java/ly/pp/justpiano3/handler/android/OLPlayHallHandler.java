@@ -13,13 +13,11 @@ import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
@@ -54,7 +52,7 @@ public final class OLPlayHallHandler extends Handler {
                     boolean showTime = ds.getBoolean("chats_time_show", false);
                     String time = "";
                     if (showTime) {
-                        time = DateUtil.format(new Date(olPlayHall.jpapplication.getServerTime()), "HH:mm");
+                        time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
                     }
                     message.getData().putString("TIME", time);
 
@@ -65,7 +63,7 @@ public final class OLPlayHallHandler extends Handler {
 
                     // 聊天音效播放
                     if (olPlayHall.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
-                        olPlayHall.jpapplication.playChatSound();
+                        SoundEngineUtil.playChatSound();
                     }
 
                     // 聊天记录存储

@@ -20,6 +20,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.KeyboardModeView;
 
@@ -66,7 +67,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboardMode1View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
-                jpapplication.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
+                SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
             }
 
             @Override
@@ -78,7 +79,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboardMode2View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
-                jpapplication.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
+                SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
             }
 
             @Override
@@ -154,11 +155,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             }
         }
         if (recordStart) {
-            JPApplication.setRecord(false);
+            SoundEngineUtil.setRecord(false);
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-            JPApplication.moveFile(srcFile, desFile);
+            SoundEngineUtil.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
@@ -332,7 +333,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardMode1View.fireKeyDown(pitch, data[2], -1, false);
-            jpapplication.playSound(pitch, data[2]);
+            SoundEngineUtil.playSound(pitch, data[2]);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
             keyboardMode1View.fireKeyUp(pitch, false);
@@ -369,8 +370,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                             String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
                             recordFileName = date + "录音.wav";
-                            JPApplication.setRecordFilePath(recordFilePath);
-                            JPApplication.setRecord(true);
+                            SoundEngineUtil.setRecordFilePath(recordFilePath);
+                            SoundEngineUtil.setRecord(true);
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
@@ -383,11 +384,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         recordButton.setText("●");
                         recordButton.setTextColor(getResources().getColor(R.color.v3));
                         recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
-                        JPApplication.setRecord(false);
+                        SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                         File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-                        JPApplication.moveFile(srcFile, desFile);
+                        SoundEngineUtil.moveFile(srcFile, desFile);
                         Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {

@@ -18,6 +18,7 @@ import ly.pp.justpiano3.listener.SoundDownloadClick;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -159,12 +160,12 @@ public class SoundDownload extends Activity implements Callback {
             }
             GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str), file.toString());
             edit.apply();
-            JPApplication.teardownAudioStreamNative();
-            JPApplication.unloadWavAssetsNative();
+            SoundEngineUtil.teardownAudioStreamNative();
+            SoundEngineUtil.unloadWavAssetsNative();
             for (i = 108; i >= 24; i--) {
-                JPApplication.preloadSounds(getApplicationContext(), i);
+                SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             }
-            JPApplication.confirmLoadSounds(getApplicationContext());
+            SoundEngineUtil.confirmLoadSounds(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }

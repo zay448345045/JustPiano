@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -76,7 +77,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             JSONObject jSONObject = new JSONObject(f5139a);
             // 记录服务端返回的会话公钥
             String serverPublicKey = jSONObject.getString("publicKey");
-            loginActivity.jpapplication.setServerPublicKey(serverPublicKey);
+            EncryptUtil.setServerPublicKey(serverPublicKey);
             try {
                 newVersion = jSONObject.getString("version");
             } catch (JSONException ignored) {

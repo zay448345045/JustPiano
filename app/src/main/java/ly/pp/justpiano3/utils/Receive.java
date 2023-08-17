@@ -62,7 +62,7 @@ public final class Receive {
                                 break;
                         }
                         assert oLMainMode != null;
-                        oLMainMode.jpapplication.setServerTimeInterval(msg.getLogin().getTime());
+                        EncryptUtil.setServerTimeInterval(msg.getLogin().getTime());
                         oLMainMode.olMainModeHandler.handleMessage(message2);
                         return;
                     }

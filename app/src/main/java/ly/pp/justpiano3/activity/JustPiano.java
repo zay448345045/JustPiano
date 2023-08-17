@@ -14,6 +14,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 import ly.pp.justpiano3.view.play.ReadPm;
 
@@ -243,7 +244,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
         // 载入音源之前，先生成设备UUID到数据库中
         generateDeviceUUID(sqliteDataBase);
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(getApplicationContext(), i);
+            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             progress++;
             loading = "此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除，正在载入声音资源..." + progress + "/85";
             Message obtainMessage2 = handler.obtainMessage();
@@ -251,7 +252,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
             handler.sendMessage(obtainMessage2);
         }
 
-        JPApplication.confirmLoadSounds(getApplicationContext());
+        SoundEngineUtil.confirmLoadSounds(getApplicationContext());
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);

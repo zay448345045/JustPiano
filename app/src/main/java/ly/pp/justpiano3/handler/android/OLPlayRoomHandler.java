@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -19,9 +20,6 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineQuitRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
@@ -93,7 +91,7 @@ public final class OLPlayRoomHandler extends Handler {
                         boolean showTime = ds.getBoolean("chats_time_show", false);
                         String time = "";
                         if (showTime) {
-                            time = DateUtil.format(new Date(olPlayRoom.jpapplication.getServerTime()), "HH:mm");
+                            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
                         }
                         message.getData().putString("TIME", time);
                         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
@@ -103,7 +101,7 @@ public final class OLPlayRoomHandler extends Handler {
 
                         // 聊天音效播放
                         if (olPlayRoom.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
-                            olPlayRoom.jpapplication.playChatSound();
+                            SoundEngineUtil.playChatSound();
                         }
 
                         // 聊天记录存储

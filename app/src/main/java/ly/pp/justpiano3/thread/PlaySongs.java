@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.play.ReadPm;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
@@ -13,6 +14,7 @@ import protobuf.dto.OnlinePlaySongDTO;
 
 public final class PlaySongs {
     public JPApplication jpapplication;
+    private String songPath;
     public boolean isPlayingSongs;
     private final MelodySelect melodyselect;
     private final OLPlayRoom olPlayRoom;
@@ -24,6 +26,7 @@ public final class PlaySongs {
 
     public PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
         jpapplication = jPApplication;
+        songPath = str;
         melodyselect = melodySelect;
         position = i;
         ReadPm readpm = new ReadPm(jPApplication, str);
@@ -58,7 +61,7 @@ public final class PlaySongs {
                                 e.printStackTrace();
                             }
                         }
-                        jpapplication.playSound(noteArray[j], volumeArray[j]);
+                        SoundEngineUtil.playSound(noteArray[j], volumeArray[j]);
                         j++;
                     } else {
                         setNestSong();
@@ -69,6 +72,10 @@ public final class PlaySongs {
                 }
             }
         }).start();
+    }
+
+    private String getSongPath() {
+        return songPath;
     }
 
     private void setNestSong() {

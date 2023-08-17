@@ -19,6 +19,53 @@ public class EncryptUtil {
     private static final int KEY_SIZE = 1024;
 
     /**
+     * RSA客户端生成密钥存储
+     */
+    private static KeyPair keyPair;
+
+    /**
+     * 服务端公钥存储
+     */
+    private static PublicKey publicKey;
+
+    /**
+     * 服务端时间
+     */
+    public static Long serverTimeInterval;
+
+    /**
+     * 获取客户端密钥
+     *
+     * @return
+     */
+    public static KeyPair getDeviceKeyPair() {
+        return keyPair;
+    }
+
+    /**
+     * 更新客户端密钥
+     */
+    public static void updateDeviceKeyPair() {
+        keyPair = EncryptUtil.generateRSAKeyPair();
+    }
+
+    public static void setServerPublicKey(String publicKeyStr) {
+        publicKey = EncryptUtil.generatePublicKey(publicKeyStr);
+    }
+
+    public static PublicKey getServerPublicKey() {
+        return publicKey;
+    }
+
+    public static void setServerTimeInterval(long serverTime) {
+        serverTimeInterval = serverTime - System.currentTimeMillis();
+    }
+
+    public static Long getServerTime() {
+        return serverTimeInterval + System.currentTimeMillis();
+    }
+
+    /**
      * 生成RSA公私钥对
      *
      * @return

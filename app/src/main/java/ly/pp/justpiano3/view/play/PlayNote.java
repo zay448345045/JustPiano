@@ -3,6 +3,7 @@ package ly.pp.justpiano3.view.play;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.PlayView;
 
 public final class PlayNote {
@@ -107,7 +108,7 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && hideNote) {
-                playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
+                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
@@ -126,12 +127,12 @@ public final class PlayNote {
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (jpapplication.getSetting().getAutoPlay()) {
                 if (newNote && ((trackValue != handValue || hideNote) && jpapplication.getSetting().getIsOpenChord())) {
-                    playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
+                    playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
             } else if (newNote && trackValue != handValue && jpapplication.getSetting().getIsOpenChord()) {
-                playNote = jpapplication.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
+                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             }
@@ -156,7 +157,7 @@ public final class PlayNote {
                 if (trackValue == handValue) {
                     jpapplication.drawFire(playView, canvas, noteValue % 12);
                 }
-                playNote = jpapplication.playSound(noteValue, volumeValue);
+                playNote = SoundEngineUtil.playSound(noteValue, volumeValue);
                 newNote = false;
             }
             if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {

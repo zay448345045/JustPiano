@@ -117,7 +117,7 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new ProtobufVarint32LengthFieldPrepender())
                         // 2.下面解析器内部的channelRead方法进行数据包解密，使用客户端生成的私钥进行解密
                         // 7.下面解析器内部的write方法进行数据包加密，使用服务端生成的公钥进行加密
-                        .addLast(new ProtobufEncryptionHandler(jpapplication.getServerPublicKey(), jpapplication.getDeviceKeyPair().getPrivate()))
+                        .addLast(new ProtobufEncryptionHandler(EncryptUtil.getServerPublicKey(), EncryptUtil.getDeviceKeyPair().getPrivate()))
                         // 3.将数据包内容（字节数组）反序列化为protobuf VO对象
                         .addLast(new ProtobufDecoder(OnlineBaseVO.getDefaultInstance()))
                         // 6.将protobuf DTO对象序列化为数据包字节数组
@@ -160,7 +160,7 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode(DeviceUtil.getVersionName(jpapplication));
                 builder.setPackageName(getPackageName());
-                builder.setPublicKey(EncryptUtil.generatePublicKeyString(jpapplication.getDeviceKeyPair().getPublic()));
+                builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
                 deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication.getApplicationContext()));
@@ -207,7 +207,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void run() {
         // 更新客户端公钥
-        jpapplication.updateDeviceKeyPair();
+        EncryptUtil.updateDeviceKeyPair();
         initNetty();
         mNetty.connect(jpapplication.getServer(), ONLINE_PORT);
     }

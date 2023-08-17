@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -20,9 +21,6 @@ import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.io.File;
@@ -57,7 +55,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         boolean showTime = ds.getBoolean("chats_time_show", false);
                         String time = "";
                         if (showTime) {
-                            time = DateUtil.format(new Date(olPlayKeyboardRoom.jpapplication.getServerTime()), "HH:mm");
+                            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
                         }
                         message.getData().putString("TIME", time);
 
@@ -68,7 +66,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
 
                         // 聊天音效播放
                         if (olPlayKeyboardRoom.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayKeyboardRoom.jpapplication.getKitiName())) {
-                            olPlayKeyboardRoom.jpapplication.playChatSound();
+                            SoundEngineUtil.playChatSound();
                         }
 
                         // 聊天记录存储
@@ -145,7 +143,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     }
                                 }
                                 if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                    olPlayKeyboardRoom.jpapplication.playSound(notes[i + 1], notes[i + 2]);
+                                    SoundEngineUtil.playSound(notes[i + 1], notes[i + 2]);
                                 }
                                 int finalI = i;
                                 olPlayKeyboardRoom.runOnUiThread(() -> {

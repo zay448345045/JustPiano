@@ -36,6 +36,7 @@ import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardModeView;
@@ -698,8 +699,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                             String date = DateUtil.format(DateUtil.now());
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
                             recordFileName = date + "录音.wav";
-                            JPApplication.setRecordFilePath(recordFilePath);
-                            JPApplication.setRecord(true);
+                            SoundEngineUtil.setRecordFilePath(recordFilePath);
+                            SoundEngineUtil.setRecord(true);
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
@@ -712,11 +713,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         recordButton.setText("●");
                         recordButton.setTextColor(getResources().getColor(R.color.v3));
                         recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
-                        JPApplication.setRecord(false);
+                        SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                         File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-                        JPApplication.moveFile(srcFile, desFile);
+                        SoundEngineUtil.moveFile(srcFile, desFile);
                         Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception ignored) {
@@ -884,7 +885,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                        jpapplication.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
+                        SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
                     }
                     if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
                         olKeyboardStates[roomPositionSub1].setPlaying(true);
@@ -982,11 +983,11 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
         stopNotesSchedule();
         if (recordStart) {
-            JPApplication.setRecord(false);
+            SoundEngineUtil.setRecord(false);
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-            JPApplication.moveFile(srcFile, desFile);
+            SoundEngineUtil.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
@@ -1089,7 +1090,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             }
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                    jpapplication.playSound(pitch, data[2]);
+                    SoundEngineUtil.playSound(pitch, data[2]);
                 }
                 if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
                     olKeyboardStates[roomPositionSub1].setPlaying(true);

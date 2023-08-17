@@ -31,6 +31,7 @@ import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimer;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ShareUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.*;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
@@ -298,12 +299,12 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         jpapplication.setHeightPixels(displayMetrics.heightPixels);
         jpapplication.setWidthPixels(displayMetrics.widthPixels);
         jpapplication.loadSettings(true);
-        JPApplication.teardownAudioStreamNative();
-        JPApplication.unloadWavAssetsNative();
+        SoundEngineUtil.teardownAudioStreamNative();
+        SoundEngineUtil.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(getApplicationContext(), i);
+            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
         }
-        JPApplication.confirmLoadSounds(getApplicationContext());
+        SoundEngineUtil.confirmLoadSounds(getApplicationContext());
     }
 
     public void sendMsg(int type, MessageLite msg) {
@@ -340,8 +341,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
         if (isOpenRecord && !recordStart) {
             recordStart = true;
-            JPApplication.setRecordFilePath(recordWavPath);
-            JPApplication.setRecord(true);
+            SoundEngineUtil.setRecordFilePath(recordWavPath);
+            SoundEngineUtil.setRecord(true);
             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
         }
     }
@@ -357,10 +358,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public void recordFinish() {
         if (recordStart) {
             isOpenRecord = false;
-            JPApplication.setRecord(false);
+            SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
-            JPApplication.moveFile(srcFile, desFile);
+            SoundEngineUtil.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
             recordStart = false;
         }

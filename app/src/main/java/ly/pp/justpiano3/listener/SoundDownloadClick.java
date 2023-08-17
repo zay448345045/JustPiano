@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnClickListener;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.SoundDownload;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 
 public final class SoundDownloadClick implements OnClickListener {
     private final SoundDownload soundDownload;
@@ -30,7 +31,7 @@ public final class SoundDownloadClick implements OnClickListener {
                 ThreadPoolUtils.execute(() -> soundDownload.mo3006a(name + ".ss"));
                 break;
             case 2:
-                ThreadPoolUtils.execute(() -> JPApplication.reLoadOriginalSounds(soundDownload.getApplicationContext()));
+                ThreadPoolUtils.execute(() -> SoundEngineUtil.reLoadOriginalSounds(soundDownload.getApplicationContext()));
                 break;
         }
     }

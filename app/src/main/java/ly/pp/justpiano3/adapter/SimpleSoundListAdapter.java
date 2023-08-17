@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
@@ -63,7 +64,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
             olPlayKeyboardRoom.jpprogressBar.show();
             ThreadPoolUtils.execute(() -> {
                 if (name.equals("原生音源")) {
-                    JPApplication.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
+                    SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
                     edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName());
@@ -80,12 +81,12 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         }
                         GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());
                         edit.apply();
-                        JPApplication.teardownAudioStreamNative();
-                        JPApplication.unloadWavAssetsNative();
+                        SoundEngineUtil.teardownAudioStreamNative();
+                        SoundEngineUtil.unloadWavAssetsNative();
                         for (i = 108; i >= 24; i--) {
-                            JPApplication.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
+                            SoundEngineUtil.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
                         }
-                        JPApplication.confirmLoadSounds(olPlayKeyboardRoom.getApplicationContext());
+                        SoundEngineUtil.confirmLoadSounds(olPlayKeyboardRoom.getApplicationContext());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
