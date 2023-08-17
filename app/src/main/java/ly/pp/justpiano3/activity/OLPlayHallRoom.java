@@ -20,6 +20,7 @@ import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeBlessingClick;
@@ -518,7 +519,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         jpApplication.loadSettings(true);
         setContentView(R.layout.olplayhallroom);
         jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(0);
+        jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);
         hallList.clear();

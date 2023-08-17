@@ -3,19 +3,31 @@ package ly.pp.justpiano3.thread;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
+import lombok.Data;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.play.ReadPm;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.enums.PlaySongsModeEnum;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.view.play.ReadPm;
 import protobuf.dto.OnlinePlaySongDTO;
 
+@Data
 public final class PlaySongs {
-    public JPApplication jpapplication;
+    private JPApplication jpapplication;
+
+    /**
+     * 目前正在播放的歌曲路径
+     */
     private String songPath;
-    public boolean isPlayingSongs;
+
+    /**
+     * 播放模式
+     */
+    private int playSongsMode;
+    private boolean isPlayingSongs;
     private final MelodySelect melodyselect;
     private final OLPlayRoom olPlayRoom;
     private final int position;
@@ -74,10 +86,6 @@ public final class PlaySongs {
         }).start();
     }
 
-    private String getSongPath() {
-        return songPath;
-    }
-
     private void setNestSong() {
         if (melodyselect != null && melodyselect.getIsFollowPlay() && melodyselect.handler != null) {
             Message message = Message.obtain(melodyselect.handler);
@@ -88,8 +96,8 @@ public final class PlaySongs {
             melodyselect.handler.sendMessage(message);
         }
         if (olPlayRoom != null) {
-            switch (jpapplication.getPlaySongsMode()) {
-                case 1:
+            switch (PlaySongsModeEnum.ofCode(playSongsMode, PlaySongsModeEnum.ONCE)) {
+                case RECYCLE:
                     OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                     builder.setTune(olPlayRoom.getdiao());
                     builder.setSongPath(jpapplication.getNowSongsName());
@@ -98,7 +106,7 @@ public final class PlaySongs {
                     obtainMessage1.what = 12;
                     olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage1);
                     return;
-                case 2:
+                case RANDOM:
                     String str0 = "";
                     if (!olPlayRoom.online_1.isEmpty()) {
                         str0 = " AND " + olPlayRoom.online_1;
@@ -118,7 +126,7 @@ public final class PlaySongs {
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);
                     }
                     return;
-                case 3:
+                case FAVOR_RANDOM:
                     str0 = "";
                     if (!olPlayRoom.online_1.isEmpty()) {
                         str0 = " AND " + olPlayRoom.online_1;
@@ -140,6 +148,8 @@ public final class PlaySongs {
                         obtainMessage2.what = 12;
                         olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);
                     }
+                    return;
+                default:
             }
         }
     }

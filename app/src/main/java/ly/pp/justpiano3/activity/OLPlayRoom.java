@@ -26,6 +26,7 @@ import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.*;
@@ -49,7 +50,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public Handler handler;
     public byte hallID0;
     public String hallName;
-    public String songPath = "";
     public List<Bundle> friendPlayerList = new ArrayList<>();
     public boolean canNotNextPage;
     public OLPlayRoomHandler olPlayRoomHandler;
@@ -340,7 +340,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         moreSongs.dismiss();
     }
 
-    public void m3756h() {
+    public void changeCursor() {
         if (!sqlWhere.isEmpty()) {
             cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
             olRoomSongsAdapter.changeCursor(cursor);
@@ -627,15 +627,17 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 m3744a(8, 12);
                 return;
             case R.id.add_favor:
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("isfavo", 1);
-                int result = sqlitedatabase.update("jp_data", contentValues, "path = '" + songPath + "'", null);
-                if (result > 0) {
-                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
+                if (jpapplication.isPlayingSong()) {
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("isfavo", 1);
+                    int result = sqlitedatabase.update("jp_data", contentValues, "path = '" + jpapplication.getPlaySongs().getSongPath() + "'", null);
+                    if (result > 0) {
+                        Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
+                    }
+                    contentValues.clear();
                 }
-                contentValues.clear();
                 moreSongs.dismiss();
-                m3756h();
+                changeCursor();
                 return;
             case R.id.type_l:
                 m3749b(1);
@@ -765,36 +767,36 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 changeChatColor(50, 9, 0xFF000000);
                 return;
             case R.id.onetimeplay:
-                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 0 && playerKind.equals("H")) {
-                    jpapplication.setPlaySongsMode(0);
-                    Toast.makeText(this, "单次播放已开启", Toast.LENGTH_SHORT).show();
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongs().getPlaySongsMode() != PlaySongsModeEnum.ONCE.getCode() && playerKind.equals("H")) {
+                    jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.ONCE.getCode());
+                    Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
                 } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.circulateplay:
-                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 1 && playerKind.equals("H")) {
-                    jpapplication.setPlaySongsMode(1);
-                    Toast.makeText(this, "单曲循环已开启", Toast.LENGTH_SHORT).show();
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongs().getPlaySongsMode() != PlaySongsModeEnum.RECYCLE.getCode() && playerKind.equals("H")) {
+                    jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.RECYCLE.getCode());
+                    Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
                 } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.randomplay:
-                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 2 && playerKind.equals("H")) {
-                    jpapplication.setPlaySongsMode(2);
-                    Toast.makeText(this, "乐曲将随机播放", Toast.LENGTH_SHORT).show();
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongs().getPlaySongsMode() != PlaySongsModeEnum.RANDOM.getCode() && playerKind.equals("H")) {
+                    jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.RANDOM.getCode());
+                    Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
                 } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.favorplay:
-                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongsMode() != 3 && playerKind.equals("H")) {
-                    jpapplication.setPlaySongsMode(3);
-                    Toast.makeText(this, "乐曲将选择收藏夹内曲目随机播放", Toast.LENGTH_SHORT).show();
+                if (jpapplication.isPlayingSong() && jpapplication.getPlaySongs().getPlaySongsMode() != PlaySongsModeEnum.FAVOR_RANDOM.getCode() && playerKind.equals("H")) {
+                    jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM.getCode());
+                    Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
                 } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
@@ -999,7 +1001,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         if (!jpapplication.getNowSongsName().isEmpty()) {
             songNameText.setText(querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
-        jpapplication.setPlaySongsMode(0);
+        jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.ONCE.getCode());
         // songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
         songNameText.setSingleLine(true);
         songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);

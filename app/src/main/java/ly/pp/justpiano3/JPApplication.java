@@ -13,6 +13,8 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.multidex.MultiDex;
+import lombok.Getter;
+import lombok.Setter;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
@@ -45,15 +47,31 @@ public final class JPApplication extends Application {
     private float blackKeyHeight;
     private float blackKeyWidth;
     private boolean isBindService;
+
+    /**
+     * 游戏模式
+     */
+    @Setter
+    @Getter
     private int gameMode;
+
+    /**
+     * 是否已经显示对话框，防止对话框重复显示
+     */
+    @Setter
+    @Getter
     private boolean isShowDialog;
-    private int playSongsMode;
     private final Map<Byte, User> hashMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
     private List<SimpleUser> chatBlackList;
     private String nowSongsName = "";
     private String server = Consts.ONLINE_SERVER_URL;
+
+    /**
+     * 目前正在播放的歌曲
+     */
+    @Getter
     private PlaySongs playSongs;
     private int widthPixels;
     private int heightPixels;
@@ -87,7 +105,7 @@ public final class JPApplication extends Application {
 
     public boolean stopPlaySong() {
         if (this.playSongs != null) {
-            this.playSongs.isPlayingSongs = false;
+            this.playSongs.setPlayingSongs(false);
             this.playSongs = null;
             return true;
         }
@@ -95,7 +113,7 @@ public final class JPApplication extends Application {
     }
 
     public boolean isPlayingSong() {
-        return this.playSongs != null && this.playSongs.isPlayingSongs;
+        return this.playSongs != null && this.playSongs.isPlayingSongs();
     }
 
     public static void initSettings(Context context) {
@@ -140,14 +158,6 @@ public final class JPApplication extends Application {
                 return;
             default:
         }
-    }
-
-    public int getGameMode() {
-        return gameMode;
-    }
-
-    public void setGameMode(int i) {
-        gameMode = i;  //0为普通模式 1为自由模式 2为练习模式 3为欣赏模式
     }
 
     public List<Rect> getKeyRectArray() {
@@ -453,14 +463,6 @@ public final class JPApplication extends Application {
         setting.setKeyboardSoundTune(keyboardSoundTune);
     }
 
-    public int getPlaySongsMode() {
-        return playSongsMode;
-    }
-
-    public void setPlaySongsMode(int n) {
-        playSongsMode = n;
-    }
-
     public float getWidthDiv8() {
         return widthDiv8;
     }
@@ -520,15 +522,6 @@ public final class JPApplication extends Application {
     public void setServer(String server) {
         this.server = server;
     }
-
-    public boolean getIsShowDialog() {
-        return isShowDialog;
-    }
-
-    public void setIsShowDialog(boolean isShowDialog) {
-        this.isShowDialog = isShowDialog;
-    }
-
 
     public void stopSongs(int i) {
         // nothing

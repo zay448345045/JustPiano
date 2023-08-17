@@ -43,11 +43,11 @@ public class DialogUtil {
             });
             jpDialog.setSecondButton("取消", (dialog, which) -> {
                 dialog.dismiss();
-                jpApplication.setIsShowDialog(false);
+                jpApplication.setShowDialog(false);
             });
             jpDialog.setFirstButton("确定", ((dialog, which) -> {
                 dialog.dismiss();
-                jpApplication.setIsShowDialog(false);
+                jpApplication.setShowDialog(false);
                 OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                 builder.setType(3);
                 builder.setName(userName);

@@ -66,7 +66,6 @@ public final class OLPlayRoomHandler extends Handler {
                                         }
                                     }
                                     olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, olPlayRoom.getdiao());
-                                    olPlayRoom.songPath = str1;
                                 } catch (Exception e) {
                                     return;
                                 }
@@ -161,7 +160,6 @@ public final class OLPlayRoomHandler extends Handler {
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
                                 try {
                                     olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, diao);
-                                    olPlayRoom.songPath = str1;
                                 } catch (Exception ignored) {
                                 }
                             }
@@ -260,7 +258,7 @@ public final class OLPlayRoomHandler extends Handler {
                                 }
                                 return;
                             case 1:
-                                olPlayRoom.jpapplication.setIsShowDialog(false);
+                                olPlayRoom.jpapplication.setShowDialog(false);
                                 string = message.getData().getString("F");
                                 int i = message.getData().getInt("I");
                                 JPDialog jpdialog2 = new JPDialog(olPlayRoom);

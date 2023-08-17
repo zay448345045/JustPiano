@@ -32,6 +32,6 @@ public final class OLAddFavorClick implements OnClickListener {
         }
         olRoomSongsAdapter.olPlayRoom.sqlitedatabase.update("jp_data", contentValues, "path = '" + f5594d + "'", null);
         contentValues.clear();
-        olRoomSongsAdapter.olPlayRoom.m3756h();
+        olRoomSongsAdapter.olPlayRoom.changeCursor();
     }
 }

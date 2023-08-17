@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceHolder;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.view.PlayView;
 import ly.pp.justpiano3.activity.PianoPlay;
 
@@ -58,7 +59,7 @@ public final class LoadBackgroundsThread extends Thread {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
                 }
-                if (jpapplication.getGameMode() != 3) {  // 不是欣赏模式
+                if (jpapplication.getGameMode() != GameModeEnum.HEAR.getCode()) {  // 不是欣赏模式
                     playView.mo2930b(canvas);
                 } else {
                     playView.mo2931c(canvas);

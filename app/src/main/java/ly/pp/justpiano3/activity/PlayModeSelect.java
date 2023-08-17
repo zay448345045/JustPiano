@@ -8,9 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.KeyBoard;
-import ly.pp.justpiano3.activity.MainMode;
-import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.enums.GameModeEnum;
 
 public class PlayModeSelect extends Activity implements OnClickListener {
     private JPApplication jpApplication;
@@ -33,7 +31,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication = jpApplication;
-                jPApplication.setGameMode(0);
+                jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
                 startActivity(intent);
                 finish();
                 return;
@@ -41,7 +39,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication2 = jpApplication;
-                jPApplication2.setGameMode(2);
+                jPApplication2.setGameMode(GameModeEnum.PRACTISE.getCode());
                 startActivity(intent);
                 finish();
                 return;
@@ -49,7 +47,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication2 = jpApplication;
-                jPApplication2.setGameMode(3);
+                jPApplication2.setGameMode(GameModeEnum.HEAR.getCode());
                 startActivity(intent);
                 finish();
                 return;

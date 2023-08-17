@@ -16,6 +16,7 @@ import ly.pp.justpiano3.adapter.OLMelodySelectAdapter2;
 import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
@@ -233,7 +234,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(0);
+        jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         try {
             jpapplication.loadSettings(true);
             jpapplication.getSetting().setTempSpeed(1f);

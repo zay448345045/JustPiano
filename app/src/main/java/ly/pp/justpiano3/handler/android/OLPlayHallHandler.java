@@ -195,7 +195,7 @@ public final class OLPlayHallHandler extends Handler {
                             }
                             return;
                         case 1:
-                            olPlayHall.jpapplication.setIsShowDialog(false);
+                            olPlayHall.jpapplication.setShowDialog(false);
                             string = message.getData().getString("F");
                             int i = message.getData().getInt("I");
                             JPDialog jpdialog2 = new JPDialog(olPlayHall);
@@ -228,7 +228,7 @@ public final class OLPlayHallHandler extends Handler {
                 return;
             case 9:
                 post(() -> {
-                    if (!olPlayHall.jpapplication.getIsShowDialog()) {
+                    if (!olPlayHall.jpapplication.isShowDialog()) {
                         Bundle data14 = message.getData();
                         int i = data14.getInt("T");
                         byte b = (byte) data14.getInt("R");
@@ -243,7 +243,7 @@ public final class OLPlayHallHandler extends Handler {
                             jpdialog.setMessage(string);
                             jpdialog.setFirstButton("进入房间", (dialog, which) -> {
                                 dialog.dismiss();
-                                olPlayHall.jpapplication.setIsShowDialog(false);
+                                olPlayHall.jpapplication.setShowDialog(false);
                                 if (i == 0) {
                                     olPlayHall.enterRoomHandle(data14.getInt("P"), b);
                                 } else if (i == 1) {
@@ -255,18 +255,18 @@ public final class OLPlayHallHandler extends Handler {
                             });
                             jpdialog.setSecondButton("取消", (dialog, which) -> {
                                 dialog.dismiss();
-                                olPlayHall.jpapplication.setIsShowDialog(false);
+                                olPlayHall.jpapplication.setShowDialog(false);
                             });
                         } else {
                             jpdialog.setMessage(string);
                             jpdialog.setFirstButton(string2, (dialog, which) -> {
                                 dialog.dismiss();
-                                olPlayHall.jpapplication.setIsShowDialog(false);
+                                olPlayHall.jpapplication.setShowDialog(false);
                             });
                         }
                         DialogUtil.handleGoldSend(olPlayHall.jpapplication, jpdialog, i, data14.getString("N"), data14.getString("F"));
                         jpdialog.showDialog();
-                        olPlayHall.jpapplication.setIsShowDialog(true);
+                        olPlayHall.jpapplication.setShowDialog(true);
                     }
                 });
                 return;

@@ -2,6 +2,7 @@ package ly.pp.justpiano3.thread;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.enums.GameModeEnum;
 
 public final class DownNotesThread extends Thread {
     private final JPApplication jpapplication;
@@ -19,7 +20,7 @@ public final class DownNotesThread extends Thread {
         while (pianoPlay.isPlayingStart) {
             while (pianoPlay.playView.startFirstNoteTouching) {
                 try {
-                    if (jpapplication.getGameMode() != 2 || pianoPlay.playView.isTouchRightNote) {
+                    if (jpapplication.getGameMode() != GameModeEnum.PRACTISE.getCode() || pianoPlay.playView.isTouchRightNote) {
                         jpapplication.downNote();
                     }
                     DownNotesThread.sleep(sleepTime);

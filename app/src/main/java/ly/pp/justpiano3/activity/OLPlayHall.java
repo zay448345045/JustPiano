@@ -26,6 +26,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
@@ -368,7 +369,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         setContentView(R.layout.olplayhall);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(0);
+        jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         Button f4405u = findViewById(R.id.ol_send_b);
         f4405u.setOnClickListener(this);
         Button f4406v = findViewById(R.id.ol_createroom_b);

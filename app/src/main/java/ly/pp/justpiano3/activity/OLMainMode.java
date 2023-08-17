@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
 import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.DialogDismissClick;
@@ -106,7 +107,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         setContentView(R.layout.olmainmode);
         jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(0);
+        jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         Button topButton = findViewById(R.id.ol_top_b);
         topButton.setOnClickListener(this);
         Button userButton = findViewById(R.id.ol_users_b);

@@ -14,6 +14,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.listener.touch.TouchNotes;
 import ly.pp.justpiano3.thread.DownNotesThread;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
@@ -677,7 +678,7 @@ public final class PlayView extends SurfaceView implements Callback {
                             }
                         }
                     }
-                    if (jpapplication.getGameMode() == 2 && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() + 10 &&
+                    if (jpapplication.getGameMode() == GameModeEnum.PRACTISE.getCode() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() + 10 &&
                             currentPlayNote.posiAdd15AddAnim >= jpapplication.getHalfHeightSub20() && !hasTouched && !currentPlayNote.hideNote) {
                         isTouchRightNote = false;
                     }
@@ -830,7 +831,7 @@ public final class PlayView extends SurfaceView implements Callback {
         loadbackgrounds.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
-        if (jpapplication.getGameMode() != 3) {
+        if (jpapplication.getGameMode() != GameModeEnum.HEAR.getCode()) {
             setOnTouchListener(new TouchNotes(this));
             setAccessibilityDelegate(new View.AccessibilityDelegate() {
                 @Override
