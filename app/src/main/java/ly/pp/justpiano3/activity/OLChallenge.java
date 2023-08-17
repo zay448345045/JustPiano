@@ -11,6 +11,7 @@ import android.widget.*;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
@@ -75,7 +76,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
                 return;
             case R.id.viewChallenge:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://" + JPApplication.WEBSITE_URL + "/pages/challenge.html"));
+                intent.setData(Uri.parse("https://" + Consts.WEBSITE_URL + "/pages/challenge.html"));
                 startActivity(intent);
                 return;
         }

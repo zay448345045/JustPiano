@@ -19,6 +19,7 @@ import androidx.multidex.MultiDex;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
@@ -35,26 +36,6 @@ import java.security.PublicKey;
 import java.util.*;
 
 public final class JPApplication extends Application {
-
-    /**
-     * 官网地址
-     */
-    public static final String WEBSITE_URL = "justpiano.fun";
-
-    /**
-     * 官网地址
-     */
-    public static final String INSIDE_WEBSITE_URL = "i.justpiano.fun";
-
-    /**
-     * 对战服务器地址
-     */
-    public static final String ONLINE_SERVER_URL = "server.justpiano.fun";
-
-    /**
-     * 测试对战服务器地址
-     */
-    public static final String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
 
     private List<MidiConnectionListener> midiConnectionListeners;
     public static String kitiName = "";
@@ -83,7 +64,7 @@ public final class JPApplication extends Application {
     private String password = "";
     private List<SimpleUser> chatBlackList;
     private String nowSongsName = "";
-    private String server = ONLINE_SERVER_URL;
+    private String server = Consts.ONLINE_SERVER_URL;
     private PlaySongs playSongs;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -624,6 +605,7 @@ public final class JPApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        loadSettings(false);
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

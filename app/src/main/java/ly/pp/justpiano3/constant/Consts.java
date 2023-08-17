@@ -6,6 +6,27 @@ import android.provider.BaseColumns;
 import ly.pp.justpiano3.R;
 
 public interface Consts extends BaseColumns {
+
+    /**
+     * 官网地址
+     */
+    String WEBSITE_URL = "justpiano.fun";
+
+    /**
+     * 官网地址
+     */
+    String INSIDE_WEBSITE_URL = "i.justpiano.fun";
+
+    /**
+     * 对战服务器地址
+     */
+    String ONLINE_SERVER_URL = "server.justpiano.fun";
+
+    /**
+     * 测试对战服务器地址
+     */
+    String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
+
     String[] items = new String[]{"  收藏夹 ", "经典乐章", "流行空间", "影视剧场", "儿时回忆", "动漫原声", "游戏主题", "红色歌谣", "原创作品"};
     //    String[] f5601e = new String[]{"极尽琴乐", "琴心联语", "以琴会友", "高山流水", "剑胆琴心"};
     String[] nameCL = new String[]{"", "巧遇钢琴", "黑白之梦", "钢琴学徒", "小有成就", "肖练超技", "名动一时", "顶尖琴手", "梦圆指尖", "名不虚传", "名列神迹", "超神存在", "琴键狂魔"};

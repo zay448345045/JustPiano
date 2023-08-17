@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.IPUtil;
 
 public class ChangeServer extends BaseActivity implements OnClickListener {
@@ -32,9 +33,9 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.server1:
                 SharedPreferences.Editor edit2 = sharedPreferences.edit();
-                edit2.putString("ip", JPApplication.ONLINE_SERVER_URL);
+                edit2.putString("ip", Consts.ONLINE_SERVER_URL);
                 edit2.apply();
-                jpapplication.setServer(JPApplication.ONLINE_SERVER_URL);
+                jpapplication.setServer(Consts.ONLINE_SERVER_URL);
                 Intent intent = new Intent();
                 intent.putExtra("no_auto", false);
                 intent.setClass(this, LoginActivity.class);
@@ -43,9 +44,9 @@ public class ChangeServer extends BaseActivity implements OnClickListener {
                 return;
             case R.id.server2:
                 edit2 = sharedPreferences.edit();
-                edit2.putString("ip", JPApplication.TEST_ONLINE_SERVER_URL);
+                edit2.putString("ip", Consts.TEST_ONLINE_SERVER_URL);
                 edit2.commit();
-                jpapplication.setServer(JPApplication.TEST_ONLINE_SERVER_URL);
+                jpapplication.setServer(Consts.TEST_ONLINE_SERVER_URL);
                 intent = new Intent();
                 intent.putExtra("no_auto", false);
                 intent.setClass(this, LoginActivity.class);

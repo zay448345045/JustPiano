@@ -17,6 +17,7 @@ import androidx.core.content.FileProvider;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.LoginSuccessClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
@@ -180,7 +181,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
-        jpapplication.setServer(s.getString("ip", JPApplication.ONLINE_SERVER_URL));
+        jpapplication.setServer(s.getString("ip", Consts.ONLINE_SERVER_URL));
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
@@ -247,7 +248,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 
     private String getApkUrlByVersion(String version) {
-        return "https://" + JPApplication.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
+        return "https://" + Consts.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
     }
 
     private String getApkFileName(String version) {
