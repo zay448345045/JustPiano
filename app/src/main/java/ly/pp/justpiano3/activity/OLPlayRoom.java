@@ -1001,8 +1001,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         if (!jpapplication.getNowSongsName().isEmpty()) {
             songNameText.setText(querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
         }
-        jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.ONCE.getCode());
-        // songNameText.setMovementMethod(ScrollingMovementMethod.getInstance());
         songNameText.setSingleLine(true);
         songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         songNameText.setMarqueeRepeatLimit(-1);
