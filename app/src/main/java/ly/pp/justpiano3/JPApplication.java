@@ -98,6 +98,7 @@ public final class JPApplication extends Application {
     private String server = ONLINE_SERVER_URL;
     private boolean keyboardPrefer;
     private PlaySongs playSongs;
+    private int msgFontSize;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -346,7 +347,7 @@ public final class JPApplication extends Application {
     }
 
     public void setGameMode(int i) {
-        gameMode = i;  //0为普通模式 1为自由模式 2为练习模式 3为欣赏模式
+        gameMode = i;  // 0为普通模式 1为自由模式 2为练习模式 3为欣赏模式
     }
 
     public List<Rect> getKeyRectArray() {
@@ -655,6 +656,8 @@ public final class JPApplication extends Application {
         noteSize = Float.parseFloat(sharedPreferences.getString("note_size", "1"));
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false);
         changeNotesColor = sharedPreferences.getBoolean("change_color", true);
+        msgFontSize = Integer.parseInt(sharedPreferences.getString("msg_font_size", "15"));
+
     }
 
     public void setTempSpeed() {
@@ -671,6 +674,10 @@ public final class JPApplication extends Application {
 
     public int getDownSpeed() {
         return notesDownSpeed;
+    }
+
+    public int getMsgFontSize() {
+        return msgFontSize;
     }
 
     public void setDownSpeed(int speed) {
@@ -965,7 +972,7 @@ public final class JPApplication extends Application {
     }
 
     @Override
-    protected void attachBaseContext(Context context){
+    protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
         MultiDex.install(this);
     }
@@ -974,7 +981,7 @@ public final class JPApplication extends Application {
      * 重写 getResource 方法，防止系统字体影响
      */
     @Override
-    public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
+    public Resources getResources() {// 禁止app字体大小跟随系统字体大小调节
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
             android.content.res.Configuration configuration = resources.getConfiguration();

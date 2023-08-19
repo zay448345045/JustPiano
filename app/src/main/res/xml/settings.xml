@@ -162,5 +162,13 @@
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
             android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
+        <ListPreference
+            android:defaultValue="15"
+            android:dialogTitle="房间内聊天的字体大小修改"
+            android:entries="@array/msg_font_size_entries"
+            android:entryValues="@array/msg_font_size_values"
+            android:key="msg_font_size"
+            android:summary="房间内聊天的字体大小修改"
+            android:title="聊天字体大小" />
     </PreferenceCategory>
 </PreferenceScreen>

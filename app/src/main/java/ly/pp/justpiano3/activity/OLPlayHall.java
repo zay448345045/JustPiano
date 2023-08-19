@@ -17,7 +17,8 @@ import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
 import ly.pp.justpiano3.adapter.ExpressAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
@@ -180,7 +181,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         listView.setCacheColorHint(0);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle(i2 +"房"+" 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+        new JPDialog(this).setTitle(i2 + "房" + " 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             enterRoomHandle(bundle.getInt("P"), (byte) i2);
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();
@@ -188,7 +189,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
 
     public void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
         int posi = listView.getFirstVisiblePosition();
-        listView.setAdapter(new ChattingAdapter(list, layoutInflater1, showChatTime));
+        listView.setAdapter(new ChattingAdapter(jpapplication, list, layoutInflater1, showChatTime));
         if (posi > 0) {
             listView.setSelection(posi + 2);
         } else {
