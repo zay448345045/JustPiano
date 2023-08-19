@@ -100,6 +100,11 @@ public class Setting {
      */
     private Integer roughLine;
 
+    /**
+     * 聊天字体大小
+     */
+    private Integer chatTextSize;
+
     public static Setting loadSettings(SharedPreferences sharedPreferences, boolean online) {
         Setting setting = new Setting();
         if (online) {
@@ -125,6 +130,7 @@ public class Setting {
         setting.setNoteSize(Float.parseFloat(sharedPreferences.getString("note_size", "1")));
         setting.setNoteDismiss(sharedPreferences.getBoolean("note_dismiss", false));
         setting.setChangeNotesColor(sharedPreferences.getBoolean("change_color", true));
+        setting.setChatTextSize(Integer.parseInt(sharedPreferences.getString("chats_text_size", "15")));
         return setting;
     }
 }

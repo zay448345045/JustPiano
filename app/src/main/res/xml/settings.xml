@@ -150,6 +150,14 @@
             android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
             android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
             android:title="聊天行首显示时间" />
+        <ListPreference
+                android:defaultValue="15"
+                android:dialogTitle="聊天字体大小"
+                android:entries="@array/chats_text_size"
+                android:entryValues="@array/chats_text_size"
+                android:key="chats_text_size"
+                android:summary="设置聊天字体显示大小"
+                android:title="聊天字体大小" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="chats_sound"

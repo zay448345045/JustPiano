@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.listener.ChangeRecommandSongClick;
-import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.listener.ChangeRecommandSongClick;
+import ly.pp.justpiano3.utils.JPStack;
 
 import java.util.List;
 
@@ -68,11 +69,13 @@ public final class ChattingAdapter extends BaseAdapter {
                 ((OLPlayRoom) activity).setdiao(bundle.getInt("D"));
                 textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[荐]" + string);
+                textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                 textView2 = view.findViewById(R.id.ol_msg_text);
                 String[] a = ((OLPlayRoom) activity).querySongNameAndDiffByPath(str1);
                 if (a[0] != null && a[1] != null) {
                     textView2.setText(string2 + a[0] + "[难度:" + a[1]);
                     textView2.setTextColor(0xffff0000);
+                    textView2.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                     if (((OLPlayRoom) activity).getPlayerKind().equals("H")) {
                         textView2.append("(点击选取)");
                         textView2.setOnClickListener(new ChangeRecommandSongClick(this, bundle.getString("I")));
@@ -85,7 +88,9 @@ public final class ChattingAdapter extends BaseAdapter {
             if (!string2.startsWith("//")) {
                 textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
+                textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                 textView2 = view.findViewById(R.id.ol_user_mao);
+                textView2.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                 TextView textView3 = view.findViewById(R.id.ol_msg_text);
                 if (JPStack.top() instanceof OLPlayRoom || JPStack.top() instanceof OLPlayKeyboardRoom) {
                     switch (id) {
@@ -152,14 +157,17 @@ public final class ChattingAdapter extends BaseAdapter {
                     textView3.setTextColor(0xffFFFACD);
                 }
                 textView3.setText(string2);
+                textView3.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
             } else {
                 try {
                     textView = view.findViewById(R.id.ol_user_text);
                     textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
+                    textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                     ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
                 } catch (Exception e) {
                     textView = view.findViewById(R.id.ol_user_text);
                     textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
+                    textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                     switch (string2) {
                         case "//dalao0":
                             ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
@@ -247,28 +255,34 @@ public final class ChattingAdapter extends BaseAdapter {
         } else if (i2 == 2) {
             textView = view.findViewById(R.id.ol_user_text);
             textView.setText((showTime ? bundle.getString("TIME") : "") + "[私]" + string);
+            textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
             textView.setTextColor(0xff00ff00);
             textView2 = view.findViewById(R.id.ol_msg_text);
             ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
             textView2.setText(string2);
             textView2.setTextColor(0xff00ff00);
+            textView2.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
         } else if (i2 == 3) {
             textView = view.findViewById(R.id.ol_user_text);
             textView.setText((showTime ? bundle.getString("TIME") : "") + "[系统消息]" + string);
+            textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
             textView.setTextColor(0xff00ffff);
             textView2 = view.findViewById(R.id.ol_msg_text);
             ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
             textView2.setText(string2);
             textView2.setTextColor(0xff00ffff);
+            textView2.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
         } else {
             if (i2 == 18) {
                 textView = view.findViewById(R.id.ol_user_text);
                 textView.setText((showTime ? bundle.getString("TIME") : "") + "[全服消息]" + string);
+                textView.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
                 textView.setTextColor(0xff00ffff);
                 textView2 = view.findViewById(R.id.ol_msg_text);
                 ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
                 textView2.setText(string2);
                 textView2.setTextColor(0xff00ffff);
+                textView2.setTextSize(((JPApplication) (activity.getApplication())).getSetting().getChatTextSize());
             }
             textView = null;
         }
