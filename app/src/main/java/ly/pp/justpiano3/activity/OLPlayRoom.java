@@ -27,6 +27,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
+import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.*;
@@ -69,7 +70,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public String online_1 = "online = 1";
     public ListView playerListView;
     public ListView friendsListView;
-    public int roomMode = 0;
+    public int roomMode;
     public int page;
     public User user;
     public byte roomID0;
@@ -835,7 +836,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 moreSongs.showAtLocation(playSongsModeButton, Gravity.CENTER, 0, 0);
                 return;
             case R.id.ol_group_b:
-                if (roomMode == 0) {
+                if (roomMode == RoomModeEnum.NORMAL.getCode()) {
                     PopupWindow popupWindow2 = new PopupWindow(this);
                     View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_hand_list, null);
                     popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
@@ -856,10 +857,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;
-                } else if (roomMode == 1 && groupModeGroup != null) {
+                } else if (roomMode == RoomModeEnum.TEAM.getCode() && groupModeGroup != null) {
                     groupModeGroup.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;
-                } else if (roomMode == 2 && coupleModeGroup != null) {
+                } else if (roomMode == RoomModeEnum.COUPLE.getCode() && coupleModeGroup != null) {
                     coupleModeGroup.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;
                 }
@@ -1056,11 +1057,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         popupWindow2.setTouchable(true);
         popupWindow2.setOutsideTouchable(true);
         moreSongs = popupWindow2;
-        switch (roomMode) {
-            case 0:
+        switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
+            case NORMAL:
                 groupButton.setText("右00");
                 break;
-            case 1:
+            case TEAM:
                 popupWindow2 = new PopupWindow(this);
                 inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_group_list, null);
                 popupWindow2.setContentView(inflate2);
@@ -1075,7 +1076,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 popupWindow2.setOutsideTouchable(true);
                 groupModeGroup = popupWindow2;
                 break;
-            case 2:
+            case COUPLE:
                 popupWindow2 = new PopupWindow(this);
                 inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_couple_list, null);
                 popupWindow2.setContentView(inflate2);

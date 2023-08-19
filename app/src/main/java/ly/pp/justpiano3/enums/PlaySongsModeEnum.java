@@ -23,13 +23,4 @@ public enum PlaySongsModeEnum {
     private final int code;
     private final String name;
     private final String desc;
-
-    public static PlaySongsModeEnum ofCode(int code, PlaySongsModeEnum defaultValue) {
-        for (PlaySongsModeEnum value : values()) {
-            if (value.code == code) {
-                return value;
-            }
-        }
-        return defaultValue;
-    }
 }

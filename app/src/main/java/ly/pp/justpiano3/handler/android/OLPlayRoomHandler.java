@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -56,7 +57,7 @@ public final class OLPlayRoomHandler extends Handler {
                             if (string != null) {
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
                                 try {
-                                    if (olPlayRoom.getMode() == 0) {
+                                    if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
                                         if (diao > 0) {
                                             olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
                                         } else if (diao < 0) {

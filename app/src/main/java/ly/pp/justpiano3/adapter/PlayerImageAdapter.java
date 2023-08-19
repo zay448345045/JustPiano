@@ -16,6 +16,7 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
@@ -284,14 +285,14 @@ public final class PlayerImageAdapter extends BaseAdapter {
             olPlayRoom.lv = i3;
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;
-            switch (olPlayRoom.getMode()) {
-                case 2:
+            switch (RoomModeEnum.ofCode(olPlayRoom.getMode(), RoomModeEnum.NORMAL)) {
+                case COUPLE:
                     olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;
                     break;
-                case 1:
+                case TEAM:
                     olPlayRoom.currentHand = 0;
                     break;
-                case 0:
+                case NORMAL:
                     olPlayRoom.currentHand = playerList.get(i).getInt("GR");
                     break;
             }
@@ -403,16 +404,16 @@ public final class PlayerImageAdapter extends BaseAdapter {
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(string);
         textView = view.findViewById(R.id.ol_player_hand);
-        switch (olPlayRoom.getMode()) {
-            case 0:
+        switch (RoomModeEnum.ofCode(olPlayRoom.getMode(), RoomModeEnum.NORMAL)) {
+            case NORMAL:
                 textView.setBackgroundResource(Consts.groupModeColor[0]);
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") + 12) % 2]);
                 break;
-            case 1:
+            case TEAM:
                 textView.setText(Consts.groups[(playerList.get(i).getInt("GR")) - 1]);
                 textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
                 break;
-            case 2:
+            case COUPLE:
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") % 2)]);
                 textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR") - 1) / 2]);
                 break;
