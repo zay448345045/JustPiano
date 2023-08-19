@@ -23,7 +23,6 @@ public final class ReturnHallClick implements OnClickListener {
     public void onClick(DialogInterface dialogInterface, int i) {
         if (olPlayRoomInterface instanceof OLPlayRoom) {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
-            olPlayRoom.jpapplication.getPlaySongs().setPlaySongsMode(PlaySongsModeEnum.ONCE.getCode());
             olPlayRoom.isOnStart = false;
             olPlayRoom.sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
             olPlayRoom.jpapplication.stopPlaySong();

@@ -234,13 +234,13 @@ public final class OLPlayHallHandler extends Handler {
                         byte b = (byte) data14.getInt("R");
                         byte b2 = (byte) data14.getInt("H");
                         int i2 = data14.getInt("C");
-                        String string = data14.getString("I");
-                        String string2 = data14.getString("Ti");
+                        String messageStr = data14.getString("I");
+                        String title = data14.getString("Ti");
                         JPDialog jpdialog = new JPDialog(olPlayHall);
-                        jpdialog.setTitle(string2);
-                        string2 = "确定";
+                        jpdialog.setTitle(title);
+                        title = "确定";
                         if (i2 == 1 && b2 == olPlayHall.hallID && b2 > (byte) 0) {
-                            jpdialog.setMessage(string);
+                            jpdialog.setMessage(messageStr);
                             jpdialog.setFirstButton("进入房间", (dialog, which) -> {
                                 dialog.dismiss();
                                 olPlayHall.jpapplication.setShowDialog(false);
@@ -258,8 +258,8 @@ public final class OLPlayHallHandler extends Handler {
                                 olPlayHall.jpapplication.setShowDialog(false);
                             });
                         } else {
-                            jpdialog.setMessage(string);
-                            jpdialog.setFirstButton(string2, (dialog, which) -> {
+                            jpdialog.setMessage(messageStr);
+                            jpdialog.setFirstButton(title, (dialog, which) -> {
                                 dialog.dismiss();
                                 olPlayHall.jpapplication.setShowDialog(false);
                             });

@@ -220,13 +220,13 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.jpprogressBar.dismiss();
                         Bundle data = message.getData();
                         byte b = (byte) data.getInt("H");
-                        String string = data.getString("Ti");
-                        String string2 = data.getString("I");
+                        String title = data.getString("Ti");
+                        String messageStr = data.getString("I");
                         String str = "确定";
                         JPDialog jpdialog = new JPDialog(olPlayHallRoom);
-                        jpdialog.setTitle(string);
+                        jpdialog.setTitle(title);
                         if (b > 0) {
-                            jpdialog.setMessage(string2);
+                            jpdialog.setMessage(messageStr);
                             jpdialog.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
                                 dialog.dismiss();
                                 OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
@@ -235,7 +235,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             });
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         } else {
-                            jpdialog.setMessage(string2);
+                            jpdialog.setMessage(messageStr);
                             jpdialog.setFirstButton(str, new DialogDismissClick());
                         }
                         DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
