@@ -164,11 +164,11 @@
             android:title="存储聊天记录" />
         <ListPreference
             android:defaultValue="15"
-            android:dialogTitle="房间内聊天的字体大小修改"
+            android:dialogTitle="聊天字体大小"
             android:entries="@array/msg_font_size_entries"
             android:entryValues="@array/msg_font_size_values"
             android:key="msg_font_size"
-            android:summary="房间内聊天的字体大小修改"
+            android:summary="设置聊天字体显示大小"
             android:title="聊天字体大小" />
     </PreferenceCategory>
 </PreferenceScreen>
