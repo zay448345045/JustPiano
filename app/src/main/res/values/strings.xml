@@ -195,6 +195,7 @@
     <string name="ol_playsongs_cycle">单曲循环</string>
     <string name="ol_playsongs_rand">曲库随机</string>
     <string name="ol_playsongs_rand_fa">收藏随机</string>
+    <string name="ol_playsongs_rand_fa_list">收藏顺序</string>
     <string name="ol_room_view_name">房间名称</string>
     <string name="ol_room_view_no">100</string>
     <string name="ol_room_view_ent">进入</string>

@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
@@ -13,6 +15,8 @@ import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.play.ReadPm;
 import protobuf.dto.OnlinePlaySongDTO;
+
+import java.util.Objects;
 
 @Data
 public final class PlaySongs {
@@ -26,7 +30,9 @@ public final class PlaySongs {
     /**
      * 播放模式
      */
-    private int playSongsMode;
+    @Setter
+    @Getter
+    private static PlaySongsModeEnum playSongsMode;
     private boolean isPlayingSongs;
     private final MelodySelect melodyselect;
     private final OLPlayRoom olPlayRoom;
@@ -96,7 +102,7 @@ public final class PlaySongs {
             melodyselect.handler.sendMessage(message);
         }
         if (olPlayRoom != null) {
-            switch (PlaySongsModeEnum.ofCode(playSongsMode, PlaySongsModeEnum.ONCE)) {
+            switch (playSongsMode) {
                 case RECYCLE:
                     OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                     builder.setTune(olPlayRoom.getdiao());
@@ -134,6 +140,35 @@ public final class PlaySongs {
                     if (olPlayRoom.sqlitedatabase != null) {
                         Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "isfavo > 0" + str0, null, null, null, null);
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
+                        query.close();
+                        if (str0.isEmpty()) {
+                            return;
+                        }
+                        String str1 = str0.substring(6, str0.length() - 3);
+                        jpapplication.setNowSongsName(str1);
+                        OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
+                        builder1.setTune(olPlayRoom.getdiao());
+                        builder1.setSongPath(str1);
+                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
+                        Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
+                        obtainMessage2.what = 12;
+                        olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage2);
+                    }
+                    return;
+                case FAVOR:
+                    str0 = "";
+                    if (!olPlayRoom.online_1.isEmpty()) {
+                        str0 = " AND " + olPlayRoom.online_1;
+                    }
+                    if (olPlayRoom.sqlitedatabase != null) {
+                        Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "isfavo > 0" + str0, null, null, null, null);
+                        while (query.moveToNext()) {
+                            String path = query.getString(query.getColumnIndex("path"));
+                            if (Objects.equals(path, songPath)) {
+                                break;
+                            }
+                        }
+                        str0 = query.moveToNext() ? query.getString(query.getColumnIndex("path")) : "";
                         query.close();
                         if (str0.isEmpty()) {
                             return;

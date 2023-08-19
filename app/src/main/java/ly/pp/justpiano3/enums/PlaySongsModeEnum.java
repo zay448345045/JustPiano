@@ -17,6 +17,7 @@ public enum PlaySongsModeEnum {
     RECYCLE(1, "单曲循环", "单曲循环已开启"),
     RANDOM(2, "曲库随机", "乐曲将随机播放"),
     FAVOR_RANDOM(3, "收藏随机", "乐曲将选择收藏夹内曲目随机播放"),
+    FAVOR(4, "收藏顺序", "乐曲将按收藏夹内曲目顺序播放"),
     ;
 
     private final int code;
