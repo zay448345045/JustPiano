@@ -53,13 +53,6 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
     private NoteFallListener noteFallListener;
 
     /**
-     * 播放总体进度
-     */
-    @Getter
-    @Setter
-    private int progress;
-
-    /**
      * 瀑布流循环绘制线程
      */
     private WaterfallDownNotesThread waterfallDownNotesThread;
@@ -96,15 +89,10 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
         barImage = loadImage(context, "bar");
     }
 
-    public void addProgress(int progress) {
-        this.progress += progress;
-    }
-
     /**
      * 开始绘制
      */
     public void startPlay(WaterfallNote[] waterfallNotes) {
-        this.progress = 0;
         this.waterfallNotes = waterfallNotes;
         stopPlay();
         waterfallDownNotesThread = new WaterfallDownNotesThread(this);
@@ -114,6 +102,7 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
     public void stopPlay() {
         if (waterfallDownNotesThread != null) {
             waterfallDownNotesThread.setRunning(false);
+            waterfallDownNotesThread = null;
         }
     }
 

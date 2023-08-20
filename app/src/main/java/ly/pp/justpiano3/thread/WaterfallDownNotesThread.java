@@ -41,7 +41,6 @@ public final class WaterfallDownNotesThread extends Thread {
         Paint leftHandPaint = new Paint();
         rightHandPaint.setColor(0x7fffcc00);
         leftHandPaint.setColor(0x7f66FFFF);
-        int sleepTime = 16;
         while (running) {
             Canvas canvas = null;
             try {
@@ -54,23 +53,23 @@ public final class WaterfallDownNotesThread extends Thread {
                         // 进度（毫秒数） - 音符开始时间小于0的时候，瀑布流还是在屏幕上未开始出现的状态，这种情况下过滤掉，不绘制
                         // 结束时间同理，在屏幕内的才绘制
                         int intervalTime = (int) (System.currentTimeMillis() - startDrawTime);
-                        if (intervalTime - waterfallNote.getStartTime() > 0 && (intervalTime - waterfallNote.getEndTime()) / sleepTime <= waterfallView.getHeight() / sleepTime) {
+                        if (intervalTime - waterfallNote.getStartTime() > 0 && (intervalTime - waterfallNote.getEndTime()) <= waterfallView.getHeight()) {
                             // 绘制长方形
                             canvas.drawRect(waterfallNote.getLeft(), intervalTime - waterfallNote.getEndTime(),
                                     waterfallNote.getRight(), intervalTime - waterfallNote.getStartTime(),
                                     waterfallNote.isLeftHand() ? leftHandPaint : rightHandPaint);
                             // 音块刚下落到下边界时，触发琴键按下效果，音块刚离开时，触发琴键抬起效果
-                            if (noteJustInViewBottom(intervalTime, sleepTime, waterfallNote)) {
+                            if (noteJustInViewBottom(intervalTime, waterfallNote)) {
                                 waterfallView.getNoteFallListener().onNoteFallDown(waterfallNote);
                                 waterfallNote.setStatus(WaterfallNote.WaterfallNoteStatusEnum.PLAYING);
-                            } else if (noteJustLeaveView(intervalTime, sleepTime, waterfallNote)) {
+                            } else if (noteJustLeaveView(intervalTime, waterfallNote)) {
                                 waterfallView.getNoteFallListener().onNoteLeave(waterfallNote);
                                 waterfallNote.setStatus(WaterfallNote.WaterfallNoteStatusEnum.LEAVE);
                             }
                         }
                     }
                 }
-                WaterfallDownNotesThread.sleep(sleepTime);
+                WaterfallDownNotesThread.sleep(16);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -81,12 +80,12 @@ public final class WaterfallDownNotesThread extends Thread {
         }
     }
 
-    private boolean noteJustInViewBottom(int intervalTime, int sleepTime, WaterfallNote waterfallNote) {
+    private boolean noteJustInViewBottom(int intervalTime, WaterfallNote waterfallNote) {
         return waterfallNote.getStatus() == WaterfallNote.WaterfallNoteStatusEnum.INIT
                 && Math.abs(intervalTime - waterfallNote.getStartTime() - waterfallView.getHeight()) < 50;
     }
 
-    private boolean noteJustLeaveView(int intervalTime, int sleepTime, WaterfallNote waterfallNote) {
+    private boolean noteJustLeaveView(int intervalTime, WaterfallNote waterfallNote) {
         return waterfallNote.getStatus() == WaterfallNote.WaterfallNoteStatusEnum.PLAYING
                 && Math.abs(intervalTime - waterfallNote.getEndTime() - waterfallView.getHeight()) < 50;
     }
