@@ -22,11 +22,6 @@ public final class WaterfallDownNotesThread extends Thread {
      */
     private final WaterfallView waterfallView;
 
-    /**
-     * 记录上一次绘制时间，确定休眠时间，使绘制的间隔时间更稳定
-     */
-    private long lastDrawTime;
-
     public WaterfallDownNotesThread(WaterfallView waterfallView) {
         this.waterfallView = waterfallView;
         this.running = true;
@@ -34,8 +29,9 @@ public final class WaterfallDownNotesThread extends Thread {
 
     @Override
     public void run() {
-        this.lastDrawTime = System.currentTimeMillis();
-        // TODO 颜色
+        // 记录上一次绘制时间，确定休眠时间，使绘制的间隔时间更稳定
+        long lastDrawTime = System.currentTimeMillis();
+        // TODO 颜色不这么写死
         Paint rightHandPaint = new Paint();
         Paint leftHandPaint = new Paint();
         rightHandPaint.setColor(0x7fffcc00);

@@ -71,10 +71,13 @@ public class WaterfallActivity extends Activity {
         List<WaterfallNote> leftHandWaterfallNoteList = new ArrayList<>();
         List<WaterfallNote> rightHandWaterfallNoteList = new ArrayList<>();
         int totalTime = 0;
+        // 取pm文件中的解析音符内容，进行瀑布流音符的生成
         for (int i = 0; i < pmFileParser.getNoteArray().length; i++) {
             int pitch = pmFileParser.getNoteArray()[i];
+            // 计算音符播放的累计时间
             totalTime += pmFileParser.getTickArray()[i] * pmFileParser.getPm_2();
             boolean leftHand = pmFileParser.getTrackArray()[i] != 0;
+            // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
             RectF rectF = WaterfallView.convertWidthToWaterfallWidth(KeyboardModeView.isBlackKey(pitch),
                     keyboardModeView.convertPitchToReact(pitch));
             if (rectF != null) {
@@ -90,7 +93,8 @@ public class WaterfallActivity extends Activity {
                 // 取list中上一个元素（音符），填充它的结束时间为当前音符的（累计）开始时间
                 if (!waterfallNoteListByHand.isEmpty()) {
                     WaterfallNote lastNote = waterfallNoteListByHand.get(waterfallNoteListByHand.size() - 1);
-                    lastNote.setEndTime(totalTime);
+                    // 结束时间稍微减一点点，否则相同的音符连续按的时候，看不出来是几个音符，而是瀑布长条都粘在一起了
+                    lastNote.setEndTime(totalTime - 10);
                 }
                 waterfallNoteListByHand.add(waterfallNote);
             }
