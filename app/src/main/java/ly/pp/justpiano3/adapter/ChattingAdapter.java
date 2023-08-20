@@ -111,7 +111,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void setMsgFontSize(TextView... views) {
         if (views != null) {
             for (TextView view : views) {
-                view.setTextSize(jpapplication.getMsgFontSize());
+                view.setTextSize(jpapplication.getSetting().getChatTextSize());
             }
         }
     }
