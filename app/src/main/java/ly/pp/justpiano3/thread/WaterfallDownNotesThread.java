@@ -29,10 +29,11 @@ public final class WaterfallDownNotesThread extends Thread {
 
     @Override
     public void run() {
+        // TODO 颜色
         Paint rightHandPaint = new Paint();
         Paint leftHandPaint = new Paint();
-        rightHandPaint.setColor(0x7fff6600);
-        leftHandPaint.setColor(0x7f009999);
+        rightHandPaint.setColor(0x7fffcc00);
+        leftHandPaint.setColor(0x7f66FFFF);
         while (running) {
             Canvas canvas = null;
             try {
@@ -56,9 +57,9 @@ public final class WaterfallDownNotesThread extends Thread {
                                     waterfallNote.isLeftHand() ? leftHandPaint : rightHandPaint);
                             // 音块刚下落到下边界时，触发琴键按下效果，音块刚离开时，触发琴键抬起效果
                             if (noteJustInViewBottom(intervalTime, waterfallNote)) {
-                                waterfallView.getNoteFallListener().onNoteFallDown(waterfallNote.getPitch(), waterfallNote.getVolume());
+                                waterfallView.getNoteFallListener().onNoteFallDown(waterfallNote);
                             } else if (noteJustLeaveView(intervalTime, waterfallNote)) {
-                                waterfallView.getNoteFallListener().onNoteLeave(waterfallNote.getPitch(), waterfallNote.getVolume());
+                                waterfallView.getNoteFallListener().onNoteLeave(waterfallNote);
                             }
                         }
                     }

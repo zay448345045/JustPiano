@@ -36,14 +36,14 @@ public class WaterfallActivity extends Activity {
         waterfallView = findViewById(R.id.waterfall_view);
         waterfallView.setNoteFallListener(new WaterfallView.NoteFallListener() {
             @Override
-            public void onNoteFallDown(int pitch, int volume) {
-                SoundEngineUtil.playSound(pitch, volume);
-                keyboardModeView.fireKeyDown(pitch, volume, KeyboardModeView.isBlackKey(pitch) ? 2 : 15, false);
+            public void onNoteFallDown(WaterfallNote waterfallNote) {
+                SoundEngineUtil.playSound(waterfallNote.getPitch(), waterfallNote.getVolume());
+                keyboardModeView.fireKeyDown(waterfallNote.getPitch(), waterfallNote.getVolume(), waterfallNote.isLeftHand() ? 14 : 1, false);
             }
 
             @Override
-            public void onNoteLeave(int pitch, int volume) {
-                keyboardModeView.fireKeyUp(pitch, false);
+            public void onNoteLeave(WaterfallNote waterfallNote) {
+                keyboardModeView.fireKeyUp(waterfallNote.getPitch(), false);
             }
         });
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始

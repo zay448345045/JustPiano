@@ -72,12 +72,12 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
         /**
          * 瀑布某个音刚开始落到view的最下方时触发
          */
-        void onNoteFallDown(int pitch, int volume);
+        void onNoteFallDown(WaterfallNote waterfallNote);
 
         /**
          * 瀑布某个音彻底从瀑布流view下方消失时触发
          */
-        void onNoteLeave(int pitch, int volume);
+        void onNoteLeave(WaterfallNote waterfallNote);
     }
 
     public WaterfallView(Context context) {
