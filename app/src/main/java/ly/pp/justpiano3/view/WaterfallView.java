@@ -26,7 +26,7 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * 瀑布流音符最短和最长的持续时间
      */
-    public static final int MIN_INTERVAL_TIME = 100;
+    public static final int MIN_INTERVAL_TIME = 150;
     public static final int MAX_INTERVAL_TIME = 2000;
 
     /**
