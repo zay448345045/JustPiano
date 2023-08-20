@@ -23,7 +23,7 @@ import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
-import ly.pp.justpiano3.view.play.ReadPm;
+import ly.pp.justpiano3.view.play.PmFileParser;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
@@ -126,7 +126,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private byte[] tickArray;
     private byte[] trackArray;
     private boolean f4713V = true;
-    private ReadPm readpm;
+    private PmFileParser pmFileParser;
     private PlayNote ln;
     private int noteCounts;
     private Rect f4801bz;
@@ -258,14 +258,14 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(Context context, String str, int diao) {
-        readpm = new ReadPm(context, str);
-        tickArray = readpm.getTickArray();
-        noteArray = readpm.getNoteArray();
-        trackArray = readpm.getTrackArray();
-        volumeArray = readpm.getVolumeArray();
-        nandu = readpm.getNandu();
-        songsName = readpm.getSongName();
-        pm_2 = readpm.getPm_2();
+        pmFileParser = new PmFileParser(context, str);
+        tickArray = pmFileParser.getTickArray();
+        noteArray = pmFileParser.getNoteArray();
+        trackArray = pmFileParser.getTrackArray();
+        volumeArray = pmFileParser.getVolumeArray();
+        nandu = pmFileParser.getNandu();
+        songsName = pmFileParser.getSongName();
+        pm_2 = pmFileParser.getPm_2();
         if (pm_2 <= 0) {
             pm_2 += 256;
         }
@@ -315,14 +315,14 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(JPApplication jPApplication, byte[] bArr) {
-        readpm = new ReadPm(bArr);
-        tickArray = readpm.getTickArray();
-        noteArray = readpm.getNoteArray();
-        trackArray = readpm.getTrackArray();
-        volumeArray = readpm.getVolumeArray();
-        nandu = readpm.getNandu();
-        songsName = readpm.getSongName();
-        pm_2 = readpm.getPm_2();
+        pmFileParser = new PmFileParser(bArr);
+        tickArray = pmFileParser.getTickArray();
+        noteArray = pmFileParser.getNoteArray();
+        trackArray = pmFileParser.getTrackArray();
+        volumeArray = pmFileParser.getVolumeArray();
+        nandu = pmFileParser.getNandu();
+        songsName = pmFileParser.getSongName();
+        pm_2 = pmFileParser.getPm_2();
         arrayLength = tickArray.length;
         int i = 0;
         if (pm_2 <= 0) {

@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.play.ReadPm;
+import ly.pp.justpiano3.view.play.PmFileParser;
 import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.activity.MelodySelect;
@@ -65,10 +65,10 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 for (File file : files) {
                     String item = file.getName().substring(0, 1);
                     FileInputStream fileInputStream = new FileInputStream(file);
-                    ReadPm readpm = new ReadPm(null);
-                    readpm.loadWithInputStream(fileInputStream);
+                    PmFileParser pmFileParser = new PmFileParser(null);
+                    pmFileParser.loadWithInputStream(fileInputStream);
                     ContentValues contentvalues = new ContentValues();
-                    contentvalues.put("name", readpm.getSongName());
+                    contentvalues.put("name", pmFileParser.getSongName());
                     contentvalues.put("item", Consts.items[item.charAt(0) - 'a' + 1]);
                     contentvalues.put("path", "songs/" + item + '/' + file.getName());
                     contentvalues.put("isnew", 1);
@@ -78,10 +78,10 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                     contentvalues.put("score", 0);
                     contentvalues.put("date", 0);
                     contentvalues.put("count", 0);
-                    contentvalues.put("diff", readpm.getNandu());
+                    contentvalues.put("diff", pmFileParser.getNandu());
                     contentvalues.put("online", 1);
-                    contentvalues.put("Ldiff", readpm.getLeftNandu());
-                    contentvalues.put("length", readpm.getSongTime());
+                    contentvalues.put("Ldiff", pmFileParser.getLeftNandu());
+                    contentvalues.put("length", pmFileParser.getSongTime());
                     contentvalues.put("Lscore", 0);
                     sqliteDataBase.insertOrThrow("jp_data", null, contentvalues);
                     count++;

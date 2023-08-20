@@ -4,19 +4,27 @@
               android:id="@+id/layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@drawable/ground"
               android:orientation="vertical"
               android:gravity="center">
 
-    <TextView
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/dark"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:textSize="48sp"
-            android:text="测试瀑布流">
-    </TextView>
+            android:layout_weight="4">
+
+        <TextView
+                android:id="@+id/waterfall_song_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_30dp"
+                android:textColor="@color/white1"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:background="@color/black"
+                android:gravity="center">
+        </TextView>
+
+    </LinearLayout>
 
     <ly.pp.justpiano3.view.KeyboardModeView
             android:layout_width="match_parent"

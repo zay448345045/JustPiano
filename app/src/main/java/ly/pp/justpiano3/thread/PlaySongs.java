@@ -13,7 +13,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.play.ReadPm;
+import ly.pp.justpiano3.view.play.PmFileParser;
 import protobuf.dto.OnlinePlaySongDTO;
 
 import java.util.Objects;
@@ -47,12 +47,12 @@ public final class PlaySongs {
         songPath = str;
         melodyselect = melodySelect;
         position = i;
-        ReadPm readpm = new ReadPm(jPApplication, str);
-        noteArray = readpm.getNoteArray();
-        volumeArray = readpm.getVolumeArray();
-        tickArray = readpm.getTickArray();
+        PmFileParser pmFileParser = new PmFileParser(jPApplication, str);
+        noteArray = pmFileParser.getNoteArray();
+        volumeArray = pmFileParser.getVolumeArray();
+        tickArray = pmFileParser.getTickArray();
         final int arrayLength = noteArray.length;
-        pm_2 = (readpm.getPm_2());
+        pm_2 = (pmFileParser.getPm_2());
         if (pm_2 <= 0) {
             pm_2 += 256;
         }

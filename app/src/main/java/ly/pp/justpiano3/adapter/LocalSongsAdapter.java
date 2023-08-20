@@ -17,6 +17,7 @@ import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.AddSongsFavoClick;
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick;
 import ly.pp.justpiano3.listener.PlaySongsClick;
+import ly.pp.justpiano3.listener.PlayWaterfallClick;
 import ly.pp.justpiano3.view.ScrollText;
 
 public final class LocalSongsAdapter extends CursorAdapter {
@@ -55,14 +56,7 @@ public final class LocalSongsAdapter extends CursorAdapter {
         ImageView imageView3 = view.findViewById(R.id.favor);
         view.findViewById(R.id.play).setOnClickListener(new LocalSongsStartPlayClick(this, cursor));
         imageView.setOnClickListener(new PlaySongsClick(this, cursor, view, context));
-        waterFallImageView.setOnClickListener(v -> {
-            melodyselect.jpapplication.stopPlaySong();
-            Intent intent = new Intent();
-            intent.putExtra("songPath", cursor.getString(cursor.getColumnIndexOrThrow("path")));
-            intent.putExtra("songName", cursor.getString(cursor.getColumnIndexOrThrow("name")));
-            intent.setClass(melodyselect, WaterfallActivity.class);
-            melodyselect.startActivity(intent);
-        });
+        waterFallImageView.setOnClickListener(new PlayWaterfallClick(melodyselect, cursor));
         imageView3.setOnClickListener(new AddSongsFavoClick(this, cursor, context));
         ScrollText scrollText = view.findViewById(R.id.s_n);
         scrollText.setText(cursor.getString(1));

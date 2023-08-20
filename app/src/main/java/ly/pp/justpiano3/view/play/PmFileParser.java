@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public final class ReadPm {
+public final class PmFileParser {
     private Context context;
     private InputStream inputstream;
     private byte[] noteArray;
@@ -22,12 +22,12 @@ public final class ReadPm {
     private int songNameLength = 0;
     private float nandu = 0;
 
-    public ReadPm(Context ct, String str) {
+    public PmFileParser(Context ct, String str) {
         context = ct;
         createWithSongPath(str);
     }
 
-    public ReadPm(byte[] bArr) {
+    public PmFileParser(byte[] bArr) {
         if (bArr == null) {
             return;
         }

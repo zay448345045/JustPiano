@@ -16,7 +16,7 @@ import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
-import ly.pp.justpiano3.view.play.ReadPm;
+import ly.pp.justpiano3.view.play.PmFileParser;
 
 import java.io.File;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
         String string;
         // 键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
         Map<String, String> pmPathMap = new HashMap<>();
-        ReadPm readpm = new ReadPm(null);
+        PmFileParser pmFileParser = new PmFileParser(null);
         // 下面的字段是删除标记，更新和插入的曲谱会得到更新，然后把未更新也未插入的（就是新版没有这个pm）的曲子删掉，也就是在客户端曲子删库用
         int originalPmVersion = 0;
         Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path", "count"}, null, null, null, null, "_id desc");
@@ -70,12 +70,12 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     if (list3 != null) {
                         for (String aList3 : list3) {
                             string = "songs/" + list[i] + "/" + aList3;
-                            readpm.loadWithSongPath(this, string);
-                            String h = readpm.getSongName();
+                            pmFileParser.loadWithSongPath(this, string);
+                            String h = pmFileParser.getSongName();
                             if (h != null) {
-                                float g = readpm.getNandu();
-                                float j = readpm.getLeftNandu();
-                                int l = readpm.getSongTime();
+                                float g = pmFileParser.getNandu();
+                                float j = pmFileParser.getLeftNandu();
+                                int l = pmFileParser.getSongTime();
                                 songCount++;
                                 if (pmPathMap.containsKey(aList3.substring(1))) {
                                     info = "更新曲目:" + h + "..." + songCount + "";
