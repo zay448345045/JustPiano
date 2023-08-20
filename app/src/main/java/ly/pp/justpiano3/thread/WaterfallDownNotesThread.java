@@ -57,8 +57,10 @@ public final class WaterfallDownNotesThread extends Thread {
                             // 音块刚下落到下边界时，触发琴键按下效果，音块刚离开时，触发琴键抬起效果
                             if (noteJustInViewBottom(intervalTime, waterfallNote)) {
                                 waterfallView.getNoteFallListener().onNoteFallDown(waterfallNote);
+                                waterfallNote.setStatus(WaterfallNote.WaterfallNoteStatusEnum.PLAYING);
                             } else if (noteJustLeaveView(intervalTime, waterfallNote)) {
                                 waterfallView.getNoteFallListener().onNoteLeave(waterfallNote);
+                                waterfallNote.setStatus(WaterfallNote.WaterfallNoteStatusEnum.LEAVE);
                             }
                         }
                     }
@@ -81,11 +83,13 @@ public final class WaterfallDownNotesThread extends Thread {
         }
     }
 
-    private boolean noteJustLeaveView(int intervalTime, WaterfallNote waterfallNote) {
-        return (waterfallView.getProgress() - waterfallNote.getEndTime()) / intervalTime == waterfallView.getHeight() / intervalTime;
+    private boolean noteJustInViewBottom(int intervalTime, WaterfallNote waterfallNote) {
+        return waterfallNote.getStatus() == WaterfallNote.WaterfallNoteStatusEnum.INIT
+                && Math.abs(waterfallView.getProgress() - waterfallNote.getStartTime() - waterfallView.getHeight()) < intervalTime;
     }
 
-    private boolean noteJustInViewBottom(int intervalTime, WaterfallNote waterfallNote) {
-        return (waterfallView.getProgress() - waterfallNote.getStartTime()) / intervalTime == waterfallView.getHeight() / intervalTime;
+    private boolean noteJustLeaveView(int intervalTime, WaterfallNote waterfallNote) {
+        return waterfallNote.getStatus() == WaterfallNote.WaterfallNoteStatusEnum.PLAYING
+                && Math.abs(waterfallView.getProgress() - waterfallNote.getEndTime() - waterfallView.getHeight()) < intervalTime;
     }
 }
