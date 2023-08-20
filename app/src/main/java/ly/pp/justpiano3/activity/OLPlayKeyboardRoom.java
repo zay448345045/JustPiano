@@ -17,7 +17,8 @@ import android.widget.*;
 import android.widget.TabHost.TabSpec;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.MidiConstants;
@@ -379,7 +380,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     public void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
+        msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater, showChatTime));
         System.out.println("位置" + posi);
         if (posi > 0) {
             msgListView.setSelection(posi + 2);

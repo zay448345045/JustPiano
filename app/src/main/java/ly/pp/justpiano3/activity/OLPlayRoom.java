@@ -21,7 +21,8 @@ import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -362,7 +363,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         jpapplication.getHashmap().put(b, User);
     }
 
-    public  void mo2860a(int i, String str, int i2, byte b) {
+    public void mo2860a(int i, String str, int i2, byte b) {
         String str2 = "";
         String str3 = "";
         String str4 = "";
@@ -425,7 +426,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
 
     public void mo2862a(boolean showChatTime) {
         int posi = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater, showChatTime));
+        msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater, showChatTime));
         if (posi > 0) {
             msgListView.setSelection(posi + 2);
         } else {
@@ -609,7 +610,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 new JPDialog(this)
                         .setTitle(getString(R.string.msg_this_is_what))
                         .setMessage(getString(R.string.ol_screen_change))
-                        .setFirstButton("确定",(dialogInterface, num) -> runOnUiThread(this::changeScreenOrientation))
+                        .setFirstButton("确定", (dialogInterface, num) -> runOnUiThread(this::changeScreenOrientation))
                         .setSecondButton("取消", new DialogDismissClick())
                         .showDialog();
                 return;
