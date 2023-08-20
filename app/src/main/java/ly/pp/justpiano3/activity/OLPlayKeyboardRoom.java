@@ -702,7 +702,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
-                            recordButton.setTextColor(getResources().getColor(R.color.dack));
+                            recordButton.setTextColor(getResources().getColor(R.color.dark));
                             recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());

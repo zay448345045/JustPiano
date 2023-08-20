@@ -70,7 +70,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     private int intentFlag;
     private ListView songListView;
     private LocalSongsAdapter songListAdapter;
-    public ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
+    public SQLiteHelper SQLiteHelper;
     private int score;
     private final List<String> sortNamesList = new ArrayList<>();
 

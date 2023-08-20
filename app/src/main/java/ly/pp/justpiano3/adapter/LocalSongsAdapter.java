@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.AddSongsFavoClick;
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick;
 import ly.pp.justpiano3.listener.PlaySongsClick;
@@ -48,9 +51,18 @@ public final class LocalSongsAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         view.setTag(cursor.getPosition());
         ImageView imageView = view.findViewById(R.id.play_image);
+        ImageView waterFallImageView = view.findViewById(R.id.play_waterfall);
         ImageView imageView3 = view.findViewById(R.id.favor);
         view.findViewById(R.id.play).setOnClickListener(new LocalSongsStartPlayClick(this, cursor));
         imageView.setOnClickListener(new PlaySongsClick(this, cursor, view, context));
+        waterFallImageView.setOnClickListener(v -> {
+            melodyselect.jpapplication.stopPlaySong();
+            Intent intent = new Intent();
+            intent.putExtra("songPath", cursor.getString(cursor.getColumnIndexOrThrow("path")));
+            intent.putExtra("songName", cursor.getString(cursor.getColumnIndexOrThrow("name")));
+            intent.setClass(melodyselect, WaterfallActivity.class);
+            melodyselect.startActivity(intent);
+        });
         imageView3.setOnClickListener(new AddSongsFavoClick(this, cursor, context));
         ScrollText scrollText = view.findViewById(R.id.s_n);
         scrollText.setText(cursor.getString(1));

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/ground"
+              android:orientation="vertical"
+              android:gravity="center">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/dark"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textSize="48sp"
+            android:text="测试瀑布流">
+    </TextView>
+
+    <ly.pp.justpiano3.view.KeyboardModeView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:whiteKeyNum="49"
+            app:whiteKeyOffset="0"
+            app:pianoKeyTouchable="false"
+            android:layout_weight="1">
+    </ly.pp.justpiano3.view.KeyboardModeView>
+
+</LinearLayout>
