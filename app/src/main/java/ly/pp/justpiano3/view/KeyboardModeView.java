@@ -410,7 +410,7 @@ public class KeyboardModeView extends View {
                     notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilterMultiPly[kuangColorIndex]);
                 }
             }
-            invalidate();
+            postInvalidate();
         }
     }
 
@@ -426,7 +426,7 @@ public class KeyboardModeView extends View {
                 return;
             }
             notesOnArray[pitchInScreen] = false;
-            invalidate();
+            postInvalidate();
         }
     }
 

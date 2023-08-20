@@ -11,22 +11,32 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/dark"
-            android:layout_weight="4">
+            android:layout_weight="4"
+            android:orientation="vertical">
 
         <TextView
                 android:id="@+id/waterfall_song_name"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_30dp"
+                android:layout_height="0dp"
                 android:textColor="@color/white1"
+                android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:background="@color/black"
                 android:gravity="center">
         </TextView>
 
+        <ly.pp.justpiano3.view.WaterfallView
+                android:id="@+id/waterfall_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7">
+        </ly.pp.justpiano3.view.WaterfallView>
+
     </LinearLayout>
 
     <ly.pp.justpiano3.view.KeyboardModeView
+            android:id="@+id/waterfall_keyboard"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:whiteKeyNum="49"
