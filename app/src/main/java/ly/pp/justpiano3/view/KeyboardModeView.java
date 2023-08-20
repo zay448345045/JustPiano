@@ -31,7 +31,7 @@ public class KeyboardModeView extends View {
     private static final int MAX_VOLUME = 127;
 
     private static final float BLACK_KEY_HEIGHT_FACTOR = 0.57f;
-    private static final float BLACK_KEY_WIDTH_FACTOR = 0.607f;
+    public static final float BLACK_KEY_WIDTH_FACTOR = 0.607f;
 
     private static final int WHITE_KEY_OFFSET_0_MIDI_PITCH = 24;
 
@@ -574,7 +574,7 @@ public class KeyboardModeView extends View {
         return Bitmap.createBitmap(bitmap, 0, 0, newWidth, bitmap.getHeight(), null, false);
     }
 
-    public final Bitmap loadImage(Context context, String str) {
+    private Bitmap loadImage(Context context, String str) {
         Bitmap bitmap = null;
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             try {
