@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.Nullable;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 
@@ -42,10 +43,19 @@ public class KeyboardModeView extends View {
             1, 3, 6, 8, 10
     };
 
-    // -1为黑键、0为left、1为middle、2为right
-    private static final int[] KEY_IMAGE_TYPE = {
-            2, -1, 1, -1, 0, 2, -1, 1, -1, 1, -1, 0
+    /**
+     * 一个八度内要绘制的图像种类，包括黑键、白键右侧(右上角抠掉黑键的，比如do键)、白键MIDDLE(左右都被抠掉黑键的，比如do re mi的re键)、白键左侧
+     */
+    private static final KeyImageTypeEnum[] KEY_IMAGE_TYPE = {
+            KeyImageTypeEnum.WHITE_KEY_RIGHT, KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_LEFT, KeyImageTypeEnum.WHITE_KEY_RIGHT,
+            KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_MIDDLE, KeyImageTypeEnum.BLACK_KEY,
+            KeyImageTypeEnum.WHITE_KEY_MIDDLE, KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_LEFT,
     };
+
+    private enum KeyImageTypeEnum {
+        BLACK_KEY, WHITE_KEY_LEFT, WHITE_KEY_MIDDLE, WHITE_KEY_RIGHT;
+    }
 
     // midi音高转白键或黑键索引
     private static final int[] PITCH_TO_KEY_INDEX_IN_OCTAVE = {
@@ -65,7 +75,11 @@ public class KeyboardModeView extends View {
     private RectF[] blackKeyRectArray;
     private boolean[] notesOnArray;
     private Paint[] notesOnPaintArray;
-    private boolean cancelled;
+
+    /**
+     * 是否在展示动画，展示动画期间不允许重新绘制、修改白键数量等操作
+     */
+    private boolean isAnimRunning;
 
     private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
@@ -80,6 +94,11 @@ public class KeyboardModeView extends View {
     private Bitmap whiteKeyMiddleImage;
     private Bitmap whiteKeyLeftImage;
     private Bitmap blackKeyImage;
+
+    /**
+     * 是否可点击琴键
+     */
+    private boolean pianoKeyTouchable;
 
     /**
      * Implement this to receive keyboard events.
@@ -124,6 +143,7 @@ public class KeyboardModeView extends View {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardModeView);
         whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM);
         whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET);
+        pianoKeyTouchable = typedArray.getBoolean(R.styleable.KeyboardModeView_pianoKeyTouchable, true);
         typedArray.recycle();
     }
 
@@ -146,10 +166,16 @@ public class KeyboardModeView extends View {
         postInvalidate();
     }
 
+    /**
+     * 计算好琴键各种图片要绘制的位置坐标，一般在修改view宽高，动画播放，或者修改白键数量等场景中调用
+     */
     private void makeDraw() {
+        // 计算黑白键的宽度
         whiteKeyWidth = viewWidth / whiteKeyNum;
         float blackKeyWidth = whiteKeyWidth * BLACK_KEY_WIDTH_FACTOR;
+        // 计算一个八度内，白键的起始偏移个数
         int octaveWhiteKeyOffset = whiteKeyOffset % WHITE_NOTES_PER_OCTAVE;
+        // 计算最左侧八度需要绘制的左右坐标点
         float left = -octaveWhiteKeyOffset * whiteKeyWidth;
         float right = (WHITE_NOTES_PER_OCTAVE - octaveWhiteKeyOffset) * whiteKeyWidth;
         float width = right - left;
@@ -159,8 +185,10 @@ public class KeyboardModeView extends View {
         // 先加一个左侧看不见的八度的，防止动画穿帮
         keyboardRectList.add(new RectF(left - width, 0, right - width, viewHeight));
         int octave = 0;
+        // 循环添加绘制每一个八度的位置坐标，直到触及view的右边界
         while (left < viewWidth) {
             octave++;
+            // 先添加绘制键盘图的位置坐标，再叠上5个黑键
             keyboardRectList.add(new RectF(left, 0, right, viewHeight));
             float blackKeyLeft1 = left + blackKeyWidth * 1.15f;
             blackKeyRectList.add(new RectF(blackKeyLeft1, 0, blackKeyLeft1 + blackKeyWidth, blackKeyHeight));
@@ -177,9 +205,11 @@ public class KeyboardModeView extends View {
         }
         // 再加一个右侧看不见的八度的，防止动画穿帮
         keyboardRectList.add(new RectF(left, 0, right, viewHeight));
+        // 最后添加绘制所有白键图的位置坐标
         for (float i = -octaveWhiteKeyOffset * whiteKeyWidth; i < right; i += whiteKeyWidth) {
             whiteKeyRectList.add(new RectF(i, 0, i + whiteKeyWidth, viewHeight));
         }
+        // 转换为数组，后续取数组中的位置坐标值做实际的绘制
         keyboardImageRectArray = keyboardRectList.toArray(new RectF[0]);
         whiteKeyRectArray = whiteKeyRectList.toArray(new RectF[0]);
         blackKeyRectArray = blackKeyRectList.toArray(new RectF[0]);
@@ -193,25 +223,29 @@ public class KeyboardModeView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        // 先绘制所有八度的键盘图
         for (RectF rectF : keyboardImageRectArray) {
             canvas.drawBitmap(keyboardImage, null, rectF, null);
         }
-        if (!cancelled) {
+        // 没有在动画播放期间的话，开始按数组中的位置坐标值，拿图片进行绘制
+        if (!isAnimRunning) {
+            //
             for (int i = 0; i < notesOnArray.length; i++) {
+                // 如果某个琴键处于按下状态，根据具体图片类型来绘制具体琴键按下的图片，叠在键盘图的上面
                 if (notesOnArray[i]) {
                     int octaveI = i / NOTES_PER_OCTAVE;
                     int noteI = i % NOTES_PER_OCTAVE;
                     switch (KEY_IMAGE_TYPE[noteI]) {
-                        case -1:
+                        case BLACK_KEY:
                             canvas.drawBitmap(blackKeyImage, null, blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
-                        case 0:
+                        case WHITE_KEY_LEFT:
                             canvas.drawBitmap(whiteKeyLeftImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
-                        case 1:
+                        case WHITE_KEY_MIDDLE:
                             canvas.drawBitmap(whiteKeyMiddleImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
-                        case 2:
+                        case WHITE_KEY_RIGHT:
                             canvas.drawBitmap(whiteKeyRightImage, null, whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]);
                             break;
                         default:
@@ -222,9 +256,32 @@ public class KeyboardModeView extends View {
         }
     }
 
+    /**
+     * 根据midi音高值，获取对应琴键的绘制绝对坐标位置，供外界取用
+     * 注意黑键和白键的绝对坐标位置的宽度有差异
+     */
+    @Nullable
+    public RectF convertPitchToReact(int pitch) {
+        int pitchInScreen = getPitchInScreen(pitch);
+        // 入参的音高不在键盘view所绘制的琴键范围内，返回空
+        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
+            return null;
+        }
+        int octaveI = pitchInScreen / NOTES_PER_OCTAVE;
+        int noteI = pitchInScreen % NOTES_PER_OCTAVE;
+        if (KEY_IMAGE_TYPE[noteI] == KeyImageTypeEnum.BLACK_KEY) {
+            return blackKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE];
+        } else {
+            return whiteKeyRectArray[PITCH_TO_KEY_INDEX_IN_OCTAVE[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE];
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
+        if (!pianoKeyTouchable) {
+            return true;
+        }
         int action = event.getActionMasked();
         // Track individual fingers.
         int pointerIndex = event.getActionIndex();
@@ -327,13 +384,13 @@ public class KeyboardModeView extends View {
     }
 
     public void fireKeyDown(int pitch, int volume, int kuangColorIndex, boolean trigListener) {
-        if (!cancelled) {
+        if (!isAnimRunning) {
             if (trigListener) {
                 for (MusicKeyListener listener : mListeners) {
                     listener.onKeyDown(pitch, Math.min(volume, MAX_VOLUME));
                 }
             }
-            int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
+            int pitchInScreen = getPitchInScreen(pitch);
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
                 return;
             }
@@ -346,6 +403,7 @@ public class KeyboardModeView extends View {
                         break;
                     }
                 }
+                // 对于黑键，使用PorterDuff.Mode.ADD模式叠加框框颜色，对于白键，使用PorterDuff.Mode.MULTIPLY模式，使绘制颜色叠加看起来更为真实
                 if (isBlack) {
                     notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilterAdd[kuangColorIndex]);
                 } else {
@@ -357,19 +415,27 @@ public class KeyboardModeView extends View {
     }
 
     public void fireKeyUp(int pitch, boolean trigListener) {
-        if (!cancelled) {
+        if (!isAnimRunning) {
             if (trigListener) {
                 for (MusicKeyListener listener : mListeners) {
                     listener.onKeyUp(pitch);
                 }
             }
-            int pitchInScreen = pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
+            int pitchInScreen = getPitchInScreen(pitch);
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
                 return;
             }
             notesOnArray[pitchInScreen] = false;
             invalidate();
         }
+    }
+
+    /**
+     * 根据midi音高，计算屏幕内已经绘制了的所有琴键的音高索引
+     * 比如midi音高为60，而view中只绘制（可以理解为显示）了两个八度，那么转换后的音高就应该是以屏幕最左侧绘制的八度的do键为0算起的，一定比60小，比如可能为0，可能为12
+     */
+    private int getPitchInScreen(int pitch) {
+        return pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE;
     }
 
     // Convert x to MIDI pitch. Ignores black keys.
@@ -400,7 +466,7 @@ public class KeyboardModeView extends View {
     }
 
     public void setWhiteKeyNum(int whiteKeyNum, int animInterval) {
-        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || cancelled) {
+        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || isAnimRunning) {
             return;
         }
         ValueAnimator anim = ValueAnimator.ofFloat(1, (float) this.whiteKeyNum / whiteKeyNum);
@@ -416,7 +482,7 @@ public class KeyboardModeView extends View {
             return;
         }
         anim.setDuration(animInterval);
-        cancelled = true;
+        isAnimRunning = true;
         float[] oriLeft = new float[keyboardImageRectArray.length];
         float[] oriRight = new float[keyboardImageRectArray.length];
         for (int i = 0; i < keyboardImageRectArray.length; i++) {
@@ -432,17 +498,21 @@ public class KeyboardModeView extends View {
             }
             postInvalidate();
         });
+        makeAnimListenerAndStart(anim);
+    }
+
+    private void makeAnimListenerAndStart(ValueAnimator anim) {
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                cancelled = false;
+                isAnimRunning = false;
                 makeDraw();
                 postInvalidate();
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-                cancelled = false;
+                isAnimRunning = false;
                 makeDraw();
                 postInvalidate();
             }
@@ -463,7 +533,7 @@ public class KeyboardModeView extends View {
     }
 
     public void setWhiteKeyOffset(int whiteKeyOffset, int animInterval) {
-        if (whiteKeyOffset < 0 || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || cancelled) {
+        if (whiteKeyOffset < 0 || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || isAnimRunning) {
             return;
         }
         ValueAnimator anim = ValueAnimator.ofFloat(0f, (this.whiteKeyOffset - whiteKeyOffset) * whiteKeyWidth);
@@ -474,7 +544,7 @@ public class KeyboardModeView extends View {
             return;
         }
         anim.setDuration(animInterval);
-        cancelled = true;
+        isAnimRunning = true;
         float[] oriLeft = new float[keyboardImageRectArray.length];
         float[] oriRight = new float[keyboardImageRectArray.length];
         for (int i = 0; i < keyboardImageRectArray.length; i++) {
@@ -489,26 +559,11 @@ public class KeyboardModeView extends View {
             }
             postInvalidate();
         });
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                cancelled = false;
-                makeDraw();
-                postInvalidate();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                cancelled = false;
-                makeDraw();
-                postInvalidate();
-            }
-        });
-        anim.start();
+        makeAnimListenerAndStart(anim);
     }
 
     /**
-     * 裁剪键盘
+     * 裁剪键盘，八个白键的键盘皮肤图要分成七份（乘7/8），裁成一个八度
      *
      * @param bitmap 原图
      * @return 裁剪后的图像
@@ -541,5 +596,18 @@ public class KeyboardModeView extends View {
             e2.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 根据一个midi音高，判断它是否为黑键，通用工具，与view无关
+     */
+    public static boolean isBlackKey(int pitch) {
+        int pitchInOctave = pitch % NOTES_PER_OCTAVE;
+        for (int blackKeyOffsetInOctave : BLACK_KEY_OFFSETS) {
+            if (pitchInOctave == blackKeyOffsetInOctave) {
+                return true;
+            }
+        }
+        return false;
     }
 }

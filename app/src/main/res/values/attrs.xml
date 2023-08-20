@@ -3,6 +3,7 @@
     <declare-styleable name="KeyboardModeView">
         <attr name="whiteKeyNum" format="integer" />
         <attr name="whiteKeyOffset" format="integer" />
+        <attr name="pianoKeyTouchable" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="DataSelectView">
