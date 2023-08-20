@@ -22,6 +22,11 @@ public final class WaterfallDownNotesThread extends Thread {
      */
     private final WaterfallView waterfallView;
 
+    /**
+     * 记录上一次绘制时间，确定休眠时间，使绘制的间隔时间更稳定
+     */
+    private long lastDrawTime;
+
     public WaterfallDownNotesThread(WaterfallView waterfallView) {
         this.waterfallView = waterfallView;
         this.running = true;
@@ -29,18 +34,16 @@ public final class WaterfallDownNotesThread extends Thread {
 
     @Override
     public void run() {
+        this.lastDrawTime = System.currentTimeMillis();
         // TODO 颜色
         Paint rightHandPaint = new Paint();
         Paint leftHandPaint = new Paint();
         rightHandPaint.setColor(0x7fffcc00);
         leftHandPaint.setColor(0x7f66FFFF);
+        int intervalTime = 16;
         while (running) {
             Canvas canvas = null;
             try {
-                // TODO 停顿时间配置化，参数待调整
-                int intervalTime = 24;
-                waterfallView.addProgress(intervalTime);
-                WaterfallDownNotesThread.sleep(16);
                 canvas = waterfallView.getHolder().lockCanvas();
                 if (canvas != null) {
                     // 开始绘制操作
@@ -63,7 +66,15 @@ public final class WaterfallDownNotesThread extends Thread {
                             }
                         }
                     }
+                    waterfallView.addProgress(intervalTime);
                 }
+                // 计算实际的休眠时间
+                long drawTime = System.currentTimeMillis();
+                long sleepTime = intervalTime - (drawTime - lastDrawTime);
+                if (sleepTime > 0) {
+                    WaterfallDownNotesThread.sleep(sleepTime);
+                }
+                lastDrawTime = drawTime;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
