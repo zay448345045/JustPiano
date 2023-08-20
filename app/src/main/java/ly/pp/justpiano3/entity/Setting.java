@@ -130,7 +130,7 @@ public class Setting {
         setting.setNoteSize(Float.parseFloat(sharedPreferences.getString("note_size", "1")));
         setting.setNoteDismiss(sharedPreferences.getBoolean("note_dismiss", false));
         setting.setChangeNotesColor(sharedPreferences.getBoolean("change_color", true));
-        setting.setChatTextSize(Integer.parseInt(sharedPreferences.getString("chats_text_size", "15")));
+        setting.setChatTextSize(Integer.parseInt(sharedPreferences.getString("msg_font_size", "15")));
         return setting;
     }
 }
