@@ -98,7 +98,7 @@ public class WaterfallActivity extends Activity {
                         WaterfallNote lastNote = waterfallNoteListByHand.get(index);
                         // 设置上一个音符的结束时间
                         // 结束时间稍微减一点点，否则相同的音符连续按的时候，看不出来是几个音符，而是瀑布长条都粘在一起了
-                        lastNote.setEndTime(totalTime - 10);
+                        lastNote.setEndTime(totalTime - 15);
                         index--;
                         // 如果上一个音符的开始时间和当前音符的开始时间相同，则表示同时按下，此时循环，继续设定两个音符的结束时间相同即可
                     } while (index >= 0 && waterfallNoteListByHand.get(index).getStartTime() == waterfallNoteListByHand.get(index + 1).getStartTime());
