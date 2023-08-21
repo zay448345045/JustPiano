@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center_vertical"
-    android:keepScreenOn="true"
-    android:orientation="vertical">
+              android:id="@+id/LinearLayout1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center_vertical"
+              android:keepScreenOn="true"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -19,39 +19,39 @@
             android:layout_height="100dp"
             android:layout_alignParentStart="true"
             android:visibility="gone"
-            android:background="@drawable/_none" />
+            android:background="@drawable/_none"/>
 
         <ImageView
             android:id="@+id/ol_player_mod"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignParentStart="true"
-            android:background="@drawable/filled_msg" />
+            android:background="@drawable/filled_msg"/>
 
         <ImageView
             android:id="@+id/ol_player_eye"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"/>
 
         <ImageView
             android:id="@+id/ol_player_hair"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"/>
 
         <ImageView
             android:id="@+id/ol_player_shoes"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"/>
 
         <ImageView
             android:id="@+id/ol_player_trousers"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"/>
 
         <ImageView
             android:id="@+id/ol_player_jacket"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"/>
 
         <TextView
             android:id="@+id/ol_player_name"
@@ -69,7 +69,7 @@
             android:singleLine="true"
             android:text=""
             android:textColor="@color/white1"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/ol_player_level"
@@ -83,7 +83,7 @@
             android:textColor="@color/green_r"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:typeface="sans" />
+            android:typeface="sans"/>
 
         <TextView
             android:id="@+id/ol_ready_text"
@@ -95,7 +95,7 @@
             android:gravity="center"
             android:textColor="@color/white1"
             android:textColorHint="@color/yellow_r"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/ol_player_class"
@@ -109,7 +109,7 @@
             android:textColor="@color/yellow"
             android:textColorHint="@color/yellow_r"
             android:textSize="12sp"
-            android:typeface="sans" />
+            android:typeface="sans"/>
 
         <TextView
             android:id="@+id/ol_player_clname"
@@ -123,8 +123,8 @@
             android:maxEms="1"
             android:textColor="@color/white1"
             android:textColorHint="@color/yellow_r"
-            android:textSize="12sp"
-            android:typeface="monospace" />
+            android:textSize="11sp"
+            android:typeface="monospace"/>
 
         <TextView
             android:id="@+id/ol_player_hand"
@@ -134,7 +134,7 @@
             android:layout_alignStart="@+id/ol_player_mod"
             android:textStyle="bold"
             android:textColor="@color/white1"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <ImageView
             android:id="@+id/ol_player_couple"
@@ -142,7 +142,7 @@
             android:layout_height="20dp"
             android:layout_alignEnd="@+id/ol_player_mod"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginEnd="5dp"/>
 
         <ImageView
             android:id="@+id/ol_player_family"
@@ -150,6 +150,6 @@
             android:layout_height="20dp"
             android:layout_alignEnd="@+id/ol_player_mod"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginEnd="5dp"/>
     </RelativeLayout>
 </LinearLayout>

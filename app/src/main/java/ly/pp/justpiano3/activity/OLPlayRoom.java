@@ -951,7 +951,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         jpapplication.getHashmap().clear();
         connectionService = jpapplication.getConnectionService();
         setContentView(R.layout.olplayroom);
-        //  jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");
