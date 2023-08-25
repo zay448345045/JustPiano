@@ -21,9 +21,6 @@ public class WaterfallActivity extends Activity {
      */
     private WaterfallView waterfallView;
 
-    private int waterfallViewClickCount = 0;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,28 +56,47 @@ public class WaterfallActivity extends Activity {
             }
         });
 
-        // 设置连续点击一次？或两次？瀑布流区域时，暂停/继续播放
+        // 设置点击瀑布流区域时，暂停/继续播放
         waterfallView.setOnClickListener(v -> {
-            waterfallView.pauseOrResumePlay();
-//            waterfallViewClickCount++;
-//            new Timer().schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    if (waterfallViewClickCount >= 2) {
-//                        waterfallViewClickCount = 0;
-//                        // 暂停/继续播放
-//                        waterfallView.pauseOrResumePlay();
-//                    }
-//                }
-//            }, 300);
+            if (waterfallView.isPlaying()) {
+                waterfallView.pausePlay();
+            } else {
+                waterfallView.resumePlay();
+            }
         });
     }
 
     @Override
+    protected void onStop() {
+        if (waterfallView.isPlaying()) {
+            waterfallView.pausePlay();
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        if (!waterfallView.isPlaying()) {
+            waterfallView.resumePlay();
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        if (!waterfallView.isPlaying()) {
+            waterfallView.resumePlay();
+        }
+        super.onRestart();
+    }
+
+    @Override
     protected void onDestroy() {
-        super.onDestroy();
-        waterfallView.stopPlay();
+        if (waterfallView.isPlaying()) {
+            waterfallView.stopPlay();
+        }
         waterfallView = null;
+        super.onDestroy();
     }
 
     private WaterfallNote[] convertToWaterfallNote(PmFileParser pmFileParser, KeyboardModeView keyboardModeView) {

@@ -92,11 +92,20 @@ public class WaterfallView extends SurfaceView {
     }
 
     /**
-     * 暂停或继续播放
+     * 暂停播放
      */
-    public void pauseOrResumePlay() {
+    public void pausePlay() {
         if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
-            waterfallDownNotesThread.setPause(!waterfallDownNotesThread.isPause());
+            waterfallDownNotesThread.setPause(true);
+        }
+    }
+
+    /**
+     * 继续播放
+     */
+    public void resumePlay() {
+        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
+            waterfallDownNotesThread.setPause(false);
         }
     }
 
@@ -108,6 +117,17 @@ public class WaterfallView extends SurfaceView {
             waterfallDownNotesThread.setRunning(false);
         }
         waterfallDownNotesThread = null;
+    }
+
+    /**
+     * 是否正在播放
+     */
+    public boolean isPlaying() {
+        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
+            return !waterfallDownNotesThread.isPause();
+        } else {
+            return false;
+        }
     }
 
     /**

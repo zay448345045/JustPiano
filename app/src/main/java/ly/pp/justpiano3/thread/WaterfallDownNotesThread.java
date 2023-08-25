@@ -64,29 +64,30 @@ public final class WaterfallDownNotesThread extends Thread {
         while (running) {
             Canvas canvas = null;
             try {
-                WaterfallDownNotesThread.sleep(16);
+                // sleep虽然写了固定值，但由于设备刷新率等原因，在绘制线程中的sleep数值会自动变化，不可信，需要根据时间戳进行计算坐标和进度
+                WaterfallDownNotesThread.sleep(10);
+                // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
+                // 计算过程中，减掉用户手动拖动进度时设置的进度偏移值
+                int playIntervalTime = (int) (System.currentTimeMillis() - startPlayTime - progressOffset);
+                // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
+                if (pause && pauseProgress == null) {
+                    pauseProgress = playIntervalTime;
+                } else if (!pause && pauseProgress != null) {
+                    // 更新偏移量，使之后继续播放时能按照刚暂停时的进度来继续
+                    progressOffset += playIntervalTime - pauseProgress;
+                    playIntervalTime -= playIntervalTime - pauseProgress;
+                    pauseProgress = null;
+                }
+                // 根据当前是否暂停，取出进度，进行绘制坐标计算
+                progress = pause ? pauseProgress : playIntervalTime;
+                // 获取绘制canvas
                 canvas = waterfallView.getHolder().lockCanvas();
                 if (canvas != null) {
                     // 清空画布，之后开始绘制
                     canvas.drawColor(Color.BLACK);
                     for (WaterfallNote waterfallNote : waterfallView.getWaterfallNotes()) {
-                        // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
-                        // 计算过程中，减掉用户手动拖动进度时设置的进度偏移值
-                        int playIntervalTime = (int) (System.currentTimeMillis() - startPlayTime - progressOffset);
-                        // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
-                        if (pause && pauseProgress == null) {
-                            pauseProgress = playIntervalTime;
-                        } else if (!pause && pauseProgress != null) {
-                            // 更新偏移量，使之后继续播放时能按照刚暂停时的进度来继续
-                            progressOffset += playIntervalTime - pauseProgress;
-                            playIntervalTime -= progressOffset;
-                            pauseProgress = null;
-                        }
-                        // 根据当前是否暂停，取出进度，进行绘制坐标计算
-                        progress = pause ? pauseProgress : playIntervalTime;
                         // 瀑布流音块在view内对用户可见的，才绘制
                         if (noteIsVisible(waterfallNote)) {
-                            // 绘制瀑布流
                             canvas.drawRect(waterfallNote.getLeft(), progress - waterfallNote.getEndTime(),
                                     waterfallNote.getRight(), progress - waterfallNote.getStartTime(),
                                     waterfallNote.isLeftHand() ? leftHandPaint : rightHandPaint);
