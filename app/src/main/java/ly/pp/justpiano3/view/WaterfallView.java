@@ -47,7 +47,7 @@ public class WaterfallView extends SurfaceView {
     private NoteFallListener noteFallListener;
 
     /**
-     * 瀑布流循环绘制线程
+     * 瀑布流循环绘制线程，不对外暴露
      */
     private WaterfallDownNotesThread waterfallDownNotesThread;
 
@@ -82,7 +82,7 @@ public class WaterfallView extends SurfaceView {
     }
 
     /**
-     * 开始绘制
+     * 开始播放
      */
     public void startPlay(WaterfallNote[] waterfallNotes) {
         this.waterfallNotes = waterfallNotes;
@@ -91,10 +91,42 @@ public class WaterfallView extends SurfaceView {
         waterfallDownNotesThread.start();
     }
 
+    /**
+     * 暂停或继续播放
+     */
+    public void pauseOrResumePlay() {
+        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
+            waterfallDownNotesThread.setPause(!waterfallDownNotesThread.isPause());
+        }
+    }
+
+    /**
+     * 停止播放
+     */
     public void stopPlay() {
-        if (waterfallDownNotesThread != null) {
+        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
             waterfallDownNotesThread.setRunning(false);
-            waterfallDownNotesThread = null;
+        }
+        waterfallDownNotesThread = null;
+    }
+
+    /**
+     * 获取目前的播放进度，单位毫秒，如果未在播放，返回0
+     */
+    public int getPlayProgress() {
+        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
+            return waterfallDownNotesThread.getProgress();
+        }
+        return 0;
+    }
+
+    /**
+     * 设置当前播放进度，单位毫秒
+     */
+    public void setPlayProgress(int progress) {
+        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
+            // 读取当前播放进度，更新偏移量即可，之后绘制时的时间会根据偏移量进行计算，后续就会在新的进度上继续绘制了
+            waterfallDownNotesThread.setProgressOffset(waterfallDownNotesThread.getProgressOffset() + waterfallDownNotesThread.getProgress() - progress);
         }
     }
 

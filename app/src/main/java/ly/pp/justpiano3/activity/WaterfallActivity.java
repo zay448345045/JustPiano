@@ -12,9 +12,7 @@ import ly.pp.justpiano3.view.KeyboardModeView;
 import ly.pp.justpiano3.view.WaterfallView;
 import ly.pp.justpiano3.view.play.PmFileParser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class WaterfallActivity extends Activity {
 
@@ -22,6 +20,9 @@ public class WaterfallActivity extends Activity {
      * 瀑布流view
      */
     private WaterfallView waterfallView;
+
+    private int waterfallViewClickCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,22 @@ public class WaterfallActivity extends Activity {
                 // 移除监听，避免重复调用
                 keyboardModeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
+        });
+
+        // 设置连续点击一次？或两次？瀑布流区域时，暂停/继续播放
+        waterfallView.setOnClickListener(v -> {
+            waterfallView.pauseOrResumePlay();
+//            waterfallViewClickCount++;
+//            new Timer().schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    if (waterfallViewClickCount >= 2) {
+//                        waterfallViewClickCount = 0;
+//                        // 暂停/继续播放
+//                        waterfallView.pauseOrResumePlay();
+//                    }
+//                }
+//            }, 300);
         });
     }
 
