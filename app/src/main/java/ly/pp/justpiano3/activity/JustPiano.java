@@ -241,8 +241,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
         } catch (Exception e5) {
             System.exit(-1);
         }
-        // 载入音源之前，先生成设备UUID到数据库中
-        generateDeviceUUID(sqliteDataBase);
+        // 载入音源
         for (int i = 108; i >= 24; i--) {
             SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             progress++;
@@ -256,14 +255,5 @@ public class JustPiano extends Activity implements Callback, Runnable {
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);
-    }
-
-    /**
-     * 生成设备UUID
-     * 虽然这个每次重装极品会变，但某些情况也可以被当作唯一标志使用
-     * @param sqliteDataBase dataBase
-     */
-    private void generateDeviceUUID(SQLiteDatabase sqliteDataBase) {
-        //TODO 未完成的生成设备唯一标志。
     }
 }

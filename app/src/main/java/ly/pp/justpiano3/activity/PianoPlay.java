@@ -29,6 +29,7 @@ import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimer;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
@@ -362,7 +363,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
-            SoundEngineUtil.moveFile(srcFile, desFile);
+            FileUtil.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
             recordStart = false;
         }

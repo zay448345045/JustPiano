@@ -10,6 +10,11 @@ import java.io.*;
 
 public class SoundEngineUtil {
 
+    /**
+     * 聊天音效名称
+     */
+    public static final String CHAT_SOUND_FILE_NAME = "chat_b5.wav";
+
     static {
         System.loadLibrary("soundengine");
     }
@@ -68,7 +73,7 @@ public class SoundEngineUtil {
     }
 
     private static void loadChatWav(Context context) throws IOException {
-        AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("chat_b5.wav");
+        AssetFileDescriptor assetFD = context.getResources().getAssets().openFd(CHAT_SOUND_FILE_NAME);
         FileInputStream dataStream = assetFD.createInputStream();
         int dataLen = dataStream.available();
         byte[] dataBytes = new byte[dataLen];
@@ -76,34 +81,6 @@ public class SoundEngineUtil {
         loadWavAssetNative(dataBytes, 0, 0);
         assetFD.close();
         dataStream.close();
-    }
-
-    /**
-     * 移动文件到新文件的位置（拷贝流）
-     *
-     * @param src 源文件对象
-     * @param des 目标文件对象
-     */
-    public static boolean moveFile(File src, File des) {
-        if (!src.exists()) {
-            return false;
-        }
-        if (des.exists()) {
-            des.delete();
-        }
-        try (BufferedInputStream reader = new BufferedInputStream(new FileInputStream(src)); BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(des))) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, length);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            src.delete();
-        }
-        return true;
     }
 
     public static void reLoadOriginalSounds(Context context) {
