@@ -19,6 +19,7 @@ import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
@@ -298,7 +299,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.family);
         cs = jpapplication.getConnectionService();
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));

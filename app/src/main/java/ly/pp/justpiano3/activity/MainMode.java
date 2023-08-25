@@ -21,6 +21,7 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -137,7 +138,7 @@ public class MainMode extends Activity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+            SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
 
@@ -148,7 +149,7 @@ public class MainMode extends Activity implements OnClickListener {
         jpApplication.loadSettings(false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean newHelp = sharedPreferences.getBoolean("new_help", true);
         if (newHelp) {

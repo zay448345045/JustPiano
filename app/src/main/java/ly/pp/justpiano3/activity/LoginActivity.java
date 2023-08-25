@@ -23,6 +23,7 @@ import ly.pp.justpiano3.listener.LoginSuccessClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.*;
@@ -188,7 +189,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         setContentView(R.layout.login);
         Bundle extras = getIntent().getExtras();
         boolean noAuto = extras == null || extras.getBoolean("no_auto");
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
         Button changeServerButton = findViewById(R.id.ol_change_server);

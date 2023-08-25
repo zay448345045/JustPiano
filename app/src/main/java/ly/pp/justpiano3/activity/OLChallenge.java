@@ -18,6 +18,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.GetPrizeClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.DrawPrizeView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -100,7 +101,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
         sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
         info = findViewById(R.id.infoview);

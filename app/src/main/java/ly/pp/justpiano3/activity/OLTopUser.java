@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
 public class OLTopUser extends Activity implements OnClickListener {
 
@@ -77,7 +78,7 @@ public class OLTopUser extends Activity implements OnClickListener {
         super.onCreate(bundle);
         JPApplication jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_top_user);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button f4561l = findViewById(R.id.ol_level_b);
         f4561l.setOnClickListener(this);
         Button f4557h = findViewById(R.id.ol_topUsers_b);

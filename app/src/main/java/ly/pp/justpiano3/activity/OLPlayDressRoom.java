@@ -35,6 +35,7 @@ import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
@@ -217,7 +218,7 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         shoesNow = extras.getInt("O");
         sex = extras.getString("S");
         setContentView(R.layout.olplaydressroom);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button dressOK = findViewById(R.id.ol_dress_ok);
         Button dressCancel = findViewById(R.id.ol_dress_cancel);
         dressOK.setOnClickListener(this);

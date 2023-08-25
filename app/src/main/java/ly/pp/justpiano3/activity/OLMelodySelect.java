@@ -18,6 +18,7 @@ import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -242,7 +243,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             layoutInflater2 = LayoutInflater.from(this);
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Consts.sortNames).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             setContentView(LayoutInflater.from(this).inflate(R.layout.olmelodylist, null));
-            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+            SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
             LinearLayout linearLayout = findViewById(R.id.sup_view);
             Button f4325n = findViewById(R.id.ol_search_button);
             f4325n.setOnClickListener(this);

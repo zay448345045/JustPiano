@@ -21,6 +21,7 @@ import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
 import ly.pp.justpiano3.view.play.PmFileParser;
@@ -188,18 +189,18 @@ public final class PlayView extends SurfaceView implements Callback {
 
     private void loadImages() {
         Matrix matrix = new Matrix();
-        barImage = jpapplication.loadImage("bar");
-        keyboardImage = jpapplication.loadImage("key_board_hd");
-        backgroundImage = jpapplication.loadImage("background_hd");
-        perfectImage = jpapplication.loadImage("perfect_img");
-        coolImage = jpapplication.loadImage("cool_img");
-        greatImage = jpapplication.loadImage("great_img");
-        badImage = jpapplication.loadImage("bad_img");
-        missImage = jpapplication.loadImage("miss_img");
-        maxImage = jpapplication.loadImage("max_img");
-        xImage = jpapplication.loadImage("x_img");
-        scoreImage = jpapplication.loadImage("score");
-        scoreNumImage = jpapplication.loadImage("number");
+        barImage = SkinImageLoadUtil.loadImage(jpapplication, "bar");
+        keyboardImage = SkinImageLoadUtil.loadImage(jpapplication, "key_board_hd");
+        backgroundImage = SkinImageLoadUtil.loadImage(jpapplication, "background_hd");
+        perfectImage = SkinImageLoadUtil.loadImage(jpapplication, "perfect_img");
+        coolImage = SkinImageLoadUtil.loadImage(jpapplication, "cool_img");
+        greatImage = SkinImageLoadUtil.loadImage(jpapplication, "great_img");
+        badImage = SkinImageLoadUtil.loadImage(jpapplication, "bad_img");
+        missImage = SkinImageLoadUtil.loadImage(jpapplication, "miss_img");
+        maxImage = SkinImageLoadUtil.loadImage(jpapplication, "max_img");
+        xImage = SkinImageLoadUtil.loadImage(jpapplication, "x_img");
+        scoreImage = SkinImageLoadUtil.loadImage(jpapplication, "score");
+        scoreNumImage = SkinImageLoadUtil.loadImage(jpapplication, "number");
         if (jpapplication.getHeightPixels() < 1080) {
             matrix.postScale(0.7f, 0.7f);
             perfectImage = Bitmap.createBitmap(perfectImage, 0, 0, perfectImage.getWidth(), perfectImage.getHeight(), matrix, true);
@@ -211,30 +212,30 @@ public final class PlayView extends SurfaceView implements Callback {
             scoreImage = Bitmap.createBitmap(scoreImage, 0, 0, scoreImage.getWidth(), scoreImage.getHeight(), matrix, true);
             scoreNumImage = Bitmap.createBitmap(scoreNumImage, 0, 0, scoreNumImage.getWidth(), scoreNumImage.getHeight(), matrix, true);
         }
-        noteImage = jpapplication.loadImage("white_note_hd");
-        blackNoteImage = jpapplication.loadImage("black_note_hd");
-        playNoteImage = jpapplication.loadImage("play_note_hd");
-        practiceNoteImage = jpapplication.loadImage("play_note_hd");
-        whiteKeyRightImage = jpapplication.loadImage("white_r");
-        whiteKeyMiddleImage = jpapplication.loadImage("white_m");
-        whiteKeyLeftImage = jpapplication.loadImage("white_l");
-        blackKeyImage = jpapplication.loadImage("black");
-        fireImage = jpapplication.loadImage("fire");
-        longKeyboardImage = jpapplication.loadImage("keyboard_long");
-        nullImage = jpapplication.loadImage("null");
+        noteImage = SkinImageLoadUtil.loadImage(jpapplication, "white_note_hd");
+        blackNoteImage = SkinImageLoadUtil.loadImage(jpapplication, "black_note_hd");
+        playNoteImage = SkinImageLoadUtil.loadImage(jpapplication, "play_note_hd");
+        practiceNoteImage = SkinImageLoadUtil.loadImage(jpapplication, "play_note_hd");
+        whiteKeyRightImage = SkinImageLoadUtil.loadImage(jpapplication, "white_r");
+        whiteKeyMiddleImage = SkinImageLoadUtil.loadImage(jpapplication, "white_m");
+        whiteKeyLeftImage = SkinImageLoadUtil.loadImage(jpapplication, "white_l");
+        blackKeyImage = SkinImageLoadUtil.loadImage(jpapplication, "black");
+        fireImage = SkinImageLoadUtil.loadImage(jpapplication, "fire");
+        longKeyboardImage = SkinImageLoadUtil.loadImage(jpapplication, "keyboard_long");
+        nullImage = SkinImageLoadUtil.loadImage(jpapplication, "null");
         switch (jpapplication.getSetting().getRoughLine()) {
             case 1:
                 roughLineImage = nullImage;
                 break;
             case 2:
-                roughLineImage = jpapplication.loadImage("rough_line1");
+                roughLineImage = SkinImageLoadUtil.loadImage(jpapplication, "rough_line1");
                 break;
             case 3:
-                roughLineImage = jpapplication.loadImage("rough_line");
+                roughLineImage = SkinImageLoadUtil.loadImage(jpapplication, "rough_line");
                 break;
         }
-        progressBarImage = jpapplication.loadImage("progress_bar");
-        progressBarBaseImage = jpapplication.loadImage("progress_bar_base");
+        progressBarImage = SkinImageLoadUtil.loadImage(jpapplication, "progress_bar");
+        progressBarBaseImage = SkinImageLoadUtil.loadImage(jpapplication, "progress_bar_base");
         Bitmap bitmap = noteImage;
         float noteSize = jpapplication.getSetting().getNoteSize();
         matrix.postScale(noteSize, noteSize);

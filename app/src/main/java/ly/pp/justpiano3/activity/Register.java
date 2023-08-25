@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.RegisterTask;
@@ -79,7 +80,7 @@ public class Register extends Activity implements OnClickListener {
         super.onCreate(bundle);
         setContentView(R.layout.register);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         sex = "";
         account = "";
         kitiName = "";

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -125,7 +126,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.showtopinfo);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         f4989e = findViewById(R.id.ol_top_list);

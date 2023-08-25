@@ -2,21 +2,19 @@ package ly.pp.justpiano3.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.RectF;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import androidx.annotation.NonNull;
 import lombok.Getter;
 import lombok.Setter;
 import ly.pp.justpiano3.entity.WaterfallNote;
 import ly.pp.justpiano3.thread.WaterfallDownNotesThread;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
-import java.io.IOException;
-
-public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback {
+/**
+ * 瀑布流绘制view
+ */
+public class WaterfallView extends SurfaceView {
 
     /**
      * 瀑布的宽度占键盘黑键宽度的百分比
@@ -30,14 +28,10 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
     public static final int MAX_INTERVAL_TIME = 2000;
 
     /**
-     * 背景、进度条
+     * 进度条
      */
     @Getter
-    private Bitmap backgroundImage;
-    @Getter
-    RectF backgroundRectF;
-    @Getter
-    private Bitmap barImage;
+    private final Bitmap barImage;
 
     /**
      * 绘制音块瀑布流内容
@@ -83,10 +77,8 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
 
     public WaterfallView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        getHolder().addCallback(this);
         getHolder().setKeepScreenOn(true);
-        backgroundImage = loadImage(context, "background_hd");
-        barImage = loadImage(context, "bar");
+        barImage = SkinImageLoadUtil.loadImage(context, "bar");
     }
 
     /**
@@ -118,49 +110,5 @@ public class WaterfallView extends SurfaceView implements SurfaceHolder.Callback
                 : rectF.width() * KeyboardModeView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR;
         // 建立新的坐标，返回
         return new RectF(rectF.centerX() - waterfallWidth / 2, rectF.top, rectF.centerX() + waterfallWidth / 2, rectF.bottom);
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
-    }
-
-    @Override
-    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-        // do nothing
-    }
-
-    @Override
-    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-        stopPlay();
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        this.backgroundRectF = new RectF(getLeft(), getTop(), getLeft() + w, getTop() + h);
-    }
-
-    private Bitmap loadImage(Context context, String str) {
-        Bitmap bitmap = null;
-        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
-            try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
-            } catch (Exception e) {
-                try {
-                    return BitmapFactory.decodeStream(getResources().getAssets().open("drawable/" + str + ".png"));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-        if (bitmap != null) {
-            return bitmap;
-        }
-        try {
-            return BitmapFactory.decodeStream(getResources().getAssets().open("drawable/" + str + ".png"));
-        } catch (IOException e2) {
-            e2.printStackTrace();
-            return null;
-        }
     }
 }

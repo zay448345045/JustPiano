@@ -30,6 +30,7 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -518,7 +519,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
         jpApplication.loadSettings(true);
         setContentView(R.layout.olplayhallroom);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);

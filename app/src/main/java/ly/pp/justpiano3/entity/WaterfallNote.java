@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.entity;
 
-import android.graphics.RectF;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

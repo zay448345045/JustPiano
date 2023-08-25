@@ -19,6 +19,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.MidiConstants;
@@ -770,7 +771,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         jpapplication.getHashmap().clear();
         connectionService = jpapplication.getConnectionService();
         setContentView(R.layout.olplaykeyboardroom);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         roomTitle = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");

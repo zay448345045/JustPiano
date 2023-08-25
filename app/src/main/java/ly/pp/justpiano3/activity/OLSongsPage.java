@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
 public class OLSongsPage extends Activity implements OnClickListener {
 
@@ -79,7 +80,7 @@ public class OLSongsPage extends Activity implements OnClickListener {
         JPApplication jpApplication = (JPApplication) getApplication();
         jpApplication.loadSettings(true);
         setContentView(R.layout.ol_songs_page);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         Button f4544b = findViewById(R.id.ol_melodyList_b);
         f4544b.setOnClickListener(this);

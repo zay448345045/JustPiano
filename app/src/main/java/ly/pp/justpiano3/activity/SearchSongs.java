@@ -21,6 +21,7 @@ import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -169,7 +170,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         jpapplication = (JPApplication) getApplication();
         headType = getIntent().getExtras().getInt("head");
         setContentView(R.layout.searchsongs);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutinflater = LayoutInflater.from(this);
         keywords = findViewById(R.id.ol_keywords);
         Button f4957l = findViewById(R.id.ol_search_b);

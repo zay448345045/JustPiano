@@ -14,6 +14,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
 import ly.pp.justpiano3.task.ShowSongsInfoTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,7 +127,7 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
         head = extras.getString("head");
         keywords = extras.getString("keywords");
         setContentView(R.layout.showtopinfo);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
         TextView f4974j = findViewById(R.id.ol_top_title);
         Button f4976l = findViewById(R.id.ol_top_before);

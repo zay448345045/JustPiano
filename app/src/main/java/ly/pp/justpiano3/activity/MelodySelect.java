@@ -30,6 +30,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.wrapper.JustPianoCursorWrapper;
@@ -212,7 +213,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+            SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
 
@@ -296,7 +297,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 }
                 return false;
             });
-            jpapplication.setBackGround(this, "ground", linearLayout);
+            SkinImageLoadUtil.setBackGround(this, "ground", linearLayout);
             sortButton = findViewById(R.id.list_sort_b);
             sortButton.setOnClickListener(this);
             ListView f4245a = findViewById(R.id.f_list);

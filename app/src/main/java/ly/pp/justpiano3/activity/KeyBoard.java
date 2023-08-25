@@ -21,6 +21,7 @@ import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.KeyboardModeView;
@@ -345,7 +346,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+            SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
             keyboardMode1View.changeImage(this);
             keyboardMode2View.changeImage(this);
         }

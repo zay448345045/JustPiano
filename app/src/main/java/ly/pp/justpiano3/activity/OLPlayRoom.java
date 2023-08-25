@@ -23,6 +23,7 @@ import android.widget.TabHost.TabSpec;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -951,7 +952,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         jpapplication.getHashmap().clear();
         connectionService = jpapplication.getConnectionService();
         setContentView(R.layout.olplayroom);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");

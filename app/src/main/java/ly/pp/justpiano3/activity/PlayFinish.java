@@ -16,6 +16,7 @@ import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.task.PlayFinishTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.util.Date;
@@ -194,7 +195,7 @@ public class PlayFinish extends Activity implements OnClickListener {
                 break;
         }
         setContentView(R.layout.finish);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         finishButton = findViewById(R.id.ok);
         finishButton.setOnClickListener(this);
         retryButton = findViewById(R.id.retry);

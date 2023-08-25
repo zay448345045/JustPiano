@@ -19,6 +19,7 @@ import ly.pp.justpiano3.listener.SkinDownloadClick;
 import ly.pp.justpiano3.task.SkinDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -199,7 +200,7 @@ public class SkinDownload extends Activity implements Callback {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "皮肤设置成功!", Toast.LENGTH_SHORT).show();
-                    jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+                    SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
                     break;
             }
         }
@@ -225,7 +226,7 @@ public class SkinDownload extends Activity implements Callback {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.skin_list);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);
