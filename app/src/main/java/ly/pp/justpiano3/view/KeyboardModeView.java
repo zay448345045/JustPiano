@@ -287,11 +287,8 @@ public class KeyboardModeView extends View {
         int pointerIndex = event.getActionIndex();
         int id = event.getPointerId(pointerIndex);
         // Get the pointer's current position
-        float x = event.getX(pointerIndex);
-        float y = event.getY(pointerIndex);
-        // Some devices can return negative x or y, which can cause an array exception.
-        x = Math.max(x, 0.0f);
-        y = Math.max(y, 0.0f);
+        float x = Math.max(event.getX(pointerIndex), 0.0f);
+        float y = Math.max(event.getY(pointerIndex), 0.0f);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
@@ -301,10 +298,8 @@ public class KeyboardModeView extends View {
                 int pointerCount = event.getPointerCount();
                 for (int i = 0; i < pointerCount; i++) {
                     id = event.getPointerId(i);
-                    x = event.getX(i);
-                    y = event.getY(i);
-                    x = Math.max(x, 0.0f);
-                    y = Math.max(y, 0.0f);
+                    x = Math.max(event.getX(i), 0.0f);
+                    y = Math.max(event.getY(i), 0.0f);
                     onFingerMove(id, x, y);
                 }
                 break;

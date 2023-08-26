@@ -3,11 +3,14 @@ package ly.pp.justpiano3.view;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import lombok.Getter;
 import lombok.Setter;
 import ly.pp.justpiano3.entity.WaterfallNote;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+
+import java.util.Arrays;
 
 /**
  * 瀑布流绘制view
@@ -17,13 +20,13 @@ public class WaterfallView extends SurfaceView {
     /**
      * 瀑布的宽度占键盘黑键宽度的百分比
      */
-    private static final float BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.85f;
+    private static final float BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f;
 
     /**
      * 瀑布流音符最短和最长的持续时间
      */
-    public static final int MIN_INTERVAL_TIME = 150;
-    public static final int MAX_INTERVAL_TIME = 2000;
+    public static final int MIN_INTERVAL_TIME = 200;
+    public static final int MAX_INTERVAL_TIME = 1500;
 
     /**
      * 进度条
@@ -35,7 +38,7 @@ public class WaterfallView extends SurfaceView {
      * 进度条绘制坐标范围
      */
     private final RectF progressBarRect = new RectF();
-    private final RectF progressBarBaseRect = new RectF();
+    private RectF progressBarBaseRect;
 
     /**
      * 绘制音块瀑布流内容
@@ -50,14 +53,28 @@ public class WaterfallView extends SurfaceView {
     /**
      * 瀑布流音块当前状态，不对外暴露
      */
-    @Getter
-    private int[] waterfallNoteStatus;
+    private WaterfallNoteStatusEnum[] waterfallNoteStatus;
+
+    /**
+     * 是否在滑动这个view
+     */
+    private boolean isScrolling;
+
+    /**
+     * 记录按下view时的横坐标
+     */
+    private float startX;
+
+    /**
+     * 瀑布流音块当前状态枚举：初始化状态、正在演奏状态、演奏结束状态
+     */
+    private enum WaterfallNoteStatusEnum {
+        INIT, PLAYING, FINISH;
+    }
 
     /**
      * 监听器
      */
-    @Getter
-    @Setter
     private NoteFallListener noteFallListener;
 
     /**
@@ -96,6 +113,13 @@ public class WaterfallView extends SurfaceView {
         void onNoteLeave(WaterfallNote waterfallNote);
     }
 
+    /**
+     * 设置瀑布流监听器
+     */
+    public void setNoteFallListener(NoteFallListener noteFallListener) {
+        this.noteFallListener = noteFallListener;
+    }
+
     public WaterfallView(Context context) {
         this(context, null);
     }
@@ -116,9 +140,15 @@ public class WaterfallView extends SurfaceView {
      */
     public void startPlay(WaterfallNote[] waterfallNotes) {
         stopPlay();
+        // 初始化音符相关数据、状态
         this.waterfallNotes = waterfallNotes;
-        this.totalProgress = calculateTotalProgress(waterfallNotes);
-        this.waterfallNoteStatus = new int[waterfallNotes.length];
+        // 曲谱总进度 = 曲谱最后一个音符的结束时间 + 屏幕的高度，因为要等最后一个音符绘制完的时间才是曲谱最终结束的时间
+        this.totalProgress = calculateNoteMaxEndTime(waterfallNotes) + getHeight();
+        this.waterfallNoteStatus = new WaterfallNoteStatusEnum[waterfallNotes.length];
+        Arrays.fill(this.waterfallNoteStatus, WaterfallNoteStatusEnum.INIT);
+        // 初始化进度条绘制坐标
+        progressBarBaseRect = new RectF(0, 0, getWidth(), progressBarBaseImage.getHeight());
+        // 开启绘制线程
         waterfallDownNotesThread = new WaterfallDownNotesThread(this);
         waterfallDownNotesThread.start();
     }
@@ -126,7 +156,7 @@ public class WaterfallView extends SurfaceView {
     /**
      * 计算曲谱总进度
      */
-    private int calculateTotalProgress(WaterfallNote[] waterfallNotes) {
+    private int calculateNoteMaxEndTime(WaterfallNote[] waterfallNotes) {
         int max = 0;
         for (WaterfallNote waterfallNote : waterfallNotes) {
             max = Math.max(waterfallNote.getEndTime(), max);
@@ -178,25 +208,18 @@ public class WaterfallView extends SurfaceView {
      */
     public int getPlayProgress() {
         if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
-            return waterfallDownNotesThread.getProgress();
+            return waterfallDownNotesThread.progress;
         }
         return 0;
     }
 
     /**
-     * 获取曲谱总时长
-     */
-    public int getTotalProgress() {
-        return totalProgress;
-    }
-
-    /**
-     * 设置当前播放进度，单位毫秒
+     * 增加当前播放进度，单位毫秒，传负数时可以回退当前进度，可以理解为快进或者快退多少毫秒
      */
     public void setPlayProgress(int progress) {
         if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
             // 读取当前播放进度，更新偏移量即可，之后绘制时的时间会根据偏移量进行计算，后续就会在新的进度上继续绘制了
-            waterfallDownNotesThread.setProgressOffset(waterfallDownNotesThread.getProgressOffset() + waterfallDownNotesThread.getProgress() - progress);
+            waterfallDownNotesThread.setProgressOffset(getPlayProgress() - progress);
         }
     }
 
@@ -214,8 +237,70 @@ public class WaterfallView extends SurfaceView {
         return new RectF(rectF.centerX() - waterfallWidth / 2, rectF.top, rectF.centerX() + waterfallWidth / 2, rectF.bottom);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                // 有触摸按下view时，记录此时按下的坐标，便于后续手指滑动了多少坐标的计算
+                startX = Math.max(event.getX(), 0.0f);
+                // 单独触摸按下view时，触发暂停/继续播放操作
+                if (isPlaying()) {
+                    pausePlay();
+                } else {
+                    resumePlay();
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // 有检测到在view上滑动手指，置正在滑动标记为true，正在滑动时将停止进行"音符到达屏幕底部或离开屏幕时"的监听
+                isScrolling = true;
+                // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
+                pausePlay();
+                // 根据目前手指滑动的X坐标和记录的刚按下view时的X坐标的差（就是横坐标的偏移量）占总宽度的比例，来按比例调整歌曲的进度
+                setPlayProgress((int) (getPlayProgress() + (Math.max(event.getX(), 0.0f) - startX) / getWidth() * totalProgress));
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (isScrolling) {
+                    // 重新设置了进度后，要重置所有音符的状态（新进度之前的音符为完成状态，新进度之后的音符为初始化状态等）
+                    updateNoteStatusByProgress(getPlayProgress());
+                    // 重置状态后，需要手动触发来把目前键盘上所有按下的音符进行清除，这里进行所有音符离开屏幕的监听调用
+                    // 可以这么说，如果改变了进度之后不清除键盘上留有的按下的音符，改变进度继续播放后，多余的音符就一直在键盘上保持按下状态了
+                    if (noteFallListener != null) {
+                        for (WaterfallNote waterfallNote : waterfallNotes) {
+                            noteFallListener.onNoteLeave(waterfallNote);
+                        }
+                    }
+                    // 一切设置进度的操作都准备完成后，触发继续播放
+                    resumePlay();
+                }
+                // 如果只是通过点按（没有滑动）导致触发的手指抬起操作，则不做任何操作
+                // 此时统一记录正在滑动的标记为false
+                isScrolling = false;
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
     /**
-     * 绘制线程
+     * 根据当前的进度，重新设置音符的状态
+     */
+    private void updateNoteStatusByProgress(int progress) {
+        for (int i = 0; i < waterfallNotes.length; i++) {
+            if (waterfallNotes[i].getStartTime() + getHeight() < progress) {
+                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH;
+            } else if (waterfallNotes[i].getEndTime() + getHeight() < progress) {
+                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
+            } else {
+                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.INIT;
+            }
+        }
+    }
+
+    /**
+     * 瀑布流双缓冲绘制线程
      */
     private static final class WaterfallDownNotesThread extends Thread {
 
@@ -245,7 +330,14 @@ public class WaterfallView extends SurfaceView {
         private int progress;
 
         /**
-         * 播放进度的偏移量，用于暂停后继续时，或手动调节进度时的进度更新，
+         * 播放进度的偏移量，用于暂停后继续时的进度更新
+         */
+        @Getter
+        @Setter
+        private int progressPauseOffset;
+
+        /**
+         * 播放进度的偏移量，用于手动调节进度时的进度更新
          */
         @Getter
         @Setter
@@ -256,6 +348,9 @@ public class WaterfallView extends SurfaceView {
          */
         private final WaterfallView waterfallView;
 
+        /**
+         * 瀑布流绘制线程初始化
+         */
         public WaterfallDownNotesThread(WaterfallView waterfallView) {
             this.waterfallView = waterfallView;
             this.running = true;
@@ -270,26 +365,35 @@ public class WaterfallView extends SurfaceView {
             Paint leftHandPaint = new Paint();
             rightHandPaint.setColor(0x7fffcc00);
             leftHandPaint.setColor(0x7f66FFFF);
+            // 循环绘制，直到外部有触发终止绘制
             while (running) {
                 // 暂停线程，控制最高绘制帧率
                 sleepThreadFrameTime();
                 // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
-                // 计算过程中，减掉进度偏移量，进度偏移量可能为用户手动拖动进度时设置的，也可能为暂停播放后继续播放所带来的时间差
-                int playIntervalTime = (int) (System.currentTimeMillis() - startPlayTime - progressOffset);
+                // 计算过程中，减掉暂停播放后继续播放所带来的时间差
+                int playIntervalTime = (int) (System.currentTimeMillis() - startPlayTime - progressPauseOffset);
                 // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
                 if (pause && pauseProgress == null) {
                     pauseProgress = playIntervalTime;
                 } else if (!pause && pauseProgress != null) {
                     // 更新偏移量，使之后继续播放时能按照刚暂停时的进度来继续
-                    progressOffset += playIntervalTime - pauseProgress;
+                    // updatePauseOffset可以理解为本次暂停过程一共暂停了多少毫秒，所以需要加偏移量补偿掉这些毫秒
+                    // 由于暂停的时候会人工拖动进度条操纵进度的修改，所以需要把人工操纵进度的结果progressOffset也算上
+                    // 都处理结束之后再清零progressOffset
+                    int updatePauseOffset = playIntervalTime - pauseProgress + progressOffset;
+                    progressPauseOffset += updatePauseOffset;
                     // 接下来当前的绘制帧，调整playIntervalTime，也减掉偏移量的改变值，使当前帧的绘制顺滑起来
-                    playIntervalTime -= playIntervalTime - pauseProgress;
+                    playIntervalTime -= updatePauseOffset;
+                    // 清零progressOffset，如果不清零，下次拖动修改进度的时候又要变化progressOffset，会导致和前一次progressOffset的变化冲突
+                    progressOffset = 0;
+                    // 清除暂停时保存的当时的进度值
                     pauseProgress = null;
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算
-                progress = pause ? pauseProgress : playIntervalTime;
+                // 要减掉用户手动拖动进度时设置的进度偏移时间，因为用户在暂停播放时会操纵进度的修改
+                progress = (pause ? pauseProgress : playIntervalTime) - progressOffset;
                 // 执行绘制，在锁canvas期间，尽可能执行最少的代码逻辑操作
-                doDrawWaterfallNotes(rightHandPaint, leftHandPaint);
+                doDrawWaterfall(rightHandPaint, leftHandPaint);
                 // 确定是否有音块到达了屏幕底部或完全移出了屏幕，如果有，调用监听
                 handleWaterfallNoteListener();
             }
@@ -310,9 +414,9 @@ public class WaterfallView extends SurfaceView {
         }
 
         /**
-         * 执行绘制可见的瀑布流音块
+         * 执行绘制瀑布流
          */
-        private void doDrawWaterfallNotes(Paint rightHandPaint, Paint leftHandPaint) {
+        private void doDrawWaterfall(Paint rightHandPaint, Paint leftHandPaint) {
             Canvas canvas = null;
             try {
                 // 获取绘制canvas
@@ -323,18 +427,12 @@ public class WaterfallView extends SurfaceView {
                     // 进度条绘制
                     drawProgressBar(canvas);
                     // 音块绘制
-                    for (WaterfallNote waterfallNote : waterfallView.waterfallNotes) {
-                        // 瀑布流音块在view内对用户可见的，才绘制
-                        if (noteIsVisible(waterfallNote)) {
-                            canvas.drawRect(waterfallNote.getLeft(), progress - waterfallNote.getEndTime(),
-                                    waterfallNote.getRight(), progress - waterfallNote.getStartTime(),
-                                    waterfallNote.isLeftHand() ? leftHandPaint : rightHandPaint);
-                        }
-                    }
+                    drawNotes(rightHandPaint, leftHandPaint, canvas);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
+                // 解锁画布
                 if (canvas != null) {
                     waterfallView.getHolder().unlockCanvasAndPost(canvas);
                 }
@@ -345,11 +443,27 @@ public class WaterfallView extends SurfaceView {
          * 绘制进度条
          */
         private void drawProgressBar(Canvas canvas) {
-            waterfallView.progressBarBaseRect.set(0, 0, waterfallView.getWidth(), waterfallView.progressBarBaseImage.getHeight());
+            // 绘制进度条背景（基底）图，它包含完整的一个进度条轮廓
             canvas.drawBitmap(waterfallView.progressBarBaseImage, null, waterfallView.progressBarBaseRect, null);
-            waterfallView.progressBarRect.set(0, 0, (float) waterfallView.getWidth() * progress / waterfallView.getTotalProgress(),
+            // 修改当前进度条的绘制坐标矩形位置，注意矩形的右侧坐标就是进度条百分比进度值 * view的宽度
+            waterfallView.progressBarRect.set(0, 0, (float) progress / waterfallView.totalProgress * waterfallView.getWidth(),
                     waterfallView.progressBarBaseImage.getHeight());
+            // 绘制进度条图片
             canvas.drawBitmap(waterfallView.progressBarImage, null, waterfallView.progressBarRect, null);
+        }
+
+        /**
+         * 绘制所有应该绘制的音块
+         */
+        private void drawNotes(Paint rightHandPaint, Paint leftHandPaint, Canvas canvas) {
+            for (WaterfallNote waterfallNote : waterfallView.waterfallNotes) {
+                // 瀑布流音块当前在view内对用户可见的，才绘制
+                if (noteIsVisible(waterfallNote)) {
+                    canvas.drawRect(waterfallNote.getLeft(), progress - waterfallNote.getEndTime(),
+                            waterfallNote.getRight(), progress - waterfallNote.getStartTime(),
+                            waterfallNote.isLeftHand() ? leftHandPaint : rightHandPaint);
+                }
+            }
         }
 
         /**
@@ -365,19 +479,21 @@ public class WaterfallView extends SurfaceView {
          * 确定是否有音块到达了屏幕底部或完全移出了屏幕，如果有，调用监听
          */
         private void handleWaterfallNoteListener() {
-            WaterfallView.NoteFallListener noteFallListener = waterfallView.getNoteFallListener();
-            if (noteFallListener == null) {
+            // 如果没有监听器，或者目前view处于拖动来改变进度的情形，则不做任何监听操作
+            if (waterfallView.noteFallListener == null || waterfallView.isScrolling) {
                 return;
             }
-            int[] waterfallNoteStatus = waterfallView.getWaterfallNoteStatus();
             for (int i = 0; i < waterfallView.waterfallNotes.length; i++) {
+                WaterfallNoteStatusEnum currentNoteStatus = waterfallView.waterfallNoteStatus[i];
                 // 音块刚下落到下边界时，触发琴键按下效果，音块刚离开时，触发琴键抬起效果
-                if (waterfallNoteStatus[i] == 0 && progress - waterfallView.waterfallNotes[i].getStartTime() > waterfallView.getHeight()) {
-                    noteFallListener.onNoteFallDown(waterfallView.waterfallNotes[i]);
-                    waterfallView.getWaterfallNoteStatus()[i] = 1;
-                } else if (waterfallNoteStatus[i] == 1 && progress - waterfallView.waterfallNotes[i].getEndTime() > waterfallView.getHeight()) {
-                    noteFallListener.onNoteLeave(waterfallView.waterfallNotes[i]);
-                    waterfallView.getWaterfallNoteStatus()[i] = 2;
+                if (currentNoteStatus == WaterfallNoteStatusEnum.INIT
+                        && progress - waterfallView.waterfallNotes[i].getStartTime() > waterfallView.getHeight()) {
+                    waterfallView.noteFallListener.onNoteFallDown(waterfallView.waterfallNotes[i]);
+                    waterfallView.waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
+                } else if ((currentNoteStatus == WaterfallNoteStatusEnum.INIT || currentNoteStatus == WaterfallNoteStatusEnum.PLAYING)
+                        && progress - waterfallView.waterfallNotes[i].getEndTime() > waterfallView.getHeight()) {
+                    waterfallView.noteFallListener.onNoteLeave(waterfallView.waterfallNotes[i]);
+                    waterfallView.waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH;
                 }
             }
         }

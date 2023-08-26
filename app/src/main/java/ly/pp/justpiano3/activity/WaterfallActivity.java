@@ -55,15 +55,6 @@ public class WaterfallActivity extends Activity {
                 keyboardModeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-
-        // 设置点击瀑布流区域时，暂停/继续播放
-        waterfallView.setOnClickListener(v -> {
-            if (waterfallView.isPlaying()) {
-                waterfallView.pausePlay();
-            } else {
-                waterfallView.resumePlay();
-            }
-        });
     }
 
     @Override
