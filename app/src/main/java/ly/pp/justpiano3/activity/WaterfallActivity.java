@@ -94,6 +94,7 @@ public class WaterfallActivity extends Activity {
     protected void onDestroy() {
         if (waterfallView.isPlaying()) {
             waterfallView.stopPlay();
+            waterfallView.destroy();
         }
         waterfallView = null;
         super.onDestroy();

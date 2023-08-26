@@ -50,17 +50,8 @@ public class WaterfallNote {
     private int volume;
 
     /**
-     * 状态，内部使用，禁止随意修改
+     * 音符持续时间计算
      */
-    private WaterfallNoteStatusEnum status = WaterfallNoteStatusEnum.INIT;
-
-    /**
-     * 状态枚举：初始化状态、正在演奏状态、演奏结束状态
-     */
-    public enum WaterfallNoteStatusEnum {
-        INIT, PLAYING, LEAVE;
-    }
-
     public int interval() {
         return endTime - startTime;
     }
