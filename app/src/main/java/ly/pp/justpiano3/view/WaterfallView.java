@@ -214,7 +214,7 @@ public class WaterfallView extends SurfaceView {
     }
 
     /**
-     * 增加当前播放进度，单位毫秒，传负数时可以回退当前进度，可以理解为快进或者快退多少毫秒
+     * 设置当前播放进度，单位毫秒
      */
     public void setPlayProgress(int progress) {
         if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning()) {
@@ -253,11 +253,15 @@ public class WaterfallView extends SurfaceView {
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 有检测到在view上滑动手指，置正在滑动标记为true，正在滑动时将停止进行"音符到达屏幕底部或离开屏幕时"的监听
-                isScrolling = true;
-                // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
-                pausePlay();
-                // 根据目前手指滑动的X坐标和记录的刚按下view时的X坐标的差（就是横坐标的偏移量）占总宽度的比例，来按比例调整歌曲的进度
-                setPlayProgress((int) (getPlayProgress() + (Math.max(event.getX(), 0.0f) - startX) / getWidth() * totalProgress));
+                // 检测标准为，手指的横坐标偏离原来位置10像素，此阈值待摸索
+                if (isScrolling || Math.abs(Math.max(event.getX(), 0.0f) - startX) > 10) {
+                    isScrolling = true;
+                    // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
+                    pausePlay();
+                    // 根据目前手指滑动的X坐标和记录的刚按下view时的X坐标的差（就是横坐标的偏移量）占总宽度的比例，来按比例调整歌曲的进度
+                    int calculatedProgress = (int) (getPlayProgress() + (Math.max(event.getX(), 0.0f) - startX) / getWidth() * totalProgress);
+                    setPlayProgress(calculatedProgress);
+                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -273,10 +277,10 @@ public class WaterfallView extends SurfaceView {
                     }
                     // 一切设置进度的操作都准备完成后，触发继续播放
                     resumePlay();
+                    // 清空正在滑动的标记为false
+                    isScrolling = false;
                 }
                 // 如果只是通过点按（没有滑动）导致触发的手指抬起操作，则不做任何操作
-                // 此时统一记录正在滑动的标记为false
-                isScrolling = false;
                 break;
             default:
                 break;
