@@ -187,7 +187,7 @@ public class WaterfallActivity extends Activity {
                 currentWaterfallNote.setEndTime(currentWaterfallNote.getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
             }
             currentWaterfallNote.setStartTime((int) (currentWaterfallNote.getStartTime() / jpApplication.getSetting().getTempSpeed()));
-            currentWaterfallNote.setEndTime((int) (currentWaterfallNote.getEndTime( jpApplication.getSetting().getTempSpeed()));
+            currentWaterfallNote.setEndTime((int) (currentWaterfallNote.getEndTime() / jpApplication.getSetting().getTempSpeed()));
         }
         return waterfallNoteList.toArray(new WaterfallNote[0]);
     }
