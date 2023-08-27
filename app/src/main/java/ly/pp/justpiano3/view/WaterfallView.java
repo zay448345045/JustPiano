@@ -115,7 +115,7 @@ public class WaterfallView extends SurfaceView {
         this.waterfallNotes = waterfallNotes;
         this.waterfallNoteStatus = new WaterfallNoteStatusEnum[waterfallNotes.length];
         Arrays.fill(this.waterfallNoteStatus, WaterfallNoteStatusEnum.INIT);
-        // 计算曲谱总进度 = 曲谱最后一个音符的结束时间 + 屏幕的高度，因为要等最后一个音符绘制完的时间才是曲谱最终结束的时间
+        // 计算曲谱总进度 = 曲谱总时长 + view的高度，因为要等最后一个音符绘制完的时间才是曲谱最终结束的时间
         this.totalProgress = calculateNoteMaxEndTime(waterfallNotes) + getHeight();
         // 初始化进度条背景图（基底）的绘制坐标
         progressBarBaseRect = new RectF(0, 0, getWidth(), progressBarBaseImage.getHeight());
@@ -201,16 +201,17 @@ public class WaterfallView extends SurfaceView {
      * 销毁view，释放资源
      */
     public void destroy() {
+        // 停止播放
         stopPlay();
+        // 释放图片资源
         if (progressBarImage != null) {
             progressBarImage.recycle();
+            progressBarImage = null;
         }
-        progressBarImage = null;
-
         if (progressBarBaseImage != null) {
             progressBarBaseImage.recycle();
+            progressBarBaseImage = null;
         }
-        progressBarBaseImage = null;
     }
 
     @Override
@@ -224,7 +225,7 @@ public class WaterfallView extends SurfaceView {
                 pauseOrResumePlay();
                 break;
             case MotionEvent.ACTION_MOVE:
-                // 检测是否为滑动的标准为，手指的横坐标偏离原来位置10像素，因真机按压时仅仅是普通点击，滑动的偏移像素很少时也会执行ACTION_MOVE事件
+                // 检测是否为滑动：手指的横坐标偏离原来位置10像素，因按压时仅仅是普通点击，滑动的偏移像素很少时也会执行ACTION_MOVE事件
                 if (isScrolling || Math.abs(Math.max(event.getX(), 0.0f) - lastX) > 10) {
                     // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
                     pausePlay();
@@ -237,7 +238,7 @@ public class WaterfallView extends SurfaceView {
                     // 更新此时滑动后的手指坐标，后续计算手指滑动了多少坐标
                     lastX = Math.max(event.getX(), 0.0f);
                     // 有检测到在view上滑动手指，置正在滑动标记为true
-                    // 正在滑动标记为true时将停止进行瀑布流监听，避免滑动时播放大量声音和键盘效果，参考方法WaterfallDownNotesThread.handleWaterfallNoteListener
+                    // 正在滑动标记为true时会停止进行瀑布流监听，避免滑动时播放大量声音和键盘效果，参考方法WaterfallDownNotesThread.handleWaterfallNoteListener
                     isScrolling = true;
                 }
                 break;
@@ -330,16 +331,15 @@ public class WaterfallView extends SurfaceView {
         public void run() {
             // 记录绘制的起始时间
             long startPlayTime = System.currentTimeMillis();
-            // TODO Paint颜色之后看看不这么写死在这儿，绘制的美观性还需优化
+            // 音块边界线部分Paint
             Paint borderPaint = new Paint();
-            // 透明边框线，防止绘制后看起来相同音高的音符连续出现时，粘在一起
             borderPaint.setAlpha(255);
             borderPaint.setStyle(Paint.Style.STROKE);
             borderPaint.setStrokeWidth(15);
-
+            // 音块实心部分Paint
             Paint notePaint = new Paint();
             notePaint.setStyle(Paint.Style.FILL);
-            notePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+//            notePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
                 // 暂停线程，控制最高绘制帧率
@@ -374,7 +374,7 @@ public class WaterfallView extends SurfaceView {
                 }
                 // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
                 doDrawWaterfall(borderPaint, notePaint);
-                // 确定是否有音块到达了屏幕底部或完全移出了屏幕，如果有，调用监听
+                // 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
                 handleWaterfallNoteListener();
             }
         }
@@ -458,13 +458,13 @@ public class WaterfallView extends SurfaceView {
          * 音符是否在view中对用户可见
          */
         private boolean noteIsVisible(WaterfallNote waterfallNote) {
-            // 进度（毫秒数） - 音符开始时间小于0的时候，瀑布流还是在屏幕上未开始出现的状态，这种情况下过滤掉，不绘制
-            // 结束时间同理，即是说，在屏幕内的才绘制
+            // 进度（毫秒数） - 音符开始时间小于0的时候，瀑布流还是在view上未开始出现的状态，这种情况下过滤掉，不绘制
+            // 结束时间同理，即是说，在view内的才绘制
             return progress - waterfallNote.getStartTime() > 0 && (progress - waterfallNote.getEndTime()) < getHeight();
         }
 
         /**
-         * 确定是否有音块到达了屏幕底部或完全移出了屏幕，如果有，调用监听
+         * 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
          */
         private void handleWaterfallNoteListener() {
             // 如果没有监听器，或者目前view处于拖动来改变进度的情形，则不做任何监听操作
@@ -472,12 +472,13 @@ public class WaterfallView extends SurfaceView {
                 return;
             }
             for (int i = 0; i < waterfallNotes.length; i++) {
-                // 音块刚下落到下边界时，触发琴键按下效果，音块刚离开时，触发琴键抬起效果
                 if ((waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT || waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING)
                         && progress - waterfallNotes[i].getEndTime() > getHeight()) {
+                    // 判断到音块首次完全离开view时，触发琴键抬起效果
                     noteFallListener.onNoteLeave(waterfallNotes[i]);
                     waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH;
                 } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].getStartTime() > getHeight()) {
+                    // 判断到音块首次下落到view的下边界时，触发琴键按下效果
                     noteFallListener.onNoteFallDown(waterfallNotes[i]);
                     waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
                 }

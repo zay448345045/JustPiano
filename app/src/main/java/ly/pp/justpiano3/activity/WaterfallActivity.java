@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
-import android.app.Application;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
@@ -15,6 +14,7 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.KeyboardModeView;
 import ly.pp.justpiano3.view.WaterfallView;
 import ly.pp.justpiano3.view.play.PmFileParser;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,14 +41,8 @@ public class WaterfallActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.waterfall);
-        PmFileParser pmFileParser;
-        String songPath = getIntent().getExtras().getString("songPath");
-        if (StringUtil.isNullOrEmpty(songPath)) {
-            byte[] songBytes = getIntent().getExtras().getByteArray("songBytes");
-            pmFileParser = new PmFileParser(songBytes);
-        } else {
-            pmFileParser = new PmFileParser(this, songPath);
-        }
+        // 从extras中的数据确定曲目，解析pm文件
+        PmFileParser pmFileParser = parsePmFileFromIntentExtras();
         TextView songNameView = findViewById(R.id.waterfall_song_name);
         songNameView.setText(pmFileParser.getSongName());
         KeyboardModeView keyboardModeView = findViewById(R.id.waterfall_keyboard);
@@ -79,6 +73,19 @@ public class WaterfallActivity extends Activity {
                 keyboardModeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+    }
+
+    @NotNull
+    private PmFileParser parsePmFileFromIntentExtras() {
+        PmFileParser pmFileParser;
+        String songPath = getIntent().getExtras().getString("songPath");
+        if (StringUtil.isNullOrEmpty(songPath)) {
+            byte[] songBytes = getIntent().getExtras().getByteArray("songBytes");
+            pmFileParser = new PmFileParser(songBytes);
+        } else {
+            pmFileParser = new PmFileParser(this, songPath);
+        }
+        return pmFileParser;
     }
 
     @Override
