@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.WaterfallActivity;
-import ly.pp.justpiano3.adapter.LocalSongsAdapter;
 
 public final class PlayWaterfallClick implements OnClickListener {
     private final Context context;

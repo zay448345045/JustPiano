@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.OLMelodySongsPlayClick;
+import ly.pp.justpiano3.listener.PlayWaterfallClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
 import java.util.HashMap;
@@ -50,13 +49,13 @@ public final class OLMelodySelectAdapter2 extends BaseAdapter {
         }
         view.setKeepScreenOn(true);
         String trim = songsList.get(i).get("songName").toString().trim();
-        String l = (String) songsList.get(i).get("songID");
+        String songId = (String) songsList.get(i).get("songID");
         ImageButton imageButton = view.findViewById(R.id.ol_favor_b);
         imageButton.setImageResource(R.drawable.favor_1);
         imageButton.setOnClickListener(v -> {
             Toast.makeText(olMelodySelect.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(olMelodySelect, l, "F", olMelodySelect.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(olMelodySelect, songId, "F", olMelodySelect.jpapplication.getAccountName()).start();
         });
         TextView songName = view.findViewById(R.id.ol_s_n);
         songName.setText(trim);
@@ -86,7 +85,9 @@ public final class OLMelodySelectAdapter2 extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
         ((TextView) view.findViewById(R.id.ol_playcount)).setText("播放量:" + songsList.get(i).get("playCount"));
-        view.findViewById(R.id.ol_play_button).setOnClickListener(new OLMelodySongsPlayClick(this, trim, l, (Integer) songsList.get(i).get("topScore"), d));
+        view.findViewById(R.id.ol_play_button).setOnClickListener(new OLMelodySongsPlayClick(this, trim, songId, (Integer) songsList.get(i).get("topScore"), d));
+        ImageView waterFallImageView = view.findViewById(R.id.ol_play_waterfall);
+        waterFallImageView.setOnClickListener(new OLMelodySongsPlayClick(this, songId, new Intent().setClass(olMelodySelect, WaterfallActivity.class)));
         return view;
     }
 }

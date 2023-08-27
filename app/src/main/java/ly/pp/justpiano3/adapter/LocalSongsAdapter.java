@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;

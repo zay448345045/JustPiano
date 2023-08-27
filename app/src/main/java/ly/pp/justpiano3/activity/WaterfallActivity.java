@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import androidx.core.util.Pair;
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.WaterfallNote;
@@ -27,9 +28,8 @@ public class WaterfallActivity extends Activity {
     public static final float BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f;
 
     /**
-     * 瀑布流音符播放时的最短持续时间、播放时的最长的持续时间
+     * 瀑布流音符播放时的最长的持续时间
      */
-    public static final int NOTE_PLAY_MIN_INTERVAL_TIME = 200;
     public static final int NOTE_PLAY_MAX_INTERVAL_TIME = 1200;
 
     /**
@@ -41,8 +41,14 @@ public class WaterfallActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.waterfall);
+        PmFileParser pmFileParser;
         String songPath = getIntent().getExtras().getString("songPath");
-        PmFileParser pmFileParser = new PmFileParser(this, songPath);
+        if (StringUtil.isNullOrEmpty(songPath)) {
+            byte[] songBytes = getIntent().getExtras().getByteArray("songBytes");
+            pmFileParser = new PmFileParser(songBytes);
+        } else {
+            pmFileParser = new PmFileParser(this, songPath);
+        }
         TextView songNameView = findViewById(R.id.waterfall_song_name);
         songNameView.setText(pmFileParser.getSongName());
         KeyboardModeView keyboardModeView = findViewById(R.id.waterfall_keyboard);

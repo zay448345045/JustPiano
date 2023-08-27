@@ -15,10 +15,12 @@ import java.lang.ref.WeakReference;
 
 public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
+    private Intent intent;
     private String str = "";
 
-    public OLMelodySongsPlayTask(OLMelodySelect oLMelodySelect) {
+    public OLMelodySongsPlayTask(OLMelodySelect oLMelodySelect, Intent intent) {
         olMelodySelect = new WeakReference<>(oLMelodySelect);
+        this.intent = intent;
     }
 
     @Override
@@ -28,14 +30,12 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
             Toast.makeText(olMelodySelect.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent();
         intent.putExtra("head", 1);
         intent.putExtra("songBytes", OLMelodySelect.songBytes);
         intent.putExtra("songName", olMelodySelect.get().songName);
         intent.putExtra("songID", OLMelodySelect.songID);
         intent.putExtra("topScore", olMelodySelect.get().topScore);
         intent.putExtra("degree", olMelodySelect.get().degree);
-        intent.setClass(olMelodySelect.get(), PianoPlay.class);
         olMelodySelect.get().startActivity(intent);
         olMelodySelect.get().jpprogressBar.cancel();
     }

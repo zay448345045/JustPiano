@@ -24,10 +24,12 @@ public final class SearchSongsPlayTask {
     private String str = "";
     private final ExecutorService executorService;
     private Future<Void> future;
+    private final Intent intent;
 
-    public SearchSongsPlayTask(SearchSongs searchSongs) {
+    public SearchSongsPlayTask(SearchSongs searchSongs, Intent intent) {
         this.searchSongs = new WeakReference<>(searchSongs);
         executorService = Executors.newSingleThreadExecutor();
+        this.intent = intent;
     }
 
     public void execute() {
@@ -58,8 +60,6 @@ public final class SearchSongsPlayTask {
             handleResult();
             return null;
         });
-
-
     }
 
     public void cancel() {
@@ -76,14 +76,12 @@ public final class SearchSongsPlayTask {
                 return;
             }
             OLMelodySelect.songBytes = songBytes;
-            Intent intent = new Intent();
             intent.putExtra("head", 1);
             intent.putExtra("songBytes", songBytes);
             intent.putExtra("songName", searchSongs.get().f4949d);
             intent.putExtra("songID", searchSongs.get().songID);
             intent.putExtra("topScore", searchSongs.get().f4954i);
             intent.putExtra("degree", searchSongs.get().f4953h);
-            intent.setClass(searchSongs.get(), PianoPlay.class);
             searchSongs.get().startActivity(intent);
             searchSongs.get().jpprogressBar.cancel();
         });

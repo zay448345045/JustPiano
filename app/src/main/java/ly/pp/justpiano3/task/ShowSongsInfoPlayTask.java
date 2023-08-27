@@ -17,11 +17,13 @@ import java.lang.ref.WeakReference;
 
 public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
+    private final Intent intent;
     private byte[] songBytes = null;
     private String str = "";
 
-    public ShowSongsInfoPlayTask(ShowSongsInfo showSongsInfo) {
+    public ShowSongsInfoPlayTask(ShowSongsInfo showSongsInfo, Intent intent) {
         this.showSongsInfo = new WeakReference<>(showSongsInfo);
+        this.intent = intent;
     }
 
     @Override
@@ -51,7 +53,6 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
         return null;
     }
 
-
     @Override
     protected void onPostExecute(String str) {
         if (songBytes == null || songBytes.length <= 3) {
@@ -60,14 +61,12 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
             return;
         }
         OLMelodySelect.songBytes = songBytes;
-        Intent intent = new Intent();
         intent.putExtra("head", 1);
         intent.putExtra("songBytes", songBytes);
         intent.putExtra("songName", showSongsInfo.get().songName);
         intent.putExtra("songID", showSongsInfo.get().songID);
         intent.putExtra("topScore", showSongsInfo.get().score);
         intent.putExtra("degree", showSongsInfo.get().nandu);
-        intent.setClass(showSongsInfo.get(), PianoPlay.class);
         showSongsInfo.get().startActivity(intent);
         showSongsInfo.get().jpprogressBar.dismiss();
     }

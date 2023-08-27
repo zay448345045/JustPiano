@@ -405,7 +405,7 @@ public class WaterfallView extends SurfaceView {
                     // 清空画布，之后开始绘制
                     canvas.drawColor(Color.BLACK);
                     // 音块绘制
-                    drawNotes(borderPaint, notePaint, canvas);
+                    drawNotes(canvas, borderPaint, notePaint);
                     // 进度条绘制
                     drawProgressBar(canvas);
                 }
@@ -432,7 +432,7 @@ public class WaterfallView extends SurfaceView {
         /**
          * 绘制所有应该绘制的音块
          */
-        private void drawNotes(Paint borderPaint, Paint notePaint, Canvas canvas) {
+        private void drawNotes(Canvas canvas, Paint borderPaint, Paint notePaint) {
             for (WaterfallNote waterfallNote : waterfallNotes) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
@@ -446,7 +446,7 @@ public class WaterfallView extends SurfaceView {
                     notePaint.setAlpha(waterfallNote.getVolume() * 2);
                     // 绘制音块的实心部分
                     canvas.drawRect(waterfallNote.getLeft(), progress - waterfallNote.getEndTime(),
-                            waterfallNote.getRight(), progress - waterfallNote.getStartTime(),notePaint);
+                            waterfallNote.getRight(), progress - waterfallNote.getStartTime(), notePaint);
                     // 绘制音块的下边框线，防止面条音符看起来像粘在一起
                     canvas.drawLine(waterfallNote.getLeft(), progress - waterfallNote.getStartTime(),
                             waterfallNote.getRight(), progress - waterfallNote.getStartTime(), borderPaint);
@@ -473,14 +473,13 @@ public class WaterfallView extends SurfaceView {
             }
             for (int i = 0; i < waterfallNotes.length; i++) {
                 // 音块刚下落到下边界时，触发琴键按下效果，音块刚离开时，触发琴键抬起效果
-                if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT
-                        && progress - waterfallNotes[i].getStartTime() > getHeight()) {
-                    noteFallListener.onNoteFallDown(waterfallNotes[i]);
-                    waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
-                } else if ((waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT || waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING)
+                if ((waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT || waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING)
                         && progress - waterfallNotes[i].getEndTime() > getHeight()) {
                     noteFallListener.onNoteLeave(waterfallNotes[i]);
                     waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH;
+                } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].getStartTime() > getHeight()) {
+                    noteFallListener.onNoteFallDown(waterfallNotes[i]);
+                    waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
                 }
             }
         }

@@ -143,10 +143,18 @@
         android:gravity="end|center_vertical|center_horizontal|center"
         android:orientation="horizontal">
 
+        <ImageView
+                android:id="@+id/ol_play_waterfall"
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:background="@color/translent"
+                android:src="@drawable/midi_usb" />
+
         <ImageButton
             android:id="@+id/ol_favor_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:background="@color/translent"
             android:src="@drawable/selector_favor_background" />
@@ -154,7 +162,7 @@
         <ImageView
             android:id="@+id/ol_play_button"
             android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/translent"
             android:src="@drawable/selector_child_play" />
     </LinearLayout>
