@@ -340,16 +340,11 @@ public class WaterfallView extends SurfaceView {
             // 透明边框线，防止绘制后看起来相同音高的音符连续出现时，粘在一起
             borderPaint.setAlpha(255);
             borderPaint.setStyle(Paint.Style.STROKE);
-            borderPaint.setStrokeWidth(10);
+            borderPaint.setStrokeWidth(15);
 
-            Paint rightHandPaint = new Paint();
-            Paint leftHandPaint = new Paint();
-            rightHandPaint.setColor(0x7fffcc00);
-            rightHandPaint.setStyle(Paint.Style.FILL);
-//            rightHandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-            leftHandPaint.setColor(0x7f66FFFF);
-            leftHandPaint.setStyle(Paint.Style.FILL);
-//            leftHandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+            Paint notePaint = new Paint();
+            notePaint.setStyle(Paint.Style.FILL);
+            notePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
                 // 暂停线程，控制最高绘制帧率
@@ -377,7 +372,7 @@ public class WaterfallView extends SurfaceView {
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要减掉用户当前在手动拖动进度时设置的进度偏移时间
                 progress = (isPause ? pauseProgress : playIntervalTime) - progressOffset;
                 // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(borderPaint, rightHandPaint, leftHandPaint);
+                doDrawWaterfall(borderPaint, notePaint);
                 // 确定是否有音块到达了屏幕底部或完全移出了屏幕，如果有，调用监听
                 handleWaterfallNoteListener();
             }
@@ -400,7 +395,7 @@ public class WaterfallView extends SurfaceView {
         /**
          * 执行绘制瀑布流
          */
-        private void doDrawWaterfall(Paint borderPaint, Paint rightHandPaint, Paint leftHandPaint) {
+        private void doDrawWaterfall(Paint borderPaint, Paint notePaint) {
             Canvas canvas = null;
             try {
                 // 获取绘制canvas
@@ -409,7 +404,7 @@ public class WaterfallView extends SurfaceView {
                     // 清空画布，之后开始绘制
                     canvas.drawColor(Color.BLACK);
                     // 音块绘制
-                    drawNotes(borderPaint, rightHandPaint, leftHandPaint, canvas);
+                    drawNotes(borderPaint, notePaint, canvas);
                     // 进度条绘制
                     drawProgressBar(canvas);
                 }
@@ -436,17 +431,24 @@ public class WaterfallView extends SurfaceView {
         /**
          * 绘制所有应该绘制的音块
          */
-        private void drawNotes(Paint borderPaint, Paint rightHandPaint, Paint leftHandPaint, Canvas canvas) {
+        private void drawNotes(Paint borderPaint, Paint notePaint, Canvas canvas) {
             for (WaterfallNote waterfallNote : waterfallNotes) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
+                    // 根据音符的左右手确定音块的颜色
+                    if (waterfallNote.isLeftHand()) {
+                        notePaint.setColor(0x7f66FFFF);
+                    } else {
+                        notePaint.setColor(0x7fffcc00);
+                    }
+                    // 根据音符的力度，确定音块绘制的透明度
+                    notePaint.setAlpha(waterfallNote.getVolume() * 2);
                     // 绘制音块的实心部分
                     canvas.drawRect(waterfallNote.getLeft(), progress - waterfallNote.getEndTime(),
-                            waterfallNote.getRight(), progress - waterfallNote.getStartTime(),
-                            waterfallNote.isLeftHand() ? leftHandPaint : rightHandPaint);
+                            waterfallNote.getRight(), progress - waterfallNote.getStartTime(),notePaint);
                     // 绘制音块的下边框线，防止面条音符看起来像粘在一起
-                    canvas.drawLine(waterfallNote.getLeft(), progress - waterfallNote.getStartTime() - borderPaint.getStrokeWidth() / 2,
-                            waterfallNote.getRight(), progress - waterfallNote.getStartTime() - borderPaint.getStrokeWidth() / 2, borderPaint);
+                    canvas.drawLine(waterfallNote.getLeft(), progress - waterfallNote.getStartTime(),
+                            waterfallNote.getRight(), progress - waterfallNote.getStartTime(), borderPaint);
                 }
             }
         }
