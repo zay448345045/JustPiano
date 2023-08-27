@@ -14,17 +14,70 @@
             android:layout_weight="4"
             android:orientation="vertical">
 
-        <TextView
-                android:id="@+id/waterfall_song_name"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:textColor="@color/white1"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/waterfall_sub_key"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/selector_ol_button"
+                android:gravity="center"
+                android:text="@string/keyboard_mode_minus"
+                android:textColor="@color/white1"
+                android:textSize="20sp">
+            </Button>
+
+            <Button
+                android:id="@+id/waterfall_key_move_left"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_ol_button"
+                android:text="@string/keyboard_mode_arrow_left"
+                android:textColor="@color/white1"
+                android:textSize="20sp">
+            </Button>
+
+            <TextView
+                android:id="@+id/waterfall_song_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/white1"
+                android:layout_weight="8"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:background="@color/black"
                 android:gravity="center">
-        </TextView>
+            </TextView>
+
+            <Button
+                android:id="@+id/waterfall_key_move_right"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_ol_button"
+                android:text="@string/keyboard_mode_arrow_right"
+                android:textColor="@color/white1"
+                android:textSize="20sp">
+            </Button>
+
+            <Button
+                android:id="@+id/waterfall_add_key"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_ol_button"
+                android:gravity="center"
+                android:text="@string/keyboard_mode_plus"
+                android:textColor="@color/white1"
+                android:textSize="20sp">
+            </Button>
+        </LinearLayout>
 
         <ly.pp.justpiano3.view.WaterfallView
                 android:id="@+id/waterfall_view"

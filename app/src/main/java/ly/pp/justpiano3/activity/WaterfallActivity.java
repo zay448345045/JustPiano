@@ -3,6 +3,10 @@ package ly.pp.justpiano3.activity;
 import android.app.Activity;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import androidx.core.util.Pair;
@@ -19,8 +23,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class WaterfallActivity extends Activity {
+public class WaterfallActivity extends Activity implements View.OnTouchListener {
 
     /**
      * 瀑布的宽度占键盘黑键宽度的百分比
@@ -37,6 +44,16 @@ public class WaterfallActivity extends Activity {
      */
     private WaterfallView waterfallView;
 
+    /**
+     * 钢琴键盘view
+     */
+    private KeyboardModeView keyboardModeView;
+
+    /**
+     * 用于播放动画
+     */
+    private ScheduledExecutorService scheduledExecutor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +62,6 @@ public class WaterfallActivity extends Activity {
         PmFileParser pmFileParser = parsePmFileFromIntentExtras();
         TextView songNameView = findViewById(R.id.waterfall_song_name);
         songNameView.setText(pmFileParser.getSongName());
-        KeyboardModeView keyboardModeView = findViewById(R.id.waterfall_keyboard);
         waterfallView = findViewById(R.id.waterfall_view);
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
         waterfallView.setNoteFallListener(new WaterfallView.NoteFallListener() {
@@ -62,6 +78,7 @@ public class WaterfallActivity extends Activity {
                 keyboardModeView.fireKeyUp(waterfallNote.getPitch(), false);
             }
         });
+        keyboardModeView = findViewById(R.id.waterfall_keyboard);
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
         keyboardModeView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -69,10 +86,29 @@ public class WaterfallActivity extends Activity {
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 WaterfallNote[] waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView);
                 waterfallView.startPlay(waterfallNotes);
-                // 移除监听，避免重复调用
+                // 开启增减白键数量、移动键盘按钮的监听
+                findViewById(R.id.waterfall_sub_key).setOnTouchListener(WaterfallActivity.this);
+                findViewById(R.id.waterfall_add_key).setOnTouchListener(WaterfallActivity.this);
+                findViewById(R.id.waterfall_key_move_left).setOnTouchListener(WaterfallActivity.this);
+                findViewById(R.id.waterfall_key_move_right).setOnTouchListener(WaterfallActivity.this);
+                // 移除布局监听，避免重复调用
                 keyboardModeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+    }
+
+    /**
+     * 重新确定瀑布流音符长条的左侧和右侧的坐标值
+     */
+    private void updateWaterfallNoteLeftRightLocation(WaterfallNote[] waterfallNotes, KeyboardModeView keyboardModeView) {
+        for (WaterfallNote waterfallNote : waterfallNotes) {
+            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(KeyboardModeView.isBlackKey(waterfallNote.getPitch()),
+                    keyboardModeView.convertPitchToReact(waterfallNote.getPitch()));
+            if (noteLeftRightLocation != null) {
+                waterfallNote.setLeft(noteLeftRightLocation.first);
+                waterfallNote.setRight(noteLeftRightLocation.second);
+            }
+        }
     }
 
     @NotNull
@@ -219,4 +255,71 @@ public class WaterfallActivity extends Activity {
         // 建立新的坐标，返回
         return Pair.create(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2);
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        int action = event.getAction();
+        int id = view.getId();
+        if (action == MotionEvent.ACTION_DOWN) {
+            view.setPressed(true);
+            updateAddOrSubtract(id);
+        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+            view.setPressed(false);
+            stopAddOrSubtract();
+        }
+        return true;
+    }
+
+    /**
+     * 处理按钮长按，定时发送消息
+     */
+    private void updateAddOrSubtract(int viewId) {
+        scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutor.scheduleWithFixedDelay(() -> {
+            Message msg = Message.obtain(handler);
+            msg.what = viewId;
+            handler.sendMessage(msg);
+        }, 0, 80, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * 停止定时发送消息
+     */
+    private void stopAddOrSubtract() {
+        if (scheduledExecutor != null) {
+            scheduledExecutor.shutdownNow();
+            scheduledExecutor = null;
+        }
+    }
+
+    /**
+     * 处理按钮长按的消息
+     */
+    private final Handler handler = new Handler(msg -> {
+        switch (msg.what) {
+            case R.id.waterfall_sub_key:
+                int keyboard1WhiteKeyNum = keyboardModeView.getWhiteKeyNum() - 1;
+                keyboardModeView.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
+                break;
+            case R.id.waterfall_add_key:
+                keyboard1WhiteKeyNum = keyboardModeView.getWhiteKeyNum() + 1;
+                keyboardModeView.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
+                break;
+            case R.id.waterfall_key_move_left:
+                int keyboard1WhiteKeyOffset = keyboardModeView.getWhiteKeyOffset() - 1;
+                keyboardModeView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
+                break;
+            case R.id.waterfall_key_move_right:
+                keyboard1WhiteKeyOffset = keyboardModeView.getWhiteKeyOffset() + 1;
+                keyboardModeView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
+                break;
+            default:
+                break;
+        }
+        return false;
+    });
 }

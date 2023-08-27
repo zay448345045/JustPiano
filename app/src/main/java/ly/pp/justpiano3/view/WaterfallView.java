@@ -5,6 +5,7 @@ import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
+import lombok.Getter;
 import ly.pp.justpiano3.entity.WaterfallNote;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
@@ -26,6 +27,7 @@ public class WaterfallView extends SurfaceView {
     /**
      * 绘制音块瀑布流内容
      */
+    @Getter
     private WaterfallNote[] waterfallNotes;
 
     /**
