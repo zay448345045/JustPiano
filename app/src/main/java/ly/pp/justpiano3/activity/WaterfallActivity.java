@@ -252,7 +252,7 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
         // 根据比例计算瀑布流的宽度
         float waterfallWidth = isBlack ? rectF.width() * BLACK_KEY_WATERFALL_WIDTH_FACTOR
                 : rectF.width() * KeyboardModeView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR;
-        // 建立新的坐标，返回
+        // 根据中轴线和新的宽度计算坐标，返回
         return Pair.create(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2);
     }
 
@@ -296,25 +296,24 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
      * 处理按钮长按的消息
      */
     private final Handler handler = new Handler(msg -> {
+        if (keyboardModeView == null || waterfallView == null || waterfallView.getWaterfallNotes() == null) {
+            return false;
+        }
         switch (msg.what) {
             case R.id.waterfall_sub_key:
-                int keyboard1WhiteKeyNum = keyboardModeView.getWhiteKeyNum() - 1;
-                keyboardModeView.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+                keyboardModeView.setWhiteKeyNum(keyboardModeView.getWhiteKeyNum() - 1, 0);
                 updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
                 break;
             case R.id.waterfall_add_key:
-                keyboard1WhiteKeyNum = keyboardModeView.getWhiteKeyNum() + 1;
-                keyboardModeView.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+                keyboardModeView.setWhiteKeyNum(keyboardModeView.getWhiteKeyNum() + 1, 0);
                 updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
                 break;
             case R.id.waterfall_key_move_left:
-                int keyboard1WhiteKeyOffset = keyboardModeView.getWhiteKeyOffset() - 1;
-                keyboardModeView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+                keyboardModeView.setWhiteKeyOffset(keyboardModeView.getWhiteKeyOffset() - 1, 0);
                 updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
                 break;
             case R.id.waterfall_key_move_right:
-                keyboard1WhiteKeyOffset = keyboardModeView.getWhiteKeyOffset() + 1;
-                keyboardModeView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+                keyboardModeView.setWhiteKeyOffset(keyboardModeView.getWhiteKeyOffset() + 1, 0);
                 updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
                 break;
             default:
