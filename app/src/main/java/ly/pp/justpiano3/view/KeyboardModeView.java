@@ -15,10 +15,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KeyboardModeView extends View {
     private static final int NOTES_PER_OCTAVE = 12;
@@ -229,7 +226,6 @@ public class KeyboardModeView extends View {
         }
         // 没有在动画播放期间的话，开始按数组中的位置坐标值，拿图片进行绘制
         if (!isAnimRunning) {
-            //
             for (int i = 0; i < notesOnArray.length; i++) {
                 // 如果某个琴键处于按下状态，根据具体图片类型来绘制具体琴键按下的图片，叠在键盘图的上面
                 if (notesOnArray[i]) {
@@ -398,11 +394,15 @@ public class KeyboardModeView extends View {
                         break;
                     }
                 }
+                Paint currentPitchPaint = notesOnPaintArray[pitchInScreen];
+                if (currentPitchPaint == null) {
+                    currentPitchPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                }
                 // 对于黑键，使用PorterDuff.Mode.ADD模式叠加框框颜色，对于白键，使用PorterDuff.Mode.MULTIPLY模式，使绘制颜色叠加看起来更为真实
                 if (isBlack) {
-                    notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilterAdd[kuangColorIndex]);
+                    currentPitchPaint.setColorFilter(Consts.kuangColorFilterAdd[kuangColorIndex]);
                 } else {
-                    notesOnPaintArray[pitchInScreen].setColorFilter(Consts.kuangColorFilterMultiPly[kuangColorIndex]);
+                    currentPitchPaint.setColorFilter(Consts.kuangColorFilterMultiPly[kuangColorIndex]);
                 }
             }
             postInvalidate();
