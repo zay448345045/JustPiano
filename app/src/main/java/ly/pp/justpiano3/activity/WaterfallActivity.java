@@ -22,7 +22,7 @@ public class WaterfallActivity extends Activity {
     /**
      * 瀑布的宽度占键盘黑键宽度的百分比
      */
-    public static final float BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.85f;
+    public static final float BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f;
 
     /**
      * 瀑布流音符播放时的最短持续时间、播放时的最长的持续时间
@@ -67,7 +67,6 @@ public class WaterfallActivity extends Activity {
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 WaterfallNote[] waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView);
                 waterfallView.startPlay(waterfallNotes);
-
                 // 移除监听，避免重复调用
                 keyboardModeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -157,8 +156,7 @@ public class WaterfallActivity extends Activity {
      * 1、合并左右手两条音轨的音符list，处理最后一个音符间隔没有写进去的情况，直接写入间隔最大值
      * 2、过滤掉间隔为0的音符，按音符的起始时间进行排序
      * 4、处理音符间隔太大的情况，订正间隔为最大值
-     * 5、【待定】处理音符间隔太小的情况，订正间隔为最小值，处理过程中要避免订正后和后续的音符纵向重叠的现象
-     * 6、转为数组返回
+     * 5、转为数组返回
      */
     private WaterfallNote[] waterfallNoteListAfterHandle(List<WaterfallNote> leftHandWaterfallNoteList, List<WaterfallNote> rightHandWaterfallNoteList) {
         List<WaterfallNote> waterfallNoteList = new ArrayList<>();
@@ -180,26 +178,11 @@ public class WaterfallActivity extends Activity {
             }
         }
         Collections.sort(waterfallNoteList, (o1, o2) -> Integer.compare(o1.getStartTime(), o2.getStartTime()));
-        for (int i = 0; i < waterfallNoteList.size(); i++) {
-            WaterfallNote currentWaterfallNote = waterfallNoteList.get(i);
+        for (WaterfallNote currentWaterfallNote : waterfallNoteList) {
             if (currentWaterfallNote.interval() > NOTE_PLAY_MAX_INTERVAL_TIME) {
                 currentWaterfallNote.setEndTime(currentWaterfallNote.getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
-            } else if (currentWaterfallNote.interval() < NOTE_PLAY_MIN_INTERVAL_TIME) {
-//                currentWaterfallNote.setEndTime(currentWaterfallNote.getStartTime() + NOTE_PLAY_MIN_INTERVAL_TIME);
-                // 如果音符间隔太小，打算填充最小的时间间隔，但填充前需要寻找最小间隔的范围内有没有相同音高的音符，避免音符纵向重叠，如有重叠，需要订正
-//                for (int j = i + 1; j < waterfallNoteList.size(); j++) {
-//                    WaterfallNote nextWaterfallNote = waterfallNoteList.get(j);
-//                    if (nextWaterfallNote.getStartTime() < currentWaterfallNote.getStartTime() + NOTE_PLAY_MIN_INTERVAL_TIME
-//                            && nextWaterfallNote.getPitch() == currentWaterfallNote.getPitch()) {
-//                        currentWaterfallNote.setEndTime(nextWaterfallNote.getStartTime());
-//                    } else {
-//                        currentWaterfallNote.setEndTime(currentWaterfallNote.getStartTime() + NOTE_PLAY_MIN_INTERVAL_TIME);
-//                        break;
-//                    }
-//                }
             }
         }
-// 结束时间减去音符间空缺的时间间隔，否则相同的音符连续按的时候，瀑布长条都粘在一起了
         return waterfallNoteList.toArray(new WaterfallNote[0]);
     }
 

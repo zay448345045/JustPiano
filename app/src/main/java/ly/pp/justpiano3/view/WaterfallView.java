@@ -51,9 +51,9 @@ public class WaterfallView extends SurfaceView {
     private boolean isScrolling;
 
     /**
-     * 记录按下view时的横坐标
+     * 记录手指按下或当前滑动时的初始横坐标，会根据此值计算手指滑动的坐标偏移量
      */
-    private float startX;
+    private float lastX;
 
     /**
      * 瀑布流循环绘制线程，不对外暴露
@@ -198,16 +198,6 @@ public class WaterfallView extends SurfaceView {
     }
 
     /**
-     * 设置当前播放进度，单位毫秒，原则上只能在暂停播放时设置
-     */
-    public void setPlayProgress(int progress) {
-        if (waterfallDownNotesThread != null && waterfallDownNotesThread.isRunning) {
-            // 读取当前播放进度，更新进度偏移量，之后绘制时的时间会根据偏移量进行计算，后续就会在新的进度上继续绘制了
-            waterfallDownNotesThread.progressOffset = getPlayProgress() - progress;
-        }
-    }
-
-    /**
      * 销毁view，释放资源
      */
     public void destroy() {
@@ -228,19 +218,24 @@ public class WaterfallView extends SurfaceView {
         super.onTouchEvent(event);
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                // 有触摸按下view时，记录此时按下的坐标，便于后续手指滑动了多少坐标的计算
-                startX = Math.max(event.getX(), 0.0f);
+                // 有触摸按下view时，记录此时按下的坐标，后续计算手指滑动了多少坐标
+                lastX = Math.max(event.getX(), 0.0f);
                 // 单独触摸按下view时，触发暂停/继续播放操作
                 pauseOrResumePlay();
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 检测是否为滑动的标准为，手指的横坐标偏离原来位置10像素，因真机按压时仅仅是普通点击，滑动的偏移像素很少时也会执行ACTION_MOVE事件
-                if (isScrolling || Math.abs(Math.max(event.getX(), 0.0f) - startX) > 10) {
+                if (isScrolling || Math.abs(Math.max(event.getX(), 0.0f) - lastX) > 10) {
                     // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
                     pausePlay();
-                    // 根据目前手指滑动的X坐标和记录的刚按下view时的X坐标的差（就是横坐标的偏移量）占总宽度的比例，来按比例调整歌曲的进度
-                    int calculatedProgress = (int) (getPlayProgress() + (Math.max(event.getX(), 0.0f) - startX) / getWidth() * totalProgress);
-                    setPlayProgress(calculatedProgress);
+                    // 根据目前手指滑动的X坐标的偏移量占总宽度的比例，来计算本次手指滑动的偏移量时间（进度）
+                    int moveProgressOffset = (int) ((Math.max(event.getX(), 0.0f) - lastX) / getWidth() * totalProgress);
+                    // 如果经过计算后的进度落在总进度之内，则继续执行设置进度操作
+                    if (moveProgressOffset + getPlayProgress() >= 0 && moveProgressOffset + getPlayProgress() <= totalProgress) {
+                        waterfallDownNotesThread.progressOffset += moveProgressOffset;
+                    }
+                    // 更新此时滑动后的手指坐标，后续计算手指滑动了多少坐标
+                    lastX = Math.max(event.getX(), 0.0f);
                     // 有检测到在view上滑动手指，置正在滑动标记为true
                     // 正在滑动标记为true时将停止进行瀑布流监听，避免滑动时播放大量声音和键盘效果，参考方法WaterfallDownNotesThread.handleWaterfallNoteListener
                     isScrolling = true;
@@ -354,13 +349,14 @@ public class WaterfallView extends SurfaceView {
                 int playIntervalTime = (int) (System.currentTimeMillis() - startPlayTime - progressPauseOffset);
                 // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
                 if (isPause && pauseProgress == null) {
+                    // 只有第一次监测到isPause为true时才触发这里，重复置isPause为true，不会重复触发，确保进度保存的是第一次触发暂停时的
                     pauseProgress = playIntervalTime;
                 } else if (!isPause && pauseProgress != null) {
-                    // 更新偏移量，使之后继续播放时能按照刚暂停时的进度来继续
+                    // 第一次监测到isPause为false，更新偏移量，使之后继续播放时能按照刚暂停时的进度来继续
                     // updatePauseOffset可以理解为本次暂停过程一共暂停了多少毫秒，所以需要加偏移量补偿掉这些毫秒
                     // 由于暂停的时候会人工拖动进度条操纵进度的修改，所以需要把人工操纵进度的结果progressOffset也算上
                     // 都处理结束之后再清零progressOffset
-                    int updatePauseOffset = playIntervalTime - pauseProgress + progressOffset;
+                    int updatePauseOffset = playIntervalTime - pauseProgress - progressOffset;
                     progressPauseOffset += updatePauseOffset;
                     // 接下来当前的绘制帧，调整playIntervalTime，也减掉偏移量的改变值，使当前帧的绘制顺滑起来
                     playIntervalTime -= updatePauseOffset;
@@ -369,8 +365,13 @@ public class WaterfallView extends SurfaceView {
                     // 清除暂停时保存的当时的进度值
                     pauseProgress = null;
                 }
-                // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要减掉用户当前在手动拖动进度时设置的进度偏移时间
-                progress = (isPause ? pauseProgress : playIntervalTime) - progressOffset;
+                // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
+                progress = (isPause ? pauseProgress : playIntervalTime) + progressOffset;
+                // 如果发现进度大于总进度，说明播放完成，此时标记暂停
+                // （如果不标记暂停，progress一直增大，在播放结束后往回拖进度条的时候可能拉很长时间进度条都没到100%之前）
+                if (progress > totalProgress) {
+                    isPause = true;
+                }
                 // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
                 doDrawWaterfall(borderPaint, notePaint);
                 // 确定是否有音块到达了屏幕底部或完全移出了屏幕，如果有，调用监听
