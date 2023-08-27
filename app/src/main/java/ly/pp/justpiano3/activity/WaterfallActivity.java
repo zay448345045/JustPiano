@@ -1,11 +1,13 @@
 package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
+import android.app.Application;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import androidx.core.util.Pair;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.WaterfallNote;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
@@ -155,7 +157,8 @@ public class WaterfallActivity extends Activity {
      * <p>
      * 1、合并左右手两条音轨的音符list，处理最后一个音符间隔没有写进去的情况，直接写入间隔最大值
      * 2、过滤掉间隔为0的音符，按音符的起始时间进行排序
-     * 4、处理音符间隔太大的情况，订正间隔为最大值
+     * 3、处理音符间隔太大的情况，订正间隔为最大值
+     * 4、所有音符乘以节拍比率数值，整体控制速度
      * 5、转为数组返回
      */
     private WaterfallNote[] waterfallNoteListAfterHandle(List<WaterfallNote> leftHandWaterfallNoteList, List<WaterfallNote> rightHandWaterfallNoteList) {
@@ -178,10 +181,13 @@ public class WaterfallActivity extends Activity {
             }
         }
         Collections.sort(waterfallNoteList, (o1, o2) -> Integer.compare(o1.getStartTime(), o2.getStartTime()));
+        JPApplication jpApplication = (JPApplication) getApplication();
         for (WaterfallNote currentWaterfallNote : waterfallNoteList) {
             if (currentWaterfallNote.interval() > NOTE_PLAY_MAX_INTERVAL_TIME) {
                 currentWaterfallNote.setEndTime(currentWaterfallNote.getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
             }
+            currentWaterfallNote.setStartTime((int) (currentWaterfallNote.getStartTime() / jpApplication.getSetting().getTempSpeed()));
+            currentWaterfallNote.setEndTime((int) (currentWaterfallNote.getEndTime( jpApplication.getSetting().getTempSpeed()));
         }
         return waterfallNoteList.toArray(new WaterfallNote[0]);
     }
