@@ -41,6 +41,10 @@ public class SoundEngineUtil {
         return 0;
     }
 
+    public static void stopPlaySound(int i) {
+        // nothing
+    }
+
     public static void playChatSound() {
         trigger(85, 127);
     }

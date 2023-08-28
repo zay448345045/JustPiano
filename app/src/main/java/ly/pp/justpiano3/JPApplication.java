@@ -7,7 +7,6 @@ import android.graphics.*;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.multidex.MultiDex;
 import lombok.Getter;
@@ -56,7 +55,6 @@ public final class JPApplication extends Application {
     private String accountName = "";
     private String password = "";
     private List<SimpleUser> chatBlackList;
-    private String nowSongsName = "";
     private String server = Consts.ONLINE_SERVER_URL;
 
     /**
@@ -207,14 +205,6 @@ public final class JPApplication extends Application {
 
     public void setPassword(String str) {
         password = str;
-    }
-
-    public String getNowSongsName() {
-        return nowSongsName;
-    }
-
-    public void setNowSongsName(String str) {
-        nowSongsName = str;
     }
 
     public String getKitiName() {
@@ -409,10 +399,6 @@ public final class JPApplication extends Application {
 
     public void setServer(String server) {
         this.server = server;
-    }
-
-    public void stopSongs(int i) {
-        // nothing
     }
 
     private class CrashHandler implements Thread.UncaughtExceptionHandler {

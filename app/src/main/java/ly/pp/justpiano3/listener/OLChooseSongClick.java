@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import ly.pp.justpiano3.adapter.OLRoomSongsAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.thread.PlaySongs;
 import protobuf.dto.OnlinePlaySongDTO;
 
 public final class OLChooseSongClick implements OnClickListener {
@@ -18,11 +19,10 @@ public final class OLChooseSongClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        String str1 = string.substring(6, string.length() - 3);
-        olRoomSongsAdapter.olPlayRoom.jpapplication.setNowSongsName(str1);
+        PlaySongs.setSongPath(string);
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
         builder.setTune(olRoomSongsAdapter.olPlayRoom.getdiao());
-        builder.setSongPath(str1);
+        builder.setSongPath(string.substring(6, string.length() - 3));
         olRoomSongsAdapter.olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
         Message obtainMessage = olRoomSongsAdapter.olPlayRoom.olPlayRoomHandler.obtainMessage();
         obtainMessage.what = 12;

@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
 import com.google.protobuf.MessageLite;
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
@@ -124,11 +125,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         sqlWhere = "diff >= " + i + " AND diff < " + i2 + str;
         Cursor query = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
         str = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
-        String str1 = str.substring(6, str.length() - 3);
-        jpapplication.setNowSongsName(str1);
+        PlaySongs.setSongPath(str);
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
         builder.setTune(diao);
-        builder.setSongPath(str1);
+        builder.setSongPath(str.substring(6, str.length() - 3));
         sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
         query.close();
         if (moreSongs != null) {
@@ -878,7 +878,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.shengdiao:
-                if (playerKind.equals("H") && !jpapplication.getNowSongsName().isEmpty()) {
+                if (playerKind.equals("H") && jpapplication.isPlayingSong()) {
                     if (diao < 6) {
                         diao++;
                     } else {
@@ -886,7 +886,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     }
                     OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                     builder1.setTune(diao);
-                    builder1.setSongPath(jpapplication.getNowSongsName());
+                    String fullSongPath = PlaySongs.getSongPath();
+                    builder1.setSongPath(fullSongPath.substring(6, fullSongPath.length() - 3));
                     sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
@@ -899,7 +900,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.jiangdiao:
-                if (playerKind.equals("H") && !jpapplication.getNowSongsName().isEmpty()) {
+                if (playerKind.equals("H") && jpapplication.isPlayingSong()) {
                     if (diao > -6) {
                         diao--;
                     } else {
@@ -907,7 +908,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     }
                     OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                     builder1.setTune(diao);
-                    builder1.setSongPath(jpapplication.getNowSongsName());
+                    String fullSongPath = PlaySongs.getSongPath();
+                    builder1.setSongPath(fullSongPath.substring(6, fullSongPath.length() - 3));
                     sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
                     obtainMessage.what = 12;
@@ -1014,8 +1016,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, online_1, null, null, null, null);
         olRoomSongsAdapter = new OLRoomSongsAdapter(this, this, cursor);
         songNameText = findViewById(R.id.ol_songlist_b);
-        if (!jpapplication.getNowSongsName().isEmpty()) {
-            songNameText.setText(querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[0] + "[难度:" + querySongNameAndDiffByPath("songs/" + jpapplication.getNowSongsName() + ".pm")[1] + "]");
+        if (!StringUtil.isNullOrEmpty(PlaySongs.getSongPath())) {
+            songNameText.setText(querySongNameAndDiffByPath(PlaySongs.getSongPath())[0] + "[难度:" + querySongNameAndDiffByPath(PlaySongs.getSongPath())[1] + "]");
         }
         songNameText.setSingleLine(true);
         songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);

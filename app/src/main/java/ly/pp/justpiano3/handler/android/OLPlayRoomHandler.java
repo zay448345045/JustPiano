@@ -13,6 +13,7 @@ import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.enums.RoomModeEnum;
+import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -47,10 +48,10 @@ public final class OLPlayRoomHandler extends Handler {
                         olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
                         String str1 = message.getData().getString("SI");
                         if (!str1.isEmpty()) {
-                            olPlayRoom.jpapplication.setNowSongsName(str1);
                             int diao = message.getData().getInt("diao");
                             olPlayRoom.setdiao(diao);
                             str1 = "songs/" + str1 + ".pm";
+                            PlaySongs.setSongPath(str1);
                             String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];
@@ -144,8 +145,8 @@ public final class OLPlayRoomHandler extends Handler {
                         String str1 = message.getData().getString("song_path");
                         int diao = message.getData().getInt("diao");
                         if (!str1.isEmpty()) {
-                            olPlayRoom.jpapplication.setNowSongsName(str1);
                             str1 = "songs/" + str1 + ".pm";
+                            PlaySongs.setSongPath(str1);
                             String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];

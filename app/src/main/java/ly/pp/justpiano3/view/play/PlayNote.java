@@ -112,7 +112,7 @@ public final class PlayNote {
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
-                playView.jpapplication.stopSongs(playNote);
+                SoundEngineUtil.stopPlaySound(playNote);
                 return posiAdd15AddAnim;
             }
         }
@@ -137,7 +137,7 @@ public final class PlayNote {
                 return posiAdd15AddAnim;
             }
             if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
-                playView.jpapplication.stopSongs(playNote);
+                SoundEngineUtil.stopPlaySound(playNote);
             }
         }
         if (jpapplication.getSetting().getAutoPlay()) {
@@ -161,7 +161,7 @@ public final class PlayNote {
                 newNote = false;
             }
             if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
-                jpapplication.stopSongs(playNote);
+                SoundEngineUtil.stopPlaySound(playNote);
             }
         }
         if (canvas != null && trackValue == handValue) {

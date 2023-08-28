@@ -12,7 +12,9 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.*;
@@ -97,7 +99,7 @@ public final class OLPlayHallHandler extends Handler {
                 return;
             case 2:
                 Bundle data = message.getData();
-                olPlayHall.jpapplication.setNowSongsName("");
+                PlaySongs.setSongPath(StringUtil.EMPTY_STRING);
                 data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
                 Intent intent;

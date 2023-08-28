@@ -25,7 +25,9 @@ public final class PlaySongs {
     /**
      * 目前正在播放的歌曲路径
      */
-    private String songPath;
+    @Getter
+    @Setter
+    private static String songPath;
 
     /**
      * 播放模式
@@ -106,7 +108,7 @@ public final class PlaySongs {
                 case RECYCLE:
                     OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                     builder.setTune(olPlayRoom.getdiao());
-                    builder.setSongPath(jpapplication.getNowSongsName());
+                    builder.setSongPath(songPath.substring(6, songPath.length() - 3));
                     olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
                     Message obtainMessage1 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                     obtainMessage1.what = 12;
@@ -121,11 +123,10 @@ public final class PlaySongs {
                         Cursor query = olPlayRoom.sqlitedatabase.query("jp_data", Consts.sqlColumns, "diff >= " + 0 + " AND diff < " + 20 + str0, null, null, null, null);
                         str0 = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
                         query.close();
-                        String str1 = str0.substring(6, str0.length() - 3);
-                        jpapplication.setNowSongsName(str1);
+                        songPath = str0.substring(6, str0.length() - 3);
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
-                        builder1.setSongPath(str1);
+                        builder1.setSongPath(songPath);
                         olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
@@ -144,11 +145,10 @@ public final class PlaySongs {
                         if (str0.isEmpty()) {
                             return;
                         }
-                        String str1 = str0.substring(6, str0.length() - 3);
-                        jpapplication.setNowSongsName(str1);
+                        songPath = str0.substring(6, str0.length() - 3);
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
-                        builder1.setSongPath(str1);
+                        builder1.setSongPath(songPath);
                         olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
@@ -173,11 +173,10 @@ public final class PlaySongs {
                         if (str0.isEmpty()) {
                             return;
                         }
-                        String str1 = str0.substring(6, str0.length() - 3);
-                        jpapplication.setNowSongsName(str1);
+                        songPath = str0.substring(6, str0.length() - 3);
                         OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                         builder1.setTune(olPlayRoom.getdiao());
-                        builder1.setSongPath(str1);
+                        builder1.setSongPath(songPath);
                         olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                         Message obtainMessage2 = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage2.what = 12;
