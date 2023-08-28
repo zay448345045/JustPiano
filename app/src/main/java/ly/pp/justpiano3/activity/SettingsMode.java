@@ -12,7 +12,7 @@ public class SettingsMode extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        jpApplication.loadSettings(false);
+        jpApplication.getSetting().loadSettings(this, false);
         finish();
     }
 

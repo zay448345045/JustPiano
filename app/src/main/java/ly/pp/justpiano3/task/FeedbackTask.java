@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.MainMode;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -32,7 +33,7 @@ public final class FeedbackTask {
     public void execute(String... objects) {
         String url = "http://" + mainMode.get().jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback";
         FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("version", mainMode.get().jpApplication.getVersion());
+        formBuilder.add("version", DeviceUtil.getAppVersionName(mainMode.get()));
         formBuilder.add("userName", userName);
         formBuilder.add("message", message);
         RequestBody requestBody = formBuilder.build();

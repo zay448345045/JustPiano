@@ -237,7 +237,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         try {
-            jpapplication.loadSettings(true);
+            jpapplication.getSetting().loadSettings(this, true);
             jpapplication.getSetting().setTempSpeed(1f);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);

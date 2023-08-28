@@ -517,7 +517,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         layoutinflater = LayoutInflater.from(this);
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
-        jpApplication.loadSettings(true);
+        jpApplication.getSetting().loadSettings(this, true);
         setContentView(R.layout.olplayhallroom);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());

@@ -83,4 +83,13 @@ public class DeviceUtil {
             return null;
         }
     }
+
+    /**
+     * 获取app 版本
+     * @return
+     */
+    public static String getAppVersionName(Context context) {
+        PackageInfo packageInfo = getPackageInfo(context);
+        return packageInfo == null ? StringUtil.EMPTY_STRING : packageInfo.versionName;
+    }
 }

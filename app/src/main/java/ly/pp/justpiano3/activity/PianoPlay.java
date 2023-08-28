@@ -300,7 +300,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         jpapplication.setHeightPixels(displayMetrics.heightPixels);
         jpapplication.setWidthPixels(displayMetrics.widthPixels);
-        jpapplication.loadSettings(true);
+        jpapplication.getSetting().loadSettings(this, true);
         SoundEngineUtil.teardownAudioStreamNative();
         SoundEngineUtil.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {

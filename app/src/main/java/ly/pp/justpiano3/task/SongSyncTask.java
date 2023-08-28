@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.play.PmFileParser;
 import ly.pp.justpiano3.helper.SQLiteHelper;
@@ -40,7 +41,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", ((JPApplication) activity.get().getApplication()).getVersion())
+                .add("version", DeviceUtil.getAppVersionName(activity.get()))
                 .add("maxSongId", maxSongId)
                 .build();
         // 创建请求对象

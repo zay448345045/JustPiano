@@ -2,7 +2,6 @@ package ly.pp.justpiano3;
 
 import android.app.Application;
 import android.content.*;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.os.IBinder;
@@ -33,17 +32,18 @@ public final class JPApplication extends Application {
 
     public static String kitiName = "";
     public static SharedPreferences accountListSharedPreferences;
-    public static int SETTING_MODE_CODE = 122;
     public String title = "";
     public String f4072f = "";
     public String f4073g = "";
     public String f4074h = "";
-    private Setting setting;
+    private final Setting setting = new Setting();
     private ConnectionService connectionService;
     private int whiteKeyHeight;
     private float blackKeyHeight;
     private float blackKeyWidth;
-    private boolean isBindService;
+    @Setter
+    @Getter
+    private boolean bindService;
 
     /**
      * 游戏模式
@@ -52,12 +52,6 @@ public final class JPApplication extends Application {
     @Getter
     private int gameMode;
 
-    /**
-     * 是否已经显示对话框，防止对话框重复显示
-     */
-    @Setter
-    @Getter
-    private boolean isShowDialog;
     private final Map<Byte, User> hashMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
@@ -78,7 +72,6 @@ public final class JPApplication extends Application {
     private float halfHeightSub10;
     private float whiteKeyHeightAdd90;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             setConnectionService(((ConnectionService.JPBinder) service).getConnectionService());
@@ -111,19 +104,6 @@ public final class JPApplication extends Application {
 
     public boolean isPlayingSong() {
         return this.playSongs != null && this.playSongs.isPlayingSongs();
-    }
-
-    public static void initSettings(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("down_speed", "6");
-        editor.putString("anim_frame", "4");
-        editor.putBoolean("note_dismiss", false);
-        editor.putString("note_size", "1");
-        editor.putString("b_s_vol", "0.8");
-        editor.putString("temp_speed", "1.0");
-        editor.putString("sound_list", "original");
-        editor.apply();
     }
 
     public void m3520a(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
@@ -191,16 +171,6 @@ public final class JPApplication extends Application {
         widthPixels = i;
     }
 
-    public String getVersion() {
-        String str = "";
-        try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-            return str;
-        }
-    }
-
     public ServiceConnection getServiceConnection() {
         return serviceConnection;
     }
@@ -211,14 +181,6 @@ public final class JPApplication extends Application {
 
     public void setConnectionService(ConnectionService connectionService) {
         this.connectionService = connectionService;
-    }
-
-    public boolean getIsBindService() {
-        return isBindService;
-    }
-
-    public void setIsBindService(boolean z) {
-        isBindService = z;
     }
 
     public Map<Byte, User> getHashmap() {
@@ -374,42 +336,19 @@ public final class JPApplication extends Application {
         blackKeyHeight = f;
     }
 
-    public void loadSettings(boolean online) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        setting = Setting.loadSettings(sharedPreferences, online);
-    }
-
     public Setting getSetting() {
         return setting;
-    }
-
-    public void setDownSpeed(int speed) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.edit().putString("down_speed", String.valueOf(speed)).apply();
-        setting.setNotesDownSpeed(speed);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        loadSettings(false);
+        setting.loadSettings(this, false);
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
         accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         MidiUtil.initMidiDevice(this);
-    }
-
-    public void setMidiKeyboardTune(int midiKeyboardTune) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.edit().putString("midi_keyboard_tune", String.valueOf(midiKeyboardTune)).apply();
-        setting.setMidiKeyboardTune(midiKeyboardTune);
-    }
-
-    public void setKeyboardSoundTune(int keyboardSoundTune) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.edit().putString("keyboard_sound_tune", String.valueOf(keyboardSoundTune)).apply();
-        setting.setKeyboardSoundTune(keyboardSoundTune);
     }
 
     public float getWidthDiv8() {
@@ -493,9 +432,9 @@ public final class JPApplication extends Application {
             if (connectionService != null) {
                 connectionService.outLine();
             }
-            if (isBindService) {
+            if (bindService) {
                 unbindService(serviceConnection);
-                setIsBindService(false);
+                bindService = false;
             }
             new Thread() {
                 @Override
@@ -514,9 +453,9 @@ public final class JPApplication extends Application {
         if (connectionService != null) {
             connectionService.outLine();
         }
-        if (isBindService) {
+        if (bindService) {
             unbindService(serviceConnection);
-            setIsBindService(false);
+            bindService = false;
         }
     }
 
@@ -530,7 +469,8 @@ public final class JPApplication extends Application {
      * 重写 getResource 方法，防止系统字体影响
      */
     @Override
-    public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
+    public Resources getResources() {
+        // 禁止app字体大小跟随系统字体大小调节
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
             android.content.res.Configuration configuration = resources.getConfiguration();

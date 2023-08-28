@@ -210,7 +210,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                 }
                                 return;
                             case 1:
-                                olPlayKeyboardRoom.jpapplication.setShowDialog(false);
+                                DialogUtil.setShowDialog(false);
                                 string = message.getData().getString("F");
                                 int i = message.getData().getInt("I");
                                 JPDialog jpdialog2 = new JPDialog(olPlayKeyboardRoom);

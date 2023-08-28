@@ -259,7 +259,7 @@ public final class OLPlayRoomHandler extends Handler {
                                 }
                                 return;
                             case 1:
-                                olPlayRoom.jpapplication.setShowDialog(false);
+                                DialogUtil.setShowDialog(false);
                                 string = message.getData().getString("F");
                                 int i = message.getData().getInt("I");
                                 JPDialog jpdialog2 = new JPDialog(olPlayRoom);

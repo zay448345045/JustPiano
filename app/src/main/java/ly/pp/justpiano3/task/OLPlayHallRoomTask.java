@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -23,7 +24,7 @@ public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("head", "2")
-                .add("version", olPlayHallRoom.get().jpApplication.getVersion())
+                .add("version", DeviceUtil.getAppVersionName(olPlayHallRoom.get()))
                 .add("keywords", strArr[0])
                 .add("userName", strArr[1])
                 .build();

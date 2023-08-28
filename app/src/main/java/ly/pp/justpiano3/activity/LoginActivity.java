@@ -22,6 +22,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.LoginSuccessClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
@@ -199,7 +200,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         Button changeAccountButton = findViewById(R.id.ol_change_account);
         changeAccountButton.setOnClickListener(this);
         TextView appVersionTextView = findViewById(R.id.app_version);
-        appVersionTextView.setText(jpapplication.getVersion());
+        appVersionTextView.setText(DeviceUtil.getAppVersionName(this));
         accountTextView = findViewById(R.id.username);
         passwordTextView = findViewById(R.id.password);
         rememAccount = findViewById(R.id.chec_name);

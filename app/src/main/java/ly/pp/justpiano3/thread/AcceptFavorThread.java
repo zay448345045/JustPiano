@@ -3,6 +3,7 @@ package ly.pp.justpiano3.thread;
 import android.app.Activity;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -29,7 +30,7 @@ public final class AcceptFavorThread extends Thread {
             String url = "http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/AcceptFavorIn";
 
             FormBody.Builder formBuilder = new FormBody.Builder();
-            formBuilder.add("version", jpapplication.getVersion());
+            formBuilder.add("version", DeviceUtil.getAppVersionName(jpapplication));
             formBuilder.add("type", type);
             formBuilder.add("songID", songID);
             formBuilder.add("user", userName);

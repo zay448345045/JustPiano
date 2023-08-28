@@ -855,7 +855,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     popupWindow2.setContentView(inflate2);
                     DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
                     noteSpeed.setDefaultValue(String.valueOf(jpapplication.getSetting().getNotesDownSpeed()));
-                    noteSpeed.setDataChangeListener((dataSelectView, name, value) -> jpapplication.setDownSpeed(Integer.parseInt(value)));
+                    noteSpeed.setDataChangeListener((dataSelectView, name, value) -> {
+                        jpapplication.getSetting().setNotesDownSpeed(Integer.parseInt(value));
+                        jpapplication.getSetting().saveSettings(jpapplication);
+                    });
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;

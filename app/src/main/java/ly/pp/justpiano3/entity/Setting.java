@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.entity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import lombok.Data;
@@ -9,6 +10,8 @@ import lombok.Data;
  */
 @Data
 public class Setting {
+
+    public static int SETTING_MODE_CODE = 122;
 
     /**
      * 音块变色
@@ -105,32 +108,46 @@ public class Setting {
      */
     private Integer chatTextSize;
 
-    public static Setting loadSettings(SharedPreferences sharedPreferences, boolean online) {
-        Setting setting = new Setting();
+    /**
+     * 从sharedPreferences获取设置
+     */
+    public void loadSettings(Context context, boolean online) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (online) {
-            setting.setTempSpeed(1f);
-            setting.setAutoPlay(true);
+            setTempSpeed(1f);
+            setAutoPlay(true);
         } else {
-            setting.setAutoPlay(sharedPreferences.getBoolean("auto_play", true));
-            setting.setTempSpeed(Float.parseFloat(sharedPreferences.getString("temp_speed", "1.0")));
+            setAutoPlay(sharedPreferences.getBoolean("auto_play", true));
+            setTempSpeed(Float.parseFloat(sharedPreferences.getString("temp_speed", "1.0")));
         }
-        setting.setIsOpenChord(sharedPreferences.getBoolean("sound_check_box", true));
-        setting.setChordVolume(Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8")));
-        setting.setAnimFrame(Integer.parseInt(sharedPreferences.getString("anim_frame", "4")));
-        setting.setKeyboardPrefer(sharedPreferences.getBoolean("keyboard_perfer", true));
-        setting.setShowTouchNotesLevel(sharedPreferences.getBoolean("tishi_cj", true));
-        setting.setShowLine(sharedPreferences.getBoolean("show_line", true));
-        setting.setLoadLongKeyboard(sharedPreferences.getBoolean("open_long_key", false));
-        setting.setRoughLine(Integer.parseInt(sharedPreferences.getString("rough_line", "1")));
-        setting.setMidiKeyboardTune(Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0")));
-        setting.setKeyboardSoundTune(Integer.parseInt(sharedPreferences.getString("keyboard_sound_tune", "0")));
-        setting.setKeyboardAnim(sharedPreferences.getBoolean("keyboard_anim", true));
-        setting.setChatSound(sharedPreferences.getBoolean("chats_sound", false));
-        setting.setNotesDownSpeed(Integer.parseInt(sharedPreferences.getString("down_speed", "6")));
-        setting.setNoteSize(Float.parseFloat(sharedPreferences.getString("note_size", "1")));
-        setting.setNoteDismiss(sharedPreferences.getBoolean("note_dismiss", false));
-        setting.setChangeNotesColor(sharedPreferences.getBoolean("change_color", true));
-        setting.setChatTextSize(Integer.parseInt(sharedPreferences.getString("msg_font_size", "15")));
-        return setting;
+        setIsOpenChord(sharedPreferences.getBoolean("sound_check_box", true));
+        setChordVolume(Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8")));
+        setAnimFrame(Integer.parseInt(sharedPreferences.getString("anim_frame", "4")));
+        setKeyboardPrefer(sharedPreferences.getBoolean("keyboard_perfer", true));
+        setShowTouchNotesLevel(sharedPreferences.getBoolean("tishi_cj", true));
+        setShowLine(sharedPreferences.getBoolean("show_line", true));
+        setLoadLongKeyboard(sharedPreferences.getBoolean("open_long_key", false));
+        setRoughLine(Integer.parseInt(sharedPreferences.getString("rough_line", "1")));
+        setMidiKeyboardTune(Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0")));
+        setKeyboardSoundTune(Integer.parseInt(sharedPreferences.getString("keyboard_sound_tune", "0")));
+        setKeyboardAnim(sharedPreferences.getBoolean("keyboard_anim", true));
+        setChatSound(sharedPreferences.getBoolean("chats_sound", false));
+        setNotesDownSpeed(Integer.parseInt(sharedPreferences.getString("down_speed", "6")));
+        setNoteSize(Float.parseFloat(sharedPreferences.getString("note_size", "1")));
+        setNoteDismiss(sharedPreferences.getBoolean("note_dismiss", false));
+        setChangeNotesColor(sharedPreferences.getBoolean("change_color", true));
+        setChatTextSize(Integer.parseInt(sharedPreferences.getString("msg_font_size", "15")));
+    }
+
+    /**
+     * 写入设置到sharedPreferences
+     */
+    public void saveSettings(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("keyboard_sound_tune", String.valueOf(keyboardSoundTune));
+        edit.putString("midi_keyboard_tune", String.valueOf(midiKeyboardTune));
+        edit.putString("down_speed", String.valueOf(notesDownSpeed));
+        edit.apply();
     }
 }

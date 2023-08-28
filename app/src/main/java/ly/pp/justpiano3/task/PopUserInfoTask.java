@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -26,7 +27,7 @@ public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + popUserInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m).newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("head", String.valueOf(popUserInfo.get().headType));
-            formBuilder.add("version", popUserInfo.get().jpapplication.getVersion());
+            formBuilder.add("version", DeviceUtil.getAppVersionName(popUserInfo.get()));
             formBuilder.add("keywords", popUserInfo.get().f4830d);
             formBuilder.add("userName", popUserInfo.get().kitiName);
             // 创建Request对象，用于发送请求

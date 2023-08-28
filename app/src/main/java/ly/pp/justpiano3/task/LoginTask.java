@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
@@ -43,7 +44,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             formBuilder.add("versionCode", String.valueOf(41));
             formBuilder.add("username", loginActivity.accountX);
             formBuilder.add("password", loginActivity.password);
-            formBuilder.add("local", loginActivity.jpapplication.getVersion());
+            formBuilder.add("local", DeviceUtil.getAppVersionName(loginActivity));
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder().url(urlBuilder.build())
                     .post(formBuilder.build())

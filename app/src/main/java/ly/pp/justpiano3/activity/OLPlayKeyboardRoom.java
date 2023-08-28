@@ -19,6 +19,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
@@ -614,7 +615,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.midi_down_tune:
                 if (jpapplication.getSetting().getMidiKeyboardTune() > -6) {
-                    jpapplication.setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() - 1);
+                    jpapplication.getSetting().setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() - 1);
+                    jpapplication.getSetting().saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -622,7 +624,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.midi_up_tune:
                 if (jpapplication.getSetting().getMidiKeyboardTune() < 6) {
-                    jpapplication.setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() + 1);
+                    jpapplication.getSetting().setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() + 1);
+                    jpapplication.getSetting().saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -630,7 +633,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.sound_down_tune:
                 if (jpapplication.getSetting().getKeyboardSoundTune() > -6) {
-                    jpapplication.setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() - 1);
+                    jpapplication.getSetting().setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() - 1);
+                    jpapplication.getSetting().saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -638,7 +642,8 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 return;
             case R.id.sound_up_tune:
                 if (jpapplication.getSetting().getKeyboardSoundTune() < 6) {
-                    jpapplication.setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() + 1);
+                    jpapplication.getSetting().setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() + 1);
+                    jpapplication.getSetting().saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();

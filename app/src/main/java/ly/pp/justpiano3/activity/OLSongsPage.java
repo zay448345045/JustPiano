@@ -78,7 +78,7 @@ public class OLSongsPage extends Activity implements OnClickListener {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         JPApplication jpApplication = (JPApplication) getApplication();
-        jpApplication.loadSettings(true);
+        jpApplication.getSetting().loadSettings(this, true);
         setContentView(R.layout.ol_songs_page);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());

@@ -44,7 +44,7 @@ public class WaterfallView extends SurfaceView {
      * 瀑布流音块当前状态枚举：初始化状态、正在演奏状态、演奏结束状态
      */
     private enum WaterfallNoteStatusEnum {
-        INIT, PLAYING, FINISH;
+        INIT, APPEAR, PLAYING, FINISH;
     }
 
     /**
@@ -68,17 +68,22 @@ public class WaterfallView extends SurfaceView {
     private NoteFallListener noteFallListener;
 
     /**
-     * 瀑布流监听器
+     * 瀑布流监听器，使用监听时，不要有耗时太长的操作，避免影响绘制
      */
     public interface NoteFallListener {
 
         /**
-         * 瀑布某个音刚开始落到view的最下方时触发，监听器中不要有耗时太长的操作，避免影响绘制
+         * 瀑布某个音刚在view最上方出现时触发
+         */
+        void onNoteAppear(WaterfallNote waterfallNote);
+
+        /**
+         * 瀑布某个音刚开始落到view的最下方时触发
          */
         void onNoteFallDown(WaterfallNote waterfallNote);
 
         /**
-         * 瀑布某个音彻底从瀑布流view下方消失时触发，监听器中不要有耗时太长的操作，避免影响绘制
+         * 瀑布某个音彻底从瀑布流view下方消失时触发
          */
         void onNoteLeave(WaterfallNote waterfallNote);
     }
@@ -247,11 +252,13 @@ public class WaterfallView extends SurfaceView {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (isScrolling) {
-                    // 重新设置了进度后，需要获取原音符状态中的PLAYING状态，手动触发来把目前键盘上所有按下的音符（PLAYING状态的）进行清除
+                    // 获取原音符状态中的PLAYING状态，手动触发来把目前键盘上所有按下的音符（PLAYING状态的）进行清除
                     // 可以这么说，如果改变了进度之后不清除键盘上留有的按下的音符，改变进度继续播放后，多余的音符就一直在键盘上保持按下状态了
                     triggerAllPlayingStatusNoteLeave();
+                    // 手指抬起之前还在滑动的话，计算最后一次滑动到抬起这小段时间的坐标变化，用于确定当前准确的进度
+                    int moveProgressOffset = (int) ((Math.max(event.getX(), 0.0f) - lastX) / getWidth() * totalProgress);
                     // 要重置所有音符的状态（新进度之前的音符为完成状态，新进度之后的音符为初始化状态等）
-                    updateNoteStatusByProgress(getPlayProgress());
+                    updateNoteStatusByProgress(moveProgressOffset + getPlayProgress());
                     // 一切设置进度的操作都准备完成后，触发继续播放
                     resumePlay();
                     // 清空正在滑动的标记为false
@@ -341,7 +348,6 @@ public class WaterfallView extends SurfaceView {
             // 音块实心部分Paint
             Paint notePaint = new Paint();
             notePaint.setStyle(Paint.Style.FILL);
-//            notePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
                 // 暂停线程，控制最高绘制帧率
@@ -474,15 +480,18 @@ public class WaterfallView extends SurfaceView {
                 return;
             }
             for (int i = 0; i < waterfallNotes.length; i++) {
-                if ((waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT || waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING)
-                        && progress - waterfallNotes[i].getEndTime() > getHeight()) {
-                    // 判断到音块首次完全离开view时，触发琴键抬起效果
+                if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING && progress - waterfallNotes[i].getEndTime() > getHeight()) {
+                    // 判断到音块刚刚完全离开view时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener.onNoteLeave(waterfallNotes[i]);
                     waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH;
-                } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].getStartTime() > getHeight()) {
-                    // 判断到音块首次下落到view的下边界时，触发琴键按下效果
+                } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.APPEAR && progress - waterfallNotes[i].getStartTime() > getHeight()) {
+                    // 判断到音块刚刚下落到view的下边界时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener.onNoteFallDown(waterfallNotes[i]);
                     waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
+                } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].getStartTime() > 0) {
+                    // 判断到音块刚刚在view的上边界出现时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
+                    noteFallListener.onNoteAppear(waterfallNotes[i]);
+                    waterfallNoteStatus[i] = WaterfallNoteStatusEnum.APPEAR;
                 }
             }
         }

@@ -6,6 +6,7 @@ import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 
@@ -73,7 +74,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 .build();
         FormBody.Builder bodyBuilder = new FormBody.Builder()
                 .add("head", "0")
-                .add("version", usersInfo.get().jpapplication.getVersion())
+                .add("version", DeviceUtil.getAppVersionName(usersInfo.get()))
                 .add("keywords", strArr[0])
                 .add("userName", usersInfo.get().jpapplication.getAccountName());
         if (strArr[1] == null || strArr[2] == null) {

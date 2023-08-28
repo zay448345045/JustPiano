@@ -14,6 +14,7 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.WaterfallNote;
+import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.KeyboardModeView;
 import ly.pp.justpiano3.view.WaterfallView;
@@ -66,15 +67,20 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
         waterfallView.setNoteFallListener(new WaterfallView.NoteFallListener() {
             @Override
+            public void onNoteAppear(WaterfallNote waterfallNote) {
+                // 瀑布流音符在瀑布流view的顶端出现，目前无操作
+            }
+
+            @Override
             public void onNoteFallDown(WaterfallNote waterfallNote) {
-                // 瀑布流音符到达屏幕的底部，播放声音并触发键盘view的琴键按压效果
+                // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
                 SoundEngineUtil.playSound(waterfallNote.getPitch(), waterfallNote.getVolume());
                 keyboardModeView.fireKeyDown(waterfallNote.getPitch(), waterfallNote.getVolume(), waterfallNote.isLeftHand() ? 14 : 1, false);
             }
 
             @Override
             public void onNoteLeave(WaterfallNote waterfallNote) {
-                // 瀑布流音符完全离开屏幕，触发键盘view的琴键抬起效果
+                // 瀑布流音符完全离开瀑布流view，触发键盘view的琴键抬起效果
                 keyboardModeView.fireKeyUp(waterfallNote.getPitch(), false);
             }
         });
@@ -102,7 +108,7 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
      */
     private void updateWaterfallNoteLeftRightLocation(WaterfallNote[] waterfallNotes, KeyboardModeView keyboardModeView) {
         for (WaterfallNote waterfallNote : waterfallNotes) {
-            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(KeyboardModeView.isBlackKey(waterfallNote.getPitch()),
+            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(MidiUtil.isBlackKey(waterfallNote.getPitch()),
                     keyboardModeView.convertPitchToReact(waterfallNote.getPitch()));
             if (noteLeftRightLocation != null) {
                 waterfallNote.setLeft(noteLeftRightLocation.first);
@@ -170,7 +176,7 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
             totalTime += pmFileParser.getTickArray()[i] * pmFileParser.getPm_2();
             boolean leftHand = pmFileParser.getTrackArray()[i] != 0;
             // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
-            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(KeyboardModeView.isBlackKey(pitch),
+            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(MidiUtil.isBlackKey(pitch),
                     keyboardModeView.convertPitchToReact(pitch));
             if (noteLeftRightLocation != null) {
                 WaterfallNote waterfallNote = new WaterfallNote()

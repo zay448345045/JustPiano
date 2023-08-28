@@ -6,6 +6,7 @@ import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.ShowTopInfo;
 import ly.pp.justpiano3.adapter.TopUserAdapter;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
@@ -30,7 +31,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", String.valueOf(showTopInfo.get().head))
-                    .add("version", showTopInfo.get().jpapplication.getVersion())
+                    .add("version", DeviceUtil.getAppVersionName(showTopInfo.get()))
                     .add("keywords", showTopInfo.get().f4988d)
                     .add("page", String.valueOf(showTopInfo.get().f4996l))
                     .add("P", showTopInfo.get().f4999o)

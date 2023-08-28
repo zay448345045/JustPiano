@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -13,6 +15,13 @@ import java.math.RoundingMode;
  * @author as
  */
 public class DialogUtil {
+
+    /**
+     * 是否已经显示对话框，防止对话框重复显示
+     */
+    @Setter
+    @Getter
+    private static boolean isShowDialog;
 
     /**
      * 赠送音符消息接收-对话框处理
@@ -43,11 +52,11 @@ public class DialogUtil {
             });
             jpDialog.setSecondButton("取消", (dialog, which) -> {
                 dialog.dismiss();
-                jpApplication.setShowDialog(false);
+                DialogUtil.setShowDialog(false);
             });
             jpDialog.setFirstButton("确定", ((dialog, which) -> {
                 dialog.dismiss();
-                jpApplication.setShowDialog(false);
+                DialogUtil.setShowDialog(false);
                 OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                 builder.setType(3);
                 builder.setName(userName);

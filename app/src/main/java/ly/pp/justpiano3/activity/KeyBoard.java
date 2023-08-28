@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.MidiConstants;
+import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
@@ -346,7 +347,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+        if (requestCode == Setting.SETTING_MODE_CODE) {
             SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
             keyboardMode1View.changeImage(this);
             keyboardMode2View.changeImage(this);
@@ -359,7 +360,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             case R.id.keyboard_setting:
                 Intent intent = new Intent();
                 intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                startActivityForResult(intent, Setting.SETTING_MODE_CODE);
                 break;
             case R.id.keyboard_record:
                 try {

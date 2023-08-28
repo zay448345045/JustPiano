@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
@@ -35,7 +36,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             }
             // 创建FormBody对象，添加请求参数
             FormBody formBody = new FormBody.Builder()
-                    .add("version", searchSongs.get().jpapplication.getVersion())
+                    .add("version", DeviceUtil.getAppVersionName(searchSongs.get()))
                     .add("head", str2)
                     .add("keywords", searchSongs.get().f4948c)
                     .add("user", searchSongs.get().jpapplication.getAccountName())

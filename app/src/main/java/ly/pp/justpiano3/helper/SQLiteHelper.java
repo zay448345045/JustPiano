@@ -1,9 +1,11 @@
 package ly.pp.justpiano3.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.utils.DeviceUtil;
@@ -44,7 +46,7 @@ public final class SQLiteHelper extends SQLiteOpenHelper {
             JustPiano.updateSQL = true;
         }
         if (sQLiteDatabase.getVersion() < 40) {
-            JPApplication.initSettings(context);
+            initSettingsVersion40(context);
             File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
             if (file.isDirectory()) {
                 File[] files = file.listFiles(pathname -> {
@@ -62,5 +64,21 @@ public final class SQLiteHelper extends SQLiteOpenHelper {
         }
         // Math.max用来防止版本回退出错
         sQLiteDatabase.setVersion(Math.max(sQLiteDatabase.getVersion(), DeviceUtil.getVersionCode(context)));
+    }
+
+    /**
+     * 兼容4.33版本设置
+     */
+    private static void initSettingsVersion40(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("down_speed", "6");
+        editor.putString("anim_frame", "4");
+        editor.putBoolean("note_dismiss", false);
+        editor.putString("note_size", "1");
+        editor.putString("b_s_vol", "0.8");
+        editor.putString("temp_speed", "1.0");
+        editor.putString("sound_list", "original");
+        editor.apply();
     }
 }

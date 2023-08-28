@@ -19,6 +19,32 @@ import static android.content.Context.MIDI_SERVICE;
 
 public class MidiUtil {
 
+    /**
+     * 每个八度的音符数量、白键数量、黑键数量
+     */
+    public static final int NOTES_PER_OCTAVE = 12;
+    public static final int WHITE_NOTES_PER_OCTAVE = 7;
+    public static final int BLACK_NOTES_PER_OCTAVE = 5;
+
+    /**
+     * 每个八度内白键的索引
+     */
+    public static final int[] WHITE_KEY_OFFSETS = {
+            0, 2, 4, 5, 7, 9, 11
+    };
+
+    /**
+     * 每个八度内黑键的索引
+     */
+    public static final int[] BLACK_KEY_OFFSETS = {
+            1, 3, 6, 8, 10
+    };
+
+    /**
+     * 最大音量值
+     */
+    public static final int MAX_VOLUME = 127;
+
     private static List<MidiConnectionListener> midiConnectionListeners;
 
     private static MidiManager mMidiManager;
@@ -100,5 +126,18 @@ public class MidiUtil {
 
     public static MidiOutputPort getMidiOutputPort() {
         return midiOutputPort;
+    }
+
+    /**
+     * 根据一个midi音高，判断它是否为黑键
+     */
+    public static boolean isBlackKey(int pitch) {
+        int pitchInOctave = pitch % NOTES_PER_OCTAVE;
+        for (int blackKeyOffsetInOctave : BLACK_KEY_OFFSETS) {
+            if (pitchInOctave == blackKeyOffsetInOctave) {
+                return true;
+            }
+        }
+        return false;
     }
 }

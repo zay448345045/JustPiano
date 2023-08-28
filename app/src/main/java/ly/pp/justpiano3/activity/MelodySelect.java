@@ -25,6 +25,7 @@ import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
 import ly.pp.justpiano3.adapter.MelodySelectAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
@@ -151,7 +152,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
                         intent.setClass(this, SettingsMode.class);
-                        startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                        startActivityForResult(intent, Setting.SETTING_MODE_CODE);
                         break;
                     case 1:  // 曲库同步
                         new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(SQLiteHelper)).execute();
@@ -212,7 +213,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+        if (requestCode == Setting.SETTING_MODE_CODE) {
             SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }

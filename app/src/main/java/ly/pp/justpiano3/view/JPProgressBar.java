@@ -53,9 +53,9 @@ public final class JPProgressBar extends ProgressDialog {
                 if (connectionService != null) {
                     connectionService.outLine();
                 }
-                if (jpApplication.getIsBindService()) {
+                if (jpApplication.isBindService()) {
                     jpApplication.unbindService(jpApplication.getServiceConnection());
-                    jpApplication.setIsBindService(false);
+                    jpApplication.setBindService(false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

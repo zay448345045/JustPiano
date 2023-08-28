@@ -104,7 +104,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
-        jpapplication.loadSettings(true);
+        jpapplication.getSetting().loadSettings(this, true);
         setContentView(R.layout.olmainmode);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
@@ -128,9 +128,9 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             if (jpapplication.getConnectionService() != null) {
                 jpapplication.getConnectionService().outLine();
             }
-            if (jpapplication.getIsBindService()) {
+            if (jpapplication.isBindService()) {
                 jpapplication.unbindService(jpapplication.getServiceConnection());
-                jpapplication.setIsBindService(false);
+                jpapplication.setBindService(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,15 +157,15 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
 
     public void loginOnline() {
         jpprogressBar.show();
-        if (jpapplication.getIsBindService()) {
+        if (jpapplication.isBindService()) {
             try {
                 jpapplication.unbindService(jpapplication.getServiceConnection());
-                jpapplication.setIsBindService(false);
+                jpapplication.setBindService(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
+        jpapplication.setBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
     }
 
     public static String getMaxSongIdFromDatabase(SQLiteHelper SQLiteHelper) {

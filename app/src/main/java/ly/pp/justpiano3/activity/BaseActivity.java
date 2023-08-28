@@ -71,7 +71,8 @@ public class BaseActivity extends Activity {
     }
 
     @Override
-    public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
+    public Resources getResources() {
+        // 禁止app字体大小跟随系统字体大小调节
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
             android.content.res.Configuration configuration = resources.getConfiguration();
@@ -88,5 +89,4 @@ public class BaseActivity extends Activity {
     public boolean isOutLine() {
         return isOutLine;
     }
-
 }

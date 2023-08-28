@@ -367,7 +367,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.loadSettings(true);
+        jpapplication.getSetting().loadSettings(this, true);
         setContentView(R.layout.olplayhall);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
