@@ -35,10 +35,19 @@ public final class JPApplication extends Application {
     public String f4072f = "";
     public String f4073g = "";
     public String f4074h = "";
+    @Getter
     private final Setting setting = new Setting();
+    @Getter
+    @Setter
     private ConnectionService connectionService;
+    @Getter
+    @Setter
     private int whiteKeyHeight;
+    @Getter
+    @Setter
     private float blackKeyHeight;
+    @Getter
+    @Setter
     private float blackKeyWidth;
     @Setter
     @Getter
@@ -55,6 +64,8 @@ public final class JPApplication extends Application {
     private String accountName = "";
     private String password = "";
     private List<SimpleUser> chatBlackList;
+    @Getter
+    @Setter
     private String server = Consts.ONLINE_SERVER_URL;
 
     /**
@@ -62,13 +73,28 @@ public final class JPApplication extends Application {
      */
     @Getter
     private PlaySongs playSongs;
+    @Getter
+    @Setter
     private int widthPixels;
+    @Getter
+    @Setter
     private int heightPixels;
+    @Getter
+    @Setter
     private int animPosition;
+    @Getter
+    @Setter
     private float widthDiv8;
+    @Getter
+    @Setter
     private float halfHeightSub20;
+    @Getter
+    @Setter
     private float halfHeightSub10;
+    @Getter
+    @Setter
     private float whiteKeyHeightAdd90;
+    @Getter
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -151,34 +177,6 @@ public final class JPApplication extends Application {
         arrayList.add(new Rect((int) (widthDiv8 * 6), whiteKeyHeight, (int) (widthDiv8 * 7), heightPixels));
         arrayList.add(new Rect((int) (widthDiv8 * 7), whiteKeyHeight, (int) (widthDiv8 * 8), heightPixels));
         return arrayList;
-    }
-
-    public int getHeightPixels() {
-        return heightPixels;
-    }
-
-    public void setHeightPixels(int i) {
-        heightPixels = i;
-    }
-
-    public int getWidthPixels() {
-        return widthPixels;
-    }
-
-    public void setWidthPixels(int i) {
-        widthPixels = i;
-    }
-
-    public ServiceConnection getServiceConnection() {
-        return serviceConnection;
-    }
-
-    public ConnectionService getConnectionService() {
-        return connectionService;
-    }
-
-    public void setConnectionService(ConnectionService connectionService) {
-        this.connectionService = connectionService;
     }
 
     public Map<Byte, User> getHashmap() {
@@ -310,24 +308,8 @@ public final class JPApplication extends Application {
         }
     }
 
-    public int getAnimPosition() {
-        return animPosition;
-    }
-
-    public void setAnimPosition(int f) {
-        animPosition = f;
-    }
-
     public void downNote() {
         animPosition += setting.getAnimFrame();
-    }
-
-    public void setBlackKeyHeight(float f) {
-        blackKeyHeight = f;
-    }
-
-    public Setting getSetting() {
-        return setting;
     }
 
     @Override
@@ -339,66 +321,6 @@ public final class JPApplication extends Application {
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
         accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         MidiUtil.initMidiDevice(this);
-    }
-
-    public float getWidthDiv8() {
-        return widthDiv8;
-    }
-
-    public void setWidthDiv8(float f) {
-        widthDiv8 = f;
-    }
-
-    public float getHalfHeightSub20() {
-        return halfHeightSub20;
-    }
-
-    public void setHalfHeightSub20(float f) {
-        halfHeightSub20 = f;
-    }
-
-    public int getWhiteKeyHeight() {
-        return whiteKeyHeight;
-    }
-
-    public void setWhiteKeyHeight(int f) {
-        whiteKeyHeight = f;
-    }
-
-    public float getBlackKeyHeight() {
-        return blackKeyHeight;
-    }
-
-    public float getBlackKeyWidth() {
-        return blackKeyWidth;
-    }
-
-    public void setBlackKeyWidth(float f) {
-        blackKeyWidth = f;
-    }
-
-    public float getHalfHeightSub10() {
-        return halfHeightSub10;
-    }
-
-    public void setHalfHeightSub10(float f) {
-        halfHeightSub10 = f;
-    }
-
-    public float getWhiteKeyHeightAdd90() {
-        return whiteKeyHeightAdd90;
-    }
-
-    public void setWhiteKeyHeightAdd90(float f) {
-        whiteKeyHeightAdd90 = f;
-    }
-
-    public String getServer() {
-        return server;
-    }
-
-    public void setServer(String server) {
-        this.server = server;
     }
 
     private class CrashHandler implements Thread.UncaughtExceptionHandler {
