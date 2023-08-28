@@ -188,18 +188,8 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
                         .setLeftHand(leftHand);
                 // 根据左右手拿到对应的list
                 List<WaterfallNote> waterfallNoteListByHand = leftHand ? leftHandWaterfallNoteList : rightHandWaterfallNoteList;
-                // 取list中上一个元素（音符），填充它的结束时间为当前音符的（累计）开始时间
-                if (!waterfallNoteListByHand.isEmpty()) {
-                    // 循环向前寻找之前的音符
-                    int index = waterfallNoteListByHand.size() - 1;
-                    do {
-                        WaterfallNote lastWaterfallNote = waterfallNoteListByHand.get(index);
-                        // 设置上一个音符的结束时间
-                        lastWaterfallNote.setEndTime(Math.max(lastWaterfallNote.getStartTime(), totalTime));
-                        index--;
-                        // 如果上一个音符的开始时间和当前音符的开始时间相同，则表示同时按下，此时循环，继续设定两个音符的结束时间相同即可
-                    } while (index >= 0 && waterfallNoteListByHand.get(index).getStartTime() == waterfallNoteListByHand.get(index + 1).getStartTime());
-                }
+                // 填充上一个音符的结束时间 = 当前音符的起始时间，如果之前的好几个音符的起始时间相同（按和弦），那么统一都设置成当前音符的起始时间
+                fillNoteEndTime(waterfallNoteListByHand, waterfallNote.getStartTime());
                 waterfallNoteListByHand.add(waterfallNote);
             }
         }
@@ -210,32 +200,25 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
     /**
      * 音符list后置处理，订正一些时间间隔情况，最后转为数组
      * <p>
-     * 1、合并左右手两条音轨的音符list，处理最后一个音符间隔没有写进去的情况，直接写入间隔最大值
-     * 2、过滤掉间隔为0的音符，按音符的起始时间进行排序
+     * 1、处理最后一个音符间隔没有写进去的情况，直接写入间隔最大值
+     * 2、合并左右手两条音轨的音符list，按音符的起始时间进行排序
      * 3、处理音符间隔太大的情况，订正间隔为最大值
      * 4、所有音符乘以节拍比率数值，整体控制速度
      * 5、转为数组返回
      */
     private WaterfallNote[] waterfallNoteListAfterHandle(List<WaterfallNote> leftHandWaterfallNoteList, List<WaterfallNote> rightHandWaterfallNoteList) {
         List<WaterfallNote> waterfallNoteList = new ArrayList<>();
-        for (WaterfallNote waterfallNote : leftHandWaterfallNoteList) {
-            // 每个音轨的最后一个音符，按之前的逻辑，没有填充结束时间，这里直接填充最后一个音符的结束时间 = 起始时间 + 持续时间最大值
-            if (waterfallNote.getEndTime() == 0) {
-                waterfallNote.setEndTime(waterfallNote.getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
-            }
-            if (waterfallNote.interval() > 0) {
-                waterfallNoteList.add(waterfallNote);
-            }
+        // 每个音轨的最后一个音符，按之前的逻辑，没有填充结束时间，这里直接填充最后一个音符的结束时间 = 最后一个音符的起始时间 + 持续时间最大值
+        if (!leftHandWaterfallNoteList.isEmpty()) {
+            fillNoteEndTime(leftHandWaterfallNoteList, leftHandWaterfallNoteList.get(leftHandWaterfallNoteList.size() - 1).getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
+            waterfallNoteList.addAll(leftHandWaterfallNoteList);
         }
-        for (WaterfallNote waterfallNote : rightHandWaterfallNoteList) {
-            if (waterfallNote.getEndTime() == 0) {
-                waterfallNote.setEndTime(waterfallNote.getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
-            }
-            if (waterfallNote.interval() > 0) {
-                waterfallNoteList.add(waterfallNote);
-            }
+        if (!rightHandWaterfallNoteList.isEmpty()) {
+            fillNoteEndTime(rightHandWaterfallNoteList, rightHandWaterfallNoteList.get(rightHandWaterfallNoteList.size() - 1).getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
+            waterfallNoteList.addAll(rightHandWaterfallNoteList);
         }
         Collections.sort(waterfallNoteList, (o1, o2) -> Integer.compare(o1.getStartTime(), o2.getStartTime()));
+
         JPApplication jpApplication = (JPApplication) getApplication();
         for (WaterfallNote currentWaterfallNote : waterfallNoteList) {
             if (currentWaterfallNote.interval() > NOTE_PLAY_MAX_INTERVAL_TIME) {
@@ -245,6 +228,27 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
             currentWaterfallNote.setEndTime((int) (currentWaterfallNote.getEndTime() / jpApplication.getSetting().getTempSpeed()));
         }
         return waterfallNoteList.toArray(new WaterfallNote[0]);
+    }
+
+    /**
+     * 填充音符的结束时间，如果之前的好几个音符的起始时间相同（按和弦），那么统一都设置成这个时间
+     *
+     * @param waterfallNoteList 音符list
+     * @param noteEndTime 给定的音符结束时间
+     */
+    private void fillNoteEndTime(List<WaterfallNote> waterfallNoteList, int noteEndTime) {
+        // 取list中上一个元素（音符），填充它的结束时间为当前音符的（累计）开始时间
+        if (!waterfallNoteList.isEmpty()) {
+            // 循环向前寻找之前的音符
+            int index = waterfallNoteList.size() - 1;
+            do {
+                WaterfallNote lastWaterfallNote = waterfallNoteList.get(index);
+                // 设置上一个音符的结束时间
+                lastWaterfallNote.setEndTime(Math.max(lastWaterfallNote.getStartTime(), noteEndTime));
+                index--;
+                // 如果上一个音符的开始时间和当前音符的开始时间相同，则表示同时按下，此时循环，继续设定两个音符的结束时间相同即可
+            } while (index >= 0 && waterfallNoteList.get(index).getStartTime() == waterfallNoteList.get(index + 1).getStartTime());
+        }
     }
 
     /**

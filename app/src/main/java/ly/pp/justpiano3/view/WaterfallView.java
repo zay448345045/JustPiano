@@ -3,6 +3,7 @@ package ly.pp.justpiano3.view;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import lombok.Getter;
@@ -252,14 +253,7 @@ public class WaterfallView extends SurfaceView {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (isScrolling) {
-                    // 获取原音符状态中的PLAYING状态，手动触发来把目前键盘上所有按下的音符（PLAYING状态的）进行清除
-                    // 可以这么说，如果改变了进度之后不清除键盘上留有的按下的音符，改变进度继续播放后，多余的音符就一直在键盘上保持按下状态了
-                    triggerAllPlayingStatusNoteLeave();
-                    // 手指抬起之前还在滑动的话，计算最后一次滑动到抬起这小段时间的坐标变化，用于确定当前准确的进度
-                    int moveProgressOffset = (int) ((Math.max(event.getX(), 0.0f) - lastX) / getWidth() * totalProgress);
-                    // 要重置所有音符的状态（新进度之前的音符为完成状态，新进度之后的音符为初始化状态等）
-                    updateNoteStatusByProgress(moveProgressOffset + getPlayProgress());
-                    // 一切设置进度的操作都准备完成后，触发继续播放
+                    // 触发继续播放
                     resumePlay();
                     // 清空正在滑动的标记为false
                     isScrolling = false;
@@ -291,10 +285,12 @@ public class WaterfallView extends SurfaceView {
     private void updateNoteStatusByProgress(int progress) {
         // 执行重新设置音符的状态，根据起始时间和结束时间，结合目前进度计算坐标来确定状态
         for (int i = 0; i < waterfallNotes.length; i++) {
-            if (waterfallNotes[i].getStartTime() + getHeight() < progress) {
+            if (progress - waterfallNotes[i].getEndTime() > getHeight()) {
                 waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH;
-            } else if (waterfallNotes[i].getEndTime() + getHeight() < progress) {
+            } else if (progress - waterfallNotes[i].getStartTime() > getHeight()) {
                 waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING;
+            } else if (progress - waterfallNotes[i].getStartTime() > 0) {
+                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.APPEAR;
             } else {
                 waterfallNoteStatus[i] = WaterfallNoteStatusEnum.INIT;
             }
@@ -372,6 +368,12 @@ public class WaterfallView extends SurfaceView {
                     progressOffset = 0;
                     // 清除暂停时保存的当时的进度值
                     pauseProgress = null;
+                    // 以下两行代码内容主要用于拖动进度时，手指抬起后的继续播放，进度发生变化的情形，需要做处理
+                    // 1、获取原音符状态中的PLAYING状态，手动触发来把目前键盘上所有按下的音符（PLAYING状态的）进行清除
+                    //    可以这么说，如果改变了进度之后不清除键盘上留有的按下的音符，改变进度继续播放后，多余的音符就一直在键盘上保持按下了
+                    triggerAllPlayingStatusNoteLeave();
+                    // 2、根据当前进度重新计算所有音符的状态，主要用于拖动进度手指抬起后的继续播放，进度发生变化，需要重新刷新状态
+                    updateNoteStatusByProgress(playIntervalTime);
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
                 progress = (isPause ? pauseProgress : playIntervalTime) + progressOffset;
