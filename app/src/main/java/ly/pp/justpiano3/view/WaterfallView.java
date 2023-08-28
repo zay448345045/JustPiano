@@ -245,14 +245,15 @@ public class WaterfallView extends SurfaceView {
                     // 更新此时滑动后的手指坐标，后续计算手指滑动了多少坐标
                     lastX = Math.max(event.getX(), 0.0f);
                     // 有检测到在view上滑动手指，置正在滑动标记为true
-                    // 正在滑动标记为true时会停止进行瀑布流监听，避免滑动时播放大量声音和键盘效果，参考方法WaterfallDownNotesThread.handleWaterfallNoteListener
+                    // 正在滑动标记为true时会停止进行瀑布流监听，避免滑动时播放大量声音和键盘效果
+                    // 可参考调用音符监听的代码：WaterfallDownNotesThread.handleWaterfallNoteListener
                     isScrolling = true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (isScrolling) {
-                    // 触发继续播放
+                    // 在滑动后，手指抬起，则触发继续播放
                     resumePlay();
                     // 清空正在滑动的标记为false
                     isScrolling = false;
@@ -363,21 +364,22 @@ public class WaterfallView extends SurfaceView {
                     progressPauseOffset += updatePauseOffset;
                     // 接下来当前的绘制帧，调整playIntervalTime，也减掉偏移量的改变值，使当前帧的绘制顺滑起来
                     playIntervalTime -= updatePauseOffset;
-                    // 清零progressOffset，如果不清零，下次拖动修改进度的时候又要变化progressOffset，会导致和前一次progressOffset的值冲突
+                    // 清零progressOffset，如果不清零，下次拖动修改进度的时候又要变化progressOffset，会导致和前一次的值冲突
                     progressOffset = 0;
                     // 清除暂停时保存的当时的进度值
                     pauseProgress = null;
                     // 以下两行代码内容主要用于拖动进度时，手指抬起后的继续播放，进度发生变化的情形，需要做处理
-                    // 1、获取原音符状态中的PLAYING状态，手动触发来把目前键盘上所有按下的音符（PLAYING状态的）进行清除
-                    //    可以这么说，如果改变了进度之后不清除键盘上留有的按下的音符，改变进度继续播放后，多余的音符就一直在键盘上保持按下了
+                    // 1、获取此时键盘中保持按压状态的音符，手动触发来把目前键盘上所有按下的音符进行清除
+                    // 可以这么说，如果是改变了进度之后继续播放的，不清除键盘上留有的按下的音符，这些音符就一直在键盘上保持按下了
                     triggerAllPlayingStatusNoteLeave();
-                    // 2、根据当前进度重新计算所有音符的状态，主要用于拖动进度手指抬起后的继续播放，进度发生变化，需要重新刷新状态
+                    // 2、根据当前进度重新计算所有音符的状态，如果没有这一步，进度回溯的时候，之前已经弹奏完成的音符便不会再次触发按下了
+                    // 可参考调用音符监听的代码：WaterfallDownNotesThread.handleWaterfallNoteListener
                     updateNoteStatusByProgress(playIntervalTime);
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
                 progress = (isPause ? pauseProgress : playIntervalTime) + progressOffset;
                 // 如果发现进度大于总进度，说明播放完成，此时标记暂停
-                // （如果不标记暂停，progress一直增大，在播放结束后往回拖进度条的时候可能拉很长时间进度条都没到100%之前）
+                // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
                 if (progress > totalProgress) {
                     isPause = true;
                 }
