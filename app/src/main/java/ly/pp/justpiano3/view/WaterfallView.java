@@ -3,7 +3,6 @@ package ly.pp.justpiano3.view;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import lombok.Getter;

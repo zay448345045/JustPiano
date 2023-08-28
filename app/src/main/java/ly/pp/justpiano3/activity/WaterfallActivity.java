@@ -234,7 +234,7 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
      * 填充音符的结束时间，如果之前的好几个音符的起始时间相同（按和弦），那么统一都设置成这个时间
      *
      * @param waterfallNoteList 音符list
-     * @param noteEndTime 给定的音符结束时间
+     * @param noteEndTime       给定的音符结束时间
      */
     private void fillNoteEndTime(List<WaterfallNote> waterfallNoteList, int noteEndTime) {
         // 取list中上一个元素（音符），填充它的结束时间为当前音符的（累计）开始时间
