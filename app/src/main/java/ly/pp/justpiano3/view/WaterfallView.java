@@ -467,9 +467,11 @@ public class WaterfallView extends SurfaceView {
          * 音符是否在view中对用户可见
          */
         private boolean noteIsVisible(WaterfallNote waterfallNote) {
-            // 进度（毫秒数） - 音符开始时间小于0的时候，瀑布流还是在view上未开始出现的状态，这种情况下过滤掉，不绘制
-            // 结束时间同理，即是说，在view内的才绘制
-            return progress - waterfallNote.getStartTime() > 0 && (progress - waterfallNote.getEndTime()) < getHeight();
+            // 音符的上下左右边界都要在view内，对于左右边界，可以允许有一部分出现在view内，对于上下边界的说明：
+            // 进度（毫秒数） - 音符开始时间小于0的时候，音符在view的上方，未开始出现，这种情况下过滤掉，不绘制
+            // 进度（毫秒数） - 音符结束时间大于view的高度的时候，音符已经完全离开了view的下边界，这种情况下过滤掉，不绘制
+            return progress - waterfallNote.getStartTime() > 0 && (progress - waterfallNote.getEndTime()) < getHeight()
+                    && waterfallNote.getRight() > 0 && waterfallNote.getLeft() < getWidth();
         }
 
         /**

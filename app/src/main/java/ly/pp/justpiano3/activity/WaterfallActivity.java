@@ -113,6 +113,10 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
             if (noteLeftRightLocation != null) {
                 waterfallNote.setLeft(noteLeftRightLocation.first);
                 waterfallNote.setRight(noteLeftRightLocation.second);
+            } else {
+                // 说明音符的音高落在了键盘之外，直接将坐标置为-1，不绘制即可
+                waterfallNote.setLeft(-1);
+                waterfallNote.setRight(-1);
             }
         }
     }
