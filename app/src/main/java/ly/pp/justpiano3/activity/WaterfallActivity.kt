@@ -43,6 +43,24 @@ class WaterfallActivity : Activity(), OnTouchListener {
      */
     private var scheduledExecutor: ScheduledExecutorService? = null
 
+    companion object {
+        /**
+         * 瀑布的宽度占键盘黑键宽度的百分比
+         */
+        const val BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f
+
+        /**
+         * 瀑布流音符播放时的最长的持续时间
+         */
+        const val NOTE_PLAY_MAX_INTERVAL_TIME = 1200
+
+        /**
+         * 瀑布流音符左右手颜色（透明度无效，透明度目前根据音符力度确定）
+         */
+        const val LEFT_HAND_NOTE_COLOR = 0x2BBBFB
+        const val RIGHT_HAND_NOTE_COLOR = 0xFF802D
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.waterfall)
@@ -62,10 +80,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
                 keyboardModeView.fireKeyDown(
                         waterfallNote.pitch, waterfallNote.volume,
-                        ColorUtil.getKuangColorByKuangIndex(
-                                this@WaterfallActivity,
-                                if (waterfallNote.leftHand) 14 else 1
-                        )
+                        if (waterfallNote.leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR
                 )
             }
 
@@ -76,11 +91,13 @@ class WaterfallActivity : Activity(), OnTouchListener {
         })
         keyboardModeView = findViewById(R.id.waterfall_keyboard)
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
-        keyboardModeView.viewTreeObserver
-                .addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        keyboardModeView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
                         waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                        // 设置瀑布流音符的左右手颜色
+                        waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR
+                        waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
                         // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                         val waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView)
                         waterfallView.startPlay(waterfallNotes)
@@ -89,6 +106,16 @@ class WaterfallActivity : Activity(), OnTouchListener {
                         findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
                         findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
                         findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
+                        // 设置键盘的点击监听，播放对应琴键的声音
+                        keyboardModeView.setMusicKeyListener(object : KeyboardModeView.MusicKeyListener {
+                            override fun onKeyDown(pitch: Int, volume: Int) {
+                                SoundEngineUtil.playSound(pitch, volume)
+                            }
+
+                            override fun onKeyUp(pitch: Int) {
+                                // nothing
+                            }
+                        })
                         // 移除布局监听，避免重复调用
                         keyboardModeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
@@ -327,6 +354,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
         when (msg.what) {
             R.id.waterfall_sub_key -> {
                 keyboardModeView.setWhiteKeyNum(keyboardModeView.whiteKeyNum - 1, 0)
+                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                         waterfallView.waterfallNotes,
                         keyboardModeView
@@ -335,6 +363,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
 
             R.id.waterfall_add_key -> {
                 keyboardModeView.setWhiteKeyNum(keyboardModeView.whiteKeyNum + 1, 0)
+                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                         waterfallView.waterfallNotes,
                         keyboardModeView
@@ -343,6 +372,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
 
             R.id.waterfall_key_move_left -> {
                 keyboardModeView.setWhiteKeyOffset(keyboardModeView.whiteKeyOffset - 1, 0)
+                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                         waterfallView.waterfallNotes,
                         keyboardModeView
@@ -351,6 +381,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
 
             R.id.waterfall_key_move_right -> {
                 keyboardModeView.setWhiteKeyOffset(keyboardModeView.whiteKeyOffset + 1, 0)
+                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                         waterfallView.waterfallNotes,
                         keyboardModeView
@@ -358,17 +389,5 @@ class WaterfallActivity : Activity(), OnTouchListener {
             }
         }
         false
-    }
-
-    companion object {
-        /**
-         * 瀑布的宽度占键盘黑键宽度的百分比
-         */
-        const val BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f
-
-        /**
-         * 瀑布流音符播放时的最长的持续时间
-         */
-        const val NOTE_PLAY_MAX_INTERVAL_TIME = 1200
     }
 }
