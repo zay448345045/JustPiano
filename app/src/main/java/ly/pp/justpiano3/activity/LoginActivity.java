@@ -24,17 +24,16 @@ import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -269,49 +268,52 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             Toast.makeText(LoginActivity.this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
         });
 
-        OkHttpClient client = new OkHttpClient();
-        // 创建一个GET方式的请求结构
         Request request = new Request.Builder().url(getApkUrlByVersion(version)).build();
-        Call call = client.newCall(request); // 根据请求结构创建调用对象
-        // 加入HTTP请求队列。异步调用，并设置接口应答的回调方法
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) { // 请求失败
-                // 回到主线程操纵界面
-                runOnUiThread(() -> {
-                    jpprogressBar.setText(null);
-                    jpprogressBar.dismiss();
-                    Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
-                });
+        try (Response response = OkHttpUtil.client().newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                getApkResponseAndInstall(file, response);
+            } else {
+                apkDownloadFallHandle(version);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            apkDownloadFallHandle(version);
+        }
+    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) { // 请求成功
-                long length = response.body().contentLength();
-                // 下面从返回的输入流中读取字节数据并保存为本地文件
-                try (InputStream is = response.body().byteStream();
-                     FileOutputStream fos = new FileOutputStream(file)) {
-                    byte[] buf = new byte[100 * 1024];
-                    int sum = 0, len;
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                        sum += len;
-                        int progress = (int) (sum * 1.0f / length * 100);
-                        String detail = String.format(Locale.getDefault(), "下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
-                        // 回到主线程操纵界面
-                        runOnUiThread(() -> jpprogressBar.setText(detail));
-                    }
-                    installApk(LoginActivity.this, file);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    runOnUiThread(() -> {
-                        jpprogressBar.setText(null);
-                        jpprogressBar.dismiss();
-                    });
-                }
-            }
+    private void apkDownloadFallHandle(String version) {
+        // 回到主线程操纵界面
+        runOnUiThread(() -> {
+            jpprogressBar.setText(null);
+            jpprogressBar.dismiss();
+            Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void getApkResponseAndInstall(File file, Response response) {
+        long length = response.body().contentLength();
+        // 下面从返回的输入流中读取字节数据并保存为本地文件
+        try (InputStream is = response.body().byteStream();
+             FileOutputStream fos = new FileOutputStream(file)) {
+            byte[] buf = new byte[100 * 1024];
+            int sum = 0, len;
+            while ((len = is.read(buf)) != -1) {
+                fos.write(buf, 0, len);
+                sum += len;
+                int progress = (int) (sum * 1.0f / length * 100);
+                String detail = String.format(Locale.getDefault(), "下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
+                // 回到主线程操纵界面
+                runOnUiThread(() -> jpprogressBar.setText(detail));
+            }
+            installApk(LoginActivity.this, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            runOnUiThread(() -> {
+                jpprogressBar.setText(null);
+                jpprogressBar.dismiss();
+            });
+        }
     }
 
     /**

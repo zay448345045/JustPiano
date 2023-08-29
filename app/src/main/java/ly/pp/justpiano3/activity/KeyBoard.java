@@ -68,7 +68,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         setContentView(R.layout.keyboard_mode);
         jpapplication = (JPApplication) getApplication();
         keyboardMode1View = findViewById(R.id.keyboard1_view);
-        keyboardMode1View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
+        keyboardMode1View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
                 SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
@@ -80,7 +80,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             }
         });
         keyboardMode2View = findViewById(R.id.keyboard2_view);
-        keyboardMode2View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
+        keyboardMode2View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
                 SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
@@ -336,11 +336,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardMode1View.fireKeyDown(pitch, data[2], -1, false);
+            keyboardMode1View.fireKeyDown(pitch, data[2], 0xffffffff);
             SoundEngineUtil.playSound(pitch, data[2]);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardMode1View.fireKeyUp(pitch, false);
+            keyboardMode1View.fireKeyUp(pitch);
         }
     }
 
@@ -349,8 +349,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Setting.SETTING_MODE_CODE) {
             SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-            keyboardMode1View.changeImage(this);
-            keyboardMode2View.changeImage(this);
+            keyboardMode1View.changeSkinKeyboardImage(this);
+            keyboardMode2View.changeSkinKeyboardImage(this);
         }
     }
 

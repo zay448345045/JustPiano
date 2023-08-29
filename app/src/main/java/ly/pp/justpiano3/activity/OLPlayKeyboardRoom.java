@@ -19,7 +19,6 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.Setting;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
@@ -881,7 +880,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             olKeyboardStates[i] = new OLKeyboardState();
         }
         keyboardView = findViewById(R.id.keyboard_view);
-        keyboardView.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
+        keyboardView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
                 if (hasAnotherUser()) {
@@ -1088,7 +1087,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(pitch, data[2], kuang, false);
+            keyboardView.fireKeyDown(pitch, data[2], ColorUtil.getKuangColorByKuangIndex(this, kuang));
             if (hasAnotherUser()) {
                 broadNote(pitch, data[2]);
             }
@@ -1107,7 +1106,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             }
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardView.fireKeyUp(pitch, false);
+            keyboardView.fireKeyUp(pitch);
             if (hasAnotherUser()) {
                 broadNote(pitch, 0);
             }

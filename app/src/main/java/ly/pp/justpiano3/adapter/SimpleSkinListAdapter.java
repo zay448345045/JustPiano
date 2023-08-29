@@ -81,7 +81,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                 }
                 edit.apply();
                 olPlayKeyboardRoom.runOnUiThread(() -> {
-                    olPlayKeyboardRoom.keyboardView.changeImage(olPlayKeyboardRoom);
+                    olPlayKeyboardRoom.keyboardView.changeSkinKeyboardImage(olPlayKeyboardRoom);
                     SkinImageLoadUtil.setBackGround(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));
                     olPlayKeyboardRoom.jpprogressBar.dismiss();
                     Toast.makeText(olPlayKeyboardRoom, "皮肤设置成功", Toast.LENGTH_SHORT).show();

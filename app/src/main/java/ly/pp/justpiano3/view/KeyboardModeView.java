@@ -5,16 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
@@ -74,11 +70,11 @@ public class KeyboardModeView extends View {
 
     private final Map<Integer, Integer> mFingerMap = new HashMap<>();
 
-    private final List<MusicKeyListener> mListeners = new ArrayList<>();
+    private MusicKeyListener musicKeyListener;
 
     private int whiteKeyNum;
     private int whiteKeyOffset;
-    private int noteOnColor = -1;
+    private int noteOnColor = 0xffffffff;
 
     private Bitmap keyboardImage;
     private Bitmap whiteKeyRightImage;
@@ -146,7 +142,7 @@ public class KeyboardModeView extends View {
         makeDraw();
     }
 
-    public void changeImage(Context context) {
+    public void changeSkinKeyboardImage(Context context) {
         Bitmap keyBoardHd = SkinImageLoadUtil.loadImage(context, "key_board_hd");
         assert keyBoardHd != null;
         keyboardImage = cropKeyboardBitmap(keyBoardHd);
@@ -332,7 +328,7 @@ public class KeyboardModeView extends View {
             pitch = xToWhitePitch(x);
             volume = (int) (y / viewHeight * MidiUtil.MAX_VOLUME);
         }
-        fireKeyDown(pitch, volume, noteOnColor, true);
+        fireKeyDownAndHandleListener(pitch, volume, noteOnColor);
         mFingerMap.put(id, pitch);
     }
 
@@ -351,8 +347,8 @@ public class KeyboardModeView extends View {
             }
             // Did we change to a new key.
             if (pitch >= 0 && pitch != previousPitch) {
-                fireKeyDown(pitch, volume, noteOnColor, true);
-                fireKeyUp(previousPitch, true);
+                fireKeyDownAndHandleListener(pitch, volume, noteOnColor);
+                fireKeyUpAndHandleListener(previousPitch);
                 mFingerMap.put(id, pitch);
             }
         }
@@ -361,7 +357,7 @@ public class KeyboardModeView extends View {
     private void onFingerUp(int id, float x, float y) {
         Integer previousPitch = mFingerMap.get(id);
         if (previousPitch != null) {
-            fireKeyUp(previousPitch, true);
+            fireKeyUpAndHandleListener(previousPitch);
             mFingerMap.remove(id);
         } else {
             int pitch = -1;
@@ -371,53 +367,58 @@ public class KeyboardModeView extends View {
             if (pitch < 0) {
                 pitch = xToWhitePitch(x);
             }
-            fireKeyUp(pitch, true);
+            fireKeyUpAndHandleListener(pitch);
         }
     }
 
     private void onAllFingersUp() {
         // Turn off all notes.
         for (Integer pitch : mFingerMap.values()) {
-            fireKeyUp(pitch, true);
+            fireKeyUpAndHandleListener(pitch);
         }
         mFingerMap.clear();
     }
 
-    public void fireKeyDown(int pitch, int volume, int kuangColorIndex, boolean trigListener) {
+    private void fireKeyDownAndHandleListener(int pitch, int volume, int color) {
         if (!isAnimRunning) {
-            if (trigListener) {
-                for (MusicKeyListener listener : mListeners) {
-                    listener.onKeyDown(pitch, Math.min(volume, MidiUtil.MAX_VOLUME));
-                }
+            if (musicKeyListener != null) {
+                musicKeyListener.onKeyDown(pitch, Math.min(volume, MidiUtil.MAX_VOLUME));
             }
+            fireKeyDown(pitch, volume, color);
+        }
+    }
+
+    public void fireKeyDown(int pitch, int volume, int color) {
+        if (!isAnimRunning) {
             int pitchInScreen = getPitchInScreen(pitch);
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
                 return;
             }
             notesOnArray[pitchInScreen] = true;
-            if (kuangColorIndex >= 0 && kuangColorIndex < Consts.kuangColorFilterMultiPly.length) {
-                Paint currentPitchPaint = notesOnPaintArray[pitchInScreen];
-                if (currentPitchPaint == null) {
-                    currentPitchPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                }
-                // 对于黑键，使用PorterDuff.Mode.ADD模式叠加框框颜色，对于白键，使用PorterDuff.Mode.MULTIPLY模式，使绘制颜色叠加看起来更为真实
-                if (MidiUtil.isBlackKey(pitch)) {
-                    currentPitchPaint.setColorFilter(Consts.kuangColorFilterAdd[kuangColorIndex]);
-                } else {
-                    currentPitchPaint.setColorFilter(Consts.kuangColorFilterMultiPly[kuangColorIndex]);
-                }
+            Paint currentPitchPaint = notesOnPaintArray[pitchInScreen] != null ? notesOnPaintArray[pitchInScreen] : new Paint(Paint.ANTI_ALIAS_FLAG);
+            if (MidiUtil.isBlackKey(pitch)) {
+                // 对于黑键，使用PorterDuff.Mode.ADD模式叠加颜色，对于白键，使用PorterDuff.Mode.MULTIPLY模式，使绘制颜色叠加看起来更为真实
+                int handledColor = Color.argb(volume, Color.red(color), Color.green(color), Color.blue(color));
+                currentPitchPaint.setColorFilter(new PorterDuffColorFilter(handledColor, PorterDuff.Mode.ADD));
+            } else {
+                int handledColor = Color.argb(volume * 2, Color.red(color), Color.green(color), Color.blue(color));
+                currentPitchPaint.setColorFilter(new PorterDuffColorFilter(handledColor, PorterDuff.Mode.MULTIPLY));
             }
             postInvalidate();
         }
     }
 
-    public void fireKeyUp(int pitch, boolean trigListener) {
+    private void fireKeyUpAndHandleListener(int pitch) {
         if (!isAnimRunning) {
-            if (trigListener) {
-                for (MusicKeyListener listener : mListeners) {
-                    listener.onKeyUp(pitch);
-                }
+            if (musicKeyListener != null) {
+                musicKeyListener.onKeyUp(pitch);
             }
+            fireKeyUp(pitch);
+        }
+    }
+
+    public void fireKeyUp(int pitch) {
+        if (!isAnimRunning) {
             int pitchInScreen = getPitchInScreen(pitch);
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
                 return;
@@ -454,8 +455,8 @@ public class KeyboardModeView extends View {
         return -1;
     }
 
-    public void addMusicKeyListener(MusicKeyListener musicKeyListener) {
-        mListeners.add(musicKeyListener);
+    public void setMusicKeyListener(MusicKeyListener musicKeyListener) {
+        this.musicKeyListener = musicKeyListener;
     }
 
     public int getWhiteKeyNum() {

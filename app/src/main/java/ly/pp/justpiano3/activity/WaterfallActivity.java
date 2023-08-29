@@ -8,12 +8,12 @@ import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.TextView;
 import androidx.core.util.Pair;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.WaterfallNote;
+import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.KeyboardModeView;
@@ -22,7 +22,6 @@ import ly.pp.justpiano3.view.WaterfallView;
 import ly.pp.justpiano3.view.play.PmFileParser;
 import org.jetbrains.annotations.NotNull;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,13 +76,14 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
             public void onNoteFallDown(WaterfallNote waterfallNote) {
                 // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
                 SoundEngineUtil.playSound(waterfallNote.getPitch(), waterfallNote.getVolume());
-                keyboardModeView.fireKeyDown(waterfallNote.getPitch(), waterfallNote.getVolume(), waterfallNote.isLeftHand() ? 14 : 1, false);
+                keyboardModeView.fireKeyDown(waterfallNote.getPitch(), waterfallNote.getVolume(),
+                        ColorUtil.getKuangColorByKuangIndex(WaterfallActivity.this, waterfallNote.isLeftHand() ? 14 : 1));
             }
 
             @Override
             public void onNoteLeave(WaterfallNote waterfallNote) {
                 // 瀑布流音符完全离开瀑布流view，触发键盘view的琴键抬起效果
-                keyboardModeView.fireKeyUp(waterfallNote.getPitch(), false);
+                keyboardModeView.fireKeyUp(waterfallNote.getPitch());
             }
         });
         keyboardModeView = findViewById(R.id.waterfall_keyboard);
