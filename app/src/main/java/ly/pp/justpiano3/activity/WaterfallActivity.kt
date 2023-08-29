@@ -55,10 +55,10 @@ class WaterfallActivity : Activity(), OnTouchListener {
         const val NOTE_PLAY_MAX_INTERVAL_TIME = 1200
 
         /**
-         * 瀑布流音符左右手颜色
+         * 瀑布流音符左右手颜色（透明度无效，透明度目前根据音符力度确定）
          */
-        const val LEFT_HAND_NOTE_COLOR = 0x7f66FFFF
-        const val RIGHT_HAND_NOTE_COLOR = 0x7fffcc00
+        const val LEFT_HAND_NOTE_COLOR = 0x2BBBFB
+        const val RIGHT_HAND_NOTE_COLOR = 0xFF802D
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

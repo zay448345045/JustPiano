@@ -425,7 +425,7 @@ class WaterfallView @JvmOverloads constructor(
             var canvas: Canvas? = null
             try {
                 // 获取绘制canvas
-                canvas = holder.lockCanvas()
+                canvas = if (holder.surface.isValid) holder.lockCanvas() else null
                 canvas?.let {
                     // 绘制背景图
                     it.drawBitmap(backgroundImage!!, null, backgroundRect!!, null)
@@ -438,7 +438,11 @@ class WaterfallView @JvmOverloads constructor(
                 }
             } finally {
                 // 解锁画布
-                canvas?.let { holder.unlockCanvasAndPost(it) }
+                canvas?.let {
+                    if (holder.surface.isValid) {
+                        holder.unlockCanvasAndPost(it)
+                    }
+                }
             }
         }
 
