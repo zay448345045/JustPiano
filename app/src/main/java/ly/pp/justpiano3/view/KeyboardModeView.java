@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class KeyboardModeView extends View {
     private static final int DEFAULT_WHITE_KEY_NUM = 8;
@@ -41,7 +43,7 @@ public class KeyboardModeView extends View {
     };
 
     private enum KeyImageTypeEnum {
-        BLACK_KEY, WHITE_KEY_LEFT, WHITE_KEY_MIDDLE, WHITE_KEY_RIGHT;
+        BLACK_KEY, WHITE_KEY_LEFT, WHITE_KEY_MIDDLE, WHITE_KEY_RIGHT
     }
 
     // midi音高转白键或黑键索引
@@ -74,13 +76,18 @@ public class KeyboardModeView extends View {
 
     private int whiteKeyNum;
     private int whiteKeyOffset;
-    private int noteOnColor = 0xffffffff;
+    private int noteOnColor = 0xffffff;
 
     private Bitmap keyboardImage;
     private Bitmap whiteKeyRightImage;
     private Bitmap whiteKeyMiddleImage;
     private Bitmap whiteKeyLeftImage;
     private Bitmap blackKeyImage;
+
+    /**
+     * 颜色过滤器处理 - 对象缓存
+     */
+    private final Map<String, PorterDuffColorFilter> colorFilterMap = new ConcurrentHashMap<>();
 
     /**
      * 是否可点击琴键
@@ -395,15 +402,21 @@ public class KeyboardModeView extends View {
                 return;
             }
             notesOnArray[pitchInScreen] = true;
-            Paint currentPitchPaint = notesOnPaintArray[pitchInScreen] != null ? notesOnPaintArray[pitchInScreen] : new Paint(Paint.ANTI_ALIAS_FLAG);
-            if (MidiUtil.isBlackKey(pitch)) {
-                // 对于黑键，使用PorterDuff.Mode.ADD模式叠加颜色，对于白键，使用PorterDuff.Mode.MULTIPLY模式，使绘制颜色叠加看起来更为真实
-                int handledColor = Color.argb(volume, Color.red(color), Color.green(color), Color.blue(color));
-                currentPitchPaint.setColorFilter(new PorterDuffColorFilter(handledColor, PorterDuff.Mode.ADD));
-            } else {
-                int handledColor = Color.argb(volume * 2, Color.red(color), Color.green(color), Color.blue(color));
-                currentPitchPaint.setColorFilter(new PorterDuffColorFilter(handledColor, PorterDuff.Mode.MULTIPLY));
+            if (notesOnPaintArray[pitchInScreen] == null) {
+                notesOnPaintArray[pitchInScreen] = new Paint(Paint.ANTI_ALIAS_FLAG);
             }
+            boolean blackKey = MidiUtil.isBlackKey(pitch);
+            PorterDuffColorFilter porterDuffColorFilter = colorFilterMap.get(String.valueOf(color) + blackKey);
+            if (porterDuffColorFilter == null) {
+                // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
+                // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
+                int handledColor = blackKey ? Color.argb(Color.alpha(0x7F000000), Color.red(color), Color.green(color), Color.blue(color))
+                        : Color.argb(Color.alpha(0xFF000000), Color.red(color), Color.green(color), Color.blue(color));
+                Log.i("TAG", "handledColor: " + String.format("%x", handledColor));
+                porterDuffColorFilter = new PorterDuffColorFilter(handledColor, blackKey ? PorterDuff.Mode.ADD : PorterDuff.Mode.MULTIPLY);
+                colorFilterMap.put(String.valueOf(color) + blackKey, porterDuffColorFilter);
+            }
+            notesOnPaintArray[pitchInScreen].setColorFilter(porterDuffColorFilter);
             postInvalidate();
         }
     }

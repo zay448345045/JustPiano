@@ -355,8 +355,6 @@ class WaterfallView @JvmOverloads constructor(
             val octaveLinePath = Path()
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
-                // 暂停线程，控制最高绘制帧率
-                sleepThreadFrameTime()
                 // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
                 // 计算过程中，减掉暂停播放后继续播放所带来的时间差
                 var playIntervalTime =
@@ -393,24 +391,10 @@ class WaterfallView @JvmOverloads constructor(
                 if (progress > totalProgress) {
                     isPause = true
                 }
-                // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(notePaint, octaveLinePaint, octaveLinePath)
                 // 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
                 handleWaterfallNoteListener()
-            }
-        }
-
-        /**
-         * 暂停线程，控制最高绘制帧率
-         */
-        private fun sleepThreadFrameTime() {
-            // 在绘制线程中的sleep数值若比系统刷新率确定的每帧时间短，则sleep的值可能会被忽略，此处限定每帧最小间隔10毫秒绘制
-            // 即是说，系统刷新率如果设置比100Hz要高的情况下，会强制100Hz绘制，设置比100Hz低的情况下，绘制频率取决于系统设置的刷新率
-            // 因此，计算绘制坐标等，不要依赖这个sleep的时间，而要手动取系统时间计时，用时间差来计算坐标
-            try {
-                sleep(10)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
+                // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
+                doDrawWaterfall(notePaint, octaveLinePaint, octaveLinePath)
             }
         }
 

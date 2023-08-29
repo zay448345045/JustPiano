@@ -80,7 +80,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
                 keyboardModeView.fireKeyDown(
                         waterfallNote.pitch, waterfallNote.volume,
-                        if (waterfallNote.leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR
+                        (if (waterfallNote.leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR).toInt()
                 )
             }
 
@@ -96,8 +96,8 @@ class WaterfallActivity : Activity(), OnTouchListener {
                         // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
                         waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
                         // 设置瀑布流音符的左右手颜色
-                        waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR
-                        waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
+                        waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR.toInt()
+                        waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR.toInt()
                         // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                         val waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView)
                         waterfallView.startPlay(waterfallNotes)
