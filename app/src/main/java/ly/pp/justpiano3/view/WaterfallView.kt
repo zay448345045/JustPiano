@@ -18,13 +18,26 @@ class WaterfallView @JvmOverloads constructor(
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : SurfaceView(context, attrs, defStyleAttr) {
+
+    /**
+     * 背景图及背景的绘制范围
+     */
+    private var backgroundImage: Bitmap? = null
+    private var backgroundRect: RectF? = null
+
     /**
      * 进度条图片与进度条背景（基底）图片，及它们的绘制范围
      */
-    private var progressBarImage: Bitmap?
-    private var progressBarBaseImage: Bitmap?
+    private var progressBarImage: Bitmap? = null
+    private var progressBarBaseImage: Bitmap? = null
     private var progressBarRect: RectF? = null
     private var progressBarBaseRect: RectF? = null
+
+    /**
+     * 瀑布流音符左右手颜色
+     */
+    var leftHandNoteColor = 0
+    var rightHandNoteColor = 0
 
     /**
      * 绘制音块瀑布流内容
@@ -100,10 +113,19 @@ class WaterfallView @JvmOverloads constructor(
         this.noteFallListener = noteFallListener
     }
 
+    companion object {
+
+        /**
+         * 瀑布流音符之间的绘制空缺间隔时间，单位毫秒，防止同音高的音符连续绘制时看起来粘在一起，小于这个值的音符将不可见
+         */
+        const val NOTE_MIN_INTERVAL = 10
+    }
+
     init {
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
-        // 通过皮肤加载进度条图片
+        // 通过皮肤加载背景图、进度条图片
+        backgroundImage = SkinImageLoadUtil.loadImage(context, "background_hd")
         progressBarImage = SkinImageLoadUtil.loadImage(context, "progress_bar")
         progressBarBaseImage = SkinImageLoadUtil.loadImage(context, "progress_bar_base")
     }
@@ -120,9 +142,10 @@ class WaterfallView @JvmOverloads constructor(
         Arrays.fill(waterfallNoteStatus, WaterfallNoteStatusEnum.INIT)
         // 计算曲谱总进度 = 曲谱总时长 + view的高度，因为要等最后一个音符绘制完的时间才是曲谱最终结束的时间
         totalProgress = waterfallNotes.maxOf { it.endTime } + height
+        // 初始化背景图的绘制范围
+        backgroundRect = RectF(0f, 0f, width.toFloat(), height.toFloat())
         // 初始化进度条背景图（基底）的绘制坐标
-        progressBarBaseRect =
-                RectF(0f, 0f, width.toFloat(), progressBarBaseImage!!.height.toFloat())
+        progressBarBaseRect = RectF(0f, 0f, width.toFloat(), progressBarBaseImage!!.height.toFloat())
         // 初始化进度条的绘制坐标，初始情况下，进度条宽度为0
         progressBarRect = RectF(0f, 0f, 0f, progressBarImage!!.height.toFloat())
         // 开启绘制线程
@@ -270,7 +293,7 @@ class WaterfallView @JvmOverloads constructor(
     private fun updateNoteStatusByProgress(progress: Int) {
         // 执行重新设置音符的状态，根据起始时间和结束时间，结合目前进度计算坐标来确定状态
         for (i in waterfallNotes.indices) {
-            if (progress - waterfallNotes[i].endTime > height) {
+            if (progress - waterfallNotes[i].endTime + NOTE_MIN_INTERVAL > height) {
                 waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH
             } else if (progress - waterfallNotes[i].startTime > height) {
                 waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING
@@ -319,18 +342,15 @@ class WaterfallView @JvmOverloads constructor(
         override fun run() {
             // 记录绘制的起始时间
             val startPlayTime = System.currentTimeMillis()
-            // 音块边界线部分Paint
-            val borderPaint = Paint()
-            borderPaint.alpha = 255
-            borderPaint.style = Paint.Style.STROKE
-            borderPaint.strokeWidth = 15f
-            // 音块实心部分Paint
+            // 音块Paint
             val notePaint = Paint()
             notePaint.style = Paint.Style.FILL
             // 每个八度的虚线Paint
             val octaveLinePaint = Paint()
-            octaveLinePaint.color = Color.BLACK
-            octaveLinePaint.strokeWidth = 5f
+            octaveLinePaint.color = Color.WHITE
+            octaveLinePaint.alpha = 128
+            octaveLinePaint.strokeWidth = 3f
+            octaveLinePaint.style = Paint.Style.STROKE
             octaveLinePaint.pathEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
             val octaveLinePath = Path()
             // 循环绘制，直到外部有触发终止绘制
@@ -374,7 +394,7 @@ class WaterfallView @JvmOverloads constructor(
                     isPause = true
                 }
                 // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(borderPaint, notePaint, octaveLinePaint, octaveLinePath)
+                doDrawWaterfall(notePaint, octaveLinePaint, octaveLinePath)
                 // 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
                 handleWaterfallNoteListener()
             }
@@ -398,7 +418,6 @@ class WaterfallView @JvmOverloads constructor(
          * 执行绘制瀑布流
          */
         private fun doDrawWaterfall(
-                borderPaint: Paint,
                 notePaint: Paint,
                 octaveLinePaint: Paint,
                 octaveLinePath: Path
@@ -408,12 +427,12 @@ class WaterfallView @JvmOverloads constructor(
                 // 获取绘制canvas
                 canvas = holder.lockCanvas()
                 canvas?.let {
-                    // 清空画布，之后开始绘制
-                    it.drawColor(Color.BLACK)
+                    // 绘制背景图
+                    it.drawBitmap(backgroundImage!!, null, backgroundRect!!, null)
                     // 八度虚线绘制
                     drawOctaveLine(it, octaveLinePaint, octaveLinePath)
                     // 音块绘制
-                    drawNotes(it, borderPaint, notePaint)
+                    drawNotes(it, notePaint)
                     // 进度条绘制
                     drawProgressBar(it)
                 }
@@ -432,7 +451,8 @@ class WaterfallView @JvmOverloads constructor(
             }
             // 设置每个八度虚线的坐标
             for (octaveLineX in octaveLineXList!!) {
-                if (octaveLineX in 1 until width) {
+                if (octaveLineX in 0 until width) {
+                    octaveLinePath.reset()
                     octaveLinePath.moveTo(octaveLineX.toFloat(), 0f)
                     octaveLinePath.lineTo(octaveLineX.toFloat(), height.toFloat())
                     // 执行八度虚线绘制
@@ -444,29 +464,21 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 绘制所有应该绘制的音块
          */
-        private fun drawNotes(canvas: Canvas, borderPaint: Paint, notePaint: Paint) {
+        private fun drawNotes(canvas: Canvas, notePaint: Paint) {
             for (waterfallNote in waterfallNotes) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
                     // 根据音符的左右手确定音块的颜色
-                    notePaint.color = if (waterfallNote.leftHand) 0x7f66FFFF else 0x7fffcc00
+                    notePaint.color = if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
                     // 根据音符的力度，确定音块绘制的透明度
                     notePaint.alpha = waterfallNote.volume * 2
-                    // 绘制音块的实心部分
+                    // 绘制音块
                     canvas.drawRect(
                             waterfallNote.left,
-                            (progress - waterfallNote.endTime).toFloat(),
+                            (progress - waterfallNote.endTime + NOTE_MIN_INTERVAL).toFloat(),
                             waterfallNote.right,
                             (progress - waterfallNote.startTime).toFloat(),
                             notePaint
-                    )
-                    // 绘制音块的下边框线，防止面条音符看起来像粘在一起
-                    canvas.drawLine(
-                            waterfallNote.left,
-                            (progress - waterfallNote.startTime).toFloat(),
-                            waterfallNote.right,
-                            (progress - waterfallNote.startTime).toFloat(),
-                            borderPaint
                     )
                 }
             }
@@ -488,10 +500,13 @@ class WaterfallView @JvmOverloads constructor(
          * 音符是否在view中对用户可见
          */
         private fun noteIsVisible(waterfallNote: WaterfallNote): Boolean {
-            // 音符的上下左右边界都要在view内，对于左右边界，可以允许有一部分出现在view内，对于上下边界的说明：
-            // 进度（毫秒数） - 音符开始时间小于0的时候，音符在view的上方，未开始出现，这种情况下过滤掉，不绘制
-            // 进度（毫秒数） - 音符结束时间大于view的高度的时候，音符已经完全离开了view的下边界，这种情况下过滤掉，不绘制
-            return progress - waterfallNote.startTime > 0 && progress - waterfallNote.endTime < height && waterfallNote.right > 0 && waterfallNote.left < width
+            // 1、音符的上下左右边界都要在view内，对于左右边界，可以允许有一部分出现在view内
+            // 2、音符间隔过小，不绘制
+            // 3、进度（毫秒数） - 音符开始时间小于0的时候，音符在view的上方，未开始出现，这种情况下过滤掉，不绘制
+            // 4、进度（毫秒数） - 音符结束时间大于view的高度的时候，音符已经完全离开了view的下边界，这种情况下过滤掉，不绘制
+            //
+            return waterfallNote.right > 0 && waterfallNote.left < width && waterfallNote.interval() > NOTE_MIN_INTERVAL
+                    && progress - waterfallNote.startTime > 0 && progress - waterfallNote.endTime + NOTE_MIN_INTERVAL < height
         }
 
         /**
@@ -503,7 +518,7 @@ class WaterfallView @JvmOverloads constructor(
                 return
             }
             for (i in waterfallNotes.indices) {
-                if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING && progress - waterfallNotes[i].endTime > height) {
+                if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING && progress - waterfallNotes[i].endTime + NOTE_MIN_INTERVAL > height) {
                     // 判断到音块刚刚完全离开view时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteLeave(waterfallNotes[i])
                     waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH
