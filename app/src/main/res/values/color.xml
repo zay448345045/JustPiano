@@ -10,12 +10,14 @@
     <color name="translent">#00ffffff</color>
     <color name="yellow_l">#30c1b9fd</color>
     <color name="red_l">#60ffb9fd</color>
+    <color name="red_lo">#eeef4580</color>
     <color name="red_light">#DCEA4848</color>
     <color name="green_y">#ff6e8848</color>
     <color name="yellow_r">#ffffbb40</color>
     <color name="yellow_r_1">#00f4b240</color>
     <color name="yellow_c">#ffd5fce6</color>
     <color name="blue_l">#004b75ff</color>
+    <color name="blue_le">#ee54a4f0</color>
     <color name="blue_translent">#ff3195f3</color>
     <color name="dark">#dd000000</color>
     <color name="top_background">#ff26292f</color>
