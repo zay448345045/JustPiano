@@ -17,10 +17,12 @@ import ly.pp.justpiano3.entity.WaterfallNote;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.KeyboardModeView;
+import ly.pp.justpiano3.view.ScrollText;
 import ly.pp.justpiano3.view.WaterfallView;
 import ly.pp.justpiano3.view.play.PmFileParser;
 import org.jetbrains.annotations.NotNull;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +63,7 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
         setContentView(R.layout.waterfall);
         // 从extras中的数据确定曲目，解析pm文件
         PmFileParser pmFileParser = parsePmFileFromIntentExtras();
-        TextView songNameView = findViewById(R.id.waterfall_song_name);
+        ScrollText songNameView = findViewById(R.id.waterfall_song_name);
         songNameView.setText(pmFileParser.getSongName());
         waterfallView = findViewById(R.id.waterfall_view);
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
@@ -89,6 +91,8 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
         keyboardModeView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
+                waterfallView.setOctaveLineXList(keyboardModeView.getAllOctaveLineX());
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 WaterfallNote[] waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView);
                 waterfallView.startPlay(waterfallNotes);

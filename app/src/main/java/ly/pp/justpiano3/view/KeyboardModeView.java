@@ -158,6 +158,17 @@ public class KeyboardModeView extends View {
     }
 
     /**
+     * 获取所有八度键盘图的起始横坐标
+     */
+    public List<Integer> getAllOctaveLineX() {
+        List<Integer> octaveLineXList = new ArrayList<>();
+        for (RectF keyboardImageRect : keyboardImageRectArray) {
+            octaveLineXList.add((int) keyboardImageRect.left);
+        }
+        return octaveLineXList;
+    }
+
+    /**
      * 计算好琴键各种图片要绘制的位置坐标，一般在修改view宽高，动画播放，或者修改白键数量等场景中调用
      */
     private void makeDraw() {

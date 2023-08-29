@@ -6,10 +6,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import lombok.Getter;
+import lombok.Setter;
 import ly.pp.justpiano3.entity.WaterfallNote;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 瀑布流绘制view
@@ -29,6 +32,13 @@ public class WaterfallView extends SurfaceView {
      */
     @Getter
     private WaterfallNote[] waterfallNotes;
+
+    /**
+     * 所有八度虚线的横坐标列表
+     */
+    @Getter
+    @Setter
+    private List<Integer> octaveLineXList;
 
     /**
      * 曲谱总进度（总时长），单位毫秒
@@ -344,6 +354,12 @@ public class WaterfallView extends SurfaceView {
             // 音块实心部分Paint
             Paint notePaint = new Paint();
             notePaint.setStyle(Paint.Style.FILL);
+            // 每个八度的虚线Paint
+            Paint octaveLinePaint = new Paint();
+            octaveLinePaint.setColor(Color.BLACK);
+            octaveLinePaint.setStrokeWidth(5);
+            octaveLinePaint.setPathEffect(new DashPathEffect(new float[]{10, 5}, 0));
+            Path octaveLinePath = new Path();
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
                 // 暂停线程，控制最高绘制帧率
@@ -384,7 +400,7 @@ public class WaterfallView extends SurfaceView {
                     isPause = true;
                 }
                 // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(borderPaint, notePaint);
+                doDrawWaterfall(borderPaint, notePaint, octaveLinePaint, octaveLinePath);
                 // 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
                 handleWaterfallNoteListener();
             }
@@ -407,7 +423,7 @@ public class WaterfallView extends SurfaceView {
         /**
          * 执行绘制瀑布流
          */
-        private void doDrawWaterfall(Paint borderPaint, Paint notePaint) {
+        private void doDrawWaterfall(Paint borderPaint, Paint notePaint, Paint octaveLinePaint, Path octaveLinePath) {
             Canvas canvas = null;
             try {
                 // 获取绘制canvas
@@ -415,6 +431,8 @@ public class WaterfallView extends SurfaceView {
                 if (canvas != null) {
                     // 清空画布，之后开始绘制
                     canvas.drawColor(Color.BLACK);
+                    // 八度虚线绘制
+                    drawOctaveLine(canvas, octaveLinePaint, octaveLinePath);
                     // 音块绘制
                     drawNotes(canvas, borderPaint, notePaint);
                     // 进度条绘制
@@ -429,15 +447,21 @@ public class WaterfallView extends SurfaceView {
         }
 
         /**
-         * 绘制进度条
+         * 绘制八度虚线
          */
-        private void drawProgressBar(Canvas canvas) {
-            // 绘制进度条背景（基底）图，它包含完整的一个进度条轮廓
-            canvas.drawBitmap(progressBarBaseImage, null, progressBarBaseRect, null);
-            // 修改当前进度条的最右端绘制坐标，进度条最右侧坐标 = 曲谱播放进度百分比 * view的宽度
-            progressBarRect.right = (float) progress / totalProgress * getWidth();
-            // 绘制进度条图片
-            canvas.drawBitmap(progressBarImage, null, progressBarRect, null);
+        private void drawOctaveLine(Canvas canvas, Paint octaveLinePaint, Path octaveLinePath) {
+            if (octaveLineXList == null) {
+                return;
+            }
+            // 设置每个八度虚线的坐标
+            for (Integer octaveLineX : octaveLineXList) {
+                if (octaveLineX > 0 && octaveLineX < getWidth()) {
+                    octaveLinePath.moveTo(octaveLineX, 0);
+                    octaveLinePath.lineTo(octaveLineX, getHeight());
+                    // 执行八度虚线绘制
+                    canvas.drawPath(octaveLinePath, octaveLinePaint);
+                }
+            }
         }
 
         /**
@@ -448,11 +472,7 @@ public class WaterfallView extends SurfaceView {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
                     // 根据音符的左右手确定音块的颜色
-                    if (waterfallNote.isLeftHand()) {
-                        notePaint.setColor(0x7f66FFFF);
-                    } else {
-                        notePaint.setColor(0x7fffcc00);
-                    }
+                    notePaint.setColor(waterfallNote.isLeftHand() ? 0x7f66FFFF : 0x7fffcc00);
                     // 根据音符的力度，确定音块绘制的透明度
                     notePaint.setAlpha(waterfallNote.getVolume() * 2);
                     // 绘制音块的实心部分
@@ -463,6 +483,18 @@ public class WaterfallView extends SurfaceView {
                             waterfallNote.getRight(), progress - waterfallNote.getStartTime(), borderPaint);
                 }
             }
+        }
+
+        /**
+         * 绘制进度条
+         */
+        private void drawProgressBar(Canvas canvas) {
+            // 绘制进度条背景（基底）图，它包含完整的一个进度条轮廓
+            canvas.drawBitmap(progressBarBaseImage, null, progressBarBaseRect, null);
+            // 修改当前进度条的最右端绘制坐标，进度条最右侧坐标 = 曲谱播放进度百分比 * view的宽度
+            progressBarRect.right = (float) progress / totalProgress * getWidth();
+            // 绘制进度条图片
+            canvas.drawBitmap(progressBarImage, null, progressBarRect, null);
         }
 
         /**
