@@ -453,13 +453,15 @@ class WaterfallView @JvmOverloads constructor(
          * 绘制所有应该绘制的音块
          */
         private fun drawNotes(canvas: Canvas, notePaint: Paint) {
-            for (waterfallNote in waterfallNotes) {
+            for ((index, waterfallNote) in waterfallNotes.withIndex()) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
                     // 根据音符的左右手确定音块的颜色
-                    notePaint.color = if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
+                    val color = if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
+                    // 根据音符是否为弹奏中状态，确定颜色是否要高亮显示
+                    notePaint.color = if (waterfallNoteStatus[index] == WaterfallNoteStatusEnum.PLAYING) highlightColor(color) else color
                     // 根据音符的力度，确定音块绘制的透明度
-                    notePaint.alpha = waterfallNote.volume * 2
+                    notePaint.alpha = minOf(waterfallNote.volume / 100f * 128 * 2, 255f).toInt()
                     // 绘制音块
                     canvas.drawRect(
                             waterfallNote.left,
@@ -470,6 +472,23 @@ class WaterfallView @JvmOverloads constructor(
                     )
                 }
             }
+        }
+
+        /**
+         * 使颜色高亮
+         */
+        private fun highlightColor(color: Int): Int {
+            val red = Color.red(color)
+            val green = Color.green(color)
+            val blue = Color.blue(color)
+            val alpha = Color.alpha(color)
+
+            val highlightedRed = minOf(red + 50, 255)
+            val highlightedGreen = minOf(green + 50, 255)
+            val highlightedBlue = minOf(blue + 50, 255)
+            val highlightedAlpha = minOf(alpha + 50, 255)
+
+            return Color.argb(highlightedAlpha, highlightedRed, highlightedGreen, highlightedBlue)
         }
 
         /**
