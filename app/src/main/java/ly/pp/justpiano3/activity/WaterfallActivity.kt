@@ -1,241 +1,245 @@
-package ly.pp.justpiano3.activity;
+package ly.pp.justpiano3.activity
 
-import android.app.Activity;
-import android.graphics.RectF;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import androidx.core.util.Pair;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.WaterfallNote;
-import ly.pp.justpiano3.utils.ColorUtil;
-import ly.pp.justpiano3.utils.MidiUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.KeyboardModeView;
-import ly.pp.justpiano3.view.ScrollText;
-import ly.pp.justpiano3.view.WaterfallView;
-import ly.pp.justpiano3.view.play.PmFileParser;
-import org.jetbrains.annotations.NotNull;
+import android.app.Activity
+import android.graphics.RectF
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
+import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnTouchListener
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import androidx.core.util.Pair
+import io.netty.util.internal.StringUtil
+import ly.pp.justpiano3.JPApplication
+import ly.pp.justpiano3.R
+import ly.pp.justpiano3.entity.WaterfallNote
+import ly.pp.justpiano3.utils.ColorUtil
+import ly.pp.justpiano3.utils.MidiUtil
+import ly.pp.justpiano3.utils.SoundEngineUtil
+import ly.pp.justpiano3.view.KeyboardModeView
+import ly.pp.justpiano3.view.ScrollText
+import ly.pp.justpiano3.view.WaterfallView
+import ly.pp.justpiano3.view.WaterfallView.NoteFallListener
+import ly.pp.justpiano3.view.play.PmFileParser
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-public class WaterfallActivity extends Activity implements View.OnTouchListener {
-
-    /**
-     * 瀑布的宽度占键盘黑键宽度的百分比
-     */
-    public static final float BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f;
-
-    /**
-     * 瀑布流音符播放时的最长的持续时间
-     */
-    public static final int NOTE_PLAY_MAX_INTERVAL_TIME = 1200;
-
+class WaterfallActivity : Activity(), OnTouchListener {
     /**
      * 瀑布流view
      */
-    private WaterfallView waterfallView;
+    private lateinit var waterfallView: WaterfallView
 
     /**
      * 钢琴键盘view
      */
-    private KeyboardModeView keyboardModeView;
+    private lateinit var keyboardModeView: KeyboardModeView
 
     /**
      * 用于播放动画
      */
-    private ScheduledExecutorService scheduledExecutor;
+    private var scheduledExecutor: ScheduledExecutorService? = null
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.waterfall);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.waterfall)
         // 从extras中的数据确定曲目，解析pm文件
-        PmFileParser pmFileParser = parsePmFileFromIntentExtras();
-        ScrollText songNameView = findViewById(R.id.waterfall_song_name);
-        songNameView.setText(pmFileParser.getSongName());
-        waterfallView = findViewById(R.id.waterfall_view);
+        val pmFileParser = parsePmFileFromIntentExtras()
+        val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
+        songNameView.text = pmFileParser.songName
+        waterfallView = findViewById(R.id.waterfall_view)
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
-        waterfallView.setNoteFallListener(new WaterfallView.NoteFallListener() {
-            @Override
-            public void onNoteAppear(WaterfallNote waterfallNote) {
+        waterfallView.setNoteFallListener(object : NoteFallListener {
+            override fun onNoteAppear(waterfallNote: WaterfallNote?) {
                 // 瀑布流音符在瀑布流view的顶端出现，目前无操作
             }
 
-            @Override
-            public void onNoteFallDown(WaterfallNote waterfallNote) {
+            override fun onNoteFallDown(waterfallNote: WaterfallNote?) {
                 // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
-                SoundEngineUtil.playSound(waterfallNote.getPitch(), waterfallNote.getVolume());
-                keyboardModeView.fireKeyDown(waterfallNote.getPitch(), waterfallNote.getVolume(),
-                        ColorUtil.getKuangColorByKuangIndex(WaterfallActivity.this, waterfallNote.isLeftHand() ? 14 : 1));
+                SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
+                keyboardModeView.fireKeyDown(
+                        waterfallNote.pitch, waterfallNote.volume,
+                        ColorUtil.getKuangColorByKuangIndex(
+                                this@WaterfallActivity,
+                                if (waterfallNote.leftHand) 14 else 1
+                        )
+                )
             }
 
-            @Override
-            public void onNoteLeave(WaterfallNote waterfallNote) {
+            override fun onNoteLeave(waterfallNote: WaterfallNote?) {
                 // 瀑布流音符完全离开瀑布流view，触发键盘view的琴键抬起效果
-                keyboardModeView.fireKeyUp(waterfallNote.getPitch());
+                keyboardModeView.fireKeyUp(waterfallNote!!.pitch)
             }
-        });
-        keyboardModeView = findViewById(R.id.waterfall_keyboard);
+        })
+        keyboardModeView = findViewById(R.id.waterfall_keyboard)
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
-        keyboardModeView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
-                waterfallView.setOctaveLineXList(keyboardModeView.getAllOctaveLineX());
-                // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
-                WaterfallNote[] waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView);
-                waterfallView.startPlay(waterfallNotes);
-                // 开启增减白键数量、移动键盘按钮的监听
-                findViewById(R.id.waterfall_sub_key).setOnTouchListener(WaterfallActivity.this);
-                findViewById(R.id.waterfall_add_key).setOnTouchListener(WaterfallActivity.this);
-                findViewById(R.id.waterfall_key_move_left).setOnTouchListener(WaterfallActivity.this);
-                findViewById(R.id.waterfall_key_move_right).setOnTouchListener(WaterfallActivity.this);
-                // 移除布局监听，避免重复调用
-                keyboardModeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
+        keyboardModeView.viewTreeObserver
+                .addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
+                        waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                        // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
+                        val waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView)
+                        waterfallView.startPlay(waterfallNotes)
+                        // 开启增减白键数量、移动键盘按钮的监听
+                        findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
+                        findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
+                        findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
+                        findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
+                        // 移除布局监听，避免重复调用
+                        keyboardModeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
     }
 
     /**
      * 重新确定瀑布流音符长条的左侧和右侧的坐标值
      */
-    private void updateWaterfallNoteLeftRightLocation(WaterfallNote[] waterfallNotes, KeyboardModeView keyboardModeView) {
-        for (WaterfallNote waterfallNote : waterfallNotes) {
-            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(MidiUtil.isBlackKey(waterfallNote.getPitch()),
-                    keyboardModeView.convertPitchToReact(waterfallNote.getPitch()));
+    private fun updateWaterfallNoteLeftRightLocation(
+            waterfallNotes: Array<WaterfallNote>,
+            keyboardModeView: KeyboardModeView
+    ) {
+        for (waterfallNote in waterfallNotes) {
+            val noteLeftRightLocation = convertWidthToWaterfallWidth(
+                    MidiUtil.isBlackKey(waterfallNote.pitch),
+                    keyboardModeView.convertPitchToReact(waterfallNote.pitch)
+            )
             if (noteLeftRightLocation != null) {
-                waterfallNote.setLeft(noteLeftRightLocation.first);
-                waterfallNote.setRight(noteLeftRightLocation.second);
+                waterfallNote.left = noteLeftRightLocation.first
+                waterfallNote.right = noteLeftRightLocation.second
             } else {
                 // 说明音符的音高落在了键盘之外，直接将坐标置为-1，不绘制即可
-                waterfallNote.setLeft(-1);
-                waterfallNote.setRight(-1);
+                waterfallNote.left = (-1).toFloat()
+                waterfallNote.right = (-1).toFloat()
             }
         }
     }
 
-    @NotNull
-    private PmFileParser parsePmFileFromIntentExtras() {
-        PmFileParser pmFileParser;
-        String songPath = getIntent().getExtras().getString("songPath");
-        if (StringUtil.isNullOrEmpty(songPath)) {
-            byte[] songBytes = getIntent().getExtras().getByteArray("songBytes");
-            pmFileParser = new PmFileParser(songBytes);
+    private fun parsePmFileFromIntentExtras(): PmFileParser {
+        val pmFileParser: PmFileParser
+        val songPath = intent.extras?.getString("songPath")
+        pmFileParser = if (StringUtil.isNullOrEmpty(songPath)) {
+            val songBytes = intent.extras?.getByteArray("songBytes")
+            PmFileParser(songBytes)
         } else {
-            pmFileParser = new PmFileParser(this, songPath);
+            PmFileParser(this, songPath)
         }
-        return pmFileParser;
+        return pmFileParser
     }
 
-    @Override
-    protected void onStop() {
-        if (waterfallView.isPlaying()) {
-            waterfallView.pausePlay();
+    override fun onStop() {
+        if (waterfallView.isPlaying) {
+            waterfallView.pausePlay()
         }
-        super.onStop();
+        super.onStop()
     }
 
-    @Override
-    protected void onStart() {
-        if (!waterfallView.isPlaying()) {
-            waterfallView.resumePlay();
+    override fun onStart() {
+        if (!waterfallView.isPlaying) {
+            waterfallView.resumePlay()
         }
-        super.onStart();
+        super.onStart()
     }
 
-    @Override
-    protected void onRestart() {
-        if (!waterfallView.isPlaying()) {
-            waterfallView.resumePlay();
+    override fun onRestart() {
+        if (!waterfallView.isPlaying) {
+            waterfallView.resumePlay()
         }
-        super.onRestart();
+        super.onRestart()
     }
 
-    @Override
-    protected void onDestroy() {
-        waterfallView.destroy();
-        waterfallView = null;
-        super.onDestroy();
+    override fun onDestroy() {
+        // 停止播放
+        waterfallView.stopPlay()
+        waterfallView.destroy()
+        super.onDestroy()
     }
 
     /**
      * pm文件解析结果转换为瀑布流音符
      */
-    private WaterfallNote[] convertToWaterfallNote(PmFileParser pmFileParser, KeyboardModeView keyboardModeView) {
+    private fun convertToWaterfallNote(
+            pmFileParser: PmFileParser,
+            keyboardModeView: KeyboardModeView?
+    ): Array<WaterfallNote> {
         // 分别处理左右手的音符list，以便寻找每条音轨的上一个音符，插入结束时间
-        List<WaterfallNote> leftHandWaterfallNoteList = new ArrayList<>();
-        List<WaterfallNote> rightHandWaterfallNoteList = new ArrayList<>();
-        int totalTime = 0;
+        val leftHandWaterfallNoteList: MutableList<WaterfallNote> = ArrayList()
+        val rightHandWaterfallNoteList: MutableList<WaterfallNote> = ArrayList()
+        var totalTime = 0
         // 取pm文件中的解析音符内容，进行瀑布流音符的生成
-        for (int i = 0; i < pmFileParser.getNoteArray().length; i++) {
-            int pitch = pmFileParser.getNoteArray()[i];
+        for (i in pmFileParser.noteArray.indices) {
+            val pitch = pmFileParser.noteArray[i].toInt()
             // 计算音符播放的累计时间
-            totalTime += pmFileParser.getTickArray()[i] * pmFileParser.getPm_2();
-            boolean leftHand = pmFileParser.getTrackArray()[i] != 0;
+            totalTime += pmFileParser.tickArray[i] * pmFileParser.pm_2
+            val leftHand = pmFileParser.trackArray[i].toInt() != 0
             // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
-            Pair<Float, Float> noteLeftRightLocation = convertWidthToWaterfallWidth(MidiUtil.isBlackKey(pitch),
-                    keyboardModeView.convertPitchToReact(pitch));
+            val noteLeftRightLocation = convertWidthToWaterfallWidth(
+                    MidiUtil.isBlackKey(pitch),
+                    keyboardModeView!!.convertPitchToReact(pitch)
+            )
             if (noteLeftRightLocation != null) {
-                WaterfallNote waterfallNote = new WaterfallNote()
-                        .setLeft(noteLeftRightLocation.first)
-                        .setRight(noteLeftRightLocation.second)
-                        .setStartTime(totalTime)
-                        .setVolume(pmFileParser.getVolumeArray()[i])
-                        .setPitch(pitch)
-                        .setLeftHand(leftHand);
+                val waterfallNote = WaterfallNote(noteLeftRightLocation.first, noteLeftRightLocation.second,
+                        totalTime, 0, leftHand, pitch, pmFileParser.volumeArray[i].toInt())
                 // 根据左右手拿到对应的list
-                List<WaterfallNote> waterfallNoteListByHand = leftHand ? leftHandWaterfallNoteList : rightHandWaterfallNoteList;
+                val waterfallNoteListByHand: MutableList<WaterfallNote> =
+                        if (leftHand) leftHandWaterfallNoteList else rightHandWaterfallNoteList
                 // 填充上一个音符的结束时间 = 当前音符的起始时间，如果之前的好几个音符的起始时间相同（按和弦），那么统一都设置成当前音符的起始时间
-                fillNoteEndTime(waterfallNoteListByHand, waterfallNote.getStartTime());
-                waterfallNoteListByHand.add(waterfallNote);
+                fillNoteEndTime(waterfallNoteListByHand, waterfallNote.startTime)
+                waterfallNoteListByHand.add(waterfallNote)
             }
         }
         // 左右手音符列表合并，做后置处理
-        return waterfallNoteListAfterHandle(leftHandWaterfallNoteList, rightHandWaterfallNoteList);
+        return waterfallNoteListAfterHandle(leftHandWaterfallNoteList, rightHandWaterfallNoteList)
     }
 
     /**
      * 音符list后置处理，订正一些时间间隔情况，最后转为数组
-     * <p>
+     *
+     *
      * 1、处理最后一个音符间隔没有写进去的情况，直接写入间隔最大值
      * 2、合并左右手两条音轨的音符list，按音符的起始时间进行排序
      * 3、处理音符间隔太大的情况，订正间隔为最大值
      * 4、所有音符乘以节拍比率数值，整体控制速度
      * 5、转为数组返回
      */
-    private WaterfallNote[] waterfallNoteListAfterHandle(List<WaterfallNote> leftHandWaterfallNoteList, List<WaterfallNote> rightHandWaterfallNoteList) {
-        List<WaterfallNote> waterfallNoteList = new ArrayList<>();
+    private fun waterfallNoteListAfterHandle(
+            leftHandWaterfallNoteList: List<WaterfallNote>,
+            rightHandWaterfallNoteList: List<WaterfallNote>
+    ): Array<WaterfallNote> {
+        val waterfallNoteList: MutableList<WaterfallNote> = ArrayList()
         // 每个音轨的最后一个音符，按之前的逻辑，没有填充结束时间，这里直接填充最后一个音符的结束时间 = 最后一个音符的起始时间 + 持续时间最大值
-        if (!leftHandWaterfallNoteList.isEmpty()) {
-            fillNoteEndTime(leftHandWaterfallNoteList, leftHandWaterfallNoteList.get(leftHandWaterfallNoteList.size() - 1).getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
-            waterfallNoteList.addAll(leftHandWaterfallNoteList);
+        if (leftHandWaterfallNoteList.isNotEmpty()) {
+            fillNoteEndTime(
+                    leftHandWaterfallNoteList,
+                    leftHandWaterfallNoteList[leftHandWaterfallNoteList.size - 1].startTime + NOTE_PLAY_MAX_INTERVAL_TIME
+            )
+            waterfallNoteList.addAll(leftHandWaterfallNoteList)
         }
-        if (!rightHandWaterfallNoteList.isEmpty()) {
-            fillNoteEndTime(rightHandWaterfallNoteList, rightHandWaterfallNoteList.get(rightHandWaterfallNoteList.size() - 1).getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
-            waterfallNoteList.addAll(rightHandWaterfallNoteList);
+        if (rightHandWaterfallNoteList.isNotEmpty()) {
+            fillNoteEndTime(
+                    rightHandWaterfallNoteList,
+                    rightHandWaterfallNoteList[rightHandWaterfallNoteList.size - 1].startTime + NOTE_PLAY_MAX_INTERVAL_TIME
+            )
+            waterfallNoteList.addAll(rightHandWaterfallNoteList)
         }
-        Collections.sort(waterfallNoteList, (o1, o2) -> Integer.compare(o1.getStartTime(), o2.getStartTime()));
-
-        JPApplication jpApplication = (JPApplication) getApplication();
-        for (WaterfallNote currentWaterfallNote : waterfallNoteList) {
+        waterfallNoteList.sortWith { (_, _, startTime): WaterfallNote, (_, _, startTime1): WaterfallNote ->
+            startTime.compareTo(startTime1)
+        }
+        val jpApplication = application as JPApplication
+        for (currentWaterfallNote in waterfallNoteList) {
             if (currentWaterfallNote.interval() > NOTE_PLAY_MAX_INTERVAL_TIME) {
-                currentWaterfallNote.setEndTime(currentWaterfallNote.getStartTime() + NOTE_PLAY_MAX_INTERVAL_TIME);
+                currentWaterfallNote.endTime =
+                        currentWaterfallNote.startTime + NOTE_PLAY_MAX_INTERVAL_TIME
             }
-            currentWaterfallNote.setStartTime((int) (currentWaterfallNote.getStartTime() / jpApplication.getSetting().getTempSpeed()));
-            currentWaterfallNote.setEndTime((int) (currentWaterfallNote.getEndTime() / jpApplication.getSetting().getTempSpeed()));
+            currentWaterfallNote.startTime =
+                    (currentWaterfallNote.startTime / jpApplication.setting.tempSpeed).toInt()
+            currentWaterfallNote.endTime =
+                    (currentWaterfallNote.endTime / jpApplication.setting.tempSpeed).toInt()
         }
-        return waterfallNoteList.toArray(new WaterfallNote[0]);
+        return waterfallNoteList.toTypedArray()
     }
 
     /**
@@ -244,18 +248,18 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
      * @param waterfallNoteList 音符list
      * @param noteEndTime       给定的音符结束时间
      */
-    private void fillNoteEndTime(List<WaterfallNote> waterfallNoteList, int noteEndTime) {
+    private fun fillNoteEndTime(waterfallNoteList: List<WaterfallNote>, noteEndTime: Int) {
         // 取list中上一个元素（音符），填充它的结束时间为当前音符的（累计）开始时间
-        if (!waterfallNoteList.isEmpty()) {
+        if (waterfallNoteList.isNotEmpty()) {
             // 循环向前寻找之前的音符
-            int index = waterfallNoteList.size() - 1;
+            var index = waterfallNoteList.size - 1
             do {
-                WaterfallNote lastWaterfallNote = waterfallNoteList.get(index);
+                val lastWaterfallNote = waterfallNoteList[index]
                 // 设置上一个音符的结束时间
-                lastWaterfallNote.setEndTime(Math.max(lastWaterfallNote.getStartTime(), noteEndTime));
-                index--;
+                lastWaterfallNote.endTime = lastWaterfallNote.startTime.coerceAtLeast(noteEndTime)
+                index--
                 // 如果上一个音符的开始时间和当前音符的开始时间相同，则表示同时按下，此时循环，继续设定两个音符的结束时间相同即可
-            } while (index >= 0 && waterfallNoteList.get(index).getStartTime() == waterfallNoteList.get(index + 1).getStartTime());
+            } while (index >= 0 && waterfallNoteList[index].startTime == waterfallNoteList[index + 1].startTime)
         }
     }
 
@@ -263,80 +267,108 @@ public class WaterfallActivity extends Activity implements View.OnTouchListener 
      * 将琴键RectF的宽度，转换成瀑布流长条的宽度（略小于琴键的宽度）
      * 返回值为瀑布流音符横坐标的左边界和右边界
      */
-    private Pair<Float, Float> convertWidthToWaterfallWidth(boolean isBlack, RectF rectF) {
+    private fun convertWidthToWaterfallWidth(isBlack: Boolean, rectF: RectF?): Pair<Float, Float>? {
         if (rectF == null) {
-            return null;
+            return null
         }
         // 根据比例计算瀑布流的宽度
-        float waterfallWidth = isBlack ? rectF.width() * BLACK_KEY_WATERFALL_WIDTH_FACTOR
-                : rectF.width() * KeyboardModeView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR;
+        val waterfallWidth =
+                if (isBlack) rectF.width() * BLACK_KEY_WATERFALL_WIDTH_FACTOR else rectF.width() * KeyboardModeView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR
         // 根据中轴线和新的宽度计算坐标，返回
-        return Pair.create(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2);
+        return Pair.create(
+                rectF.centerX() - waterfallWidth / 2,
+                rectF.centerX() + waterfallWidth / 2
+        )
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        int action = event.getAction();
-        int id = view.getId();
-        if (action == MotionEvent.ACTION_DOWN) {
-            view.setPressed(true);
-            updateAddOrSubtract(id);
-        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            view.setPressed(false);
-            stopAddOrSubtract();
+    override fun onTouch(view: View, event: MotionEvent): Boolean {
+        val action = event.action
+        val id = view.id
+        when (action) {
+            MotionEvent.ACTION_DOWN -> {
+                view.isPressed = true
+                updateAddOrSubtract(id)
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                view.isPressed = false
+                stopAddOrSubtract()
+                view.performClick()
+            }
         }
-        return true;
+        return true
     }
 
     /**
      * 处理按钮长按，定时发送消息
      */
-    private void updateAddOrSubtract(int viewId) {
-        scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutor.scheduleWithFixedDelay(() -> {
-            Message msg = Message.obtain(handler);
-            msg.what = viewId;
-            handler.sendMessage(msg);
-        }, 0, 80, TimeUnit.MILLISECONDS);
+    private fun updateAddOrSubtract(viewId: Int) {
+        scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
+        scheduledExecutor?.scheduleWithFixedDelay({
+            val message = Message.obtain()
+            message.what = viewId
+            handler.sendMessage(message)
+        }, 0, 80, TimeUnit.MILLISECONDS)
     }
 
     /**
      * 停止定时发送消息
      */
-    private void stopAddOrSubtract() {
+    private fun stopAddOrSubtract() {
         if (scheduledExecutor != null) {
-            scheduledExecutor.shutdownNow();
-            scheduledExecutor = null;
+            scheduledExecutor!!.shutdownNow()
+            scheduledExecutor = null
         }
     }
 
     /**
      * 处理按钮长按的消息
      */
-    private final Handler handler = new Handler(msg -> {
-        if (keyboardModeView == null || waterfallView == null || waterfallView.getWaterfallNotes() == null) {
-            return false;
+    private val handler = Handler(Looper.getMainLooper()) { msg ->
+        when (msg.what) {
+            R.id.waterfall_sub_key -> {
+                keyboardModeView.setWhiteKeyNum(keyboardModeView.whiteKeyNum - 1, 0)
+                updateWaterfallNoteLeftRightLocation(
+                        waterfallView.waterfallNotes,
+                        keyboardModeView
+                )
+            }
+
+            R.id.waterfall_add_key -> {
+                keyboardModeView.setWhiteKeyNum(keyboardModeView.whiteKeyNum + 1, 0)
+                updateWaterfallNoteLeftRightLocation(
+                        waterfallView.waterfallNotes,
+                        keyboardModeView
+                )
+            }
+
+            R.id.waterfall_key_move_left -> {
+                keyboardModeView.setWhiteKeyOffset(keyboardModeView.whiteKeyOffset - 1, 0)
+                updateWaterfallNoteLeftRightLocation(
+                        waterfallView.waterfallNotes,
+                        keyboardModeView
+                )
+            }
+
+            R.id.waterfall_key_move_right -> {
+                keyboardModeView.setWhiteKeyOffset(keyboardModeView.whiteKeyOffset + 1, 0)
+                updateWaterfallNoteLeftRightLocation(
+                        waterfallView.waterfallNotes,
+                        keyboardModeView
+                )
+            }
         }
-        switch (msg.what) {
-            case R.id.waterfall_sub_key:
-                keyboardModeView.setWhiteKeyNum(keyboardModeView.getWhiteKeyNum() - 1, 0);
-                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
-                break;
-            case R.id.waterfall_add_key:
-                keyboardModeView.setWhiteKeyNum(keyboardModeView.getWhiteKeyNum() + 1, 0);
-                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
-                break;
-            case R.id.waterfall_key_move_left:
-                keyboardModeView.setWhiteKeyOffset(keyboardModeView.getWhiteKeyOffset() - 1, 0);
-                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
-                break;
-            case R.id.waterfall_key_move_right:
-                keyboardModeView.setWhiteKeyOffset(keyboardModeView.getWhiteKeyOffset() + 1, 0);
-                updateWaterfallNoteLeftRightLocation(waterfallView.getWaterfallNotes(), keyboardModeView);
-                break;
-            default:
-                break;
-        }
-        return false;
-    });
+        false
+    }
+
+    companion object {
+        /**
+         * 瀑布的宽度占键盘黑键宽度的百分比
+         */
+        const val BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f
+
+        /**
+         * 瀑布流音符播放时的最长的持续时间
+         */
+        const val NOTE_PLAY_MAX_INTERVAL_TIME = 1200
+    }
 }

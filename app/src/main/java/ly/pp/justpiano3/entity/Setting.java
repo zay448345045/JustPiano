@@ -16,12 +16,12 @@ public class Setting {
     /**
      * 音块变色
      */
-    public Boolean changeNotesColor;
+    private Boolean changeNotesColor;
 
     /**
      * 节拍比率
      */
-    private Float tempSpeed;
+    public Float tempSpeed;
 
     /**
      * 音块消失

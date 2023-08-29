@@ -36,7 +36,7 @@ public final class JPApplication extends Application {
     public String f4073g = "";
     public String f4074h = "";
     @Getter
-    private final Setting setting = new Setting();
+    public final Setting setting = new Setting();
     @Getter
     @Setter
     private ConnectionService connectionService;
