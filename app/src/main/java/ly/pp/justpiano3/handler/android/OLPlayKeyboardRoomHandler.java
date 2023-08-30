@@ -147,7 +147,6 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                 }
                                 int finalI = i;
                                 olPlayKeyboardRoom.runOnUiThread(() -> {
-                                    // 此处fireKeyDown的最后一个参数必须为false，否则就会循环发送导致卡死
                                     if (notes[finalI + 2] > 0) {
                                         olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[finalI + 1], notes[finalI + 2],
                                                 ColorUtil.getKuangColorByKuangIndex(olPlayKeyboardRoom, user.getKuang()));

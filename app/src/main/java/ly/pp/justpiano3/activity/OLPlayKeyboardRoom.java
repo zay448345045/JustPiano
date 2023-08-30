@@ -3,6 +3,7 @@ package ly.pp.justpiano3.activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
 import android.os.*;
@@ -1195,7 +1196,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
-        keyboardView.setNoteOnColor(kuang);
+        keyboardView.setNoteOnColor(ColorUtil.getKuangColorByKuangIndex(this, kuang));
         if (noteScheduledExecutor == null) {
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
