@@ -2,6 +2,7 @@ package ly.pp.justpiano3.view
 
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
@@ -14,9 +15,9 @@ import kotlin.math.abs
  * 瀑布流绘制view
  */
 class WaterfallView @JvmOverloads constructor(
-        context: Context?,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : SurfaceView(context, attrs, defStyleAttr) {
 
     /**
@@ -40,6 +41,16 @@ class WaterfallView @JvmOverloads constructor(
     var rightHandNoteColor = 0
 
     /**
+     * 瀑布流音块下落速率
+     */
+    private var noteFallDownSpeed = 1f
+
+    /**
+     * 曲谱播放速度
+     */
+    var notePlaySpeed = 1f
+
+    /**
      * 绘制音块瀑布流内容
      */
     lateinit var waterfallNotes: Array<WaterfallNote>
@@ -47,17 +58,17 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 所有八度虚线的横坐标列表
      */
-    var octaveLineXList: List<Int>? = null
+    var octaveLineXList: List<Float>? = null
 
     /**
-     * 曲谱总进度（总时长），单位毫秒
+     * 曲谱总进度
      */
-    private var totalProgress = 0
+    private var totalProgress: Float = 0f
 
     /**
      * 瀑布流音块当前状态，不对外暴露
      */
-    private lateinit var waterfallNoteStatus: Array<WaterfallNoteStatusEnum?>
+    private lateinit var noteStatus: Array<WaterfallNoteStatusEnum?>
 
     /**
      * 瀑布流音块当前状态枚举：初始化状态、正在演奏状态、演奏结束状态
@@ -133,15 +144,28 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 开始播放
      */
-    fun startPlay(waterfallNotes: Array<WaterfallNote>) {
+    fun startPlay(waterfallNotes: Array<WaterfallNote>, noteFallDownSpeed: Float) {
         // 停止上一次播放，确保不会重复开线程进行播放
         stopPlay()
-        // 初始化音符相关数据、状态
-        this.waterfallNotes = waterfallNotes
-        waterfallNoteStatus = arrayOfNulls(waterfallNotes.size)
-        Arrays.fill(waterfallNoteStatus, WaterfallNoteStatusEnum.INIT)
-        // 计算曲谱总进度 = 曲谱总时长 + view的高度，因为要等最后一个音符绘制完的时间才是曲谱最终结束的时间
-        totalProgress = waterfallNotes.maxOf { it.endTime } + height
+        // 存储音块下落速率的值
+        this.noteFallDownSpeed = noteFallDownSpeed
+        // 初始化音符数据，如果音块速率不为1，对每个音符进行拷贝并乘以音块速率的值，改变音符的高度间隔
+        if (noteFallDownSpeed.toInt() != 1) {
+            val waterfallNotesWithDownSpeed = waterfallNotes.copyOf()
+            for (i in waterfallNotes.indices) {
+                waterfallNotesWithDownSpeed[i] = waterfallNotes[i].copy()
+                waterfallNotesWithDownSpeed[i].bottom *= noteFallDownSpeed
+                waterfallNotesWithDownSpeed[i].top *= noteFallDownSpeed
+            }
+            this.waterfallNotes = waterfallNotesWithDownSpeed
+        } else {
+            this.waterfallNotes = waterfallNotes
+        }
+        // 初始化音符状态
+        noteStatus = arrayOfNulls(this.waterfallNotes.size)
+        Arrays.fill(noteStatus, WaterfallNoteStatusEnum.INIT)
+        // 计算曲谱总进度 = 所有音块（其实是最后一个音块）上边界的最大值 + view的高度（预留最后一个音块落下时的时间）
+        totalProgress = this.waterfallNotes.maxOf { it.top } + height
         // 初始化背景图的绘制范围
         backgroundRect = RectF(0f, 0f, width.toFloat(), height.toFloat())
         // 初始化进度条背景图（基底）的绘制坐标
@@ -202,13 +226,13 @@ class WaterfallView @JvmOverloads constructor(
             false
         }
 
-    private val playProgress: Int
+    private val playProgress: Float
         /**
          * 获取目前的播放进度，单位毫秒，如果未在播放，返回0
          */
         get() = if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
             waterfallDownNotesThread!!.progress
-        } else 0
+        } else 0f
 
     /**
      * 销毁view，释放资源
@@ -225,30 +249,32 @@ class WaterfallView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * 处理触摸/滑动事件
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 // 有触摸按下view时，记录此时按下的坐标，后续计算手指滑动了多少坐标
-                lastX = event.x.coerceAtLeast(0.0f)
+                lastX = event.x.coerceAtLeast(0f)
                 // 单独触摸按下view时，触发暂停/继续播放操作
                 pauseOrResumePlay()
             }
 
             MotionEvent.ACTION_MOVE ->
                 // 检测是否为滑动：手指的横坐标偏离原来位置10像素，因按压时仅仅是普通点击，滑动的偏移像素很少时也会执行ACTION_MOVE事件
-                if (isScrolling || abs(event.x.coerceAtLeast(0.0f) - lastX) > 10) {
+                if (isScrolling || abs(event.x.coerceAtLeast(0f) - lastX) > 10) {
                     // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
                     pausePlay()
                     // 根据目前手指滑动的X坐标的偏移量占总宽度的比例，来计算本次手指滑动的偏移量时间（进度）
-                    val moveProgressOffset =
-                            ((event.x.coerceAtLeast(0.0f) - lastX) / width * totalProgress).toInt()
+                    val moveProgressOffset = (event.x.coerceAtLeast(0f) - lastX) / width * totalProgress
                     // 如果经过计算后的进度落在总进度之内，则继续执行设置进度操作
-                    if (moveProgressOffset + playProgress in 0..totalProgress) {
+                    if (moveProgressOffset + playProgress in 0f..totalProgress) {
                         waterfallDownNotesThread!!.progressOffset += moveProgressOffset
                     }
                     // 更新此时滑动后的手指坐标，后续计算手指滑动了多少坐标
-                    lastX = event.x.coerceAtLeast(0.0f)
+                    lastX = event.x.coerceAtLeast(0f)
                     // 有检测到在view上滑动手指，置正在滑动标记为true
                     // 正在滑动标记为true时会停止进行瀑布流监听，避免滑动时播放大量声音和键盘效果
                     // 可参考调用音符监听的代码：WaterfallDownNotesThread.handleWaterfallNoteListener
@@ -261,13 +287,18 @@ class WaterfallView @JvmOverloads constructor(
                     resumePlay()
                     // 清空正在滑动的标记为false
                     isScrolling = false
+                } else {
+                    // 如果只是通过点按（没有滑动）导致触发的手指抬起操作，则触发点击事件，不做任何操作
+                    performClick()
                 }
-                performClick()
             }
         }
         return true
     }
 
+    /**
+     * 触发点击事件
+     */
     override fun performClick(): Boolean {
         super.performClick()
         // 返回 true 表示已处理点击事件
@@ -278,10 +309,10 @@ class WaterfallView @JvmOverloads constructor(
      * 手动触发把目前键盘上所有按下的音符（PLAYING状态的）进行清除
      */
     private fun triggerAllPlayingStatusNoteLeave() {
-        if (noteFallListener != null) {
+        noteFallListener?.let {
             for (i in waterfallNotes.indices) {
-                if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING) {
-                    noteFallListener!!.onNoteLeave(waterfallNotes[i])
+                if (noteStatus[i] == WaterfallNoteStatusEnum.PLAYING) {
+                    it.onNoteLeave(waterfallNotes[i])
                 }
             }
         }
@@ -290,17 +321,17 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 根据当前的进度，重新设置音符的状态
      */
-    private fun updateNoteStatusByProgress(progress: Int) {
+    private fun updateNoteStatusByProgress(progress: Float) {
         // 执行重新设置音符的状态，根据起始时间和结束时间，结合目前进度计算坐标来确定状态
         for (i in waterfallNotes.indices) {
-            if (progress - waterfallNotes[i].endTime + NOTE_MIN_INTERVAL > height) {
-                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH
-            } else if (progress - waterfallNotes[i].startTime > height) {
-                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING
-            } else if (progress - waterfallNotes[i].startTime > 0) {
-                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.APPEAR
+            if (progress - waterfallNotes[i].top + NOTE_MIN_INTERVAL > height) {
+                noteStatus[i] = WaterfallNoteStatusEnum.FINISH
+            } else if (progress - waterfallNotes[i].bottom > height) {
+                noteStatus[i] = WaterfallNoteStatusEnum.PLAYING
+            } else if (progress - waterfallNotes[i].bottom > 0) {
+                noteStatus[i] = WaterfallNoteStatusEnum.APPEAR
             } else {
-                waterfallNoteStatus[i] = WaterfallNoteStatusEnum.INIT
+                noteStatus[i] = WaterfallNoteStatusEnum.INIT
             }
         }
     }
@@ -322,43 +353,33 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 歌曲暂停时，目前的播放进度，内部保存的变量，不对外暴露
          */
-        private var pauseProgress: Int? = null
+        private var pauseProgress: Float? = null
 
         /**
          * 播放进度
          */
-        var progress = 0
+        var progress: Float = 0f
 
         /**
          * 播放进度的偏移量，用于暂停后继续时的进度更新
          */
-        private var progressPauseOffset = 0
+        private var progressPauseOffset: Float = 0f
 
         /**
-         * 用户手动调节拖动进度条导致的播放进度的偏移量，仅本次拖动生效，拖动结束后此值清零
+         * 用户手动调节拖动进度条导致的播放进度的偏移量，仅本次拖动生效，本次拖动结束后此值清零
          */
-        var progressOffset = 0
+        var progressOffset: Float = 0f
 
         override fun run() {
+            // 先初始化绘制Paint对象，避免绘制时进行频繁的创建对象
+            val (notePaint, octaveLinePaint, octaveLinePath) = initPaint()
             // 记录绘制的起始时间
             val startPlayTime = System.currentTimeMillis()
-            // 音块Paint
-            val notePaint = Paint()
-            notePaint.style = Paint.Style.FILL
-            // 每个八度的虚线Paint
-            val octaveLinePaint = Paint()
-            octaveLinePaint.color = Color.WHITE
-            octaveLinePaint.alpha = 128
-            octaveLinePaint.strokeWidth = 3f
-            octaveLinePaint.style = Paint.Style.STROKE
-            octaveLinePaint.pathEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
-            val octaveLinePath = Path()
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
                 // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
-                // 计算过程中，减掉暂停播放后继续播放所带来的时间差
-                var playIntervalTime =
-                        (System.currentTimeMillis() - startPlayTime - progressPauseOffset).toInt()
+                // 需要乘以播放速度和音块速率，可整体控制音块的下落速度和音块速率，最后减掉暂停播放后继续播放所带来的时间差
+                var playIntervalTime = (System.currentTimeMillis() - startPlayTime) * notePlaySpeed * noteFallDownSpeed - progressPauseOffset
                 // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
                 if (isPause && pauseProgress == null) {
                     // 只有第一次监测到isPause为true时才触发这里，重复置isPause为true，不会重复触发，确保进度保存的是第一次触发暂停时的
@@ -373,7 +394,7 @@ class WaterfallView @JvmOverloads constructor(
                     // 接下来当前的绘制帧，调整playIntervalTime，也减掉偏移量的改变值，使当前帧的绘制顺滑起来
                     playIntervalTime -= updatePauseOffset
                     // 清零progressOffset，如果不清零，下次拖动修改进度的时候又要变化progressOffset，会导致和前一次的值冲突
-                    progressOffset = 0
+                    progressOffset = 0f
                     // 清除暂停时保存的当时的进度值
                     pauseProgress = null
                     // 以下两行代码内容主要用于拖动进度时，手指抬起后的继续播放，进度发生变化的情形，需要做处理
@@ -385,7 +406,7 @@ class WaterfallView @JvmOverloads constructor(
                     updateNoteStatusByProgress(playIntervalTime)
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
-                progress = (if (isPause) pauseProgress else playIntervalTime)!! + progressOffset
+                progress = (if (isPause) pauseProgress!! else playIntervalTime) + progressOffset
                 // 如果发现进度大于总进度，说明播放完成，此时标记暂停
                 // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
                 if (progress > totalProgress) {
@@ -399,17 +420,39 @@ class WaterfallView @JvmOverloads constructor(
         }
 
         /**
+         * 初始化Paint
+         */
+        private fun initPaint(): Triple<Paint, Paint, Path> {
+            // 初始化每个八度的虚线Paint
+            val octaveLinePaint = Paint()
+            octaveLinePaint.color = Color.WHITE
+            octaveLinePaint.alpha = 64
+            octaveLinePaint.strokeWidth = 3f
+            octaveLinePaint.style = Paint.Style.STROKE
+            octaveLinePaint.pathEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
+            // 初始化音块Paint，初始化虚线对应的路径对象
+            return Triple(Paint(), octaveLinePaint, Path())
+        }
+
+        /**
          * 执行绘制瀑布流
          */
         private fun doDrawWaterfall(
-                notePaint: Paint,
-                octaveLinePaint: Paint,
-                octaveLinePath: Path
+            notePaint: Paint,
+            octaveLinePaint: Paint,
+            octaveLinePath: Path
         ) {
             var canvas: Canvas? = null
             try {
-                // 获取绘制canvas
-                canvas = if (holder.surface.isValid) holder.lockCanvas() else null
+                // 获取绘制canvas，优先使用硬件加速
+                canvas = if (holder.surface.isValid) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        holder.lockHardwareCanvas() ?: holder.lockCanvas()
+                    } else {
+                        holder.lockCanvas()
+                    }
+                } else null
+
                 canvas?.let {
                     // 绘制背景图
                     it.drawBitmap(backgroundImage!!, null, backgroundRect!!, null)
@@ -439,10 +482,10 @@ class WaterfallView @JvmOverloads constructor(
             }
             // 设置每个八度虚线的坐标
             for (octaveLineX in octaveLineXList!!) {
-                if (octaveLineX in 0 until width) {
+                if (octaveLineX in 0f..width.toFloat()) {
                     octaveLinePath.reset()
-                    octaveLinePath.moveTo(octaveLineX.toFloat(), 0f)
-                    octaveLinePath.lineTo(octaveLineX.toFloat(), height.toFloat())
+                    octaveLinePath.moveTo(octaveLineX, 0f)
+                    octaveLinePath.lineTo(octaveLineX, height.toFloat())
                     // 执行八度虚线绘制
                     canvas.drawPath(octaveLinePath, octaveLinePaint)
                 }
@@ -459,16 +502,17 @@ class WaterfallView @JvmOverloads constructor(
                     // 根据音符的左右手确定音块的颜色
                     val color = if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
                     // 根据音符是否为弹奏中状态，确定颜色是否要高亮显示
-                    notePaint.color = if (waterfallNoteStatus[index] == WaterfallNoteStatusEnum.PLAYING) highlightColor(color) else color
+                    notePaint.color =
+                        if (noteStatus[index] == WaterfallNoteStatusEnum.PLAYING) highlightColor(color) else color
                     // 根据音符的力度，确定音块绘制的透明度
                     notePaint.alpha = minOf(waterfallNote.volume / 100f * 128 * 2, 255f).toInt()
                     // 绘制音块
                     canvas.drawRect(
-                            waterfallNote.left,
-                            (progress - waterfallNote.endTime + NOTE_MIN_INTERVAL).toFloat(),
-                            waterfallNote.right,
-                            (progress - waterfallNote.startTime).toFloat(),
-                            notePaint
+                        waterfallNote.left,
+                        (progress - waterfallNote.top + NOTE_MIN_INTERVAL),
+                        waterfallNote.right,
+                        (progress - waterfallNote.bottom),
+                        notePaint
                     )
                 }
             }
@@ -478,16 +522,11 @@ class WaterfallView @JvmOverloads constructor(
          * 使颜色高亮
          */
         private fun highlightColor(color: Int): Int {
-            val red = Color.red(color)
-            val green = Color.green(color)
-            val blue = Color.blue(color)
-            val alpha = Color.alpha(color)
-
-            val highlightedRed = minOf(red + 50, 255)
-            val highlightedGreen = minOf(green + 50, 255)
-            val highlightedBlue = minOf(blue + 50, 255)
-            val highlightedAlpha = minOf(alpha + 50, 255)
-
+            // 取颜色值的透明度、红绿蓝值，分别增加，营造亮度增加效果
+            val highlightedRed = minOf(Color.red(color) + 50, 255)
+            val highlightedGreen = minOf(Color.green(color) + 50, 255)
+            val highlightedBlue = minOf(Color.blue(color) + 50, 255)
+            val highlightedAlpha = minOf(Color.alpha(color) + 50, 255)
             return Color.argb(highlightedAlpha, highlightedRed, highlightedGreen, highlightedBlue)
         }
 
@@ -498,7 +537,7 @@ class WaterfallView @JvmOverloads constructor(
             // 绘制进度条背景（基底）图，它包含完整的一个进度条轮廓
             canvas.drawBitmap(progressBarBaseImage!!, null, progressBarBaseRect!!, null)
             // 修改当前进度条的最右端绘制坐标，进度条最右侧坐标 = 曲谱播放进度百分比 * view的宽度
-            progressBarRect!!.right = progress.toFloat() / totalProgress * width
+            progressBarRect!!.right = progress / totalProgress * width
             // 绘制进度条图片
             canvas.drawBitmap(progressBarImage!!, null, progressBarRect!!, null)
         }
@@ -508,12 +547,11 @@ class WaterfallView @JvmOverloads constructor(
          */
         private fun noteIsVisible(waterfallNote: WaterfallNote): Boolean {
             // 1、音符的上下左右边界都要在view内，对于左右边界，可以允许有一部分出现在view内
-            // 2、音符间隔过小，不绘制
-            // 3、进度（毫秒数） - 音符开始时间小于0的时候，音符在view的上方，未开始出现，这种情况下过滤掉，不绘制
-            // 4、进度（毫秒数） - 音符结束时间大于view的高度的时候，音符已经完全离开了view的下边界，这种情况下过滤掉，不绘制
-            //
-            return waterfallNote.right > 0 && waterfallNote.left < width && waterfallNote.interval() > NOTE_MIN_INTERVAL
-                    && progress - waterfallNote.startTime > 0 && progress - waterfallNote.endTime + NOTE_MIN_INTERVAL < height
+            // 2、进度 - 音符下边界小于0的时候，音符在view的上方，未开始出现，这种情况下过滤掉，不绘制
+            // 3、进度 - 音符上边界大于view的高度的时候，音符已经完全离开了view的下边界，这种情况下过滤掉，不绘制
+            return waterfallNote.right > 0 && waterfallNote.left < width
+                    && progress - waterfallNote.bottom > 0
+                    && progress - waterfallNote.top + NOTE_MIN_INTERVAL < height
         }
 
         /**
@@ -525,18 +563,18 @@ class WaterfallView @JvmOverloads constructor(
                 return
             }
             for (i in waterfallNotes.indices) {
-                if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.PLAYING && progress - waterfallNotes[i].endTime + NOTE_MIN_INTERVAL > height) {
+                if (noteStatus[i] == WaterfallNoteStatusEnum.PLAYING && progress - waterfallNotes[i].top + NOTE_MIN_INTERVAL > height) {
                     // 判断到音块刚刚完全离开view时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteLeave(waterfallNotes[i])
-                    waterfallNoteStatus[i] = WaterfallNoteStatusEnum.FINISH
-                } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.APPEAR && progress - waterfallNotes[i].startTime > height) {
+                    noteStatus[i] = WaterfallNoteStatusEnum.FINISH
+                } else if (noteStatus[i] == WaterfallNoteStatusEnum.APPEAR && progress - waterfallNotes[i].bottom > height) {
                     // 判断到音块刚刚下落到view的下边界时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteFallDown(waterfallNotes[i])
-                    waterfallNoteStatus[i] = WaterfallNoteStatusEnum.PLAYING
-                } else if (waterfallNoteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].startTime > 0) {
+                    noteStatus[i] = WaterfallNoteStatusEnum.PLAYING
+                } else if (noteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].bottom > 0) {
                     // 判断到音块刚刚在view的上边界出现时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteAppear(waterfallNotes[i])
-                    waterfallNoteStatus[i] = WaterfallNoteStatusEnum.APPEAR
+                    noteStatus[i] = WaterfallNoteStatusEnum.APPEAR
                 }
             }
         }

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
@@ -163,10 +162,10 @@ public class KeyboardModeView extends View {
     /**
      * 获取所有八度键盘图的起始横坐标
      */
-    public List<Integer> getAllOctaveLineX() {
-        List<Integer> octaveLineXList = new ArrayList<>();
+    public List<Float> getAllOctaveLineX() {
+        List<Float> octaveLineXList = new ArrayList<>();
         for (RectF keyboardImageRect : keyboardImageRectArray) {
-            octaveLineXList.add((int) keyboardImageRect.left);
+            octaveLineXList.add(keyboardImageRect.left);
         }
         return octaveLineXList;
     }
@@ -314,6 +313,7 @@ public class KeyboardModeView extends View {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 onFingerUp(id, x, y);
+                performClick();
                 break;
             case MotionEvent.ACTION_CANCEL:
                 onAllFingersUp();
@@ -321,6 +321,12 @@ public class KeyboardModeView extends View {
             default:
                 break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean performClick() {
+        super.performClick();
         return true;
     }
 
@@ -412,7 +418,6 @@ public class KeyboardModeView extends View {
                 // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
                 int handledColor = blackKey ? Color.argb(Color.alpha(0x7F000000), Color.red(color), Color.green(color), Color.blue(color))
                         : Color.argb(Color.alpha(0xFF000000), Color.red(color), Color.green(color), Color.blue(color));
-                Log.i("TAG", "handledColor: " + String.format("%x", handledColor));
                 porterDuffColorFilter = new PorterDuffColorFilter(handledColor, blackKey ? PorterDuff.Mode.ADD : PorterDuff.Mode.MULTIPLY);
                 colorFilterMap.put(String.valueOf(color) + blackKey, porterDuffColorFilter);
             }

@@ -22,6 +22,7 @@ import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -330,7 +331,7 @@ public final class JPApplication extends Application {
         }
 
         @Override
-        public void uncaughtException(Thread t, Throwable e) {
+        public void uncaughtException(@NotNull Thread t, Throwable e) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(byteArrayOutputStream));
             final String errorLog = byteArrayOutputStream.toString();

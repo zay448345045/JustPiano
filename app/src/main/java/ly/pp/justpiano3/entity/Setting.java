@@ -21,17 +21,12 @@ public class Setting {
     /**
      * 节拍比率
      */
-    public Float tempSpeed;
+    private Float tempSpeed;
 
     /**
      * 音块消失
      */
     private Boolean noteDismiss;
-
-    /**
-     * 聊天音效
-     */
-    private Boolean chatSound;
 
     /**
      * 音块大小
@@ -41,7 +36,7 @@ public class Setting {
     /**
      * 音块速率
      */
-    private Integer notesDownSpeed;
+    public Integer notesDownSpeed;
 
     /**
      * MIDI键盘移调
@@ -104,9 +99,24 @@ public class Setting {
     private Integer roughLine;
 
     /**
+     * 聊天音效
+     */
+    private Boolean chatSound;
+
+    /**
      * 聊天字体大小
      */
     private Integer chatTextSize;
+
+    /**
+     * 瀑布流曲谱播放速度
+     */
+    public Float waterfallSongSpeed;
+
+    /**
+     * 瀑布流音块下落速率
+     */
+    public Float waterfallDownSpeed;
 
     /**
      * 从sharedPreferences获取设置
@@ -123,7 +133,7 @@ public class Setting {
         setIsOpenChord(sharedPreferences.getBoolean("sound_check_box", true));
         setChordVolume(Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8")));
         setAnimFrame(Integer.parseInt(sharedPreferences.getString("anim_frame", "4")));
-        setKeyboardPrefer(sharedPreferences.getBoolean("keyboard_perfer", true));
+        setKeyboardPrefer(sharedPreferences.getBoolean("keyboard_prefer", true));
         setShowTouchNotesLevel(sharedPreferences.getBoolean("tishi_cj", true));
         setShowLine(sharedPreferences.getBoolean("show_line", true));
         setLoadLongKeyboard(sharedPreferences.getBoolean("open_long_key", false));
@@ -136,7 +146,9 @@ public class Setting {
         setNoteSize(Float.parseFloat(sharedPreferences.getString("note_size", "1")));
         setNoteDismiss(sharedPreferences.getBoolean("note_dismiss", false));
         setChangeNotesColor(sharedPreferences.getBoolean("change_color", true));
-        setChatTextSize(Integer.parseInt(sharedPreferences.getString("msg_font_size", "15")));
+        setChatTextSize(Integer.parseInt(sharedPreferences.getString("chats_text_size", "15")));
+        setWaterfallSongSpeed(Float.parseFloat(sharedPreferences.getString("waterfall_song_speed", "1.0")));
+        setWaterfallDownSpeed(Float.parseFloat(sharedPreferences.getString("waterfall_down_speed", "1.0")));
     }
 
     /**

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/settings_name">
     <PreferenceCategory android:title="弹奏音块与界面">
         <ly.pp.justpiano3.view.SkinListPreference
@@ -45,7 +46,7 @@
             android:title="音块变色" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="keyboard_perfer"
+            android:key="keyboard_prefer"
             android:summaryOff="&lt;关闭&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
             android:summaryOn="&lt;打开&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
             android:title="按键效果" />
@@ -142,6 +143,24 @@
             android:key="midi_keyboard_tune"
             android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
             android:title="MIDI键盘移调" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="瀑布流">
+        <ListPreference
+            android:defaultValue="1.0"
+            android:entries="@array/temp_e"
+            android:entryValues="@array/temp_e"
+            android:key="waterfall_song_speed"
+            android:summary="值越小，音乐速度越慢，持续时间越长"
+            android:title="曲谱播放速度"
+            android:dialogTitle="曲谱播放速度" />
+        <ListPreference
+            android:defaultValue="1.0"
+            android:entries="@array/temp_e"
+            android:entryValues="@array/temp_e"
+            android:key="waterfall_down_speed"
+            android:summary="设置音块的下落速度，值越小，音块高度越小，下落速度越慢"
+            android:title="音块下落速率"
+            android:dialogTitle="音块下落速率" />
     </PreferenceCategory>
     <PreferenceCategory android:title="在线聊天">
         <SwitchPreference
