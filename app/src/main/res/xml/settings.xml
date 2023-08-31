@@ -6,7 +6,6 @@
         <ly.pp.justpiano3.view.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
-            android:persistent="true"
             android:title="皮肤" />
         <ListPreference
             android:defaultValue="6"
@@ -95,7 +94,6 @@
         <ly.pp.justpiano3.view.SoundListPreference
             android:dialogTitle="设置管理音源"
             android:key="sound_list"
-            android:persistent="true"
             android:title="音源" />
         <SwitchPreference
             android:defaultValue="true"
@@ -145,20 +143,24 @@
             android:title="MIDI键盘移调" />
     </PreferenceCategory>
     <PreferenceCategory android:title="瀑布流">
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1.0"
-            android:entries="@array/temp_e"
-            android:entryValues="@array/temp_e"
+            app:minValue="0.5"
+            app:maxValue="1.5"
+            app:floatNumber="true"
             android:key="waterfall_song_speed"
             android:summary="值越小，音乐速度越慢，持续时间越长"
+            android:dialogMessage="值越小，音乐速度越慢，持续时间越长"
             android:title="曲谱播放速度"
             android:dialogTitle="曲谱播放速度" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1.0"
-            android:entries="@array/temp_e"
-            android:entryValues="@array/temp_e"
+            app:minValue="0.5"
+            app:maxValue="1.5"
+            app:floatNumber="true"
             android:key="waterfall_down_speed"
             android:summary="设置音块的下落速度，值越小，音块高度越小，下落速度越慢"
+            android:dialogMessage="设置音块的下落速度，值越小，音块高度越小，下落速度越慢"
             android:title="音块下落速率"
             android:dialogTitle="音块下落速率" />
     </PreferenceCategory>
@@ -169,14 +171,6 @@
             android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
             android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
             android:title="聊天行首显示时间" />
-        <ListPreference
-                android:defaultValue="15"
-                android:dialogTitle="聊天字体大小"
-                android:entries="@array/chats_text_size"
-                android:entryValues="@array/chats_text_size"
-                android:key="chats_text_size"
-                android:summary="设置聊天字体显示大小"
-                android:title="聊天字体大小" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="chats_sound"
@@ -189,12 +183,13 @@
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
             android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="15"
+            app:minValue="10"
+            app:maxValue="20"
+            app:floatNumber="false"
             android:dialogTitle="聊天字体大小"
-            android:entries="@array/msg_font_size_entries"
-            android:entryValues="@array/msg_font_size_values"
-            android:key="msg_font_size"
+            android:key="chats_text_size"
             android:summary="设置聊天字体显示大小"
             android:title="聊天字体大小" />
     </PreferenceCategory>

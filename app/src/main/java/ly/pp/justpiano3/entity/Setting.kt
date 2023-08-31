@@ -1,165 +1,183 @@
-package ly.pp.justpiano3.entity;
+package ly.pp.justpiano3.entity
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import lombok.Data;
+import android.content.Context
+import android.preference.PreferenceManager
 
 /**
  * 设置中的设置项
  */
-@Data
-public class Setting {
-
-    public static int SETTING_MODE_CODE = 122;
-
+data class Setting(
     /**
      * 音块变色
      */
-    private Boolean changeNotesColor;
+    var changeNotesColor: Boolean = true,
 
     /**
      * 节拍比率
      */
-    private Float tempSpeed;
+    var tempSpeed: Float = 1f,
 
     /**
      * 音块消失
      */
-    private Boolean noteDismiss;
+    var noteDismiss: Boolean = false,
 
     /**
      * 音块大小
      */
-    private Float noteSize;
+    var noteSize: Float = 1f,
 
     /**
      * 音块速率
      */
-    public Integer notesDownSpeed;
+    var notesDownSpeed: Int = 6,
 
     /**
      * MIDI键盘移调
      */
-    private Integer midiKeyboardTune;
+    var midiKeyboardTune: Int = 0,
 
     /**
      * 触摸键盘移调
      */
-    private Integer keyboardSoundTune;
+    var keyboardSoundTune: Int = 0,
 
     /**
      * 是否开启键盘模式动画
      */
-    private Boolean keyboardAnim;
+    var keyboardAnim: Boolean = true,
 
     /**
      * 是否开启和弦
      */
-    private Boolean isOpenChord;
+    var isOpenChord: Boolean = true,
 
     /**
      * 和弦音量
      */
-    private Float chordVolume;
+    var chordVolume: Float = 0.8f,
 
     /**
      * 弹奏时展示等级
      */
-    private Boolean showTouchNotesLevel;
+    var showTouchNotesLevel: Boolean = true,
 
     /**
      * 自动弹奏
      */
-    private Boolean autoPlay;
+    var autoPlay: Boolean = true,
 
     /**
      * 展示判断线
      */
-    private Boolean showLine;
+    var showLine: Boolean = true,
 
     /**
      * 显示键盘缩略图
      */
-    private Boolean loadLongKeyboard;
+    var loadLongKeyboard: Boolean = false,
 
     /**
      * 动画帧率
      */
-    private Integer animFrame;
+    var animFrame: Int = 4,
 
     /**
      * 按键效果
      */
-    private Boolean keyboardPrefer;
+    var keyboardPrefer: Boolean = true,
 
     /**
      * 判断线加粗类型
      */
-    private Integer roughLine;
+    var roughLine: Int = 1,
 
     /**
      * 聊天音效
      */
-    private Boolean chatSound;
+    var chatSound: Boolean = false,
 
     /**
      * 聊天字体大小
      */
-    private Integer chatTextSize;
+    var chatTextSize: Int = 15,
 
     /**
      * 瀑布流曲谱播放速度
      */
-    public Float waterfallSongSpeed;
+    var waterfallSongSpeed: Float = 1f,
 
     /**
      * 瀑布流音块下落速率
      */
-    public Float waterfallDownSpeed;
+    var waterfallDownSpeed: Float = 1f,
+) {
 
     /**
      * 从sharedPreferences获取设置
      */
-    public void loadSettings(Context context, boolean online) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    fun loadSettings(context: Context?, online: Boolean) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         if (online) {
-            setTempSpeed(1f);
-            setAutoPlay(true);
+            tempSpeed = 1f
+            autoPlay = true
         } else {
-            setAutoPlay(sharedPreferences.getBoolean("auto_play", true));
-            setTempSpeed(Float.parseFloat(sharedPreferences.getString("temp_speed", "1.0")));
+            tempSpeed = sharedPreferences.getString("temp_speed", "1.0")!!.toFloat()
+            autoPlay = sharedPreferences.getBoolean("auto_play", true)
         }
-        setIsOpenChord(sharedPreferences.getBoolean("sound_check_box", true));
-        setChordVolume(Float.parseFloat(sharedPreferences.getString("b_s_vol", "0.8")));
-        setAnimFrame(Integer.parseInt(sharedPreferences.getString("anim_frame", "4")));
-        setKeyboardPrefer(sharedPreferences.getBoolean("keyboard_prefer", true));
-        setShowTouchNotesLevel(sharedPreferences.getBoolean("tishi_cj", true));
-        setShowLine(sharedPreferences.getBoolean("show_line", true));
-        setLoadLongKeyboard(sharedPreferences.getBoolean("open_long_key", false));
-        setRoughLine(Integer.parseInt(sharedPreferences.getString("rough_line", "1")));
-        setMidiKeyboardTune(Integer.parseInt(sharedPreferences.getString("midi_keyboard_tune", "0")));
-        setKeyboardSoundTune(Integer.parseInt(sharedPreferences.getString("keyboard_sound_tune", "0")));
-        setKeyboardAnim(sharedPreferences.getBoolean("keyboard_anim", true));
-        setChatSound(sharedPreferences.getBoolean("chats_sound", false));
-        setNotesDownSpeed(Integer.parseInt(sharedPreferences.getString("down_speed", "6")));
-        setNoteSize(Float.parseFloat(sharedPreferences.getString("note_size", "1")));
-        setNoteDismiss(sharedPreferences.getBoolean("note_dismiss", false));
-        setChangeNotesColor(sharedPreferences.getBoolean("change_color", true));
-        setChatTextSize(Integer.parseInt(sharedPreferences.getString("chats_text_size", "15")));
-        setWaterfallSongSpeed(Float.parseFloat(sharedPreferences.getString("waterfall_song_speed", "1.0")));
-        setWaterfallDownSpeed(Float.parseFloat(sharedPreferences.getString("waterfall_down_speed", "1.0")));
+        isOpenChord = sharedPreferences.getBoolean("sound_check_box", true)
+        chordVolume = sharedPreferences.getString("b_s_vol", "0.8")!!.toFloat()
+        animFrame = sharedPreferences.getString("anim_frame", "4")!!.toInt()
+        keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)
+        showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true)
+        showLine = sharedPreferences.getBoolean("show_line", true)
+        loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false)
+        roughLine = sharedPreferences.getString("rough_line", "1")!!.toInt()
+        midiKeyboardTune = sharedPreferences.getString("midi_keyboard_tune", "0")!!.toInt()
+        keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()
+        keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true)
+        chatSound = sharedPreferences.getBoolean("chats_sound", false)
+        notesDownSpeed = sharedPreferences.getString("down_speed", "6")!!.toInt()
+        noteSize = sharedPreferences.getString("note_size", "1")!!.toFloat()
+        noteDismiss = sharedPreferences.getBoolean("note_dismiss", false)
+        changeNotesColor = sharedPreferences.getBoolean("change_color", true)
+        chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
+        waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
+        waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "1.0")!!.toFloat()
     }
 
     /**
      * 写入设置到sharedPreferences
      */
-    public void saveSettings(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString("keyboard_sound_tune", String.valueOf(keyboardSoundTune));
-        edit.putString("midi_keyboard_tune", String.valueOf(midiKeyboardTune));
-        edit.putString("down_speed", String.valueOf(notesDownSpeed));
-        edit.apply();
+    fun saveSettings(context: Context?) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val edit = sharedPreferences.edit()
+        edit.putString("auto_play", autoPlay.toString())
+        edit.putString("temp_speed", tempSpeed.toString())
+        edit.putString("sound_check_box", isOpenChord.toString())
+        edit.putString("b_s_vol", chordVolume.toString())
+        edit.putString("anim_frame", animFrame.toString())
+        edit.putString("keyboard_prefer", keyboardPrefer.toString())
+        edit.putString("tishi_cj", showTouchNotesLevel.toString())
+        edit.putString("show_line", showLine.toString())
+        edit.putString("open_long_key", loadLongKeyboard.toString())
+        edit.putString("rough_line", roughLine.toString())
+        edit.putString("midi_keyboard_tune", midiKeyboardTune.toString())
+        edit.putString("keyboard_sound_tune", keyboardSoundTune.toString())
+        edit.putString("keyboard_anim", keyboardAnim.toString())
+        edit.putString("chats_sound", chatSound.toString())
+        edit.putString("down_speed", notesDownSpeed.toString())
+        edit.putString("note_size", noteSize.toString())
+        edit.putString("note_dismiss", noteDismiss.toString())
+        edit.putString("change_color", changeNotesColor.toString())
+        edit.putString("chats_text_size", chatTextSize.toString())
+        edit.putString("waterfall_song_speed", waterfallSongSpeed.toString())
+        edit.putString("waterfall_down_speed", waterfallDownSpeed.toString())
+        edit.apply()
+    }
+
+    companion object {
+        // activity区分是否是从设置界面返回的值
+        const val SETTING_MODE_CODE = 122
     }
 }

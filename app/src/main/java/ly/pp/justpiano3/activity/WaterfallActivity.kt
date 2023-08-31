@@ -172,7 +172,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
     }
 
     override fun onDestroy() {
-        // 停止播放
+        // 停止播放，释放资源
         waterfallView.stopPlay()
         waterfallView.destroy()
         super.onDestroy()
