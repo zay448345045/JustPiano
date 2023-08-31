@@ -392,7 +392,7 @@ public class KeyboardModeView extends View {
         mFingerMap.clear();
     }
 
-    private void fireKeyDownAndHandleListener(int pitch, int volume, int color) {
+    private void fireKeyDownAndHandleListener(int pitch, int volume, Integer color) {
         if (!isAnimRunning) {
             if (musicKeyListener != null) {
                 musicKeyListener.onKeyDown(pitch, Math.min(volume, MidiUtil.MAX_VOLUME));

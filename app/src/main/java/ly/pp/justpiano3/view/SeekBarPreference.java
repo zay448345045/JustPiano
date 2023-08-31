@@ -22,7 +22,6 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     private SeekBar seekBar;
     private TextView valueText;
     private final Context context;
-    private final String dialogMessage;
     private final String suffix;
     private final float minValue;
     private final float maxValue;
@@ -33,7 +32,6 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        dialogMessage = attrs.getAttributeValue(androidNs, "dialogMessage");
         suffix = attrs.getAttributeValue(androidNs, "text");
         defaultValue = attrs.getAttributeValue(androidNs, "defaultValue");
         // 获取自定义属性的最大和最小值
@@ -49,12 +47,6 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(6, 6, 6, 6);
-
-        TextView splashText = new TextView(context);
-        if (dialogMessage != null) {
-            splashText.setText(dialogMessage);
-        }
-        layout.addView(splashText);
 
         valueText = new TextView(context);
         valueText.setGravity(Gravity.CENTER_HORIZONTAL);

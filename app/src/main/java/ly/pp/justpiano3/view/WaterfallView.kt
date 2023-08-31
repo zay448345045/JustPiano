@@ -68,12 +68,12 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 瀑布流音块当前状态，不对外暴露
      */
-    private lateinit var noteStatus: Array<WaterfallNoteStatusEnum?>
+    private lateinit var noteStatus: Array<NoteStatus?>
 
     /**
-     * 瀑布流音块当前状态枚举：初始化状态、正在演奏状态、演奏结束状态
+     * 瀑布流音块状态枚举：初始化状态、出现在屏幕中状态、正在演奏状态、演奏结束状态
      */
-    private enum class WaterfallNoteStatusEnum {
+    private enum class NoteStatus {
         INIT, APPEAR, PLAYING, FINISH
     }
 
@@ -149,21 +149,17 @@ class WaterfallView @JvmOverloads constructor(
         stopPlay()
         // 存储音块下落速率的值
         this.noteFallDownSpeed = noteFallDownSpeed
-        // 初始化音符数据，如果音块速率不为1，对每个音符进行拷贝并乘以音块速率的值，改变音符的高度间隔
-        if (noteFallDownSpeed.toInt() != 1) {
-            val waterfallNotesWithDownSpeed = waterfallNotes.copyOf()
-            for (i in waterfallNotes.indices) {
-                waterfallNotesWithDownSpeed[i] = waterfallNotes[i].copy()
-                waterfallNotesWithDownSpeed[i].bottom *= noteFallDownSpeed
-                waterfallNotesWithDownSpeed[i].top *= noteFallDownSpeed
-            }
-            this.waterfallNotes = waterfallNotesWithDownSpeed
-        } else {
-            this.waterfallNotes = waterfallNotes
+        // 初始化音符数据，对每个音符进行拷贝并乘以音块速率的值，改变音符的高度间隔
+        val waterfallNotesWithDownSpeed = waterfallNotes.copyOf()
+        for (i in waterfallNotes.indices) {
+            waterfallNotesWithDownSpeed[i] = waterfallNotes[i].copy()
+            waterfallNotesWithDownSpeed[i].bottom *= noteFallDownSpeed
+            waterfallNotesWithDownSpeed[i].top *= noteFallDownSpeed
         }
+        this.waterfallNotes = waterfallNotesWithDownSpeed
         // 初始化音符状态
         noteStatus = arrayOfNulls(this.waterfallNotes.size)
-        Arrays.fill(noteStatus, WaterfallNoteStatusEnum.INIT)
+        Arrays.fill(noteStatus, NoteStatus.INIT)
         // 计算曲谱总进度 = 所有音块（其实是最后一个音块）上边界的最大值 + view的高度（预留最后一个音块落下时的时间）
         totalProgress = this.waterfallNotes.maxOf { it.top } + height
         // 初始化背景图的绘制范围
@@ -311,7 +307,7 @@ class WaterfallView @JvmOverloads constructor(
     private fun triggerAllPlayingStatusNoteLeave() {
         noteFallListener?.let {
             for (i in waterfallNotes.indices) {
-                if (noteStatus[i] == WaterfallNoteStatusEnum.PLAYING) {
+                if (noteStatus[i] == NoteStatus.PLAYING) {
                     it.onNoteLeave(waterfallNotes[i])
                 }
             }
@@ -325,13 +321,13 @@ class WaterfallView @JvmOverloads constructor(
         // 执行重新设置音符的状态，根据起始时间和结束时间，结合目前进度计算坐标来确定状态
         for (i in waterfallNotes.indices) {
             if (progress - waterfallNotes[i].top + NOTE_MIN_INTERVAL > height) {
-                noteStatus[i] = WaterfallNoteStatusEnum.FINISH
+                noteStatus[i] = NoteStatus.FINISH
             } else if (progress - waterfallNotes[i].bottom > height) {
-                noteStatus[i] = WaterfallNoteStatusEnum.PLAYING
+                noteStatus[i] = NoteStatus.PLAYING
             } else if (progress - waterfallNotes[i].bottom > 0) {
-                noteStatus[i] = WaterfallNoteStatusEnum.APPEAR
+                noteStatus[i] = NoteStatus.APPEAR
             } else {
-                noteStatus[i] = WaterfallNoteStatusEnum.INIT
+                noteStatus[i] = NoteStatus.INIT
             }
         }
     }
@@ -503,8 +499,7 @@ class WaterfallView @JvmOverloads constructor(
                     // 根据音符的左右手确定音块的颜色
                     val color = if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
                     // 根据音符是否为弹奏中状态，确定颜色是否要高亮显示
-                    notePaint.color =
-                        if (noteStatus[index] == WaterfallNoteStatusEnum.PLAYING) highlightColor(color) else color
+                    notePaint.color = if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(color) else color
                     // 根据音符的力度，确定音块绘制的透明度
                     notePaint.alpha = minOf(waterfallNote.volume / 100f * 128 * 2, 255f).toInt()
                     // 绘制音块
@@ -564,18 +559,18 @@ class WaterfallView @JvmOverloads constructor(
                 return
             }
             for (i in waterfallNotes.indices) {
-                if (noteStatus[i] == WaterfallNoteStatusEnum.PLAYING && progress - waterfallNotes[i].top + NOTE_MIN_INTERVAL > height) {
+                if (noteStatus[i] == NoteStatus.PLAYING && progress - waterfallNotes[i].top + NOTE_MIN_INTERVAL > height) {
                     // 判断到音块刚刚完全离开view时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteLeave(waterfallNotes[i])
-                    noteStatus[i] = WaterfallNoteStatusEnum.FINISH
-                } else if (noteStatus[i] == WaterfallNoteStatusEnum.APPEAR && progress - waterfallNotes[i].bottom > height) {
+                    noteStatus[i] = NoteStatus.FINISH
+                } else if (noteStatus[i] == NoteStatus.APPEAR && progress - waterfallNotes[i].bottom > height) {
                     // 判断到音块刚刚下落到view的下边界时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteFallDown(waterfallNotes[i])
-                    noteStatus[i] = WaterfallNoteStatusEnum.PLAYING
-                } else if (noteStatus[i] == WaterfallNoteStatusEnum.INIT && progress - waterfallNotes[i].bottom > 0) {
+                    noteStatus[i] = NoteStatus.PLAYING
+                } else if (noteStatus[i] == NoteStatus.INIT && progress - waterfallNotes[i].bottom > 0) {
                     // 判断到音块刚刚在view的上边界出现时，调用监听，通过叠加音符状态的判断，保证这个监听不会重复调用
                     noteFallListener!!.onNoteAppear(waterfallNotes[i])
-                    noteStatus[i] = WaterfallNoteStatusEnum.APPEAR
+                    noteStatus[i] = NoteStatus.APPEAR
                 }
             }
         }
