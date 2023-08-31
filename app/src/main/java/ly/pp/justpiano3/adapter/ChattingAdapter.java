@@ -14,6 +14,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.ChangeRecommandSongClick;
 import ly.pp.justpiano3.utils.JPStack;
 
@@ -111,7 +112,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void setMsgFontSize(TextView... views) {
         if (views != null) {
             for (TextView view : views) {
-                view.setTextSize(jpapplication.getSetting().getChatTextSize());
+                view.setTextSize(GlobalSetting.INSTANCE.getChatTextSize());
             }
         }
     }

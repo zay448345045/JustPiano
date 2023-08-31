@@ -2,6 +2,7 @@ package ly.pp.justpiano3.thread;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 
 public final class DownNotesThread extends Thread {
@@ -11,7 +12,7 @@ public final class DownNotesThread extends Thread {
 
     public DownNotesThread(JPApplication jPApplication, int downSpeed, PianoPlay pianoPlay) {
         jpapplication = jPApplication;
-        sleepTime = downSpeed * jpapplication.getSetting().getAnimFrame();
+        sleepTime = downSpeed * GlobalSetting.INSTANCE.getAnimFrame();
         this.pianoPlay = pianoPlay;
     }
 

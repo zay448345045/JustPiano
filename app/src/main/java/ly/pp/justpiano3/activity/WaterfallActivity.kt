@@ -12,6 +12,7 @@ import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import ly.pp.justpiano3.JPApplication
 import ly.pp.justpiano3.R
+import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.MidiUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
@@ -98,10 +99,10 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
                 // 设置音块下落速率，播放速度
                 val jpApplication = application as JPApplication
-                waterfallView.notePlaySpeed = jpApplication.setting.waterfallSongSpeed
+                waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 val waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView)
-                waterfallView.startPlay(waterfallNotes, jpApplication.setting.waterfallDownSpeed)
+                waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
                 // 开启增减白键数量、移动键盘按钮的监听
                 findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)

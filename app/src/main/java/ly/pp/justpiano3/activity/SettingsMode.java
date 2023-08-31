@@ -4,22 +4,20 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import androidx.annotation.NonNull;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 
 public class SettingsMode extends PreferenceActivity {
-    private JPApplication jpApplication;
 
     @Override
     public void onBackPressed() {
-        jpApplication.getSetting().loadSettings(this, false);
+        GlobalSetting.INSTANCE.loadSettings(this, false);
         finish();
     }
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        jpApplication = (JPApplication) getApplication();
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 

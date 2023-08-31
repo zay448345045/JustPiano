@@ -3,6 +3,7 @@ package ly.pp.justpiano3.view.play;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.PlayView;
 
@@ -108,7 +109,7 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && hideNote) {
-                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
+                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
@@ -125,14 +126,14 @@ public final class PlayNote {
     public float mo3108c(Canvas canvas) {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
-            if (jpapplication.getSetting().getAutoPlay()) {
-                if (newNote && ((trackValue != handValue || hideNote) && jpapplication.getSetting().isOpenChord())) {
-                    playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
+            if (GlobalSetting.INSTANCE.getAutoPlay()) {
+                if (newNote && ((trackValue != handValue || hideNote) && GlobalSetting.INSTANCE.isOpenChord())) {
+                    playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
-            } else if (newNote && trackValue != handValue && jpapplication.getSetting().isOpenChord()) {
-                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * jpapplication.getSetting().getChordVolume()));
+            } else if (newNote && trackValue != handValue && GlobalSetting.INSTANCE.isOpenChord()) {
+                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             }
@@ -140,7 +141,7 @@ public final class PlayNote {
                 SoundEngineUtil.stopPlaySound(playNote);
             }
         }
-        if (jpapplication.getSetting().getAutoPlay()) {
+        if (GlobalSetting.INSTANCE.getAutoPlay()) {
             if (canvas != null && trackValue == handValue && !hideNote) {
                 canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
             }
@@ -153,7 +154,7 @@ public final class PlayNote {
     public void noCompatibleMode(Canvas canvas) {  // 欣赏模式
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
-            if (newNote && jpapplication.getSetting().isOpenChord()) {
+            if (newNote && GlobalSetting.INSTANCE.isOpenChord()) {
                 if (trackValue == handValue) {
                     jpapplication.drawFire(playView, canvas, noteValue % 12);
                 }

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
 import ly.pp.justpiano3.helper.SQLiteHelper;
@@ -104,7 +105,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
-        jpapplication.getSetting().loadSettings(this, true);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olmainmode);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;

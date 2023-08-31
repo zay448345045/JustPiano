@@ -16,6 +16,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ColorUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineKickedQuitRoomDTO;
@@ -374,9 +375,9 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         if (i2 == 0) {
             textView2.setBackgroundResource(R.drawable.back_puased);
         } else {
-            textView2.setBackgroundResource(Consts.kuang[i2]);
+            textView2.setBackgroundResource(ColorUtil.kuang[i2]);
         }
-        imageView.setBackgroundResource(Consts.filledKuang[i2]);
+        imageView.setBackgroundResource(ColorUtil.filledKuang[i2]);
         return view;
     }
 }

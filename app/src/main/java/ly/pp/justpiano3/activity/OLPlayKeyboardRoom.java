@@ -3,7 +3,6 @@ package ly.pp.justpiano3.activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
 import android.os.*;
@@ -20,6 +19,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
@@ -439,25 +439,25 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 break;
             case R.id.keyboard_count_down:
                 int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_count_up:
                 keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() + 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_move_left:
                 int keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() - 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
             case R.id.keyboard_move_right:
                 keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() + 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                 edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
@@ -603,10 +603,10 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 popupWindow2.setContentView(inflate2);
                 // 键盘声调回显
                 TextView midiTune = inflate2.findViewById(R.id.midi_tune);
-                midiTune.setText(String.valueOf(jpapplication.getSetting().getMidiKeyboardTune()));
+                midiTune.setText(String.valueOf(GlobalSetting.INSTANCE.getMidiKeyboardTune()));
                 // 声调回显
                 TextView soundTune = inflate2.findViewById(R.id.sound_tune);
-                soundTune.setText(String.valueOf(jpapplication.getSetting().getKeyboardSoundTune()));
+                soundTune.setText(String.valueOf(GlobalSetting.INSTANCE.getKeyboardSoundTune()));
                 // 同步模式回显
                 TextView syncModeText = inflate2.findViewById(R.id.keyboard_sync_mode_text);
                 syncModeText.setText(keyboardSyncMode.getDesc());
@@ -614,36 +614,36 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 popupWindow2.showAtLocation(keyboardSetting, Gravity.CENTER, 0, 0);
                 return;
             case R.id.midi_down_tune:
-                if (jpapplication.getSetting().getMidiKeyboardTune() > -6) {
-                    jpapplication.getSetting().setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() - 1);
-                    jpapplication.getSetting().saveSettings(jpapplication);
+                if (GlobalSetting.INSTANCE.getMidiKeyboardTune() > -6) {
+                    GlobalSetting.INSTANCE.setMidiKeyboardTune(GlobalSetting.INSTANCE.getMidiKeyboardTune() - 1);
+                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
                 return;
             case R.id.midi_up_tune:
-                if (jpapplication.getSetting().getMidiKeyboardTune() < 6) {
-                    jpapplication.getSetting().setMidiKeyboardTune(jpapplication.getSetting().getMidiKeyboardTune() + 1);
-                    jpapplication.getSetting().saveSettings(jpapplication);
+                if (GlobalSetting.INSTANCE.getMidiKeyboardTune() < 6) {
+                    GlobalSetting.INSTANCE.setMidiKeyboardTune(GlobalSetting.INSTANCE.getMidiKeyboardTune() + 1);
+                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
                 return;
             case R.id.sound_down_tune:
-                if (jpapplication.getSetting().getKeyboardSoundTune() > -6) {
-                    jpapplication.getSetting().setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() - 1);
-                    jpapplication.getSetting().saveSettings(jpapplication);
+                if (GlobalSetting.INSTANCE.getKeyboardSoundTune() > -6) {
+                    GlobalSetting.INSTANCE.setKeyboardSoundTune(GlobalSetting.INSTANCE.getKeyboardSoundTune() - 1);
+                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
                 }
                 return;
             case R.id.sound_up_tune:
-                if (jpapplication.getSetting().getKeyboardSoundTune() < 6) {
-                    jpapplication.getSetting().setKeyboardSoundTune(jpapplication.getSetting().getKeyboardSoundTune() + 1);
-                    jpapplication.getSetting().saveSettings(jpapplication);
+                if (GlobalSetting.INSTANCE.getKeyboardSoundTune() < 6) {
+                    GlobalSetting.INSTANCE.setKeyboardSoundTune(GlobalSetting.INSTANCE.getKeyboardSoundTune() + 1);
+                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
                 }
                 if (keyboardSettingPopup != null) {
                     keyboardSettingPopup.dismiss();
@@ -889,7 +889,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                        SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
+                        SoundEngineUtil.playSound(pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune(), volume);
                     }
                     if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
                         olKeyboardStates[roomPositionSub1].setPlaying(true);
@@ -1086,7 +1086,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
+        int pitch = data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardView.fireKeyDown(pitch, data[2], ColorUtil.getKuangColorByKuangIndex(this, kuang));
             if (hasAnotherUser()) {

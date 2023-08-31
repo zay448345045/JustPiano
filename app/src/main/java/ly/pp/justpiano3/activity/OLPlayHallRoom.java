@@ -19,6 +19,7 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
@@ -517,7 +518,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         layoutinflater = LayoutInflater.from(this);
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
-        jpApplication.getSetting().loadSettings(this, true);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olplayhallroom);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());

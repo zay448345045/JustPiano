@@ -16,6 +16,7 @@ import ly.pp.justpiano3.adapter.OLMelodySelectAdapter2;
 import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
@@ -237,8 +238,8 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         try {
-            jpapplication.getSetting().loadSettings(this, true);
-            jpapplication.getSetting().setTempSpeed(1f);
+            GlobalSetting.INSTANCE.loadSettings(this, true);
+            GlobalSetting.INSTANCE.setTempSpeed(1f);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Consts.sortNames).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

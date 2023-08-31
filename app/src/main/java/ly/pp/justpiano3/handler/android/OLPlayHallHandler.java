@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
@@ -64,7 +65,7 @@ public final class OLPlayHallHandler extends Handler {
                     }
 
                     // 聊天音效播放
-                    if (olPlayHall.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
+                    if (GlobalSetting.INSTANCE.getChatSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
                         SoundEngineUtil.playChatSound();
                     }
 

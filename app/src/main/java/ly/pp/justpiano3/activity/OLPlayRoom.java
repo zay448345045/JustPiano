@@ -24,6 +24,7 @@ import com.google.protobuf.MessageLite;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
@@ -854,10 +855,10 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
                     DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
-                    noteSpeed.setDefaultValue(String.valueOf(jpapplication.getSetting().getNotesDownSpeed()));
+                    noteSpeed.setDefaultValue(String.valueOf(GlobalSetting.INSTANCE.getNotesDownSpeed()));
                     noteSpeed.setDataChangeListener((dataSelectView, name, value) -> {
-                        jpapplication.getSetting().setNotesDownSpeed(Integer.parseInt(value));
-                        jpapplication.getSetting().saveSettings(jpapplication);
+                        GlobalSetting.INSTANCE.setNotesDownSpeed(Integer.parseInt(value));
+                        GlobalSetting.INSTANCE.saveSettings(jpapplication);
                     });
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);

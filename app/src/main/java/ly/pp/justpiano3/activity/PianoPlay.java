@@ -21,6 +21,7 @@ import ly.pp.justpiano3.adapter.FinishScoreAdapter;
 import ly.pp.justpiano3.adapter.MiniScoreAdapter;
 import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
@@ -300,7 +301,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         jpapplication.setHeightPixels(displayMetrics.heightPixels);
         jpapplication.setWidthPixels(displayMetrics.widthPixels);
-        jpapplication.getSetting().loadSettings(this, true);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
         SoundEngineUtil.teardownAudioStreamNative();
         SoundEngineUtil.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
@@ -661,7 +662,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     }
 
     public void updateKeyboardPrefer() {
-        if (jpapplication.getSetting().getKeyboardPrefer()) {
+        if (GlobalSetting.INSTANCE.getKeyboardPrefer()) {
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);

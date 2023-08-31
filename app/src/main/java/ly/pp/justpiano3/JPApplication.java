@@ -14,7 +14,7 @@ import lombok.Setter;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.entity.Setting;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
@@ -30,14 +30,14 @@ import java.util.*;
 
 public final class JPApplication extends Application {
 
+    public static int SETTING_MODE_CODE = 122;
+
     public static String kitiName = "";
     public static SharedPreferences accountListSharedPreferences;
     public String title = "";
     public String f4072f = "";
     public String f4073g = "";
     public String f4074h = "";
-    @Getter
-    public final Setting setting = new Setting();
     @Getter
     @Setter
     private ConnectionService connectionService;
@@ -310,13 +310,13 @@ public final class JPApplication extends Application {
     }
 
     public void downNote() {
-        animPosition += setting.getAnimFrame();
+        animPosition += GlobalSetting.INSTANCE.getAnimFrame();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        setting.loadSettings(this, false);
+        GlobalSetting.INSTANCE.loadSettings(this, false);
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());

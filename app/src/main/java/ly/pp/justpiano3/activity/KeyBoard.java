@@ -16,7 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.constant.MidiConstants;
-import ly.pp.justpiano3.entity.Setting;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
@@ -71,7 +71,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboardMode1View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
-                SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
+                SoundEngineUtil.playSound(pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune(), volume);
             }
 
             @Override
@@ -83,7 +83,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboardMode2View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(int pitch, int volume) {
-                SoundEngineUtil.playSound(pitch + jpapplication.getSetting().getKeyboardSoundTune(), volume);
+                SoundEngineUtil.playSound(pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune(), volume);
             }
 
             @Override
@@ -250,49 +250,49 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             switch (msg.what) {
                 case R.id.keyboard1_count_down:
                     int keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() - 1;
-                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_down:
                     int keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() - 1;
-                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_count_up:
                     keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() + 1;
-                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_up:
                     keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() + 1;
-                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_left:
                     int keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() - 1;
-                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_left:
                     int keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() - 1;
-                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_right:
                     keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() + 1;
-                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_right:
                     keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() + 1;
-                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, jpapplication.getSetting().getKeyboardAnim() ? interval : 0);
+                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
                     edit.apply();
                     break;
@@ -334,7 +334,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
+        int pitch = data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardMode1View.fireKeyDown(pitch, data[2], null);
             SoundEngineUtil.playSound(pitch, data[2]);
@@ -347,7 +347,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Setting.SETTING_MODE_CODE) {
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
             SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
             keyboardMode1View.changeSkinKeyboardImage(this);
             keyboardMode2View.changeSkinKeyboardImage(this);
@@ -360,7 +360,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             case R.id.keyboard_setting:
                 Intent intent = new Intent();
                 intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, Setting.SETTING_MODE_CODE);
+                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 break;
             case R.id.keyboard_record:
                 try {

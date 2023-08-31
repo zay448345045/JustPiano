@@ -56,15 +56,5 @@ public interface Consts extends BaseColumns {
     int[] colors = new int[]{R.color.translent, R.color.c1, R.color.c2, R.color.c3, R.color.c4, R.color.c5, R.color.c6, R.color.c7, R.color.c8, R.color.c9, R.color.c10, R.color.c11, R.color.c12};
     int[] couples = new int[]{R.drawable._none, R.drawable.couple_1, R.drawable.couple_2, R.drawable.couple_3};
     int[] sex = new int[]{R.drawable.m, R.drawable.f, R.drawable.none, R.drawable._none};
-    int[] filledKuang = new int[]{R.drawable.filled_msg, R.drawable.filled_v1, R.drawable.filled_v2, R.drawable.filled_v3, R.drawable.filled_v4, R.drawable.filled_v5, R.drawable.filled_v6,
-            R.drawable.filled_v7, R.drawable.filled_v8, R.drawable.filled_v9, R.drawable.filled_v10, R.drawable.filled_v11, R.drawable.filled_v12,
-            R.drawable.filled_v13, R.drawable.filled_v14, R.drawable.filled_v15, R.drawable.filled_v16, R.drawable.filled_v17, R.drawable.filled_v18,
-            R.drawable.filled_v19, R.drawable.filled_v20, R.drawable.filled_v21, R.drawable.filled_v22, R.drawable.filled_v23, R.drawable.filled_v24,
-            R.drawable.filled_v25, R.drawable.filled_v26, R.drawable.filled_v27};
     int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v7_name};
-    int[] kuang = new int[]{R.drawable.title_bar, R.drawable.v1_name, R.drawable.v2_name, R.drawable.v3_name, R.drawable.v4_name, R.drawable.v5_name, R.drawable.v6_name,
-            R.drawable.v7_name, R.drawable.v8_name, R.drawable.v9_name, R.drawable.v10_name, R.drawable.v11_name, R.drawable.v12_name,
-            R.drawable.v13_name, R.drawable.v14_name, R.drawable.v15_name, R.drawable.v16_name, R.drawable.v17_name, R.drawable.v18_name,
-            R.drawable.v19_name, R.drawable.v20_name, R.drawable.v21_name, R.drawable.v22_name, R.drawable.v23_name, R.drawable.v24_name,
-            R.drawable.v25_name, R.drawable.v26_name, R.drawable.v27_name};
 }

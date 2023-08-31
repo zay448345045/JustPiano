@@ -12,6 +12,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.*;
@@ -101,7 +102,7 @@ public final class OLPlayRoomHandler extends Handler {
                         }
 
                         // 聊天音效播放
-                        if (olPlayRoom.jpapplication.getSetting().getChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
+                        if (GlobalSetting.INSTANCE.getChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
                             SoundEngineUtil.playChatSound();
                         }
 

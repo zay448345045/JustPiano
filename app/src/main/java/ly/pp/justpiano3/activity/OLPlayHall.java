@@ -19,6 +19,7 @@ import android.widget.TabHost.TabSpec;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
 import ly.pp.justpiano3.adapter.ExpressAdapter;
@@ -367,7 +368,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.getSetting().loadSettings(this, true);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olplayhall);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;

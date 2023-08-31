@@ -19,7 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.entity.Setting;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
@@ -99,7 +99,7 @@ public class MainMode extends Activity implements OnClickListener {
                 return;
             case R.id.settings:
                 intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, Setting.SETTING_MODE_CODE);
+                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                 return;
             case R.id.feed_back:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
@@ -138,7 +138,7 @@ public class MainMode extends Activity implements OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Setting.SETTING_MODE_CODE) {
+        if (requestCode == JPApplication.SETTING_MODE_CODE) {
             SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
@@ -147,7 +147,7 @@ public class MainMode extends Activity implements OnClickListener {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         jpApplication = (JPApplication) getApplication();
-        jpApplication.getSetting().loadSettings(this, false);
+        GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
         SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
