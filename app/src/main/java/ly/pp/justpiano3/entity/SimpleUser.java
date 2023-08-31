@@ -31,10 +31,4 @@ public class SimpleUser {
      * 某些时间(临时时间存放变量)
      */
     private Date date;
-
-    public SimpleUser(String gender, String name, Integer lv) {
-        this.gender = gender;
-        this.name = name;
-        this.lv = lv;
-    }
 }

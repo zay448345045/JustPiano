@@ -24,4 +24,10 @@
         <attr name="bottomGoldConvertText" format="string" />
         <attr name="defaultValue" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="SeekBarPreference">
+        <attr name="minValue" format="float" />
+        <attr name="maxValue" format="float" />
+        <attr name="floatNumber" format="boolean" />
+    </declare-styleable>
 </resources>

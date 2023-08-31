@@ -63,7 +63,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 曲谱总进度
      */
-    private var totalProgress: Float = 0f
+    private var totalProgress = 0f
 
     /**
      * 瀑布流音块当前状态，不对外暴露
@@ -127,9 +127,9 @@ class WaterfallView @JvmOverloads constructor(
     companion object {
 
         /**
-         * 瀑布流音符之间的绘制空缺间隔时间，单位毫秒，防止同音高的音符连续绘制时看起来粘在一起，小于这个值的音符将不可见
+         * 瀑布流音符之间的绘制空缺间隔时间，单位毫秒，防止同音高的音符连续绘制时看起来粘在一起
          */
-        const val NOTE_MIN_INTERVAL = 10
+        const val NOTE_MIN_INTERVAL = 15
     }
 
     init {
@@ -271,7 +271,7 @@ class WaterfallView @JvmOverloads constructor(
                     val moveProgressOffset = (event.x.coerceAtLeast(0f) - lastX) / width * totalProgress
                     // 如果经过计算后的进度落在总进度之内，则继续执行设置进度操作
                     if (moveProgressOffset + playProgress in 0f..totalProgress) {
-                        waterfallDownNotesThread!!.progressOffset += moveProgressOffset
+                        waterfallDownNotesThread!!.progressScrollOffset += moveProgressOffset
                     }
                     // 更新此时滑动后的手指坐标，后续计算手指滑动了多少坐标
                     lastX = event.x.coerceAtLeast(0f)
@@ -361,14 +361,14 @@ class WaterfallView @JvmOverloads constructor(
         var progress: Float = 0f
 
         /**
-         * 播放进度的偏移量，用于暂停后继续时的进度更新
+         * 处于暂停状态的时间累加，作为时间偏移进行计算
          */
-        private var progressPauseOffset: Float = 0f
+        private var progressPauseTime: Float = 0f
 
         /**
          * 用户手动调节拖动进度条导致的播放进度的偏移量，仅本次拖动生效，本次拖动结束后此值清零
          */
-        var progressOffset: Float = 0f
+        var progressScrollOffset: Float = 0f
 
         override fun run() {
             // 先初始化绘制Paint对象，避免绘制时进行频繁的创建对象
@@ -379,7 +379,8 @@ class WaterfallView @JvmOverloads constructor(
             while (isRunning) {
                 // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
                 // 需要乘以播放速度和音块速率，可整体控制音块的下落速度和音块速率，最后减掉暂停播放后继续播放所带来的时间差
-                var playIntervalTime = (System.currentTimeMillis() - startPlayTime) * notePlaySpeed * noteFallDownSpeed - progressPauseOffset
+                var playIntervalTime =
+                    (System.currentTimeMillis() - startPlayTime) * notePlaySpeed * noteFallDownSpeed - progressPauseTime
                 // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
                 if (isPause && pauseProgress == null) {
                     // 只有第一次监测到isPause为true时才触发这里，重复置isPause为true，不会重复触发，确保进度保存的是第一次触发暂停时的
@@ -387,14 +388,14 @@ class WaterfallView @JvmOverloads constructor(
                 } else if (!isPause && pauseProgress != null) {
                     // 第一次监测到isPause为false，更新偏移量，使之后继续播放时能按照刚暂停时的进度来继续
                     // updatePauseOffset可以理解为本次暂停过程一共暂停了多少毫秒，所以需要加偏移量补偿掉这些毫秒
-                    // 由于暂停的时候会人工拖动进度条操纵进度的修改，所以需要把人工操纵进度的结果progressOffset也算上
-                    // 都处理结束之后再清零progressOffset
-                    val updatePauseOffset = playIntervalTime - pauseProgress!! - progressOffset
-                    progressPauseOffset += updatePauseOffset
+                    // 由于暂停的时候会人工拖动进度条操纵进度的修改，所以需要把人工操纵进度的结果progressScrollOffset也算上
+                    // 都处理结束之后再清零progressScrollOffset
+                    val updatePauseOffset = playIntervalTime - pauseProgress!! - progressScrollOffset
+                    progressPauseTime += updatePauseOffset
                     // 接下来当前的绘制帧，调整playIntervalTime，也减掉偏移量的改变值，使当前帧的绘制顺滑起来
                     playIntervalTime -= updatePauseOffset
-                    // 清零progressOffset，如果不清零，下次拖动修改进度的时候又要变化progressOffset，会导致和前一次的值冲突
-                    progressOffset = 0f
+                    // 清零progressScrollOffset，如果不清零，下次拖动修改进度的时候又要变化progressOffset，会导致和前一次的值冲突
+                    progressScrollOffset = 0f
                     // 清除暂停时保存的当时的进度值
                     pauseProgress = null
                     // 以下两行代码内容主要用于拖动进度时，手指抬起后的继续播放，进度发生变化的情形，需要做处理
@@ -406,7 +407,7 @@ class WaterfallView @JvmOverloads constructor(
                     updateNoteStatusByProgress(playIntervalTime)
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
-                progress = (if (isPause) pauseProgress!! else playIntervalTime) + progressOffset
+                progress = (if (isPause) pauseProgress!! else playIntervalTime) + progressScrollOffset
                 // 如果发现进度大于总进度，说明播放完成，此时标记暂停
                 // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
                 if (progress > totalProgress) {
@@ -509,9 +510,9 @@ class WaterfallView @JvmOverloads constructor(
                     // 绘制音块
                     canvas.drawRect(
                         waterfallNote.left,
-                        (progress - waterfallNote.top + NOTE_MIN_INTERVAL),
+                        progress - waterfallNote.top + NOTE_MIN_INTERVAL,
                         waterfallNote.right,
-                        (progress - waterfallNote.bottom),
+                        progress - waterfallNote.bottom,
                         notePaint
                     )
                 }

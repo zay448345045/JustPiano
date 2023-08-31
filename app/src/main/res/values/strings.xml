@@ -38,7 +38,7 @@
     <string name="b_s_key">sound_check_box</string>
     <string name="b_s_vol">sound_vol</string>
     <string name="b_s_vol_title">和弦音量</string>
-    <string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果。</string>
+    <string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果</string>
     <string name="thanks"></string>
     <string name="login_title">极品钢琴</string>
     <string name="login_subtitle">浴火重生版</string>
