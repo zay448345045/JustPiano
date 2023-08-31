@@ -150,17 +150,13 @@ class WaterfallView @JvmOverloads constructor(
         // 存储音块下落速率的值
         this.noteFallDownSpeed = noteFallDownSpeed
         // 初始化音符数据，如果音块速率不为1，对每个音符进行拷贝并乘以音块速率的值，改变音符的高度间隔
-        if (noteFallDownSpeed.toInt() != 1) {
-            val waterfallNotesWithDownSpeed = waterfallNotes.copyOf()
-            for (i in waterfallNotes.indices) {
-                waterfallNotesWithDownSpeed[i] = waterfallNotes[i].copy()
-                waterfallNotesWithDownSpeed[i].bottom *= noteFallDownSpeed
-                waterfallNotesWithDownSpeed[i].top *= noteFallDownSpeed
-            }
-            this.waterfallNotes = waterfallNotesWithDownSpeed
-        } else {
-            this.waterfallNotes = waterfallNotes
+        val waterfallNotesWithDownSpeed = waterfallNotes.copyOf()
+        for (i in waterfallNotes.indices) {
+            waterfallNotesWithDownSpeed[i] = waterfallNotes[i].copy()
+            waterfallNotesWithDownSpeed[i].bottom *= noteFallDownSpeed
+            waterfallNotesWithDownSpeed[i].top *= noteFallDownSpeed
         }
+        this.waterfallNotes = waterfallNotesWithDownSpeed
         // 初始化音符状态
         noteStatus = arrayOfNulls(this.waterfallNotes.size)
         Arrays.fill(noteStatus, WaterfallNoteStatusEnum.INIT)
