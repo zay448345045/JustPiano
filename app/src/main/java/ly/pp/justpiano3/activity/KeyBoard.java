@@ -336,7 +336,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         int pitch = data[1] + jpapplication.getSetting().getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardMode1View.fireKeyDown(pitch, data[2], 0xffffff);
+            keyboardMode1View.fireKeyDown(pitch, data[2], null);
             SoundEngineUtil.playSound(pitch, data[2]);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
