@@ -136,7 +136,7 @@ class WaterfallView @JvmOverloads constructor(
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
-        backgroundImage = SkinImageLoadUtil.loadImage(context, "background_hd")
+        backgroundImage = SkinImageLoadUtil.loadImage(context, "waterfall")
         progressBarImage = SkinImageLoadUtil.loadImage(context, "progress_bar")
         progressBarBaseImage = SkinImageLoadUtil.loadImage(context, "progress_bar_base")
     }

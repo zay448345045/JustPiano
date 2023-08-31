@@ -202,9 +202,8 @@
             android:layout_marginRight="@dimen/dimen_8dp"
             android:layout_toEndOf="@+id/ol_register"
             android:background="@drawable/selector_orange_button"
-
             android:text="@string/login_sw_acc"
-            android:textColor="@color/white1"
+            android:textColor="@color/black"
             android:textSize="14sp" />
 
         <Button
@@ -215,9 +214,8 @@
             android:layout_alignBottom="@+id/ol_change_account"
             android:layout_toEndOf="@+id/ol_change_account"
             android:background="@drawable/selector_orange_button"
-
             android:text="@string/login_sw_svr"
-            android:textColor="@color/white1"
+            android:textColor="@color/black"
             android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>
