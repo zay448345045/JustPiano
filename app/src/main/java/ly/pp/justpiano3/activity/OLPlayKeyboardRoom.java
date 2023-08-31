@@ -1088,7 +1088,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         int pitch = data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(pitch, data[2], ColorUtil.getKuangColorByKuangIndex(this, kuang));
+            keyboardView.fireKeyDown(pitch, data[2], kuang == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuang));
             if (hasAnotherUser()) {
                 broadNote(pitch, data[2]);
             }
@@ -1196,7 +1196,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
-        keyboardView.setNoteOnColor(ColorUtil.getKuangColorByKuangIndex(this, kuang));
+        if (kuang > 0) {
+            keyboardView.setNoteOnColor(ColorUtil.getKuangColorByKuangIndex(this, kuang));
+        }
         if (noteScheduledExecutor == null) {
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();

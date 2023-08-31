@@ -2,11 +2,19 @@ package ly.pp.justpiano3.utils;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.util.Xml;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * 框框颜色处理工具
@@ -26,7 +34,7 @@ public class ColorUtil {
             R.drawable.v4_name, R.drawable.v5_name, R.drawable.v6_name, R.drawable.v7_name, 
             R.drawable.v8_name, R.drawable.v9_name, R.drawable.v10_name, R.drawable.v11_name, 
             R.drawable.v12_name, R.drawable.v13_name, R.drawable.v14_name, R.drawable.v15_name, 
-            R.drawable.v16_name, R.drawable.v17_name, R.drawable.v18_name, R.drawable.v19_name, 
+            R.drawable.v16_name, R.drawable.v17_name, R.drawable._none, R.drawable.v19_name,
             R.drawable.v20_name, R.drawable.v21_name, R.drawable.v22_name, R.drawable.v23_name, 
             R.drawable.v24_name, R.drawable.v25_name, R.drawable.v26_name, R.drawable.v27_name,
     };
@@ -42,19 +50,28 @@ public class ColorUtil {
     }
 
     public static Integer getKuangColorByDrawable(Context context, int drawable) {
-        GradientDrawable gradientDrawable = (GradientDrawable) context.getResources().getDrawable(drawable);
-        Drawable.ConstantState gradientState = gradientDrawable.getConstantState();
-        // 反射获取xml stroke标签中的color属性值
+        // 使用 XmlPullParser 解析 Drawable 的 XML 内容
+        XmlResourceParser parser = context.getResources().getXml(drawable);
+        AttributeSet attrs = Xml.asAttributeSet(parser);
+
+        // 寻找 stroke 标签，并获取 color 属性的值
+        int color = 0;
         try {
-            Field strokeColorField = gradientState.getClass().getDeclaredField("mStrokeColors");
-            strokeColorField.setAccessible(true);
-            ColorStateList colorStateList = (ColorStateList) strokeColorField.get(gradientState);
-            if (colorStateList != null) {
-                return colorStateList.getDefaultColor();
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG) {
+                    if (parser.getName().equals("stroke")) {
+                        int colorResource = attrs.getAttributeResourceValue(Consts.ANDROID_NAMESPACE, "color", 0);
+                        if (colorResource > 0) {
+                            color = ContextCompat.getColor(context, colorResource);
+                        }
+                    }
+                }
+                eventType = parser.next();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return color == 0 ? null : color;
     }
 }

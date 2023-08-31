@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
 
 import java.util.Locale;
 
@@ -17,7 +18,6 @@ import java.util.Locale;
  * 可拖动选择数值的Preference
  */
 public class SeekBarPreference extends DialogPreference implements SeekBar.OnSeekBarChangeListener {
-    private static final String androidNs = "http://schemas.android.com/apk/res/android";
 
     private SeekBar seekBar;
     private TextView valueText;
@@ -32,8 +32,8 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        suffix = attrs.getAttributeValue(androidNs, "text");
-        defaultValue = attrs.getAttributeValue(androidNs, "defaultValue");
+        suffix = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "text");
+        defaultValue = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "defaultValue");
         // 获取自定义属性的最大和最小值
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
         minValue = typedArray.getFloat(R.styleable.SeekBarPreference_minValue, 0f);

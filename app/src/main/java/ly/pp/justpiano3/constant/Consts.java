@@ -1,11 +1,11 @@
 package ly.pp.justpiano3.constant;
 
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.provider.BaseColumns;
 import ly.pp.justpiano3.R;
 
 public interface Consts extends BaseColumns {
+
+    String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
 
     /**
      * 官网地址
