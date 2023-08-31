@@ -235,14 +235,9 @@ class WaterfallView @JvmOverloads constructor(
      */
     fun destroy() {
         // 释放图片资源
-        if (progressBarImage != null) {
-            progressBarImage!!.recycle()
-            progressBarImage = null
-        }
-        if (progressBarBaseImage != null) {
-            progressBarBaseImage!!.recycle()
-            progressBarBaseImage = null
-        }
+        backgroundImage?.recycle()
+        progressBarImage?.recycle()
+        progressBarBaseImage?.recycle()
     }
 
     /**
