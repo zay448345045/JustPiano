@@ -71,14 +71,14 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
             value = getPersistedString(defaultValue);
         }
 
-        seekBar.setProgress((int) ((Float.parseFloat(value) - minValue) / (maxValue - minValue) * 100));
+        seekBar.setProgress(Math.round((Float.parseFloat(value) - minValue) / (maxValue - minValue) * 100));
         return layout;
     }
 
     @Override
     protected void onBindDialogView(View v) {
         super.onBindDialogView(v);
-        seekBar.setProgress((int) ((Float.parseFloat(value) - minValue) / (maxValue - minValue) * 100));
+        seekBar.setProgress(Math.round((Float.parseFloat(value) - minValue) / (maxValue - minValue) * 100));
     }
 
     @Override

@@ -15,11 +15,12 @@
             android:key="down_speed"
             android:summary="设置音块的滑落速度，会影响弹奏难度，可根据个人习惯进行调整"
             android:title="音块速率" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="音块大小"
-            android:entries="@array/note_s"
-            android:entryValues="@array/note_size"
+            app:minValue="0.5"
+            app:maxValue="2"
+            app:floatNumber="true"
             android:key="note_size"
             android:summary="设置音块大小，可根据个人习惯进行调整"
             android:title="音块大小" />
@@ -57,12 +58,12 @@
             android:title="提示弹奏等级显示(暴击、完美等)" />
         <ListPreference
             android:defaultValue="1"
-            android:dialogTitle="判断线加粗"
+            android:dialogTitle="判断线类型"
             android:entries="@array/rough_line"
             android:entryValues="@array/rough_linev"
             android:key="rough_line"
-            android:summary="设置判断线位置是否加粗及加粗样式"
-            android:title="判断线加粗" />
+            android:summary="设置判断线是否加粗及加粗样式"
+            android:title="判断线类型" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="show_line"
@@ -75,11 +76,12 @@
             android:summaryOff="键盘缩略图已关闭"
             android:summaryOn="键盘缩略图已打开"
             android:title="键盘缩略图" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1.0"
+            app:minValue="0.5"
+            app:maxValue="1.5"
+            app:floatNumber="true"
             android:dialogTitle="节拍比率(仅本地模式有效)"
-            android:entries="@array/temp_e"
-            android:entryValues="@array/temp_e"
             android:key="temp_speed"
             android:summary="值越小，音乐整体节拍越慢，持续时间越长"
             android:title="节拍比率(仅本地模式有效)" />
@@ -108,12 +110,13 @@
             android:summaryOff="@string/b_s_open_2"
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0.8"
             android:dependency="@string/b_s_key"
             android:dialogTitle="@string/b_s_vol_title"
-            android:entries="@array/vol_entries"
-            android:entryValues="@array/vol_entries"
+            app:minValue="0.1"
+            app:maxValue="1.5"
+            app:floatNumber="true"
             android:key="b_s_vol"
             android:summary="@string/b_s_vol_sum"
             android:title="@string/b_s_vol_title" />
@@ -125,19 +128,21 @@
             android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
             android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
             android:title="启用键盘移动缩放动画" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="触屏点击声音移调"
-            android:entries="@array/midi_keyboard_tune"
-            android:entryValues="@array/midi_keyboard_tune"
+            app:minValue="-6"
+            app:maxValue="6"
+            app:floatNumber="false"
             android:key="keyboard_sound_tune"
             android:summary="调整键盘模式触屏点击按键播放的声音移调"
             android:title="触屏点击声音移调" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
+            app:minValue="-6"
+            app:maxValue="6"
+            app:floatNumber="false"
             android:dialogTitle="MIDI键盘移调"
-            android:entries="@array/midi_keyboard_tune"
-            android:entryValues="@array/midi_keyboard_tune"
             android:key="midi_keyboard_tune"
             android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
             android:title="MIDI键盘移调" />
