@@ -34,7 +34,7 @@ public final class SkinDownloadClick implements OnClickListener {
                 ThreadPoolUtils.execute(() -> SkinDownload.downloadPS(skinDownload, url, name));
                 break;
             case 1:
-                ThreadPoolUtils.execute(() -> skinDownload.mo2993a(name + ".ps"));
+                ThreadPoolUtils.execute(() -> skinDownload.changeSkin(name + ".ps"));
                 break;
             case 2:
                 Editor edit = PreferenceManager.getDefaultSharedPreferences(skinDownload).edit();

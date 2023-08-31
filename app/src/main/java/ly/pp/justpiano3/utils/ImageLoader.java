@@ -114,7 +114,7 @@ public class ImageLoader {
     }
 
     /**
-     * @function 提供MyImageLoader对象
+     * @function 提供ImageLoader对象
      */
     public static ImageLoader build(Context context, String cacheName) {
         return new ImageLoader(context, cacheName);

@@ -48,12 +48,7 @@ public class SoundDownload extends Activity implements Callback {
         Message message = Message.obtain(soundDownload.handler);
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str2 + ".ss");
         if (file.exists()) {
-            Bundle bundle = new Bundle();
-            bundle.putString("name", str2);
-            message.setData(bundle);
-            message.what = 4;
-            soundDownload.handler.sendMessage(message);
-            return;
+            file.delete();
         }
         message.what = 0;
         if (soundDownload.handler != null) {
@@ -142,7 +137,7 @@ public class SoundDownload extends Activity implements Callback {
         jpdialog.showDialog();
     }
 
-    public final void mo3006a(String str) {
+    public final void changeSound(String str) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);
@@ -195,13 +190,6 @@ public class SoundDownload extends Activity implements Callback {
                 case 3:
                     linearLayout.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "很抱歉,连接出错!", Toast.LENGTH_LONG).show();
-                    break;
-                case 4:
-                    linearLayout.setVisibility(View.GONE);
-                    progressBar.setProgress(100);
-                    downloadText.setText("100%");
-                    Toast.makeText(getApplicationContext(), "已存在该音源!", Toast.LENGTH_LONG).show();
-                    mo3005a(1, message.getData().getString("name"), "", 0, "");
                     break;
                 case 5:
                     linearLayout.setVisibility(View.GONE);

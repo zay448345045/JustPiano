@@ -48,12 +48,7 @@ public class SkinDownload extends Activity implements Callback {
         Message message = Message.obtain(skinDownload.handler);
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + str2 + ".ps");
         if (file.exists()) {
-            Bundle bundle = new Bundle();
-            bundle.putString("name", str2);
-            message.setData(bundle);
-            message.what = 4;
-            skinDownload.handler.sendMessage(message);
-            return;
+            file.delete();
         }
         message.what = 0;
         if (skinDownload.handler != null) {
@@ -142,7 +137,7 @@ public class SkinDownload extends Activity implements Callback {
         jpdialog.showDialog();
     }
 
-    public final void mo2993a(String str) {
+    public final void changeSkin(String str) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);
@@ -184,13 +179,6 @@ public class SkinDownload extends Activity implements Callback {
                 case 3:
                     linearLayout.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "很抱歉,连接出错!", Toast.LENGTH_LONG).show();
-                    break;
-                case 4:
-                    linearLayout.setVisibility(View.GONE);
-                    progressBar.setProgress(100);
-                    downloadText.setText("100%");
-                    Toast.makeText(getApplicationContext(), "已存在该皮肤!", Toast.LENGTH_LONG).show();
-                    mo2992a(1, message.getData().getString("name"), "", 0, "");
                     break;
                 case 5:
                     linearLayout.setVisibility(View.GONE);

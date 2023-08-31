@@ -70,7 +70,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
         if (shouldPersist()) {
             value = getPersistedString(defaultValue);
         }
-
+        valueText.setText(value);
         seekBar.setProgress(Math.round((Float.parseFloat(value) - minValue) / (maxValue - minValue) * 100));
         return layout;
     }

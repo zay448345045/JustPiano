@@ -8,7 +8,6 @@ import android.widget.TextView;
 import ly.pp.justpiano3.utils.ImageLoader;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.SkinDownload;
-import ly.pp.justpiano3.listener.SkinItemClick;
 import ly.pp.justpiano3.view.ScrollText;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,7 +76,7 @@ public final class SkinDownloadAdapter extends BaseAdapter {
                 } else {
                     textView2.setText("下载:" + i3 + "次");
                 }
-                view.setOnClickListener(new SkinItemClick(this, string2, string, i2, string3));
+                view.setOnClickListener(v -> skinDownload.mo2992a(0, string2, string, i2, string3));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
