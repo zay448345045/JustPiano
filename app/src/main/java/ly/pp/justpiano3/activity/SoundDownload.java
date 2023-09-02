@@ -161,7 +161,7 @@ public class SoundDownload extends Activity implements Callback {
             for (i = 108; i >= 24; i--) {
                 SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             }
-            SoundEngineUtil.confirmLoadSounds(getApplicationContext());
+            SoundEngineUtil.afterLoadSounds(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }

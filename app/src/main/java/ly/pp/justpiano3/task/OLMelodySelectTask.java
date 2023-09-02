@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -28,7 +29,7 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
         if (!olMelodySelect.get().f4317e.isEmpty()) {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
-                    .add("version", DeviceUtil.getAppVersionName(olMelodySelect.get()))
+                    .add("version", BuildConfig.VERSION_NAME)
                     .add("page", String.valueOf(olMelodySelect.get().index))
                     .add("type", olMelodySelect.get().f4317e)
                     .build();

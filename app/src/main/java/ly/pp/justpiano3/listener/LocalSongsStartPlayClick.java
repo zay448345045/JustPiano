@@ -1,50 +1,50 @@
 package ly.pp.justpiano3.listener;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.view.View;
 import android.view.View.OnClickListener;
-import ly.pp.justpiano3.adapter.LocalSongsAdapter;
+import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.database.entity.Song;
 
 public final class LocalSongsStartPlayClick implements OnClickListener {
-    private final LocalSongsAdapter localSongsAdapter;
+    private final MelodySelect melodySelect;
     private final String path;
     private final String name;
-    private final double nandu;
-    private final double leftnandu;
-    private final int songstime;
+    private final double rightHandDegree;
+    private final double leftHandDegree;
+    private final int songsTime;
     private final int score;
 
-    public LocalSongsStartPlayClick(LocalSongsAdapter LocalSongsAdapter, Cursor cursor) {
-        localSongsAdapter = LocalSongsAdapter;
-        path = cursor.getString(cursor.getColumnIndexOrThrow("path"));
-        name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-        nandu = cursor.getFloat(cursor.getColumnIndexOrThrow("diff"));
-        leftnandu = cursor.getFloat(cursor.getColumnIndexOrThrow("Ldiff"));
-        songstime = cursor.getInt(cursor.getColumnIndexOrThrow("length"));
-        score = cursor.getInt(cursor.getColumnIndexOrThrow("score"));
+    public LocalSongsStartPlayClick(MelodySelect melodySelect, Song song) {
+        this.melodySelect = melodySelect;
+        path = song.getFilePath();
+        name = song.getName();
+        rightHandDegree = song.getRightHandDegree();
+        leftHandDegree = song.getLeftHandDegree();
+        songsTime = song.getLength();
+        score = song.getRightHandHighScore();
     }
 
     @Override
     public void onClick(View view) {
         int i = 0;
-        localSongsAdapter.melodyselect.jpapplication.stopPlaySong();
+        melodySelect.jpapplication.stopPlaySong();
         Intent intent = new Intent();
         intent.putExtra("head", 0);
         intent.putExtra("path", path);
         intent.putExtra("name", name);
-        intent.putExtra("nandu", nandu);
-        intent.putExtra("leftnandu", leftnandu);
-        intent.putExtra("songstime", songstime);
+        intent.putExtra("nandu", rightHandDegree);
+        intent.putExtra("leftnandu", leftHandDegree);
+        intent.putExtra("songstime", songsTime);
         intent.putExtra("score", score);
-        intent.putExtra("isrecord", localSongsAdapter.melodyselect.isRecord.isChecked());
+        intent.putExtra("isrecord", melodySelect.isRecord.isChecked());
         String str = "hand";
-        if (localSongsAdapter.melodyselect.isLeftHand.isChecked()) {
+        if (melodySelect.isLeftHand.isChecked()) {
             i = 1;
         }
         intent.putExtra(str, i);
-        intent.setClass(localSongsAdapter.melodyselect, PianoPlay.class);
-        localSongsAdapter.melodyselect.startActivity(intent);
+        intent.setClass(melodySelect, PianoPlay.class);
+        melodySelect.startActivity(intent);
     }
 }

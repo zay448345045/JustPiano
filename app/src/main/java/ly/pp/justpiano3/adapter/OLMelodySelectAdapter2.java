@@ -10,7 +10,6 @@ import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.OLMelodySongsPlayClick;
-import ly.pp.justpiano3.listener.PlayWaterfallClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
 import java.util.HashMap;

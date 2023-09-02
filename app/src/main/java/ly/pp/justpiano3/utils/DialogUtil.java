@@ -1,7 +1,5 @@
 package ly.pp.justpiano3.utils;
 
-import lombok.Getter;
-import lombok.Setter;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -19,9 +17,15 @@ public class DialogUtil {
     /**
      * 是否已经显示对话框，防止对话框重复显示
      */
-    @Setter
-    @Getter
     private static boolean isShowDialog;
+
+    public static boolean isShowDialog() {
+        return isShowDialog;
+    }
+
+    public static void setShowDialog(boolean isShowDialog) {
+        DialogUtil.isShowDialog = isShowDialog;
+    }
 
     /**
      * 赠送音符消息接收-对话框处理

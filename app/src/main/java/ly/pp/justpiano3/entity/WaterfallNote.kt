@@ -38,12 +38,4 @@ data class WaterfallNote(
      * 音量
      */
     var volume: Int,
-) {
-
-    /**
-     * 音符上下坐标的间隔
-     */
-    fun interval(): Float {
-        return top - bottom
-    }
-}
+)

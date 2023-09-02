@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -27,7 +28,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", DeviceUtil.getAppVersionName(olMainMode.get()))
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("maxSongId", String.valueOf(maxSongId))
                 .build();
         // 创建请求对象

@@ -1,30 +1,26 @@
-package ly.pp.justpiano3.entity;
-
-import lombok.Data;
+package ly.pp.justpiano3.entity
 
 /**
  * 记录在线键盘模式用户状态
  */
-@Data
-public class OLKeyboardState {
-
+data class OLKeyboardState (
     /**
      * 是否静音
      */
-    private boolean muted;
+    var isMuted: Boolean,
 
     /**
      * midi键盘是否打开
      */
-    private boolean midiKeyboardOn;
+    var isMidiKeyboardOn: Boolean,
 
     /**
      * 此位置是否有人
      */
-    private boolean hasUser;
+    var isHasUser: Boolean,
 
     /**
      * 此位置是否正在弹奏（闪烁）
      */
-    private boolean isPlaying;
-}
+    var isPlaying: Boolean,
+)

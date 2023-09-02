@@ -235,7 +235,7 @@
             android:background="@drawable/filled_bar"
             android:orientation="horizontal">
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/c_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

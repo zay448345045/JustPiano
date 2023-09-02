@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.play.PmFileParser;
-import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -41,7 +40,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", DeviceUtil.getAppVersionName(activity.get()))
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("maxSongId", maxSongId)
                 .build();
         // 创建请求对象
@@ -60,8 +59,6 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 fileOutputStream.close();
                 List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
-                SQLiteHelper SQLiteHelper = new SQLiteHelper(activity.get(), "data");
-                SQLiteDatabase sqliteDataBase = SQLiteHelper.getWritableDatabase();
                 sqliteDataBase.beginTransaction();
                 for (File file : files) {
                     String item = file.getName().substring(0, 1);
@@ -89,8 +86,6 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 }
                 sqliteDataBase.setTransactionSuccessful();
                 sqliteDataBase.endTransaction();
-                sqliteDataBase.close();
-                SQLiteHelper.close();
             }
         } catch (Exception e3) {
             e3.printStackTrace();

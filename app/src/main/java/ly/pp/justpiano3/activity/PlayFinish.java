@@ -1,10 +1,7 @@
 package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,14 +9,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.helper.SQLiteHelper;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.task.PlayFinishTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-import java.util.Date;
+import java.util.List;
 
 public class PlayFinish extends Activity implements OnClickListener {
     private int head;
@@ -136,30 +133,25 @@ public class PlayFinish extends Activity implements OnClickListener {
                 badScore = bad * 2;
                 missScore = miss * -5;
                 totalScore = extras.getInt("totalScore");
-                Date f4652P = new Date(System.currentTimeMillis());
                 clickNum = perfect + cool + great + bad + miss;
-                SQLiteDatabase writableDatabase = new SQLiteHelper(this, "data").getWritableDatabase();
-                Cursor query = writableDatabase.query("jp_data", new String[]{"_id", "name", "score", "date", "isnew"}, "name='" + name.replace("'", "''") + "'", null, null, null, null);
-                while (query.moveToNext()) {
-                    topScore = query.getInt(query.getColumnIndexOrThrow("score"));
+                // 虽然返回是list，但查询结果只能说有一个元素或者没有
+                List<Song> songByPath = JPApplication.getSongDatabase().songDao().getSongByFilePath(path);
+                for (Song song : songByPath) {
+                    topScore = hand == 0 ? song.getRightHandHighScore() : song.getLeftHandHighScore();
+                    if (topScore <= totalScore) {
+                        isWinner = true;
+                        if (hand == 0) {
+                            song.setRightHandHighScore(totalScore);
+                        } else {
+                            song.setLeftHandHighScore(totalScore);
+                        }
+                        song.setHighScoreDate(System.currentTimeMillis());
+                        song.setNew(0);
+                        JPApplication.getSongDatabase().songDao().updateSongs(song);
+                    } else {
+                        isWinner = false;
+                    }
                 }
-                if (topScore <= totalScore) {
-                    isWinner = true;
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("score", totalScore);
-                    contentValues.put("date", String.valueOf(f4652P));
-                    contentValues.put("isnew", 0);
-                    writableDatabase.update("jp_data", contentValues, "name='" + name.replace("'", "''") + "'", null);
-                    contentValues.clear();
-                } else {
-                    isWinner = false;
-                }
-                try {
-                    query.close();
-                } catch (Exception e) {
-                    break;
-                }
-                writableDatabase.close();
                 break;
             case 1:
                 topScore = extras.getInt("topScore");
@@ -202,43 +194,43 @@ public class PlayFinish extends Activity implements OnClickListener {
         retryButton.setOnClickListener(this);
         shareButton = findViewById(R.id.share_score);
         shareButton.setOnClickListener(this);
-        TextView f4681y = findViewById(R.id.perfect);
-        f4681y.setText(String.valueOf(perfect));
-        TextView f4682z = findViewById(R.id.cool);
-        f4682z.setText(String.valueOf(cool));
-        TextView f4637A = findViewById(R.id.great);
-        f4637A.setText(String.valueOf(great));
-        TextView f4638B = findViewById(R.id.bad);
-        f4638B.setText(String.valueOf(bad));
-        TextView f4639C = findViewById(R.id.miss);
-        f4639C.setText(String.valueOf(miss));
-        TextView f4640D = findViewById(R.id.total);
-        f4640D.setText(String.valueOf(clickNum));
-        TextView f4641E = findViewById(R.id.combo);
-        f4641E.setText(String.valueOf(combo));
-        TextView f4642F = findViewById(R.id.combo_scr);
-        f4642F.setText(String.valueOf(comboScore));
-        TextView f4643G = findViewById(R.id.perfect_scr);
-        f4643G.setText(String.valueOf(perfectScore));
-        TextView f4644H = findViewById(R.id.cool_scr);
-        f4644H.setText(String.valueOf(coolScore));
-        TextView f4645I = findViewById(R.id.great_scr);
-        f4645I.setText(String.valueOf(greatScore));
-        TextView f4646J = findViewById(R.id.bad_scr);
-        f4646J.setText(String.valueOf(badScore));
-        TextView f4647K = findViewById(R.id.miss_scr);
-        f4647K.setText(String.valueOf(missScore));
-        TextView f4648L = findViewById(R.id.total_scr);
-        f4648L.setText(String.valueOf(totalScore));
-        TextView f4649M = findViewById(R.id.highscore);
-        f4649M.setText(String.valueOf(topScore));
-        TextView f4650N = findViewById(R.id.totlescore);
-        f4650N.setText(String.valueOf(totalScore));
-        TextView f4651O = findViewById(R.id.report);
+        TextView perfectView = findViewById(R.id.perfect);
+        perfectView.setText(String.valueOf(perfect));
+        TextView coolView = findViewById(R.id.cool);
+        coolView.setText(String.valueOf(cool));
+        TextView greatView = findViewById(R.id.great);
+        greatView.setText(String.valueOf(great));
+        TextView badView = findViewById(R.id.bad);
+        badView.setText(String.valueOf(bad));
+        TextView missView = findViewById(R.id.miss);
+        missView.setText(String.valueOf(miss));
+        TextView totalView = findViewById(R.id.total);
+        totalView.setText(String.valueOf(clickNum));
+        TextView comboView = findViewById(R.id.combo);
+        comboView.setText(String.valueOf(combo));
+        TextView comboScoreView = findViewById(R.id.combo_scr);
+        comboScoreView.setText(String.valueOf(comboScore));
+        TextView perfectScoreView = findViewById(R.id.perfect_scr);
+        perfectScoreView.setText(String.valueOf(perfectScore));
+        TextView coolScoreView = findViewById(R.id.cool_scr);
+        coolScoreView.setText(String.valueOf(coolScore));
+        TextView greatScoreView = findViewById(R.id.great_scr);
+        greatScoreView.setText(String.valueOf(greatScore));
+        TextView badScoreView = findViewById(R.id.bad_scr);
+        badScoreView.setText(String.valueOf(badScore));
+        TextView missScoreView = findViewById(R.id.miss_scr);
+        missScoreView.setText(String.valueOf(missScore));
+        TextView totalScoreView = findViewById(R.id.total_scr);
+        totalScoreView.setText(String.valueOf(totalScore));
+        TextView highScoreView = findViewById(R.id.highscore);
+        highScoreView.setText(String.valueOf(topScore));
+        TextView titleScoreView = findViewById(R.id.titlescore);
+        titleScoreView.setText(String.valueOf(totalScore));
+        TextView reportView = findViewById(R.id.report);
         if (isWinner) {
-            f4651O.setText("恭喜您获得了《" + name + "》曲目的冠军!");
+            reportView.setText("恭喜您获得了《" + name + "》曲目的冠军!");
         } else {
-            f4651O.setText("很不幸,您差点就是《" + name + "》曲目的冠军了");
+            reportView.setText("很不幸，您差点就是《" + name + "》曲目的冠军了");
         }
     }
 }

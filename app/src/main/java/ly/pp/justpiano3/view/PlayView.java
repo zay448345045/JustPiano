@@ -149,6 +149,9 @@ public final class PlayView extends SurfaceView implements Callback {
         super(context);
     }
 
+    /**
+     * 本地弹奏或房间对战-初始化弹奏view
+     */
     public PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int diao) {
         super(context);
         jpapplication = jPApplication;
@@ -170,6 +173,9 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
+    /**
+     * 在线曲库弹奏或大厅考级或挑战-初始化弹奏view
+     */
     public PlayView(JPApplication jPApplication, Context context, byte[] bArr, PianoPlay pianoPlay, double d, int i, int kind, int i3, String songId) {
         super(context);
         jpapplication = jPApplication;

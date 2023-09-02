@@ -1,11 +1,9 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,13 +17,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.paging.DataSource;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.adapter.LocalSongsAdapter;
-import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
-import ly.pp.justpiano3.adapter.MelodySelectAdapter;
-import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
+import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.helper.SQLiteHelper;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
@@ -38,15 +39,12 @@ import ly.pp.justpiano3.wrapper.JustPianoCursorWrapper;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MelodySelect extends Activity implements Callback, TextWatcher, OnClickListener {
-    public final String onlineCondition = "online = 1";
-
+public class MelodySelect extends AppCompatActivity implements Callback, TextWatcher, OnClickListener {
     public Handler handler;
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
     public JPProgressBar jpprogressBar;
-    public ImageView isNewImageView;
     public String songItem = "";
     public String songsPath = "";
     public CheckBox isRecord;
@@ -54,14 +52,12 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     public CheckBox isLeftHand;
     public AutoCompleteTextView autoctv;
     public Button showOrHideTitleButton;
-    public SQLiteDatabase sqlitedatabase;
     public boolean showTitle;
-    public String sortStr = null;
+    public String sortStr;
     public String f4263s = "";
     public int f4264t;
     public TextView titleTextView;
     public JPApplication jpapplication;
-    public Cursor cursor;
     private Button sortButton;
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
@@ -69,19 +65,12 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     private PopupWindow menuPopupwindow = null;
     private TextView timeText;
     private int intentFlag;
-    private ListView songListView;
-    private LocalSongsAdapter songListAdapter;
-    public SQLiteHelper SQLiteHelper;
     private int score;
     private final List<String> sortNamesList = new ArrayList<>();
+    private MutableLiveData<PagedList<Song>> mutablePagedListLiveData;
 
     public final void mo2784a(Cursor cursor) {
         isFollowPlay.setChecked(false);
-        if (songListAdapter == null) {
-            songListAdapter = new LocalSongsAdapter(this, this, cursor);
-            songListView.setAdapter(songListAdapter);
-            return;
-        }
         Cursor cursor2;
         switch (sortStr) {
             case "name desc":
@@ -140,7 +129,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 sortButton.setText(sortNamesList.get(i));
                 sortStr = Consts.sortSyntax[i];
                 if (!songItem.isEmpty() && songListAdapter != null && sqlitedatabase != null) {
-                    mo2784a(sqlitedatabase.query("jp_data", null, "ishot = 0 and " + onlineCondition + " and item=?", new String[]{songItem}, null, null, sortStr));
+                    mo2784a(sqlitedatabase.query("jp_data", null, "item=?", new String[]{songItem}, null, null, sortStr));
                 }
                 sortPopupwindow.dismiss();
                 break;
@@ -154,7 +143,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                         startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
                         break;
                     case 1:  // 曲库同步
-                        new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase(SQLiteHelper)).execute();
+                        new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
                         break;
                     case 2:  // 数据导出
                         JPDialog jpdialog = new JPDialog(this);
@@ -219,9 +208,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     @Override
     public void onBackPressed() {
-        if (sqlitedatabase.isOpen()) {
-            sqlitedatabase.close();
-        }
         jpapplication.stopPlaySong();
         Intent intent;
         if (intentFlag == 10) {
@@ -246,7 +232,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 return;
             case R.id.search_fast:
                 autoctv.clearFocus();
-                cursor = sqlitedatabase.query("jp_data", null, "name like '%" + autoctv.getText().toString() + "%' AND " + onlineCondition, null, null, null, sortStr);
+                cursor = sqlitedatabase.query("jp_data", null, "name like '%" + autoctv.getText().toString() + "%'", null, null, null, null);
                 mo2784a(cursor);
                 try {
                     ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -275,17 +261,11 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
-            SQLiteHelper = new SQLiteHelper(this, "data");
-            sqlitedatabase = SQLiteHelper.getWritableDatabase();
-            cursor = sqlitedatabase.query("jp_data", null, onlineCondition, null, null, null, null);
+            cursor = sqlitedatabase.query("jp_data", null, null, null, null, null, sortStr);
             while (cursor.moveToNext()) {
                 score += cursor.getInt(cursor.getColumnIndexOrThrow("score"));
             }
             int f4257m = cursor.getCount();
-            if (cursor != null) {
-                cursor.close();
-                cursor = null;
-            }
             LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
             setContentView(linearLayout);
             linearLayout.setOnTouchListener((v, event) -> {
@@ -301,7 +281,17 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             sortButton = findViewById(R.id.list_sort_b);
             sortButton.setOnClickListener(this);
             ListView f4245a = findViewById(R.id.f_list);
-            songListView = findViewById(R.id.c_list);
+
+            RecyclerView songsListView = findViewById(R.id.c_list);
+            songsListView.setLayoutManager(new LinearLayoutManager(this));
+            LocalSongsTempAdapter localSongsTempAdapter = new LocalSongsTempAdapter(this);
+            songsListView.setAdapter(localSongsTempAdapter);
+            DataSource.Factory<Integer, Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongsWithDataSource();
+            PagedList<Song> pageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(allSongs);
+            mutablePagedListLiveData = new MutableLiveData<>();
+            mutablePagedListLiveData.setValue(pageList);
+            mutablePagedListLiveData.observe(this, localSongsTempAdapter::submitList);
+
             TextView f4247c = findViewById(R.id.all_mel);
             autoctv = findViewById(R.id.search_edit);
             ImageView searchFast = findViewById(R.id.search_fast);
@@ -316,7 +306,8 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             } else {
                 isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                        mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
+                        mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。" +
+                                "录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
                     }
                 });
             }
@@ -344,7 +335,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
             f4247c.setText("曲谱:" + f4257m);
             f4248d.setText("总分:" + score);
             f4245a.setAdapter(new LocalSongsItemAdapter(this));
-            songListView.setCacheColorHint(0);
             f4245a.setCacheColorHint(0);
             f4245a.setOnItemClickListener((parent, view, position, id) -> {
                 Cursor query;
@@ -352,10 +342,10 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
                 view.setSelected(true);
                 if (position == 0) {
                     songItem = "";
-                    query = sqlitedatabase.query("jp_data", null, "isfavo = 1 AND " + onlineCondition, null, null, null, sortStr);
+                    query = sqlitedatabase.query("jp_data", null, "isfavo = 1", null, null, null, sortStr);
                 } else {
                     songItem = Consts.items[position];
-                    query = sqlitedatabase.query("jp_data", null, "ishot = 0 AND " + onlineCondition + " AND item=?", new String[]{songItem}, null, null, sortStr);
+                    query = sqlitedatabase.query("jp_data", null, "item=?", new String[]{Consts.items[position]}, null, null, sortStr);
                 }
                 mo2784a(query);
                 f4263s = Consts.items[position];
@@ -389,19 +379,6 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
     protected void onDestroy() {
         jpapplication.stopPlaySong();
         handler = null;
-        if (songListAdapter != null && songListAdapter.getCursor() != null) {
-            songListAdapter.getCursor().close();
-        }
-        if (cursor != null) {
-            cursor.close();
-            cursor = null;
-        }
-        if (sqlitedatabase.isOpen()) {
-            sqlitedatabase.close();
-            sqlitedatabase = null;
-            SQLiteHelper.close();
-            SQLiteHelper = null;
-        }
         super.onDestroy();
     }
 
@@ -441,7 +418,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     private void initAutoComplete(AutoCompleteTextView autoCompleteTextView) {
         String valueOf = autoCompleteTextView.getText().toString();
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf.replace("'", "''") + "%' AND " + onlineCondition, null, null, null, sortStr);
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf.replace("'", "''") + "%'", null, null, null, null);
         autoCompleteTextHandle(autoCompleteTextView);
     }
 
@@ -455,7 +432,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     @Override
     public void afterTextChanged(Editable s) {
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString().replace("'", "''") + "%' AND " + onlineCondition, null, null, null, sortStr);
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString().replace("'", "''") + "%'", null, null, null, null);
         autoCompleteTextHandle(autoctv);
     }
 
@@ -476,7 +453,7 @@ public class MelodySelect extends Activity implements Callback, TextWatcher, OnC
 
     public Cursor search(String str) {
         str = str.replace("'", "''");
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + str + "%' AND " + onlineCondition, null, null, null, sortStr);
+        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + str + "%'", null, null, null, null);
         return cursor;
     }
 }

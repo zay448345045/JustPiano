@@ -38,7 +38,7 @@ public class JustPianoView extends View {
         paint = new Paint();
     }
 
-    public final void mo2760a() {
+    public final void destroy() {
         if (logoBitmap != null) {
             logoBitmap.recycle();
             logoBitmap = null;
@@ -53,10 +53,10 @@ public class JustPianoView extends View {
         }
     }
 
-    public final void mo2761a(int i, String str, String str2) {
-        progress = i;
-        info = str;
-        loading = str2;
+    public final void updateProgressAndInfo(int progress, String info, String loading) {
+        this.progress = progress;
+        this.info = info;
+        this.loading = loading;
         invalidate();
     }
 

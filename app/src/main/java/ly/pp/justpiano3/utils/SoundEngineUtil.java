@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.preference.PreferenceManager;
 import javazoom.jl.converter.Converter;
+import ly.pp.justpiano3.entity.GlobalSetting;
 
 import java.io.*;
 
@@ -102,20 +103,18 @@ public class SoundEngineUtil {
         for (int i = 108; i >= 24; i--) {
             preloadSounds(context, i);
         }
-        confirmLoadSounds(context);
+        afterLoadSounds(context);
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();
     }
 
-    public static void confirmLoadSounds(Context context) {
+    public static void afterLoadSounds(Context context) {
         try {
             loadChatWav(context);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean compatibleSound = sharedPreferences.getBoolean("compatible_sound", true);
-        setupAudioStreamNative(compatibleSound ? 2 : 4, 44100);
+        setupAudioStreamNative(GlobalSetting.INSTANCE.getCompatiblePlaySound() ? 2 : 4, 44100);
     }
 }

@@ -1,68 +1,136 @@
 package ly.pp.justpiano3.adapter;
 
-import android.content.Context;
-import android.database.Cursor;
+import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.paging.DataSource;
+import androidx.paging.PagedList;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.listener.OLAddFavorClick;
-import ly.pp.justpiano3.listener.OLChooseSongClick;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.thread.PlaySongs;
+import protobuf.dto.OnlinePlaySongDTO;
 
-public final class OLRoomSongsAdapter extends CursorAdapter {
-    public final OLPlayRoom olPlayRoom;
+import java.util.Objects;
 
-    public OLRoomSongsAdapter(OLPlayRoom om, Context context, Cursor cursor) {
-        super(context, cursor, false);
-        olPlayRoom = om;
+public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapter.SongViewHolder> {
+    private final OLPlayRoom olPlayRoom;
+
+    public OLRoomSongsAdapter(OLPlayRoom olPlayRoom) {
+        super(DIFF_CALLBACK);
+        this.olPlayRoom = olPlayRoom;
+    }
+
+    @NonNull
+    @Override
+    public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.song_view, null);
+        itemView.setBackgroundResource(R.drawable.selector_list_c);
+        return new SongViewHolder(itemView);
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        TextView songName = view.findViewById(R.id.song_name);
-        songName.setText(cursor.getString(cursor.getColumnIndex("name")));
-        songName.setMovementMethod(ScrollingMovementMethod.getInstance());
-        songName.setHorizontallyScrolling(true);
-        ImageView imageView = view.findViewById(R.id.song_favor);
-        String string = cursor.getString(cursor.getColumnIndexOrThrow("path"));
-        RatingBar ratingBar = view.findViewById(R.id.song_degree);
-        RatingBar ratingBar2 = view.findViewById(R.id.song_degree2);
-        TextView time = view.findViewById(R.id.ol_sound_time);
-        TextView textView = view.findViewById(R.id.nandu_1);
-        TextView textView2 = view.findViewById(R.id.nandu_2);
-        float f = cursor.getFloat(cursor.getColumnIndexOrThrow("diff"));
-        float g = cursor.getFloat(cursor.getColumnIndexOrThrow("Ldiff"));
-        int i = cursor.getInt(cursor.getColumnIndexOrThrow("isfavo"));
-        int timeNum = cursor.getInt(cursor.getColumnIndexOrThrow("length"));
-        if (i == 0) {
-            imageView.setImageResource(R.drawable.favor_1);
-        } else {
-            imageView.setImageResource(R.drawable.favor);
+    public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
+        // 绑定数据到ViewHolder
+        Song song = getItem(position);
+        if (song != null) {
+            holder.bindData(song);
         }
-        imageView.setOnClickListener(new OLAddFavorClick(this, i, imageView, string));
-        textView.setText(" 右手:" + f);
-        textView2.setText(" 左手:" + g);
-        time.setText((timeNum / 60 < 10 ? "0" : "") + (timeNum / 60) + ":" + (timeNum % 60 < 10 ? "0" : "") + (timeNum % 60));
-        ratingBar.setNumStars(5);
-        ratingBar.setClickable(false);
-        ratingBar.setRating(f / 2);
-        ratingBar2.setNumStars(5);
-        ratingBar2.setClickable(false);
-        ratingBar2.setRating(g / 2);
-        songName.setOnClickListener(new OLChooseSongClick(this, string));
-        view.setOnClickListener(new OLChooseSongClick(this, string));
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.song_view, null);
-        inflate.setBackgroundResource(R.drawable.selector_list_c);
-        return inflate;
+    protected class SongViewHolder extends RecyclerView.ViewHolder {
+        private final TextView songNameTextView;
+        private final TextView timeTextView;
+        private final TextView rightHandDegreeTextView;
+        private final TextView leftHandDegreeTextView;
+        private final ImageView songFavorImageView;
+        private final RatingBar rightHandDegreeRatingBar;
+        private final RatingBar leftHandDegreeRatingBar;
+
+        public SongViewHolder(@NonNull View songView) {
+            super(songView);
+            songNameTextView = songView.findViewById(R.id.song_name);
+            songFavorImageView = songView.findViewById(R.id.song_favor);
+            rightHandDegreeRatingBar = songView.findViewById(R.id.song_degree);
+            leftHandDegreeRatingBar = songView.findViewById(R.id.song_degree2);
+            timeTextView = songView.findViewById(R.id.ol_sound_time);
+            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1);
+            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2);
+
+            songView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Song song = getItem(position);
+                    if (song != null) {
+                        PlaySongs.setSongFilePath(song.getFilePath());
+                        OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+                        builder.setTune(olPlayRoom.getdiao());
+                        builder.setSongPath(song.getFilePath().substring(6, song.getFilePath().length() - 3));
+                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
+                        Message obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
+                        obtainMessage.what = 12;
+                        olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
+                    }
+                }
+            });
+        }
+
+        public void bindData(Song song) {
+            songNameTextView.setText(song.getName());
+            songNameTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
+            songNameTextView.setHorizontallyScrolling(true);
+
+            if (song.isFavorite() == 0) {
+                songFavorImageView.setImageResource(R.drawable.favor_1);
+            } else {
+                songFavorImageView.setImageResource(R.drawable.favor);
+            }
+            songFavorImageView.setOnClickListener(v -> {
+                if (song.isFavorite() == 0) {
+                    JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), 1);
+                    songFavorImageView.setImageResource(R.drawable.favor);
+                } else {
+                    JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), 0);
+                    songFavorImageView.setImageResource(R.drawable.favor_1);
+                }
+                DataSource.Factory<Integer, Song> favoriteSong = JPApplication.getSongDatabase().songDao().getFavoriteSongWithDataSource();
+                PagedList<Song> songPageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(favoriteSong);
+                olPlayRoom.getMutablePagedListLiveData().setValue(songPageList);
+            });
+            rightHandDegreeTextView.setText(" 右手:" + song.getRightHandDegree());
+            leftHandDegreeTextView.setText(" 左手:" + song.getLeftHandDegree());
+            timeTextView.setText((song.getLength() / 60 < 10 ? "0" : "") +
+                    (song.getLength() / 60) + ":" + (song.getLength() % 60 < 10 ? "0" : "") + (song.getLength() % 60));
+            rightHandDegreeRatingBar.setNumStars(5);
+            rightHandDegreeRatingBar.setClickable(false);
+            rightHandDegreeRatingBar.setRating(song.getRightHandDegree() / 2);
+            leftHandDegreeRatingBar.setNumStars(5);
+            leftHandDegreeRatingBar.setClickable(false);
+            leftHandDegreeRatingBar.setRating(song.getLeftHandDegree() / 2);
+        }
     }
+
+    public static final DiffUtil.ItemCallback<Song> DIFF_CALLBACK = new DiffUtil.ItemCallback<Song>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
+            return Objects.equals(oldItem.getId(), newItem.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 }

@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -30,7 +31,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
                     .addPathSegment("ScoreUpload")
                     .build();
             RequestBody body = new FormBody.Builder()
-                    .add("version", DeviceUtil.getAppVersionName(playFinish.get()))
+                    .add("version", BuildConfig.VERSION_NAME)
                     .add("songID", playFinish.get().songID)
                     .add("userName", playFinish.get().jpapplication.getAccountName())
                     .add("scoreArray", playFinish.get().scoreArray)

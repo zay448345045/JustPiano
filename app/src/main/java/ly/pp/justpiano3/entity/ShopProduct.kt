@@ -1,37 +1,31 @@
-package ly.pp.justpiano3.entity;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+package ly.pp.justpiano3.entity
 
 /**
  * 商店商品
  */
-@Data
-@AllArgsConstructor
-public class ShopProduct {
-
+data class ShopProduct(
     /**
      * 商品id
      */
-    private int id;
+    var id: Int,
 
     /**
      * 商品名称
      */
-    private String name;
+    var name: String,
 
     /**
      * 商品图片（字符串，传递给安卓端后安卓端按字符串反射图片资源id进行加载）
      */
-    private String picture;
+    var picture: String,
 
     /**
      * 商品价格（音符币）
      */
-    private int price;
+    var price: Int,
 
     /**
      * 商品描述
      */
-    private String description;
-}
+    var description: String,
+)

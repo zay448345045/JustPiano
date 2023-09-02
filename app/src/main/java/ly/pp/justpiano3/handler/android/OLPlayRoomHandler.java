@@ -52,7 +52,7 @@ public final class OLPlayRoomHandler extends Handler {
                             int diao = message.getData().getInt("diao");
                             olPlayRoom.setdiao(diao);
                             str1 = "songs/" + str1 + ".pm";
-                            PlaySongs.setSongPath(str1);
+                            PlaySongs.setSongFilePath(str1);
                             String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];
@@ -147,7 +147,7 @@ public final class OLPlayRoomHandler extends Handler {
                         int diao = message.getData().getInt("diao");
                         if (!str1.isEmpty()) {
                             str1 = "songs/" + str1 + ".pm";
-                            PlaySongs.setSongPath(str1);
+                            PlaySongs.setSongFilePath(str1);
                             String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];

@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import ly.pp.justpiano3.JPApplication
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.WaterfallNote
@@ -98,7 +97,6 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR
                 waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
                 // 设置音块下落速率，播放速度
-                val jpApplication = application as JPApplication
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 val waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView)
@@ -220,7 +218,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
      *
      * 1、处理最后一个音符上边界没有写进去的情况，直接写入音符高度的最大值
      * 2、合并左右手两条音轨的音符list，按音符的下边界坐标进行排序
-     * 3、处理音符高度过大的情况，订正高度为最大值，最后转为数组返回
+     * 3、处理音符高度过大的情况，订正高度为最大值
      */
     private fun waterfallNoteListAfterHandle(
         leftHandWaterfallNoteList: List<WaterfallNote>,
@@ -244,7 +242,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
         }
         waterfallNoteList.sortBy { it.bottom }
         for (currentWaterfallNote in waterfallNoteList) {
-            if (currentWaterfallNote.interval() > NOTE_MAX_HEIGHT) {
+            if (currentWaterfallNote.top - currentWaterfallNote.bottom > NOTE_MAX_HEIGHT) {
                 currentWaterfallNote.top = currentWaterfallNote.bottom + NOTE_MAX_HEIGHT
             }
         }

@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.content.Intent;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.SearchSongs;
@@ -39,7 +40,7 @@ public final class SearchSongsPlayTask {
                 String url = "http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong";
 
                 FormBody.Builder formBuilder = new FormBody.Builder();
-                formBuilder.add("version", DeviceUtil.getAppVersionName(searchSongs.get()));
+                formBuilder.add("version", BuildConfig.VERSION_NAME);
                 formBuilder.add("songID", searchSongs.get().songID);
                 RequestBody requestBody = formBuilder.build();
 

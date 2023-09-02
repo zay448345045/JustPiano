@@ -878,7 +878,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         Button keyboardRecord = findViewById(R.id.keyboard_record);
         keyboardRecord.setOnClickListener(this);
         for (int i = 0; i < olKeyboardStates.length; i++) {
-            olKeyboardStates[i] = new OLKeyboardState();
+            olKeyboardStates[i] = new OLKeyboardState(false, false, false, false);
         }
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {

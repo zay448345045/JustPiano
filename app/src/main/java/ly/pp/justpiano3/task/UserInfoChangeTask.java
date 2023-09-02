@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
@@ -74,7 +75,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 .build();
         FormBody.Builder bodyBuilder = new FormBody.Builder()
                 .add("head", "0")
-                .add("version", DeviceUtil.getAppVersionName(usersInfo.get()))
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("keywords", strArr[0])
                 .add("userName", usersInfo.get().jpapplication.getAccountName());
         if (strArr[1] == null || strArr[2] == null) {

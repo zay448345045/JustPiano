@@ -2,7 +2,6 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.SoundListPreference;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -41,7 +40,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         for (int i = 108; i >= 24; i--) {
             SoundEngineUtil.preloadSounds(soundListPreference.context, i);
         }
-        SoundEngineUtil.confirmLoadSounds(soundListPreference.context);
+        SoundEngineUtil.afterLoadSounds(soundListPreference.context);
         return null;
     }
 

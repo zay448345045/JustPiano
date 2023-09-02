@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.utils.DeviceUtil;
@@ -45,7 +46,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", DeviceUtil.getAppVersionName(olMelodySelect.get()))
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("songID", OLMelodySelect.songID)
                 .build();
         // 创建请求对象

@@ -100,7 +100,7 @@ public final class OLPlayHallHandler extends Handler {
                 return;
             case 2:
                 Bundle data = message.getData();
-                PlaySongs.setSongPath(StringUtil.EMPTY_STRING);
+                PlaySongs.setSongFilePath(StringUtil.EMPTY_STRING);
                 data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
                 Intent intent;

@@ -48,48 +48,4 @@ public class DeviceUtil {
     public static String getDeviceBrandAndModel() {
         return Build.MANUFACTURER + "." + Build.MODEL;
     }
-
-    /**
-     * 获取app版本号
-     *
-     * @param context
-     * @return
-     */
-    public static String getVersionName(Context context) {
-        PackageInfo packageInfo = getPackageInfo(context);
-        return packageInfo == null ? StringUtil.EMPTY_STRING : packageInfo.versionName;
-    }
-
-    /**
-     * 获取app版本code
-     * @param context
-     * @return
-     */
-    public static int getVersionCode(Context context) {
-        PackageInfo packageInfo = getPackageInfo(context);
-        return packageInfo == null ? 0 : packageInfo.versionCode;
-    }
-
-    /**
-     * 获取app package信息
-     * @param context
-     * @return
-     */
-    public static PackageInfo getPackageInfo(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 获取app 版本
-     * @return
-     */
-    public static String getAppVersionName(Context context) {
-        PackageInfo packageInfo = getPackageInfo(context);
-        return packageInfo == null ? StringUtil.EMPTY_STRING : packageInfo.versionName;
-    }
 }

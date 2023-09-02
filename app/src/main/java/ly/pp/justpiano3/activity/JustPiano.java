@@ -1,25 +1,25 @@
 package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import ly.pp.justpiano3.*;
+import android.widget.Toast;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.helper.SQLiteHelper;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 import ly.pp.justpiano3.view.play.PmFileParser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JustPiano extends Activity implements Callback, Runnable {
@@ -28,16 +28,87 @@ public class JustPiano extends Activity implements Callback, Runnable {
     private boolean isPause;
     private boolean loadFinish;
     private int songCount;
-    private ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
-    private SQLiteDatabase sqliteDataBase;
-    private ContentValues contentvalues;
     private JustPianoView justpianoview;
-    private String info = "";
+    private String info;
     private int progress;
-    private String loading = "";
+    private String loading;
 
-    private void updateSql(SQLiteDatabase sQLiteDatabase) {
+    private void scanSongFileAndUpdateSongDatabase(List<Song> songList) {
         // 删除上个版本曲谱同步下来的所有文件
+        deleteOldSyncSongFile();
+        // 键为pm文件名，值为Song对象，更新和删除时候映射用
+        Map<String, Song> pmPathMap = new HashMap<>();
+        // 下面的字段是删除标记，更新和插入的曲谱会得到更新，然后把未更新也未插入的（就是新版没有这个pm）的曲子删掉，也就是在客户端曲子删库用
+        int originalPmVersion = songList.isEmpty() ? 0 : songList.get(0).getFileVersion();
+        for (Song song : songList) {
+            if (song.getFilePath().length() > 8 && song.getFilePath().charAt(7) == '/') {
+                pmPathMap.put(song.getFilePath().substring(9), song);
+            }
+        }
+        // 创建pm解析器对象，用于解析pm
+        PmFileParser pmFileParser = new PmFileParser(null);
+        // 遍历assets下的曲谱pm文件
+        // 构造插入、更新和删除的曲谱list，扫描曲谱结束时进行事务批量操作
+        List<Song> insertSongList = new ArrayList<>();
+        List<Song> updateSongList = new ArrayList<>();
+        List<Song> deleteSongList = new ArrayList<>();
+        try {
+            String[] pmCategoryList = getResources().getAssets().list("songs");
+            if (pmCategoryList != null) {
+                for (int i = 0; i < pmCategoryList.length; i++) {
+                    String[] pmFileList = getResources().getAssets().list("songs/" + pmCategoryList[i]);
+                    if (pmFileList != null) {
+                        for (String pmFileName : pmFileList) {
+                            String songPath = "songs/" + pmCategoryList[i] + "/" + pmFileName;
+                            pmFileParser.loadWithSongPath(this, songPath);
+                            String songName = pmFileParser.getSongName();
+                            if (songName != null) {
+                                float rightDegree = pmFileParser.getNandu();
+                                float leftDegree = pmFileParser.getLeftNandu();
+                                int songTime = pmFileParser.getSongTime();
+                                songCount++;
+                                // 由于分类可能被修改，更新时文件名必须去除分类（首字母）
+                                Song currentSong = pmPathMap.get(pmFileName.substring(1));
+                                if (currentSong != null) {
+                                    info = "更新曲目:" + songName + "..." + songCount;
+                                    currentSong.setName(songName);
+                                    currentSong.setCategory(Consts.items[i + 1]);
+                                    currentSong.setFilePath(songPath);
+                                    currentSong.setRightHandDegree(rightDegree);
+                                    currentSong.setLeftHandDegree(leftDegree);
+                                    currentSong.setLength(songTime);
+                                    currentSong.setNew(0);
+                                    currentSong.setOnline(1);
+                                    currentSong.setFileVersion(originalPmVersion + 1);
+                                    updateSongList.add(currentSong);
+                                } else {
+                                    info = "加入曲目" + songName + "..." + songCount;
+                                    insertSongList.add(new Song(null, songName, Consts.items[i + 1], songPath, 1,
+                                            0, 0, 0, 0, 0,
+                                            originalPmVersion + 1, rightDegree, leftDegree, songTime, 1, ""));
+                                }
+                                Message obtainMessage = handler.obtainMessage();
+                                obtainMessage.what = 0;
+                                handler.sendMessage(obtainMessage);
+                            }
+                        }
+                    }
+                }
+                // 删除未检测到pm的曲谱
+                for (Song song : songList) {
+                    if (song.getFileVersion() == originalPmVersion) {
+                        deleteSongList.add(song);
+                    }
+                }
+                // 执行数据库批量操作
+                JPApplication.getSongDatabase().songDao().syncSongs(insertSongList, updateSongList, deleteSongList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteOldSyncSongFile() {
         File syncDir = new File(getFilesDir().getAbsolutePath(), "Songs");
         if (syncDir.exists()) {
             File[] files = syncDir.listFiles();
@@ -47,92 +118,13 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 }
             }
         }
-        String string;
-        // 键为pm文件名后缀不带分类的内容（subString文件名（1），值为整个原path，更新时候筛选搜索用
-        Map<String, String> pmPathMap = new HashMap<>();
-        PmFileParser pmFileParser = new PmFileParser(null);
-        // 下面的字段是删除标记，更新和插入的曲谱会得到更新，然后把未更新也未插入的（就是新版没有这个pm）的曲子删掉，也就是在客户端曲子删库用
-        int originalPmVersion = 0;
-        Cursor query = sQLiteDatabase.query("jp_data", new String[]{"path", "count"}, null, null, null, null, "_id desc");
-        while (query.moveToNext()) {
-            string = query.getString(query.getColumnIndex("path"));
-            originalPmVersion = query.getInt(query.getColumnIndex("count"));
-            if (string.length() > 8 && string.charAt(7) == '/') {
-                pmPathMap.put(string.substring(9), string);
-            }
-        }
-        try {
-            String[] list = getResources().getAssets().list("songs");
-            if (list != null) {
-                sQLiteDatabase.beginTransaction();
-                for (int i = 0; i < list.length; i++) {
-                    String[] list3 = getResources().getAssets().list("songs/" + list[i]);
-                    if (list3 != null) {
-                        for (String aList3 : list3) {
-                            string = "songs/" + list[i] + "/" + aList3;
-                            pmFileParser.loadWithSongPath(this, string);
-                            String h = pmFileParser.getSongName();
-                            if (h != null) {
-                                float g = pmFileParser.getNandu();
-                                float j = pmFileParser.getLeftNandu();
-                                int l = pmFileParser.getSongTime();
-                                songCount++;
-                                if (pmPathMap.containsKey(aList3.substring(1))) {
-                                    info = "更新曲目:" + h + "..." + songCount + "";
-                                    contentvalues.put("name", h);
-                                    contentvalues.put("item", Consts.items[i + 1]);
-                                    contentvalues.put("path", string);
-                                    contentvalues.put("diff", g);
-                                    contentvalues.put("Ldiff", j);
-                                    contentvalues.put("length", l);
-                                    contentvalues.put("isnew", 0);
-                                    contentvalues.put("online", 1);
-                                    contentvalues.put("count", originalPmVersion + 1);
-                                    sQLiteDatabase.update("jp_data", contentvalues, "path = '" + pmPathMap.get(aList3.substring(1)) + "'", null);
-                                } else {
-                                    info = "加入曲目" + h + "..." + songCount + "";
-                                    contentvalues.put("name", h);
-                                    contentvalues.put("item", Consts.items[i + 1]);
-                                    contentvalues.put("path", string);
-                                    contentvalues.put("isnew", 1);
-                                    contentvalues.put("ishot", 0);
-                                    contentvalues.put("isfavo", 0);
-                                    contentvalues.put("player", "");
-                                    contentvalues.put("score", 0);
-                                    contentvalues.put("date", 0);
-                                    contentvalues.put("count", originalPmVersion + 1);
-                                    contentvalues.put("diff", g);
-                                    contentvalues.put("online", 1);
-                                    contentvalues.put("Ldiff", j);
-                                    contentvalues.put("length", l);
-                                    contentvalues.put("Lscore", 0);
-                                    sQLiteDatabase.insertOrThrow("jp_data", null, contentvalues);
-                                }
-                                contentvalues.clear();
-                                Message obtainMessage = handler.obtainMessage();
-                                obtainMessage.what = 0;
-                                handler.sendMessage(obtainMessage);
-                            }
-                        }
-                    }
-                }
-                sQLiteDatabase.setTransactionSuccessful();
-                sQLiteDatabase.endTransaction();
-                // 删除未检测到pm的曲谱
-                sQLiteDatabase.delete("jp_data", "count=" + originalPmVersion, null);
-                info = "";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        query.close();
     }
 
     @Override
     public boolean handleMessage(Message message) {
         switch (message.what) {
             case 0:
-                justpianoview.mo2761a(progress, info, loading);
+                justpianoview.updateProgressAndInfo(progress, info, loading);
                 break;
             case 1:
                 loadFinish = true;
@@ -159,7 +151,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
         jpapplication.setWidthPixels(displayMetrics.widthPixels);
         justpianoview = new JustPianoView(this, jpapplication);
         setContentView(justpianoview);
-        contentvalues = new ContentValues();
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;
         handler.sendMessage(obtainMessage);
@@ -168,21 +159,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
 
     @Override
     protected void onDestroy() {
-        if (sqliteDataBase != null) {
-            try {
-                if (sqliteDataBase.isOpen()) {
-                    sqliteDataBase.close();
-                }
-                sqliteDataBase = null;
-                if (SQLiteHelper != null) {
-                    SQLiteHelper.close();
-                }
-                SQLiteHelper = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        justpianoview.mo2760a();
+        justpianoview.destroy();
         super.onDestroy();
     }
 
@@ -227,18 +204,14 @@ public class JustPiano extends Activity implements Callback, Runnable {
             file.mkdirs();
         }
         Message obtainMessage;
-        SQLiteHelper = new SQLiteHelper(this, "data");
-        sqliteDataBase = SQLiteHelper.getWritableDatabase();
         try {
-            Cursor query = sqliteDataBase.query("jp_data", null, null, null, null, null, null);
-            if ((query != null && (query.getCount() == 0)) || updateSQL) {
-                loading = "";
-                updateSql(sqliteDataBase);
-            }
-            if (query != null) {
-                query.close();
+            List<Song> songList = JPApplication.getSongDatabase().songDao().getAllSongs();
+            if (songList.isEmpty() || updateSQL) {
+                // 扫描包内的曲谱文件，更新至曲谱数据库
+                scanSongFileAndUpdateSongDatabase(songList);
             }
         } catch (Exception e5) {
+            Toast.makeText(this, "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show();
             System.exit(-1);
         }
         // 载入音源
@@ -251,7 +224,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
             handler.sendMessage(obtainMessage2);
         }
 
-        SoundEngineUtil.confirmLoadSounds(getApplicationContext());
+        SoundEngineUtil.afterLoadSounds(getApplicationContext());
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);

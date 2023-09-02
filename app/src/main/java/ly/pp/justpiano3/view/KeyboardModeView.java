@@ -412,16 +412,17 @@ public class KeyboardModeView extends View {
                 notesOnPaintArray[pitchInScreen] = new Paint(Paint.ANTI_ALIAS_FLAG);
             }
             boolean blackKey = MidiUtil.isBlackKey(pitch);
+            int handledVolume = Math.max(0, Math.min(Math.round(volume * 128f / 100), 127));
+            notesOnPaintArray[pitchInScreen].setAlpha(handledVolume * 2);
             if (color != null) {
-                int handledVolume = Math.max(0, Math.min(Math.round(volume * 128f / 100), 127));
-                // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色，具体的透明度取决于按键力度
+                // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
                 // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
-                int handledColor = blackKey ? Color.argb(handledVolume, Color.red(color), Color.green(color), Color.blue(color))
-                        : Color.argb(handledVolume * 2, Color.red(color), Color.green(color), Color.blue(color));
-                PorterDuffColorFilter porterDuffColorFilter = colorFilterMap.get(String.valueOf(handledColor) + blackKey);
+                int handledColor = blackKey ? Color.argb(128, Color.red(color), Color.green(color), Color.blue(color))
+                        : Color.argb(255, Color.red(color), Color.green(color), Color.blue(color));
+                PorterDuffColorFilter porterDuffColorFilter = colorFilterMap.get(String.valueOf(color) + blackKey);
                 if (porterDuffColorFilter == null) {
                     porterDuffColorFilter = new PorterDuffColorFilter(handledColor, blackKey ? PorterDuff.Mode.ADD : PorterDuff.Mode.MULTIPLY);
-                    colorFilterMap.put(String.valueOf(handledColor) + blackKey, porterDuffColorFilter);
+                    colorFilterMap.put(String.valueOf(color) + blackKey, porterDuffColorFilter);
                 }
                 notesOnPaintArray[pitchInScreen].setColorFilter(porterDuffColorFilter);
             } else {

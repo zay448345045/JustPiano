@@ -1,15 +1,10 @@
 package ly.pp.justpiano3.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * 游戏模式枚举
  *
  * @author as
  **/
-@Getter
-@AllArgsConstructor
 public enum GameModeEnum {
 
     NORMAL(0, "普通模式"),
@@ -20,4 +15,17 @@ public enum GameModeEnum {
 
     private final int code;
     private final String desc;
+
+    GameModeEnum(int code, String desc) {
+        this.code = code;
+        this.desc = desc;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
 }

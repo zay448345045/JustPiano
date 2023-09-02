@@ -22,6 +22,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.Receive;
@@ -158,7 +159,7 @@ public class ConnectionService extends Service implements Runnable {
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
                 builder.setPassword(jpapplication.getPassword());
-                builder.setVersionCode(DeviceUtil.getVersionName(jpapplication));
+                builder.setVersionCode(BuildConfig.VERSION_NAME);
                 builder.setPackageName(getPackageName());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息

@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.R;
@@ -86,7 +85,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         for (i = 108; i >= 24; i--) {
                             SoundEngineUtil.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
                         }
-                        SoundEngineUtil.confirmLoadSounds(olPlayKeyboardRoom.getApplicationContext());
+                        SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom.getApplicationContext());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

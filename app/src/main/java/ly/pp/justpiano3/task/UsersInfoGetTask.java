@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -25,7 +26,7 @@ public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
             // 创建FormBody对象，添加请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", "0")
-                    .add("version", DeviceUtil.getAppVersionName(userInfo.get()))
+                    .add("version", BuildConfig.VERSION_NAME)
                     .add("keywords", "0")
                     .add("userName", userInfo.get().jpapplication.getAccountName())
                     .build();

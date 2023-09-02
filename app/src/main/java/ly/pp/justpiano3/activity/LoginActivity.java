@@ -19,7 +19,6 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.LoginSuccessClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
@@ -93,7 +92,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case 4:
-                jpDialog.setTitle(title).setMessage(message).setFirstButton("知道了", new LoginSuccessClick(this)).showDialog();
+                jpDialog.setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
+                    Toast.makeText(this, "登陆成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    dialog.dismiss();
+                    finish();
+                }).showDialog();
                 return;
             case 5:
                 jpDialog.setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).showDialog();
@@ -199,7 +203,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         Button changeAccountButton = findViewById(R.id.ol_change_account);
         changeAccountButton.setOnClickListener(this);
         TextView appVersionTextView = findViewById(R.id.app_version);
-        appVersionTextView.setText(DeviceUtil.getAppVersionName(this));
+        appVersionTextView.setText(BuildConfig.VERSION_NAME);
         accountTextView = findViewById(R.id.username);
         passwordTextView = findViewById(R.id.password);
         rememAccount = findViewById(R.id.chec_name);

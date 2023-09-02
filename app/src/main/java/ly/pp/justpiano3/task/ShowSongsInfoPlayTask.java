@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
@@ -33,7 +34,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
             FormBody.Builder builder = new FormBody.Builder();
-            builder.add("version", DeviceUtil.getAppVersionName(showSongsInfo.get()));
+            builder.add("version", BuildConfig.VERSION_NAME);
             builder.add("songID", showSongsInfo.get().songID);
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder()

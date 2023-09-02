@@ -1,16 +1,10 @@
 package ly.pp.justpiano3.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import ly.pp.justpiano3.thread.PlaySongs;
-
 /**
  * 曲谱播放模式枚举
  *
  * @author as
  **/
-@Getter
-@AllArgsConstructor
 public enum PlaySongsModeEnum {
 
     ONCE(0, "单次播放", "单次播放已开启"),
@@ -23,4 +17,22 @@ public enum PlaySongsModeEnum {
     private final int code;
     private final String name;
     private final String desc;
+
+    PlaySongsModeEnum(int code, String name, String desc) {
+        this.code = code;
+        this.name = name;
+        this.desc = desc;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
 }

@@ -5,13 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 
+import androidx.appcompat.app.AppCompatActivity;
 import ly.pp.justpiano3.handler.android.BaseActivityHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ReturnMainModeClick;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
     private boolean isOutLine = false;
     public JPProgressBar jpprogressBar;
     public BaseActivityHandler baseActivityHandler = new BaseActivityHandler(this);

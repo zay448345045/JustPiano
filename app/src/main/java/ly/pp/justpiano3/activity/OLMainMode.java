@@ -15,7 +15,6 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
-import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
@@ -69,9 +68,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                SQLiteHelper SQLiteHelper = new SQLiteHelper(this, "data");
-                String maxSongIdFromDatabase = getMaxSongIdFromDatabase(SQLiteHelper);
-                SQLiteHelper.close();
+                String maxSongIdFromDatabase = getMaxSongIdFromDatabase();
                 new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
                 return;
             case R.id.ol_top_b:
@@ -169,8 +166,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         jpapplication.setBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
     }
 
-    public static String getMaxSongIdFromDatabase(SQLiteHelper SQLiteHelper) {
-        SQLiteDatabase writableDatabase = SQLiteHelper.getWritableDatabase();
+    public static String getMaxSongIdFromDatabase() {
         Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
         int maxSongId = 0;
         while (query.moveToNext()) {
@@ -180,7 +176,6 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             }
         }
         query.close();
-        writableDatabase.close();
         return String.valueOf(maxSongId);
     }
 }

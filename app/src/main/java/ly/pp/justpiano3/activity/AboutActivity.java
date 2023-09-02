@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.DeviceUtil;
@@ -16,7 +17,6 @@ public class AboutActivity extends Activity {
         super.onCreate(bundle);
         setContentView(R.layout.about);
         TextView title = findViewById(R.id.title);
-        JPApplication jpApplication = (JPApplication) getApplication();
-        title.setText("极品钢琴V" + DeviceUtil.getAppVersionName(this) + " 浴火重生版");
+        title.setText("极品钢琴V" + BuildConfig.VERSION_NAME + " 浴火重生版");
     }
 }

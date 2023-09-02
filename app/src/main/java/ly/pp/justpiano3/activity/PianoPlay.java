@@ -215,7 +215,6 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         layoutparams.leftMargin = 0;
         Bundle extras = getIntent().getExtras();
         playKind = extras.getInt("head");
-        String str;
         switch (playKind) {
             case 0:    //本地模式
                 String songsPath = extras.getString("path");
@@ -226,8 +225,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 score = extras.getInt("score");
                 isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
-                str = songsPath;
-                playView = new PlayView(jpapplication, this, str, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
+                playView = new PlayView(jpapplication, this, songsPath, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
                 break;
             case 1:    //在线曲库
                 songsName = extras.getString("songName");
@@ -263,8 +261,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(0);
-                str = songsPath;
-                playView = new PlayView(jpapplication, this, str, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
+                playView = new PlayView(jpapplication, this, songsPath, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
@@ -307,7 +304,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         for (int i = 108; i >= 24; i--) {
             SoundEngineUtil.preloadSounds(getApplicationContext(), i);
         }
-        SoundEngineUtil.confirmLoadSounds(getApplicationContext());
+        SoundEngineUtil.afterLoadSounds(getApplicationContext());
     }
 
     public void sendMsg(int type, MessageLite msg) {

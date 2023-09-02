@@ -460,8 +460,8 @@ final class ReceiveHandle {
                 bundle2.putString("N", room.getRoomName());
                 bundle2.putIntArray("UA", room.getPeople());
                 bundle2.putBoolean("IF", room.isPeopleFull());
-                bundle2.putInt("IP", room.getIsPlaying());
-                bundle2.putInt("PA", room.getIsPassword());
+                bundle2.putInt("IP", room.isPlaying());
+                bundle2.putInt("PA", room.isPassword());
                 bundle2.putInt("V", room.getRoomKuang());
                 bundle2.putInt("D", room.getRoomMode());
                 bundle.putBundle(String.valueOf(i), bundle2);
@@ -796,8 +796,8 @@ final class ReceiveHandle {
                     bundle2.putString("N", room.getRoomName());
                     bundle2.putIntArray("UA", room.getPeople());
                     bundle2.putBoolean("IF", room.isPeopleFull());
-                    bundle2.putInt("IP", room.getIsPlaying());
-                    bundle2.putInt("PA", room.getIsPassword());
+                    bundle2.putInt("IP", room.isPlaying());
+                    bundle2.putInt("PA", room.isPassword());
                     bundle2.putInt("V", room.getRoomKuang());
                     bundle2.putInt("D", room.getRoomMode());
                     bundle.putBundle(String.valueOf(i2), bundle2);

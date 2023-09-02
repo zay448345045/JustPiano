@@ -1,10 +1,7 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.ContentValues;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.*;
@@ -20,26 +17,32 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+import androidx.lifecycle.MutableLiveData;
+import androidx.paging.DataSource;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.protobuf.MessageLite;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.dao.SongDao;
+import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
-import ly.pp.justpiano3.helper.SQLiteHelper;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.DataSelectView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.ScrollText;
@@ -52,7 +55,6 @@ import java.util.*;
 public final class OLPlayRoom extends BaseActivity implements Callback, OnClickListener, OLPlayRoomInterface {
     public int lv;
     public int cl;
-    public SQLiteDatabase sqlitedatabase;
     public Handler handler;
     public byte hallID0;
     public String hallName;
@@ -71,7 +73,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     // 防止横竖屏切换时，玩家前后台状态错误
     private boolean isChangeScreen = false;
     public String userTo = "";
-    public String online_1 = "online = 1";
     public ListView playerListView;
     public ListView friendsListView;
     public int roomMode;
@@ -102,14 +103,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private PopupWindow coupleModeGroup = null;
     private PopupWindow changeColor = null;
     private PopupWindow playSongsMode = null;
-    private OLRoomSongsAdapter olRoomSongsAdapter;
-    private ly.pp.justpiano3.helper.SQLiteHelper SQLiteHelper;
-    private Cursor cursor;
     private TextView timeTextView;
-    private String sqlWhere = "";
     private int colorNum = 99;
     private TimeUpdateThread timeUpdateThread;
     private ImageView changeColorButton = null;
+    private MutableLiveData<PagedList<Song>> mutablePagedListLiveData;
 
     public OLPlayRoom() {
         canNotNextPage = false;
@@ -118,20 +116,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         timeUpdateThread = null;
     }
 
-    private void m3744a(int i, int i2) {
-        String str = "";
-        if (!online_1.isEmpty()) {
-            str = " AND " + online_1;
-        }
-        sqlWhere = "diff >= " + i + " AND diff < " + i2 + str;
-        Cursor query = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        str = query.moveToPosition((int) (Math.random() * ((double) query.getCount()))) ? query.getString(query.getColumnIndex("path")) : "";
-        PlaySongs.setSongPath(str);
+    private void playSongByDegreeRandom(int i, int i2) {
+        List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(i, i2);
+        String songFilePath = songs.isEmpty() ? "" : songs.get(0).getFilePath();
+        PlaySongs.setSongFilePath(songFilePath);
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
         builder.setTune(diao);
-        builder.setSongPath(str.substring(6, str.length() - 3));
+        builder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));
         sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
-        query.close();
         if (moreSongs != null) {
             moreSongs.dismiss();
         }
@@ -308,49 +300,29 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
 
     private void m3749b(int i) {
         roomTabs.setCurrentTab(2);
-        String str = "";
-        if (!online_1.isEmpty()) {
-            str = " AND " + online_1;
-        }
-        sqlWhere = "item = '" + Consts.items[i + 1] + "' OR item = '" + Consts.items[i + 2] + "'" + str;
-        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        olRoomSongsAdapter.changeCursor(cursor);
-        olRoomSongsAdapter.notifyDataSetChanged();
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao
+                .getSongsByCategoryWithDataSource(Consts.items[i + 1], Consts.items[i + 2]);
+        mutablePagedListLiveData.setValue(songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource));
         moreSongs.dismiss();
     }
 
     private void m3749c(int i) {
         roomTabs.setCurrentTab(2);
-        String str = "";
-        if (!online_1.isEmpty()) {
-            str = " AND " + online_1;
-        }
-        sqlWhere = "item = '" + Consts.items[i + 1] + "'" + str;
-        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        olRoomSongsAdapter.changeCursor(cursor);
-        olRoomSongsAdapter.notifyDataSetChanged();
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao
+                .getSongsByCategoryWithDataSource(Consts.items[i + 1]);
+        mutablePagedListLiveData.setValue(songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource));
         moreSongs.dismiss();
     }
 
     private void m3749c(int i, int j) {
         roomTabs.setCurrentTab(2);
-        String str = "";
-        if (!online_1.isEmpty()) {
-            str = " AND " + online_1;
-        }
-        sqlWhere = "item = '" + Consts.items[i + 1] + "' OR item = '" + Consts.items[j + 1] + "'" + str;
-        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-        olRoomSongsAdapter.changeCursor(cursor);
-        olRoomSongsAdapter.notifyDataSetChanged();
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao
+                .getSongsByCategoryWithDataSource(Consts.items[i + 1], Consts.items[j + 1]);
+        mutablePagedListLiveData.setValue(songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource));
         moreSongs.dismiss();
-    }
-
-    public void changeCursor() {
-        if (!sqlWhere.isEmpty()) {
-            cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-            olRoomSongsAdapter.changeCursor(cursor);
-            olRoomSongsAdapter.notifyDataSetChanged();
-        }
     }
 
     public void sendMsg(int type, MessageLite msg) {
@@ -444,30 +416,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public String[] querySongNameAndDiffByPath(String str) {
-        Cursor cursor = null;
         String[] strArr = new String[2];
-        Cursor query;
-        try {
-            query = sqlitedatabase.query("jp_data", Consts.sqlColumns, "path = '" + str + "'" + (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
-            try {
-                if (query.moveToNext()) {
-                    strArr[0] = query.getString(query.getColumnIndex("name"));
-                    strArr[1] = query.getString(query.getColumnIndex("diff"));
-                }
-                query.close();
-            } catch (Exception e) {
-                if (query != null) {
-                    query.close();
-                }
-                return strArr;
-            } catch (Throwable th2) {
-                cursor = query;
-                throw th2;
-            }
-        } catch (Throwable th3) {
-            if (cursor != null) {
-                cursor.close();
-            }
+        List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(str);
+        for (Song song : songByFilePath) {
+            strArr[0] = song.getName();
+            strArr[1] = String.format(Locale.getDefault(), "%.1f", song.getLeftHandDegree());
         }
         return strArr;
     }
@@ -561,14 +514,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         switch (view.getId()) {
             case R.id.favor:
                 roomTabs.setCurrentTab(2);
-                str = "";
-                if (!online_1.isEmpty()) {
-                    str = " AND " + online_1;
-                }
-                sqlWhere = "isfavo = 1" + str;
-                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, sqlWhere, null, null, null, null);
-                olRoomSongsAdapter.changeCursor(cursor);
-                olRoomSongsAdapter.notifyDataSetChanged();
+                DataSource.Factory<Integer, Song> favoriteSongList = JPApplication.getSongDatabase().songDao().getFavoriteSongWithDataSource();
+                PagedList<Song> pageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(favoriteSongList);
+                mutablePagedListLiveData.setValue(pageList);
                 moreSongs.dismiss();
                 return;
             case R.id.couple_1:
@@ -617,32 +565,30 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                         .showDialog();
                 return;
             case R.id.rand_0:
-                m3744a(2, 4);
+                playSongByDegreeRandom(2, 4);
                 return;
             case R.id.rand_all:
-                m3744a(0, 2);
+                playSongByDegreeRandom(0, 2);
                 return;
             case R.id.rand_5:
-                m3744a(6, 8);
+                playSongByDegreeRandom(6, 8);
                 return;
             case R.id.rand_3:
-                m3744a(4, 6);
+                playSongByDegreeRandom(4, 6);
                 return;
             case R.id.rand_7:
-                m3744a(8, 12);
+                playSongByDegreeRandom(8, 12);
                 return;
             case R.id.add_favor:
                 if (jpapplication.isPlayingSong()) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("isfavo", 1);
-                    int result = sqlitedatabase.update("jp_data", contentValues, "path = '" + jpapplication.getPlaySongs().getSongPath() + "'", null);
-                    if (result > 0) {
+                    if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(PlaySongs.getSongFilePath(), 1) > 0) {
                         Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
+                        DataSource.Factory<Integer, Song> favoriteSong = JPApplication.getSongDatabase().songDao().getFavoriteSongWithDataSource();
+                        PagedList<Song> songPageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(favoriteSong);
+                        mutablePagedListLiveData.setValue(songPageList);
                     }
-                    contentValues.clear();
                 }
                 moreSongs.dismiss();
-                changeCursor();
                 return;
             case R.id.type_l:
                 m3749b(1);
@@ -661,23 +607,19 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.ol_search_b:
                 String valueOf = String.valueOf(searchText.getText());
-                searchText.setText("");
-                cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, "name like '%" + valueOf.replace("'", "''") + "%'" +
-                        (!online_1.isEmpty() ? " AND " + online_1 : ""), null, null, null, null);
-                int count = cursor.getCount();
                 if (valueOf.isEmpty()) {
-                    olRoomSongsAdapter.changeCursor(cursor);
-                    olRoomSongsAdapter.notifyDataSetChanged();
-                    return;
-                } else if (cursor.getCount() == 0) {
-                    Toast.makeText(this, "未搜索到与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    Toast.makeText(this, "搜索到" + count + "首与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                    olRoomSongsAdapter.changeCursor(cursor);
-                    olRoomSongsAdapter.notifyDataSetChanged();
                     return;
                 }
+                searchText.setText("");
+                DataSource.Factory<Integer, Song> songByNameKeywords = JPApplication.getSongDatabase().songDao().getSongByNameKeywordsWithDataSource(valueOf);
+                PagedList<Song> songPageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(songByNameKeywords);
+                if (songPageList.isEmpty()) {
+                    Toast.makeText(this, "未搜索到与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "搜索到" + songPageList.size() + "首与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+                    mutablePagedListLiveData.setValue(songPageList);
+                }
+                return;
             case R.id.pre_button:
                 page -= 20;
                 if (page < 0) {
@@ -887,7 +829,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     }
                     OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                     builder1.setTune(diao);
-                    String fullSongPath = PlaySongs.getSongPath();
+                    String fullSongPath = PlaySongs.getSongFilePath();
                     builder1.setSongPath(fullSongPath.substring(6, fullSongPath.length() - 3));
                     sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
@@ -909,7 +851,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     }
                     OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
                     builder1.setTune(diao);
-                    String fullSongPath = PlaySongs.getSongPath();
+                    String fullSongPath = PlaySongs.getSongFilePath();
                     builder1.setSongPath(fullSongPath.substring(6, fullSongPath.length() - 3));
                     sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
                     Message obtainMessage = olPlayRoomHandler.obtainMessage();
@@ -1000,25 +942,30 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         sendText = findViewById(R.id.ol_send_text);
         searchText = findViewById(R.id.ol_search_text);
         express = findViewById(R.id.ol_express_b);
-        ImageView soundstopbutton = findViewById(R.id.ol_soundstop);
+        ImageView soundStopButton = findViewById(R.id.ol_soundstop);
         changeColorButton = findViewById(R.id.ol_changecolor);
         playerListView = findViewById(R.id.ol_player_list);
         playerListView.setCacheColorHint(0);
         express.setOnClickListener(this);
-        soundstopbutton.setOnClickListener(this);
+        soundStopButton.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
-        ListView songsList = findViewById(R.id.ol_song_list);
-        songsList.setCacheColorHint(0);
+
+        RecyclerView songsListView = findViewById(R.id.ol_song_list);
+        songsListView.setLayoutManager(new LinearLayoutManager(this));
+        OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this);
+        songsListView.setAdapter(olRoomSongsAdapter);
+        DataSource.Factory<Integer, Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongsWithDataSource();
+        PagedList<Song> pageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(allSongs);
+        mutablePagedListLiveData = new MutableLiveData<>();
+        mutablePagedListLiveData.setValue(pageList);
+        mutablePagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
+
         handler = new Handler(this);
-        SQLiteHelper = new SQLiteHelper(this, "data");
-        sqlitedatabase = SQLiteHelper.getWritableDatabase();
-        cursor = sqlitedatabase.query("jp_data", Consts.sqlColumns, online_1, null, null, null, null);
-        olRoomSongsAdapter = new OLRoomSongsAdapter(this, this, cursor);
         songNameText = findViewById(R.id.ol_songlist_b);
-        if (!StringUtil.isNullOrEmpty(PlaySongs.getSongPath())) {
-            songNameText.setText(querySongNameAndDiffByPath(PlaySongs.getSongPath())[0] + "[难度:" + querySongNameAndDiffByPath(PlaySongs.getSongPath())[1] + "]");
+        if (!StringUtil.isNullOrEmpty(PlaySongs.getSongFilePath())) {
+            songNameText.setText(querySongNameAndDiffByPath(PlaySongs.getSongFilePath())[0] + "[难度:" + querySongNameAndDiffByPath(PlaySongs.getSongFilePath())[1] + "]");
         }
         songNameText.setSingleLine(true);
         songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -1027,7 +974,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         songNameText.setFocusable(true);
         songNameText.setFocusableInTouchMode(true);
         songNameText.setOnClickListener(this);
-        songsList.setAdapter(olRoomSongsAdapter);
         sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
         msgList.clear();
         PopupWindow popupWindow = new PopupWindow(this);
@@ -1209,19 +1155,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         invitePlayerList.clear();
         friendPlayerList.clear();
         JPStack.pop(this);
-        if (olRoomSongsAdapter != null && olRoomSongsAdapter.getCursor() != null) {
-            olRoomSongsAdapter.getCursor().close();
-        }
-        if (cursor != null) {
-            cursor.close();
-            cursor = null;
-        }
-        if (SQLiteHelper != null) {
-            SQLiteHelper.close();
-            SQLiteHelper = null;
-            sqlitedatabase.close();
-            sqlitedatabase = null;
-        }
         super.onDestroy();
     }
 
@@ -1261,5 +1194,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             builder1.setStatus("B");
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
+    }
+
+    public MutableLiveData<PagedList<Song>> getMutablePagedListLiveData() {
+        return mutablePagedListLiveData;
     }
 }

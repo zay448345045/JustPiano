@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -24,7 +25,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
         if (!showSongsInfo.get().keywords.isEmpty()) {
             // 创建一个FormBody对象，用于存放请求参数
             FormBody formBody = new FormBody.Builder()
-                    .add("version", DeviceUtil.getAppVersionName(showSongsInfo.get()))
+                    .add("version", BuildConfig.VERSION_NAME)
                     .add("head", showSongsInfo.get().head)
                     .add("keywords", showSongsInfo.get().keywords)
                     .add("user", showSongsInfo.get().jpapplication.getAccountName())

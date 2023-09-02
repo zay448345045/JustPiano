@@ -113,6 +113,11 @@ object GlobalSetting{
     var waterfallDownSpeed: Float = 1f
 
     /**
+     * 是否兼容模式播放
+     */
+    var compatiblePlaySound: Boolean = true
+
+    /**
      * 曲谱播放时是否显示通知栏
      */
     var showNotification: Boolean = false
@@ -148,11 +153,13 @@ object GlobalSetting{
         chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "1.0")!!.toFloat()
+        compatiblePlaySound = sharedPreferences.getBoolean("compatible_sound",true)
         showNotification = sharedPreferences.getBoolean("show_notification",false)
     }
 
     /**
      * 写入设置到sharedPreferences
+     * 部分值存了，不是全部都存了
      */
     fun saveSettings(context: Context?) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -176,6 +183,7 @@ object GlobalSetting{
         edit.putString("chats_text_size", chatTextSize.toString())
         edit.putString("waterfall_song_speed", waterfallSongSpeed.toString())
         edit.putString("waterfall_down_speed", waterfallDownSpeed.toString())
+        edit.putBoolean("compatible_sound", compatiblePlaySound)
         edit.putBoolean("show_notification", showNotification)
         edit.apply()
     }
