@@ -13,20 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.listener.AddSongsFavoriteClick;
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick;
 import ly.pp.justpiano3.view.ScrollText;
 
 import java.util.Objects;
 
-public class LocalSongsTempAdapter extends PagedListAdapter<Song, LocalSongsTempAdapter.SongViewHolder> {
+public class LocalSongsAdapter extends PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder> {
     private final MelodySelect melodySelect;
 
-    public LocalSongsTempAdapter(MelodySelect melodySelect) {
+    public LocalSongsAdapter(MelodySelect melodySelect) {
         super(DIFF_CALLBACK);
         this.melodySelect = melodySelect;
     }
@@ -35,7 +35,7 @@ public class LocalSongsTempAdapter extends PagedListAdapter<Song, LocalSongsTemp
     @Override
     public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.c_view, null);
+        View itemView = inflater.inflate(R.layout.c_view, parent, false);
         itemView.setBackgroundResource(R.drawable.selector_list_c);
         return new SongViewHolder(itemView);
     }
@@ -82,14 +82,13 @@ public class LocalSongsTempAdapter extends PagedListAdapter<Song, LocalSongsTemp
 
         public void bindData(Song song) {
             playImageView.setOnClickListener(new LocalSongsStartPlayClick(melodySelect, song));
-
             listenImageView.setOnClickListener(v -> {
                 if (song.getFilePath().equals(melodySelect.songsPath)) {
                     melodySelect.songsPath = "";
                     return;
                 }
                 melodySelect.songsPath = song.getFilePath();
-                melodySelect.jpapplication.startPlaySongLocal(song.getFilePath(), melodySelect, (Integer) this.view.getTag());
+                melodySelect.jpapplication.startPlaySongLocal(song.getFilePath(), melodySelect);
                 Toast.makeText(melodySelect, "正在播放:《" + song.getName() + "》", Toast.LENGTH_SHORT).show();
             });
             waterFallImageView.setOnClickListener(v -> {
@@ -99,20 +98,21 @@ public class LocalSongsTempAdapter extends PagedListAdapter<Song, LocalSongsTemp
                 intent.setClass(melodySelect, WaterfallActivity.class);
                 melodySelect.startActivity(intent);
             });
-            favorImageView.setOnClickListener(new AddSongsFavoriteClick(melodySelect, song));
+            favorImageView.setOnClickListener(v -> {
+                JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), song.isFavorite() == 0 ? 1 : 0);
+                Toast.makeText(melodySelect, song.getName() + (song.isFavorite() == 0 ? ":已移出收藏夹" : ":已加入收藏夹"), Toast.LENGTH_SHORT).show();
+            });
             songNameScrollText.setText(song.getName());
             songNameScrollText.setMovementMethod(ScrollingMovementMethod.getInstance());
             songNameScrollText.setHorizontallyScrolling(true);
             songNameScrollText.setOnClickListener(new LocalSongsStartPlayClick(melodySelect, song));
             int rightHandScore = song.getRightHandHighScore();
             int leftHandScore = song.getLeftHandHighScore();
-            highScoreTextView.setText("最高分:" + (rightHandScore <= 0 ? "0" : String.valueOf(rightHandScore)) + "(右) " + (leftHandScore <= 0 ? "0" : String.valueOf(leftHandScore)) + "(左)");
-
+            highScoreTextView.setText("右手最高:" + (rightHandScore <= 0 ? "0" : String.valueOf(rightHandScore)) + " 左手最高: " + (leftHandScore <= 0 ? "0" : String.valueOf(leftHandScore)));
             int length = song.getLength();
             String str1 = length / 60 >= 10 ? "" + length / 60 : "0" + length / 60;
             String str2 = length % 60 >= 10 ? "" + length % 60 : "0" + length % 60;
             soundTimeTextView.setText(str1 + ":" + str2);
-
             float rightHandDegree = song.getRightHandDegree();
             if ((int) rightHandDegree == 10) {
                 rightHandDegreeTextView.setText(" 难度: 右手 10 ");

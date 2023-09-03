@@ -53,9 +53,6 @@ public class ChatFiles extends Activity {
         Collections.sort(f4917b, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
         chatFilesAdapter = new ChatFilesAdapter(f4917b, this);
         f4919d.setAdapter(chatFilesAdapter);
-        if (f4917b.size() == 0) {
-            Toast.makeText(this, "没有聊天记录!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public final void remove(int i, String str) {

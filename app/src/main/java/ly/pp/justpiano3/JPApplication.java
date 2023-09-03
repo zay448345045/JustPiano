@@ -95,14 +95,14 @@ public final class JPApplication extends Application {
         }
     };
 
-    public void startPlaySongLocal(String songPath, MelodySelect melodySelect, int position) {
+    public void startPlaySongLocal(String songPath, MelodySelect melodySelect) {
         stopPlaySong();
-        this.playSongs = new PlaySongs(this, songPath, melodySelect, null, position, 0);
+        this.playSongs = new PlaySongs(this, songPath, melodySelect, null, 0);
     }
 
     public void startPlaySongOnline(String songPath, OLPlayRoom olPlayRoom, int tune) {
         stopPlaySong();
-        this.playSongs = new PlaySongs(this, songPath, null, olPlayRoom, 0, tune);
+        this.playSongs = new PlaySongs(this, songPath, null, olPlayRoom, tune);
     }
 
     public boolean stopPlaySong() {
@@ -314,7 +314,7 @@ public final class JPApplication extends Application {
         accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         // 初始化数据库
         songDatabase = Room.databaseBuilder(this, SongDatabase.class, "data")
-                .addMigrations(generateMigrations()).build();
+                .addMigrations(generateMigrations()).allowMainThreadQueries().build();
         // 初始化midi设备
         MidiUtil.initMidiDevice(this);
     }
@@ -381,6 +381,11 @@ public final class JPApplication extends Application {
         }
         // 4.6版本 数据库版本号为44
         // 4.7版本后，数据库的版本号为app的versionCode
+        if (oldVersion < 51) {
+            // 兼容room框架，建立新表，修改数据库字段类型
+            database.execSQL("CREATE TABLE IF NOT EXISTS `song` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL DEFAULT '', `item` TEXT NOT NULL DEFAULT '经典乐章', `path` TEXT NOT NULL DEFAULT '', `isnew` INTEGER NOT NULL DEFAULT 1, `ishot` INTEGER NOT NULL DEFAULT 0, `isfavo` INTEGER NOT NULL DEFAULT 0, `player` TEXT NOT NULL DEFAULT '', `score` INTEGER NOT NULL DEFAULT 0, `date` INTEGER NOT NULL DEFAULT 0, `count` INTEGER NOT NULL DEFAULT 0, `diff` REAL NOT NULL DEFAULT 0, `online` INTEGER NOT NULL DEFAULT 1, `Ldiff` REAL NOT NULL DEFAULT 0, `length` INTEGER NOT NULL DEFAULT 0, `Lscore` INTEGER NOT NULL DEFAULT 0);");
+            database.execSQL("INSERT INTO `song` SELECT * FROM jp_data;");
+        }
     }
 
     private class CrashHandler implements Thread.UncaughtExceptionHandler {

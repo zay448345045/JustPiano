@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.1"
+            android:layout_weight="0.15"
             android:orientation="vertical">
 
             <TextView
@@ -92,10 +92,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/search_edit"
                     style="@style/AutoCompleteStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
@@ -121,33 +121,6 @@
                 android:layout_weight="0.03" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="@dimen/dimen_0dp"
-            android:layout_height="@dimen/dimen_55dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/dimen_20dp"
-            android:layout_weight="0.28"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="@dimen/dimen_0dp"
-                android:layout_height="@dimen/dimen_0dp"
-                android:layout_weight="0.11" />
-
-            <ImageView
-                android:id="@+id/search_fast"
-                android:layout_width="@dimen/dimen_40dp"
-                android:layout_height="@dimen/dimen_0dp"
-                android:layout_weight="0.25"
-                android:background="@drawable/selector_ol_button"
-                android:src="@drawable/search" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_0dp"
-                android:layout_weight="0.11" />
-        </LinearLayout>
-
         <CheckBox
             android:id="@+id/check_record"
             android:layout_width="wrap_content"
@@ -166,6 +139,7 @@
             android:layout_marginEnd="@dimen/dimen_8dp"
             android:gravity="center"
             android:text="@string/melodylist1_seq"
+            android:enabled="false"
             android:textSize="16sp" />
 
         <CheckBox
@@ -228,19 +202,13 @@
                 android:listSelector="#00000000" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout14"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/c_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/filled_bar"
-            android:orientation="horizontal">
+            android:cacheColorHint="#00ffffff"
+            android:divider="@null" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/c_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:cacheColorHint="#00ffffff"
-                android:divider="@null" />
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

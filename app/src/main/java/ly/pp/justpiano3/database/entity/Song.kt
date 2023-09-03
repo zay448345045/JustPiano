@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "jp_data")
+@Entity(tableName = "song")
 data class Song(
     /**
      * 自增主键
@@ -51,16 +51,16 @@ data class Song(
     var isFavorite: Int,
 
     /**
+     * 冠军用户，预留字段
+     */
+    @ColumnInfo(name = "player", defaultValue = "")
+    var winner: String,
+
+    /**
      * 本地弹奏右手最高分数
      */
     @ColumnInfo(name = "score", defaultValue = "0")
     var rightHandHighScore: Int,
-
-    /**
-     * 本地弹奏左手最高分数
-     */
-    @ColumnInfo(name = "Lscore", defaultValue = "0")
-    var leftHandHighScore: Int,
 
     /**
      * 本地弹奏最高分数时产生最高记录的时间戳
@@ -82,6 +82,12 @@ data class Song(
     var rightHandDegree: Float,
 
     /**
+     * 在线曲库是否可见，预留字段
+     */
+    @ColumnInfo(name = "online", defaultValue = "1")
+    var isOnline: Int,
+
+    /**
      * 曲谱左手难度
      */
     @ColumnInfo(name = "Ldiff", defaultValue = "0")
@@ -94,14 +100,8 @@ data class Song(
     var length: Int,
 
     /**
-     * 在线曲库是否可见，预留字段
+     * 本地弹奏左手最高分数
      */
-    @ColumnInfo(name = "online", defaultValue = "1")
-    var isOnline: Int,
-
-    /**
-     * 冠军用户，预留字段
-     */
-    @ColumnInfo(name = "player", defaultValue = "")
-    var winner: String,
+    @ColumnInfo(name = "Lscore", defaultValue = "0")
+    var leftHandHighScore: Int,
 )

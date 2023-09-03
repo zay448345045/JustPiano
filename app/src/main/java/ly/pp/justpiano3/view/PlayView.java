@@ -14,12 +14,14 @@ import ly.pp.justpiano3.*;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.listener.touch.TouchNotes;
 import ly.pp.justpiano3.thread.DownNotesThread;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
@@ -34,6 +36,7 @@ import protobuf.dto.OnlinePlayFinishDTO;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -609,6 +612,23 @@ public final class PlayView extends SurfaceView implements Callback {
                     pianoPlay.sendMsg(OnlineProtocolType.CL_TEST, builder.build());
                     break;
                 case 2:
+                    // 增加弹奏结果到本地数据库
+                    ThreadPoolUtils.execute(() -> {
+                        List<Song> songByPath = JPApplication.getSongDatabase().songDao().getSongByFilePath(songsPath);
+                        for (Song song : songByPath) {
+                            int topScore = handValue == 0 ? song.getRightHandHighScore() : song.getLeftHandHighScore();
+                            if (topScore <= showScoreAndLevelsThread.levelScore) {
+                                if (handValue == 0) {
+                                    song.setRightHandHighScore(showScoreAndLevelsThread.levelScore);
+                                } else {
+                                    song.setLeftHandHighScore(showScoreAndLevelsThread.levelScore);
+                                }
+                                song.setHighScoreDate(System.currentTimeMillis());
+                                song.setNew(0);
+                                JPApplication.getSongDatabase().songDao().updateSongs(Collections.singletonList(song));
+                            }
+                        }
+                    });
                     message = Message.obtain(pianoPlay.pianoPlayHandler);
                     message.what = 8;
                     pianoPlay.pianoPlayHandler.handleMessage(message);

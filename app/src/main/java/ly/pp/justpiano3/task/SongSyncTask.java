@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.database.dao.SongDao;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.play.PmFileParser;
 import ly.pp.justpiano3.activity.MainMode;
@@ -24,6 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
@@ -59,7 +64,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 fileOutputStream.close();
                 List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
-                sqliteDataBase.beginTransaction();
+                List<Song> insertSongList = new ArrayList<>();
                 for (File file : files) {
                     String item = file.getName().substring(0, 1);
                     FileInputStream fileInputStream = new FileInputStream(file);
@@ -81,11 +86,13 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                     contentvalues.put("Ldiff", pmFileParser.getLeftNandu());
                     contentvalues.put("length", pmFileParser.getSongTime());
                     contentvalues.put("Lscore", 0);
-                    sqliteDataBase.insertOrThrow("jp_data", null, contentvalues);
+                    insertSongList.add(new Song(null, pmFileParser.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
+                            "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
+                            0, 0, 0, pmFileParser.getNandu(), 1,
+                            pmFileParser.getLeftNandu(), pmFileParser.getSongTime(), 0));
                     count++;
                 }
-                sqliteDataBase.setTransactionSuccessful();
-                sqliteDataBase.endTransaction();
+                JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
             }
         } catch (Exception e3) {
             e3.printStackTrace();
@@ -103,12 +110,11 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
             JPDialog jpdialog = new JPDialog(melodySelect);
             jpdialog.setTitle("在线曲库同步");
             jpdialog.setCancelableFalse();
-            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首，请重新进入本地曲库查看");
+            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
             jpdialog.setSecondButton("确定", ((dialogInterface, i) -> {
-                Intent intent = new Intent();
-                intent.setClass(melodySelect, MainMode.class);
-                melodySelect.startActivity(intent);
-                melodySelect.finish();
+                List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
+                melodySelect.getTotalSongInfoMutableLiveData().setValue(allSongsCountAndScore.get(0));
+                dialogInterface.dismiss();
             }));
             jpdialog.showDialog();
         }

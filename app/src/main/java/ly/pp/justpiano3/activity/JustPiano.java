@@ -84,8 +84,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                 } else {
                                     info = "加入曲目" + songName + "..." + songCount;
                                     insertSongList.add(new Song(null, songName, Consts.items[i + 1], songPath, 1,
-                                            0, 0, 0, 0, 0,
-                                            originalPmVersion + 1, rightDegree, leftDegree, songTime, 1, ""));
+                                            0, 0, "", 0, 0,
+                                            originalPmVersion + 1, rightDegree, 1, leftDegree, songTime, 0));
                                 }
                                 Message obtainMessage = handler.obtainMessage();
                                 obtainMessage.what = 0;
@@ -96,7 +96,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 }
                 // 删除未检测到pm的曲谱
                 for (Song song : songList) {
-                    if (song.getFileVersion() == originalPmVersion) {
+                    if (song.getFileVersion() != originalPmVersion + 1) {
                         deleteSongList.add(song);
                     }
                 }
@@ -211,7 +211,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
                 scanSongFileAndUpdateSongDatabase(songList);
             }
         } catch (Exception e5) {
-            Toast.makeText(this, "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show();
+            e5.printStackTrace();
+            Toast.makeText(getApplicationContext(), "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show();
             System.exit(-1);
         }
         // 载入音源

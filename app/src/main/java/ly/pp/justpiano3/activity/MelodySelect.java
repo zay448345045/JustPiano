@@ -3,7 +3,6 @@ package ly.pp.justpiano3.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,17 +14,21 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.ComponentActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.adapter.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.LocalSongsAdapter;
+import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
+import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
@@ -34,12 +37,11 @@ import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
-import ly.pp.justpiano3.wrapper.JustPianoCursorWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MelodySelect extends AppCompatActivity implements Callback, TextWatcher, OnClickListener {
+public class MelodySelect extends ComponentActivity implements Callback, TextWatcher, OnClickListener {
     public Handler handler;
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
@@ -50,62 +52,19 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
     public CheckBox isRecord;
     public CheckBox isFollowPlay;
     public CheckBox isLeftHand;
-    public AutoCompleteTextView autoctv;
-    public Button showOrHideTitleButton;
-    public boolean showTitle;
-    public String sortStr;
-    public String f4263s = "";
-    public int f4264t;
-    public TextView titleTextView;
+    public EditText songSearchEditText;
     public JPApplication jpapplication;
     private Button sortButton;
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
-    private PopupWindow sortPopupwindow = null;
-    private PopupWindow menuPopupwindow = null;
+    private PopupWindow sortPopupWindow;
+    private PopupWindow menuPopupWindow;
     private TextView timeText;
-    private int intentFlag;
-    private int score;
-    private final List<String> sortNamesList = new ArrayList<>();
-    private MutableLiveData<PagedList<Song>> mutablePagedListLiveData;
-
-    public final void mo2784a(Cursor cursor) {
-        isFollowPlay.setChecked(false);
-        Cursor cursor2;
-        switch (sortStr) {
-            case "name desc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "name", false);
-                break;
-            case "isnew desc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "isnew", false);
-                break;
-            case "date desc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "date", false);
-                break;
-            case "diff asc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "diff", true);
-                break;
-            case "diff desc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "diff", false);
-                break;
-            case "score asc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "score", true);
-                break;
-            case "score desc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "score", false);
-                break;
-            case "length asc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "length", true);
-                break;
-            case "length desc":
-                cursor2 = new JustPianoCursorWrapper(cursor, "length", false);
-                break;
-            default:
-                cursor2 = new JustPianoCursorWrapper(cursor, "name", true);
-        }
-        songListAdapter.changeCursor(cursor2);
-        songListAdapter.notifyDataSetChanged();
-    }
+    private TextView totalSongCountTextView;
+    private TextView totalSongScoreTextView;
+    private RecyclerView songsListView;
+    private LiveData<PagedList<Song>> pagedListLiveData;
+    private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
 
     protected final void mo2785a(String str2, int i) {
         JPDialog jpdialog = new JPDialog(this);
@@ -126,15 +85,17 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
         switch (message.what) {
             case 1:
                 int i = data.getInt("selIndex");
-                sortButton.setText(sortNamesList.get(i));
-                sortStr = Consts.sortSyntax[i];
-                if (!songItem.isEmpty() && songListAdapter != null && sqlitedatabase != null) {
-                    mo2784a(sqlitedatabase.query("jp_data", null, "item=?", new String[]{songItem}, null, null, sortStr));
+                sortButton.setText(Consts.sortNames[i]);
+                if (!songItem.isEmpty()) {
+                    SongDao songDao = JPApplication.getSongDatabase().songDao();
+                    DataSource.Factory<Integer, Song> songsDataSource = songDao.getOrderedSongsByCategoryWithDataSource(songItem, Consts.sortSyntax[i]);
+                    pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
+                    pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 }
-                sortPopupwindow.dismiss();
+                sortPopupWindow.dismiss();
                 break;
             case 2:
-                menuPopupwindow.dismiss();
+                menuPopupWindow.dismiss();
                 jpapplication.stopPlaySong();
                 Intent intent = new Intent();
                 switch (data.getInt("selIndex")) {
@@ -183,16 +144,17 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
                 }
                 break;
             case 4:
-                Cursor cursor = songListAdapter.getCursor();
-                int i2 = data.getInt("position") + 1;
-                songsPath = "";
-                if (cursor.moveToPosition(i2)) {
-                    String string = cursor.getString(cursor.getColumnIndexOrThrow("path"));
-                    String string2 = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                    jpapplication.startPlaySongLocal(string, this, i2);
-                    Toast.makeText(this, "正在播放:《" + string2 + "》", Toast.LENGTH_SHORT).show();
-                    break;
-                }
+                // 本地连续播放功能暂时取消
+//                Cursor cursor = songListAdapter.getCursor();
+//                int i2 = data.getInt("position") + 1;
+//                songsPath = "";
+//                if (cursor.moveToPosition(i2)) {
+//                    String string = cursor.getString(cursor.getColumnIndexOrThrow("path"));
+//                    String string2 = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+//                    jpapplication.startPlaySongLocal(string, this);
+//                    Toast.makeText(this, "正在播放:《" + string2 + "》", Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
                 break;
         }
         return false;
@@ -210,7 +172,7 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
     public void onBackPressed() {
         jpapplication.stopPlaySong();
         Intent intent;
-        if (intentFlag == 10) {
+        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
             intent = new Intent();
             intent.setClass(this, MainMode.class);
             startActivity(intent);
@@ -227,22 +189,12 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
         switch (view.getId()) {
             case R.id.list_sort_b:
                 if (firstLoadFocusFinish) {
-                    sortPopupwindow.showAsDropDown(sortButton);
-                }
-                return;
-            case R.id.search_fast:
-                autoctv.clearFocus();
-                cursor = sqlitedatabase.query("jp_data", null, "name like '%" + autoctv.getText().toString() + "%'", null, null, null, null);
-                mo2784a(cursor);
-                try {
-                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    sortPopupWindow.showAsDropDown(sortButton);
                 }
                 return;
             case R.id.menu_list_fast:
                 if (firstLoadFocusFinish) {
-                    menuPopupwindow.showAsDropDown(menuListButton);
+                    menuPopupWindow.showAsDropDown(menuListButton);
                 }
                 return;
             default:
@@ -252,56 +204,41 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        intentFlag = getIntent().getFlags();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        sortStr = Consts.sortSyntax[0];
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
         try {
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
-            cursor = sqlitedatabase.query("jp_data", null, null, null, null, null, sortStr);
-            while (cursor.moveToNext()) {
-                score += cursor.getInt(cursor.getColumnIndexOrThrow("score"));
-            }
-            int f4257m = cursor.getCount();
             LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
             setContentView(linearLayout);
-            linearLayout.setOnTouchListener((v, event) -> {
-                if (null != getCurrentFocus()) {
-                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    if (inputMethodManager != null) {
-                        return inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    }
-                }
-                return false;
-            });
             SkinImageLoadUtil.setBackGround(this, "ground", linearLayout);
             sortButton = findViewById(R.id.list_sort_b);
             sortButton.setOnClickListener(this);
-            ListView f4245a = findViewById(R.id.f_list);
-
-            RecyclerView songsListView = findViewById(R.id.c_list);
+            totalSongCountTextView = findViewById(R.id.all_mel);
+            totalSongScoreTextView = findViewById(R.id.total_score_all);
+            List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
+            totalSongInfoMutableLiveData.setValue(allSongsCountAndScore.get(0));
+            totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
+                totalSongCountTextView.setText("曲谱:" + totalSongInfo.getTotalCount());
+                totalSongScoreTextView.setText("总分:" + totalSongInfo.getTotalScore());
+            });
+            ListView categoryListView = findViewById(R.id.f_list);
+            songsListView = findViewById(R.id.c_list);
             songsListView.setLayoutManager(new LinearLayoutManager(this));
-            LocalSongsTempAdapter localSongsTempAdapter = new LocalSongsTempAdapter(this);
-            songsListView.setAdapter(localSongsTempAdapter);
-            DataSource.Factory<Integer, Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongsWithDataSource();
-            PagedList<Song> pageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(allSongs);
-            mutablePagedListLiveData = new MutableLiveData<>();
-            mutablePagedListLiveData.setValue(pageList);
-            mutablePagedListLiveData.observe(this, localSongsTempAdapter::submitList);
-
-            TextView f4247c = findViewById(R.id.all_mel);
-            autoctv = findViewById(R.id.search_edit);
-            ImageView searchFast = findViewById(R.id.search_fast);
-            searchFast.setOnClickListener(this);
+            LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this);
+            songsListView.setAdapter(localSongsAdapter);
+            SongDao songDao = JPApplication.getSongDatabase().songDao();
+            DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
+            pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+            pagedListLiveData.observe(this, localSongsAdapter::submitList);
+            songSearchEditText = findViewById(R.id.search_edit);
+            songSearchEditText.addTextChangedListener(this);
             menuListButton = findViewById(R.id.menu_list_fast);
             menuListButton.setOnClickListener(this);
-            autoctv.addTextChangedListener(this);
-            initAutoComplete(autoctv);
             isRecord = findViewById(R.id.check_record);
-            if (intentFlag == 10) {
+            if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
                 isRecord.setVisibility(View.GONE);
             } else {
                 isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -312,17 +249,17 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
                 });
             }
             isFollowPlay = findViewById(R.id.check_play);
-            if (intentFlag == 10) {
+            if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
                 isFollowPlay.setVisibility(View.GONE);
             } else {
                 isFollowPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked && sharedPreferences.getBoolean("play_dialog", true)) {
-                        mo2785a("选择后软件将从当前播放的曲目开始依次播放试听", 1);
+                        mo2785a("抱歉，连续播放功能暂时取消", 1);
                     }
                 });
             }
             isLeftHand = findViewById(R.id.check_hand);
-            if (intentFlag == 10) {
+            if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
                 isLeftHand.setVisibility(View.GONE);
             } else {
                 isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -331,42 +268,22 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
                     }
                 });
             }
-            TextView f4248d = findViewById(R.id.total_score_all);
-            f4247c.setText("曲谱:" + f4257m);
-            f4248d.setText("总分:" + score);
-            f4245a.setAdapter(new LocalSongsItemAdapter(this));
-            f4245a.setCacheColorHint(0);
-            f4245a.setOnItemClickListener((parent, view, position, id) -> {
-                Cursor query;
-                f4264t = position;
+            categoryListView.setAdapter(new LocalSongsItemAdapter(this));
+            categoryListView.setCacheColorHint(0);
+            categoryListView.setOnItemClickListener((parent, view, position, id) -> {
                 view.setSelected(true);
                 if (position == 0) {
                     songItem = "";
-                    query = sqlitedatabase.query("jp_data", null, "isfavo = 1", null, null, null, sortStr);
+                    DataSource.Factory<Integer, Song> favoriteSongsWithDataSource = songDao.getFavoriteSongsWithDataSource();
+                    pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongsWithDataSource);
                 } else {
                     songItem = Consts.items[position];
-                    query = sqlitedatabase.query("jp_data", null, "item=?", new String[]{Consts.items[position]}, null, null, sortStr);
+                    DataSource.Factory<Integer, Song> dataSource = songDao.getOrderedSongsByCategoryWithDataSource(Consts.items[position], Consts.sortSyntax[position]);
+                    pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
                 }
-                mo2784a(query);
-                f4263s = Consts.items[position];
+                pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
             });
-            titleTextView = findViewById(R.id.title_bar);
-            titleTextView.setVisibility(View.GONE);
             timeText = findViewById(R.id.time_text);
-            if (showTitle) {
-                titleTextView.setVisibility(View.VISIBLE);
-            }
-            showOrHideTitleButton.setOnClickListener(v -> {
-                if (showTitle) {
-                    titleTextView.setVisibility(View.GONE);
-                    showTitle = false;
-                    showOrHideTitleButton.setText("显示标题");
-                    return;
-                }
-                titleTextView.setVisibility(View.GONE);
-                showTitle = true;
-                showOrHideTitleButton.setText("隐藏标题");
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -393,15 +310,15 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
         super.onWindowFocusChanged(z);
         while (!firstLoadFocusFinish) {
             handler = new Handler(this);
-            sortNamesList.clear();
+            List<String> sortNamesList = new ArrayList<>();
             Collections.addAll(sortNamesList, Consts.sortNames);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);
             ListView listView = inflate.findViewById(R.id.list);
             PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
-            sortPopupwindow.setOutsideTouchable(true);
-            sortPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+            sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
+            sortPopupWindow.setOutsideTouchable(true);
+            sortPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
             List<String> menuListNames = new ArrayList<>();
             Collections.addAll(menuListNames, Consts.localMenuListNames);
             inflate = getLayoutInflater().inflate(R.layout.options, null);
@@ -409,17 +326,11 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
             listView.setAdapter(popupWindowSelectAdapter);
             listView.setDivider(null);
-            menuPopupwindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
-            menuPopupwindow.setOutsideTouchable(true);
-            menuPopupwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+            menuPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
+            menuPopupWindow.setOutsideTouchable(true);
+            menuPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
             firstLoadFocusFinish = true;
         }
-    }
-
-    private void initAutoComplete(AutoCompleteTextView autoCompleteTextView) {
-        String valueOf = autoCompleteTextView.getText().toString();
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + valueOf.replace("'", "''") + "%'", null, null, null, null);
-        autoCompleteTextHandle(autoCompleteTextView);
     }
 
     @Override
@@ -428,33 +339,18 @@ public class MelodySelect extends AppCompatActivity implements Callback, TextWat
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(s.toString());
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+        pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + s.toString().replace("'", "''") + "%'", null, null, null, null);
-        autoCompleteTextHandle(autoctv);
     }
 
-    private void autoCompleteTextHandle(AutoCompleteTextView autoctv) {
-        MelodySelectAdapter adapter = new MelodySelectAdapter(this, cursor, this);
-        autoctv.setAdapter(adapter);
-        autoctv.setOnFocusChangeListener((v, hasFocus) -> {
-            AutoCompleteTextView view = (AutoCompleteTextView) v;
-            if (hasFocus) {
-                try {
-                    view.showDropDown();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public Cursor search(String str) {
-        str = str.replace("'", "''");
-        cursor = sqlitedatabase.query("jp_data", null, "name like '%" + str + "%'", null, null, null, null);
-        return cursor;
+    public MutableLiveData<SongDao.TotalSongInfo> getTotalSongInfoMutableLiveData() {
+        return totalSongInfoMutableLiveData;
     }
 }
 

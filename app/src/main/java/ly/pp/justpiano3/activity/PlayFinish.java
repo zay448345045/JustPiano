@@ -16,6 +16,8 @@ import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayFinish extends Activity implements OnClickListener {
@@ -134,7 +136,6 @@ public class PlayFinish extends Activity implements OnClickListener {
                 missScore = miss * -5;
                 totalScore = extras.getInt("totalScore");
                 clickNum = perfect + cool + great + bad + miss;
-                // 虽然返回是list，但查询结果只能说有一个元素或者没有
                 List<Song> songByPath = JPApplication.getSongDatabase().songDao().getSongByFilePath(path);
                 for (Song song : songByPath) {
                     topScore = hand == 0 ? song.getRightHandHighScore() : song.getLeftHandHighScore();
@@ -147,7 +148,7 @@ public class PlayFinish extends Activity implements OnClickListener {
                         }
                         song.setHighScoreDate(System.currentTimeMillis());
                         song.setNew(0);
-                        JPApplication.getSongDatabase().songDao().updateSongs(song);
+                        JPApplication.getSongDatabase().songDao().updateSongs(Collections.singletonList(song));
                     } else {
                         isWinner = false;
                     }

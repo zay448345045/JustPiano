@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.paging.DataSource;
-import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +16,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.thread.PlaySongs;
 import protobuf.dto.OnlinePlaySongDTO;
@@ -36,7 +35,7 @@ public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapte
     @Override
     public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.song_view, null);
+        View itemView = inflater.inflate(R.layout.song_view, parent, false);
         itemView.setBackgroundResource(R.drawable.selector_list_c);
         return new SongViewHolder(itemView);
     }
@@ -91,23 +90,20 @@ public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapte
             songNameTextView.setText(song.getName());
             songNameTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
             songNameTextView.setHorizontallyScrolling(true);
-
-            if (song.isFavorite() == 0) {
-                songFavorImageView.setImageResource(R.drawable.favor_1);
-            } else {
-                songFavorImageView.setImageResource(R.drawable.favor);
-            }
+            songNameTextView.setOnClickListener(v -> {
+                PlaySongs.setSongFilePath(song.getFilePath());
+                OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
+                builder.setTune(olPlayRoom.getdiao());
+                builder.setSongPath(song.getFilePath().substring(6, song.getFilePath().length() - 3));
+                olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
+                Message obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
+                obtainMessage.what = 12;
+                olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
+            });
+            songFavorImageView.setImageResource(song.isFavorite() == 0 ? R.drawable.favor_1 : R.drawable.favor);
             songFavorImageView.setOnClickListener(v -> {
-                if (song.isFavorite() == 0) {
-                    JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), 1);
-                    songFavorImageView.setImageResource(R.drawable.favor);
-                } else {
-                    JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), 0);
-                    songFavorImageView.setImageResource(R.drawable.favor_1);
-                }
-                DataSource.Factory<Integer, Song> favoriteSong = JPApplication.getSongDatabase().songDao().getFavoriteSongWithDataSource();
-                PagedList<Song> songPageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(favoriteSong);
-                olPlayRoom.getMutablePagedListLiveData().setValue(songPageList);
+                SongDao songDao = JPApplication.getSongDatabase().songDao();
+                songDao.updateFavoriteSong(song.getFilePath(), song.isFavorite() == 0 ? 1 : 0);
             });
             rightHandDegreeTextView.setText(" 右手:" + song.getRightHandDegree());
             leftHandDegreeTextView.setText(" 左手:" + song.getLeftHandDegree());

@@ -25,11 +25,10 @@ public final class PlaySongs {
     /**
      * 播放模式
      */
-    private static PlaySongsModeEnum playSongsMode;
+    private static PlaySongsModeEnum playSongsMode = PlaySongsModeEnum.ONCE;
     private boolean isPlayingSongs;
     private final MelodySelect melodySelect;
     private final OLPlayRoom olPlayRoom;
-    private final int position;
     private int pm_2;
     private final byte[] tickArray;
     private final byte[] noteArray;
@@ -67,10 +66,6 @@ public final class PlaySongs {
         return olPlayRoom;
     }
 
-    public int getPosition() {
-        return position;
-    }
-
     public int getPm_2() {
         return pm_2;
     }
@@ -91,10 +86,9 @@ public final class PlaySongs {
         return volumeArray;
     }
 
-    public PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int i, int diao) {
+    public PlaySongs(JPApplication jPApplication, String str, MelodySelect melodySelect, OLPlayRoom olPlayRoom, int diao) {
         songFilePath = str;
         this.melodySelect = melodySelect;
-        position = i;
         PmFileParser pmFileParser = new PmFileParser(jPApplication, str);
         noteArray = pmFileParser.getNoteArray();
         volumeArray = pmFileParser.getVolumeArray();
@@ -144,7 +138,6 @@ public final class PlaySongs {
         if (melodySelect != null && melodySelect.getIsFollowPlay() && melodySelect.handler != null) {
             Message message = Message.obtain(melodySelect.handler);
             Bundle bundle = new Bundle();
-            bundle.putInt("position", position);
             message.what = 4;
             message.setData(bundle);
             melodySelect.handler.sendMessage(message);
@@ -189,7 +182,7 @@ public final class PlaySongs {
                     olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage3);
                     return;
                 case FAVOR:
-                    List<Song> favoriteSongList = JPApplication.getSongDatabase().songDao().getFavoriteSong();
+                    List<Song> favoriteSongList = JPApplication.getSongDatabase().songDao().getFavoriteSongs();
                     for (int i = 0; i < favoriteSongList.size(); i++) {
                         if (Objects.equals(favoriteSongList.get(i).getFilePath(), PlaySongs.songFilePath)) {
                             songFilePath = favoriteSongList.get(i == favoriteSongList.size() - 1 ? 0 : i + 1).getFilePath();

@@ -17,7 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -67,11 +67,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public int maxListValue = 100;
     public GridView playerGrid;
     public List<Bundle> invitePlayerList = new ArrayList<>();
-    public PopupWindow commonModeGroup = null;
+    public PopupWindow commonModeGroup;
     public TabHost roomTabs;
     public boolean isOnStart = true;
     // 防止横竖屏切换时，玩家前后台状态错误
-    private boolean isChangeScreen = false;
+    private boolean isChangeScreen;
     public String userTo = "";
     public ListView playerListView;
     public ListView friendsListView;
@@ -80,7 +80,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public User user;
     public byte roomID0;
     public String roomName;
-    public JPApplication jpapplication = null;
+    public JPApplication jpapplication;
     public TextView roomNameView;
     public String playerKind = "";
     public Button groupButton;
@@ -97,17 +97,18 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private ImageView express;
     private LayoutInflater layoutInflater;
     private final List<Bundle> playerList = new ArrayList<>();
-    private PopupWindow expressWindow = null;
-    private PopupWindow moreSongs = null;
-    private PopupWindow groupModeGroup = null;
-    private PopupWindow coupleModeGroup = null;
-    private PopupWindow changeColor = null;
-    private PopupWindow playSongsMode = null;
+    private PopupWindow expressWindow;
+    private PopupWindow moreSongs;
+    private PopupWindow groupModeGroup;
+    private PopupWindow coupleModeGroup;
+    private PopupWindow changeColor;
+    private PopupWindow playSongsMode;
     private TextView timeTextView;
     private int colorNum = 99;
     private TimeUpdateThread timeUpdateThread;
-    private ImageView changeColorButton = null;
-    private MutableLiveData<PagedList<Song>> mutablePagedListLiveData;
+    private ImageView changeColorButton;
+    private RecyclerView songsListView;
+    private LiveData<PagedList<Song>> pagedListLiveData;
 
     public OLPlayRoom() {
         canNotNextPage = false;
@@ -116,8 +117,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         timeUpdateThread = null;
     }
 
-    private void playSongByDegreeRandom(int i, int i2) {
-        List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(i, i2);
+    private void playSongByDegreeRandom(int startDegree, int endDegree) {
+        List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(startDegree, endDegree);
         String songFilePath = songs.isEmpty() ? "" : songs.get(0).getFilePath();
         PlaySongs.setSongFilePath(songFilePath);
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
@@ -301,27 +302,27 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private void m3749b(int i) {
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao
-                .getSongsByCategoryWithDataSource(Consts.items[i + 1], Consts.items[i + 2]);
-        mutablePagedListLiveData.setValue(songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource));
+        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[i + 2]);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
 
     private void m3749c(int i) {
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao
-                .getSongsByCategoryWithDataSource(Consts.items[i + 1]);
-        mutablePagedListLiveData.setValue(songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource));
+        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1]);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
 
     private void m3749c(int i, int j) {
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao
-                .getSongsByCategoryWithDataSource(Consts.items[i + 1], Consts.items[j + 1]);
-        mutablePagedListLiveData.setValue(songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource));
+        DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[j + 1]);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
 
@@ -416,11 +417,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public String[] querySongNameAndDiffByPath(String str) {
-        String[] strArr = new String[2];
+        String[] strArr = new String[3];
         List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(str);
         for (Song song : songByFilePath) {
             strArr[0] = song.getName();
-            strArr[1] = String.format(Locale.getDefault(), "%.1f", song.getLeftHandDegree());
+            strArr[1] = String.format(Locale.getDefault(), "%.1f", song.getRightHandDegree());
+            strArr[2] = String.format(Locale.getDefault(), "%.1f", song.getLeftHandDegree());
         }
         return strArr;
     }
@@ -510,13 +512,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     @Override
     public void onClick(View view) {
         String str;
-        int i;
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
         switch (view.getId()) {
             case R.id.favor:
                 roomTabs.setCurrentTab(2);
-                DataSource.Factory<Integer, Song> favoriteSongList = JPApplication.getSongDatabase().songDao().getFavoriteSongWithDataSource();
-                PagedList<Song> pageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(favoriteSongList);
-                mutablePagedListLiveData.setValue(pageList);
+                DataSource.Factory<Integer, Song> favoriteSongList = songDao.getFavoriteSongsWithDataSource();
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
+                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 moreSongs.dismiss();
                 return;
             case R.id.couple_1:
@@ -577,15 +579,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 playSongByDegreeRandom(4, 6);
                 return;
             case R.id.rand_7:
-                playSongByDegreeRandom(8, 12);
+                playSongByDegreeRandom(8, 10);
                 return;
             case R.id.add_favor:
                 if (jpapplication.isPlayingSong()) {
                     if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(PlaySongs.getSongFilePath(), 1) > 0) {
                         Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
-                        DataSource.Factory<Integer, Song> favoriteSong = JPApplication.getSongDatabase().songDao().getFavoriteSongWithDataSource();
-                        PagedList<Song> songPageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(favoriteSong);
-                        mutablePagedListLiveData.setValue(songPageList);
                     }
                 }
                 moreSongs.dismiss();
@@ -606,19 +605,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 m3749c(7);
                 return;
             case R.id.ol_search_b:
-                String valueOf = String.valueOf(searchText.getText());
-                if (valueOf.isEmpty()) {
+                String keywords = String.valueOf(searchText.getText());
+                if (keywords.isEmpty()) {
                     return;
                 }
                 searchText.setText("");
-                DataSource.Factory<Integer, Song> songByNameKeywords = JPApplication.getSongDatabase().songDao().getSongByNameKeywordsWithDataSource(valueOf);
-                PagedList<Song> songPageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(songByNameKeywords);
-                if (songPageList.isEmpty()) {
-                    Toast.makeText(this, "未搜索到与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "搜索到" + songPageList.size() + "首与 " + valueOf + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                    mutablePagedListLiveData.setValue(songPageList);
-                }
+                DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
+                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 return;
             case R.id.pre_button:
                 page -= 20;
@@ -873,7 +867,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -951,17 +945,14 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         changeColorButton.setOnClickListener(this);
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
-
-        RecyclerView songsListView = findViewById(R.id.ol_song_list);
+        songsListView = findViewById(R.id.ol_song_list);
         songsListView.setLayoutManager(new LinearLayoutManager(this));
         OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this);
         songsListView.setAdapter(olRoomSongsAdapter);
-        DataSource.Factory<Integer, Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongsWithDataSource();
-        PagedList<Song> pageList = JPApplication.getSongDatabase().songDao().getPageListByDatasourceFactory(allSongs);
-        mutablePagedListLiveData = new MutableLiveData<>();
-        mutablePagedListLiveData.setValue(pageList);
-        mutablePagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
-
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+        pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
         handler = new Handler(this);
         songNameText = findViewById(R.id.ol_songlist_b);
         if (!StringUtil.isNullOrEmpty(PlaySongs.getSongFilePath())) {
@@ -1162,9 +1153,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onStart() {
         super.onStart();
         if (!isOnStart) {
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            OnlineChangeRoomUserStatusDTO.Builder builder = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder.setStatus("N");
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
         }
         isOnStart = true;
     }
@@ -1173,9 +1164,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     protected void onRestart() {
         super.onRestart();
         if (!isOnStart) {
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            OnlineChangeRoomUserStatusDTO.Builder builder = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder.setStatus("N");
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
                 msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
@@ -1190,13 +1181,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         // 确定从前台切换到后台才会调用下面的代码，防止玩家手动横竖屏切换，导致后台状态错乱
         if (isOnStart && !isChangeScreen) {
             isOnStart = false;
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("B");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            OnlineChangeRoomUserStatusDTO.Builder builder = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder.setStatus("B");
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
         }
-    }
-
-    public MutableLiveData<PagedList<Song>> getMutablePagedListLiveData() {
-        return mutablePagedListLiveData;
     }
 }

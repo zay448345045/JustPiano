@@ -59,7 +59,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         seekBar!!.progress = ((value!!.toFloat() - minValue) / (maxValue - minValue) * 100).roundToInt()
     }
 
-    override fun onSetInitialValue(restore: Boolean, defaultValue: Any) {
+    override fun onSetInitialValue(restore: Boolean, defaultValue: Any?) {
         super.onSetInitialValue(restore, defaultValue)
         value = if (restore) {
             if (shouldPersist()) getPersistedString(this.defaultValue) else defaultValue as String

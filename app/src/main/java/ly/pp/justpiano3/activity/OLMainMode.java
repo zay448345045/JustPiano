@@ -2,16 +2,16 @@ package ly.pp.justpiano3.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
@@ -22,6 +22,8 @@ import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
+
+import java.util.List;
 
 public class OLMainMode extends BaseActivity implements OnClickListener {
     final OLMainMode context = this;
@@ -167,15 +169,13 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     }
 
     public static String getMaxSongIdFromDatabase() {
-        Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
+        List<Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongs();
         int maxSongId = 0;
-        while (query.moveToNext()) {
-            String path = query.getString(query.getColumnIndex("path"));
-            if (path.length() > 8 && path.charAt(7) == '/') {
-                maxSongId = Math.max(maxSongId, Integer.parseInt(path.substring(9, 15)));
+        for (Song song : allSongs) {
+            if (song.getFilePath().length() > 8 && song.getFilePath().charAt(7) == '/') {
+                maxSongId = Math.max(maxSongId, Integer.parseInt(song.getFilePath().substring(9, 15)));
             }
         }
-        query.close();
         return String.valueOf(maxSongId);
     }
 }
