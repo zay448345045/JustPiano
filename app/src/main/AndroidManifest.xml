@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="ly.pp.justpiano3">
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission
             android:name="android.permission.BIND_MIDI_DEVICE_SERVICE"
@@ -14,21 +13,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-feature android:name="android.hardware.usb.host"/>
     <uses-feature
             android:name="android.software.midi"
             android:required="true"/>
-
     <application
             android:name=".JPApplication"
+            android:requestLegacyExternalStorage="true"
             android:allowBackup="false"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:icon="@drawable/icon"
-            android:isGame="true"
             android:label="@string/app_name"
-            android:requestLegacyExternalStorage="true"
+            android:isGame="true"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/JustPianoTheme"
             android:usesCleartextTraffic="true"
@@ -36,13 +34,12 @@
         <activity
                 android:name=".activity.JustPiano"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:exported="true"
                 android:label="@string/app_name"
                 android:screenOrientation="sensorLandscape"
-                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan">
+                android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -266,5 +263,4 @@
                     android:resource="@xml/file_paths"/>
         </provider>
     </application>
-
 </manifest>
