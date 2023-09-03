@@ -7,7 +7,6 @@ import androidx.paging.PagedList
 import androidx.room.*
 import ly.pp.justpiano3.database.entity.Song
 
-
 @Dao
 interface SongDao {
 
@@ -33,7 +32,7 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE isfavo = 1")
     fun getFavoriteSongsWithDataSource(): DataSource.Factory<Int, Song>
 
-    @Query("SELECT COUNT(1) AS totalCount, SUM(score) AS totalScore FROM song")
+    @Query("SELECT COUNT(1) AS totalCount, (SUM(score) + SUM(Lscore)) AS totalScore FROM song")
     fun getAllSongsCountAndScore(): List<TotalSongInfo>
 
     /**
