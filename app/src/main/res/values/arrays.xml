@@ -99,4 +99,30 @@
         <item>0.8</item>
         <item>0.6</item>
     </string-array>
+    <string-array name="msg_font_size_entries">
+        <item>10(最小)</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15(默认)</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20(最大)</item>
+    </string-array>
+    <string-array name="msg_font_size_values">
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </string-array>
 </resources>
