@@ -23,8 +23,55 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE name LIKE '%' || :keyWord || '%'")
     fun getSongsByNameKeywordsWithDataSource(keyWord: String): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY :orderBy")
-    fun getOrderedSongsByCategoryWithDataSource(category: String, orderBy: String): DataSource.Factory<Int, Song>
+    enum class ORDER {
+        NAME_ASC, NAME_DESC, IS_NEW_ASC, DATE_DESC, DEGREE_ASC, DEGREE_DESC, SCORE_ASC, SCORE_DESC, LENGTH_ASC, LENGTH_DESC
+    }
+
+    fun getOrderedSongsByCategoryWithDataSource(category: String, orderByIndex: Int): DataSource.Factory<Int, Song> {
+        return when (orderByIndex) {
+            ORDER.NAME_ASC.ordinal -> getNameAscOrderedSongsByCategoryWithDataSource(category)
+            ORDER.NAME_DESC.ordinal -> getNameDescOrderedSongsByCategoryWithDataSource(category)
+            ORDER.IS_NEW_ASC.ordinal -> getIsNewAscOrderedSongsByCategoryWithDataSource(category)
+            ORDER.DATE_DESC.ordinal -> getDateDescOrderedSongsByCategoryWithDataSource(category)
+            ORDER.DEGREE_ASC.ordinal -> getDegreeAscOrderedSongsByCategoryWithDataSource(category)
+            ORDER.DEGREE_DESC.ordinal -> getDegreeDescOrderedSongsByCategoryWithDataSource(category)
+            ORDER.SCORE_ASC.ordinal -> getScoreAscOrderedSongsByCategoryWithDataSource(category)
+            ORDER.SCORE_DESC.ordinal -> getScoreDescOrderedSongsByCategoryWithDataSource(category)
+            ORDER.LENGTH_ASC.ordinal -> getLengthAscOrderedSongsByCategoryWithDataSource(category)
+            ORDER.LENGTH_DESC.ordinal -> getLengthDescOrderedSongsByCategoryWithDataSource(category)
+            else -> getNameAscOrderedSongsByCategoryWithDataSource(category)
+        }
+    }
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY name ASC")
+    fun getNameAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY name DESC")
+    fun getNameDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY isnew ASC")
+    fun getIsNewAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY date DESC")
+    fun getDateDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY diff ASC")
+    fun getDegreeAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY diff DESC")
+    fun getDegreeDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY score ASC")
+    fun getScoreAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY score DESC")
+    fun getScoreDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY length ASC")
+    fun getLengthAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE item = :category ORDER BY length DESC")
+    fun getLengthDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE isfavo = 1")
     fun getFavoriteSongs(): List<Song>

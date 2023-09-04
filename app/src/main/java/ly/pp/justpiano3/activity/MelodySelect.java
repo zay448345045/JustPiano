@@ -47,7 +47,6 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
     public JPProgressBar jpprogressBar;
-    public String songItem = "";
     public String songsPath = "";
     public CheckBox isRecord;
     public CheckBox isFollowPlay;
@@ -57,6 +56,8 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
     private Button sortButton;
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
+    private int orderPosition;
+    private int categoryPosition;
     private PopupWindow sortPopupWindow;
     private PopupWindow menuPopupWindow;
     private TextView timeText;
@@ -86,13 +87,12 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
             case 1:
                 int i = data.getInt("selIndex");
                 sortButton.setText(Consts.sortNames[i]);
-                if (!songItem.isEmpty()) {
-                    SongDao songDao = JPApplication.getSongDatabase().songDao();
-                    DataSource.Factory<Integer, Song> songsDataSource = songDao.getOrderedSongsByCategoryWithDataSource(songItem, Consts.sortSyntax[i]);
-                    pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
-                    pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
-                }
+                SongDao songDao = JPApplication.getSongDatabase().songDao();
+                DataSource.Factory<Integer, Song> songsDataSource = songDao.getOrderedSongsByCategoryWithDataSource(Consts.items[categoryPosition], i);
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
+                pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 sortPopupWindow.dismiss();
+                orderPosition = i;
                 break;
             case 2:
                 menuPopupWindow.dismiss();
@@ -207,86 +207,83 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
-        try {
-            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            layoutInflater1 = LayoutInflater.from(this);
-            layoutInflater2 = LayoutInflater.from(this);
-            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
-            setContentView(linearLayout);
-            SkinImageLoadUtil.setBackGround(this, "ground", linearLayout);
-            sortButton = findViewById(R.id.list_sort_b);
-            sortButton.setOnClickListener(this);
-            totalSongCountTextView = findViewById(R.id.all_mel);
-            totalSongScoreTextView = findViewById(R.id.total_score_all);
-            List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
-            totalSongInfoMutableLiveData.setValue(allSongsCountAndScore.get(0));
-            totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
-                totalSongCountTextView.setText("曲谱:" + totalSongInfo.getTotalCount());
-                totalSongScoreTextView.setText("总分:" + totalSongInfo.getTotalScore());
-            });
-            ListView categoryListView = findViewById(R.id.f_list);
-            songsListView = findViewById(R.id.c_list);
-            songsListView.setLayoutManager(new LinearLayoutManager(this));
-            LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this);
-            songsListView.setAdapter(localSongsAdapter);
-            SongDao songDao = JPApplication.getSongDatabase().songDao();
-            DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
-            pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
-            pagedListLiveData.observe(this, localSongsAdapter::submitList);
-            songSearchEditText = findViewById(R.id.search_edit);
-            songSearchEditText.addTextChangedListener(this);
-            menuListButton = findViewById(R.id.menu_list_fast);
-            menuListButton.setOnClickListener(this);
-            isRecord = findViewById(R.id.check_record);
-            if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-                isRecord.setVisibility(View.GONE);
-            } else {
-                isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                        mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。" +
-                                "录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
-                    }
-                });
-            }
-            isFollowPlay = findViewById(R.id.check_play);
-            if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-                isFollowPlay.setVisibility(View.GONE);
-            } else {
-                isFollowPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked && sharedPreferences.getBoolean("play_dialog", true)) {
-                        mo2785a("抱歉，连续播放功能暂时取消", 1);
-                    }
-                });
-            }
-            isLeftHand = findViewById(R.id.check_hand);
-            if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-                isLeftHand.setVisibility(View.GONE);
-            } else {
-                isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
-                        mo2785a("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 2);
-                    }
-                });
-            }
-            categoryListView.setAdapter(new LocalSongsItemAdapter(this));
-            categoryListView.setCacheColorHint(0);
-            categoryListView.setOnItemClickListener((parent, view, position, id) -> {
-                view.setSelected(true);
-                if (position == 0) {
-                    songItem = "";
-                    DataSource.Factory<Integer, Song> favoriteSongsWithDataSource = songDao.getFavoriteSongsWithDataSource();
-                    pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongsWithDataSource);
-                } else {
-                    songItem = Consts.items[position];
-                    DataSource.Factory<Integer, Song> dataSource = songDao.getOrderedSongsByCategoryWithDataSource(Consts.items[position], Consts.sortSyntax[position]);
-                    pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater1 = LayoutInflater.from(this);
+        layoutInflater2 = LayoutInflater.from(this);
+        LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
+        setContentView(linearLayout);
+        SkinImageLoadUtil.setBackGround(this, "ground", linearLayout);
+        sortButton = findViewById(R.id.list_sort_b);
+        sortButton.setOnClickListener(this);
+        sortButton.setEnabled(false);
+        totalSongCountTextView = findViewById(R.id.all_mel);
+        totalSongScoreTextView = findViewById(R.id.total_score_all);
+        List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
+        totalSongInfoMutableLiveData.setValue(allSongsCountAndScore.get(0));
+        totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
+            totalSongCountTextView.setText("曲谱:" + totalSongInfo.getTotalCount());
+            totalSongScoreTextView.setText("总分:" + totalSongInfo.getTotalScore());
+        });
+        ListView categoryListView = findViewById(R.id.f_list);
+        songsListView = findViewById(R.id.c_list);
+        songsListView.setLayoutManager(new LinearLayoutManager(this));
+        LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this);
+        songsListView.setAdapter(localSongsAdapter);
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+        pagedListLiveData.observe(this, localSongsAdapter::submitList);
+        songSearchEditText = findViewById(R.id.search_edit);
+        songSearchEditText.addTextChangedListener(this);
+        menuListButton = findViewById(R.id.menu_list_fast);
+        menuListButton.setOnClickListener(this);
+        isRecord = findViewById(R.id.check_record);
+        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
+            isRecord.setVisibility(View.GONE);
+        } else {
+            isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
+                    mo2785a("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。" +
+                            "录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
                 }
-                pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
             });
-            timeText = findViewById(R.id.time_text);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        isFollowPlay = findViewById(R.id.check_play);
+        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
+            isFollowPlay.setVisibility(View.GONE);
+        } else {
+            isFollowPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked && sharedPreferences.getBoolean("play_dialog", true)) {
+                    mo2785a("抱歉，连续播放功能暂时取消", 1);
+                }
+            });
+        }
+        isLeftHand = findViewById(R.id.check_hand);
+        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
+            isLeftHand.setVisibility(View.GONE);
+        } else {
+            isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
+                    mo2785a("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 2);
+                }
+            });
+        }
+        categoryListView.setAdapter(new LocalSongsItemAdapter(this));
+        categoryListView.setCacheColorHint(0);
+        categoryListView.setOnItemClickListener((parent, view, position, id) -> {
+            view.setSelected(true);
+            sortButton.setEnabled(position != 0);
+            if (position == 0) {
+                DataSource.Factory<Integer, Song> favoriteSongsWithDataSource = songDao.getFavoriteSongsWithDataSource();
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongsWithDataSource);
+            } else {
+                DataSource.Factory<Integer, Song> dataSource = songDao.getOrderedSongsByCategoryWithDataSource(Consts.items[position], orderPosition);
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+            }
+            pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+            categoryPosition = position;
+        });
+        timeText = findViewById(R.id.time_text);
         sharedPreferences = getSharedPreferences("set", MODE_PRIVATE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -339,14 +336,14 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(s.toString());
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
-        pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(s.toString());
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+        pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
     }
 
     public MutableLiveData<SongDao.TotalSongInfo> getTotalSongInfoMutableLiveData() {
