@@ -57,7 +57,7 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
     private int orderPosition;
-    private int categoryPosition;
+    private int categoryPosition = -1;
     private PopupWindow sortPopupWindow;
     private PopupWindow menuPopupWindow;
     private TextView timeText;

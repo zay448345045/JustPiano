@@ -22,7 +22,7 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE name LIKE '%' || :keyWord || '%'")
     fun getSongsByNameKeywordsWithDataSource(keyWord: String): DataSource.Factory<Int, Song>
 
-    enum class Category(val code: Int, name: String) {
+    enum class Category(val code: Int, val desc: String) {
         CLASSICS(1, "经典乐章"), POP(2, "流行空间"), FILM(3, "影视剧场"), CHILD(4, "儿时回忆"),
         COMICS(5, "动漫原声"), GAME(6, "游戏主题"), RED(7, "红色歌谣"), ORIGINAL(8, "原创作品");
     }
@@ -34,7 +34,7 @@ interface SongDao {
     fun getLocalSongsWithDataSource(categoryIndex: Int, orderByIndex: Int): DataSource.Factory<Int, Song> {
         val categoryEnum = enumValues<Category>().find { it.code == categoryIndex }
         val isFavorite = if (categoryIndex == 0) arrayOf(1) else arrayOf(0, 1)
-        val category = categoryEnum?.let { arrayOf(it.name) } ?: enumValues<Category>().map { it.name }.toTypedArray()
+        val category = categoryEnum?.let { arrayOf(it.desc) } ?: enumValues<Category>().map { it.desc }.toTypedArray()
         return when (orderByIndex) {
             // room库不支持直接拼接order by字段，只能分别走调用
             Order.NAME_ASC.ordinal -> getNameAscSongsWithDataSource(isFavorite, category)

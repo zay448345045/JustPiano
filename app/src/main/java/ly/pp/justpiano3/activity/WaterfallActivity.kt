@@ -49,7 +49,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
         /**
          * 瀑布流音符最大高度
          */
-        const val NOTE_MAX_HEIGHT = 1200
+        const val NOTE_MAX_HEIGHT = 1000
 
         /**
          * 瀑布流音符左右手颜色（透明度无效，透明度目前根据音符力度确定）
