@@ -13,7 +13,6 @@ interface SongDao {
     @Query("SELECT * FROM song")
     fun getAllSongs(): List<Song>
 
-    // 获取支持分页加载的数据源的查询方法
     @Query("SELECT * FROM song")
     fun getAllSongsWithDataSource(): DataSource.Factory<Int, Song>
 
@@ -23,55 +22,64 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE name LIKE '%' || :keyWord || '%'")
     fun getSongsByNameKeywordsWithDataSource(keyWord: String): DataSource.Factory<Int, Song>
 
-    enum class ORDER {
+    enum class Category(val code: Int, name: String) {
+        CLASSICS(1, "经典乐章"), POP(2, "流行空间"), FILM(3, "影视剧场"), CHILD(4, "儿时回忆"),
+        COMICS(5, "动漫原声"), GAME(6, "游戏主题"), RED(7, "红色歌谣"), ORIGINAL(8, "原创作品");
+    }
+
+    enum class Order {
         NAME_ASC, NAME_DESC, IS_NEW_ASC, DATE_DESC, DEGREE_ASC, DEGREE_DESC, SCORE_ASC, SCORE_DESC, LENGTH_ASC, LENGTH_DESC
     }
 
-    fun getOrderedSongsByCategoryWithDataSource(category: String, orderByIndex: Int): DataSource.Factory<Int, Song> {
+    fun getLocalSongsWithDataSource(categoryIndex: Int, orderByIndex: Int): DataSource.Factory<Int, Song> {
+        val categoryEnum = enumValues<Category>().find { it.code == categoryIndex }
+        val isFavorite = if (categoryIndex == 0) arrayOf(1) else arrayOf(0, 1)
+        val category = categoryEnum?.let { arrayOf(it.name) } ?: enumValues<Category>().map { it.name }.toTypedArray()
         return when (orderByIndex) {
-            ORDER.NAME_ASC.ordinal -> getNameAscOrderedSongsByCategoryWithDataSource(category)
-            ORDER.NAME_DESC.ordinal -> getNameDescOrderedSongsByCategoryWithDataSource(category)
-            ORDER.IS_NEW_ASC.ordinal -> getIsNewAscOrderedSongsByCategoryWithDataSource(category)
-            ORDER.DATE_DESC.ordinal -> getDateDescOrderedSongsByCategoryWithDataSource(category)
-            ORDER.DEGREE_ASC.ordinal -> getDegreeAscOrderedSongsByCategoryWithDataSource(category)
-            ORDER.DEGREE_DESC.ordinal -> getDegreeDescOrderedSongsByCategoryWithDataSource(category)
-            ORDER.SCORE_ASC.ordinal -> getScoreAscOrderedSongsByCategoryWithDataSource(category)
-            ORDER.SCORE_DESC.ordinal -> getScoreDescOrderedSongsByCategoryWithDataSource(category)
-            ORDER.LENGTH_ASC.ordinal -> getLengthAscOrderedSongsByCategoryWithDataSource(category)
-            ORDER.LENGTH_DESC.ordinal -> getLengthDescOrderedSongsByCategoryWithDataSource(category)
-            else -> getNameAscOrderedSongsByCategoryWithDataSource(category)
+            // room库不支持直接拼接order by字段，只能分别走调用
+            Order.NAME_ASC.ordinal -> getNameAscSongsWithDataSource(isFavorite, category)
+            Order.NAME_DESC.ordinal -> getNameDescSongsWithDataSource(isFavorite, category)
+            Order.IS_NEW_ASC.ordinal -> getIsNewAscSongsWithDataSource(isFavorite, category)
+            Order.DATE_DESC.ordinal -> getDateDescSongsWithDataSource(isFavorite, category)
+            Order.DEGREE_ASC.ordinal -> getDegreeAscSongsWithDataSource(isFavorite, category)
+            Order.DEGREE_DESC.ordinal -> getDegreeDescSongsWithDataSource(isFavorite, category)
+            Order.SCORE_ASC.ordinal -> getScoreAscSongsWithDataSource(isFavorite, category)
+            Order.SCORE_DESC.ordinal -> getScoreDescSongsWithDataSource(isFavorite, category)
+            Order.LENGTH_ASC.ordinal -> getLengthAscSongsWithDataSource(isFavorite, category)
+            Order.LENGTH_DESC.ordinal -> getLengthDescSongsWithDataSource(isFavorite, category)
+            else -> getNameAscSongsWithDataSource(isFavorite, category)
         }
     }
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY name ASC")
-    fun getNameAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name ASC")
+    fun getNameAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY name DESC")
-    fun getNameDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name DESC")
+    fun getNameDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY isnew ASC")
-    fun getIsNewAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY isnew ASC")
+    fun getIsNewAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY date DESC")
-    fun getDateDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY date DESC")
+    fun getDateDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY diff ASC")
-    fun getDegreeAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff ASC")
+    fun getDegreeAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY diff DESC")
-    fun getDegreeDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff DESC")
+    fun getDegreeDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY score ASC")
-    fun getScoreAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score ASC")
+    fun getScoreAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY score DESC")
-    fun getScoreDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score DESC")
+    fun getScoreDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY length ASC")
-    fun getLengthAscOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length ASC")
+    fun getLengthAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item = :category ORDER BY length DESC")
-    fun getLengthDescOrderedSongsByCategoryWithDataSource(category: String): DataSource.Factory<Int, Song>
+    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length DESC")
+    fun getLengthDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE isfavo = 1")
     fun getFavoriteSongs(): List<Song>

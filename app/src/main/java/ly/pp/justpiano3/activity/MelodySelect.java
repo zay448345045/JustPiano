@@ -85,14 +85,14 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         Bundle data = message.getData();
         switch (message.what) {
             case 1:
-                int i = data.getInt("selIndex");
-                sortButton.setText(Consts.sortNames[i]);
+                int orderPosition = data.getInt("selIndex");
+                sortButton.setText(Consts.sortNames[orderPosition]);
                 SongDao songDao = JPApplication.getSongDatabase().songDao();
-                DataSource.Factory<Integer, Song> songsDataSource = songDao.getOrderedSongsByCategoryWithDataSource(Consts.items[categoryPosition], i);
+                DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
                 pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
                 pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 sortPopupWindow.dismiss();
-                orderPosition = i;
+                this.orderPosition = orderPosition;
                 break;
             case 2:
                 menuPopupWindow.dismiss();
@@ -215,10 +215,10 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         SkinImageLoadUtil.setBackGround(this, "ground", linearLayout);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
-        sortButton.setEnabled(false);
         totalSongCountTextView = findViewById(R.id.all_mel);
         totalSongScoreTextView = findViewById(R.id.total_score_all);
-        List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        List<SongDao.TotalSongInfo> allSongsCountAndScore = songDao.getAllSongsCountAndScore();
         totalSongInfoMutableLiveData.setValue(allSongsCountAndScore.get(0));
         totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
             totalSongCountTextView.setText("曲谱:" + totalSongInfo.getTotalCount());
@@ -229,8 +229,7 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         songsListView.setLayoutManager(new LinearLayoutManager(this));
         LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this);
         songsListView.setAdapter(localSongsAdapter);
-        SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
+        DataSource.Factory<Integer, Song> allSongs = songDao.getLocalSongsWithDataSource(-1, 0);
         pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, localSongsAdapter::submitList);
         songSearchEditText = findViewById(R.id.search_edit);
@@ -272,14 +271,8 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         categoryListView.setCacheColorHint(0);
         categoryListView.setOnItemClickListener((parent, view, position, id) -> {
             view.setSelected(true);
-            sortButton.setEnabled(position != 0);
-            if (position == 0) {
-                DataSource.Factory<Integer, Song> favoriteSongsWithDataSource = songDao.getFavoriteSongsWithDataSource();
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongsWithDataSource);
-            } else {
-                DataSource.Factory<Integer, Song> dataSource = songDao.getOrderedSongsByCategoryWithDataSource(Consts.items[position], orderPosition);
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
-            }
+            DataSource.Factory<Integer, Song> dataSource = songDao.getLocalSongsWithDataSource(position, orderPosition);
+            pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
             pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
             categoryPosition = position;
         });
