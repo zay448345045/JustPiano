@@ -49,7 +49,9 @@ public interface Consts {
             R.drawable.b111, R.drawable.b112, R.drawable.b113, R.drawable.b114, R.drawable.b115, R.drawable.b116, R.drawable.b117, R.drawable.b118, R.drawable.b119, R.drawable.b120,
             R.drawable.b121, R.drawable.b122, R.drawable.b123, R.drawable.b124, R.drawable.b125, R.drawable.b126, R.drawable.b127, R.drawable.b128, R.drawable.b129, R.drawable.b130,
             R.drawable.b131, R.drawable.b132, R.drawable.b133, R.drawable.b134, R.drawable.b135, R.drawable.b136, R.drawable.b137, R.drawable.b138, R.drawable.b139, R.drawable.b140,
-            R.drawable.b141, R.drawable.b142, R.drawable.b143};
+            R.drawable.b141, R.drawable.b142, R.drawable.b143, R.drawable.b144, R.drawable.b145, R.drawable.b146, R.drawable.b147, R.drawable.b148, R.drawable.b149, R.drawable.b150,
+            R.drawable.b151
+    };
     int[] colors = new int[]{R.color.translent, R.color.c1, R.color.c2, R.color.c3, R.color.c4, R.color.c5, R.color.c6, R.color.c7, R.color.c8, R.color.c9, R.color.c10, R.color.c11, R.color.c12};
     int[] couples = new int[]{R.drawable._none, R.drawable.couple_1, R.drawable.couple_2, R.drawable.couple_3};
     int[] sex = new int[]{R.drawable.m, R.drawable.f, R.drawable.none, R.drawable._none};
