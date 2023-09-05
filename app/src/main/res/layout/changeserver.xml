@@ -43,7 +43,7 @@
                 android:background="@drawable/selector_orange_button"
                 android:fontFamily="@font/title"
                 android:text="正式服\n(普通的服务器普通的用)"
-                android:textColor="@color/white1"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <Button
