@@ -48,7 +48,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     public TextView passwordTextView;
     public JPProgressBar jpprogressBar;
     public SharedPreferences sharedPreferences;
-    private JPDialog jpDialog = null;
     private LayoutInflater layoutInflater;
     private CheckBox rememAccount;
     private CheckBox rememPassword;
@@ -92,7 +91,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case 4:
-                jpDialog.setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
+                new JPDialog(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
                     Toast.makeText(this, "登陆成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     dialog.dismiss();
@@ -100,7 +99,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 }).showDialog();
                 return;
             case 5:
-                jpDialog.setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).showDialog();
+                new JPDialog(this).setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).showDialog();
                 return;
             default:
         }
@@ -222,7 +221,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             passwordTextView.setText(sharedPreferences.getString("current_password", ""));
         }
         jpprogressBar = new JPProgressBar(this);
-        jpDialog = new JPDialog(this);
         account = extras == null ? null : extras.getString("name");
         password = extras == null ? null : extras.getString("password");
         if (account != null && !account.isEmpty() && password != null && !password.isEmpty()) {

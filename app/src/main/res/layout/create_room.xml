@@ -56,7 +56,6 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="输入密码(可留空)"
-                android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"

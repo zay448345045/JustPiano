@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
@@ -21,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 public final class LoginTask extends AsyncTask<String, Void, String> {
     private final WeakReference<LoginActivity> activity;
-    private String f5139a = "";
+    private String loginResponse = "";
     private String message = "";
     private String title = "";
 
@@ -57,7 +56,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream(), StandardCharsets.UTF_8));
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        f5139a = line;
+                        loginResponse = line;
                     }
                     response.body().close();
                     return f5140b;
@@ -76,7 +75,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         int i = 3;
         String newVersion = null;
         try {
-            JSONObject jSONObject = new JSONObject(f5139a);
+            JSONObject jSONObject = new JSONObject(loginResponse);
             // 记录服务端返回的会话公钥
             String serverPublicKey = jSONObject.getString("publicKey");
             EncryptUtil.setServerPublicKey(serverPublicKey);
