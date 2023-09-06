@@ -90,10 +90,7 @@ public final class ChallengeHandler extends Handler {
                         if (i == 1) {
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         }
-                        try {
-                            jpdialog.showDialog();
-                        } catch (Exception ignored) {
-                        }
+                        jpdialog.showDialog();
                     });
                     return;
                 case 5:

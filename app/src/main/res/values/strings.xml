@@ -75,7 +75,7 @@
     <string name="main_mode_fb">问题反馈</string>
     <string name="main_mode_sound">音源下载</string>
     <string name="main_mode_wrn">此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除</string>
-    <string name="msg_this_is_what">旋转屏幕</string>
+    <string name="msg_this_is_what">这是什么</string>
     <string name="create_room_n">普通</string>
     <string name="create_room_g">组队</string>
     <string name="create_room_k">键盘</string>
@@ -333,8 +333,5 @@
         \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
     </string>
     <string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
-    <string name="ol_screen_change">
-        此操作会清空聊天窗口消息，重置播放模式并重新播放歌曲，是否继续操作?
-    </string>
 
 </resources>

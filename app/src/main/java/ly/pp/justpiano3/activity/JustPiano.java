@@ -63,8 +63,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
                             pmFileParser.loadWithSongPath(this, songPath);
                             String songName = pmFileParser.getSongName();
                             if (songName != null) {
-                                float rightDegree = pmFileParser.getNandu();
-                                float leftDegree = pmFileParser.getLeftNandu();
+                                float rightDegree = pmFileParser.getRightHandDegree();
+                                float leftDegree = pmFileParser.getLeftHandDegree();
                                 int songTime = pmFileParser.getSongTime();
                                 songCount++;
                                 // 由于分类可能被修改，更新时文件名必须去除分类（首字母）

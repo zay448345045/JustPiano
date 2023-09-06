@@ -274,9 +274,9 @@ public final class PlayView extends SurfaceView implements Callback {
         noteArray = pmFileParser.getNoteArray();
         trackArray = pmFileParser.getTrackArray();
         volumeArray = pmFileParser.getVolumeArray();
-        nandu = pmFileParser.getNandu();
+        nandu = pmFileParser.getRightHandDegree();
         songsName = pmFileParser.getSongName();
-        pm_2 = pmFileParser.getPm_2();
+        pm_2 = pmFileParser.getPmGlobalSpeed();
         if (pm_2 <= 0) {
             pm_2 += 256;
         }
@@ -331,9 +331,9 @@ public final class PlayView extends SurfaceView implements Callback {
         noteArray = pmFileParser.getNoteArray();
         trackArray = pmFileParser.getTrackArray();
         volumeArray = pmFileParser.getVolumeArray();
-        nandu = pmFileParser.getNandu();
+        nandu = pmFileParser.getRightHandDegree();
         songsName = pmFileParser.getSongName();
-        pm_2 = pmFileParser.getPm_2();
+        pm_2 = pmFileParser.getPmGlobalSpeed();
         arrayLength = tickArray.length;
         int i = 0;
         if (pm_2 <= 0) {

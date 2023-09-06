@@ -193,7 +193,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
             val pitch = pmFileParser.noteArray[i].toInt()
             val volume = pmFileParser.volumeArray[i].toInt()
             // 计算音符播放的累计时间
-            totalTime += pmFileParser.tickArray[i] * pmFileParser.pm_2
+            totalTime += pmFileParser.tickArray[i] * pmFileParser.pmGlobalSpeed
             val leftHand = pmFileParser.trackArray[i] > 0
             // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
             val (left, right) = convertWidthToWaterfallWidth(

@@ -2,27 +2,25 @@ package ly.pp.justpiano3.handler.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.enums.RoomModeEnum;
-import ly.pp.justpiano3.thread.PlaySongs;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.view.JPDialog;
 import protobuf.dto.OnlineQuitRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
@@ -52,25 +50,25 @@ public final class OLPlayRoomHandler extends Handler {
                             int diao = message.getData().getInt("diao");
                             olPlayRoom.setdiao(diao);
                             str1 = "songs/" + str1 + ".pm";
-                            PlaySongs.setSongFilePath(str1);
+                            olPlayRoom.currentPlaySongPath = str1;
                             String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];
                             if (string != null) {
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
-                                try {
-                                    if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
-                                        if (diao > 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
-                                        } else if (diao < 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "" + diao);
-                                        } else {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
-                                        }
+                                if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
+                                    if (diao > 0) {
+                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
+                                    } else if (diao < 0) {
+                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "" + diao);
+                                    } else {
+                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
                                     }
-                                    olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, olPlayRoom.getdiao());
-                                } catch (Exception e) {
-                                    return;
+                                }
+                                if (!olPlayRoom.isChangeScreen) {
+                                    SongPlay.INSTANCE.startPlay(olPlayRoom, str1, olPlayRoom.getdiao());
+                                } else {
+                                    olPlayRoom.isChangeScreen = false;
                                 }
                             }
                         }
@@ -89,10 +87,8 @@ public final class OLPlayRoomHandler extends Handler {
                         if (olPlayRoom.msgList.size() > olPlayRoom.maxListValue) {
                             olPlayRoom.msgList.remove(0);
                         }
-                        SharedPreferences ds = PreferenceManager.getDefaultSharedPreferences(olPlayRoom);
-                        boolean showTime = ds.getBoolean("chats_time_show", false);
                         String time = "";
-                        if (showTime) {
+                        if (GlobalSetting.INSTANCE.getShowChatTime()) {
                             time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
                         }
                         message.getData().putString("TIME", time);
@@ -107,7 +103,7 @@ public final class OLPlayRoomHandler extends Handler {
                         }
 
                         // 聊天记录存储
-                        if (ds.getBoolean("save_chats", false)) {
+                        if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
                             try {
                                 File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");
                                 if (!file.exists()) {
@@ -125,20 +121,23 @@ public final class OLPlayRoomHandler extends Handler {
                                 String str = message.getData().getString("M");
                                 if (str.startsWith("//")) {
                                     writer.close();
-                                    olPlayRoom.mo2862a(showTime);
+                                    olPlayRoom.bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
                                     return;
                                 } else if (message.getData().getInt("T") == 2) {
-                                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
+                                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                                     writer.close();
                                 } else if (message.getData().getInt("T") == 1) {
-                                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
+                                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
+                                    writer.close();
+                                } else if (message.getData().getInt("T") == 18) {
+                                    writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                                     writer.close();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        olPlayRoom.mo2862a(showTime);
+                        olPlayRoom.bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
                     });
                     return;
                 case 3:
@@ -147,7 +146,7 @@ public final class OLPlayRoomHandler extends Handler {
                         int diao = message.getData().getInt("diao");
                         if (!str1.isEmpty()) {
                             str1 = "songs/" + str1 + ".pm";
-                            PlaySongs.setSongFilePath(str1);
+                            olPlayRoom.currentPlaySongPath = str1;
                             String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
                             String string = a[0];
                             String str2 = a[1];
@@ -161,17 +160,14 @@ public final class OLPlayRoomHandler extends Handler {
                                     olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "0" + diao);
                                 }
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
-                                try {
-                                    olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, diao);
-                                } catch (Exception ignored) {
-                                }
+                                SongPlay.INSTANCE.startPlay(olPlayRoom, str1, diao);
                             }
                         }
                     });
                     return;
                 case 5:
                     post(() -> {
-                        olPlayRoom.jpapplication.stopPlaySong();
+                        SongPlay.INSTANCE.stopPlay();
                         String str1 = message.getData().getString("S");
                         if (!olPlayRoom.isOnStart) {
                             olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
@@ -216,7 +212,7 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 case 8:
                     post(() -> {
-                        olPlayRoom.jpapplication.stopPlaySong();
+                        SongPlay.INSTANCE.stopPlay();
                         JPDialog jpdialog = new JPDialog(olPlayRoom);
                         jpdialog.setCancelableFalse();
                         jpdialog.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
@@ -277,12 +273,8 @@ public final class OLPlayRoomHandler extends Handler {
                                     jpdialog2.setMessage(message.getData().getString("Message"));
                                 }
                                 jpdialog2.setFirstButton("确定", new DialogDismissClick());
-                                try {
-                                    jpdialog2.showDialog();
-                                    return;
-                                } catch (Exception e2) {
-                                    return;
-                                }
+                                jpdialog2.showDialog();
+                                return;
                             default:
                         }
                     });
@@ -398,7 +390,8 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 default:
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

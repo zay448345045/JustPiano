@@ -19,6 +19,7 @@ import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick;
+import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.view.ScrollText;
 
 import java.util.Objects;
@@ -88,11 +89,11 @@ public class LocalSongsAdapter extends PagedListAdapter<Song, LocalSongsAdapter.
                     return;
                 }
                 melodySelect.songsPath = song.getFilePath();
-                melodySelect.jpapplication.startPlaySongLocal(song.getFilePath(), melodySelect);
+                SongPlay.INSTANCE.startPlay(melodySelect, song.getFilePath(), 0);
                 Toast.makeText(melodySelect, "正在播放:《" + song.getName() + "》", Toast.LENGTH_SHORT).show();
             });
             waterFallImageView.setOnClickListener(v -> {
-                melodySelect.jpapplication.stopPlaySong();
+                SongPlay.INSTANCE.stopPlay();
                 Intent intent = new Intent();
                 intent.putExtra("songPath", song.getFilePath());
                 intent.setClass(melodySelect, WaterfallActivity.class);

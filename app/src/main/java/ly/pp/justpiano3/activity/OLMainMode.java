@@ -57,8 +57,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     intent1.setData(Uri.parse("https://" + Consts.INSIDE_WEBSITE_URL));
                     startActivity(intent1);
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.showDialog();
+                jpdialog.setSecondButton("取消", new DialogDismissClick()).showDialog();
                 return;
             case R.id.ol_songs_b:
                 intent.setClass(this, OLSongsPage.class);
@@ -144,8 +143,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                 jpapplication.f4074h = "";
                 jpapplication.f4073g = "";
                 dialog.dismiss();
-            });
-            jpdialog.showDialog();
+            }).showDialog();
         }
     }
 

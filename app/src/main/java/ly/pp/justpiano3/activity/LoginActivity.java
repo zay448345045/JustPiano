@@ -251,7 +251,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         jpdialog.showDialog();
     }
 
-
     private String getApkUrlByVersion(String version) {
         return "https://" + Consts.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
     }

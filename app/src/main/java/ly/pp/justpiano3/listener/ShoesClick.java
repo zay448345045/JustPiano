@@ -3,10 +3,10 @@ package ly.pp.justpiano3.listener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import ly.pp.justpiano3.adapter.DressAdapter;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.view.JPDialog;
 import protobuf.dto.OnlineChangeClothesDTO;
 
 public final class ShoesClick implements OnItemClickListener {
@@ -61,11 +61,7 @@ public final class ShoesClick implements OnItemClickListener {
                     olPlayDressRoom.shoesTry.add(i);
                 });
             }
-            try {
-                jpdialog.showDialog();
-            } catch (Exception e3) {
-                e3.printStackTrace();
-            }
+            jpdialog.showDialog();
         }
     }
 }

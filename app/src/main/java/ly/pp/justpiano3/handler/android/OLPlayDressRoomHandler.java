@@ -87,11 +87,7 @@ public final class OLPlayDressRoomHandler extends Handler {
                         jpdialog.setTitle("提示");
                         jpdialog.setMessage(data.getString("I"));
                         jpdialog.setFirstButton("确定", new DialogDismissClick());
-                        try {
-                            jpdialog.showDialog();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        jpdialog.showDialog();
                     });
                     break;
                 case 5:  // 接收服务器下发的服装价格

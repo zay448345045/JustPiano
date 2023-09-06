@@ -2,8 +2,6 @@ package ly.pp.justpiano3.task;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.BuildConfig;
@@ -12,7 +10,6 @@ import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.play.PmFileParser;
-import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.constant.Consts;
@@ -27,8 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
@@ -81,15 +76,15 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                     contentvalues.put("score", 0);
                     contentvalues.put("date", 0);
                     contentvalues.put("count", 0);
-                    contentvalues.put("diff", pmFileParser.getNandu());
+                    contentvalues.put("diff", pmFileParser.getRightHandDegree());
                     contentvalues.put("online", 1);
-                    contentvalues.put("Ldiff", pmFileParser.getLeftNandu());
+                    contentvalues.put("Ldiff", pmFileParser.getLeftHandDegree());
                     contentvalues.put("length", pmFileParser.getSongTime());
                     contentvalues.put("Lscore", 0);
                     insertSongList.add(new Song(null, pmFileParser.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
                             "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
-                            0, 0, 0, pmFileParser.getNandu(), 1,
-                            pmFileParser.getLeftNandu(), pmFileParser.getSongTime(), 0));
+                            0, 0, 0, pmFileParser.getRightHandDegree(), 1,
+                            pmFileParser.getLeftHandDegree(), pmFileParser.getSongTime(), 0));
                     count++;
                 }
                 JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);

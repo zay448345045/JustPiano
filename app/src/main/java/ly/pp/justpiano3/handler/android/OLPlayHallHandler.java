@@ -2,25 +2,21 @@ package ly.pp.justpiano3.handler.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.thread.PlaySongs;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.view.JPDialog;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
@@ -51,10 +47,8 @@ public final class OLPlayHallHandler extends Handler {
                     if (!file.exists()) {
                         file.mkdirs();
                     }
-                    SharedPreferences ds = PreferenceManager.getDefaultSharedPreferences(olPlayHall);
-                    boolean showTime = ds.getBoolean("chats_time_show", false);
                     String time = "";
-                    if (showTime) {
+                    if (GlobalSetting.INSTANCE.getShowChatTime()) {
                         time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
                     }
                     message.getData().putString("TIME", time);
@@ -70,7 +64,7 @@ public final class OLPlayHallHandler extends Handler {
                     }
 
                     // 聊天记录存储
-                    if (ds.getBoolean("save_chats", false)) {
+                    if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
                         try {
                             String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
                             file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats/" + date + ".txt");
@@ -83,24 +77,25 @@ public final class OLPlayHallHandler extends Handler {
                             FileWriter writer = new FileWriter(file, true);
                             if (message.getData().getString("M").startsWith("//")) {
                                 writer.close();
-                                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, showTime);
+                                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, GlobalSetting.INSTANCE.getShowChatTime());
                                 return;
                             } else if (message.getData().getInt("T") == 2) {
-                                writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M"))));
-                            } else {
-                                writer.write(time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n");
+                                writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M"))+ '\n'));
+                            } else if (message.getData().getInt("T") == 18) {
+                                writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
+                            } else if (message.getData().getInt("T") == 1) {
+                                writer.write(time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n');
                             }
                             writer.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, showTime);
+                    olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, GlobalSetting.INSTANCE.getShowChatTime());
                 });
                 return;
             case 2:
                 Bundle data = message.getData();
-                PlaySongs.setSongFilePath(StringUtil.EMPTY_STRING);
                 data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
                 Intent intent;
@@ -219,12 +214,8 @@ public final class OLPlayHallHandler extends Handler {
                                     break;
                             }
                             jpdialog2.setFirstButton("确定", new DialogDismissClick());
-                            try {
-                                jpdialog2.showDialog();
-                                return;
-                            } catch (Exception e2) {
-                                return;
-                            }
+                            jpdialog2.showDialog();
+                            return;
                         default:
                     }
                 });
@@ -331,10 +322,7 @@ public final class OLPlayHallHandler extends Handler {
                     if (i == 1) {
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
                     }
-                    try {
-                        jpdialog.showDialog();
-                    } catch (Exception ignored) {
-                    }
+                    jpdialog.showDialog();
                 });
                 return;
             case 12:

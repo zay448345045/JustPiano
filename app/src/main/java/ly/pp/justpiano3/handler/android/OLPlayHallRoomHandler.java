@@ -239,10 +239,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             jpdialog.setFirstButton(str, new DialogDismissClick());
                         }
                         DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
-                        try {
-                            jpdialog.showDialog();
-                        } catch (Exception ignored) {
-                        }
+                        jpdialog.showDialog();
                     });
                     return;
                 case 6:
@@ -290,10 +287,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         } else {
                             jpdialog.setFirstButton("确定", new DialogDismissClick());
                         }
-                        try {
-                            jpdialog.showDialog();
-                        } catch (Exception ignored) {
-                        }
+                        jpdialog.showDialog();
                     });
                     return;
                 case 10:

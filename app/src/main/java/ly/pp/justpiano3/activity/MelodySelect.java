@@ -34,6 +34,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
+import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -96,7 +97,7 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
                 break;
             case 2:
                 menuPopupWindow.dismiss();
-                jpapplication.stopPlaySong();
+                SongPlay.INSTANCE.stopPlay();
                 Intent intent = new Intent();
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
@@ -170,7 +171,7 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
 
     @Override
     public void onBackPressed() {
-        jpapplication.stopPlaySong();
+        SongPlay.INSTANCE.stopPlay();
         Intent intent;
         if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
             intent = new Intent();
@@ -284,7 +285,7 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
 
     @Override
     protected void onDestroy() {
-        jpapplication.stopPlaySong();
+        SongPlay.INSTANCE.stopPlay();
         handler = null;
         super.onDestroy();
     }

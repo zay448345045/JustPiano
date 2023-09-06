@@ -12,16 +12,16 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.view.JPDialog;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.io.File;
@@ -92,10 +92,13 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     olPlayKeyboardRoom.mo2862a(showTime);
                                     return;
                                 } else if (message.getData().getInt("T") == 2) {
-                                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
+                                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                                     writer.close();
                                 } else if (message.getData().getInt("T") == 1) {
-                                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
+                                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
+                                    writer.close();
+                                } else if (message.getData().getInt("T") == 18) {
+                                    writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                                     writer.close();
                                 }
                             } catch (Exception e) {
@@ -227,12 +230,8 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     jpdialog2.setMessage(message.getData().getString("Message"));
                                 }
                                 jpdialog2.setFirstButton("确定", new DialogDismissClick());
-                                try {
-                                    jpdialog2.showDialog();
-                                    return;
-                                } catch (Exception e2) {
-                                    return;
-                                }
+                                jpdialog2.showDialog();
+                                return;
                             default:
                         }
                     });

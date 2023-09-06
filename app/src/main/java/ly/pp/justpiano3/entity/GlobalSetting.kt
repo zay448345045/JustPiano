@@ -118,6 +118,16 @@ object GlobalSetting{
     var compatiblePlaySound: Boolean = true
 
     /**
+     * 是否存储聊天记录
+     */
+    var saveChatRecord: Boolean = false
+
+    /**
+     * 聊天是否展示时间
+     */
+    var showChatTime: Boolean = false
+
+    /**
      * 曲谱播放时是否显示通知栏
      */
     var showNotification: Boolean = false
@@ -154,6 +164,8 @@ object GlobalSetting{
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "1.0")!!.toFloat()
         compatiblePlaySound = sharedPreferences.getBoolean("compatible_sound",true)
+        saveChatRecord = sharedPreferences.getBoolean("save_chats",false)
+        showChatTime = sharedPreferences.getBoolean("chats_time_show",false)
         showNotification = sharedPreferences.getBoolean("show_notification",false)
     }
 
@@ -184,6 +196,8 @@ object GlobalSetting{
         edit.putString("waterfall_song_speed", waterfallSongSpeed.toString())
         edit.putString("waterfall_down_speed", waterfallDownSpeed.toString())
         edit.putBoolean("compatible_sound", compatiblePlaySound)
+        edit.putBoolean("save_chats", saveChatRecord)
+        edit.putBoolean("chats_time_show", showChatTime)
         edit.putBoolean("show_notification", showNotification)
         edit.apply()
     }

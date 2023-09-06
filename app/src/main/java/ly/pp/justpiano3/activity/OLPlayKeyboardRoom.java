@@ -474,10 +474,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         jpdialog.setMessage("退出房间并返回大厅?");
         jpdialog.setFirstButton("确定", new ReturnHallClick(this));
         jpdialog.setSecondButton("取消", new DialogDismissClick());
-        try {
-            jpdialog.showDialog();
-        } catch (Exception ignored) {
-        }
+        jpdialog.showDialog();
     }
 
     @Override
@@ -751,7 +748,6 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                 keyboardSettingPopup.dismiss();
             }
         }
-
     }
 
     private void changeChatColor(int lv, int colorNum, int color) {

@@ -86,12 +86,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 jpdialog.setMessage("申请加入家族需要族长或副族长的批准!");
                 break;
         }
-        jpdialog.setFirstButton("确定", new InOutFamilyClick(this)).setSecondButton("取消", new DialogDismissClick());
-        try {
-            jpdialog.showDialog();
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
+        jpdialog.setFirstButton("确定", new InOutFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
@@ -227,12 +222,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 JPDialog jpDialog = new JPDialog(this);
                 jpDialog.setTitle("提示");
                 jpDialog.setMessage("确定要将Ta移出家族吗?");
-                jpDialog.setFirstButton("确定", new KickFamilyClick(this)).setSecondButton("取消", new DialogDismissClick());
-                try {
-                    jpDialog.showDialog();
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                }
+                jpDialog.setFirstButton("确定", new KickFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).showDialog();
                 break;
             case R.id.ol_showinfo_b:
                 if (infoWindow != null && infoWindow.isShowing()) {

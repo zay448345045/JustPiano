@@ -218,11 +218,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         jpdialog.setTitle(str);
         jpdialog.setMessage(str2);
         jpdialog.setFirstButton("确定", new DialogDismissClick());
-        try {
-            jpdialog.showDialog();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        jpdialog.showDialog();
     }
 
     public void mo2842a(Bundle bundle) {
@@ -354,10 +350,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 }
             });
             jpdialog.setSecondButton("拒绝", new DialogDismissClick());
-            try {
-                jpdialog.showDialog();
-            } catch (Exception ignored) {
-            }
+            jpdialog.showDialog();
         }
     }
 
@@ -494,11 +487,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialog.dismiss();
             }).setSecondButton("取消", new DialogDismissClick());
-            try {
-                jpdialog.showDialog();
-            } catch (Exception e3) {
-                e3.printStackTrace();
-            }
+            jpdialog.showDialog();
         }
     }
 

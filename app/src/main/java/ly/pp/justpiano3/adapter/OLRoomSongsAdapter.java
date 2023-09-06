@@ -18,7 +18,6 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.thread.PlaySongs;
 import protobuf.dto.OnlinePlaySongDTO;
 
 import java.util.Objects;
@@ -73,7 +72,7 @@ public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapte
                 if (position != RecyclerView.NO_POSITION) {
                     Song song = getItem(position);
                     if (song != null) {
-                        PlaySongs.setSongFilePath(song.getFilePath());
+                        olPlayRoom.currentPlaySongPath = song.getFilePath();
                         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                         builder.setTune(olPlayRoom.getdiao());
                         builder.setSongPath(song.getFilePath().substring(6, song.getFilePath().length() - 3));
@@ -91,7 +90,7 @@ public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapte
             songNameTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
             songNameTextView.setHorizontallyScrolling(true);
             songNameTextView.setOnClickListener(v -> {
-                PlaySongs.setSongFilePath(song.getFilePath());
+                olPlayRoom.currentPlaySongPath = song.getFilePath();
                 OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
                 builder.setTune(olPlayRoom.getdiao());
                 builder.setSongPath(song.getFilePath().substring(6, song.getFilePath().length() - 3));

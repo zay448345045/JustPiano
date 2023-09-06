@@ -6,6 +6,7 @@ import android.view.View.OnClickListener;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.thread.SongPlay;
 
 public final class LocalSongsStartPlayClick implements OnClickListener {
     private final MelodySelect melodySelect;
@@ -29,7 +30,7 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
     @Override
     public void onClick(View view) {
         int i = 0;
-        melodySelect.jpapplication.stopPlaySong();
+        SongPlay.INSTANCE.stopPlay();
         Intent intent = new Intent();
         intent.putExtra("head", 0);
         intent.putExtra("path", path);

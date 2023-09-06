@@ -18,15 +18,12 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import ly.pp.justpiano3.activity.JustPiano;
-import ly.pp.justpiano3.activity.MelodySelect;
-import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.thread.PlaySongs;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
@@ -71,11 +68,6 @@ public final class JPApplication extends Application {
     private String password = "";
     private List<SimpleUser> chatBlackList;
     private String server = Consts.ONLINE_SERVER_URL;
-
-    /**
-     * 目前正在播放的歌曲
-     */
-    private PlaySongs playSongs;
     private int widthPixels;
     private int heightPixels;
     private int animPosition;
@@ -94,29 +86,6 @@ public final class JPApplication extends Application {
             setConnectionService(null);
         }
     };
-
-    public void startPlaySongLocal(String songPath, MelodySelect melodySelect) {
-        stopPlaySong();
-        this.playSongs = new PlaySongs(this, songPath, melodySelect, null, 0);
-    }
-
-    public void startPlaySongOnline(String songPath, OLPlayRoom olPlayRoom, int tune) {
-        stopPlaySong();
-        this.playSongs = new PlaySongs(this, songPath, null, olPlayRoom, tune);
-    }
-
-    public boolean stopPlaySong() {
-        if (this.playSongs != null) {
-            this.playSongs.setPlayingSongs(false);
-            this.playSongs = null;
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isPlayingSong() {
-        return this.playSongs != null && this.playSongs.isPlayingSongs();
-    }
 
     public void m3520a(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
         switch (i) {
@@ -515,10 +484,6 @@ public final class JPApplication extends Application {
 
     public void setServer(String server) {
         this.server = server;
-    }
-
-    public PlaySongs getPlaySongs() {
-        return playSongs;
     }
 
     public int getWidthPixels() {

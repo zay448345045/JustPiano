@@ -39,13 +39,14 @@ import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.thread.PlaySongs;
+import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.DataSelectView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.ScrollText;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import protobuf.dto.*;
 
@@ -71,7 +72,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public TabHost roomTabs;
     public boolean isOnStart = true;
     // 防止横竖屏切换时，玩家前后台状态错误
-    private boolean isChangeScreen;
+    public boolean isChangeScreen;
     public String userTo = "";
     public ListView playerListView;
     public ListView friendsListView;
@@ -108,6 +109,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private TimeUpdateThread timeUpdateThread;
     private ImageView changeColorButton;
     private RecyclerView songsListView;
+    public String currentPlaySongPath;
     private LiveData<PagedList<Song>> pagedListLiveData;
 
     public OLPlayRoom() {
@@ -120,7 +122,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
         List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(startDegree, endDegree);
         String songFilePath = songs.isEmpty() ? "" : songs.get(0).getFilePath();
-        PlaySongs.setSongFilePath(songFilePath);
+        currentPlaySongPath = songFilePath;
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
         builder.setTune(diao);
         builder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));
@@ -399,11 +401,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         }
     }
 
-    public void mo2862a(boolean showChatTime) {
-        int posi = msgListView.getFirstVisiblePosition();
+    public void bindMsgListView(boolean showChatTime) {
+        int position = msgListView.getFirstVisiblePosition();
         msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater, showChatTime));
-        if (posi > 0) {
-            msgListView.setSelection(posi + 2);
+        if (position > 0) {
+            msgListView.setSelection(position + 2);
         } else {
             msgListView.setSelection(msgListView.getBottom());
         }
@@ -503,10 +505,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         jpdialog.setMessage("退出房间并返回大厅?");
         jpdialog.setFirstButton("确定", new ReturnHallClick(this));
         jpdialog.setSecondButton("取消", new DialogDismissClick());
-        try {
-            jpdialog.showDialog();
-        } catch (Exception ignored) {
-        }
+        jpdialog.showDialog();
     }
 
     @Override
@@ -559,12 +558,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 groupButton.setText("右" + groupButton.getText().toString().substring(1));
                 return;
             case R.id.changeScreenOrientation:
-                new JPDialog(this)
-                        .setTitle(getString(R.string.msg_this_is_what))
-                        .setMessage(getString(R.string.ol_screen_change))
-                        .setFirstButton("确定", (dialogInterface, num) -> runOnUiThread(this::changeScreenOrientation))
-                        .setSecondButton("取消", new DialogDismissClick())
-                        .showDialog();
+                changeScreenOrientation();
                 return;
             case R.id.rand_0:
                 playSongByDegreeRandom(2, 4);
@@ -582,8 +576,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 playSongByDegreeRandom(8, 10);
                 return;
             case R.id.add_favor:
-                if (jpapplication.isPlayingSong()) {
-                    if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(PlaySongs.getSongFilePath(), 1) > 0) {
+                if (!StringUtil.isNullOrEmpty(currentPlaySongPath)) {
+                    if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(currentPlaySongPath, 1) > 0) {
                         Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -666,9 +660,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 expressWindow.showAtLocation(express, Gravity.CENTER, 0, 0);
                 return;
             case R.id.ol_soundstop:
-                if (jpapplication.stopPlaySong()) {
-                    Toast.makeText(this, "当前曲目已停止播放", Toast.LENGTH_SHORT).show();
-                }
+                SongPlay.INSTANCE.stopPlay();
                 return;
             case R.id.ol_changecolor:
                 if (changeColor != null) {
@@ -708,46 +700,46 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 changeChatColor(50, 9, 0xFF000000);
                 return;
             case R.id.onetimeplay:
-                if (jpapplication.isPlayingSong() && PlaySongs.getPlaySongsMode() != PlaySongsModeEnum.ONCE && playerKind.equals("H")) {
-                    PlaySongs.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+                if (playerKind.equals("H")) {
+                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
                     Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
-                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
+                } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.circulateplay:
-                if (jpapplication.isPlayingSong() && PlaySongs.getPlaySongsMode() != PlaySongsModeEnum.RECYCLE && playerKind.equals("H")) {
-                    PlaySongs.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
+                if (playerKind.equals("H")) {
+                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
                     Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
-                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
+                } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.randomplay:
-                if (jpapplication.isPlayingSong() && PlaySongs.getPlaySongsMode() != PlaySongsModeEnum.RANDOM && playerKind.equals("H")) {
-                    PlaySongs.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
+                if (playerKind.equals("H")) {
+                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
                     Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
-                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
+                } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.favorplay:
-                if (jpapplication.isPlayingSong() && PlaySongs.getPlaySongsMode() != PlaySongsModeEnum.FAVOR_RANDOM && playerKind.equals("H")) {
-                    PlaySongs.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
+                if (playerKind.equals("H")) {
+                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
                     Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
-                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
+                } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
                 return;
             case R.id.favorlist:
-                if (jpapplication.isPlayingSong() && PlaySongs.getPlaySongsMode() != PlaySongsModeEnum.FAVOR && playerKind.equals("H")) {
-                    PlaySongs.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
+                if (playerKind.equals("H")) {
+                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
                     Toast.makeText(this, PlaySongsModeEnum.FAVOR.getDesc(), Toast.LENGTH_SHORT).show();
-                } else if (jpapplication.isPlayingSong() && !playerKind.equals("H")) {
+                } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
                 playSongsMode.dismiss();
@@ -815,20 +807,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.shengdiao:
-                if (playerKind.equals("H") && jpapplication.isPlayingSong()) {
+                if (playerKind.equals("H") && !StringUtil.isNullOrEmpty(currentPlaySongPath)) {
                     if (diao < 6) {
                         diao++;
                     } else {
                         diao = 6;
                     }
-                    OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
-                    builder1.setTune(diao);
-                    String fullSongPath = PlaySongs.getSongFilePath();
-                    builder1.setSongPath(fullSongPath.substring(6, fullSongPath.length() - 3));
-                    sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
-                    Message obtainMessage = olPlayRoomHandler.obtainMessage();
-                    obtainMessage.what = 12;
-                    olPlayRoomHandler.handleMessage(obtainMessage);
+                    updateNewSongPlay(currentPlaySongPath);
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
                 }
@@ -837,20 +822,13 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.jiangdiao:
-                if (playerKind.equals("H") && jpapplication.isPlayingSong()) {
+                if (playerKind.equals("H") && !StringUtil.isNullOrEmpty(currentPlaySongPath)) {
                     if (diao > -6) {
                         diao--;
                     } else {
                         diao = -6;
                     }
-                    OnlinePlaySongDTO.Builder builder1 = OnlinePlaySongDTO.newBuilder();
-                    builder1.setTune(diao);
-                    String fullSongPath = PlaySongs.getSongFilePath();
-                    builder1.setSongPath(fullSongPath.substring(6, fullSongPath.length() - 3));
-                    sendMsg(OnlineProtocolType.PLAY_SONG, builder1.build());
-                    Message obtainMessage = olPlayRoomHandler.obtainMessage();
-                    obtainMessage.what = 12;
-                    olPlayRoomHandler.handleMessage(obtainMessage);
+                    updateNewSongPlay(currentPlaySongPath);
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
                 }
@@ -884,10 +862,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.olplayroom);
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
@@ -909,23 +888,27 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         playerGrid = findViewById(R.id.ol_player_grid);
         playerGrid.setCacheColorHint(0);
         playerList.clear();
-        Button f4483H = findViewById(R.id.ol_send_b);
-        f4483H.setOnClickListener(this);
+        msgListView = findViewById(R.id.ol_msg_list);
+        msgListView.setCacheColorHint(0);
+        if (savedInstanceState != null) {
+            msgList = savedInstanceState.getParcelableArrayList("msgList");
+            isChangeScreen = savedInstanceState.getBoolean("isChangeScreen");
+            bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
+        }
+        Button olSendButton = findViewById(R.id.ol_send_b);
+        olSendButton.setOnClickListener(this);
         timeTextView = findViewById(R.id.time_text);
-        Button f4484I = findViewById(R.id.ol_search_b);
-        f4484I.setOnClickListener(this);
+        Button olSearchButton = findViewById(R.id.ol_search_b);
+        olSearchButton.setOnClickListener(this);
         playButton = findViewById(R.id.ol_ready_b);
         playButton.setOnClickListener(this);
         playSongsModeButton = findViewById(R.id.ol_more_b);
         playSongsModeButton.setOnClickListener(this);
         groupButton = findViewById(R.id.ol_group_b);
         groupButton.setOnClickListener(this);
-        Button f4519ar = findViewById(R.id.pre_button);
-        Button f4520as = findViewById(R.id.next_button);
-        Button f4521at = findViewById(R.id.online_button);
-        f4519ar.setOnClickListener(this);
-        f4520as.setOnClickListener(this);
-        f4521at.setOnClickListener(this);
+        findViewById(R.id.pre_button).setOnClickListener(this);
+        findViewById(R.id.next_button).setOnClickListener(this);
+        findViewById(R.id.online_button).setOnClickListener(this);
         if (playerKind.equals("H")) {
             playButton.setText("开始");
         } else {
@@ -943,8 +926,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         express.setOnClickListener(this);
         soundStopButton.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
-        msgListView = findViewById(R.id.ol_msg_list);
-        msgListView.setCacheColorHint(0);
         songsListView = findViewById(R.id.ol_song_list);
         songsListView.setLayoutManager(new LinearLayoutManager(this));
         OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this);
@@ -955,9 +936,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
         handler = new Handler(this);
         songNameText = findViewById(R.id.ol_songlist_b);
-        if (!StringUtil.isNullOrEmpty(PlaySongs.getSongFilePath())) {
-            songNameText.setText(querySongNameAndDiffByPath(PlaySongs.getSongFilePath())[0] + "[难度:" + querySongNameAndDiffByPath(PlaySongs.getSongFilePath())[1] + "]");
-        }
         songNameText.setSingleLine(true);
         songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         songNameText.setMarqueeRepeatLimit(-1);
@@ -966,7 +944,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         songNameText.setFocusableInTouchMode(true);
         songNameText.setOnClickListener(this);
         sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
-        msgList.clear();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
@@ -981,7 +958,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         PopupWindow popupWindow2 = new PopupWindow(this);
         PopupWindow popupWindow3;
         View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_songpop_list, null);
-        View inflate3;
         popupWindow2.setContentView(inflate2);
         inflate2.findViewById(R.id.rand_all).setOnClickListener(this);
         inflate2.findViewById(R.id.add_favor).setOnClickListener(this);
@@ -1041,7 +1017,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 break;
         }
         popupWindow3 = new PopupWindow(this);
-        inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_changecolor, null);
+        View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_changecolor, null);
         popupWindow3.setContentView(inflate3);
         popupWindow3.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
         popupWindow3.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -1124,9 +1100,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             } else {
                 roomTabs.getTabWidget().getChildTabViewAt(intValue).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             }
-            TextView tv = roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title);
-            tv.setTextColor(0xffffffff);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+            TextView textView = roomTabs.getTabWidget().getChildAt(intValue).findViewById(android.R.id.title);
+            textView.setTextColor(0xffffffff);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
             i = intValue + 1;
@@ -1135,7 +1111,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
 
     @Override
     protected void onDestroy() {
-        jpapplication.stopPlaySong();
+        if (!isChangeScreen) {
+            SongPlay.INSTANCE.stopPlay();
+        }
         timeUpdateRunning = false;
         try {
             timeUpdateThread.interrupt();
@@ -1185,5 +1163,25 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             builder.setStatus("B");
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("msgList", new ArrayList<>(msgList));
+        outState.putBoolean("isChangeScreen", isChangeScreen);
+    }
+
+    /**
+     * 根据曲谱名称进行发消息播放
+     */
+    private void updateNewSongPlay(String songFilePath) {
+        OnlinePlaySongDTO.Builder playSongBuilder = OnlinePlaySongDTO.newBuilder();
+        playSongBuilder.setTune(diao);
+        playSongBuilder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));
+        sendMsg(OnlineProtocolType.PLAY_SONG, playSongBuilder.build());
+        Message obtainMessage = olPlayRoomHandler.obtainMessage();
+        obtainMessage.what = 12;
+        olPlayRoomHandler.handleMessage(obtainMessage);
     }
 }

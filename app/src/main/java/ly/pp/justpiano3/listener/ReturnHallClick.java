@@ -9,7 +9,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.enums.PlaySongsModeEnum;
+import ly.pp.justpiano3.thread.SongPlay;
 import protobuf.dto.OnlineQuitRoomDTO;
 
 public final class ReturnHallClick implements OnClickListener {
@@ -25,7 +25,7 @@ public final class ReturnHallClick implements OnClickListener {
             OLPlayRoom olPlayRoom = (OLPlayRoom) olPlayRoomInterface;
             olPlayRoom.isOnStart = false;
             olPlayRoom.sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
-            olPlayRoom.jpapplication.stopPlaySong();
+            SongPlay.INSTANCE.stopPlay();
             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", olPlayRoom.hallName);

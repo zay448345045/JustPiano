@@ -39,10 +39,7 @@ public class BaseActivity extends ComponentActivity {
         jpdialog.setMessage("非常抱歉,可能由于网络质量不稳定，服务器未能响应，点击确定回到到联网主界面重新登录");
         jpdialog.setCancelableFalse();
         jpdialog.setFirstButton("确定", new ReturnMainModeClick(this));
-        try {
-            jpdialog.showDialog();
-        } catch (Exception ignored) {
-        }
+        jpdialog.showDialog();
     }
 
     // 根据手机的分辨率从 dp 的单位 转成为 px(像素)

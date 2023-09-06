@@ -108,6 +108,7 @@
                     android:focusableInTouchMode="true"
                     android:hint="搜索"
                     android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
+                    android:singleLine="true"
                     android:maxLines="1"
                     android:textColor="#ffffffff"
                     android:textColorHint="#90ffffff"

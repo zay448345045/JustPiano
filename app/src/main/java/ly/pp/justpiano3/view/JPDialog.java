@@ -161,7 +161,8 @@ public final class JPDialog {
                 hideNavigationBar(window);
                 clearFocusNotAle(window);
             }
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
