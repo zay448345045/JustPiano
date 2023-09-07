@@ -67,8 +67,6 @@ public final class OLPlayRoomHandler extends Handler {
                                 }
                                 if (!olPlayRoom.isChangeScreen) {
                                     SongPlay.INSTANCE.startPlay(olPlayRoom, str1, olPlayRoom.getdiao());
-                                } else {
-                                    olPlayRoom.isChangeScreen = false;
                                 }
                             }
                         }
@@ -79,6 +77,7 @@ public final class OLPlayRoomHandler extends Handler {
                         if (!string.isEmpty()) {
                             olPlayRoom.mo2860a(i, string, i2, b);
                         }
+                        olPlayRoom.isChangeScreen = false;
                     });
                     return;
                 case 2:

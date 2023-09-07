@@ -24,8 +24,12 @@ public class ThreadPoolUtils {
         }
     };
 
-    //线程池
+    // 线程池
     private static final ThreadPoolExecutor threadPool;
+
+    public static ThreadPoolExecutor getThreadPool() {
+        return threadPool;
+    }
 
     static {
         threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, workQueue, threadFactory);

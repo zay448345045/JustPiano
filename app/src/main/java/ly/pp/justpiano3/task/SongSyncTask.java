@@ -8,8 +8,9 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.PmSongData;
+import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.play.PmFileParser;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.constant.Consts;
@@ -63,10 +64,14 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 for (File file : files) {
                     String item = file.getName().substring(0, 1);
                     FileInputStream fileInputStream = new FileInputStream(file);
-                    PmFileParser pmFileParser = new PmFileParser(null);
-                    pmFileParser.loadWithInputStream(fileInputStream);
+                    byte[] pmData = new byte[fileInputStream.available()];
+                    fileInputStream.read(pmData);
+                    PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(pmData);
+                    if (pmSongData == null) {
+                        continue;
+                    }
                     ContentValues contentvalues = new ContentValues();
-                    contentvalues.put("name", pmFileParser.getSongName());
+                    contentvalues.put("name", pmSongData.getSongName());
                     contentvalues.put("item", Consts.items[item.charAt(0) - 'a' + 1]);
                     contentvalues.put("path", "songs/" + item + '/' + file.getName());
                     contentvalues.put("isnew", 1);
@@ -76,15 +81,15 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                     contentvalues.put("score", 0);
                     contentvalues.put("date", 0);
                     contentvalues.put("count", 0);
-                    contentvalues.put("diff", pmFileParser.getRightHandDegree());
+                    contentvalues.put("diff", pmSongData.getRightHandDegree());
                     contentvalues.put("online", 1);
-                    contentvalues.put("Ldiff", pmFileParser.getLeftHandDegree());
-                    contentvalues.put("length", pmFileParser.getSongTime());
+                    contentvalues.put("Ldiff", pmSongData.getLeftHandDegree());
+                    contentvalues.put("length", pmSongData.getSongTime());
                     contentvalues.put("Lscore", 0);
-                    insertSongList.add(new Song(null, pmFileParser.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
+                    insertSongList.add(new Song(null, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
                             "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
-                            0, 0, 0, pmFileParser.getRightHandDegree(), 1,
-                            pmFileParser.getLeftHandDegree(), pmFileParser.getSongTime(), 0));
+                            0, 0, 0, pmSongData.getRightHandDegree(), 1,
+                            pmSongData.getLeftHandDegree(), pmSongData.getSongTime(), 0));
                     count++;
                 }
                 JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class KeyboardModeView extends View {
     private static final int DEFAULT_WHITE_KEY_NUM = 8;
@@ -69,7 +68,7 @@ public class KeyboardModeView extends View {
      */
     private boolean isAnimRunning;
 
-    private final Map<Integer, Integer> mFingerMap = new HashMap<>();
+    private final Map<Integer, Byte> mFingerMap = new HashMap<>();
 
     private MusicKeyListener musicKeyListener;
 
@@ -101,12 +100,12 @@ public class KeyboardModeView extends View {
         /**
          * This will be called when a key is pressed.
          */
-        void onKeyDown(int pitch, int volume);
+        void onKeyDown(byte pitch, byte volume);
 
         /**
          * This will be called when a key stop to press.
          */
-        void onKeyUp(int pitch);
+        void onKeyUp(byte pitch);
     }
 
     public KeyboardModeView(Context context) {
@@ -268,7 +267,7 @@ public class KeyboardModeView extends View {
      * 注意黑键和白键的绝对坐标位置的宽度有差异
      */
     @Nullable
-    public RectF convertPitchToReact(int pitch) {
+    public RectF convertPitchToReact(byte pitch) {
         int pitchInScreen = getPitchInScreen(pitch);
         // 入参的音高不在键盘view所绘制的琴键范围内，返回空
         if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
@@ -331,32 +330,32 @@ public class KeyboardModeView extends View {
     }
 
     private void onFingerDown(int id, float x, float y) {
-        int pitch = -1;
-        int volume = -1;
+        byte pitch = -1;
+        byte volume = -1;
         if (y < blackKeyHeight) {
             pitch = xyToBlackPitch(x, y);
-            volume = (int) (y / blackKeyHeight * MidiUtil.MAX_VOLUME);
+            volume = (byte) (y / blackKeyHeight * MidiUtil.MAX_VOLUME);
         }
         if (pitch < 0) {
             pitch = xToWhitePitch(x);
-            volume = (int) (y / viewHeight * MidiUtil.MAX_VOLUME);
+            volume = (byte) (y / viewHeight * MidiUtil.MAX_VOLUME);
         }
         fireKeyDownAndHandleListener(pitch, volume, noteOnColor);
         mFingerMap.put(id, pitch);
     }
 
     private void onFingerMove(int id, float x, float y) {
-        Integer previousPitch = mFingerMap.get(id);
+        Byte previousPitch = mFingerMap.get(id);
         if (previousPitch != null) {
-            int pitch = -1;
-            int volume = -1;
+            byte pitch = -1;
+            byte volume = -1;
             if (y < blackKeyHeight) {
                 pitch = xyToBlackPitch(x, y);
-                volume = (int) (y / blackKeyHeight * MidiUtil.MAX_VOLUME);
+                volume = (byte) (y / blackKeyHeight * MidiUtil.MAX_VOLUME);
             }
             if (pitch < 0) {
                 pitch = xToWhitePitch(x);
-                volume = (int) (y / viewHeight * MidiUtil.MAX_VOLUME);
+                volume = (byte) (y / viewHeight * MidiUtil.MAX_VOLUME);
             }
             // Did we change to a new key.
             if (pitch >= 0 && pitch != previousPitch) {
@@ -368,12 +367,12 @@ public class KeyboardModeView extends View {
     }
 
     private void onFingerUp(int id, float x, float y) {
-        Integer previousPitch = mFingerMap.get(id);
+        Byte previousPitch = mFingerMap.get(id);
         if (previousPitch != null) {
             fireKeyUpAndHandleListener(previousPitch);
             mFingerMap.remove(id);
         } else {
-            int pitch = -1;
+            byte pitch = -1;
             if (y < blackKeyHeight) {
                 pitch = xyToBlackPitch(x, y);
             }
@@ -386,22 +385,22 @@ public class KeyboardModeView extends View {
 
     private void onAllFingersUp() {
         // Turn off all notes.
-        for (Integer pitch : mFingerMap.values()) {
+        for (Byte pitch : mFingerMap.values()) {
             fireKeyUpAndHandleListener(pitch);
         }
         mFingerMap.clear();
     }
 
-    private void fireKeyDownAndHandleListener(int pitch, int volume, Integer color) {
+    private void fireKeyDownAndHandleListener(byte pitch, byte volume, Integer color) {
         if (!isAnimRunning) {
             if (musicKeyListener != null) {
-                musicKeyListener.onKeyDown(pitch, Math.min(volume, MidiUtil.MAX_VOLUME));
+                musicKeyListener.onKeyDown(pitch, (byte) Math.min(volume, MidiUtil.MAX_VOLUME));
             }
-            fireKeyDown(pitch, Math.min(volume, MidiUtil.MAX_VOLUME), color);
+            fireKeyDown(pitch, (byte) Math.min(volume, MidiUtil.MAX_VOLUME), color);
         }
     }
 
-    public void fireKeyDown(int pitch, int volume, Integer color) {
+    public void fireKeyDown(byte pitch, byte volume, Integer color) {
         if (!isAnimRunning) {
             int pitchInScreen = getPitchInScreen(pitch);
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
@@ -432,7 +431,7 @@ public class KeyboardModeView extends View {
         }
     }
 
-    private void fireKeyUpAndHandleListener(int pitch) {
+    private void fireKeyUpAndHandleListener(byte pitch) {
         if (!isAnimRunning) {
             if (musicKeyListener != null) {
                 musicKeyListener.onKeyUp(pitch);
@@ -441,7 +440,7 @@ public class KeyboardModeView extends View {
         }
     }
 
-    public void fireKeyUp(int pitch) {
+    public void fireKeyUp(byte pitch) {
         if (!isAnimRunning) {
             int pitchInScreen = getPitchInScreen(pitch);
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.length) {
@@ -461,19 +460,19 @@ public class KeyboardModeView extends View {
     }
 
     // Convert x to MIDI pitch. Ignores black keys.
-    private int xToWhitePitch(float x) {
+    private byte xToWhitePitch(float x) {
         int whiteKeyOffsetInScreen = (int) ((x / whiteKeyWidth + whiteKeyOffset));
         int octaveWhiteKeyOffset = whiteKeyOffsetInScreen % MidiUtil.WHITE_NOTES_PER_OCTAVE;
-        return WHITE_KEY_OFFSET_0_MIDI_PITCH + MidiUtil.WHITE_KEY_OFFSETS[octaveWhiteKeyOffset]
-                + whiteKeyOffsetInScreen / MidiUtil.WHITE_NOTES_PER_OCTAVE * MidiUtil.NOTES_PER_OCTAVE;
+        return (byte) (WHITE_KEY_OFFSET_0_MIDI_PITCH + MidiUtil.WHITE_KEY_OFFSETS[octaveWhiteKeyOffset]
+                        + whiteKeyOffsetInScreen / MidiUtil.WHITE_NOTES_PER_OCTAVE * MidiUtil.NOTES_PER_OCTAVE);
     }
 
     // Convert x to MIDI pitch. Ignores white keys.
-    private int xyToBlackPitch(float x, float y) {
+    private byte xyToBlackPitch(float x, float y) {
         for (int i = 0; i < blackKeyRectArray.length; i++) {
             if (blackKeyRectArray[i].contains(x, y)) {
-                return WHITE_KEY_OFFSET_0_MIDI_PITCH + MidiUtil.BLACK_KEY_OFFSETS[i % MidiUtil.BLACK_NOTES_PER_OCTAVE]
-                        + (i / MidiUtil.BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / MidiUtil.WHITE_NOTES_PER_OCTAVE) * MidiUtil.NOTES_PER_OCTAVE;
+                return (byte) (WHITE_KEY_OFFSET_0_MIDI_PITCH + MidiUtil.BLACK_KEY_OFFSETS[i % MidiUtil.BLACK_NOTES_PER_OCTAVE]
+                                        + (i / MidiUtil.BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / MidiUtil.WHITE_NOTES_PER_OCTAVE) * MidiUtil.NOTES_PER_OCTAVE);
             }
         }
         return -1;

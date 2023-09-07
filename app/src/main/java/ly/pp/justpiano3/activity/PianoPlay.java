@@ -52,7 +52,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public TextView time_mid;
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
-    public Map userMap = null;
+    public Map userMap;
     public boolean isOpenRecord;
     public PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     public View f4591J;
@@ -80,7 +80,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public MidiReceiver midiFramer;
     public View finishView;
     private View f4592K;
-    private LayoutParams layoutparams2;
+    private LayoutParams layoutParams2;
     private ConnectionService connectionService;
     private ProgressBar progressbar;
     private Bundle hallBundle;
@@ -114,7 +114,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             return;
         }
         isShowingSongsInfo = true;
-        addContentView(f4591J, layoutparams2);
+        addContentView(f4591J, layoutParams2);
         songName = findViewById(R.id.m_name);
         progressbar = findViewById(R.id.m_progress);
         f4596O = findViewById(R.id.m_nandu);
@@ -160,7 +160,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 l_nandu.setVisibility(View.GONE);
                 addContentView(f4592K, layoutparams);
                 f4592K.setVisibility(View.VISIBLE);
-                addContentView(finishView, layoutparams2);
+                addContentView(finishView, layoutParams2);
                 ImageButton finishOkButton = finishView.findViewById(R.id.ol_ok);
                 finishOkButton.setOnClickListener(v -> {
                     Intent intent = new Intent(PianoPlay.this, OLPlayRoom.class);
@@ -208,8 +208,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
 
     public void m3794f() {
         f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
-        layoutparams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutparams2.gravity = android.view.Gravity.CENTER;
+        layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams2.gravity = android.view.Gravity.CENTER;
         layoutparams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutparams.topMargin = 0;
         layoutparams.leftMargin = 0;
@@ -288,7 +288,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
         setContentView(playView);
         keyboardview = new KeyBoardView(this, playView);
-        addContentView(keyboardview, layoutparams2);
+        addContentView(keyboardview, layoutParams2);
         m3785a(playKind, false);
         isPlayingStart = true;
     }

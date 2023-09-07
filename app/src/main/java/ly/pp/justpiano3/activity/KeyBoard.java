@@ -70,24 +70,24 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboardMode1View = findViewById(R.id.keyboard1_view);
         keyboardMode1View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int pitch, int volume) {
-                SoundEngineUtil.playSound(pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune(), volume);
+            public void onKeyDown(byte pitch, byte volume) {
+                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
             }
 
             @Override
-            public void onKeyUp(int pitch) {
+            public void onKeyUp(byte pitch) {
 
             }
         });
         keyboardMode2View = findViewById(R.id.keyboard2_view);
         keyboardMode2View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int pitch, int volume) {
-                SoundEngineUtil.playSound(pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune(), volume);
+            public void onKeyDown(byte pitch, byte volume) {
+                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
             }
 
             @Override
-            public void onKeyUp(int pitch) {
+            public void onKeyUp(byte pitch) {
 
             }
         });
@@ -334,7 +334,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int pitch = data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune();
+        byte pitch = (byte) (data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune());
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardMode1View.fireKeyDown(pitch, data[2], null);
             SoundEngineUtil.playSound(pitch, data[2]);

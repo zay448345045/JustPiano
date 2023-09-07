@@ -879,13 +879,13 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
-            public void onKeyDown(int pitch, int volume) {
+            public void onKeyDown(byte pitch, byte volume) {
                 if (hasAnotherUser()) {
                     broadNote(pitch, volume);
                 }
                 if (roomPositionSub1 >= 0) {
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                        SoundEngineUtil.playSound(pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune(), volume);
+                        SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
                     }
                     if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
                         olKeyboardStates[roomPositionSub1].setPlaying(true);
@@ -897,7 +897,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
             }
 
             @Override
-            public void onKeyUp(int pitch) {
+            public void onKeyUp(byte pitch) {
                 if (hasAnotherUser()) {
                     broadNote(pitch, 0);
                 }
@@ -1082,7 +1082,7 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int pitch = data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune();
+        byte pitch = (byte) (data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune());
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardView.fireKeyDown(pitch, data[2], kuang == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuang));
             if (hasAnotherUser()) {

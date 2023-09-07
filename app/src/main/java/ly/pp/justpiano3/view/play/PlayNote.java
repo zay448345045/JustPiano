@@ -10,9 +10,9 @@ import ly.pp.justpiano3.view.PlayView;
 public final class PlayNote {
     public boolean hideNote;
     public boolean unPassed;
-    public int noteValue;
+    public byte noteValue;
     public int trackValue;
-    public int volumeValue;
+    public byte volumeValue;
     public Bitmap noteImage = null;
     public int noteXPosition;
     public int posiAdd15AddAnim;
@@ -25,7 +25,7 @@ public final class PlayNote {
     private boolean newNote = true;
     private final int posiAdd15;
 
-    public PlayNote(JPApplication jPApplication, PlayView playView, int i, int i2, int f, int f2, int i3, boolean z, int i4) {
+    public PlayNote(JPApplication jPApplication, PlayView playView, byte i, int i2, byte f, int f2, int i3, boolean z, int i4) {
         handValue = i4;
         jpapplication = jPApplication;
         this.playView = playView;
@@ -109,7 +109,7 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (newNote && hideNote) {
-                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
@@ -128,12 +128,12 @@ public final class PlayNote {
         if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
             if (GlobalSetting.INSTANCE.getAutoPlay()) {
                 if (newNote && ((trackValue != handValue || hideNote) && GlobalSetting.INSTANCE.isOpenChord())) {
-                    playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                    playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
             } else if (newNote && trackValue != handValue && GlobalSetting.INSTANCE.isOpenChord()) {
-                playNote = SoundEngineUtil.playSound(noteValue, (int) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             }

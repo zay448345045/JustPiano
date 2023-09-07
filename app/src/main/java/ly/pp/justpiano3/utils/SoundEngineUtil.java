@@ -34,7 +34,7 @@ public class SoundEngineUtil {
 
     public static native void setRecordFilePath(String recordFilePath);
 
-    public static int playSound(int pitch, int volume) {
+    public static int playSound(byte pitch, byte volume) {
         if (pitch >= 24 && pitch <= 108 && volume > 3) {
             trigger(108 - pitch, volume);
             return pitch;

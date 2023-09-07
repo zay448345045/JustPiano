@@ -11,10 +11,11 @@ import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
-import ly.pp.justpiano3.view.play.PmFileParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +47,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
             }
         }
         // 创建pm解析器对象，用于解析pm
-        PmFileParser pmFileParser = new PmFileParser(null);
         // 遍历assets下的曲谱pm文件
         // 构造插入、更新和删除的曲谱list，扫描曲谱结束时进行事务批量操作
         List<Song> insertSongList = new ArrayList<>();
@@ -60,37 +60,38 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     if (pmFileList != null) {
                         for (String pmFileName : pmFileList) {
                             String songPath = "songs/" + pmCategoryList[i] + "/" + pmFileName;
-                            pmFileParser.loadWithSongPath(this, songPath);
-                            String songName = pmFileParser.getSongName();
-                            if (songName != null) {
-                                float rightDegree = pmFileParser.getRightHandDegree();
-                                float leftDegree = pmFileParser.getLeftHandDegree();
-                                int songTime = pmFileParser.getSongTime();
-                                songCount++;
-                                // 由于分类可能被修改，更新时文件名必须去除分类（首字母）
-                                Song currentSong = pmPathMap.get(pmFileName.substring(1));
-                                if (currentSong != null) {
-                                    info = "更新曲目:" + songName + "..." + songCount;
-                                    currentSong.setName(songName);
-                                    currentSong.setCategory(Consts.items[i + 1]);
-                                    currentSong.setFilePath(songPath);
-                                    currentSong.setRightHandDegree(rightDegree);
-                                    currentSong.setLeftHandDegree(leftDegree);
-                                    currentSong.setLength(songTime);
-                                    currentSong.setNew(0);
-                                    currentSong.setOnline(1);
-                                    currentSong.setFileVersion(originalPmVersion + 1);
-                                    updateSongList.add(currentSong);
-                                } else {
-                                    info = "加入曲目" + songName + "..." + songCount;
-                                    insertSongList.add(new Song(null, songName, Consts.items[i + 1], songPath, 1,
-                                            0, 0, "", 0, 0,
-                                            originalPmVersion + 1, rightDegree, 1, leftDegree, songTime, 0));
-                                }
-                                Message obtainMessage = handler.obtainMessage();
-                                obtainMessage.what = 0;
-                                handler.sendMessage(obtainMessage);
+                            PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(this, songPath);
+                            if (pmSongData == null) {
+                                continue;
                             }
+                            String songName = pmSongData.getSongName();
+                            float rightDegree = pmSongData.getRightHandDegree();
+                            float leftDegree = pmSongData.getLeftHandDegree();
+                            int songTime = pmSongData.getSongTime();
+                            songCount++;
+                            // 由于分类可能被修改，更新时文件名必须去除分类（首字母）
+                            Song currentSong = pmPathMap.get(pmFileName.substring(1));
+                            if (currentSong != null) {
+                                info = "更新曲目:" + songName + "..." + songCount;
+                                currentSong.setName(songName);
+                                currentSong.setCategory(Consts.items[i + 1]);
+                                currentSong.setFilePath(songPath);
+                                currentSong.setRightHandDegree(rightDegree);
+                                currentSong.setLeftHandDegree(leftDegree);
+                                currentSong.setLength(songTime);
+                                currentSong.setNew(0);
+                                currentSong.setOnline(1);
+                                currentSong.setFileVersion(originalPmVersion + 1);
+                                updateSongList.add(currentSong);
+                            } else {
+                                info = "加入曲目" + songName + "..." + songCount;
+                                insertSongList.add(new Song(null, songName, Consts.items[i + 1], songPath, 1,
+                                        0, 0, "", 0, 0,
+                                        originalPmVersion + 1, rightDegree, 1, leftDegree, songTime, 0));
+                            }
+                            Message obtainMessage = handler.obtainMessage();
+                            obtainMessage.what = 0;
+                            handler.sendMessage(obtainMessage);
                         }
                     }
                 }

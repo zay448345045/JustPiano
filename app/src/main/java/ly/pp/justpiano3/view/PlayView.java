@@ -16,18 +16,15 @@ import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.listener.touch.TouchNotes;
 import ly.pp.justpiano3.thread.DownNotesThread;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.play.PlayNote;
-import ly.pp.justpiano3.view.play.PmFileParser;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
@@ -79,7 +76,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private int gameType;
     private Bitmap progressBarImage;
     private Bitmap progressBarBaseImage;
-    private int volume0;
+    private byte volume0;
     private int score;
     private DownNotesThread downNotesThread;
     private LoadBackgroundsThread loadbackgrounds;
@@ -131,7 +128,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private byte[] tickArray;
     private byte[] trackArray;
     private boolean f4713V = true;
-    private PmFileParser pmFileParser;
     private PlayNote ln;
     private int noteCounts;
     private Rect f4801bz;
@@ -268,22 +264,25 @@ public final class PlayView extends SurfaceView implements Callback {
         jpapplication.setWhiteKeyHeightAdd90(jpapplication.getWhiteKeyHeight() + 90f);
     }
 
-    private void loadPm(Context context, String str, int diao) {
-        pmFileParser = new PmFileParser(context, str);
-        tickArray = pmFileParser.getTickArray();
-        noteArray = pmFileParser.getNoteArray();
-        trackArray = pmFileParser.getTrackArray();
-        volumeArray = pmFileParser.getVolumeArray();
-        nandu = pmFileParser.getRightHandDegree();
-        songsName = pmFileParser.getSongName();
-        pm_2 = pmFileParser.getPmGlobalSpeed();
+    private void loadPm(Context context, String songFilePath, int tune) {
+        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(context, songFilePath);
+        if (pmSongData == null) {
+            return;
+        }
+        tickArray = pmSongData.getTickArray();
+        noteArray = pmSongData.getPitchArray();
+        trackArray = pmSongData.getTrackArray();
+        volumeArray = pmSongData.getVolumeArray();
+        nandu = pmSongData.getRightHandDegree();
+        songsName = pmSongData.getSongName();
+        pm_2 = pmSongData.getGlobalSpeed();
         if (pm_2 <= 0) {
             pm_2 += 256;
         }
         int length = tickArray.length;
-        if (diao != 0) {
+        if (tune != 0) {
             for (int i = 0; i < tickArray.length; i++) {
-                noteArray[i] += diao;
+                noteArray[i] += tune;
             }
         }
         arrayLength = length;
@@ -311,7 +310,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
                         i3 = noteArray[i4] / 12;
                     }
-                    if (noteArray[i4] == 110 + diao && volumeArray[i4] == 3) {
+                    if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
                         trackArray[i4] = 2;
                     }
                     ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
@@ -326,14 +325,17 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(JPApplication jPApplication, byte[] bArr) {
-        pmFileParser = new PmFileParser(bArr);
-        tickArray = pmFileParser.getTickArray();
-        noteArray = pmFileParser.getNoteArray();
-        trackArray = pmFileParser.getTrackArray();
-        volumeArray = pmFileParser.getVolumeArray();
-        nandu = pmFileParser.getRightHandDegree();
-        songsName = pmFileParser.getSongName();
-        pm_2 = pmFileParser.getPmGlobalSpeed();
+        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(bArr);
+        if (pmSongData == null) {
+            return;
+        }
+        tickArray = pmSongData.getTickArray();
+        noteArray = pmSongData.getPitchArray();
+        trackArray = pmSongData.getTrackArray();
+        volumeArray = pmSongData.getVolumeArray();
+        nandu = pmSongData.getRightHandDegree();
+        songsName = pmSongData.getSongName();
+        pm_2 = pmSongData.getGlobalSpeed();
         arrayLength = tickArray.length;
         int i = 0;
         if (pm_2 <= 0) {
@@ -553,14 +555,14 @@ public final class PlayView extends SurfaceView implements Callback {
         int noteOctaveOffset = noteMod12 * 12;
         judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
-            SoundEngineUtil.playSound(i + noteOctaveOffset, volume0);
+            SoundEngineUtil.playSound((byte) (i + noteOctaveOffset), volume0);
         }
     }
 
     public int midiJudgeAndPlaySound(int i) {
         int noteOctaveOffset = noteMod12 * 12;
         int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
-        SoundEngineUtil.playSound(trueNote + noteOctaveOffset, volume0);
+        SoundEngineUtil.playSound((byte) (trueNote + noteOctaveOffset), volume0);
         return trueNote;
     }
 

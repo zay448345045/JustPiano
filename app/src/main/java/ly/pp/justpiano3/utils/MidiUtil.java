@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
+import androidx.annotation.RequiresApi;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class MidiUtil {
     /**
      * 最大音量值
      */
-    public static final int MAX_VOLUME = 127;
+    public static final byte MAX_VOLUME = 127;
 
     private static List<MidiConnectionListener> midiConnectionListeners;
 
@@ -59,21 +60,7 @@ public class MidiUtil {
                 mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
                     @Override
                     public void onDeviceAdded(MidiDeviceInfo info) {
-                        mMidiManager.openDevice(info, device -> {
-                            if (device != null) {
-                                MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
-                                for (MidiDeviceInfo.PortInfo port : ports) {
-                                    if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
-                                        midiOutputPort = device.openOutputPort(port.getPortNumber());
-                                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                                            midiConnectionListener.onMidiConnect();
-                                        }
-                                        break;
-                                    }
-                                }
-                                Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
-                            }
-                        }, new Handler(Looper.getMainLooper()));
+                        openDevice(context, info);
                     }
 
                     @Override
@@ -96,24 +83,29 @@ public class MidiUtil {
                     }
                 }, new Handler(Looper.getMainLooper()));
                 for (MidiDeviceInfo info : mMidiManager.getDevices()) {
-                    mMidiManager.openDevice(info, device -> {
-                        if (device != null) {
-                            MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
-                            for (MidiDeviceInfo.PortInfo port : ports) {
-                                if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
-                                    midiOutputPort = device.openOutputPort(port.getPortNumber());
-                                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                                        midiConnectionListener.onMidiConnect();
-                                    }
-                                    break;
-                                }
-                            }
-                            Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
-                        }
-                    }, new Handler(Looper.getMainLooper()));
+                    openDevice(context, info);
                 }
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private static void openDevice(Context context, MidiDeviceInfo info) {
+        mMidiManager.openDevice(info, device -> {
+            if (device != null) {
+                MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
+                for (MidiDeviceInfo.PortInfo port : ports) {
+                    if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                        midiOutputPort = device.openOutputPort(port.getPortNumber());
+                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                            midiConnectionListener.onMidiConnect();
+                        }
+                        break;
+                    }
+                }
+                Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
+            }
+        }, new Handler(Looper.getMainLooper()));
     }
 
     public static void addMidiConnectionListener(MidiConnectionListener midiConnectionListener) {
@@ -131,7 +123,7 @@ public class MidiUtil {
     /**
      * 根据一个midi音高，判断它是否为黑键
      */
-    public static boolean isBlackKey(int pitch) {
+    public static boolean isBlackKey(byte pitch) {
         int pitchInOctave = pitch % NOTES_PER_OCTAVE;
         for (int blackKeyOffsetInOctave : BLACK_KEY_OFFSETS) {
             if (pitchInOctave == blackKeyOffsetInOctave) {

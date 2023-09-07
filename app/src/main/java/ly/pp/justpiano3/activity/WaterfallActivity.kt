@@ -12,14 +12,15 @@ import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
+import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.MidiUtil
+import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import ly.pp.justpiano3.view.KeyboardModeView
 import ly.pp.justpiano3.view.ScrollText
 import ly.pp.justpiano3.view.WaterfallView
 import ly.pp.justpiano3.view.WaterfallView.NoteFallListener
-import ly.pp.justpiano3.view.play.PmFileParser
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -62,9 +63,9 @@ class WaterfallActivity : Activity(), OnTouchListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.waterfall)
         // 从extras中的数据确定曲目，解析pm文件
-        val pmFileParser = parsePmFileFromIntentExtras()
+        val pmSongData = parsePmFileFromIntentExtras()
         val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
-        songNameView.text = pmFileParser.songName
+        songNameView.text = pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
         waterfallView.setNoteFallListener(object : NoteFallListener {
@@ -99,7 +100,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 // 设置音块下落速率，播放速度
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
-                val waterfallNotes = convertToWaterfallNote(pmFileParser, keyboardModeView)
+                val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardModeView)
                 waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
                 // 开启增减白键数量、移动键盘按钮的监听
                 findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
@@ -108,11 +109,11 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
                 // 设置键盘的点击监听，键盘按下时播放对应琴键的声音
                 keyboardModeView.setMusicKeyListener(object : KeyboardModeView.MusicKeyListener {
-                    override fun onKeyDown(pitch: Int, volume: Int) {
+                    override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
                     }
 
-                    override fun onKeyUp(pitch: Int) {
+                    override fun onKeyUp(pitch: Byte) {
                         // nothing
                     }
                 })
@@ -139,14 +140,13 @@ class WaterfallActivity : Activity(), OnTouchListener {
         }
     }
 
-    private fun parsePmFileFromIntentExtras(): PmFileParser {
+    private fun parsePmFileFromIntentExtras(): PmSongData? {
         val songPath = intent.extras?.getString("songPath")
-        val pmFileParser = if (songPath.isNullOrEmpty()) {
-            PmFileParser(intent.extras?.getByteArray("songBytes"))
+        return if (songPath.isNullOrEmpty()) {
+            intent.extras?.getByteArray("songBytes")?.let { PmSongUtil.parsePmDataByBytes(it) }
         } else {
-            PmFileParser(this, songPath)
+            PmSongUtil.parsePmDataByFilePath(this, songPath)
         }
-        return pmFileParser
     }
 
     override fun onStop() {
@@ -181,33 +181,35 @@ class WaterfallActivity : Activity(), OnTouchListener {
      * pm文件解析结果转换为瀑布流音符
      */
     private fun convertToWaterfallNote(
-        pmFileParser: PmFileParser,
+        pmSongData: PmSongData?,
         keyboardModeView: KeyboardModeView?
     ): Array<WaterfallNote> {
         // 分别处理左右手的音符list，以便寻找每条音轨的上一个音符，插入上边界坐标
         val leftHandWaterfallNoteList: MutableList<WaterfallNote> = ArrayList()
         val rightHandWaterfallNoteList: MutableList<WaterfallNote> = ArrayList()
-        var totalTime = 0f
         // 取pm文件中的解析音符内容，进行瀑布流音符的生成
-        for (i in pmFileParser.noteArray.indices) {
-            val pitch = pmFileParser.noteArray[i].toInt()
-            val volume = pmFileParser.volumeArray[i].toInt()
-            // 计算音符播放的累计时间
-            totalTime += pmFileParser.tickArray[i] * pmFileParser.pmGlobalSpeed
-            val leftHand = pmFileParser.trackArray[i] > 0
-            // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
-            val (left, right) = convertWidthToWaterfallWidth(
-                MidiUtil.isBlackKey(pitch),
-                keyboardModeView!!.convertPitchToReact(pitch)
-            )
-            // 初始化瀑布流音符对象，上边界暂时置0
-            val waterfallNote = WaterfallNote(left, right, 0f, totalTime, leftHand, pitch, volume)
-            // 根据左右手拿到对应的list
-            val waterfallNoteListByHand: MutableList<WaterfallNote> =
-                if (leftHand) leftHandWaterfallNoteList else rightHandWaterfallNoteList
-            // 填充上一个音符的上边界 = 当前音符的下边界，如果之前的好几个音符的下边界相同（按和弦），那么统一都设置成当前音符的下边界
-            fillNoteEndTime(waterfallNoteListByHand, waterfallNote.bottom)
-            waterfallNoteListByHand.add(waterfallNote)
+        pmSongData?.let {
+            var totalTime = 0f
+            for (i in it.pitchArray.indices) {
+                val pitch = it.pitchArray[i]
+                val volume = it.volumeArray[i]
+                // 计算音符播放的累计时间
+                totalTime += it.tickArray[i] * it.globalSpeed
+                val leftHand = it.trackArray[i] > 0
+                // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
+                val (left, right) = convertWidthToWaterfallWidth(
+                    MidiUtil.isBlackKey(pitch),
+                    keyboardModeView!!.convertPitchToReact(pitch)
+                )
+                // 初始化瀑布流音符对象，上边界暂时置0
+                val waterfallNote = WaterfallNote(left, right, 0f, totalTime, leftHand, pitch, volume)
+                // 根据左右手拿到对应的list
+                val waterfallNoteListByHand: MutableList<WaterfallNote> =
+                    if (leftHand) leftHandWaterfallNoteList else rightHandWaterfallNoteList
+                // 填充上一个音符的上边界 = 当前音符的下边界，如果之前的好几个音符的下边界相同（按和弦），那么统一都设置成当前音符的下边界
+                fillNoteEndTime(waterfallNoteListByHand, waterfallNote.bottom)
+                waterfallNoteListByHand.add(waterfallNote)
+            }
         }
         // 左右手音符列表合并，做后置处理
         return waterfallNoteListAfterHandle(leftHandWaterfallNoteList, rightHandWaterfallNoteList)

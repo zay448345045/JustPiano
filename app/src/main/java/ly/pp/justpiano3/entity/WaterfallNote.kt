@@ -32,10 +32,10 @@ data class WaterfallNote(
     /**
      * 音高
      */
-    var pitch: Int,
+    var pitch: Byte,
 
     /**
      * 音量
      */
-    var volume: Int,
+    var volume: Byte,
 )
