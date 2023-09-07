@@ -10,6 +10,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,10 +28,12 @@ import java.util.Objects;
 
 public class LocalSongsAdapter extends PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder> {
     private final MelodySelect melodySelect;
+    private final RecyclerView songsListView;
 
-    public LocalSongsAdapter(MelodySelect melodySelect) {
+    public LocalSongsAdapter(MelodySelect melodySelect, RecyclerView songsListView) {
         super(DIFF_CALLBACK);
         this.melodySelect = melodySelect;
+        this.songsListView = songsListView;
     }
 
     @NonNull
@@ -48,6 +52,13 @@ public class LocalSongsAdapter extends PagedListAdapter<Song, LocalSongsAdapter.
         if (song != null) {
             holder.bindData(song);
         }
+    }
+
+    @Override
+    public void onCurrentListChanged(@Nullable PagedList<Song> previousList, @Nullable PagedList<Song> currentList) {
+        super.onCurrentListChanged(previousList, currentList);
+        // 当数据列表发生更改时，滚动到第一个位置
+        songsListView.scrollToPosition(0);
     }
 
     protected class SongViewHolder extends RecyclerView.ViewHolder {
@@ -101,7 +112,7 @@ public class LocalSongsAdapter extends PagedListAdapter<Song, LocalSongsAdapter.
             });
             favorImageView.setOnClickListener(v -> {
                 JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), song.isFavorite() == 0 ? 1 : 0);
-                Toast.makeText(melodySelect, song.getName() + (song.isFavorite() == 0 ? ":已移出收藏夹" : ":已加入收藏夹"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(melodySelect, song.getName() + (song.isFavorite() == 0 ? ":已加入收藏夹" : ":已移出收藏夹"), Toast.LENGTH_SHORT).show();
             });
             songNameScrollText.setText(song.getName());
             songNameScrollText.setMovementMethod(ScrollingMovementMethod.getInstance());

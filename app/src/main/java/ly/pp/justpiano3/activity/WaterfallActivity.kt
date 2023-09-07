@@ -284,10 +284,7 @@ class WaterfallActivity : Activity(), OnTouchListener {
         val waterfallWidth = if (isBlack) rectF.width() * BLACK_KEY_WATERFALL_WIDTH_FACTOR
         else rectF.width() * KeyboardModeView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR
         // 根据中轴线和新的宽度计算坐标，返回
-        return Pair(
-            rectF.centerX() - waterfallWidth / 2,
-            rectF.centerX() + waterfallWidth / 2
-        )
+        return Pair(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2)
     }
 
     /**

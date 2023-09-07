@@ -14,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.activity.ComponentActivity;
 import androidx.lifecycle.LiveData;
@@ -42,7 +43,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MelodySelect extends ComponentActivity implements Callback, TextWatcher, OnClickListener {
+public class MelodySelect extends ComponentActivity implements Callback, OnClickListener {
     public Handler handler;
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
@@ -65,7 +66,6 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
     private RecyclerView songsListView;
-    private LiveData<PagedList<Song>> pagedListLiveData;
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
 
     protected final void mo2785a(String str2, int i) {
@@ -77,10 +77,6 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         jpdialog.showDialog();
     }
 
-    public final boolean getIsFollowPlay() {
-        return isFollowPlay.isChecked();
-    }
-
     @Override
     public boolean handleMessage(Message message) {
         Bundle data = message.getData();
@@ -90,7 +86,7 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
                 sortButton.setText(Consts.sortNames[orderPosition]);
                 SongDao songDao = JPApplication.getSongDatabase().songDao();
                 DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
+                LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
                 pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 sortPopupWindow.dismiss();
                 this.orderPosition = orderPosition;
@@ -188,6 +184,12 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.search_fast:
+                SongDao songDao = JPApplication.getSongDatabase().songDao();
+                DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(songSearchEditText.getText().toString());
+                LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+                pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+                return;
             case R.id.list_sort_b:
                 if (firstLoadFocusFinish) {
                     sortPopupWindow.showAsDropDown(sortButton);
@@ -218,6 +220,8 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);
         totalSongScoreTextView = findViewById(R.id.total_score_all);
+        ImageView searchFastButton = findViewById(R.id.search_fast);
+        searchFastButton.setOnClickListener(this);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         List<SongDao.TotalSongInfo> allSongsCountAndScore = songDao.getAllSongsCountAndScore();
         totalSongInfoMutableLiveData.setValue(allSongsCountAndScore.get(0));
@@ -228,13 +232,12 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         ListView categoryListView = findViewById(R.id.f_list);
         songsListView = findViewById(R.id.c_list);
         songsListView.setLayoutManager(new LinearLayoutManager(this));
-        LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this);
+        LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this, songsListView);
         songsListView.setAdapter(localSongsAdapter);
         DataSource.Factory<Integer, Song> allSongs = songDao.getLocalSongsWithDataSource(-1, 0);
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, localSongsAdapter::submitList);
         songSearchEditText = findViewById(R.id.search_edit);
-        songSearchEditText.addTextChangedListener(this);
         menuListButton = findViewById(R.id.menu_list_fast);
         menuListButton.setOnClickListener(this);
         isRecord = findViewById(R.id.check_record);
@@ -273,8 +276,8 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
         categoryListView.setOnItemClickListener((parent, view, position, id) -> {
             view.setSelected(true);
             DataSource.Factory<Integer, Song> dataSource = songDao.getLocalSongsWithDataSource(position, orderPosition);
-            pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
-            pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+            LiveData<PagedList<Song>> liveData = songDao.getPageListByDatasourceFactory(dataSource);
+            liveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
             categoryPosition = position;
         });
         timeText = findViewById(R.id.time_text);
@@ -322,22 +325,6 @@ public class MelodySelect extends ComponentActivity implements Callback, TextWat
             menuPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
             firstLoadFocusFinish = true;
         }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(s.toString());
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
-        pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
     }
 
     public MutableLiveData<SongDao.TotalSongInfo> getTotalSongInfoMutableLiveData() {

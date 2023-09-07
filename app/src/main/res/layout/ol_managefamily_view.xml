@@ -122,8 +122,6 @@
                     android:enabled="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-
-                    android:hint="输入曲目进行搜索"
                     android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
                     android:listSelector="@android:color/transparent"
                     android:maxLines="1"

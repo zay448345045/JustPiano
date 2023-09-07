@@ -110,7 +110,6 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private ImageView changeColorButton;
     private RecyclerView songsListView;
     public String currentPlaySongPath;
-    private LiveData<PagedList<Song>> pagedListLiveData;
 
     public OLPlayRoom() {
         canNotNextPage = false;
@@ -305,7 +304,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[i + 2]);
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
         pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
@@ -314,7 +313,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1]);
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
         pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
@@ -323,7 +322,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[j + 1]);
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
         pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
@@ -516,7 +515,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.favor:
                 roomTabs.setCurrentTab(2);
                 DataSource.Factory<Integer, Song> favoriteSongList = songDao.getFavoriteSongsWithDataSource();
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
+                LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
                 pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 moreSongs.dismiss();
                 return;
@@ -928,11 +927,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         changeColorButton.setOnClickListener(this);
         songsListView = findViewById(R.id.ol_song_list);
         songsListView.setLayoutManager(new LinearLayoutManager(this));
-        OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this);
+        OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this, songsListView);
         songsListView.setAdapter(olRoomSongsAdapter);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
-        pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
         handler = new Handler(this);
         songNameText = findViewById(R.id.ol_songlist_b);

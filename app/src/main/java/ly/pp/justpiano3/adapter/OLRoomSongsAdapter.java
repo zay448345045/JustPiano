@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +26,12 @@ import java.util.Objects;
 
 public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapter.SongViewHolder> {
     private final OLPlayRoom olPlayRoom;
+    private final RecyclerView songsListView;
 
-    public OLRoomSongsAdapter(OLPlayRoom olPlayRoom) {
+    public OLRoomSongsAdapter(OLPlayRoom olPlayRoom, RecyclerView songsListView) {
         super(DIFF_CALLBACK);
         this.olPlayRoom = olPlayRoom;
+        this.songsListView = songsListView;
     }
 
     @NonNull
@@ -46,6 +50,13 @@ public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapte
         if (song != null) {
             holder.bindData(song);
         }
+    }
+
+    @Override
+    public void onCurrentListChanged(@Nullable PagedList<Song> previousList, @Nullable PagedList<Song> currentList) {
+        super.onCurrentListChanged(previousList, currentList);
+        // 当数据列表发生更改时，滚动到第一个位置
+        songsListView.scrollToPosition(0);
     }
 
     protected class SongViewHolder extends RecyclerView.ViewHolder {
