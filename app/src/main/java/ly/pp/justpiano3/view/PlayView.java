@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -686,7 +685,7 @@ public final class PlayView extends SurfaceView implements Callback {
         f4713V = true;
         for (PlayNote note : notesList) {
             currentPlayNote = note;
-            if (currentPlayNote.posiAdd15AddAnim < jpapplication.getHalfHeightSub20() + 100) {
+            if (currentPlayNote.posiAdd15AddAnim < jpapplication.getHalfHeightSub20() + 60) {
                 if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && newNote) {
                     if (currentPlayNote.unPassed) {
                         hasTouched = false;
@@ -705,8 +704,8 @@ public final class PlayView extends SurfaceView implements Callback {
                             }
                         }
                     }
-                    if (jpapplication.getGameMode() == GameModeEnum.PRACTISE.getCode() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() + 10 &&
-                            currentPlayNote.posiAdd15AddAnim >= jpapplication.getHalfHeightSub20() && !hasTouched && !currentPlayNote.hideNote) {
+                    if (jpapplication.getGameMode() == GameModeEnum.PRACTISE.getCode() && !hasTouched && !currentPlayNote.hideNote
+                            && currentPlayNote.posiAdd15AddAnim > jpapplication.getWhiteKeyHeight() - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
                     noteRightValue = currentPlayNote.noteValue;
