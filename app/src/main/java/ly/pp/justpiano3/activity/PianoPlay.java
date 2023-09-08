@@ -643,7 +643,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         int touchNoteNum = data[1] % 12;
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             if (playView.currentPlayNote != null) {
-                playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+                playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
             }
             int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
             keyboardview.touchNoteSet.put(trueNote, 0);

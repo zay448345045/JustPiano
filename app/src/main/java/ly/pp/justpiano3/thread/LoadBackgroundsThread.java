@@ -63,7 +63,7 @@ public final class LoadBackgroundsThread extends Thread {
     public void run() {
         long startPlayTime = System.currentTimeMillis();
         while (pianoPlay.isPlayingStart) {
-            // 和瀑布流原理相同，具体解释详见瀑布流
+            // 时间计算部分：和瀑布流原理相同，具体解释详见瀑布流
             int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.INSTANCE.getNotesDownSpeed() - progressPauseTime);
             boolean isPause = !pianoPlay.playView.startFirstNoteTouching ||
                     (jpapplication.getGameMode() == GameModeEnum.PRACTISE.getCode() && !pianoPlay.playView.isTouchRightNote);
@@ -76,6 +76,7 @@ public final class LoadBackgroundsThread extends Thread {
                 pauseProgress = null;
             }
             jpapplication.setAnimPosition(isPause ? pauseProgress : playIntervalTime);
+            // 绘制部分
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);
                 if (canvas != null) {

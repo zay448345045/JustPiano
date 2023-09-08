@@ -80,7 +80,7 @@ public final class TouchNotes implements OnTouchListener {
 
     private void onFingerDown(int id, float x, float y) {
         if (playView.currentPlayNote != null) {
-            playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
         }
         int touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
         fireKeyDown(touchNoteNum);
@@ -89,7 +89,7 @@ public final class TouchNotes implements OnTouchListener {
 
     private void onFingerMove(int id, float x, float y) {
         if (playView.currentPlayNote != null) {
-            playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
         }
         Integer previousTouchNoteNum = mFingerMap.get(id);
         if (previousTouchNoteNum != null) {

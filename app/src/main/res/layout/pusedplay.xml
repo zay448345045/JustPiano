@@ -31,7 +31,6 @@
 
             <TextView
                 android:id="@+id/m_name"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -41,7 +40,6 @@
                 android:text="曲名"
                 android:textColor="@color/more"
                 android:textSize="24sp"
-
                 android:typeface="sans" />
 
             <ProgressBar
@@ -63,7 +61,6 @@
 
             <TextView
                 android:id="@+id/time_mid"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -76,7 +73,6 @@
 
             <TextView
                 android:id="@+id/m_score"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -90,7 +86,6 @@
 
             <TextView
                 android:id="@+id/l_nandu"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -105,7 +100,6 @@
 
             <TextView
                 android:id="@+id/m_nandu"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -62,7 +63,7 @@ public final class PlayView extends SurfaceView implements Callback {
     public int arrayLength;
     public Bitmap backgroundImage;
     public Bitmap barImage;
-    public float posiAdd15AddAnim;
+    public float positionAdd15AddAnim;
     public int f4813n;
     public Bitmap missImage;
     public Bitmap perfectImage;
@@ -286,11 +287,14 @@ public final class PlayView extends SurfaceView implements Callback {
         arrayLength = length;
         int i3 = 0;
         lastPosition = 0;
+        int actualTime;
+        int lastActualTime = 0;
         length = 0;
         while (true) {
             int i4 = length;
             if (i4 < arrayLength) {
                 tick += tickArray[i4];
+                actualTime = -tick * pm_2;
                 position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
                     notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
@@ -299,10 +303,11 @@ public final class PlayView extends SurfaceView implements Callback {
                     notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
                     hideNote = true;
                 } else {
-                    if ((int) ((lastPosition - position) * GlobalSetting.INSTANCE.getNotesDownSpeed()) >= 100 || i4 == 0) {
+                    if (lastActualTime - actualTime >= 100 || i4 == 0) {
                         hideNote = false;
                     }
                     lastPosition = position;
+                    lastActualTime = actualTime;
                     if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
                         i3 = noteArray[i4] / 12;
                     }
@@ -338,10 +343,13 @@ public final class PlayView extends SurfaceView implements Callback {
         }
         lastPosition = 0;
         int i2 = 0;
+        int actualTime;
+        int lastActualTime = 0;
         while (true) {
             int i3 = i2;
             if (i3 < arrayLength) {
                 tick += tickArray[i3];
+                actualTime = -tick * pm_2;
                 position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i3] != handValue) {
                     notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
@@ -350,10 +358,11 @@ public final class PlayView extends SurfaceView implements Callback {
                     notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
                     hideNote = true;
                 } else {
-                    if ((int) ((lastPosition - position) * GlobalSetting.INSTANCE.getNotesDownSpeed()) >= 100 || i3 == 0) {
+                    if (lastActualTime - actualTime >= 100 || i3 == 0) {
                         hideNote = false;
                     }
                     lastPosition = position;
+                    lastActualTime = actualTime;
                     if (noteArray[i3] < i * 12 || noteArray[i3] > (i * 12) + 12) {
                         i = noteArray[i3] / 12;
                     }
@@ -678,8 +687,7 @@ public final class PlayView extends SurfaceView implements Callback {
         for (PlayNote note : notesList) {
             currentPlayNote = note;
             if (currentPlayNote.posiAdd15AddAnim < jpapplication.getHalfHeightSub20() + 100) {
-                if (currentPlayNote.trackValue == currentPlayNote.handValue && newNote
-                        && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() + GlobalSetting.INSTANCE.getMofa() / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
+                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && newNote) {
                     if (currentPlayNote.unPassed) {
                         hasTouched = false;
                         currentPlayNote.unPassed = false;
