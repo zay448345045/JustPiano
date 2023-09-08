@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -29,6 +29,16 @@ public final class LoadBackgroundsThread extends Thread {
     private final Rect backgroundRect;
     private final PianoPlay pianoPlay;
 
+    /**
+     * 歌曲暂停时，目前的播放进度，内部保存的变量，不对外暴露
+     */
+    private Integer pauseProgress;
+
+    /**
+     * 处于暂停状态的时间累加，作为时间偏移进行计算
+     */
+    private int progressPauseTime;
+
     public LoadBackgroundsThread(JPApplication jPApplication, PlayView playView, PianoPlay pianoPlay) {
         jpapplication = jPApplication;
         this.playView = playView;
@@ -51,7 +61,21 @@ public final class LoadBackgroundsThread extends Thread {
 
     @Override
     public void run() {
+        long startPlayTime = System.currentTimeMillis();
         while (pianoPlay.isPlayingStart) {
+            // 和瀑布流原理相同，具体解释详见瀑布流
+            int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.INSTANCE.getNotesDownSpeed() - progressPauseTime);
+            boolean isPause = !pianoPlay.playView.startFirstNoteTouching ||
+                    (jpapplication.getGameMode() == GameModeEnum.PRACTISE.getCode() && !pianoPlay.playView.isTouchRightNote);
+            if (isPause && pauseProgress == null) {
+                pauseProgress = playIntervalTime;
+            } else if (!isPause && pauseProgress != null) {
+                int updatePauseOffset = playIntervalTime - pauseProgress;
+                progressPauseTime += updatePauseOffset;
+                playIntervalTime -= updatePauseOffset;
+                pauseProgress = null;
+            }
+            jpapplication.setAnimPosition(isPause ? pauseProgress : playIntervalTime);
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);
                 if (canvas != null) {

@@ -9,7 +9,7 @@
             android:title="皮肤" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
-            app:minValue="-100"
+            app:minValue="0"
             app:maxValue="100"
             app:floatNumber="true"
             android:key="mofa"

@@ -19,7 +19,6 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.listener.touch.TouchNotes;
-import ly.pp.justpiano3.thread.DownNotesThread;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
@@ -81,7 +80,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private Bitmap progressBarBaseImage;
     private byte volume0;
     private int score;
-    private DownNotesThread downNotesThread;
     private LoadBackgroundsThread loadBackgroundsThread;
     private boolean hideNote;
     private boolean newNote = true;
@@ -849,8 +847,6 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        downNotesThread = new DownNotesThread(jpapplication, GlobalSetting.INSTANCE.getNotesDownSpeed(), pianoPlay);
-        downNotesThread.start();
         loadBackgroundsThread = new LoadBackgroundsThread(jpapplication, this, pianoPlay);
         loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
@@ -884,15 +880,10 @@ public final class PlayView extends SurfaceView implements Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         if (pianoPlay.isBack) {
-            if (downNotesThread != null) {
-                while (downNotesThread.isAlive()) {
-                    pianoPlay.isPlayingStart = false;
-                    startFirstNoteTouching = false;
-                }
-            }
             if (loadBackgroundsThread != null) {
                 while (loadBackgroundsThread.isAlive()) {
                     pianoPlay.isPlayingStart = false;
+                    startFirstNoteTouching = false;
                 }
             }
             if (showScoreAndLevelsThread != null) {
