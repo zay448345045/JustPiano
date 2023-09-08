@@ -265,10 +265,6 @@ public final class JPApplication extends Application {
         }
     }
 
-    public void downNote() {
-        animPosition += GlobalSetting.INSTANCE.getAnimFrame();
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -324,7 +320,6 @@ public final class JPApplication extends Application {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("down_speed", "6");
-            editor.putString("anim_frame", "4");
             editor.putBoolean("note_dismiss", false);
             editor.putString("note_size", "1");
             editor.putString("b_s_vol", "0.8");

@@ -7,14 +7,15 @@
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
             android:title="皮肤" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="6"
-            android:dialogTitle="音块下落速率"
-            android:entries="@array/down_entries"
-            android:entryValues="@array/down_value"
+            app:minValue="0.5"
+            app:maxValue="6"
+            app:floatNumber="true"
             android:key="down_speed"
             android:summary="设置音块的滑落速度，会影响弹奏难度，可根据个人习惯进行调整"
-            android:title="音块速率" />
+            android:title="音块速率"
+            android:dialogTitle="音块速率" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="音块大小"
@@ -30,14 +31,6 @@
             android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
             android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
             android:title="击中音块消失" />
-        <ListPreference
-            android:defaultValue="4"
-            android:dialogTitle="音块下落帧率"
-            android:entries="@array/anim_entries"
-            android:entryValues="@array/anim_value"
-            android:key="anim_frame"
-            android:summary="音块下落动画流畅度(调低可提高性能，减少流畅度；调高可增加手机负担，增加流畅度)"
-            android:title="音块下落帧率" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="change_color"

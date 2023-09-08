@@ -14,11 +14,8 @@ import kotlin.math.abs
 /**
  * 瀑布流绘制view
  */
-class WaterfallView @JvmOverloads constructor(
-    context: Context?,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : SurfaceView(context, attrs, defStyleAttr) {
+class WaterfallView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    SurfaceView(context, attrs, defStyleAttr) {
 
     /**
      * 背景图及背景的绘制范围

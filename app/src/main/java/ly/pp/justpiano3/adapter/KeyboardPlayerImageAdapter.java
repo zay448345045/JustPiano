@@ -29,15 +29,13 @@ import java.io.InputStream;
 import java.util.List;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
-    byte roomID;
-    ConnectionService connectionService;
+    private final ConnectionService connectionService;
     private final OLPlayKeyboardRoom olPlayKeyboardRoom;
     private final List<Bundle> playerList;
     private final LayoutInflater layoutInflater;
 
     public KeyboardPlayerImageAdapter(List<Bundle> list, OLPlayKeyboardRoom olPlayKeyboardRoom) {
         layoutInflater = olPlayKeyboardRoom.getLayoutInflater();
-        roomID = olPlayKeyboardRoom.roomID0;
         playerList = list;
         this.olPlayKeyboardRoom = olPlayKeyboardRoom;
         connectionService = olPlayKeyboardRoom.jpapplication.getConnectionService();
@@ -55,11 +53,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         Button chatBlackCancelButton = inflate.findViewById(R.id.ol_chat_black_cancel);
         Button soundMuteButton = inflate.findViewById(R.id.ol_sound_b);
         soundMuteButton.setVisibility(View.VISIBLE);
-        if (olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted()) {
-            soundMuteButton.setText("取消静音");
-        } else {
-            soundMuteButton.setText("静音");
-        }
+        soundMuteButton.setText(olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted() ? "取消静音" : "静音");
         soundMuteButton.setOnClickListener(v -> {
             olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted());
             notifyDataSetChanged();
@@ -230,9 +224,8 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         } else if (viewGroup.getChildCount() != i || i >= playerList.size()) {
             return view;
         }
-        String string = playerList.get(i).getString("N");
-        String string2 = playerList.get(i).getString("S");
-        String str = string2.equals("f") ? "f" : "m";
+        String userName = playerList.get(i).getString("N");
+        String gender = playerList.get(i).getString("S").equals("f") ? "f" : "m";
         byte b = playerList.get(i).getByte("PI");
         String string3 = playerList.get(i).getString("IR");
         String string4 = playerList.get(i).getString("IH");
@@ -240,11 +233,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
         ImageView isPlayingView = view.findViewById(R.id.ol_player_playing);
-        if (olPlayKeyboardRoom.olKeyboardStates[i].isPlaying()) {
-            isPlayingView.setVisibility(View.VISIBLE);
-        } else {
-            isPlayingView.setVisibility(View.INVISIBLE);
-        }
+        isPlayingView.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isPlaying() ? View.VISIBLE : View.INVISIBLE);
         View.OnClickListener onClickListener = v -> {
             PopupWindow a = m4034a(olPlayKeyboardRoom.jpapplication.getHashmap().get(b));
             int[] iArr = new int[2];
@@ -254,11 +243,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         imageView.setOnClickListener(onClickListener);
         isPlayingView.setOnClickListener(onClickListener);
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
-        if (olPlayKeyboardRoom.olKeyboardStates[i].isMuted()) {
-            imageView8.setImageResource(R.drawable.stop);
-        } else {
-            imageView8.setImageResource(R.drawable.null_pic);
-        }
+        imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.drawable.stop : R.drawable.null_pic);
         try {
             if (string4.equals("O")) {
                 imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
@@ -281,16 +266,16 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         ImageView imageView5e = view.findViewById(R.id.ol_player_eye);
         ImageView imageView6 = view.findViewById(R.id.ol_player_couple);
         ImageView imageView7 = view.findViewById(R.id.ol_player_family);
-        int i3 = playerList.get(i).getInt("LV");
-        int i4 = playerList.get(i).getInt("CL");
-        if (JPApplication.kitiName.equals(string)) {
-            olPlayKeyboardRoom.lv = i3;
-            olPlayKeyboardRoom.cl = i4;
+        int lv = playerList.get(i).getInt("LV");
+        int cl = playerList.get(i).getInt("CL");
+        if (JPApplication.kitiName.equals(userName)) {
+            olPlayKeyboardRoom.lv = lv;
+            olPlayKeyboardRoom.cl = cl;
             olPlayKeyboardRoom.playerKind = string4;
         }
-        int i5 = playerList.get(i).getInt("CP");
-        if (i5 >= 0 && i5 <= 3) {
-            imageView6.setImageResource(Consts.couples[i5]);
+        int cpKind = playerList.get(i).getInt("CP");
+        if (cpKind >= 0 && cpKind <= 3) {
+            imageView6.setImageResource(Consts.couples[cpKind]);
         }
         if (!familyID.equals("0")) {
             File file = new File(olPlayKeyboardRoom.getFilesDir(), familyID + ".jpg");
@@ -330,53 +315,45 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             int i8 = playerList.get(i).getInt("HA") - 1;
             int i8e = playerList.get(i).getInt("EY") - 1;
             int i9 = playerList.get(i).getInt("SH") - 1;
-            textView3.setText("LV." + i3);
-            textView4.setText("CL." + i4);
-            textView4.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[i4]));
-            textView5.setText(Consts.nameCL[i4]);
-            textView5.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[i4]));
-            imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_m0.png")));
+            textView3.setText("LV." + lv);
+            textView4.setText("CL." + cl);
+            textView4.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[cl]));
+            textView5.setText(Consts.nameCL[cl]);
+            textView5.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[cl]));
+            imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_m0.png")));
             if (i6 < 0) {
                 imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_t" + i6 + ".png")));
+                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_t" + i6 + ".png")));
             }
             if (i7 < 0) {
                 imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_j" + i7 + ".png")));
+                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_j" + i7 + ".png")));
             }
             if (i9 < 0) {
                 imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_s" + i9 + ".png")));
+                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_s" + i9 + ".png")));
             }
             if (i8 < 0) {
                 imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_h" + i8 + ".png")));
+                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_h" + i8 + ".png")));
             }
             if (i8e < 0) {
                 imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
             } else {
-                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + str + "_e" + i8e + ".png")));
+                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_e" + i8e + ".png")));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         textView2 = view.findViewById(R.id.ol_player_name);
-        textView2.setText(string);
+        textView2.setText(userName);
         ImageView imageView1 = view.findViewById(R.id.ol_player_midi);
-        if (olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn()) {
-            imageView1.setVisibility(View.VISIBLE);
-        } else {
-            imageView1.setVisibility(View.INVISIBLE);
-        }
-        if (i2 == 0) {
-            textView2.setBackgroundResource(R.drawable.back_puased);
-        } else {
-            textView2.setBackgroundResource(ColorUtil.kuang[i2]);
-        }
+        imageView1.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
+        textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.kuang[i2]);
         imageView.setBackgroundResource(ColorUtil.filledKuang[i2]);
         return view;
     }

@@ -30,7 +30,7 @@ object GlobalSetting{
     /**
      * 音块速率
      */
-    var notesDownSpeed: Int = 6
+    var notesDownSpeed: Float = 6f
 
     /**
      * MIDI键盘移调
@@ -76,11 +76,6 @@ object GlobalSetting{
      * 显示键盘缩略图
      */
     var loadLongKeyboard: Boolean = false
-
-    /**
-     * 动画帧率
-     */
-    var animFrame: Int = 4
 
     /**
      * 按键效果
@@ -135,7 +130,7 @@ object GlobalSetting{
     /**
      * 从sharedPreferences获取设置
      */
-    fun loadSettings(context: Context?, online: Boolean) {
+    fun loadSettings(context: Context, online: Boolean) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         if (online) {
             tempSpeed = 1f
@@ -146,7 +141,6 @@ object GlobalSetting{
         }
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true)
         chordVolume = sharedPreferences.getString("b_s_vol", "0.8")!!.toFloat()
-        animFrame = sharedPreferences.getString("anim_frame", "4")!!.toInt()
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true)
         showLine = sharedPreferences.getBoolean("show_line", true)
@@ -156,7 +150,7 @@ object GlobalSetting{
         keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()
         keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true)
         chatSound = sharedPreferences.getBoolean("chats_sound", false)
-        notesDownSpeed = sharedPreferences.getString("down_speed", "6")!!.toInt()
+        notesDownSpeed = sharedPreferences.getString("down_speed", "6")!!.toFloat()
         noteSize = sharedPreferences.getString("note_size", "1")!!.toFloat()
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false)
         changeNotesColor = sharedPreferences.getBoolean("change_color", true)
@@ -173,12 +167,11 @@ object GlobalSetting{
      * 写入设置到sharedPreferences
      * 部分值存了，不是全部都存了
      */
-    fun saveSettings(context: Context?) {
+    fun saveSettings(context: Context) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val edit = sharedPreferences.edit()
         edit.putBoolean("sound_check_box", isOpenChord)
         edit.putString("b_s_vol", chordVolume.toString())
-        edit.putString("anim_frame", animFrame.toString())
         edit.putBoolean("keyboard_prefer", keyboardPrefer)
         edit.putBoolean("tishi_cj", showTouchNotesLevel)
         edit.putBoolean("show_line", showLine)

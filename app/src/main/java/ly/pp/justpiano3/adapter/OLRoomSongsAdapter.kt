@@ -1,142 +1,100 @@
-package ly.pp.justpiano3.adapter;
+package ly.pp.justpiano3.adapter
 
-import android.os.Message;
-import android.text.method.ScrollingMovementMethod;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.paging.PagedList;
-import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.database.dao.SongDao;
-import ly.pp.justpiano3.database.entity.Song;
-import protobuf.dto.OnlinePlaySongDTO;
+import android.text.method.ScrollingMovementMethod
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import ly.pp.justpiano3.JPApplication
+import ly.pp.justpiano3.R
+import ly.pp.justpiano3.activity.OLPlayRoom
+import ly.pp.justpiano3.constant.Consts
+import ly.pp.justpiano3.database.entity.Song
 
-import java.util.Objects;
-
-public class OLRoomSongsAdapter extends PagedListAdapter<Song, OLRoomSongsAdapter.SongViewHolder> {
-    private final OLPlayRoom olPlayRoom;
-    private final RecyclerView songsListView;
-
-    public OLRoomSongsAdapter(OLPlayRoom olPlayRoom, RecyclerView songsListView) {
-        super(DIFF_CALLBACK);
-        this.olPlayRoom = olPlayRoom;
-        this.songsListView = songsListView;
+class OLRoomSongsAdapter(private val olPlayRoom: OLPlayRoom, private val songsListView: RecyclerView) :
+    PagedListAdapter<Song, OLRoomSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val itemView = inflater.inflate(R.layout.song_view, parent, false)
+        itemView.setBackgroundResource(R.drawable.selector_list_c)
+        return SongViewHolder(itemView)
     }
 
-    @NonNull
-    @Override
-    public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.song_view, parent, false);
-        itemView.setBackgroundResource(R.drawable.selector_list_c);
-        return new SongViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         // 绑定数据到ViewHolder
-        Song song = getItem(position);
-        if (song != null) {
-            holder.bindData(song);
-        }
+        getItem(position)?.let { holder.bindData(it) }
     }
 
-    @Override
-    public void onCurrentListChanged(@Nullable PagedList<Song> previousList, @Nullable PagedList<Song> currentList) {
-        super.onCurrentListChanged(previousList, currentList);
+    override fun onCurrentListChanged(previousList: PagedList<Song>?, currentList: PagedList<Song>?) {
+        super.onCurrentListChanged(previousList, currentList)
         // 当数据列表发生更改时，滚动到第一个位置
-        songsListView.scrollToPosition(0);
+        songsListView.scrollToPosition(0)
     }
 
-    protected class SongViewHolder extends RecyclerView.ViewHolder {
-        private final TextView songNameTextView;
-        private final TextView timeTextView;
-        private final TextView rightHandDegreeTextView;
-        private final TextView leftHandDegreeTextView;
-        private final ImageView songFavorImageView;
-        private final RatingBar rightHandDegreeRatingBar;
-        private final RatingBar leftHandDegreeRatingBar;
+    inner class SongViewHolder(songView: View) : RecyclerView.ViewHolder(songView) {
+        private val songNameTextView: TextView
+        private val timeTextView: TextView
+        private val rightHandDegreeTextView: TextView
+        private val leftHandDegreeTextView: TextView
+        private val songFavorImageView: ImageView
+        private val rightHandDegreeRatingBar: RatingBar
+        private val leftHandDegreeRatingBar: RatingBar
 
-        public SongViewHolder(@NonNull View songView) {
-            super(songView);
-            songNameTextView = songView.findViewById(R.id.song_name);
-            songFavorImageView = songView.findViewById(R.id.song_favor);
-            rightHandDegreeRatingBar = songView.findViewById(R.id.song_degree);
-            leftHandDegreeRatingBar = songView.findViewById(R.id.song_degree2);
-            timeTextView = songView.findViewById(R.id.ol_sound_time);
-            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1);
-            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2);
+        fun bindData(song: Song) {
+            songNameTextView.text = song.name
+            songNameTextView.movementMethod = ScrollingMovementMethod.getInstance()
+            songNameTextView.setHorizontallyScrolling(true)
+            songNameTextView.setOnClickListener {
+                olPlayRoom.currentPlaySongPath = song.filePath
+                olPlayRoom.updateNewSongPlay(song.filePath)
+            }
+            songFavorImageView.setImageResource(if (song.isFavorite == 0) R.drawable.favor_1 else R.drawable.favor)
+            songFavorImageView.setOnClickListener {
+                val songDao = JPApplication.getSongDatabase().songDao()
+                val favoriteSongList = songDao.getFavoriteSongsWithDataSource()
+                olPlayRoom.pagedListLiveData.removeObservers(olPlayRoom)
+                songDao.updateFavoriteSong(song.filePath, if (song.isFavorite == 0) 1 else 0)
+                olPlayRoom.pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList)
+                olPlayRoom.pagedListLiveData.observe(olPlayRoom) { pagedList: PagedList<Song>? ->
+                    this@OLRoomSongsAdapter.submitList(
+                        pagedList
+                    )
+                }
+            }
+            rightHandDegreeTextView.text = " 右手:" + song.rightHandDegree
+            leftHandDegreeTextView.text = " 左手:" + song.leftHandDegree
+            timeTextView.text = (if (song.length / 60 < 10) "0" else "") +
+                    song.length / 60 + ":" + (if (song.length % 60 < 10) "0" else "") + song.length % 60
+            rightHandDegreeRatingBar.numStars = 5
+            rightHandDegreeRatingBar.isClickable = false
+            rightHandDegreeRatingBar.rating = song.rightHandDegree / 2
+            leftHandDegreeRatingBar.numStars = 5
+            leftHandDegreeRatingBar.isClickable = false
+            leftHandDegreeRatingBar.rating = song.leftHandDegree / 2
+        }
 
-            songView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
+        init {
+            songNameTextView = songView.findViewById(R.id.song_name)
+            songFavorImageView = songView.findViewById(R.id.song_favor)
+            rightHandDegreeRatingBar = songView.findViewById(R.id.song_degree)
+            leftHandDegreeRatingBar = songView.findViewById(R.id.song_degree2)
+            timeTextView = songView.findViewById(R.id.ol_sound_time)
+            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
+            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
+            songView.setOnClickListener { v: View ->
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    Song song = getItem(position);
-                    if (song != null) {
-                        olPlayRoom.currentPlaySongPath = song.getFilePath();
-                        OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
-                        builder.setTune(olPlayRoom.getdiao());
-                        builder.setSongPath(song.getFilePath().substring(6, song.getFilePath().length() - 3));
-                        olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
-                        Message obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
-                        obtainMessage.what = 12;
-                        olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
+                    getItem(position)?.let {
+                        olPlayRoom.currentPlaySongPath = it.filePath
+                        olPlayRoom.updateNewSongPlay(it.filePath)
                     }
                 }
-            });
-        }
-
-        public void bindData(Song song) {
-            songNameTextView.setText(song.getName());
-            songNameTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
-            songNameTextView.setHorizontallyScrolling(true);
-            songNameTextView.setOnClickListener(v -> {
-                olPlayRoom.currentPlaySongPath = song.getFilePath();
-                OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
-                builder.setTune(olPlayRoom.getdiao());
-                builder.setSongPath(song.getFilePath().substring(6, song.getFilePath().length() - 3));
-                olPlayRoom.sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
-                Message obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
-                obtainMessage.what = 12;
-                olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
-            });
-            songFavorImageView.setImageResource(song.isFavorite() == 0 ? R.drawable.favor_1 : R.drawable.favor);
-            songFavorImageView.setOnClickListener(v -> {
-                SongDao songDao = JPApplication.getSongDatabase().songDao();
-                songDao.updateFavoriteSong(song.getFilePath(), song.isFavorite() == 0 ? 1 : 0);
-            });
-            rightHandDegreeTextView.setText(" 右手:" + song.getRightHandDegree());
-            leftHandDegreeTextView.setText(" 左手:" + song.getLeftHandDegree());
-            timeTextView.setText((song.getLength() / 60 < 10 ? "0" : "") +
-                    (song.getLength() / 60) + ":" + (song.getLength() % 60 < 10 ? "0" : "") + (song.getLength() % 60));
-            rightHandDegreeRatingBar.setNumStars(5);
-            rightHandDegreeRatingBar.setClickable(false);
-            rightHandDegreeRatingBar.setRating(song.getRightHandDegree() / 2);
-            leftHandDegreeRatingBar.setNumStars(5);
-            leftHandDegreeRatingBar.setClickable(false);
-            leftHandDegreeRatingBar.setRating(song.getLeftHandDegree() / 2);
+            }
         }
     }
-
-    public static final DiffUtil.ItemCallback<Song> DIFF_CALLBACK = new DiffUtil.ItemCallback<Song>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
-            return Objects.equals(oldItem.getId(), newItem.getId());
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }

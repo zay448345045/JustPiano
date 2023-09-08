@@ -91,20 +91,20 @@
             android:textSize="28sp"/>
     </LinearLayout>
 
-    <ly.pp.justpiano3.view.DataSelectView
-            android:id="@+id/note_speed"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimen_40dp"
-            android:layout_below="@id/orientation"
-            android:layout_alignStart="@id/orientation"
-            android:layout_alignEnd="@id/orientation"
-            android:layout_marginTop="@dimen/dimen_3dp"
-            android:background="@drawable/selector_ol_button"
-            app:dataEditable="false"
-            app:dataTextSize="26"
-            app:dataTextColor="@color/white1"
-            app:dataDefaultName="中"
-            app:dataNameList="@array/down_entries"
-            app:dataValueList="@array/down_value"/>
+<!--    <ly.pp.justpiano3.view.DataSelectView-->
+<!--            android:id="@+id/note_speed"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="@dimen/dimen_40dp"-->
+<!--            android:layout_below="@id/orientation"-->
+<!--            android:layout_alignStart="@id/orientation"-->
+<!--            android:layout_alignEnd="@id/orientation"-->
+<!--            android:layout_marginTop="@dimen/dimen_3dp"-->
+<!--            android:background="@drawable/selector_ol_button"-->
+<!--            app:dataEditable="false"-->
+<!--            app:dataTextSize="26"-->
+<!--            app:dataTextColor="@color/white1"-->
+<!--            app:dataDefaultName="中"-->
+<!--            app:dataNameList="@array/down_entries"-->
+<!--            app:dataValueList="@array/down_value"/>-->
 
 </RelativeLayout>

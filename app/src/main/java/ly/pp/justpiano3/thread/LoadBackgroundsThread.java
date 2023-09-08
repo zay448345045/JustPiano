@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.view.SurfaceHolder;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.entity.GlobalSetting;

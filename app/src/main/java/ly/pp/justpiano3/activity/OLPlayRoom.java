@@ -92,7 +92,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     public boolean timeUpdateRunning;
     public int currentHand;
     public ListView msgListView;
-    private int diao;
+    private int tune;
     private Button playSongsModeButton;
     private TextView searchText;
     private ImageView express;
@@ -109,6 +109,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     private TimeUpdateThread timeUpdateThread;
     private ImageView changeColorButton;
     private RecyclerView songsListView;
+    public LiveData<PagedList<Song>> pagedListLiveData;
     public String currentPlaySongPath;
 
     public OLPlayRoom() {
@@ -123,7 +124,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         String songFilePath = songs.isEmpty() ? "" : songs.get(0).getFilePath();
         currentPlaySongPath = songFilePath;
         OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
-        builder.setTune(diao);
+        builder.setTune(tune);
         builder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));
         sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
         if (moreSongs != null) {
@@ -304,7 +305,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[i + 2]);
-        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        pagedListLiveData.removeObservers(this);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
         pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
@@ -313,7 +315,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1]);
-        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        pagedListLiveData.removeObservers(this);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
         pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
@@ -322,7 +325,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         roomTabs.setCurrentTab(2);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[j + 1]);
-        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
+        pagedListLiveData.removeObservers(this);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
         pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         moreSongs.dismiss();
     }
@@ -463,11 +467,11 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     }
 
     public void setdiao(int i) {
-        diao = i;
+        tune = i;
     }
 
     public int getdiao() {
-        return diao;
+        return tune;
     }
 
     @Override
@@ -476,7 +480,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         switch (message.what) {
             case 1:
                 OnlinePlaySongDTO.Builder builder = OnlinePlaySongDTO.newBuilder();
-                builder.setTune(diao);
+                builder.setTune(tune);
                 builder.setSongPath(data.getString("S"));
                 sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
                 break;
@@ -515,7 +519,8 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
             case R.id.favor:
                 roomTabs.setCurrentTab(2);
                 DataSource.Factory<Integer, Song> favoriteSongList = songDao.getFavoriteSongsWithDataSource();
-                LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
+                pagedListLiveData.removeObservers(this);
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
                 pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 moreSongs.dismiss();
                 return;
@@ -604,6 +609,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 }
                 searchText.setText("");
                 DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
+                pagedListLiveData.removeObservers(this);
                 pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
                 pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 return;
@@ -781,12 +787,12 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                     popupWindow2.setTouchable(true);
                     popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
-                    DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
-                    noteSpeed.setDefaultValue(String.valueOf(GlobalSetting.INSTANCE.getNotesDownSpeed()));
-                    noteSpeed.setDataChangeListener((dataSelectView, name, value) -> {
-                        GlobalSetting.INSTANCE.setNotesDownSpeed(Integer.parseInt(value));
-                        GlobalSetting.INSTANCE.saveSettings(jpapplication);
-                    });
+//                    DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
+//                    noteSpeed.setDefaultValue(String.valueOf(GlobalSetting.INSTANCE.getNotesDownSpeed()));
+//                    noteSpeed.setDataChangeListener((dataSelectView, name, value) -> {
+//                        GlobalSetting.INSTANCE.setNotesDownSpeed(Integer.parseInt(value));
+//                        GlobalSetting.INSTANCE.saveSettings(jpapplication);
+//                    });
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;
@@ -807,11 +813,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.shengdiao:
                 if (playerKind.equals("H") && !StringUtil.isNullOrEmpty(currentPlaySongPath)) {
-                    if (diao < 6) {
-                        diao++;
-                    } else {
-                        diao = 6;
-                    }
+                    tune = Math.min(6, tune + 1);
                     updateNewSongPlay(currentPlaySongPath);
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
@@ -822,11 +824,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
                 return;
             case R.id.jiangdiao:
                 if (playerKind.equals("H") && !StringUtil.isNullOrEmpty(currentPlaySongPath)) {
-                    if (diao > -6) {
-                        diao--;
-                    } else {
-                        diao = -6;
-                    }
+                    tune = Math.max(-6, tune - 1);
                     updateNewSongPlay(currentPlaySongPath);
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
@@ -931,7 +929,7 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
         songsListView.setAdapter(olRoomSongsAdapter);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
-        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
         handler = new Handler(this);
         songNameText = findViewById(R.id.ol_songlist_b);
@@ -1174,9 +1172,9 @@ public final class OLPlayRoom extends BaseActivity implements Callback, OnClickL
     /**
      * 根据曲谱名称进行发消息播放
      */
-    private void updateNewSongPlay(String songFilePath) {
+    public void updateNewSongPlay(String songFilePath) {
         OnlinePlaySongDTO.Builder playSongBuilder = OnlinePlaySongDTO.newBuilder();
-        playSongBuilder.setTune(diao);
+        playSongBuilder.setTune(tune);
         playSongBuilder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));
         sendMsg(OnlineProtocolType.PLAY_SONG, playSongBuilder.build());
         Message obtainMessage = olPlayRoomHandler.obtainMessage();

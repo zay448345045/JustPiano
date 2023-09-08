@@ -1,165 +1,135 @@
-package ly.pp.justpiano3.adapter;
+package ly.pp.justpiano3.adapter
 
-import android.content.Intent;
-import android.text.method.ScrollingMovementMethod;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.paging.PagedList;
-import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.MelodySelect;
-import ly.pp.justpiano3.activity.WaterfallActivity;
-import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.listener.LocalSongsStartPlayClick;
-import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.view.ScrollText;
+import android.content.Intent
+import android.text.method.ScrollingMovementMethod
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import ly.pp.justpiano3.JPApplication
+import ly.pp.justpiano3.R
+import ly.pp.justpiano3.activity.MelodySelect
+import ly.pp.justpiano3.activity.WaterfallActivity
+import ly.pp.justpiano3.constant.Consts
+import ly.pp.justpiano3.database.entity.Song
+import ly.pp.justpiano3.listener.LocalSongsStartPlayClick
+import ly.pp.justpiano3.thread.SongPlay.startPlay
+import ly.pp.justpiano3.thread.SongPlay.stopPlay
+import ly.pp.justpiano3.view.ScrollText
 
-import java.util.Objects;
-
-public class LocalSongsAdapter extends PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder> {
-    private final MelodySelect melodySelect;
-    private final RecyclerView songsListView;
-
-    public LocalSongsAdapter(MelodySelect melodySelect, RecyclerView songsListView) {
-        super(DIFF_CALLBACK);
-        this.melodySelect = melodySelect;
-        this.songsListView = songsListView;
+class LocalSongsAdapter(private val melodySelect: MelodySelect, private val songsListView: RecyclerView) :
+    PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val itemView = inflater.inflate(R.layout.c_view, parent, false)
+        itemView.setBackgroundResource(R.drawable.selector_list_c)
+        return SongViewHolder(itemView)
     }
 
-    @NonNull
-    @Override
-    public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.c_view, parent, false);
-        itemView.setBackgroundResource(R.drawable.selector_list_c);
-        return new SongViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         // 绑定数据到ViewHolder
-        Song song = getItem(position);
-        if (song != null) {
-            holder.bindData(song);
-        }
+        getItem(position)?.let { holder.bindData(it) }
     }
 
-    @Override
-    public void onCurrentListChanged(@Nullable PagedList<Song> previousList, @Nullable PagedList<Song> currentList) {
-        super.onCurrentListChanged(previousList, currentList);
+    override fun onCurrentListChanged(previousList: PagedList<Song>?, currentList: PagedList<Song>?) {
+        super.onCurrentListChanged(previousList, currentList)
         // 当数据列表发生更改时，滚动到第一个位置
-        songsListView.scrollToPosition(0);
+        songsListView.scrollToPosition(0)
     }
 
-    protected class SongViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView listenImageView;
-        private final ImageView waterFallImageView;
-        private final ImageView favorImageView;
-        private final ImageView isNewImageView;
-        private final ImageView playImageView;
-        private final TextView highScoreTextView;
-        private final TextView soundTimeTextView;
-        private final TextView rightHandDegreeTextView;
-        private final TextView leftHandDegreeTextView;
-        private final RatingBar rightHandDegreeRatingBar;
-        private final RatingBar leftHandDegreeRatingBar;
-        private final ScrollText songNameScrollText;
+    inner class SongViewHolder(songView: View) : RecyclerView.ViewHolder(songView) {
+        private val listenImageView: ImageView
+        private val waterFallImageView: ImageView
+        private val favorImageView: ImageView
+        private val isNewImageView: ImageView
+        private val playImageView: ImageView
+        private val highScoreTextView: TextView
+        private val soundTimeTextView: TextView
+        private val rightHandDegreeTextView: TextView
+        private val leftHandDegreeTextView: TextView
+        private val rightHandDegreeRatingBar: RatingBar
+        private val leftHandDegreeRatingBar: RatingBar
+        private val songNameScrollText: ScrollText
 
-        public SongViewHolder(@NonNull View songView) {
-            super(songView);
-            listenImageView = songView.findViewById(R.id.play_image);
-            waterFallImageView = songView.findViewById(R.id.play_waterfall);
-            favorImageView = songView.findViewById(R.id.favor);
-            isNewImageView = songView.findViewById(R.id.is_new);
-            playImageView = songView.findViewById(R.id.play);
-            highScoreTextView = songView.findViewById(R.id.highscore);
-            soundTimeTextView = songView.findViewById(R.id.sound_time);
-            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1);
-            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2);
-            rightHandDegreeRatingBar = songView.findViewById(R.id.nandu);
-            leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu);
-            songNameScrollText = songView.findViewById(R.id.s_n);
-            songView.setTag(getAdapterPosition());
-        }
-
-        public void bindData(Song song) {
-            playImageView.setOnClickListener(new LocalSongsStartPlayClick(melodySelect, song));
-            listenImageView.setOnClickListener(v -> {
-                if (song.getFilePath().equals(melodySelect.songsPath)) {
-                    melodySelect.songsPath = "";
-                    return;
+        fun bindData(song: Song) {
+            playImageView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
+            listenImageView.setOnClickListener {
+                if (song.filePath == melodySelect.songsPath) {
+                    melodySelect.songsPath = ""
+                    return@setOnClickListener
                 }
-                melodySelect.songsPath = song.getFilePath();
-                SongPlay.INSTANCE.startPlay(melodySelect, song.getFilePath(), 0);
-                Toast.makeText(melodySelect, "正在播放:《" + song.getName() + "》", Toast.LENGTH_SHORT).show();
-            });
-            waterFallImageView.setOnClickListener(v -> {
-                SongPlay.INSTANCE.stopPlay();
-                Intent intent = new Intent();
-                intent.putExtra("songPath", song.getFilePath());
-                intent.setClass(melodySelect, WaterfallActivity.class);
-                melodySelect.startActivity(intent);
-            });
-            favorImageView.setOnClickListener(v -> {
-                JPApplication.getSongDatabase().songDao().updateFavoriteSong(song.getFilePath(), song.isFavorite() == 0 ? 1 : 0);
-                Toast.makeText(melodySelect, song.getName() + (song.isFavorite() == 0 ? ":已加入收藏夹" : ":已移出收藏夹"), Toast.LENGTH_SHORT).show();
-            });
-            songNameScrollText.setText(song.getName());
-            songNameScrollText.setMovementMethod(ScrollingMovementMethod.getInstance());
-            songNameScrollText.setHorizontallyScrolling(true);
-            songNameScrollText.setOnClickListener(new LocalSongsStartPlayClick(melodySelect, song));
-            int rightHandScore = song.getRightHandHighScore();
-            int leftHandScore = song.getLeftHandHighScore();
-            highScoreTextView.setText("右手最高:" + (rightHandScore <= 0 ? "0" : String.valueOf(rightHandScore)) + " 左手最高: " + (leftHandScore <= 0 ? "0" : String.valueOf(leftHandScore)));
-            int length = song.getLength();
-            String str1 = length / 60 >= 10 ? "" + length / 60 : "0" + length / 60;
-            String str2 = length % 60 >= 10 ? "" + length % 60 : "0" + length % 60;
-            soundTimeTextView.setText(str1 + ":" + str2);
-            float rightHandDegree = song.getRightHandDegree();
-            if ((int) rightHandDegree == 10) {
-                rightHandDegreeTextView.setText(" 难度: 右手 10 ");
-            } else {
-                rightHandDegreeTextView.setText(" 难度: 右手 " + rightHandDegree);
+                melodySelect.songsPath = song.filePath
+                startPlay(melodySelect, song.filePath, 0)
+                Toast.makeText(melodySelect, "正在播放:《" + song.name + "》", Toast.LENGTH_SHORT).show()
             }
-            rightHandDegreeRatingBar.setNumStars(5);
-            rightHandDegreeRatingBar.setClickable(false);
-            rightHandDegreeRatingBar.setRating(rightHandDegree / 2);
-            float leftHandDegree = song.getLeftHandDegree();
-            if ((int) leftHandDegree == 10) {
-                leftHandDegreeTextView.setText(" 左手 10");
-            } else {
-                leftHandDegreeTextView.setText(" 左手 " + leftHandDegree);
+            waterFallImageView.setOnClickListener {
+                stopPlay()
+                val intent = Intent()
+                intent.putExtra("songPath", song.filePath)
+                intent.setClass(melodySelect, WaterfallActivity::class.java)
+                melodySelect.startActivity(intent)
             }
-            leftHandDegreeRatingBar.setNumStars(5);
-            leftHandDegreeRatingBar.setClickable(false);
-            leftHandDegreeRatingBar.setRating(leftHandDegree / 2);
-            if (song.isNew() == 1) {
-                isNewImageView.setImageResource(R.drawable.s_new);
-            } else {
-                isNewImageView.setImageResource(R.drawable.null_pic);
+            favorImageView.setImageResource(if (song.isFavorite == 0) R.drawable.favor_1 else R.drawable.favor)
+            favorImageView.setOnClickListener {
+                val songDao = JPApplication.getSongDatabase().songDao()
+                melodySelect.pagedListLiveData.removeObservers(melodySelect)
+                songDao.updateFavoriteSong(song.filePath, if (song.isFavorite == 0) 1 else 0)
+                val songsDataSource = songDao.getLocalSongsWithDataSource(0, melodySelect.orderPosition)
+                melodySelect.pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource)
+                melodySelect.pagedListLiveData.observe(melodySelect) { pagedList: PagedList<Song>? ->
+                    this@LocalSongsAdapter.submitList(pagedList)
+                }
+                Toast.makeText(
+                    melodySelect,
+                    song.name + if (song.isFavorite == 0) ":已加入收藏夹" else ":已移出收藏夹",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+            songNameScrollText.text = song.name
+            songNameScrollText.movementMethod = ScrollingMovementMethod.getInstance()
+            songNameScrollText.setHorizontallyScrolling(true)
+            songNameScrollText.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
+            val rightHandScore = song.rightHandHighScore
+            val leftHandScore = song.leftHandHighScore
+            highScoreTextView.text = "右手最高:" + (if (rightHandScore <= 0) "0" else rightHandScore.toString()) +
+                    " 左手最高: " + if (leftHandScore <= 0) "0" else leftHandScore.toString()
+            val length = song.length
+            val str1 = if (length / 60 >= 10) "" + length / 60 else "0" + length / 60
+            val str2 = if (length % 60 >= 10) "" + length % 60 else "0" + length % 60
+            soundTimeTextView.text = "$str1:$str2"
+            val rightHandDegree = song.rightHandDegree
+            rightHandDegreeTextView.text =
+                if (rightHandDegree.toInt() == 10) " 难度: 右手 10 " else " 难度: 右手 $rightHandDegree"
+            rightHandDegreeRatingBar.numStars = 5
+            rightHandDegreeRatingBar.isClickable = false
+            rightHandDegreeRatingBar.rating = rightHandDegree / 2
+            val leftHandDegree = song.leftHandDegree
+            leftHandDegreeTextView.text = if (leftHandDegree.toInt() == 10) " 左手 10" else " 左手 $leftHandDegree"
+            leftHandDegreeRatingBar.numStars = 5
+            leftHandDegreeRatingBar.isClickable = false
+            leftHandDegreeRatingBar.rating = leftHandDegree / 2
+            isNewImageView.setImageResource(if (song.isNew == 1) R.drawable.s_new else R.drawable.null_pic)
+        }
+
+        init {
+            listenImageView = songView.findViewById(R.id.play_image)
+            waterFallImageView = songView.findViewById(R.id.play_waterfall)
+            favorImageView = songView.findViewById(R.id.favor)
+            isNewImageView = songView.findViewById(R.id.is_new)
+            playImageView = songView.findViewById(R.id.play)
+            highScoreTextView = songView.findViewById(R.id.highscore)
+            soundTimeTextView = songView.findViewById(R.id.sound_time)
+            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
+            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
+            rightHandDegreeRatingBar = songView.findViewById(R.id.nandu)
+            leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu)
+            songNameScrollText = songView.findViewById(R.id.s_n)
         }
     }
-
-    public static final DiffUtil.ItemCallback<Song> DIFF_CALLBACK = new DiffUtil.ItemCallback<Song>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
-            return Objects.equals(oldItem.getId(), newItem.getId());
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }

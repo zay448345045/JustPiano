@@ -8,13 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.activity.ComponentActivity;
 import androidx.lifecycle.LiveData;
@@ -58,7 +55,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private Button sortButton;
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
-    private int orderPosition;
+    public int orderPosition;
     private int categoryPosition = -1;
     private PopupWindow sortPopupWindow;
     private PopupWindow menuPopupWindow;
@@ -66,6 +63,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
     private RecyclerView songsListView;
+    public LiveData<PagedList<Song>> pagedListLiveData;
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
 
     protected final void mo2785a(String str2, int i) {
@@ -86,7 +84,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 sortButton.setText(Consts.sortNames[orderPosition]);
                 SongDao songDao = JPApplication.getSongDatabase().songDao();
                 DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
-                LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
+                pagedListLiveData.removeObservers(this);
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
                 pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 sortPopupWindow.dismiss();
                 this.orderPosition = orderPosition;
@@ -187,7 +186,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             case R.id.search_fast:
                 SongDao songDao = JPApplication.getSongDatabase().songDao();
                 DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(songSearchEditText.getText().toString());
-                LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+                pagedListLiveData.removeObservers(this);
+                pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
                 pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
                 return;
             case R.id.list_sort_b:
@@ -235,7 +235,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this, songsListView);
         songsListView.setAdapter(localSongsAdapter);
         DataSource.Factory<Integer, Song> allSongs = songDao.getLocalSongsWithDataSource(-1, 0);
-        LiveData<PagedList<Song>> pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, localSongsAdapter::submitList);
         songSearchEditText = findViewById(R.id.search_edit);
         menuListButton = findViewById(R.id.menu_list_fast);

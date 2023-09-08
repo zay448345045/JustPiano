@@ -10,7 +10,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -122,7 +122,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private int uploadNoteIndex;
     private final List<PlayNote> tempNotesArray = new ArrayList<>();
     private float halfHeightSub10;
-    private int notesDownSpeed = 6;
     private final List<Integer> f4788bm = new ArrayList<>();
     private int handValue;
     private byte[] tickArray;
@@ -254,7 +253,6 @@ public final class PlayView extends SurfaceView implements Callback {
         width = playNoteImage.getWidth();
         height = playNoteImage.getHeight();
         playNoteImage = Bitmap.createBitmap(playNoteImage, 0, 0, width, height, matrix, true);
-        notesDownSpeed = GlobalSetting.INSTANCE.getNotesDownSpeed();
         jpapplication.setWidthDiv8(jpapplication.getWidthPixels() / 8f);
         jpapplication.setWhiteKeyHeight((int) (jpapplication.getHeightPixels() * 0.49));
         jpapplication.setHalfHeightSub20(jpapplication.getWhiteKeyHeight() - 20);
@@ -293,7 +291,7 @@ public final class PlayView extends SurfaceView implements Callback {
             int i4 = length;
             if (i4 < arrayLength) {
                 tick += tickArray[i4];
-                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / notesDownSpeed);
+                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
                     ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
                     notesList.add(ln);
@@ -303,7 +301,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     notesList.add(ln);
                     hideNote = true;
                 } else {
-                    if ((lastPosition - position) * notesDownSpeed >= 100 || i4 == 0) {
+                    if ((int) ((lastPosition - position) * GlobalSetting.INSTANCE.getNotesDownSpeed()) >= 100 || i4 == 0) {
                         hideNote = false;
                     }
                     lastPosition = position;
@@ -347,7 +345,7 @@ public final class PlayView extends SurfaceView implements Callback {
             int i3 = i2;
             if (i3 < arrayLength) {
                 tick += tickArray[i3];
-                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / notesDownSpeed);
+                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i3] != handValue) {
                     ln = new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue);
                     notesList.add(ln);
@@ -357,7 +355,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     notesList.add(ln);
                     hideNote = true;
                 } else {
-                    if ((lastPosition - position) * notesDownSpeed >= 100 || i3 == 0) {
+                    if ((int) ((lastPosition - position) * GlobalSetting.INSTANCE.getNotesDownSpeed()) >= 100 || i3 == 0) {
                         hideNote = false;
                     }
                     lastPosition = position;
@@ -382,10 +380,10 @@ public final class PlayView extends SurfaceView implements Callback {
         if (barImage == null) {
             loadImages();
         }
-        perfectStandard = 200f / notesDownSpeed;
-        coolStandard = 300f / notesDownSpeed;
-        greatStandard = 400f / notesDownSpeed;
-        missStandard = 500f / notesDownSpeed;
+        perfectStandard = 200f / GlobalSetting.INSTANCE.getNotesDownSpeed();
+        coolStandard = 300f / GlobalSetting.INSTANCE.getNotesDownSpeed();
+        greatStandard = 400f / GlobalSetting.INSTANCE.getNotesDownSpeed();
+        missStandard = 500f / GlobalSetting.INSTANCE.getNotesDownSpeed();
         jpapplication.setAnimPosition(0);
         line.setColor(Color.argb(178, 244, 255, 64));
         line.setStrokeWidth(3);
@@ -855,7 +853,7 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        downNotesThread = new DownNotesThread(jpapplication, notesDownSpeed, pianoPlay);
+        downNotesThread = new DownNotesThread(jpapplication, GlobalSetting.INSTANCE.getNotesDownSpeed(), pianoPlay);
         downNotesThread.start();
         loadbackgrounds = new LoadBackgroundsThread(jpapplication, this, pianoPlay);
         loadbackgrounds.start();

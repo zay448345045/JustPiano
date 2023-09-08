@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="anim_entries">
-        <item>极高</item>
-        <item>高</item>
-        <item>中</item>
-        <item>低</item>
-    </string-array>
-    <string-array name="anim_value">
-        <item>2</item>
-        <item>4</item>
-        <item>8</item>
-        <item>12</item>
-    </string-array>
-    <string-array name="down_entries">
-        <item>神快</item>
-        <item>超快</item>
-        <item>很快</item>
-        <item>快</item>
-        <item>中</item>
-    </string-array>
-    <string-array name="down_value">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>6</item>
-    </string-array>
     <string-array name="rough_line">
         <item>默认(不加粗)</item>
         <item>灰色加粗</item>
