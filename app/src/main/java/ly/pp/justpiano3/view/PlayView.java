@@ -37,6 +37,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * 陈年代码，不建议修改
+ */
 public final class PlayView extends SurfaceView implements Callback {
     public static long serialID = 2825651233768L;
     public Bitmap whiteKeyRightImage;
@@ -79,7 +82,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private byte volume0;
     private int score;
     private DownNotesThread downNotesThread;
-    private LoadBackgroundsThread loadbackgrounds;
+    private LoadBackgroundsThread loadBackgroundsThread;
     private boolean hideNote;
     private boolean newNote = true;
     private PlayNote judgingNote;
@@ -105,8 +108,8 @@ public final class PlayView extends SurfaceView implements Callback {
     private final List<PlayNote> notesList = new CopyOnWriteArrayList<>();
     private final List<ShowTouchNotesLevel> touchNotesList = new ArrayList<>();
     private ShowScoreAndLevelsThread showScoreAndLevelsThread;
-    private double nandu;
-    private double leftNandu;
+    private double rightHandDegree;
+    private double leftHandDegree;
     private int songsTime;
     private int screenHeight;
     private String songsPath;
@@ -127,7 +130,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private byte[] tickArray;
     private byte[] trackArray;
     private boolean f4713V = true;
-    private PlayNote ln;
     private int noteCounts;
     private Rect f4801bz;
     private final Paint line = new Paint();
@@ -158,8 +160,8 @@ public final class PlayView extends SurfaceView implements Callback {
         gameType = kind;
         uploadTime = i4;
         songsPath = str;
-        nandu = d1;
-        leftNandu = d2;
+        rightHandDegree = d1;
+        leftHandDegree = d2;
         score = i;
         songsTime = i5;
         loadParams();
@@ -181,7 +183,7 @@ public final class PlayView extends SurfaceView implements Callback {
         handValue = (i3 + 20) % 2;
         gameType = kind;
         songID = songId;
-        nandu = d;
+        rightHandDegree = d;
         score = i;
         loadParams();
         try {
@@ -271,7 +273,7 @@ public final class PlayView extends SurfaceView implements Callback {
         noteArray = pmSongData.getPitchArray();
         trackArray = pmSongData.getTrackArray();
         volumeArray = pmSongData.getVolumeArray();
-        nandu = pmSongData.getRightHandDegree();
+        rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
         if (pm_2 <= 0) {
@@ -293,12 +295,10 @@ public final class PlayView extends SurfaceView implements Callback {
                 tick += tickArray[i4];
                 position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
-                    ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
-                    notesList.add(ln);
+                    notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
                     hideNote = true;
                 } else if (lastPosition < position) {
-                    ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
-                    notesList.add(ln);
+                    notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
                     hideNote = true;
                 } else {
                     if ((int) ((lastPosition - position) * GlobalSetting.INSTANCE.getNotesDownSpeed()) >= 100 || i4 == 0) {
@@ -311,8 +311,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
                         trackArray[i4] = 2;
                     }
-                    ln = new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue);
-                    notesList.add(ln);
+                    notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
                     hideNote = true;
                 }
                 length = i4 + 1;
@@ -331,7 +330,7 @@ public final class PlayView extends SurfaceView implements Callback {
         noteArray = pmSongData.getPitchArray();
         trackArray = pmSongData.getTrackArray();
         volumeArray = pmSongData.getVolumeArray();
-        nandu = pmSongData.getRightHandDegree();
+        rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
         arrayLength = tickArray.length;
@@ -347,12 +346,10 @@ public final class PlayView extends SurfaceView implements Callback {
                 tick += tickArray[i3];
                 position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i3] != handValue) {
-                    ln = new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue);
-                    notesList.add(ln);
+                    notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
                     hideNote = true;
                 } else if (lastPosition < position) {
-                    ln = new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue);
-                    notesList.add(ln);
+                    notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
                     hideNote = true;
                 } else {
                     if ((int) ((lastPosition - position) * GlobalSetting.INSTANCE.getNotesDownSpeed()) >= 100 || i3 == 0) {
@@ -365,8 +362,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i3] == 110 && volumeArray[i3] == 3) {
                         trackArray[i3] = 2;
                     }
-                    ln = new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue);
-                    notesList.add(ln);
+                    notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
                     hideNote = true;
                 }
                 i2 = i3 + 1;
@@ -422,7 +418,7 @@ public final class PlayView extends SurfaceView implements Callback {
             isTouchRightNote = true;
             double abs;
             try {
-                abs = jpapplication.getWhiteKeyHeight() - judgingNote.posiAdd15AddAnim;
+                abs = Math.abs(jpapplication.getWhiteKeyHeight() - judgingNote.posiAdd15AddAnim);
             } catch (Exception e) {
                 abs = 0;
             }
@@ -666,8 +662,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("name", songsName);
                     intent.putExtra("songID", songID);
                     intent.putExtra("path", songsPath);
-                    intent.putExtra("nandu", nandu);
-                    intent.putExtra("leftnandu", leftNandu);
+                    intent.putExtra("nandu", rightHandDegree);
+                    intent.putExtra("leftnandu", leftHandDegree);
                     intent.putExtra("songstime", songsTime);
                     intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
@@ -678,17 +674,14 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     public void mo2930b(Canvas canvas) {
-        int E;
-        int i;
-        int i2;
-        int i3;
         tempNotesArray.clear();
         newNote = true;
         f4713V = true;
         for (PlayNote note : notesList) {
             currentPlayNote = note;
-            if (currentPlayNote.posiAdd15AddAnim <= jpapplication.getHalfHeightSub20() + 60) {
-                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && newNote) {
+            if (currentPlayNote.posiAdd15AddAnim < jpapplication.getHalfHeightSub20() + 100) {
+                if (currentPlayNote.trackValue == currentPlayNote.handValue && newNote
+                        && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() + GlobalSetting.INSTANCE.getMofa() / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                     if (currentPlayNote.unPassed) {
                         hasTouched = false;
                         currentPlayNote.unPassed = false;
@@ -733,6 +726,9 @@ public final class PlayView extends SurfaceView implements Callback {
             }
         }
         notesList.removeAll(tempNotesArray);
+        int i;
+        int i2;
+        int i3;
         if (canvas != null && touchNotesList != null && GlobalSetting.INSTANCE.getShowTouchNotesLevel()) {
             try {
                 for (ShowTouchNotesLevel showTouchNotesLevel : touchNotesList) {
@@ -802,24 +798,24 @@ public final class PlayView extends SurfaceView implements Callback {
         i2 = scoreNumImage.getWidth() / 10;
         i3 = scoreNumImage.getHeight();
         f4788bm.clear();
-        E = Math.max(i5, 0);
+        int e = Math.max(i5, 0);
         for (i5 = 0; i5 < 5; i5++) {
-            f4788bm.add(i5, (int) ((((double) E) % Math.pow(10, i5 + 1)) / Math.pow(10, i5)));
+            f4788bm.add(i5, (int) ((((double) e) % Math.pow(10, i5 + 1)) / Math.pow(10, i5)));
         }
-        E = 0;
+        e = 0;
         while (true) {
-            i5 = E;
+            i5 = e;
             if (i5 >= 5) {
                 f4772bD.set((float) ((jpapplication.getWidthPixels() - (i2 * 5)) - i), 0, (float) (jpapplication.getWidthPixels() - (i2 * 5)), scoreImage.getHeight());
                 canvas.drawBitmap(scoreImage, null, f4772bD, null);
                 return;
             }
-            E = f4788bm.get(i5);
-            f4801bz.set(E * i2, 0, (E + 1) * i2, i3);
+            e = f4788bm.get(i5);
+            f4801bz.set(e * i2, 0, (e + 1) * i2, i3);
             f4769bA.set(jpapplication.getWidthPixels() - ((i6 + 1) * i2), 0, jpapplication.getWidthPixels() - (i2 * i6), i3);
             canvas.drawBitmap(scoreNumImage, f4801bz, f4769bA, null);
             i6++;
-            E = i5 + 1;
+            e = i5 + 1;
         }
     }
 
@@ -855,8 +851,8 @@ public final class PlayView extends SurfaceView implements Callback {
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         downNotesThread = new DownNotesThread(jpapplication, GlobalSetting.INSTANCE.getNotesDownSpeed(), pianoPlay);
         downNotesThread.start();
-        loadbackgrounds = new LoadBackgroundsThread(jpapplication, this, pianoPlay);
-        loadbackgrounds.start();
+        loadBackgroundsThread = new LoadBackgroundsThread(jpapplication, this, pianoPlay);
+        loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
         if (jpapplication.getGameMode() != GameModeEnum.HEAR.getCode()) {
@@ -894,8 +890,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     startFirstNoteTouching = false;
                 }
             }
-            if (loadbackgrounds != null) {
-                while (loadbackgrounds.isAlive()) {
+            if (loadBackgroundsThread != null) {
+                while (loadBackgroundsThread.isAlive()) {
                     pianoPlay.isPlayingStart = false;
                 }
             }
