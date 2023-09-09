@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.UserListPageAdapter;
 import ly.pp.justpiano3.view.JPProgressBar;
 

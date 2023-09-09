@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;

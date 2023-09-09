@@ -8,7 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.task.PlayFinishTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -16,7 +17,6 @@ import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

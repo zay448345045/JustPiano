@@ -8,13 +8,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.ChatFilesAdapter;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
 import java.io.File;
 import java.util.*;

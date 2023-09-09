@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
 public class PlayModeSelect extends Activity implements OnClickListener {
     private JPApplication jpApplication;

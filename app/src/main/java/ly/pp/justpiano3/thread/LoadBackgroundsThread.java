@@ -4,13 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.view.PlayView;
-import ly.pp.justpiano3.activity.PianoPlay;
 
 public final class LoadBackgroundsThread extends Thread {
     private final PlayView playView;

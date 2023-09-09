@@ -6,12 +6,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.view.JPDialog;
 
 import java.util.List;
 

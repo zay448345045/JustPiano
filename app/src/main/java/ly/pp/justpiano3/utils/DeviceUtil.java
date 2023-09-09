@@ -1,11 +1,8 @@
 package ly.pp.justpiano3.utils;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
-import io.netty.util.internal.StringUtil;
 
 /**
  * DeviceUtils

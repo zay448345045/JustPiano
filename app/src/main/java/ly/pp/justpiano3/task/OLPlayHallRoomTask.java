@@ -3,7 +3,6 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;

@@ -7,10 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.view.JPDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 

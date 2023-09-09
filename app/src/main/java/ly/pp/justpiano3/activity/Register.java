@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
-import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.RegisterTask;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.util.regex.Pattern;
 

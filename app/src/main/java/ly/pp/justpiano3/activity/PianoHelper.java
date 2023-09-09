@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ViewFlipper;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.constant.Consts;
 
 public class PianoHelper extends Activity implements OnGestureListener {

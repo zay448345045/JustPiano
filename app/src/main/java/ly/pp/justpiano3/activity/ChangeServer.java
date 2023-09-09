@@ -11,9 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.IPUtil;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
 public class ChangeServer extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;

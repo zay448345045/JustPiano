@@ -4,7 +4,6 @@ import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.MainMode;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;

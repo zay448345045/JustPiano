@@ -8,7 +8,6 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.activity.WaterfallActivity;
-import ly.pp.justpiano3.listener.OLMelodySongsPlayClick;
 import ly.pp.justpiano3.listener.SearchSongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 

@@ -9,24 +9,11 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.protobuf.MessageLite;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -40,6 +27,11 @@ import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
 import protobuf.dto.OnlineShopDTO;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public String sex = "f";

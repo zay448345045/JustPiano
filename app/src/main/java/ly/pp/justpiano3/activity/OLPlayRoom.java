@@ -43,7 +43,6 @@ import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
-import ly.pp.justpiano3.view.DataSelectView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.ScrollText;
 import org.jetbrains.annotations.NotNull;

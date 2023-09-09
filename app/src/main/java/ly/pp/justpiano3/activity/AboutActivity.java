@@ -2,13 +2,9 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.utils.DeviceUtil;
 
 public class AboutActivity extends Activity {
 

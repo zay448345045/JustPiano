@@ -5,8 +5,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.task.UserInfoChangeTask;
 import ly.pp.justpiano3.activity.UsersInfo;
+import ly.pp.justpiano3.task.UserInfoChangeTask;
 
 public final class ChangePasswordClick implements OnClickListener {
     private final UsersInfo userInfo;

@@ -6,11 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.WaterfallActivity;
-import ly.pp.justpiano3.listener.SearchSongsPlayClick;
-import ly.pp.justpiano3.listener.ShowSongsInfoPlayClick;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
+import ly.pp.justpiano3.activity.WaterfallActivity;
+import ly.pp.justpiano3.listener.ShowSongsInfoPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
 import java.util.HashMap;

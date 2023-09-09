@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.utils;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * @author as

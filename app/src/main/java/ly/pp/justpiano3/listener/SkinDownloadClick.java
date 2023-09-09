@@ -6,9 +6,9 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.activity.SkinDownload;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
 import java.io.File;
 

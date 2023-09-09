@@ -10,7 +10,6 @@ import android.widget.GridView;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.adapter.RoomMiniPeopleAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.ColorUtil;
 

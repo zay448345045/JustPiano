@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.widget.ImageView;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.thread.PictureHandleThread;
 
 import java.io.InputStream;
 import java.lang.ref.SoftReference;

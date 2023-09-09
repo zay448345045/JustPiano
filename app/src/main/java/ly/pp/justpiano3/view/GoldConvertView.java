@@ -5,14 +5,12 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 
 import java.math.BigDecimal;

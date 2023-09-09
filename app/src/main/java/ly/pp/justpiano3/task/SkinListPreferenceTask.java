@@ -3,8 +3,8 @@ package ly.pp.justpiano3.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.view.SkinListPreference;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.view.SkinListPreference;
 
 import java.io.File;
 

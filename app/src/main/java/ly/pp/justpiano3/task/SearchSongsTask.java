@@ -5,7 +5,6 @@ import android.widget.Toast;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;

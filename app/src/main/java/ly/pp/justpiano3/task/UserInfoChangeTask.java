@@ -7,7 +7,6 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
 

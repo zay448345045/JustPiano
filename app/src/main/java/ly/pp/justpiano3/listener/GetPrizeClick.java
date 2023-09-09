@@ -3,7 +3,6 @@ package ly.pp.justpiano3.listener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.Toast;
-
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChallengeDTO;

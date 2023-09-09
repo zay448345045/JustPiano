@@ -4,8 +4,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.task.PopUserInfoTask;
 import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.task.PopUserInfoTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 

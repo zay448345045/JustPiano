@@ -7,7 +7,6 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.ShowTopInfo;
 import ly.pp.justpiano3.adapter.TopUserAdapter;
-import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;

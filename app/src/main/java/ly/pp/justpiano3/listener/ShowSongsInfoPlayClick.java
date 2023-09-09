@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.task.ShowSongsInfoPlayTask;
 import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
+import ly.pp.justpiano3.task.ShowSongsInfoPlayTask;
 
 public final class ShowSongsInfoPlayClick implements OnClickListener {
 

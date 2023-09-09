@@ -6,12 +6,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.view.JPDialog;
 import protobuf.dto.OnlineShopDTO;
 
 public final class ShopAdapter extends BaseAdapter {

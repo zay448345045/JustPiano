@@ -1,20 +1,13 @@
 package ly.pp.justpiano3.utils;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Xml;
 import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 import org.xmlpull.v1.XmlPullParser;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
 
 /**
  * 框框颜色处理工具

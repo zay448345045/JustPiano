@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.view.JPDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

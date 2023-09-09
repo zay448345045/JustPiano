@@ -1,12 +1,12 @@
 package ly.pp.justpiano3.utils;
 
+import android.util.Base64;
 import android.util.Log;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
-import android.util.Base64;
 
 /**
  * @author as
