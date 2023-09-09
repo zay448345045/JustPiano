@@ -76,7 +76,7 @@
             app:floatNumber="true"
             android:dialogTitle="节拍比率(仅本地模式有效)"
             android:key="temp_speed"
-            android:summary="值越小，音乐整体节拍越慢，持续时间越长"
+            android:summary="值越小，曲谱整体节拍越慢，持续时间越长"
             android:title="节拍比率(仅本地模式有效)" />
         <SwitchPreference
             android:defaultValue="true"
@@ -147,7 +147,7 @@
             app:maxValue="1.5"
             app:floatNumber="true"
             android:key="waterfall_song_speed"
-            android:summary="值越小，音乐速度越慢，持续时间越长"
+            android:summary="值越小，曲谱整体播放速度越慢，持续时间越长"
             android:title="瀑布流曲谱播放速度"
             android:dialogTitle="瀑布流曲谱播放速度" />
         <ly.pp.justpiano3.view.SeekBarPreference
@@ -156,9 +156,9 @@
             app:maxValue="1.2"
             app:floatNumber="true"
             android:key="waterfall_down_speed"
-            android:summary="设置音块的下落速度，值越小，音块越矮，下落速度越慢"
-            android:title="瀑布流音块下落速率"
-            android:dialogTitle="瀑布流音块下落速率" />
+            android:summary="设置音符的下落速率，值越小，音符越矮，下落速度越慢"
+            android:title="瀑布流音符下落速率"
+            android:dialogTitle="瀑布流音符下落速率" />
     </PreferenceCategory>
     <PreferenceCategory android:title="在线聊天">
         <SwitchPreference
