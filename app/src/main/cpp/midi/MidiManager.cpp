@@ -1,7 +1,7 @@
-#include <inttypes.h>
+#include <cinttypes>
 #include <jni.h>
 #include <pthread.h>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 
 #include <atomic>
@@ -14,25 +14,22 @@
 #include "utils/AndroidDebug.h"
 #include "MidiSpec.h"
 
-static AMidiDevice *sNativeReceiveDevice = NULL;
+static AMidiDevice *sNativeReceiveDevice = nullptr;
 // The thread only reads this value, so no special protection is required.
-static AMidiOutputPort *sMidiOutputPort = NULL;
-
-static AMidiDevice *sNativeSendDevice = NULL;
-static AMidiInputPort *sMidiInputPort = NULL;
+static AMidiOutputPort *sMidiOutputPort = nullptr;
 
 static pthread_t sReadThread;
-static std::atomic<bool> sReading(false);
+static std::atomic<bool> isReading(false);
 
 // The Data Callback
-extern JavaVM *theJvm;           // Need this for allocating data buffer for...
-extern jclass dataCallbackClass;  // This is the (Java) class...
-extern jmethodID midDataCallback;  // ...this callback routine
+static JavaVM *theJvm;           // Need this for allocating data buffer for...
+static jclass dataCallbackClass;  // This is the (Java) class...
+static jmethodID midDataCallback;  // ...this callback routine
 
 static void SendTheReceivedData(uint8_t *data, int numBytes) {
     JNIEnv *env;
-    theJvm->AttachCurrentThread(&env, NULL);
-    if (env == NULL) {
+    theJvm->AttachCurrentThread(&env, nullptr);
+    if (env == nullptr) {
         LOGE("Error retrieving JNI Env");
     }
 
@@ -76,14 +73,14 @@ static void logMidiBuffer(int64_t timestamp, uint8_t* dataBytes, size_t numDataB
 static void *readThreadRoutine(void *context) {
     (void) context;  // unused
 
-    sReading = true;
+    isReading = true;
     // AMidiOutputPort* outputPort = sMidiOutputPort.load();
     AMidiOutputPort *outputPort = sMidiOutputPort;
 
     const size_t MAX_BYTES_TO_RECEIVE = 128;
     uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
 
-    while (sReading) {
+    while (isReading) {
         // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU
         // unnecessarily
         usleep(2000);
@@ -98,7 +95,7 @@ static void *readThreadRoutine(void *context) {
         if (numMessagesReceived < 0) {
             LOGW("Failure receiving MIDI data %zd", numMessagesReceived);
             // Exit the thread
-            sReading = false;
+            isReading = false;
         }
         if (numMessagesReceived > 0 && numBytesReceived >= 0) {
             if (opcode == AMIDI_OPCODE_DATA &&
@@ -110,9 +107,8 @@ static void *readThreadRoutine(void *context) {
                 // ignore
             }
         }
-    }  // end while(sReading)
-
-    return NULL;
+    }  // end while(isReading)
+    return nullptr;
 }
 
 //
@@ -122,14 +118,14 @@ extern "C" {
 
 /**
  * Native implementation of TBMidiManager.startReadingMidi() method.
- * Opens the first "output" port from specified MIDI device for sReading.
+ * Opens the first "output" port from specified MIDI device for isReading.
  * @param   env  JNI Env pointer.
  * @param   (unnamed)   TBMidiManager (Java) object.
  * @param   midiDeviceObj   (Java) MidiDevice object.
  * @param   portNumber      The index of the "output" port to open.
  */
-void Java_ly_pp_justpiano3_midi_AppMidiManager_startReadingMidi(
-        JNIEnv *env, jobject, jobject midiDeviceObj, jint portNumber) {
+void Java_ly_pp_justpiano3_utils_MidiUtil_startReadingMidi(
+        JNIEnv *env, jclass clazz, jobject midiDeviceObj, jint portNumber) {
     AMidiDevice_fromJava(env, midiDeviceObj, &sNativeReceiveDevice);
     // int32_t deviceType = AMidiDevice_getType(sNativeReceiveDevice);
     // ssize_t numPorts = AMidiDevice_getNumOutputPorts(sNativeReceiveDevice);
@@ -142,8 +138,8 @@ void Java_ly_pp_justpiano3_midi_AppMidiManager_startReadingMidi(
 
     // Start read thread
     // pthread_init(true);
-    /*int pthread_result =*/pthread_create(&sReadThread, NULL, readThreadRoutine,
-                                           NULL);
+    /*int pthread_result =*/pthread_create(&sReadThread, nullptr, readThreadRoutine,
+                                           nullptr);
 }
 
 /**
@@ -151,14 +147,30 @@ void Java_ly_pp_justpiano3_midi_AppMidiManager_startReadingMidi(
  * @param   (unnamed)   JNI Env pointer.
  * @param   (unnamed)   TBMidiManager (Java) object.
  */
-void Java_ly_pp_justpiano3_midi_AppMidiManager_stopReadingMidi(JNIEnv *,
-                                                               jobject) {
+void Java_ly_pp_justpiano3_utils_MidiUtil_stopReadingMidi(JNIEnv *,
+                                                          jclass clazz) {
     // need some synchronization here
-    sReading = false;
-    pthread_join(sReadThread, NULL);
+    isReading = false;
+    pthread_join(sReadThread, nullptr);
 
     /*media_status_t status =*/AMidiDevice_release(sNativeReceiveDevice);
-    sNativeReceiveDevice = NULL;
+    sNativeReceiveDevice = nullptr;
+}
+
+/**
+ * Initializes JNI interface stuff, specifically the info needed to call back
+ * into the Java layer when MIDI data is received.
+ */
+JNICALL void Java_ly_pp_justpiano3_utils_MidiUtil_registerCallBack(
+        JNIEnv *env, jclass cls) {
+    env->GetJavaVM(&theJvm);
+
+    // Setup the receive data callback (into Java)
+    jclass clsMainActivity =
+            env->FindClass("ly/pp/justpiano3/utils/MidiUtil");
+    dataCallbackClass = static_cast<jclass>(env->NewGlobalRef(cls));
+    midDataCallback =
+            env->GetStaticMethodID(clsMainActivity, "onNativeMessageReceive", "([B)V");
 }
 
 }  // extern "C"

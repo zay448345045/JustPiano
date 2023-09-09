@@ -929,7 +929,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                             midiConnectHandle(data);
                         }
                     });
-                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        MidiUtil.getMidiOutputPort().connect(midiFramer);
+                    }
                     MidiUtil.addMidiConnectionListener(this);
                 }
             }
@@ -972,11 +974,13 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (MidiUtil.getMidiOutputPort() != null) {
                 if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    }
                     midiFramer = null;
                 }
             }
-            MidiUtil.removeMidiConnectionStart(this);
+            MidiUtil.removeMidiConnectionListener(this);
         }
         stopNotesSchedule();
         if (recordStart) {
@@ -1042,7 +1046,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
                         midiConnectHandle(data);
                     }
                 });
-                MidiUtil.getMidiOutputPort().connect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                }
                 olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
                 runOnUiThread(() -> {
                     if (playerGrid.getAdapter() != null) {
@@ -1059,7 +1065,9 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
     public void onMidiDisconnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (midiFramer != null) {
-                MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                }
                 midiFramer = null;
                 olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
                 runOnUiThread(() -> {
@@ -1073,42 +1081,61 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         }
     }
 
+    @Override
+    public void onMidiReceiveMessage(byte pitch, byte volume) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (volume > 0) {
+                onMidiReceiveKeyDownHandle(pitch, volume);
+            } else {
+                onMidiReceiveKeyUpHandle(pitch);
+            }
+        }
+    }
+
     public void midiConnectHandle(byte[] data) {
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         byte pitch = (byte) (data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune());
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(pitch, data[2], kuang == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuang));
-            if (hasAnotherUser()) {
-                broadNote(pitch, data[2]);
-            }
-            if (roomPositionSub1 >= 0) {
-                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                    SoundEngineUtil.playSound(pitch, data[2]);
-                }
-                if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
-                    olKeyboardStates[roomPositionSub1].setPlaying(true);
-                    runOnUiThread(() -> {
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
+            onMidiReceiveKeyDownHandle(pitch, data[2]);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardView.fireKeyUp(pitch);
-            if (hasAnotherUser()) {
-                broadNote(pitch, 0);
+            onMidiReceiveKeyUpHandle(pitch);
+        }
+    }
+
+    private void onMidiReceiveKeyDownHandle(byte pitch, byte volume) {
+        keyboardView.fireKeyDown(pitch, volume, kuang == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuang));
+        if (hasAnotherUser()) {
+            broadNote(pitch, volume);
+        }
+        if (roomPositionSub1 >= 0) {
+            if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                SoundEngineUtil.playSound(pitch, volume);
             }
-            if (roomPositionSub1 >= 0) {
-                if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
-                    olKeyboardStates[roomPositionSub1].setPlaying(true);
-                    runOnUiThread(() -> {
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        }
-                    });
-                }
+            if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
+                olKeyboardStates[roomPositionSub1].setPlaying(true);
+                runOnUiThread(() -> {
+                    if (playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+    }
+
+    private void onMidiReceiveKeyUpHandle(byte pitch) {
+        keyboardView.fireKeyUp(pitch);
+        if (hasAnotherUser()) {
+            broadNote(pitch, 0);
+        }
+        if (roomPositionSub1 >= 0) {
+            if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
+                olKeyboardStates[roomPositionSub1].setPlaying(true);
+                runOnUiThread(() -> {
+                    if (playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                    }
+                });
             }
         }
     }

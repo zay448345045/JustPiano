@@ -62,8 +62,7 @@ target_link_libraries( # Specifies the target library.
 # add native midi
 add_library(native_midi
         SHARED
-        midi/AppMidiManager.cpp
-        utils/midiUtil.cpp
+        midi/MidiManager.cpp
         )
 
 target_link_libraries(native_midi PRIVATE amidi OpenSLES android log)

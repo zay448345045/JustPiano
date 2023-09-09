@@ -137,7 +137,9 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                         midiConnectHandle(data)
                     }
                 })
-                MidiUtil.getMidiOutputPort().connect(midiFramer)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer)
+                }
             }
             MidiUtil.addMidiConnectionListener(this)
         }
@@ -194,11 +196,13 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (MidiUtil.getMidiOutputPort() != null) {
                 if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                    }
                     midiFramer = null
                 }
             }
-            MidiUtil.removeMidiConnectionStart(this)
+            MidiUtil.removeMidiConnectionListener(this)
         }
         // 停止播放，释放资源
         waterfallView.stopPlay()
@@ -408,7 +412,9 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                         midiConnectHandle(data)
                     }
                 })
-                MidiUtil.getMidiOutputPort().connect(midiFramer)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer)
+                }
             }
         }
     }
@@ -416,8 +422,21 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     override fun onMidiDisconnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (midiFramer != null) {
-                MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                }
                 midiFramer = null
+            }
+        }
+    }
+
+    override fun onMidiReceiveMessage(pitch: Byte, volume: Byte) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (volume > 0) {
+                keyboardModeView.fireKeyDown(pitch, volume, null)
+                SoundEngineUtil.playSound(pitch, volume)
+            } else {
+                keyboardModeView.fireKeyUp(pitch)
             }
         }
     }

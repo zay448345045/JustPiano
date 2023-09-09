@@ -27,7 +27,9 @@ public final class TouchNotes implements OnTouchListener {
                         playView.pianoPlay.midiConnectHandle(data);
                     }
                 });
-                MidiUtil.getMidiOutputPort().connect(playView.pianoPlay.midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(playView.pianoPlay.midiFramer);
+                }
             }
             MidiUtil.addMidiConnectionListener(playView.pianoPlay);
         }

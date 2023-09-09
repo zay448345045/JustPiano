@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.midi.MidiReceiver;
 import android.os.*;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -132,7 +133,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         midiConnectHandle(data);
                     }
                 });
-                MidiUtil.getMidiOutputPort().connect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                }
             }
             MidiUtil.addMidiConnectionListener(this);
         }
@@ -143,11 +146,13 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (MidiUtil.getMidiOutputPort() != null) {
                 if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    }
                     midiFramer = null;
                 }
             }
-            MidiUtil.removeMidiConnectionStart(this);
+            MidiUtil.removeMidiConnectionListener(this);
         }
         if (recordStart) {
             SoundEngineUtil.setRecord(false);
@@ -304,7 +309,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         midiConnectHandle(data);
                     }
                 });
-                MidiUtil.getMidiOutputPort().connect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                }
             }
         }
     }
@@ -313,8 +320,22 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public void onMidiDisconnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (midiFramer != null) {
-                MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                }
                 midiFramer = null;
+            }
+        }
+    }
+
+    @Override
+    public void onMidiReceiveMessage(byte pitch, byte volume) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (volume > 0) {
+                keyboardMode1View.fireKeyDown(pitch, volume, null);
+                SoundEngineUtil.playSound(pitch, volume);
+            } else {
+                keyboardMode1View.fireKeyUp(pitch);
             }
         }
     }

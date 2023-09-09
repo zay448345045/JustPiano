@@ -499,11 +499,13 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (MidiUtil.getMidiOutputPort() != null) {
                 if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    }
                     midiFramer = null;
                 }
             }
-            MidiUtil.removeMidiConnectionStart(this);
+            MidiUtil.removeMidiConnectionListener(this);
         }
         super.onDestroy();
     }
@@ -614,7 +616,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                         }
                     });
                 }
-                MidiUtil.getMidiOutputPort().connect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                }
             }
         }
     }
@@ -623,8 +627,21 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public void onMidiDisconnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (midiFramer != null) {
-                MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                }
                 midiFramer = null;
+            }
+        }
+    }
+
+    @Override
+    public void onMidiReceiveMessage(byte pitch, byte volume) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (volume > 0) {
+                onMidiReceiveKeyDownHandle(pitch % 12);
+            } else {
+                onMidiReceiveKeyUpHandle(pitch % 12);
             }
         }
     }
@@ -633,20 +650,28 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         int touchNoteNum = data[1] % 12;
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            if (playView.currentPlayNote != null) {
-                playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
-            }
-            int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
-            keyboardview.touchNoteSet.put(trueNote, 0);
-            updateKeyboardPrefer();
+            onMidiReceiveKeyDownHandle(touchNoteNum);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            if (touchNoteNum == 0) {
-                keyboardview.touchNoteSet.remove(12);
-            }
-            keyboardview.touchNoteSet.remove(touchNoteNum);
-            updateKeyboardPrefer();
+            onMidiReceiveKeyUpHandle(touchNoteNum);
         }
+    }
+
+    private void onMidiReceiveKeyUpHandle(int touchNoteNum) {
+        if (touchNoteNum == 0) {
+            keyboardview.touchNoteSet.remove(12);
+        }
+        keyboardview.touchNoteSet.remove(touchNoteNum);
+        updateKeyboardPrefer();
+    }
+
+    private void onMidiReceiveKeyDownHandle(int touchNoteNum) {
+        if (playView.currentPlayNote != null) {
+            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+        }
+        int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
+        keyboardview.touchNoteSet.put(trueNote, 0);
+        updateKeyboardPrefer();
     }
 
     public void updateKeyboardPrefer() {
