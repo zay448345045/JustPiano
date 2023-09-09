@@ -61,7 +61,6 @@ public final class Receive {
                                 message2.what = 1;
                                 break;
                         }
-                        assert oLMainMode != null;
                         EncryptUtil.setServerTimeInterval(msg.getLogin().getTime());
                         oLMainMode.olMainModeHandler.handleMessage(message2);
                         return;
@@ -81,7 +80,6 @@ public final class Receive {
                             bundle2.putInt("V", 0);
                         }
                         message.setData(bundle2);
-                        assert olPlayHall != null;
                         olPlayHall.olPlayHallHandler.handleMessage(message);
                         return;
                     }

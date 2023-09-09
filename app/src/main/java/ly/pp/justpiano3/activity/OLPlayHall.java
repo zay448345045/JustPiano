@@ -184,7 +184,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         listView.setCacheColorHint(0);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle(i2 + "房" + " 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+        new JPDialog(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             enterRoomHandle(bundle.getInt("P"), (byte) i2);
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();

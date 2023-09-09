@@ -17,6 +17,7 @@ import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.GetPrizeClick;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.view.DrawPrizeView;
@@ -80,6 +81,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
                 intent.setData(Uri.parse("https://" + Consts.WEBSITE_URL + "/pages/challenge.html"));
                 startActivity(intent);
                 return;
+            default:
         }
     }
 
@@ -115,35 +117,34 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         scoreListView.setCacheColorHint(0);
     }
 
-    public final void showDrawPrizeDialog(Bundle b) {
+    public final void showDrawPrizeDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_draw_prize, findViewById(R.id.dialog));
-        TextView t = inflate.findViewById(R.id.ol_prize_result);
-        ImageView iv = inflate.findViewById(R.id.ol_prize_pointer);
-        DrawPrizeView dp = inflate.findViewById(R.id.ol_draw_prize_pan);
-        TextView color = inflate.findViewById(R.id.ol_prize_color);
-        color.setVisibility(View.GONE);
-        String result = b.getString("N");
-        t.setText(result);
-        int prizeNum = b.getInt("P");
+        TextView prizeResultTextView = inflate.findViewById(R.id.ol_prize_result);
+        ImageView prizePointerImageView = inflate.findViewById(R.id.ol_prize_pointer);
+        DrawPrizeView drawPrizeView = inflate.findViewById(R.id.ol_draw_prize_pan);
+        TextView prizeColorView = inflate.findViewById(R.id.ol_prize_color);
+        String result = bundle.getString("N");
+        prizeResultTextView.setText(result);
+        int prizeNum = bundle.getInt("P");
         if (prizeNum != -1) {
             int prizeType = prizeNum / 100;
-            dp.luckyStart(prizeType);
-//            if (prizeType == 0) {
-//                color.setVisibility(View.VISIBLE);
-//                int kuang = prizeNum + 7;
-//                if (prizeNum > 17) {
-//                    kuang = 2 + (prizeNum - 18) * 5 / 82;
-//                }
-//                color.setBackgroundResource(Consts.kuang[kuang]);
-//            }
+            drawPrizeView.luckyStart(prizeType);
+            if (prizeType == 0) {
+                int kuang = prizeNum + 7;
+                if (prizeNum > 17) {
+                    kuang = 2 + (prizeNum - 18) * 5 / 82;
+                }
+                prizeColorView.setBackgroundResource(ColorUtil.kuang[kuang]);
+                prizeColorView.setVisibility(View.VISIBLE);
+            }
             try {
                 new JPDialog(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrizeClick(this)).setSecondButton("放弃领取", new DialogDismissClick()).showDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            iv.setVisibility(View.GONE);
-            dp.setVisibility(View.GONE);
+            prizePointerImageView.setVisibility(View.GONE);
+            drawPrizeView.setVisibility(View.GONE);
             try {
                 new JPDialog(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", new DialogDismissClick()).showDialog();
             } catch (Exception e) {

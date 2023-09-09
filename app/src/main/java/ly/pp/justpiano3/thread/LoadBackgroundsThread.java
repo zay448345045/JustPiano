@@ -85,11 +85,11 @@ public final class LoadBackgroundsThread extends Thread {
                     if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
-                }
-                if (jpapplication.getGameMode() != GameModeEnum.HEAR.getCode()) {  // 不是欣赏模式
-                    playView.mo2930b(canvas);
-                } else {
-                    playView.mo2931c(canvas);
+                    if (jpapplication.getGameMode() != GameModeEnum.HEAR.getCode()) {  // 不是欣赏模式
+                        playView.mo2930b(canvas);
+                    } else {
+                        playView.mo2931c(canvas);
+                    }
                 }
                 if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {
                     canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0.0f, 0.0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
@@ -133,14 +133,11 @@ public final class LoadBackgroundsThread extends Thread {
                     canvas.drawArc(new RectF(((float) playView.currentPlayNote.noteValue) * widthDiv120, f6021g, ((float) (playView.currentPlayNote.noteValue + 1)) * widthDiv120, f6021g + widthDiv120), 0.0f, 360.0f, false, f6024j);
                     canvas.drawArc(new RectF(((float) playView.f4813n) * widthDiv120, f6022h, ((float) (playView.f4813n + 1)) * widthDiv120, f6022h + widthDiv120), 0.0f, 360.0f, false, f6025k);
                 }
-                playView.mo2929a(canvas);
-                if (canvas != null) {
-                    surfaceholder.unlockCanvasAndPost(canvas);
-                }
-                canvas = null;
             } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
                 playView.mo2929a(canvas);
-                if (canvas != null) {
+                if (canvas != null && surfaceholder.getSurface().isValid()) {
                     surfaceholder.unlockCanvasAndPost(canvas);
                 }
                 canvas = null;

@@ -12,11 +12,11 @@ import java.util.List;
 
 public final class ChallengeListAdapter extends BaseAdapter {
     private final List<HashMap> list;
-    private final LayoutInflater li;
+    private final LayoutInflater llayoutInflater;
 
     public ChallengeListAdapter(List<HashMap> list, LayoutInflater layoutInflater) {
         this.list = list;
-        li = layoutInflater;
+        llayoutInflater = layoutInflater;
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class ChallengeListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_c_challenge_view, null);
+            view = llayoutInflater.inflate(R.layout.ol_c_challenge_view, null);
         }
         String name = (String) list.get(i).get("N");
         if (name == null) {
