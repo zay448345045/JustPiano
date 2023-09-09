@@ -1,19 +1,22 @@
 package ly.pp.justpiano3.activity
 
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.graphics.RectF
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.media.midi.MidiReceiver
+import android.os.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import ly.pp.justpiano3.R
+import ly.pp.justpiano3.constant.MidiConstants
 import ly.pp.justpiano3.entity.GlobalSetting
+import ly.pp.justpiano3.entity.GlobalSetting.midiKeyboardTune
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
+import ly.pp.justpiano3.midi.MidiConnectionListener
+import ly.pp.justpiano3.midi.MidiFramer
 import ly.pp.justpiano3.utils.MidiUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
@@ -24,8 +27,9 @@ import ly.pp.justpiano3.view.WaterfallView.NoteFallListener
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
+import kotlin.experimental.and
 
-class WaterfallActivity : Activity(), OnTouchListener {
+class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * 瀑布流view
      */
@@ -40,6 +44,11 @@ class WaterfallActivity : Activity(), OnTouchListener {
      * 用于播放动画
      */
     private var scheduledExecutor: ScheduledExecutorService? = null
+
+    /**
+     * midi键盘协议解析器
+     */
+    private var midiFramer: MidiReceiver? = null
 
     companion object {
         /**
@@ -121,6 +130,19 @@ class WaterfallActivity : Activity(), OnTouchListener {
                 keyboardModeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
+                    midiFramer = MidiFramer(object : MidiReceiver() {
+                        override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
+                            midiConnectHandle(data)
+                        }
+                    })
+                    MidiUtil.getMidiOutputPort().connect(midiFramer)
+                    MidiUtil.addMidiConnectionListener(this)
+                }
+            }
+        }
     }
 
     /**
@@ -171,6 +193,17 @@ class WaterfallActivity : Activity(), OnTouchListener {
     }
 
     override fun onDestroy() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (MidiUtil.getMidiOutputPort() != null) {
+                    if (midiFramer != null) {
+                        MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                        midiFramer = null
+                    }
+                    MidiUtil.removeMidiConnectionStart(this)
+                }
+            }
+        }
         // 停止播放，释放资源
         waterfallView.stopPlay()
         waterfallView.destroy()
@@ -369,5 +402,42 @@ class WaterfallActivity : Activity(), OnTouchListener {
             }
         }
         false
+    }
+
+    override fun onMidiConnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
+                    midiFramer = MidiFramer(object : MidiReceiver() {
+                        override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
+                            midiConnectHandle(data)
+                        }
+                    })
+                    MidiUtil.getMidiOutputPort().connect(midiFramer)
+                }
+            }
+        }
+    }
+
+    override fun onMidiDisconnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (midiFramer != null) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                    midiFramer = null
+                }
+            }
+        }
+    }
+
+    fun midiConnectHandle(data: ByteArray) {
+        val command = (data[0] and MidiConstants.STATUS_COMMAND_MASK)
+        val pitch = (data[1] + midiKeyboardTune).toByte()
+        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
+            keyboardModeView.fireKeyDown(pitch, data[2], null)
+            SoundEngineUtil.playSound(pitch, data[2])
+        } else if (command == MidiConstants.STATUS_NOTE_OFF || (command == MidiConstants.STATUS_NOTE_ON && data[2] <= 0)) {
+            keyboardModeView.fireKeyUp(pitch)
+        }
     }
 }
