@@ -130,18 +130,16 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 keyboardModeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                    midiFramer = MidiFramer(object : MidiReceiver() {
-                        override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-                            midiConnectHandle(data)
-                        }
-                    })
-                    MidiUtil.getMidiOutputPort().connect(midiFramer)
-                    MidiUtil.addMidiConnectionListener(this)
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
+                midiFramer = MidiFramer(object : MidiReceiver() {
+                    override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
+                        midiConnectHandle(data)
+                    }
+                })
+                MidiUtil.getMidiOutputPort().connect(midiFramer)
             }
+            MidiUtil.addMidiConnectionListener(this)
         }
     }
 
@@ -193,16 +191,14 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null) {
-                    if (midiFramer != null) {
-                        MidiUtil.getMidiOutputPort().disconnect(midiFramer)
-                        midiFramer = null
-                    }
-                    MidiUtil.removeMidiConnectionStart(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null) {
+                if (midiFramer != null) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                    midiFramer = null
                 }
             }
+            MidiUtil.removeMidiConnectionStart(this)
         }
         // 停止播放，释放资源
         waterfallView.stopPlay()
@@ -405,27 +401,23 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                    midiFramer = MidiFramer(object : MidiReceiver() {
-                        override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-                            midiConnectHandle(data)
-                        }
-                    })
-                    MidiUtil.getMidiOutputPort().connect(midiFramer)
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
+                midiFramer = MidiFramer(object : MidiReceiver() {
+                    override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
+                        midiConnectHandle(data)
+                    }
+                })
+                MidiUtil.getMidiOutputPort().connect(midiFramer)
             }
         }
     }
 
     override fun onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer)
-                    midiFramer = null
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (midiFramer != null) {
+                MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                midiFramer = null
             }
         }
     }

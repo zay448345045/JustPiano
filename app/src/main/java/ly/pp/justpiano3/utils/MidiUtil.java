@@ -53,38 +53,36 @@ public class MidiUtil {
     private static MidiOutputPort midiOutputPort;
 
     public static void initMidiDevice(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                midiConnectionListeners = new ArrayList<>();
-                mMidiManager = (MidiManager) context.getSystemService(MIDI_SERVICE);
-                mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
-                    @Override
-                    public void onDeviceAdded(MidiDeviceInfo info) {
-                        openDevice(context, info);
-                    }
-
-                    @Override
-                    public void onDeviceRemoved(MidiDeviceInfo info) {
-                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                            midiConnectionListener.onMidiDisconnect();
-                        }
-                        try {
-                            if (midiOutputPort != null) {
-                                midiOutputPort.close();
-                                Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } finally {
-                            midiOutputPort = null;
-                        }
-                    }
-                }, new Handler(Looper.getMainLooper()));
-                for (MidiDeviceInfo info : mMidiManager.getDevices()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            midiConnectionListeners = new ArrayList<>();
+            mMidiManager = (MidiManager) context.getSystemService(MIDI_SERVICE);
+            mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
+                @Override
+                public void onDeviceAdded(MidiDeviceInfo info) {
                     openDevice(context, info);
                 }
+
+                @Override
+                public void onDeviceRemoved(MidiDeviceInfo info) {
+                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                        midiConnectionListener.onMidiDisconnect();
+                    }
+                    try {
+                        if (midiOutputPort != null) {
+                            midiOutputPort.close();
+                            Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        midiOutputPort = null;
+                    }
+                }
+            }, new Handler(Looper.getMainLooper()));
+            for (MidiDeviceInfo info : mMidiManager.getDevices()) {
+                openDevice(context, info);
             }
         }
     }
@@ -109,7 +107,9 @@ public class MidiUtil {
     }
 
     public static void addMidiConnectionListener(MidiConnectionListener midiConnectionListener) {
-        midiConnectionListeners.add(midiConnectionListener);
+        if (!midiConnectionListeners.contains(midiConnectionListener)) {
+            midiConnectionListeners.add(midiConnectionListener);
+        }
     }
 
     public static void removeMidiConnectionStart(MidiConnectionListener midiConnectionListener) {

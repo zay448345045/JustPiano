@@ -19,12 +19,11 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 import ly.pp.justpiano3.adapter.*;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
 import ly.pp.justpiano3.entity.User;
@@ -970,16 +969,14 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
         invitePlayerList.clear();
         friendPlayerList.clear();
         JPStack.pop(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null) {
-                    if (midiFramer != null) {
-                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
-                        midiFramer = null;
-                    }
-                    MidiUtil.removeMidiConnectionStart(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null) {
+                if (midiFramer != null) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    midiFramer = null;
                 }
             }
+            MidiUtil.removeMidiConnectionStart(this);
         }
         stopNotesSchedule();
         if (recordStart) {
@@ -1037,45 +1034,41 @@ public final class OLPlayKeyboardRoom extends BaseActivity implements Callback, 
 
     @Override
     public void onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                    midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            midiConnectHandle(data);
-                        }
-                    });
-                    MidiUtil.getMidiOutputPort().connect(midiFramer);
-                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
-                    runOnUiThread(() -> {
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        } else {
-                            playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
-                        }
-                    });
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
+                midiFramer = new MidiFramer(new MidiReceiver() {
+                    @Override
+                    public void onSend(byte[] data, int offset, int count, long timestamp) {
+                        midiConnectHandle(data);
+                    }
+                });
+                MidiUtil.getMidiOutputPort().connect(midiFramer);
+                olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
+                runOnUiThread(() -> {
+                    if (playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                    } else {
+                        playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
+                    }
+                });
             }
         }
     }
 
     @Override
     public void onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
-                    midiFramer = null;
-                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
-                    runOnUiThread(() -> {
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        } else {
-                            playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
-                        }
-                    });
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (midiFramer != null) {
+                MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                midiFramer = null;
+                olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
+                runOnUiThread(() -> {
+                    if (playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+                    } else {
+                        playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
+                    }
+                });
             }
         }
     }

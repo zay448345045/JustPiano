@@ -16,7 +16,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.*;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FinishScoreAdapter;
 import ly.pp.justpiano3.adapter.MiniScoreAdapter;
 import ly.pp.justpiano3.constant.MidiConstants;
@@ -30,11 +31,7 @@ import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimer;
-import ly.pp.justpiano3.utils.FileUtil;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.MidiUtil;
-import ly.pp.justpiano3.utils.ShareUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.*;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
@@ -499,16 +496,14 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         if (isOpenRecord) {
             recordFinish();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null) {
-                    if (midiFramer != null) {
-                        MidiUtil.getMidiOutputPort().disconnect(midiFramer);
-                        midiFramer = null;
-                    }
-                    MidiUtil.removeMidiConnectionStart(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null) {
+                if (midiFramer != null) {
+                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    midiFramer = null;
                 }
             }
+            MidiUtil.removeMidiConnectionStart(this);
         }
         super.onDestroy();
     }
@@ -609,31 +604,27 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
 
     @Override
     public void onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null) {
-                    if (midiFramer == null) {
-                        midiFramer = new MidiFramer(new MidiReceiver() {
-                            @Override
-                            public void onSend(byte[] data, int offset, int count, long timestamp) {
-                                midiConnectHandle(data);
-                            }
-                        });
-                    }
-                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null) {
+                if (midiFramer == null) {
+                    midiFramer = new MidiFramer(new MidiReceiver() {
+                        @Override
+                        public void onSend(byte[] data, int offset, int count, long timestamp) {
+                            midiConnectHandle(data);
+                        }
+                    });
                 }
+                MidiUtil.getMidiOutputPort().connect(midiFramer);
             }
         }
     }
 
     @Override
     public void onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (midiFramer != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
-                    midiFramer = null;
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (midiFramer != null) {
+                MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                midiFramer = null;
             }
         }
     }

@@ -19,19 +19,17 @@ public final class TouchNotes implements OnTouchListener {
 
     public TouchNotes(PlayView playView) {
         this.playView = playView;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null && playView.pianoPlay.midiFramer == null) {
-                    playView.pianoPlay.midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            playView.pianoPlay.midiConnectHandle(data);
-                        }
-                    });
-                    MidiUtil.getMidiOutputPort().connect(playView.pianoPlay.midiFramer);
-                    MidiUtil.addMidiConnectionListener(playView.pianoPlay);
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null && playView.pianoPlay.midiFramer == null) {
+                playView.pianoPlay.midiFramer = new MidiFramer(new MidiReceiver() {
+                    @Override
+                    public void onSend(byte[] data, int offset, int count, long timestamp) {
+                        playView.pianoPlay.midiConnectHandle(data);
+                    }
+                });
+                MidiUtil.getMidiOutputPort().connect(playView.pianoPlay.midiFramer);
             }
+            MidiUtil.addMidiConnectionListener(playView.pianoPlay);
         }
     }
 
