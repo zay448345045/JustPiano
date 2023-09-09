@@ -148,17 +148,17 @@
             app:floatNumber="true"
             android:key="waterfall_song_speed"
             android:summary="值越小，音乐速度越慢，持续时间越长"
-            android:title="曲谱播放速度"
-            android:dialogTitle="曲谱播放速度" />
+            android:title="瀑布流曲谱播放速度"
+            android:dialogTitle="瀑布流曲谱播放速度" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0.8"
             app:minValue="0.4"
             app:maxValue="1.2"
             app:floatNumber="true"
             android:key="waterfall_down_speed"
-            android:summary="设置音块的下落速度，值越小，音块高度越小，下落速度越慢"
-            android:title="音块下落速率"
-            android:dialogTitle="音块下落速率" />
+            android:summary="设置音块的下落速度，值越小，音块越矮，下落速度越慢"
+            android:title="瀑布流音块下落速率"
+            android:dialogTitle="瀑布流音块下落速率" />
     </PreferenceCategory>
     <PreferenceCategory android:title="在线聊天">
         <SwitchPreference

@@ -40,6 +40,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 陈年代码，不建议修改
  */
 public final class PlayView extends SurfaceView implements Callback {
+    // 总分显示向左偏移的数量，解决曲面屏右上角总分显示不全的问题
+    private static final int TOTAL_SCORE_SHOW_OFFSET = 50;
     public static long serialID = 2825651233768L;
     public Bitmap whiteKeyRightImage;
     public Bitmap whiteKeyMiddleImage;
@@ -123,7 +125,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private int uploadNoteIndex;
     private final List<PlayNote> tempNotesArray = new ArrayList<>();
     private float halfHeightSub10;
-    private final List<Integer> f4788bm = new ArrayList<>();
+    private final List<Integer> currentTotalScoreNumberList = new ArrayList<>();
     private int handValue;
     private byte[] tickArray;
     private byte[] trackArray;
@@ -802,22 +804,24 @@ public final class PlayView extends SurfaceView implements Callback {
         i = scoreImage.getWidth();
         i2 = scoreNumImage.getWidth() / 10;
         i3 = scoreNumImage.getHeight();
-        f4788bm.clear();
+        currentTotalScoreNumberList.clear();
         int e = Math.max(i5, 0);
-        for (i5 = 0; i5 < 5; i5++) {
-            f4788bm.add(i5, (int) ((((double) e) % Math.pow(10, i5 + 1)) / Math.pow(10, i5)));
+        for (i5 = 0; i5 < 6; i5++) {
+            currentTotalScoreNumberList.add(i5, (int) ((((double) e) % Math.pow(10, i5 + 1)) / Math.pow(10, i5)));
         }
         e = 0;
         while (true) {
             i5 = e;
-            if (i5 >= 5) {
-                f4772bD.set((float) ((jpapplication.getWidthPixels() - (i2 * 5)) - i), 0, (float) (jpapplication.getWidthPixels() - (i2 * 5)), scoreImage.getHeight());
+            if (i5 >= 6) {
+                f4772bD.set((float) ((jpapplication.getWidthPixels() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
+                        (float) (jpapplication.getWidthPixels() - (i2 * 6) - TOTAL_SCORE_SHOW_OFFSET), scoreImage.getHeight());
                 canvas.drawBitmap(scoreImage, null, f4772bD, null);
                 return;
             }
-            e = f4788bm.get(i5);
+            e = currentTotalScoreNumberList.get(i5);
             f4801bz.set(e * i2, 0, (e + 1) * i2, i3);
-            f4769bA.set(jpapplication.getWidthPixels() - ((i6 + 1) * i2), 0, jpapplication.getWidthPixels() - (i2 * i6), i3);
+            f4769bA.set(jpapplication.getWidthPixels() - ((i6 + 1) * i2) - TOTAL_SCORE_SHOW_OFFSET, 0,
+                    jpapplication.getWidthPixels() - (i2 * i6) - TOTAL_SCORE_SHOW_OFFSET, i3);
             canvas.drawBitmap(scoreNumImage, f4801bz, f4769bA, null);
             i6++;
             e = i5 + 1;
