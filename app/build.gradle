@@ -6,18 +6,20 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     ndkVersion "25.2.9519653"
     defaultConfig {
         applicationId "ly.pp.justpiano3"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 51
         versionName "4.71"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++14"
                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
+                arguments "-DANDROID_PLATFORM=android-29",
+                        "-DANDROID_STL=c++_static"
             }
         }
         multiDexEnabled true

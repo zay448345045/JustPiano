@@ -8,8 +8,11 @@ import android.media.midi.MidiOutputPort;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
+
+import ly.pp.justpiano3.midi.AppMidiManager;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 import java.io.IOException;
@@ -19,6 +22,10 @@ import java.util.List;
 import static android.content.Context.MIDI_SERVICE;
 
 public class MidiUtil {
+
+    static {
+        AppMidiManager.loadNativeAPI();
+    }
 
     /**
      * 每个八度的音符数量、白键数量、黑键数量
@@ -49,6 +56,9 @@ public class MidiUtil {
     private static List<MidiConnectionListener> midiConnectionListeners;
 
     private static MidiManager mMidiManager;
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private static AppMidiManager mAppMidiManager;
 
     private static MidiOutputPort midiOutputPort;
 
@@ -84,6 +94,12 @@ public class MidiUtil {
             for (MidiDeviceInfo info : mMidiManager.getDevices()) {
                 openDevice(context, info);
             }
+
+            // 如果安卓版本更高，使用native midi
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                mAppMidiManager = new AppMidiManager(mMidiManager);
+                initNative();
+            }
         }
     }
 
@@ -118,6 +134,28 @@ public class MidiUtil {
 
     public static MidiOutputPort getMidiOutputPort() {
         return midiOutputPort;
+    }
+
+    private static native void initNative();
+
+    /**
+     * Called from the native code when MIDI messages are received.
+     *
+     * @param message
+     */
+    private void onNativeMessageReceive(final byte[] message) {
+        showReceivedMessage(message);
+    }
+
+    private void showReceivedMessage(byte[] message) {
+        switch ((message[0] & 0xF0) >> 4) {
+            case 0x09:
+                Log.i("TAG", "showReceivedMessage: pitch = " + message[1] + " volume = " + message[2]);
+                break;
+            case 0x08:
+                Log.i("TAG", "showReceivedMessage: pitch = " + message[1] + " volume = " + message[2]);
+                break;
+        }
     }
 
     /**
