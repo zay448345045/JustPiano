@@ -69,8 +69,7 @@ static void *readThreadRoutine(void *context) {
             isReading = false;
         }
         if (numMessagesReceived > 0 && numBytesReceived >= 0) {
-            if (opcode == AMIDI_OPCODE_DATA &&
-                (incomingMessage[0] & 0xF0) != 0xF0) {
+            if (opcode == AMIDI_OPCODE_DATA && (incomingMessage[0] & 0xF0) != 0xF0) {
                 SendTheReceivedData(incomingMessage, numBytesReceived);
             } else if (opcode == AMIDI_OPCODE_FLUSH) {
                 // ignore

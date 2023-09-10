@@ -148,17 +148,19 @@ public class MidiUtil {
      */
     private static void onNativeMessageReceive(final byte[] message) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            switch ((message[0] & 0xF0) >> 4) {
-                case 0x09:
-                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                        midiConnectionListener.onMidiReceiveMessage(message[1], message[2]);
-                    }
-                    break;
-                case 0x08:
-                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                        midiConnectionListener.onMidiReceiveMessage(message[1], (byte) 0);
-                    }
-                    break;
+            for (int i = 0; i < message.length; i += 3) {
+                switch ((message[i] & 0xF0) >> 4) {
+                    case 0x09:
+                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                            midiConnectionListener.onMidiReceiveMessage(message[i + 1], message[i + 2]);
+                        }
+                        break;
+                    case 0x08:
+                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                            midiConnectionListener.onMidiReceiveMessage(message[i + 1], (byte) 0);
+                        }
+                        break;
+                }
             }
         }
     }
