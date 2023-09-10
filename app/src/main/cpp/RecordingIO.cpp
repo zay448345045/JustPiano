@@ -1,7 +1,3 @@
-//
-// Created by asalehin on 7/11/20.
-//
-
 #include <cstdint>
 #include <cstdio>
 #include <string>

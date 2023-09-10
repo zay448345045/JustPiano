@@ -9,7 +9,6 @@ import android.media.midi.MidiOutputPort;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -89,10 +88,9 @@ public class MidiUtil {
                     // 更高版本的安卓：启动C++监听midi设备事件
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         stopReadingMidi();
-                    } else {
-                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                            midiConnectionListener.onMidiDisconnect();
-                        }
+                    }
+                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                        midiConnectionListener.onMidiDisconnect();
                     }
                 }
             }, new Handler(Looper.getMainLooper()));
@@ -100,11 +98,6 @@ public class MidiUtil {
             // 如果在app开启前就已经连接了midi设备，需要如下的代码来直接尝试检测并开启midi设备
             for (MidiDeviceInfo info : mMidiManager.getDevices()) {
                 openDevice(context, info);
-            }
-
-            // 如果安卓版本更高，使用native midi，注册onNativeMessageReceive为java回调
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                registerCallBack();
             }
         }
     }
@@ -120,10 +113,9 @@ public class MidiUtil {
                         // 更高版本的安卓：启动C++监听midi设备事件
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             startReadingMidi(device, port.getPortNumber());
-                        } else {
-                            for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                                midiConnectionListener.onMidiConnect();
-                            }
+                        }
+                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                            midiConnectionListener.onMidiConnect();
                         }
                         break;
                     }
@@ -147,16 +139,12 @@ public class MidiUtil {
         return midiOutputPort;
     }
 
-    private static native void registerCallBack();
-
     private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber);
 
     private static native void stopReadingMidi();
 
     /**
      * Called from the native code when MIDI messages are received.
-     *
-     * @param message
      */
     private static void onNativeMessageReceive(final byte[] message) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -165,13 +153,11 @@ public class MidiUtil {
                     for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
                         midiConnectionListener.onMidiReceiveMessage(message[1], message[2]);
                     }
-                    Log.i("TAG", "showReceivedMessage: pitch = " + message[1] + " volume = " + message[2]);
                     break;
                 case 0x08:
                     for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
                         midiConnectionListener.onMidiReceiveMessage(message[1], (byte) 0);
                     }
-                    Log.i("TAG", "showReceivedMessage: pitch = " + message[1] + " volume = " + message[2]);
                     break;
             }
         }
