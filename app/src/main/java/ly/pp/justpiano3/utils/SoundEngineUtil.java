@@ -117,6 +117,6 @@ public class SoundEngineUtil {
 
     public static void afterLoadSounds(Context context) {
         loadChatWav(context);
-        setupAudioStreamNative(GlobalSetting.INSTANCE.getCompatiblePlaySound() ? 2 : 4, 44100);
+        setupAudioStreamNative(2, 44100);
     }
 }
