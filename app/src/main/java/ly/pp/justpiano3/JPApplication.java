@@ -12,11 +12,14 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.SongDatabase;
@@ -24,14 +27,19 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 public final class JPApplication extends Application {
@@ -163,7 +171,7 @@ public final class JPApplication extends Application {
     }
 
     public String getKitiName() {
-        if (kitiName.isEmpty()) {
+        if (StringUtil.isNullOrEmpty(kitiName)) {
             kitiName = accountListSharedPreferences.getString("userKitiName", "");
         }
         return kitiName;
@@ -347,7 +355,12 @@ public final class JPApplication extends Application {
         // 4.7版本后，数据库的版本号为app的versionCode
         if (oldVersion < 51) {
             // 兼容room框架，建立新表，修改数据库字段类型
-            database.execSQL("CREATE TABLE IF NOT EXISTS `song` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL DEFAULT '', `item` TEXT NOT NULL DEFAULT '经典乐章', `path` TEXT NOT NULL DEFAULT '', `isnew` INTEGER NOT NULL DEFAULT 1, `ishot` INTEGER NOT NULL DEFAULT 0, `isfavo` INTEGER NOT NULL DEFAULT 0, `player` TEXT NOT NULL DEFAULT '', `score` INTEGER NOT NULL DEFAULT 0, `date` INTEGER NOT NULL DEFAULT 0, `count` INTEGER NOT NULL DEFAULT 0, `diff` REAL NOT NULL DEFAULT 0, `online` INTEGER NOT NULL DEFAULT 1, `Ldiff` REAL NOT NULL DEFAULT 0, `length` INTEGER NOT NULL DEFAULT 0, `Lscore` INTEGER NOT NULL DEFAULT 0);");
+            database.execSQL("CREATE TABLE IF NOT EXISTS `song` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL DEFAULT '', " +
+                    "`item` TEXT NOT NULL DEFAULT '经典乐章', `path` TEXT NOT NULL DEFAULT '', `isnew` INTEGER NOT NULL DEFAULT 1, " +
+                    "`ishot` INTEGER NOT NULL DEFAULT 0, `isfavo` INTEGER NOT NULL DEFAULT 0, `player` TEXT NOT NULL DEFAULT '', " +
+                    "`score` INTEGER NOT NULL DEFAULT 0, `date` INTEGER NOT NULL DEFAULT 0, `count` INTEGER NOT NULL DEFAULT 0, " +
+                    "`diff` REAL NOT NULL DEFAULT 0, `online` INTEGER NOT NULL DEFAULT 1, `Ldiff` REAL NOT NULL DEFAULT 0, " +
+                    "`length` INTEGER NOT NULL DEFAULT 0, `Lscore` INTEGER NOT NULL DEFAULT 0);");
             database.execSQL("INSERT INTO `song` SELECT * FROM jp_data;");
         }
     }
@@ -359,13 +372,13 @@ public final class JPApplication extends Application {
         }
 
         @Override
-        public void uncaughtException(@NotNull Thread t, Throwable e) {
+        public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(byteArrayOutputStream));
-            final String errorLog = byteArrayOutputStream.toString();
-            ClipboardManager myClipboard = (ClipboardManager) getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
-            ClipData myClip = ClipData.newPlainText("errorLog", errorLog);
-            myClipboard.setPrimaryClip(myClip);
+            throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
+            new FeedbackTask(getApplicationContext(),
+                    StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
+                    byteArrayOutputStream.toString()).execute();
+
             if (connectionService != null) {
                 connectionService.outLine();
             }
@@ -373,14 +386,11 @@ public final class JPApplication extends Application {
                 unbindService(serviceConnection);
                 bindService = false;
             }
-            new Thread() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，错误信息已复制，可粘贴至主界面问题反馈并发送", Toast.LENGTH_LONG).show();
-                    Looper.loop();
-                }
-            }.start();
+            ThreadPoolUtils.execute(() -> {
+                Looper.prepare();
+                Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
+                Looper.loop();
+            });
         }
     }
 

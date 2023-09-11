@@ -111,7 +111,7 @@ public class MainMode extends Activity implements OnClickListener {
                 TextView textViewTitle = inflate.findViewById(R.id.title_1);
                 TextView messageView = inflate.findViewById(R.id.message_view);
                 inflate.findViewById(R.id.message_view).setVisibility(View.VISIBLE);
-                messageView.setText("问题将直接反馈至开发者，请认真填写，感谢您的支持和宝贵意见（若昵称填写准确，您可能会收到私信回复问题处理结果）");
+                messageView.setText("问题将直接反馈至开发者，感谢您的支持和宝贵意见（若昵称填写准确，您可能会收到私信回复问题处理结果）");
                 textViewTitle.setText("昵称:");
                 TextView textView2 = inflate.findViewById(R.id.text_2);
                 TextView textView2Title = inflate.findViewById(R.id.title_2);

@@ -1,9 +1,14 @@
 package ly.pp.justpiano3.task;
 
+import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MainMode;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -17,21 +22,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public final class FeedbackTask {
-    private final WeakReference<MainMode> mainMode;
+    private final Context context;
     private final String userName;
     private final String message;
-    private final ExecutorService executorService;
-    private Future<String> future;
 
-    public FeedbackTask(MainMode mainMode, String userName, String message) {
-        this.mainMode = new WeakReference<>(mainMode);
+    public FeedbackTask(Context context, String userName, String message) {
+        this.context = context;
         this.userName = userName;
         this.message = message;
-        executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void execute(String... objects) {
-        String url = "http://" + mainMode.get().jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback";
+    public void execute() {
+        JPApplication jpApplication = (JPApplication) context.getApplicationContext();
+        String url = "http://" + jpApplication.getServer() + ":8910/JustPianoServer/server/Feedback";
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder.add("version", BuildConfig.VERSION_NAME);
         formBuilder.add("userName", userName);
@@ -43,31 +46,16 @@ public final class FeedbackTask {
                 .post(requestBody)
                 .build();
 
-        future = executorService.submit(() -> {
+        ThreadPoolUtils.execute(() -> {
             try (Response response = OkHttpUtil.client().newCall(request).execute()) {
                 if (response.isSuccessful()) {
-                    return response.body().string();
+                    String responseStr = response.body().string();
+                    if (context instanceof Activity) {
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context,
+                                StringUtil.isNullOrEmpty(responseStr) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
+                    }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-        handleResult();
-    }
-
-    public void cancel() {
-        if (future != null) {
-            future.cancel(true);
-        }
-    }
-
-    private void handleResult() {
-        executorService.execute(() -> {
-            try {
-                final String str = future.get();
-                mainMode.get().runOnUiThread(() -> Toast.makeText(mainMode.get(), StringUtil.isNullOrEmpty(str) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
-            } catch (Exception e) {
                 e.printStackTrace();
             }
         });

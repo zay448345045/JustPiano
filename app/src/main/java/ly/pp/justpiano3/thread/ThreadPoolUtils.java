@@ -45,4 +45,11 @@ public class ThreadPoolUtils {
             threadPool.execute(runnable);
         }
     }
+
+    public static <T> Future<T> submit(Callable<T> callable) {
+        if (callable != null) {
+            return threadPool.submit(callable);
+        }
+        return null;
+    }
 }
