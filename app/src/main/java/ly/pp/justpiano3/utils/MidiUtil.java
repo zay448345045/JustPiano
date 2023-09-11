@@ -85,7 +85,6 @@ public class MidiUtil {
                     } finally {
                         midiOutputPort = null;
                     }
-                    // 更高版本的安卓：启动C++监听midi设备事件
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         stopReadingMidi();
                     }
