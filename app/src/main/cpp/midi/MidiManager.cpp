@@ -30,12 +30,14 @@ static void SendTheReceivedData(uint8_t *data, int numBytes) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "Error retrieving JNI Env");
     }
 
-    // Allocate the Java array and fill with received data
-    jbyteArray ret = env->NewByteArray(numBytes);
-    env->SetByteArrayRegion(ret, 0, numBytes, (jbyte *) data);
-
     // send it to the (Java) callback
-    env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, ret);
+    for (int i = 0; i < numBytes; i += 3) {
+        if (((data[i] & 0xF0) >> 4) == 0x09) {
+            env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], data[i + 2]);
+        } else if (((data[i] & 0xF0) >> 4) == 0x08) {
+            env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], 0);
+        }
+    }
 }
 
 /*
@@ -64,7 +66,8 @@ static void *readThreadRoutine(void *context) {
                 &numBytesReceived, &timestamp);
 
         if (numMessagesReceived < 0) {
-            __android_log_print(ANDROID_LOG_WARN, TAG, "Failure receiving MIDI data %zd", numMessagesReceived);
+            __android_log_print(ANDROID_LOG_WARN, TAG, "Failure receiving MIDI data %zd",
+                                numMessagesReceived);
             // Exit the thread
             isReading = false;
         }
@@ -97,7 +100,7 @@ void Java_ly_pp_justpiano3_utils_MidiUtil_startReadingMidi(
     env->GetJavaVM(&theJvm);
     // Setup the receive data callback (into Java)
     dataCallbackClass = static_cast<jclass>(env->NewGlobalRef(clazz));
-    midDataCallback = env->GetStaticMethodID(clazz, "onNativeMessageReceive", "([B)V");
+    midDataCallback = env->GetStaticMethodID(clazz, "onNativeMessageReceive", "(BB)V");
 
     AMidiDevice_fromJava(env, midiDeviceObj, &sNativeReceiveDevice);
     AMidiOutputPort *outputPort;
