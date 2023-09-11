@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 #include <algorithm>
-#include <string.h>
-
+#include <cstring>
 #include <android/log.h>
 
 #include "stream/InputStream.h"
@@ -33,9 +32,9 @@ namespace parselib {
     WavStreamReader::WavStreamReader(InputStream *stream) {
         mStream = stream;
 
-        mWavChunk = 0;
-        mFmtChunk = 0;
-        mDataChunk = 0;
+        mWavChunk = nullptr;
+        mFmtChunk = nullptr;
+        mDataChunk = nullptr;
 
         mAudioDataStartPos = -1;
 
@@ -78,7 +77,7 @@ namespace parselib {
 //        __android_log_print(ANDROID_LOG_INFO, TAG, "[%c%c%c%c]",
 //                            tagStr[0], tagStr[1], tagStr[2], tagStr[3]);
 
-            WavChunkHeader *chunk = 0;
+            WavChunkHeader *chunk;
             if (tag == WavRIFFChunkHeader::RIFFID_RIFF) {
                 chunk = mWavChunk = new WavRIFFChunkHeader(tag);
                 mWavChunk->read(mStream);
@@ -100,14 +99,14 @@ namespace parselib {
             (*mChunkMap)[tag] = chunk;
         }
 
-        if (mDataChunk != 0) {
+        if (mDataChunk != nullptr) {
             mStream->setPos(mAudioDataStartPos);
         }
     }
 
 // Data access
     void WavStreamReader::positionToAudio() {
-        if (mDataChunk != 0) {
+        if (mDataChunk != nullptr) {
             mStream->setPos(mAudioDataStartPos);
         }
     }
@@ -115,7 +114,7 @@ namespace parselib {
     int WavStreamReader::getDataFloat(float *buff, int numFrames) {
         // __android_log_print(ANDROID_LOG_INFO, TAG, "getData(%d)", numFrames);
 
-        if (mDataChunk == 0 || mFmtChunk == 0) {
+        if (mDataChunk == nullptr || mFmtChunk == nullptr) {
             return 0;
         }
 
@@ -127,11 +126,10 @@ namespace parselib {
 
         // TODO - Manage other input formats
         if (mFmtChunk->mSampleSize == 16) {
-            short *readBuff = new short[128 * numChans];
+            auto *readBuff = new short[128 * numChans];
             int framesLeft = numFrames;
             while (framesLeft > 0) {
                 int framesThisRead = std::min(framesLeft, 128);
-                //__android_log_print(ANDROID_LOG_INFO, TAG, "read(%d)", framesThisRead);
                 int numFramesRead =
                         mStream->read(readBuff, framesThisRead * sizeof(short) * numChans) /
                         (sizeof(short) * numChans);

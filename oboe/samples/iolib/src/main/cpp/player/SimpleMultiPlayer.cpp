@@ -19,7 +19,7 @@
 // parselib includes
 #include <stream/MemInputStream.h>
 #include <wav/WavStreamReader.h>
-
+#include <cmath>
 #include <utility>
 
 // local includes
@@ -51,8 +51,8 @@ namespace iolib {
 
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
 
-        float *data = (float *) audioData;
-        // OneShotSampleSource* sources = mSampleSources.get();
+        auto *data = (float *) audioData;
+        float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             SampleSource *sampleSource = mSampleSources[index];
             int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
@@ -63,6 +63,8 @@ namespace iolib {
                 sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
                 if (curFrameIndex.first >= numSampleFrames) {
                     count++;
+                } else {
+                    sampleCount++;
                 }
                 sampleSource->pushCurFrameIndexQueue(curFrameIndex);
                 sampleSource->popCurFrameIndexQueue();
@@ -72,27 +74,16 @@ namespace iolib {
             }
         }
 
-        // 混音算法来源：https://blog.csdn.net/wxtsmart/article/details/2693329
-        // 暂停
-//        for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
-//            float value = mDecayFactor * data[i];
-//            if (value > 2) {
-//                mDecayFactor = 2 / value;
-//                data[i] = 2;
-//            } else if (value < -2) {
-//                mDecayFactor = -2 / value;
-//                data[i] = -2;
-//            } else {
-//                data[i] = value;
-//            }
-//            if (mDecayFactor < 1) {
-//                float step = (1 - mDecayFactor) / 16;
-//                mDecayFactor += step;
-//            }
-//        }
+        // Divide value by the logarithm of the "total number of samples"
+        // ensure that the volume is not too high when too many samples
+        float logSampleCount = sampleCount <= 1 ? 1 : log(sampleCount) / log(2.f);
+        for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
+            data[i] /= mDecayFactor;
+            mDecayFactor += (logSampleCount - mDecayFactor) / 1024;
+        }
 
         if (record) {
-            mRecordingIO->write_buffer((float *) audioData, numFrames);
+            mRecordingIO->write_buffer(data, numFrames);
         }
 
         return DataCallbackResult::Continue;

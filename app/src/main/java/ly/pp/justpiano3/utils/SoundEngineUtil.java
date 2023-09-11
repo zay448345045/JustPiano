@@ -22,15 +22,15 @@ public class SoundEngineUtil {
         System.loadLibrary("soundengine");
     }
 
-    public static native void setupAudioStreamNative(int var1, int var2);
+    public static native void setupAudioStreamNative(int numChannels, int sampleRate);
 
     public static native void teardownAudioStreamNative();
 
-    public static native void loadWavAssetNative(byte[] var1, int var2, float var3);
+    public static native void loadWavAssetNative(byte[] wavByteArray, int index, float pan);
 
     public static native void unloadWavAssetsNative();
 
-    private static native void trigger(int var1, int var2);
+    private static native void trigger(int index, int volume);
 
     public static native void setRecord(boolean record);
 
@@ -79,15 +79,19 @@ public class SoundEngineUtil {
         dataStream.close();
     }
 
-    private static void loadChatWav(Context context) throws IOException {
-        AssetFileDescriptor assetFD = context.getResources().getAssets().openFd(CHAT_SOUND_FILE_NAME);
-        FileInputStream dataStream = assetFD.createInputStream();
-        int dataLen = dataStream.available();
-        byte[] dataBytes = new byte[dataLen];
-        dataStream.read(dataBytes, 0, dataLen);
-        loadWavAssetNative(dataBytes, 0, 0);
-        assetFD.close();
-        dataStream.close();
+    private static void loadChatWav(Context context) {
+        try {
+            AssetFileDescriptor assetFD = context.getResources().getAssets().openFd(CHAT_SOUND_FILE_NAME);
+            FileInputStream dataStream = assetFD.createInputStream();
+            int dataLen = dataStream.available();
+            byte[] dataBytes = new byte[dataLen];
+            dataStream.read(dataBytes, 0, dataLen);
+            loadWavAssetNative(dataBytes, 0, 0);
+            assetFD.close();
+            dataStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void reLoadOriginalSounds(Context context) {
@@ -112,11 +116,7 @@ public class SoundEngineUtil {
     }
 
     public static void afterLoadSounds(Context context) {
-        try {
-            loadChatWav(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadChatWav(context);
         setupAudioStreamNative(GlobalSetting.INSTANCE.getCompatiblePlaySound() ? 2 : 4, 44100);
     }
 }
