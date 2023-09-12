@@ -9,6 +9,9 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 import org.xmlpull.v1.XmlPullParser;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 框框颜色处理工具
  */
@@ -32,14 +35,22 @@ public class ColorUtil {
             R.drawable.v24_name, R.drawable.v25_name, R.drawable.v26_name, R.drawable.v27_name,
     };
 
+    public static final Map<Integer, Integer> indexToColorMap = new ConcurrentHashMap<>();
+
     /**
      * 通过框框数组索引取得框框颜色
      */
-    public static Integer getKuangColorByKuangIndex(Context context, int index) {
-        if (index < 0 || index >= ColorUtil.kuang.length) {
+    public static Integer getKuangColorByKuangIndex(Context context, Integer index) {
+        if (index == null || index < 0 || index >= ColorUtil.kuang.length) {
             return null;
         }
-        return getKuangColorByDrawable(context, ColorUtil.filledKuang[index]);
+        if (indexToColorMap.containsKey(index)) {
+            return indexToColorMap.get(index);
+        } else {
+            Integer color = getKuangColorByDrawable(context, ColorUtil.filledKuang[index]);
+            indexToColorMap.put(index, color);
+            return color;
+        }
     }
 
     public static Integer getKuangColorByDrawable(Context context, int drawable) {

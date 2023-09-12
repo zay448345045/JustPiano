@@ -52,18 +52,13 @@ static void *readThreadRoutine(void *context) {
     (void) context;  // unused
     isReading = true;
     AMidiOutputPort *outputPort = sMidiOutputPort;
-    using namespace std::chrono;
-    time_point<high_resolution_clock> start = high_resolution_clock::now();
-    bool sleepThread = true;
 
     const size_t MAX_BYTES_TO_RECEIVE = 128;
     uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
 
     while (isReading) {
         // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU unnecessarily
-        if (sleepThread) {
-            usleep(5000);
-        }
+        usleep(2000);
         int32_t opcode;
         size_t numBytesReceived;
         int64_t timestamp;
@@ -79,14 +74,6 @@ static void *readThreadRoutine(void *context) {
         } else if (numMessagesReceived > 0 && numBytesReceived >= 0) {
             if (opcode == AMIDI_OPCODE_DATA && (incomingMessage[0] & 0xF0) != 0xF0) {
                 sendTheReceivedData(incomingMessage, numBytesReceived);
-                // Already received data, let's start to make no sleepTime for a while
-                start = high_resolution_clock::now();
-                sleepThread = false;
-            }
-        } else {
-            // 10 seconds no received midi data, start to sleep...
-            if (duration_cast<milliseconds>(high_resolution_clock::now() - start).count() > 10000) {
-                sleepThread = true;
             }
         }
     }  // end while(isReading)

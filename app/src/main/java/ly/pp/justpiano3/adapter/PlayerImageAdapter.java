@@ -17,6 +17,7 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ColorUtil;
+import ly.pp.justpiano3.utils.DialogUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -196,11 +197,11 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 break;
         }
         try {
-            int i6 = playerList.get(i).getInt("TR") - 1;
-            int i7 = playerList.get(i).getInt("JA") - 1;
-            int i8 = playerList.get(i).getInt("HA") - 1;
-            int i8e = playerList.get(i).getInt("EY") - 1;
-            int i9 = playerList.get(i).getInt("SH") - 1;
+            int i6 = playerList.get(i).getInt("TR");
+            int i7 = playerList.get(i).getInt("JA");
+            int i8 = playerList.get(i).getInt("HA");
+            int i8e = playerList.get(i).getInt("EY");
+            int i9 = playerList.get(i).getInt("SH");
             if (ori == Configuration.ORIENTATION_PORTRAIT) {
                 textView3.setText(String.valueOf(i3));
                 textView4.setText(String.valueOf(i4));
@@ -211,33 +212,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
             textView4.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
             textView5.setText(Consts.nameCL[i4]);
             textView5.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
-            imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_m0.png")));
-
-            if (i6 < 0) {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_t" + i6 + ".png")));
-            }
-            if (i7 < 0) {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_j" + i7 + ".png")));
-            }
-            if (i9 < 0) {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_s" + i9 + ".png")));
-            }
-            if (i8 < 0) {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_h" + i8 + ".png")));
-            }
-            if (i8e < 0) {
-                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/" + str + "_e" + i8e + ".png")));
-            }
+            DialogUtil.setUserDressImageBitmap(olPlayRoom, str, i6, i7, i8, i8e, i9,
+                    imageView, imageView2, imageView3, imageView5, imageView5e, imageView4);
         } catch (Exception e) {
             e.printStackTrace();
         }

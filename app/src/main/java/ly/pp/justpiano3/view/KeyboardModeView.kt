@@ -367,8 +367,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         if (!isAnimRunning) {
             if (musicKeyListener != null) {
                 musicKeyListener!!.onKeyDown(
-                    pitch, volume.toInt().coerceAtMost(MidiUtil.MAX_VOLUME.toInt())
-                        .toByte()
+                    pitch, volume.toInt().coerceAtMost(MidiUtil.MAX_VOLUME.toInt()).toByte()
                 )
             }
             fireKeyDown(pitch, volume.toInt().coerceAtMost(MidiUtil.MAX_VOLUME.toInt()).toByte(), color)

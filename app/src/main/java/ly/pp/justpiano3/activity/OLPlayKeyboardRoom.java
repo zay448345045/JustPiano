@@ -48,7 +48,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
-    public int kuang;
+    public Integer keyboardNoteDownColor;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[6];
     public MidiReceiver midiFramer;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
@@ -140,7 +140,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 if (name.equals(jpapplication.getKitiName())) {
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
-                    kuang = bundle1.getInt("IV");
+                    keyboardNoteDownColor = ColorUtil.getKuangColorByKuangIndex(this, bundle1.getInt("IV"));
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiFramer != null);
                 }
                 playerList.add(bundle1);
@@ -620,7 +620,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     }
 
     private void onMidiReceiveKeyDownHandle(byte pitch, byte volume) {
-        keyboardView.fireKeyDown(pitch, volume, kuang == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuang));
+        keyboardView.fireKeyDown(pitch, volume, keyboardNoteDownColor);
         if (hasAnotherUser()) {
             broadNote(pitch, volume);
         }
@@ -728,8 +728,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
-        if (kuang > 0) {
-            keyboardView.setNoteOnColor(ColorUtil.getKuangColorByKuangIndex(this, kuang));
+        if (keyboardNoteDownColor != null) {
+            keyboardView.setNoteOnColor(keyboardNoteDownColor);
         }
         if (noteScheduledExecutor == null) {
             lastNoteScheduleTime = System.currentTimeMillis();

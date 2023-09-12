@@ -13,6 +13,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.ColorUtil;
+import ly.pp.justpiano3.utils.DialogUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,7 +56,6 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         }
         String userName = playerList.get(i).getString("N");
         String gender = playerList.get(i).getString("S").equals("f") ? "f" : "m";
-        byte b = playerList.get(i).getByte("PI");
         String string3 = playerList.get(i).getString("IR");
         String string4 = playerList.get(i).getString("IH");
         int i2 = playerList.get(i).getInt("IV");
@@ -131,42 +131,18 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.green_y));
         }
         try {
-            int i6 = playerList.get(i).getInt("TR") - 1;
-            int i7 = playerList.get(i).getInt("JA") - 1;
-            int i8 = playerList.get(i).getInt("HA") - 1;
-            int i8e = playerList.get(i).getInt("EY") - 1;
-            int i9 = playerList.get(i).getInt("SH") - 1;
+            int i6 = playerList.get(i).getInt("TR");
+            int i7 = playerList.get(i).getInt("JA");
+            int i8 = playerList.get(i).getInt("HA");
+            int i8e = playerList.get(i).getInt("EY");
+            int i9 = playerList.get(i).getInt("SH");
             textView3.setText("LV." + lv);
             textView4.setText("CL." + cl);
             textView4.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[cl]));
             textView5.setText(Consts.nameCL[cl]);
             textView5.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[cl]));
-            imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_m0.png")));
-            if (i6 < 0) {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_t" + i6 + ".png")));
-            }
-            if (i7 < 0) {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_j" + i7 + ".png")));
-            }
-            if (i9 < 0) {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_s" + i9 + ".png")));
-            }
-            if (i8 < 0) {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_h" + i8 + ".png")));
-            }
-            if (i8e < 0) {
-                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5e.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/" + gender + "_e" + i8e + ".png")));
-            }
+            DialogUtil.setUserDressImageBitmap(olPlayKeyboardRoom, gender, i6, i7, i8, i8e, i9,
+                    imageView, imageView2, imageView3, imageView5, imageView5e, imageView4);
         } catch (Exception e) {
             e.printStackTrace();
         }

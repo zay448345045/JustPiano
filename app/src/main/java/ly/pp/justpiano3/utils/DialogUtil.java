@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 import ly.pp.justpiano3.JPApplication;
@@ -13,12 +14,16 @@ import protobuf.dto.OnlineDialogDTO;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author as
  */
 public class DialogUtil {
 
+    private static final Map<String, Bitmap> bitmapCacheMap = new ConcurrentHashMap<>(256);
+    private static final StringBuilder stringBuilderCache = new StringBuilder();
     /**
      * 是否已经显示对话框，防止对话框重复显示
      */
@@ -78,32 +83,85 @@ public class DialogUtil {
     /**
      * 根据用户信息设置服装图片
      */
-    public static void setUserDressImageBitmap(Context context, User user, ImageView imageView, ImageView imageView2, ImageView imageView3, ImageView imageView4, ImageView imageView4e, ImageView imageView5) throws IOException {
-        imageView.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + user.getSex() + "_m0.png")));
-        if (user.getTrousers() <= 0) {
-            imageView2.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
-        } else {
-            imageView2.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + user.getSex() + "_t" + (user.getTrousers() - 1) + ".png")));
+    public static void setUserDressImageBitmap(Context context, User user, ImageView bodyImageView, ImageView trousersImageView, ImageView jacketImageView,
+                                               ImageView hairImageView, ImageView eyeImageView, ImageView shoesImageView) throws IOException {
+        setUserDressImageBitmap(context, user.getSex(), user.getTrousers(), user.getJacket(), user.getHair(), user.getEye(), user.getShoes(),
+                bodyImageView, trousersImageView, jacketImageView, hairImageView, eyeImageView, shoesImageView);
+    }
+
+    public static void setUserDressImageBitmap(Context context, String gender, int trousers, int jacket, int hair, int eye, int shoes,
+                                               ImageView bodyImageView, ImageView trousersImageView, ImageView jacketImageView,
+                                               ImageView hairImageView, ImageView eyeImageView, ImageView shoesImageView) throws IOException {
+        if (!bitmapCacheMap.containsKey("mod/_none.png")) {
+            bitmapCacheMap.put("mod/_none.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
         }
-        if (user.getJacket() <= 0) {
-            imageView3.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
-        } else {
-            imageView3.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + user.getSex() + "_j" + (user.getJacket() - 1) + ".png")));
+        if (!bitmapCacheMap.containsKey("mod/f_m0.png")) {
+            bitmapCacheMap.put("mod/f_m0.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/f_m0.png")));
         }
-        if (user.getHair() <= 0) {
-            imageView4.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
-        } else {
-            imageView4.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + user.getSex() + "_h" + (user.getHair() - 1) + ".png")));
+        if (!bitmapCacheMap.containsKey("mod/m_m0.png")) {
+            bitmapCacheMap.put("mod/m_m0.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/m_m0.png")));
         }
-        if (user.getEye() <= 0) {
-            imageView4e.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
+        Bitmap noneModBitmap = bitmapCacheMap.get("mod/_none.png");
+        bodyImageView.setImageBitmap(bitmapCacheMap.get(gender.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png"));
+
+        if (trousers <= 0) {
+            trousersImageView.setImageBitmap(noneModBitmap);
         } else {
-            imageView4e.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + user.getSex() + "_e" + (user.getEye() - 1) + ".png")));
+            stringBuilderCache.setLength(0);
+            stringBuilderCache.append("mod/").append(gender).append('_').append('t').append(trousers - 1).append(".png");
+            String trousersString = stringBuilderCache.toString();
+            if (!bitmapCacheMap.containsKey(trousersString)) {
+                bitmapCacheMap.put(trousersString, BitmapFactory.decodeStream(context.getResources().getAssets().open(trousersString)));
+            }
+            trousersImageView.setImageBitmap(bitmapCacheMap.get(trousersString));
         }
-        if (user.getShoes() <= 0) {
-            imageView5.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
+
+        if (jacket <= 0) {
+            jacketImageView.setImageBitmap(noneModBitmap);
         } else {
-            imageView5.setImageBitmap(BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + user.getSex() + "_s" + (user.getShoes() - 1) + ".png")));
+            stringBuilderCache.setLength(0);
+            stringBuilderCache.append("mod/").append(gender).append('_').append('j').append(jacket - 1).append(".png");
+            String jacketString = stringBuilderCache.toString();
+            if (!bitmapCacheMap.containsKey(jacketString)) {
+                bitmapCacheMap.put(jacketString, BitmapFactory.decodeStream(context.getResources().getAssets().open(jacketString)));
+            }
+            jacketImageView.setImageBitmap(bitmapCacheMap.get(jacketString));
+        }
+
+        if (hair <= 0) {
+            hairImageView.setImageBitmap(noneModBitmap);
+        } else {
+            stringBuilderCache.setLength(0);
+            stringBuilderCache.append("mod/").append(gender).append('_').append('h').append(hair - 1).append(".png");
+            String hairString = stringBuilderCache.toString();
+            if (!bitmapCacheMap.containsKey(hairString)) {
+                bitmapCacheMap.put(hairString, BitmapFactory.decodeStream(context.getResources().getAssets().open(hairString)));
+            }
+            hairImageView.setImageBitmap(bitmapCacheMap.get(hairString));
+        }
+
+        if (eye <= 0) {
+            eyeImageView.setImageBitmap(noneModBitmap);
+        } else {
+            stringBuilderCache.setLength(0);
+            stringBuilderCache.append("mod/").append(gender).append('_').append('e').append(eye - 1).append(".png");
+            String eyeString = stringBuilderCache.toString();
+            if (!bitmapCacheMap.containsKey(eyeString)) {
+                bitmapCacheMap.put(eyeString, BitmapFactory.decodeStream(context.getResources().getAssets().open(eyeString)));
+            }
+            eyeImageView.setImageBitmap(bitmapCacheMap.get(eyeString));
+        }
+
+        if (shoes <= 0) {
+            shoesImageView.setImageBitmap(noneModBitmap);
+        } else {
+            stringBuilderCache.setLength(0);
+            stringBuilderCache.append("mod/").append(gender).append('_').append('s').append(shoes - 1).append(".png");
+            String shoesString = stringBuilderCache.toString();
+            if (!bitmapCacheMap.containsKey(shoesString)) {
+                bitmapCacheMap.put(shoesString, BitmapFactory.decodeStream(context.getResources().getAssets().open(shoesString)));
+            }
+            shoesImageView.setImageBitmap(bitmapCacheMap.get(shoesString));
         }
     }
 }
