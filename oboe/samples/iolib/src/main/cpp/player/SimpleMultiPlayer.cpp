@@ -76,10 +76,10 @@ namespace iolib {
 
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
-        float logSampleCount = sampleCount <= 1 ? 1 : log(sampleCount) / log(2.f);
+        float logSampleCount = log(sampleCount + 16) / log(4.f) - 1;
         for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
             data[i] /= mDecayFactor;
-            mDecayFactor += (logSampleCount - mDecayFactor) / 1024;
+            mDecayFactor += (logSampleCount - mDecayFactor) / 128;
         }
 
         if (record) {
