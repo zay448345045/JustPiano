@@ -472,6 +472,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             setTabTitleViewLayout(i);
         }
+        roomTabs.setCurrentTab(1);
     }
 
     @Override

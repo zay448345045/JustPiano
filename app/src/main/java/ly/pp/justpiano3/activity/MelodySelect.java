@@ -141,16 +141,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 break;
             case 4:
                 // 本地连续播放功能暂时取消
-//                Cursor cursor = songListAdapter.getCursor();
-//                int i2 = data.getInt("position") + 1;
-//                songsPath = "";
-//                if (cursor.moveToPosition(i2)) {
-//                    String string = cursor.getString(cursor.getColumnIndexOrThrow("path"));
-//                    String string2 = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-//                    jpapplication.startPlaySongLocal(string, this);
-//                    Toast.makeText(this, "正在播放:《" + string2 + "》", Toast.LENGTH_SHORT).show();
-//                    break;
-//                }
                 break;
         }
         return false;

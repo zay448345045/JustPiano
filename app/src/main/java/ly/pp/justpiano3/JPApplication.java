@@ -371,11 +371,16 @@ public final class JPApplication extends Application {
 
         @Override
         public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
+            ThreadPoolUtils.execute(() -> {
+                Looper.prepare();
+                Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
+                Looper.loop();
+            });
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
                     StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
-                    byteArrayOutputStream.toString()).execute();
+                    BuildConfig.VERSION_NAME + '\n' + byteArrayOutputStream).execute();
 
             if (connectionService != null) {
                 connectionService.outLine();
@@ -384,11 +389,6 @@ public final class JPApplication extends Application {
                 unbindService(serviceConnection);
                 bindService = false;
             }
-            ThreadPoolUtils.execute(() -> {
-                Looper.prepare();
-                Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
-                Looper.loop();
-            });
         }
     }
 

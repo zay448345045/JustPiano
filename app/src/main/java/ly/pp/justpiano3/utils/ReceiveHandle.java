@@ -583,7 +583,6 @@ final class ReceiveHandle {
                     case 2:  // 购买服装
                         bundle5.putString("I", changeClothes.getMessage());
                         bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                        // todo 为什么这个Key是一样的
                         bundle5.putInt("U_T", changeClothes.getBuyClothesType());
                         bundle5.putInt("U_I", changeClothes.getBuyClothesId());
                         break;

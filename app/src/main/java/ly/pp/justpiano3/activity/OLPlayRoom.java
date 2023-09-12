@@ -394,13 +394,6 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                     popupWindow2.setTouchable(true);
                     popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
-                    // TODO 展示音块速率？
-//                    DataSelectView noteSpeed = popupWindow2.getContentView().findViewById(R.id.note_speed);
-//                    noteSpeed.setDefaultValue(String.valueOf(GlobalSetting.INSTANCE.getNotesDownSpeed()));
-//                    noteSpeed.setDataChangeListener((dataSelectView, name, value) -> {
-//                        GlobalSetting.INSTANCE.setNotesDownSpeed(Integer.parseInt(value));
-//                        GlobalSetting.INSTANCE.saveSettings(jpapplication);
-//                    });
                     commonModeGroup = popupWindow2;
                     popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
                     return;
@@ -605,6 +598,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             }
             setTabTitleViewLayout(i);
         }
+        roomTabs.setCurrentTab(1);
     }
 
     @Override

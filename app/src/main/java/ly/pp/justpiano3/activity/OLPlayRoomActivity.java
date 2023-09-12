@@ -595,7 +595,6 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         newTabSpec.setIndicator("聊天");
         roomTabs.addTab(newTabSpec);
         roomTabs.setOnTabChangedListener(new PlayRoomTabChange(this));
-        roomTabs.setCurrentTab(1);
         timeUpdateRunning = true;
         timeUpdateThread = new TimeUpdateThread(this);
         timeUpdateThread.start();

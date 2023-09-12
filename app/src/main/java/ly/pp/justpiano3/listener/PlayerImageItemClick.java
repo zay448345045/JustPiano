@@ -36,7 +36,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        PopupWindow popupWindow = buildPopupWindow(olPlayRoomActivity.jpapplication.getRoomPlayerMap().get((byte) i));
+        PopupWindow popupWindow = buildPopupWindow(olPlayRoomActivity.jpapplication.getRoomPlayerMap().get((byte) (i + 1)));
         int[] iArr = new int[2];
         view.getLocationOnScreen(iArr);
         popupWindow.showAtLocation(view, Gravity.TOP | Gravity.START, iArr[0] + view.getWidth(), iArr[1]);
