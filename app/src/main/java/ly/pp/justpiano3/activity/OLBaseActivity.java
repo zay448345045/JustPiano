@@ -4,22 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import androidx.activity.ComponentActivity;
-import ly.pp.justpiano3.handler.android.BaseActivityHandler;
+import ly.pp.justpiano3.handler.android.OLBaseActivityHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.ReturnMainModeClick;
+import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class BaseActivity extends ComponentActivity {
+public class OLBaseActivity extends ComponentActivity {
     private boolean isOutLine = false;
     public JPProgressBar jpprogressBar;
-    public BaseActivityHandler baseActivityHandler = new BaseActivityHandler(this);
+    public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);
 
-    public static void returnMainMode(BaseActivity baseActivity) {
+    public static void returnMainMode(OLBaseActivity olBaseActivity) {
         Intent intent = new Intent();
-        intent.setClass(baseActivity, LoginActivity.class);
-        baseActivity.startActivity(intent);
-        baseActivity.finish();
+        intent.setClass(olBaseActivity, LoginActivity.class);
+        olBaseActivity.startActivity(intent);
+        olBaseActivity.finish();
     }
 
     public final void addDialog(String str, String str2, String str3) {
@@ -38,7 +38,11 @@ public class BaseActivity extends ComponentActivity {
         jpdialog.setTitle("提示");
         jpdialog.setMessage("非常抱歉,可能由于网络质量不稳定，服务器未能响应，点击确定回到到联网主界面重新登录");
         jpdialog.setCancelableFalse();
-        jpdialog.setFirstButton("确定", new ReturnMainModeClick(this));
+        jpdialog.setFirstButton("确定", (dialog, which) -> {
+            dialog.dismiss();
+            SongPlay.INSTANCE.stopPlay();
+            OLBaseActivity.returnMainMode(OLBaseActivity.this);
+        });
         jpdialog.showDialog();
     }
 
@@ -59,11 +63,6 @@ public class BaseActivity extends ComponentActivity {
     public static int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
-    }
-
-    public static int px2sp(Context context, float pxValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (pxValue / fontScale + 0.5f);
     }
 
     @Override

@@ -30,7 +30,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UsersInfo extends BaseActivity implements Callback, OnClickListener {
+public class UsersInfo extends OLBaseActivity implements Callback, OnClickListener {
     public JPApplication jpapplication;
     public boolean autoLogin = false;
     public boolean rememberNewPassword = false;

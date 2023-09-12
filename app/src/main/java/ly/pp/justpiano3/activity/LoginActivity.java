@@ -41,7 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-public class LoginActivity extends BaseActivity implements OnClickListener {
+public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";

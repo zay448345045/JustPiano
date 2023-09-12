@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.*;
@@ -108,6 +108,6 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
     }
 
     private void outLineAndDialog() {
-        BaseActivity.returnMainMode(usersInfo.get());
+        OLBaseActivity.returnMainMode(usersInfo.get());
     }
 }

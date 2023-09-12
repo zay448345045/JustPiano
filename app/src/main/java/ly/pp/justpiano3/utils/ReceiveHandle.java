@@ -831,11 +831,11 @@ final class ReceiveHandle {
                         roomPositionUser.getHand(),
                         roomPositionUser.getCoupleType(),
                         String.valueOf(roomPositionUser.getFamily()));
-                olPlayRoom.putJPhashMap(user.getPosition(), user);
+                olPlayRoom.putRoomPlayerMap(user.getPosition(), user);
                 i++;
             }
             Bundle bundle = new Bundle();
-            Iterator it = olPlayRoom.jpapplication.getHashmap().values().iterator();
+            Iterator it = olPlayRoom.jpapplication.getRoomPlayerMap().values().iterator();
             i = 0;
             while (true) {
                 int i3 = i;
@@ -891,11 +891,11 @@ final class ReceiveHandle {
                         roomPositionUser.getHand(),
                         roomPositionUser.getCoupleType(),
                         String.valueOf(roomPositionUser.getFamily()));
-                olPlayKeyboardRoom.putJPhashMap(user.getPosition(), user);
+                olPlayKeyboardRoom.putRoomPlayerMap(user.getPosition(), user);
                 i++;
             }
             Bundle bundle = new Bundle();
-            Iterator it = olPlayKeyboardRoom.jpapplication.getHashmap().values().iterator();
+            Iterator it = olPlayKeyboardRoom.jpapplication.getRoomPlayerMap().values().iterator();
             i = 0;
             while (true) {
                 int i3 = i;
@@ -956,7 +956,7 @@ final class ReceiveHandle {
                         roomPositionUser.getHand(),
                         roomPositionUser.getCoupleType(),
                         String.valueOf(roomPositionUser.getFamily()));
-                olPlayRoom.putJPhashMap(user.getPosition(), user);
+                olPlayRoom.putRoomPlayerMap(user.getPosition(), user);
                 bundle2.putByte("PI", user.getPosition());
                 bundle2.putString("N", user.getPlayerName());
                 bundle2.putString("S", user.getSex());
@@ -1008,7 +1008,7 @@ final class ReceiveHandle {
                         roomPositionUser.getHand(),
                         roomPositionUser.getCoupleType(),
                         String.valueOf(roomPositionUser.getFamily()));
-                olPlayKeyboardRoom.putJPhashMap(user.getPosition(), user);
+                olPlayKeyboardRoom.putRoomPlayerMap(user.getPosition(), user);
                 bundle2.putByte("PI", user.getPosition());
                 bundle2.putString("N", user.getPlayerName());
                 bundle2.putString("S", user.getSex());

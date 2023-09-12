@@ -25,7 +25,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.util.List;
 
-public class OLMainMode extends BaseActivity implements OnClickListener {
+public class OLMainMode extends OLBaseActivity implements OnClickListener {
     final OLMainMode context = this;
     public JPApplication jpapplication;
     public OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);

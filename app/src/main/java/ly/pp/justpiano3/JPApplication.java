@@ -1,7 +1,10 @@
 package ly.pp.justpiano3;
 
 import android.app.Application;
-import android.content.*;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -12,13 +15,11 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.constant.Consts;
@@ -32,14 +33,11 @@ import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.*;
 
 public final class JPApplication extends Application {
@@ -71,7 +69,7 @@ public final class JPApplication extends Application {
      */
     private int gameMode;
 
-    private final Map<Byte, User> hashMap = new HashMap<>();
+    private final Map<Byte, User> roomPlayerMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
     private List<SimpleUser> chatBlackList;
@@ -144,8 +142,8 @@ public final class JPApplication extends Application {
         return arrayList;
     }
 
-    public Map<Byte, User> getHashmap() {
-        return hashMap;
+    public Map<Byte, User> getRoomPlayerMap() {
+        return roomPlayerMap;
     }
 
     public String getAccountName() {

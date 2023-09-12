@@ -33,7 +33,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
+public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public String sex = "f";
     public Bitmap none;
     public Context context;

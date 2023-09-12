@@ -88,15 +88,15 @@ public final class ChattingAdapter extends BaseAdapter {
             userText.setOnClickListener(v -> {
                 if (activity instanceof OLPlayRoom) {
                     if (string != null) {
-                        ((OLPlayRoom) activity).mo2867c(string);
+                        ((OLPlayRoom) activity).setPrivateChatUserName(string);
                     }
                 } else if (activity instanceof OLPlayHall) {
                     if (string != null) {
-                        ((OLPlayHall) activity).mo2832b(string);
+                        ((OLPlayHall) activity).setPrivateChatUserName(string);
                     }
                 } else if (activity instanceof OLPlayKeyboardRoom) {
                     if (string != null) {
-                        ((OLPlayKeyboardRoom) activity).mo2867c(string);
+                        ((OLPlayKeyboardRoom) activity).setPrivateChatUserName(string);
                     }
                 }
             });

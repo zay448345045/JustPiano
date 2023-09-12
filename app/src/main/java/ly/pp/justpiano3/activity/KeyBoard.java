@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.media.midi.MidiReceiver;
 import android.os.*;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;

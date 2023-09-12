@@ -43,7 +43,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
+public final class PianoPlay extends OLBaseActivity implements MidiConnectionListener {
     public byte hallID;
     public TextView l_nandu;
     public TextView time_mid;
@@ -237,7 +237,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 hallID = hallBundle.getByte("hallID");
-                userMap = jpapplication.getHashmap();
+                userMap = jpapplication.getRoomPlayerMap();
                 songsPath = extras.getString("path");
                 songsName = extras.getString("name");
                 int diao = extras.getInt("diao");
@@ -266,7 +266,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 hallID = hallBundle.getByte("hallID");
-                userMap = jpapplication.getHashmap();
+                userMap = jpapplication.getRoomPlayerMap();
                 String songBytes = extras.getString("songBytes");
                 songsName = extras.getString("name");
                 times = extras.getInt("times");

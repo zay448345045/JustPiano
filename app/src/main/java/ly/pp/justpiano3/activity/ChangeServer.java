@@ -15,7 +15,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.IPUtil;
 import ly.pp.justpiano3.utils.SkinImageLoadUtil;
 
-public class ChangeServer extends BaseActivity implements OnClickListener {
+public class ChangeServer extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     private SharedPreferences sharedPreferences;
     private EditText et;

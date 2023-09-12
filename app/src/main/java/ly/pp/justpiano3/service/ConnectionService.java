@@ -27,7 +27,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.utils.*;
@@ -259,11 +259,11 @@ public class ConnectionService extends Service implements Runnable {
 
     private void outLineAndDialog() {
         outLine();
-        if (JPStack.top() instanceof BaseActivity) {
-            BaseActivity baseActivity = (BaseActivity) JPStack.top();
-            Message message = Message.obtain(baseActivity.baseActivityHandler);
+        if (JPStack.top() instanceof OLBaseActivity) {
+            OLBaseActivity olBaseActivity = (OLBaseActivity) JPStack.top();
+            Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
             message.what = 0;
-            baseActivity.baseActivityHandler.handleMessage(message);
+            olBaseActivity.olBaseActivityHandler.handleMessage(message);
         }
     }
 }

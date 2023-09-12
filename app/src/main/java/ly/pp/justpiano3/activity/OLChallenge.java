@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class OLChallenge extends BaseActivity implements OnClickListener {
+public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public ConnectionService cs;
     public byte hallID;

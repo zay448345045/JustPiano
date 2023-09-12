@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +109,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
             if (a != null) {
                 int[] iArr = new int[2];
                 linearLayout.getLocationOnScreen(iArr);
-                a.showAtLocation(linearLayout, 51, iArr[0] + linearLayout.getWidth(), iArr[1]);
+                a.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
             }
         });
         return view;

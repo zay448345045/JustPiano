@@ -229,7 +229,7 @@
                 android:label="@string/app_name"
                 android:screenOrientation="sensorLandscape"
                 android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan"/>
-        <activity android:name=".activity.BaseActivity"/>
+        <activity android:name=".activity.OLBaseActivity"/>
         <activity
                 android:name=".activity.OLChallenge"
                 android:configChanges="orientation|keyboardHidden|screenSize"
