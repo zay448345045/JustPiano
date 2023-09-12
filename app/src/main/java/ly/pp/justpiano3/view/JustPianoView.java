@@ -55,7 +55,7 @@ public class JustPianoView extends View {
 
     public final void updateProgressAndInfo(int progress, String info, String loading) {
         this.progress = progress;
-        this.info = info;
+        this.info = (info == null ? "" : info);
         this.loading = loading;
         invalidate();
     }
