@@ -19,7 +19,19 @@ public class JustPianoView extends View {
     private String loading = "";
     private String info = "";
     private final Paint paint;
+    private final Rect progressBarDynamicRect;
     private int progress = 0;
+
+    // 在构造函数或初始化块中设置Paint的属性
+    {
+        progressBarDynamicRect = new Rect();
+        paint = new Paint();
+        paint.setARGB(240, 248, 204, 48);
+        paint.setTextAlign(Align.RIGHT);
+        paint.setAntiAlias(true);
+        paint.setTextSize(20);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+    }
 
     public JustPianoView(Context context, JPApplication jPApplication) {
         super(context);
@@ -35,7 +47,6 @@ public class JustPianoView extends View {
             e.printStackTrace();
         }
         progressBarRect = new RectF(0, heightPixels - ((float) progressBarBitmap.getHeight()), (float) jPApplication.getWidthPixels(), heightPixels);
-        paint = new Paint();
     }
 
     public final void destroy() {
@@ -55,7 +66,7 @@ public class JustPianoView extends View {
 
     public final void updateProgressAndInfo(int progress, String info, String loading) {
         this.progress = progress;
-        this.info = info;
+        this.info = (info == null ? "" : info);
         this.loading = loading;
         invalidate();
     }
@@ -63,15 +74,14 @@ public class JustPianoView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        paint.setARGB(240, 248, 204, 48);
-        paint.setTextAlign(Align.RIGHT);
-        paint.setAntiAlias(true);
-        paint.setTextSize(20);
-        paint.setTypeface(Typeface.DEFAULT_BOLD);
+
         int progressOne = (jpapplication.getWidthPixels() * progress) / 85;
         canvas.drawBitmap(logoBitmap, null, allScreenRect, null);
         canvas.drawBitmap(progressBarBaseBitmap, null, progressBarRect, null);
-        canvas.drawBitmap(progressBarBitmap, null, new Rect(progressOne - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - progressBarBitmap.getHeight(), progressOne, jpapplication.getHeightPixels()), null);
+
+        progressBarDynamicRect.set(progressOne - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - progressBarBitmap.getHeight(), progressOne, jpapplication.getHeightPixels());
+        canvas.drawBitmap(progressBarBitmap, null, progressBarDynamicRect, null);
+
         canvas.drawText(loading + info, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - progressBarBitmap.getHeight()), paint);
     }
 }
