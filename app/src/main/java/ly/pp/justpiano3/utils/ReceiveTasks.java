@@ -56,10 +56,10 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.PLAY_START, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLPlayRoom) {
                 message.what = 5;
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("S", receivedMessage.getPlayStart().getSongPath());
-                bundle2.putInt("D", receivedMessage.getPlayStart().getTune());
-                message.setData(bundle2);
+                Bundle bundle = new Bundle();
+                bundle.putString("S", receivedMessage.getPlayStart().getSongPath());
+                bundle.putInt("D", receivedMessage.getPlayStart().getTune());
+                message.setData(bundle);
                 ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
             }
         });
@@ -71,19 +71,19 @@ public final class ReceiveTasks {
                 OnlinePlayFinishVO playFinish = receivedMessage.getPlayFinish();
                 for (int j = 0; j < playFinish.getPlayGradeList().size(); j++) {
                     OnlinePlayGradeVO playGrade = playFinish.getPlayGradeList().get(j);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putString("I", playGrade.getIsPlaying() ? "P" : "");
-                    bundle3.putString("N", playGrade.getName());
-                    bundle3.putString("SC", String.valueOf(playGrade.getScore()));
-                    bundle3.putString("P", String.valueOf(playGrade.getGrade().getPerfect()));
-                    bundle3.putString("C", String.valueOf(playGrade.getGrade().getCool()));
-                    bundle3.putString("G", String.valueOf(playGrade.getGrade().getGreat()));
-                    bundle3.putString("B", String.valueOf(playGrade.getGrade().getBad()));
-                    bundle3.putString("M", String.valueOf(playGrade.getGrade().getMiss()));
-                    bundle3.putString("T", String.valueOf(playGrade.getGrade().getCombo()));
-                    bundle3.putString("E", String.valueOf(playGrade.getGrade().getExp()));
-                    bundle3.putString("GR", String.valueOf(playGrade.getGrade().getGradeColor()));
-                    bundle.putBundle(String.valueOf(j), bundle3);
+                    Bundle innerBundle = new Bundle();
+                    innerBundle.putString("I", playGrade.getIsPlaying() ? "P" : "");
+                    innerBundle.putString("N", playGrade.getName());
+                    innerBundle.putString("SC", String.valueOf(playGrade.getScore()));
+                    innerBundle.putString("P", String.valueOf(playGrade.getGrade().getPerfect()));
+                    innerBundle.putString("C", String.valueOf(playGrade.getGrade().getCool()));
+                    innerBundle.putString("G", String.valueOf(playGrade.getGrade().getGreat()));
+                    innerBundle.putString("B", String.valueOf(playGrade.getGrade().getBad()));
+                    innerBundle.putString("M", String.valueOf(playGrade.getGrade().getMiss()));
+                    innerBundle.putString("T", String.valueOf(playGrade.getGrade().getCombo()));
+                    innerBundle.putString("E", String.valueOf(playGrade.getGrade().getExp()));
+                    innerBundle.putString("GR", String.valueOf(playGrade.getGrade().getGradeColor()));
+                    bundle.putBundle(String.valueOf(j), innerBundle);
                 }
                 message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
@@ -243,11 +243,11 @@ public final class ReceiveTasks {
                         Bundle bundle = new Bundle();
                         for (int i = 0; i < challenge.getChallengeEnter().getUserScoreList().size(); i++) {
                             OnlineChallengeUserVO challengeUser = challenge.getChallengeEnter().getUserScoreList().get(i);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putString("N", challengeUser.getName());
-                            bundle2.putString("S", String.valueOf(challengeUser.getScore()));
-                            bundle2.putString("T", challengeUser.getTime());
-                            bundle.putBundle(String.valueOf(i), bundle2);
+                            Bundle innerBundle = new Bundle();
+                            innerBundle.putString("N", challengeUser.getName());
+                            innerBundle.putString("S", String.valueOf(challengeUser.getScore()));
+                            innerBundle.putString("T", challengeUser.getTime());
+                            bundle.putBundle(String.valueOf(i), innerBundle);
                         }
                         bundle.putInt("S", challenge.getChallengeEnter().getScore());
                         bundle.putString("P", challenge.getChallengeEnter().getPosition());
@@ -310,24 +310,24 @@ public final class ReceiveTasks {
 
         receiveTaskMap.put(OnlineProtocolType.FAMILY, (receivedMessage, topActivity, message) -> {
             OnlineFamilyVO family = receivedMessage.getFamily();
+            Bundle bundle = new Bundle();
             switch (family.getType()) {
                 case 1:
                     if (topActivity instanceof OLFamily) {
                         OLFamily olFamily = (OLFamily) topActivity;
                         message.what = 1;
                         olFamily.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
                         for (int i = 0; i < family.getFamilyEnter().getFamilyUserList().size(); i++) {
                             OnlineFamilyUserVO familyUser = family.getFamilyEnter().getFamilyUserList().get(i);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putString("N", familyUser.getName());
-                            bundle2.putString("C", String.valueOf(familyUser.getContribution()));
-                            bundle2.putString("L", String.valueOf(familyUser.getLv()));
-                            bundle2.putString("S", familyUser.getGender());
-                            bundle2.putString("O", String.valueOf(familyUser.getOnline() ? 1 : 0));
-                            bundle2.putString("P", String.valueOf(familyUser.getPosition()));
-                            bundle2.putString("D", familyUser.getLoginDate());
-                            bundle.putBundle(String.valueOf(i), bundle2);
+                            Bundle innerBundle = new Bundle();
+                            innerBundle.putString("N", familyUser.getName());
+                            innerBundle.putString("C", String.valueOf(familyUser.getContribution()));
+                            innerBundle.putString("L", String.valueOf(familyUser.getLv()));
+                            innerBundle.putString("S", familyUser.getGender());
+                            innerBundle.putString("O", String.valueOf(familyUser.getOnline() ? 1 : 0));
+                            innerBundle.putString("P", String.valueOf(familyUser.getPosition()));
+                            innerBundle.putString("D", familyUser.getLoginDate());
+                            bundle.putBundle(String.valueOf(i), innerBundle);
                         }
                         bundle.putString("D", family.getFamilyEnter().getDeclaration());
                         String dateTime = DateUtil.format(new Date(family.getFamilyEnter().getCreateDate()));
@@ -345,17 +345,16 @@ public final class ReceiveTasks {
                         OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
                         message.what = 2;
                         olPlayHallRoom.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
                         for (int i = 0; i < family.getFamilyList().getFamilyInfoList().size(); i++) {
                             OnlineFamilyInfoVO familyInfo = family.getFamilyList().getFamilyInfoList().get(i);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putString("N", familyInfo.getName());
-                            bundle2.putString("C", String.valueOf(familyInfo.getContribution()));
-                            bundle2.putString("T", String.valueOf(familyInfo.getCapacity()));
-                            bundle2.putString("U", String.valueOf(familyInfo.getSize()));
-                            bundle2.putString("I", String.valueOf(familyInfo.getFamilyId()));
-                            bundle2.putByteArray("J", GZIPUtil.ZIPToArray(familyInfo.getPicture()));
-                            bundle.putBundle(String.valueOf(i), bundle2);
+                            Bundle innerBundle = new Bundle();
+                            innerBundle.putString("N", familyInfo.getName());
+                            innerBundle.putString("C", String.valueOf(familyInfo.getContribution()));
+                            innerBundle.putString("T", String.valueOf(familyInfo.getCapacity()));
+                            innerBundle.putString("U", String.valueOf(familyInfo.getSize()));
+                            innerBundle.putString("I", String.valueOf(familyInfo.getFamilyId()));
+                            innerBundle.putByteArray("J", GZIPUtil.ZIPToArray(familyInfo.getPicture()));
+                            bundle.putBundle(String.valueOf(i), innerBundle);
                         }
                         bundle.putString("C", String.valueOf(family.getFamilyList().getContribution()));
                         bundle.putString("P", String.valueOf(family.getFamilyList().getPosition()));
@@ -370,7 +369,6 @@ public final class ReceiveTasks {
                     break;
                 case 3:
                     if (topActivity instanceof OLPlayHallRoom) {
-                        Bundle bundle = new Bundle();
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         bundle.putInt("R", family.getFamilyDialog().getAllowed() ? 1 : 0);
                         message.setData(bundle);
@@ -381,7 +379,6 @@ public final class ReceiveTasks {
                     break;
                 case 4:
                     if (topActivity instanceof OLPlayHallRoom) {
-                        Bundle bundle = new Bundle();
                         bundle.putInt("R", family.getFamilyCreate().getResult());
                         message.setData(bundle);
                         message.what = 10;
@@ -394,7 +391,6 @@ public final class ReceiveTasks {
                 case 7:
                 case 10:
                     if (topActivity instanceof OLFamily) {
-                        Bundle bundle = new Bundle();
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         message.setData(bundle);
                         message.what = 5;
@@ -404,7 +400,6 @@ public final class ReceiveTasks {
                     break;
                 case 8:
                     if (topActivity instanceof OLFamily) {
-                        Bundle bundle = new Bundle();
                         try {
                             bundle.putString("I", family.getFamilyDialog().getMessage());
                             bundle.putInt("R", family.getFamilyDialog().getAllowed() ? 1 : 0);
@@ -428,20 +423,20 @@ public final class ReceiveTasks {
                 OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 for (int i = 0; i < loadRoomList.getRoomList().size(); i++) {
                     OnlineRoomVO roomRaw = loadRoomList.getRoomList().get(i);
-                    Bundle bundle2 = new Bundle();
                     Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                             roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
                             roomRaw.getColor(), roomRaw.getCloseNum(), roomRaw.getRoomMode());
+                    Bundle innerBundle = new Bundle();
                     olPlayHall.putRoomToMap(room.getRoomID(), room);
-                    bundle2.putByte("I", room.getRoomID());
-                    bundle2.putString("N", room.getRoomName());
-                    bundle2.putIntArray("UA", room.getPeople());
-                    bundle2.putBoolean("IF", room.isPeopleFull());
-                    bundle2.putInt("IP", room.isPlaying());
-                    bundle2.putInt("PA", room.isPassword());
-                    bundle2.putInt("V", room.getRoomKuang());
-                    bundle2.putInt("D", room.getRoomMode());
-                    bundle.putBundle(String.valueOf(i), bundle2);
+                    innerBundle.putByte("I", room.getRoomID());
+                    innerBundle.putString("N", room.getRoomName());
+                    innerBundle.putIntArray("UA", room.getPeople());
+                    innerBundle.putBoolean("IF", room.isPeopleFull());
+                    innerBundle.putInt("IP", room.isPlaying());
+                    innerBundle.putInt("PA", room.isPassword());
+                    innerBundle.putInt("V", room.getRoomKuang());
+                    innerBundle.putInt("D", room.getRoomMode());
+                    bundle.putBundle(String.valueOf(i), innerBundle);
                 }
                 message.setData(bundle);
                 olPlayHall.olPlayHallHandler.handleMessage(message);
@@ -521,16 +516,16 @@ public final class ReceiveTasks {
                 Iterator<Room> it = olPlayHall.roomTitleMap.values().iterator();
                 for (int i = 0; it.hasNext(); i++) {
                     room = it.next();
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putByte("I", room.getRoomID());
-                    bundle2.putString("N", room.getRoomName());
-                    bundle2.putIntArray("UA", room.getPeople());
-                    bundle2.putBoolean("IF", room.isPeopleFull());
-                    bundle2.putInt("IP", room.isPlaying());
-                    bundle2.putInt("PA", room.isPassword());
-                    bundle2.putInt("V", room.getRoomKuang());
-                    bundle2.putInt("D", room.getRoomMode());
-                    bundle.putBundle(String.valueOf(i), bundle2);
+                    Bundle innerBundle = new Bundle();
+                    innerBundle.putByte("I", room.getRoomID());
+                    innerBundle.putString("N", room.getRoomName());
+                    innerBundle.putIntArray("UA", room.getPeople());
+                    innerBundle.putBoolean("IF", room.isPeopleFull());
+                    innerBundle.putInt("IP", room.isPlaying());
+                    innerBundle.putInt("PA", room.isPassword());
+                    innerBundle.putInt("V", room.getRoomKuang());
+                    innerBundle.putInt("D", room.getRoomMode());
+                    bundle.putBundle(String.valueOf(i), innerBundle);
                 }
                 message.setData(bundle);
                 olPlayHall.olPlayHallHandler.handleMessage(message);
@@ -546,11 +541,11 @@ public final class ReceiveTasks {
                 List<OnlinePlayUserVO> playUserList = loadPlayUser.getPlayUserList();
                 for (int j = 0; j < playUserList.size(); j++) {
                     OnlinePlayUserVO playUser = playUserList.get(j);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putString("G", String.valueOf(playUser.getHand()));
-                    bundle3.putString("U", playUser.getName());
-                    bundle3.putString("M", String.valueOf(playUser.getMode()));
-                    bundle.putBundle(String.valueOf(j), bundle3);
+                    Bundle innerBundle = new Bundle();
+                    innerBundle.putString("G", String.valueOf(playUser.getHand()));
+                    innerBundle.putString("U", playUser.getName());
+                    innerBundle.putString("M", String.valueOf(playUser.getMode()));
+                    bundle.putBundle(String.valueOf(j), innerBundle);
                 }
                 message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
@@ -565,8 +560,6 @@ public final class ReceiveTasks {
                     return;
                 }
                 Bundle bundle = new Bundle();
-                Bundle bundle2;
-                User user2;
                 int i2 = receivedMessage.getMiniGrade().getScore();
                 int i3 = receivedMessage.getMiniGrade().getCombo();
                 if (i2 < 0) {
@@ -578,17 +571,17 @@ public final class ReceiveTasks {
                 }
                 int i = 0;
                 for (byte b = 1; b <= 6; b++) {
-                    user2 = (User) pianoPlay.userMap.get(b);
-                    if (user2 == null) {
+                    User currentUser = (User) pianoPlay.userMap.get(b);
+                    if (currentUser == null) {
                         continue;
                     }
-                    if (!user2.getPlayerName().isEmpty()) {
-                        bundle2 = new Bundle();
-                        bundle2.putString("G", String.valueOf(user2.getHand()));
-                        bundle2.putString("U", user2.getPlayerName());
-                        bundle2.putString("M", String.valueOf(user2.getScore()));
-                        bundle2.putString("T", user2.getCombo() + "");
-                        bundle.putBundle(String.valueOf(i), bundle2);
+                    if (!currentUser.getPlayerName().isEmpty()) {
+                        Bundle innerBundle = new Bundle();
+                        innerBundle.putString("G", String.valueOf(currentUser.getHand()));
+                        innerBundle.putString("U", currentUser.getPlayerName());
+                        innerBundle.putString("M", String.valueOf(currentUser.getScore()));
+                        innerBundle.putString("T", currentUser.getCombo() + "");
+                        bundle.putBundle(String.valueOf(i), innerBundle);
                         i++;
                     }
                 }
@@ -609,13 +602,13 @@ public final class ReceiveTasks {
                         olPlayDressRoom.jpprogressBar.dismiss();
                         for (int i = 0; i < shop.getShopProductShow().getProductList().size(); i++) {
                             OnlineShopProductVO shopProduct = shop.getShopProductShow().getProductList().get(i);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putString("N", shopProduct.getName());
-                            bundle2.putString("D", shopProduct.getDescription());
-                            bundle2.putInt("G", shopProduct.getPrice());
-                            bundle2.putString("P", shopProduct.getPicture());
-                            bundle2.putInt("I", shopProduct.getId());
-                            bundle.putBundle(String.valueOf(i), bundle2);
+                            Bundle innerBundle = new Bundle();
+                            innerBundle.putString("N", shopProduct.getName());
+                            innerBundle.putString("D", shopProduct.getDescription());
+                            innerBundle.putInt("G", shopProduct.getPrice());
+                            innerBundle.putString("P", shopProduct.getPicture());
+                            innerBundle.putInt("I", shopProduct.getId());
+                            bundle.putBundle(String.valueOf(i), innerBundle);
                         }
                         bundle.putString("G", String.valueOf(shop.getShopProductShow().getGold()));
                         message.setData(bundle);
@@ -649,20 +642,20 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.LOAD_USER, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLPlayHallRoom) {
                 Bundle bundle = new Bundle();
-                Bundle bundle3 = new Bundle();
+                Bundle dataBundle = new Bundle();
                 message.what = 0;
                 OnlineLoadUserVO loadUser = receivedMessage.getLoadUser();
                 for (int i = 0; i < loadUser.getHallList().size(); i++) {
                     OnlineHallVO hall = loadUser.getHallList().get(i);
-                    Bundle bundle4 = new Bundle();
-                    bundle4.putByte("I", (byte) hall.getId());
-                    bundle4.putString("N", hall.getName());
-                    bundle4.putInt("PN", hall.getSize());
-                    bundle4.putInt("TN", hall.getCapacity());
-                    bundle4.putInt("W", hall.getEncrypt() ? 1 : 0);
-                    bundle3.putBundle(String.valueOf(i), bundle4);
+                    Bundle innerBundle = new Bundle();
+                    innerBundle.putByte("I", (byte) hall.getId());
+                    innerBundle.putString("N", hall.getName());
+                    innerBundle.putInt("PN", hall.getSize());
+                    innerBundle.putInt("TN", hall.getCapacity());
+                    innerBundle.putInt("W", hall.getEncrypt() ? 1 : 0);
+                    dataBundle.putBundle(String.valueOf(i), innerBundle);
                 }
-                bundle.putBundle("L", bundle3);
+                bundle.putBundle("L", dataBundle);
                 bundle.putString("U", loadUser.getName());
                 bundle.putString("S", loadUser.getGender());
                 bundle.putString("I", String.valueOf(loadUser.getFamily()));
@@ -783,20 +776,20 @@ public final class ReceiveTasks {
                 OnlineChangeClothesVO changeClothes = receivedMessage.getChangeClothes();
                 int type = changeClothes.getType();
                 message.what = type;
-                Bundle bundle5 = new Bundle();
+                Bundle bundle = new Bundle();
                 switch (type) {
                     case 0:  // 保存服装
-                        bundle5.putString("I", changeClothes.getMessage());
+                        bundle.putString("I", changeClothes.getMessage());
                         break;
                     case 1:  // 进入换衣间加载音符和解锁情况
-                        bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                        bundle5.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
+                        bundle.putString("G", String.valueOf(changeClothes.getGold()));
+                        bundle.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
                         break;
                     case 2:  // 购买服装
-                        bundle5.putString("I", changeClothes.getMessage());
-                        bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                        bundle5.putInt("U_T", changeClothes.getBuyClothesType());
-                        bundle5.putInt("U_I", changeClothes.getBuyClothesId());
+                        bundle.putString("I", changeClothes.getMessage());
+                        bundle.putString("G", String.valueOf(changeClothes.getGold()));
+                        bundle.putInt("U_T", changeClothes.getBuyClothesType());
+                        bundle.putInt("U_I", changeClothes.getBuyClothesId());
                         break;
                     case 3:  // 服务器下发服装价格
                         message.what = 5;
@@ -804,11 +797,11 @@ public final class ReceiveTasks {
                         for (int y = 0; y < changeClothes.getBuyClothesPricesCount(); y++) {
                             priseArr[y] = changeClothes.getBuyClothesPricesList().get(y);
                         }
-                        bundle5.putInt("C_T", changeClothes.getBuyClothesType());
-                        bundle5.putIntArray("P", priseArr);
+                        bundle.putInt("C_T", changeClothes.getBuyClothesType());
+                        bundle.putIntArray("P", priseArr);
                         break;
                 }
-                message.setData(bundle5);
+                message.setData(bundle);
                 ((OLPlayDressRoom) topActivity).olPlayDressRoomHandler.handleMessage(message);
             }
         });
@@ -820,12 +813,12 @@ public final class ReceiveTasks {
                 case 1:
                     for (int i = 0; i < loadUserInfo.getLoadUserFriend().getFriendUserList().size(); i++) {
                         OnlineFriendUserVO friendUser = loadUserInfo.getLoadUserFriend().getFriendUserList().get(i);
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putString("F", friendUser.getName());
-                        bundle2.putInt("O", friendUser.getOnline() ? 1 : 0);
-                        bundle2.putString("S", friendUser.getGender());
-                        bundle2.putInt("LV", friendUser.getLv());
-                        bundle.putBundle(String.valueOf(i), bundle2);
+                        Bundle innerBundle = new Bundle();
+                        innerBundle.putString("F", friendUser.getName());
+                        innerBundle.putInt("O", friendUser.getOnline() ? 1 : 0);
+                        innerBundle.putString("S", friendUser.getGender());
+                        innerBundle.putInt("LV", friendUser.getLv());
+                        bundle.putBundle(String.valueOf(i), innerBundle);
                     }
                     switch (loadUserInfo.getLoadUserFriend().getLocation()) {
                         case 0:
@@ -863,13 +856,12 @@ public final class ReceiveTasks {
                 case 2:
                     for (int i = 0; i < loadUserInfo.getLoadUserMail().getMailList().size(); i++) {
                         OnlineMailVO mail = loadUserInfo.getLoadUserMail().getMailList().get(i);
-                        Bundle bundle6 = new Bundle();
-                        bundle6.putString("F", mail.getUserFrom());
-                        bundle6.putString("M", mail.getMessage());
-                        String dateTime = DateUtil.format(new Date(mail.getTime()));
-                        bundle6.putString("T", dateTime);
-                        bundle6.putInt("type", 0);
-                        bundle.putBundle(String.valueOf(i), bundle6);
+                        Bundle innerBundle = new Bundle();
+                        innerBundle.putString("F", mail.getUserFrom());
+                        innerBundle.putString("M", mail.getMessage());
+                        innerBundle.putString("T", DateUtil.format(new Date(mail.getTime())));
+                        innerBundle.putInt("type", 0);
+                        bundle.putBundle(String.valueOf(i), innerBundle);
                     }
                     message.what = 4;
                     message.setData(bundle);
@@ -906,12 +898,12 @@ public final class ReceiveTasks {
             OnlineLoadUserListVO loadUserList = receivedMessage.getLoadUserList();
             for (int i = 0; i < loadUserList.getUserList().size(); i++) {
                 OnlineUserVO user = loadUserList.getUserList().get(i);
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("U", user.getName());
-                bundle2.putString("S", user.getGender());
-                bundle2.putInt("LV", user.getLv());
-                bundle2.putInt("R", user.getRoomId());
-                bundle.putBundle(String.valueOf(i), bundle2);
+                Bundle innerBundle = new Bundle();
+                innerBundle.putString("U", user.getName());
+                innerBundle.putString("S", user.getGender());
+                innerBundle.putInt("LV", user.getLv());
+                innerBundle.putInt("R", user.getRoomId());
+                bundle.putBundle(String.valueOf(i), innerBundle);
             }
             if (loadUserList.getIsInRoom()) {
                 message.what = 15;
@@ -973,10 +965,7 @@ public final class ReceiveTasks {
                     bundle.putInt("H", dialog.getHallId());
                     bundle.putInt("R", dialog.getRoomId());
                     bundle.putString("N", dialog.getName());
-                    try {
-                        bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
-                    } catch (Exception ignore) {
-                    }
+                    bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
                     message.setData(bundle);
                     handler.handleMessage(message);
                 }
@@ -994,12 +983,12 @@ public final class ReceiveTasks {
                         olPlayHallRoom.jpprogressBar.dismiss();
                         for (int i = 0; i < daily.getDailyTimeList().getDailyTimeUserList().size(); i++) {
                             OnlineDailyTimeUserVO dailyTimeUser = daily.getDailyTimeList().getDailyTimeUserList().get(i);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putString("N", dailyTimeUser.getName());
-                            bundle2.putString("T", String.valueOf(dailyTimeUser.getOnlineTime()));
-                            bundle2.putString("B", dailyTimeUser.getBonus());
-                            bundle2.putString("G", String.valueOf(dailyTimeUser.getBonusGet() ? 1 : 0));
-                            bundle.putBundle(String.valueOf(i), bundle2);
+                            Bundle innerBundle = new Bundle();
+                            innerBundle.putString("N", dailyTimeUser.getName());
+                            innerBundle.putString("T", String.valueOf(dailyTimeUser.getOnlineTime()));
+                            innerBundle.putString("B", dailyTimeUser.getBonus());
+                            innerBundle.putString("G", String.valueOf(dailyTimeUser.getBonusGet() ? 1 : 0));
+                            bundle.putBundle(String.valueOf(i), innerBundle);
                         }
                         bundle.putString("M", daily.getDailyTimeList().getTomorrowBonus());
                         bundle.putString("T", String.valueOf(daily.getDailyTimeList().getTodayOnlineTime()));
@@ -1082,18 +1071,18 @@ public final class ReceiveTasks {
             if (topActivity instanceof OLPlayHall) {
                 Bundle bundle = new Bundle();
                 OnlineLoadRoomUserListVO loadRoomUserList = receivedMessage.getLoadRoomUserList();
-                Bundle bundle2 = new Bundle();
+                Bundle dataBundle = new Bundle();
                 List<OnlineLoadRoomUserVO> roomUserList = loadRoomUserList.getLoadRoomUserList();
                 for (int i = 0; i < roomUserList.size(); i++) {
                     OnlineLoadRoomUserVO loadRoomUser = roomUserList.get(i);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putString("U", loadRoomUser.getName());
-                    bundle3.putString("S", loadRoomUser.getGender());
-                    bundle3.putInt("LV", loadRoomUser.getLv());
-                    bundle3.putInt("R", loadRoomUserList.getRoomId());
-                    bundle2.putBundle(String.valueOf(i), bundle3);
+                    Bundle innerBundle = new Bundle();
+                    innerBundle.putString("U", loadRoomUser.getName());
+                    innerBundle.putString("S", loadRoomUser.getGender());
+                    innerBundle.putInt("LV", loadRoomUser.getLv());
+                    innerBundle.putInt("R", loadRoomUserList.getRoomId());
+                    dataBundle.putBundle(String.valueOf(i), innerBundle);
                 }
-                bundle.putBundle("L", bundle2);
+                bundle.putBundle("L", dataBundle);
                 bundle.putInt("R", loadRoomUserList.getRoomId());
                 bundle.putInt("S", loadRoomUserList.getIsPlaying() ? 1 : 0);
                 bundle.putInt("P", loadRoomUserList.getIsEncrypt() ? 1 : 0);
@@ -1164,7 +1153,8 @@ public final class ReceiveTasks {
     }
 
     private static User buildAndPutUser(OLPlayRoomActivity olPlayRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {
-        User user = new User((byte) roomPositionUser.getPosition(), roomPositionUser.getName(),
+        User user = new User((byte) roomPositionUser.getPosition(),
+                roomPositionUser.getName(),
                 roomPositionUser.getClothes().getHair(),
                 roomPositionUser.getClothes().getEye(),
                 roomPositionUser.getClothes().getJacket(),
@@ -1184,23 +1174,23 @@ public final class ReceiveTasks {
     }
 
     private static void fillUserBundle(Bundle bundle, int i, User user) {
-        Bundle bundle2 = new Bundle();
-        bundle2.putByte("PI", user.getPosition());
-        bundle2.putString("N", user.getPlayerName());
-        bundle2.putString("S", user.getSex());
-        bundle2.putString("IR", user.getStatus());
-        bundle2.putString("IH", user.getIshost());
-        bundle2.putInt("IV", user.getKuang());
-        bundle2.putInt("LV", user.getLevel());
-        bundle2.putInt("TR", user.getTrousers());
-        bundle2.putInt("JA", user.getJacket());
-        bundle2.putInt("EY", user.getEye());
-        bundle2.putInt("HA", user.getHair());
-        bundle2.putInt("SH", user.getShoes());
-        bundle2.putInt("CL", user.getClevel());
-        bundle2.putInt("GR", user.getHand());
-        bundle2.putInt("CP", user.getCpKind());
-        bundle2.putString("I", user.getFamilyID());
-        bundle.putBundle(String.valueOf(i), bundle2);
+        Bundle innerBundle = new Bundle();
+        innerBundle.putByte("PI", user.getPosition());
+        innerBundle.putString("N", user.getPlayerName());
+        innerBundle.putString("S", user.getSex());
+        innerBundle.putString("IR", user.getStatus());
+        innerBundle.putString("IH", user.getIshost());
+        innerBundle.putInt("IV", user.getKuang());
+        innerBundle.putInt("LV", user.getLevel());
+        innerBundle.putInt("TR", user.getTrousers());
+        innerBundle.putInt("JA", user.getJacket());
+        innerBundle.putInt("EY", user.getEye());
+        innerBundle.putInt("HA", user.getHair());
+        innerBundle.putInt("SH", user.getShoes());
+        innerBundle.putInt("CL", user.getClevel());
+        innerBundle.putInt("GR", user.getHand());
+        innerBundle.putInt("CP", user.getCpKind());
+        innerBundle.putString("I", user.getFamilyID());
+        bundle.putBundle(String.valueOf(i), innerBundle);
     }
 }
