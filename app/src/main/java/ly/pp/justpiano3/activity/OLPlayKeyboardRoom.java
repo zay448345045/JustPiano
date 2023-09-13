@@ -140,7 +140,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 if (name.equals(jpapplication.getKitiName())) {
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
-                    keyboardNoteDownColor = ColorUtil.getKuangColorByKuangIndex(this, bundle1.getInt("IV"));
+                    int kuangIndex = bundle1.getInt("IV");
+                    keyboardNoteDownColor = kuangIndex == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuangIndex);
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiFramer != null);
                 }
                 playerList.add(bundle1);
@@ -679,9 +680,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
-        if (keyboardNoteDownColor != null) {
-            keyboardView.setNoteOnColor(keyboardNoteDownColor);
-        }
+        keyboardView.setNoteOnColor(keyboardNoteDownColor);
         if (noteScheduledExecutor == null) {
             lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();

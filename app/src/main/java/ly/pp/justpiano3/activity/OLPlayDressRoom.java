@@ -72,10 +72,9 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public int jacketNow = -1;
     public int trousersNow = -1;
     public int shoesNow = -1;
-    private Bitmap body;
     private ConnectionService connectionservice;
 
-    // <editor-fold desc="服装价格常量" defaultstate="collapsed">
+    // 装价格常量
     public static int[] fHair = new int[0];
     public static int[] mHair = new int[0];
     public static int[] fEye = new int[0];
@@ -86,7 +85,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public static int[] mTrousers = new int[0];
     public static int[] fShoes = new int[0];
     public static int[] mShoes = new int[0];
-    // </editor-fold>
 
     private void setDressAdapter(GridView gridView, List<Bitmap> arrayList, int type) {
         gridView.setAdapter(new DressAdapter(arrayList, this, type));
@@ -277,15 +275,9 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         eyeImage = findViewById(R.id.ol_dress_eye);
         shoesImage = findViewById(R.id.ol_dress_shoes);
         goldNum = findViewById(R.id.gold_num);
-        try {
-            body = ImageLoadUtil.dressBitmapCacheMap.get(sex.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png");
-            none = ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        dressMod.setImageBitmap(body);
+        none = ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png");
+        dressMod.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get(sex.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png"));
         dressMod.setColorFilter(-1, Mode.MULTIPLY);
-
         Bitmap bitmap;
         int count = 0;
         do {
@@ -428,7 +420,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         }
         shoesArray.clear();
 
-        body.recycle();
         JPStack.pop(this);
         super.onDestroy();
     }

@@ -392,6 +392,11 @@ public final class JPApplication extends Application {
                 unbindService(serviceConnection);
                 bindService = false;
             }
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
