@@ -42,7 +42,7 @@ import java.util.*;
 /**
  * 房间
  */
-public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callback, View.OnClickListener {
+public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callback, View.OnClickListener, View.OnLongClickListener {
     // 防止横竖屏切换时前后台状态错误
     public boolean isChangeScreen;
     public int lv;
@@ -231,9 +231,10 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         jpdialog.showDialog();
     }
 
-    protected void sendMailClick() {
+    protected void sendMailClick(boolean isBroadcast) {
         String str;
         OnlineRoomChatDTO.Builder builder2 = OnlineRoomChatDTO.newBuilder();
+        builder2.setIsBroadcast(isBroadcast);
         str = String.valueOf(sendTextView.getText());
         if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
             builder2.setUserName("");
@@ -546,6 +547,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
+        findViewById(R.id.ol_send_b).setOnLongClickListener(this);
         findViewById(R.id.pre_button).setOnClickListener(this);
         findViewById(R.id.next_button).setOnClickListener(this);
         findViewById(R.id.online_button).setOnClickListener(this);
@@ -660,7 +662,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 nextFriendPageClick();
                 return;
             case R.id.ol_send_b:
-                sendMailClick();
+                sendMailClick(false);
                 return;
             case R.id.ol_express_b:
                 expressWindow.showAtLocation(expressImageView, Gravity.CENTER, 0, 0);
@@ -764,5 +766,26 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             builder1.setStatus("B");
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int vid = v.getId();
+        if (vid == R.id.ol_send_b) {
+            String text = sendTextView.getText().toString();
+            if (!text.isEmpty()) {
+                new JPDialog(this)
+                        .setTitle("发送'全服广播'")
+                        .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + text)
+                        .setFirstButton("希望", (dialog, i) -> {
+                            sendMailClick(true);
+                            dialog.dismiss();
+                        })
+                        .setSecondButton("再想想", new DialogDismissClick())
+                        .showDialog();
+            }
+            return true;
+        }
+        return false;
     }
 }

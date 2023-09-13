@@ -43,7 +43,7 @@ import protobuf.dto.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener {
+public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
     public ConnectionService connectionService;
     public String hallName = "";
     public byte hallID = (byte) 0;
@@ -308,28 +308,37 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 }
                 return;
             case R.id.ol_send_b:
-                String valueOf = String.valueOf(sendTextView.getText());
-                OnlineHallChatDTO.Builder builder1 = OnlineHallChatDTO.newBuilder();
-                if (!valueOf.startsWith(sendTo) || valueOf.length() <= sendTo.length()) {
-                    builder1.setUserName("");
-                    builder1.setMessage(valueOf);
-                } else {
-                    builder1.setUserName(sendTo);
-                    valueOf = valueOf.substring(sendTo.length());
-                    builder1.setMessage(valueOf);
-                }
-                sendTextView.setText("");
-                sendTo = "";
-                if (!valueOf.isEmpty()) {
-                    sendMsg(OnlineProtocolType.HALL_CHAT, builder1.build());
-                }
-                sendTextView.setText("");
-                sendTo = "";
+                sendHallChat(false);
                 return;
             case R.id.ol_express_b:
                 popupWindow.showAtLocation(imageView, Gravity.CENTER, 0, 0);
                 return;
             default:
+        }
+    }
+
+    /**
+     * 发送大厅消息
+     *
+     * @param isBroadcast 是否为全服广播类型
+     */
+    private void sendHallChat(boolean isBroadcast) {
+        String str;
+        OnlineHallChatDTO.Builder builder1 = OnlineHallChatDTO.newBuilder();
+        builder1.setIsBroadcast(isBroadcast);
+        str = String.valueOf(sendTextView.getText());
+        if (!str.startsWith(sendTo) || str.length() <= sendTo.length()) {
+            builder1.setUserName("");
+            builder1.setMessage(str);
+        } else {
+            builder1.setUserName(sendTo);
+            str = str.substring(sendTo.length());
+            builder1.setMessage(str);
+        }
+        sendTextView.setText("");
+        sendTo = "";
+        if (!str.isEmpty()) {
+            sendMsg(OnlineProtocolType.HALL_CHAT, builder1.build());
         }
     }
 
@@ -351,6 +360,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         findViewById(R.id.ol_send_b).setOnClickListener(this);
+        findViewById(R.id.ol_send_b).setOnLongClickListener(this);
         findViewById(R.id.ol_createroom_b).setOnClickListener(this);
         findViewById(R.id.ol_testroom_b).setOnClickListener(this);
         sendTextView = findViewById(R.id.ol_send_text);
@@ -433,5 +443,26 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         roomList.clear();
         userInHallList.clear();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int vid = v.getId();
+        if (vid == R.id.ol_send_b) {
+            String text = sendTextView.getText().toString();
+            if (!text.isEmpty()) {
+                new JPDialog(this)
+                        .setTitle("发送'全服广播'")
+                        .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + sendTextView.getText())
+                        .setFirstButton("希望", (dialog, i) -> {
+                            sendHallChat(true);
+                            dialog.dismiss();
+                        })
+                        .setSecondButton("再想想", new DialogDismissClick())
+                        .showDialog();
+            }
+            return true;
+        }
+        return false;
     }
 }
