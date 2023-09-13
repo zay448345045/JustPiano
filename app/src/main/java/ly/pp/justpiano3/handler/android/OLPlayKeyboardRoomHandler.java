@@ -100,7 +100,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                 case 10:
                     post(() -> {
                         String name = message.getData().getString("R");
-                        olPlayKeyboardRoom.roomNameView.setText("[" + olPlayKeyboardRoom.roomID0 + "]" + name);
+                        olPlayKeyboardRoom.roomNameView.setText("[" + olPlayKeyboardRoom.roomId + "]" + name);
                     });
                     return;
                 case 11:

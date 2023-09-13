@@ -50,7 +50,7 @@ public final class OLPlayRoomHandler extends Handler {
                                         olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + tune);
                                     }
                                 }
-                                if (!olPlayRoom.isChangeScreen && !SongPlay.INSTANCE.isPlaying()) {
+                                if (!olPlayRoom.isChangeScreen) {
                                     SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, olPlayRoom.getTune());
                                 }
                             }
@@ -98,12 +98,12 @@ public final class OLPlayRoomHandler extends Handler {
                     post(() -> {
                         SongPlay.INSTANCE.stopPlay();
                         String str1 = message.getData().getString("S");
-                        if (!olPlayRoom.isOnStart) {
+                        if (!olPlayRoom.onStart) {
                             olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);
-                            bundle.putByte("hallID", olPlayRoom.hallID0);
+                            bundle.putByte("hallID", olPlayRoom.hallId);
                             intent.putExtras(bundle);
                             olPlayRoom.startActivity(intent);
                             olPlayRoom.finish();
@@ -112,7 +112,7 @@ public final class OLPlayRoomHandler extends Handler {
                             str1 = "songs/" + str1 + ".pm";
                             String str = olPlayRoom.querySongNameAndDiffByPath(str1)[0];
                             if (str != null) {
-                                olPlayRoom.isOnStart = false;
+                                olPlayRoom.onStart = false;
                                 Intent intent2 = new Intent(olPlayRoom, PianoPlay.class);
                                 intent2.putExtra("head", 2);
                                 intent2.putExtra("path", str1);
@@ -120,8 +120,8 @@ public final class OLPlayRoomHandler extends Handler {
                                 intent2.putExtra("diao", olPlayRoom.getTune());
                                 intent2.putExtra("roomMode", olPlayRoom.roomMode);
                                 intent2.putExtra("hand", olPlayRoom.currentHand);
-                                intent2.putExtra("bundle", olPlayRoom.bundle0);
-                                intent2.putExtra("bundleHall", olPlayRoom.bundle2);
+                                intent2.putExtra("bundle", olPlayRoom.roomInfoBundle);
+                                intent2.putExtra("bundleHall", olPlayRoom.hallInfoBundle);
                                 olPlayRoom.startActivity(intent2);
                                 olPlayRoom.finish();
                             }
@@ -149,9 +149,9 @@ public final class OLPlayRoomHandler extends Handler {
                     post(() -> {
                         String name = message.getData().getString("R");
                         olPlayRoom.getIntent().putExtra("R", name);
-                        olPlayRoom.bundle0.putString("R", name);
+                        olPlayRoom.roomInfoBundle.putString("R", name);
                         olPlayRoom.roomName = name;
-                        olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomID0 + "]" + olPlayRoom.roomName);
+                        olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomId + "]" + olPlayRoom.roomName);
                     });
                     return;
                 case 11:

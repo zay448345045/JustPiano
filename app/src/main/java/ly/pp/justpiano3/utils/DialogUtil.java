@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.utils;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.view.GoldConvertView;
@@ -31,7 +32,7 @@ public class DialogUtil {
      * 赠送音符消息接收-对话框处理
      */
     public static void handleGoldSend(JPApplication jpApplication, JPDialog jpDialog, int messageType, String userName, String handlingFee) {
-        if (messageType == 2) {
+        if (messageType == 2 && !StringUtil.isNullOrEmpty(handlingFee)) {
             jpDialog.setVisibleGoldConvertView(true);
             jpDialog.getGoldConvertView().setGoldValueConvertRule(new GoldConvertView.GoldValueConvertRule() {
                 @Override

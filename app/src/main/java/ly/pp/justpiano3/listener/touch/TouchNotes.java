@@ -65,15 +65,11 @@ public final class TouchNotes implements OnTouchListener {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    onFingerUp(id, x, y);
-                    view.performClick();
-                    break;
                 case MotionEvent.ACTION_POINTER_UP:
                     onFingerUp(id, x, y);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     onAllFingersUp();
-                    view.performClick();
                     break;
                 default:
                     break;

@@ -48,29 +48,29 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     public int lv;
     public int cl;
     public Handler handler;
-    public byte hallID0;
+    public byte hallId;
     public String hallName;
     public List<Bundle> friendPlayerList = new ArrayList<>();
     public boolean canNotNextPage;
-    public TextView sendText;
+    public TextView sendTextView;
     public List<Bundle> msgList = new ArrayList<>();
     public int maxListValue = 100;
     public GridView playerGrid;
     public List<Bundle> invitePlayerList = new ArrayList<>();
     public TabHost roomTabs;
-    public boolean isOnStart = true;
+    public boolean onStart = true;
     public String userTo = "";
     public ListView playerListView;
     public ListView friendsListView;
     public int page;
-    public byte roomID0;
+    public byte roomId;
     public TextView roomNameView;
     public String roomName;
     public JPApplication jpapplication;
     public String playerKind = "";
     public ConnectionService connectionService;
-    public Bundle bundle0;
-    public Bundle bundle2;
+    public Bundle roomInfoBundle;
+    public Bundle hallInfoBundle;
     public boolean timeUpdateRunning;
     public ListView msgListView;
     public ImageView expressImageView;
@@ -212,9 +212,9 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     public void setPrivateChatUserName(String str) {
         userTo = "@" + str + ":";
         if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
-            sendText.setText(userTo);
+            sendTextView.setText(userTo);
         }
-        CharSequence text = sendText.getText();
+        CharSequence text = sendTextView.getText();
         if (text instanceof Spannable) {
             Selection.setSelection((Spannable) text, text.length());
         }
@@ -233,7 +233,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     protected void sendMailClick() {
         String str;
         OnlineRoomChatDTO.Builder builder2 = OnlineRoomChatDTO.newBuilder();
-        str = String.valueOf(sendText.getText());
+        str = String.valueOf(sendTextView.getText());
         if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
             builder2.setUserName("");
             builder2.setMessage(str);
@@ -242,7 +242,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             str = str.substring(userTo.length());
             builder2.setMessage(str);
         }
-        sendText.setText("");
+        sendTextView.setText("");
         builder2.setColor(colorNum);
         if (!str.isEmpty()) {
             sendMsg(OnlineProtocolType.ROOM_CHAT, builder2.build());
@@ -252,7 +252,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
 
     protected void changeChatColor(int lv, int colorNum, int color) {
         if (this.lv >= lv) {
-            sendText.setTextColor(color);
+            sendTextView.setTextColor(color);
             this.colorNum = colorNum;
         } else {
             Toast.makeText(this, "您的等级未达到" + lv + "级，不能使用该颜色!", Toast.LENGTH_SHORT).show();
@@ -326,11 +326,11 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         JPDialog jpdialog = new JPDialog(this);
         jpdialog.setCancelableFalse();
         jpdialog.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
-            isOnStart = false;
+            onStart = false;
             Intent intent = new Intent(this, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", hallName);
-            bundle.putByte("hallID", hallID0);
+            bundle.putByte("hallID", hallId);
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -472,8 +472,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         String string = message.getData().getString("U");
         if (string != null && !string.equals(JPApplication.kitiName)) {
             userTo = "@" + string + ":";
-            sendText.setText(userTo);
-            CharSequence text = sendText.getText();
+            sendTextView.setText(userTo);
+            CharSequence text = sendTextView.getText();
             if (text instanceof Spannable) {
                 Selection.setSelection((Spannable) text, text.length());
             }
@@ -528,14 +528,14 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         connectionService = jpapplication.getConnectionService();
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
-        bundle0 = getIntent().getExtras();
-        bundle2 = bundle0.getBundle("bundle");
-        hallID0 = bundle2.getByte("hallID");
-        hallName = bundle2.getString("hallName");
-        roomID0 = bundle0.getByte("ID");
-        roomName = bundle0.getString("R");
-        playerKind = bundle0.getString("isHost");
-        roomNameView.setText("[" + roomID0 + "]" + roomName);
+        roomInfoBundle = getIntent().getExtras();
+        hallInfoBundle = roomInfoBundle.getBundle("bundle");
+        hallId = hallInfoBundle.getByte("hallID");
+        hallName = hallInfoBundle.getString("hallName");
+        roomId = roomInfoBundle.getByte("ID");
+        roomName = roomInfoBundle.getString("R");
+        playerKind = roomInfoBundle.getString("isHost");
+        roomNameView.setText("[" + roomId + "]" + roomName);
         roomNameView.setOnClickListener(this);
         playerGrid = findViewById(R.id.ol_player_grid);
         playerGrid.setCacheColorHint(0);
@@ -544,13 +544,13 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
-        timeTextView = findViewById(R.id.time_text);
         findViewById(R.id.pre_button).setOnClickListener(this);
         findViewById(R.id.next_button).setOnClickListener(this);
         findViewById(R.id.online_button).setOnClickListener(this);
+        timeTextView = findViewById(R.id.time_text);
         friendsListView = findViewById(R.id.ol_friend_list);
         friendsListView.setCacheColorHint(0);
-        sendText = findViewById(R.id.ol_send_text);
+        sendTextView = findViewById(R.id.ol_send_text);
         expressImageView = findViewById(R.id.ol_express_b);
         changeColorButton = findViewById(R.id.ol_changecolor);
         playerListView = findViewById(R.id.ol_player_list);
@@ -730,8 +730,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     @Override
     protected void onStart() {
         super.onStart();
-        if (!isOnStart) {
-            isOnStart = true;
+        if (!onStart) {
+            onStart = true;
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("N");
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
@@ -741,8 +741,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (!isOnStart) {
-            isOnStart = true;
+        if (!onStart) {
+            onStart = true;
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("N");
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
@@ -756,8 +756,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     @Override
     protected void onStop() {
         super.onStop();
-        if (isOnStart) {
-            isOnStart = false;
+        if (onStart) {
+            onStart = false;
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("B");
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());

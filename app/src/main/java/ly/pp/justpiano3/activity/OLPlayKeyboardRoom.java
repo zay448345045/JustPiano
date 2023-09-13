@@ -634,7 +634,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);
                     edit.apply();
-                    view.performClick();
                     break;
                 default:
                     break;
@@ -650,7 +649,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 view.setPressed(false);
                 stopAddOrSubtract();
                 busyAnim = false;
-                view.performClick();
             }
         }
         return true;

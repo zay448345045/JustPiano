@@ -49,7 +49,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public TextView time_mid;
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
-    public Map userMap;
     public boolean isOpenRecord;
     public PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     public View f4591J;
@@ -237,7 +236,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 hallID = hallBundle.getByte("hallID");
-                userMap = jpapplication.getRoomPlayerMap();
                 songsPath = extras.getString("path");
                 songsName = extras.getString("name");
                 int diao = extras.getInt("diao");
@@ -266,7 +264,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 hallID = hallBundle.getByte("hallID");
-                userMap = jpapplication.getRoomPlayerMap();
                 String songBytes = extras.getString("songBytes");
                 songsName = extras.getString("name");
                 times = extras.getInt("times");

@@ -201,7 +201,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                     edit.putFloat("keyboard_weight", layoutParams.weight);
                     edit.apply();
                     reSize = false;
-                    view.performClick();
                     break;
                 default:
                     break;
@@ -217,7 +216,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 view.setPressed(false);
                 stopAddOrSubtract();
                 busyAnim = false;
-                view.performClick();
             }
         }
         return true;

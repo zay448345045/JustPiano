@@ -2,6 +2,7 @@ package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Handler;
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
@@ -555,7 +556,7 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.MINI_GRADE, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof PianoPlay) {
                 PianoPlay pianoPlay = (PianoPlay) topActivity;
-                User user = (User) pianoPlay.userMap.get((byte) receivedMessage.getMiniGrade().getRoomPosition());
+                User user = pianoPlay.jpapplication.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
                 if (user == null) {
                     return;
                 }
@@ -571,7 +572,7 @@ public final class ReceiveTasks {
                 }
                 int i = 0;
                 for (byte b = 1; b <= 6; b++) {
-                    User currentUser = (User) pianoPlay.userMap.get(b);
+                    User currentUser = pianoPlay.jpapplication.getRoomPlayerMap().get(b);
                     if (currentUser == null) {
                         continue;
                     }
@@ -965,7 +966,9 @@ public final class ReceiveTasks {
                     bundle.putInt("H", dialog.getHallId());
                     bundle.putInt("R", dialog.getRoomId());
                     bundle.putString("N", dialog.getName());
-                    bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
+                    if (!StringUtil.isNullOrEmpty(dialog.getBizData())) {
+                        bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
+                    }
                     message.setData(bundle);
                     handler.handleMessage(message);
                 }
