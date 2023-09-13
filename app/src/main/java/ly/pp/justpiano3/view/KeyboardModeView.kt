@@ -9,8 +9,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import ly.pp.justpiano3.R
-import ly.pp.justpiano3.utils.MidiUtil
 import ly.pp.justpiano3.utils.ImageLoadUtil
+import ly.pp.justpiano3.utils.MidiUtil
 import kotlin.math.roundToInt
 
 class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :

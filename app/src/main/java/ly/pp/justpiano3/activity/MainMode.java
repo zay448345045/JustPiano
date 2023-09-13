@@ -145,8 +145,8 @@ public class MainMode extends Activity implements OnClickListener {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;

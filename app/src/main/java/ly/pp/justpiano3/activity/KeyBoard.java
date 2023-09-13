@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.MidiConstants;
@@ -59,8 +61,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    @SuppressLint("ClickableViewAccessibility")
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.keyboard_mode);
         jpapplication = (JPApplication) getApplication();
         keyboardMode1View = findViewById(R.id.keyboard1_view);
@@ -95,10 +98,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboard1CountDown.setOnTouchListener(this);
         Button keyboard2CountDown = findViewById(R.id.keyboard2_count_down);
         keyboard2CountDown.setOnTouchListener(this);
-        Button keyboard1Countup = findViewById(R.id.keyboard1_count_up);
-        keyboard1Countup.setOnTouchListener(this);
-        Button keyboard2Countup = findViewById(R.id.keyboard2_count_up);
-        keyboard2Countup.setOnTouchListener(this);
+        Button keyboard1CountUp = findViewById(R.id.keyboard1_count_up);
+        keyboard1CountUp.setOnTouchListener(this);
+        Button keyboard2CountUp = findViewById(R.id.keyboard2_count_up);
+        keyboard2CountUp.setOnTouchListener(this);
         Button keyboard1MoveLeft = findViewById(R.id.keyboard1_move_left);
         keyboard1MoveLeft.setOnTouchListener(this);
         Button keyboard2MoveLeft = findViewById(R.id.keyboard2_move_left);
@@ -198,6 +201,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                     edit.putFloat("keyboard_weight", layoutParams.weight);
                     edit.apply();
                     reSize = false;
+                    view.performClick();
                     break;
                 default:
                     break;
@@ -213,6 +217,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 view.setPressed(false);
                 stopAddOrSubtract();
                 busyAnim = false;
+                view.performClick();
             }
         }
         return true;
@@ -388,14 +393,14 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
                             recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
-                            recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
+                            recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
                         jpdialog.showDialog();
                     } else {
                         recordButton.setText("●");
                         recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
-                        recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
+                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
                         SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));

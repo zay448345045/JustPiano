@@ -3,7 +3,6 @@ package ly.pp.justpiano3.view;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -61,11 +60,6 @@ public final class JPProgressBar extends ProgressDialog {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
     }
 
     @Override

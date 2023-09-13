@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import androidx.activity.ComponentActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
@@ -195,8 +196,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this, jpapplication);
@@ -290,8 +291,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     }
 
     @Override
-    public void onWindowFocusChanged(boolean z) {
-        super.onWindowFocusChanged(z);
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
         while (!firstLoadFocusFinish) {
             handler = new Handler(this);
             List<String> sortNamesList = new ArrayList<>();
@@ -302,7 +303,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             listView.setAdapter(popupWindowSelectAdapter);
             sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
             sortPopupWindow.setOutsideTouchable(true);
-            sortPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+            sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();
             Collections.addAll(menuListNames, Consts.localMenuListNames);
             inflate = getLayoutInflater().inflate(R.layout.options, null);
@@ -312,7 +313,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             listView.setDivider(null);
             menuPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
             menuPopupWindow.setOutsideTouchable(true);
-            menuPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+            menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             firstLoadFocusFinish = true;
         }
     }

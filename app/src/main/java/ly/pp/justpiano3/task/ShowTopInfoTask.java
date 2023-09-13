@@ -64,8 +64,8 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             try {
-                showTopInfo.get().f4985a = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
-                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().f4985a);
+                showTopInfo.get().dataList = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().dataList);
                 if (showTopInfo.get().f4989e != null) {
                     showTopInfo.get().f4989e.setAdapter(topUserAdapter);
                 }

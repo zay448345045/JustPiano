@@ -99,7 +99,7 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void onCreate() {
         super.onCreate();
-        jpapplication = (ly.pp.justpiano3.JPApplication) getApplication();
+        jpapplication = (JPApplication) getApplication();
 
         // 创建通知通道，并绑定
         thisIntent = new Intent(this, ConnectionService.class);

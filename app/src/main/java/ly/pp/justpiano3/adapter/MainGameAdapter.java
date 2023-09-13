@@ -10,10 +10,7 @@ import android.widget.*;
 import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.HallPasswordClick;
@@ -39,15 +36,7 @@ public final class MainGameAdapter extends BaseAdapter {
         this.jpApplication = jpApplication;
         connectionService = jpApplication.getConnectionService();
         type = i;
-        if (act instanceof OLPlayHall) {
-            activity = JPStack.top();
-        } else if (act instanceof OLPlayRoom) {
-            activity = JPStack.top();
-        } else if (act instanceof OLPlayHallRoom) {
-            activity = JPStack.top();
-        } else if (act instanceof OLPlayKeyboardRoom) {
-            activity = JPStack.top();
-        }
+        activity = JPStack.top();
     }
 
     private static void m3978a(MainGameAdapter mainGameAdapter, byte b) {
@@ -230,10 +219,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHall) activity).sendMail(string2);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string2, 0);
-                    } else if (activity instanceof OLPlayRoom) {
-                        ((OLPlayRoom) activity).sendMail(string2);
-                    } else if (activity instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) activity).sendMail(string2);
+                    } else if (activity instanceof OLPlayRoomActivity) {
+                        ((OLPlayRoomActivity) activity).sendMail(string2);
                     }
                 });
                 view.findViewById(R.id.ol_friend_dele).setOnClickListener(v -> {
@@ -394,7 +381,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         builder.setName(string7);
                         connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                     });
-                } else if (activity instanceof OLPlayRoom || activity instanceof OLPlayKeyboardRoom) {
+                } else if (activity instanceof OLPlayRoomActivity) {
                     textView.setText("邀请");
                     textView.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
@@ -414,10 +401,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHall) activity).sendMail(string7);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string7, 0);
-                    } else if (activity instanceof OLPlayRoom) {
-                        ((OLPlayRoom) activity).sendMail(string7);
-                    } else if (activity instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) activity).sendMail(string7);
+                    } else if (activity instanceof OLPlayRoomActivity) {
+                        ((OLPlayRoomActivity) activity).sendMail(string7);
                     }
                 });
                 button = view.findViewById(R.id.ol_friend_dele);

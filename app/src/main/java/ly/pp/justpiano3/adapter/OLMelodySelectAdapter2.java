@@ -12,15 +12,15 @@ import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.OLMelodySongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class OLMelodySelectAdapter2 extends BaseAdapter {
     public final OLMelodySelect olMelodySelect;
     private final int length;
-    private final List<HashMap> songsList;
+    private final List<Map<String, Object>> songsList;
 
-    public OLMelodySelectAdapter2(OLMelodySelect oLMelodySelect, int i, List<HashMap> list) {
+    public OLMelodySelectAdapter2(OLMelodySelect oLMelodySelect, int i, List<Map<String, Object>> list) {
         olMelodySelect = oLMelodySelect;
         length = i;
         songsList = list;

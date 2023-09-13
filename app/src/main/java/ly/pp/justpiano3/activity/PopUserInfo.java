@@ -127,8 +127,8 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.popuserinfo);
         jpapplication = (JPApplication) getApplication();
         userKitiName = findViewById(R.id.user_kitiname);

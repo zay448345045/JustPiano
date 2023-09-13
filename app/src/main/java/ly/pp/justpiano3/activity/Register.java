@@ -76,8 +76,8 @@ public class Register extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
         jpapplication = (JPApplication) getApplication();
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));

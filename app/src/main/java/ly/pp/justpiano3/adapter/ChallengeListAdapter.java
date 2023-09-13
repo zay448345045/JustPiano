@@ -7,16 +7,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ChallengeListAdapter extends BaseAdapter {
-    private final List<HashMap> list;
-    private final LayoutInflater llayoutInflater;
+    private final List<Map<String, String>> list;
+    private final LayoutInflater layoutInflater;
 
-    public ChallengeListAdapter(List<HashMap> list, LayoutInflater layoutInflater) {
+    public ChallengeListAdapter(List<Map<String, String>> list, LayoutInflater layoutInflater) {
         this.list = list;
-        llayoutInflater = layoutInflater;
+        this.layoutInflater = layoutInflater;
     }
 
     @Override
@@ -37,15 +37,15 @@ public final class ChallengeListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = llayoutInflater.inflate(R.layout.ol_c_challenge_view, null);
+            view = layoutInflater.inflate(R.layout.ol_c_challenge_view, null);
         }
-        String name = (String) list.get(i).get("N");
+        String name = list.get(i).get("N");
         if (name == null) {
             return view;
         }
-        String score = (String) list.get(i).get("S");
-        String time = (String) list.get(i).get("T");
-        String position = (String) list.get(i).get("P");
+        String score = list.get(i).get("S");
+        String time = list.get(i).get("T");
+        String position = list.get(i).get("P");
         TextView positionText = view.findViewById(R.id.ol_challenge_position);
         TextView nameText = view.findViewById(R.id.ol_challenge_user);
         TextView scoreText = view.findViewById(R.id.ol_challenge_score);

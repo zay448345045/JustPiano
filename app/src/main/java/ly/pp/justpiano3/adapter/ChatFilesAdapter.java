@@ -9,19 +9,19 @@ import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.ChatFiles;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ChatFilesAdapter extends BaseAdapter {
-    private List<HashMap> list;
+    private List<Map<String, Object>> list;
     private final ChatFiles chatfiles;
 
-    public ChatFilesAdapter(List<HashMap> list, ChatFiles cs) {
+    public ChatFilesAdapter(List<Map<String, Object>> list, ChatFiles chatFiles) {
         this.list = list;
-        chatfiles = cs;
+        chatfiles = chatFiles;
     }
 
-    public void mo3422a(List<HashMap> list) {
+    public void mo3422a(List<Map<String, Object>> list) {
         this.list = list;
     }
 

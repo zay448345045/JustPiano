@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.listener.DeleteRecordFilesClick;
@@ -20,7 +19,7 @@ import java.io.File;
 import java.util.*;
 
 public class RecordFiles extends Activity {
-    private List<HashMap> f4917b = null;
+    private List<Map<String, Object>> dataList;
     private ListView f4919d;
     private TextView f4921f;
     private RecordFilesAdapter recordFilesAdapter;
@@ -29,7 +28,7 @@ public class RecordFiles extends Activity {
         File[] f4924i = file.listFiles();
         f4921f.setText("录音文件目录为:SD卡\\JustPiano\\Records");
         f4921f.setTextSize(20);
-        f4917b = new ArrayList<>();
+        dataList = new ArrayList<>();
         int i = 0;
         int j;
         try {
@@ -39,19 +38,19 @@ public class RecordFiles extends Activity {
             j = 0;
         }
         while (i < j) {
-            HashMap hashMap = new HashMap();
+            Map<String, Object> hashMap = new HashMap<>();
             if (f4924i[i].isFile() && f4924i[i].getName().endsWith(".wav")) {
                 hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
                 hashMap.put("time", DateUtil.format(new Date(f4924i[i].lastModified())));
                 hashMap.put("timelong", f4924i[i].lastModified());
-                f4917b.add(hashMap);
+                dataList.add(hashMap);
             }
             i++;
         }
-        Collections.sort(f4917b, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
-        recordFilesAdapter = new RecordFilesAdapter(f4917b, this);
+        Collections.sort(dataList, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
+        recordFilesAdapter = new RecordFilesAdapter(dataList, this);
         f4919d.setAdapter(recordFilesAdapter);
     }
 
@@ -60,8 +59,8 @@ public class RecordFiles extends Activity {
         if (file.exists()) {
             file.delete();
         }
-        f4917b.remove(i);
-        recordFilesAdapter.mo3422a(f4917b);
+        dataList.remove(i);
+        recordFilesAdapter.mo3422a(dataList);
         recordFilesAdapter.notifyDataSetChanged();
     }
 
@@ -88,9 +87,8 @@ public class RecordFiles extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);

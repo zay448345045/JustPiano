@@ -12,19 +12,19 @@ import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.ShowSongsInfoPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ShowSongsInfoAdapter extends BaseAdapter {
     public final ShowSongsInfo showSongsInfo;
-    private List<HashMap> songsList;
+    private List<Map<String, Object>> songsList;
 
-    public ShowSongsInfoAdapter(ShowSongsInfo showSongsInfo, List<HashMap> list) {
+    public ShowSongsInfoAdapter(ShowSongsInfo showSongsInfo, List<Map<String, Object>> list) {
         this.showSongsInfo = showSongsInfo;
         songsList = list;
     }
 
-    public void mo3500a(List<HashMap> list) {
+    public void mo3500a(List<Map<String, Object>> list) {
         songsList = list;
     }
 

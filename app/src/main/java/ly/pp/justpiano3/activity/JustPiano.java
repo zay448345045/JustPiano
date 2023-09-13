@@ -142,8 +142,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPApplication jpapplication = (JPApplication) getApplication();
         handler = new Handler(this);
         DisplayMetrics displayMetrics = new DisplayMetrics();

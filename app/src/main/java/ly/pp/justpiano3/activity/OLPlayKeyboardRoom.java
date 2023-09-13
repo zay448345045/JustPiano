@@ -14,9 +14,9 @@ import android.view.*;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.ByteString;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.ChattingAdapter;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.adapter.SimpleSkinListAdapter;
 import ly.pp.justpiano3.adapter.SimpleSoundListAdapter;
@@ -34,7 +34,6 @@ import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardModeView;
-import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineKeyboardNoteDTO;
 
 import java.io.File;
@@ -156,16 +155,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
     }
 
-    public void mo2862a(boolean showChatTime) {
-        int posi = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater, showChatTime));
-        if (posi > 0) {
-            msgListView.setSelection(posi + 2);
-        } else {
-            msgListView.setSelection(msgListView.getBottom());
-        }
-    }
-
     @Override
     public boolean handleMessage(Message message) {
         super.handleMessage(message);
@@ -208,7 +197,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             case R.id.keyboard_setting:
                 PopupWindow popupWindow2 = new PopupWindow(this);
                 View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_keyboard_setting_list, null);
-                popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                 inflate2.findViewById(R.id.midi_down_tune).setOnClickListener(this);
@@ -332,14 +321,14 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
                             recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
-                            recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
+                            recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
                         jpdialog.showDialog();
                     } else {
                         recordButton.setText("●");
                         recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
-                        recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
+                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
                         SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
@@ -376,12 +365,12 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setContentView(R.layout.olplaykeyboardroom);
-        initRoomActivity();
+        initRoomActivity(savedInstanceState);
         jpprogressBar = new JPProgressBar(this);
         TabSpec newTabSpec = roomTabs.newTabSpec("tab3");
         newTabSpec.setContent(R.id.players_tab);
@@ -478,15 +467,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
 
     @Override
     protected void onDestroy() {
-        timeUpdateRunning = false;
-        try {
-            timeUpdateThread.interrupt();
-        } catch (Exception ignored) {
-        }
-        msgList.clear();
-        playerList.clear();
-        invitePlayerList.clear();
-        friendPlayerList.clear();
         JPStack.pop(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (MidiUtil.getMidiOutputPort() != null) {
@@ -514,43 +494,13 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     @Override
     protected void onStart() {
         super.onStart();
-        if (!isOnStart) {
-            openNotesSchedule();
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
-        }
-        isOnStart = true;
-
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (!isOnStart) {
-            openNotesSchedule();
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
-            roomTabs.setCurrentTab(1);
-            if (msgListView != null && msgListView.getAdapter() != null) {
-                msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
-            }
-        }
-        isOnStart = true;
-
+        openNotesSchedule();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (isOnStart) {
-            stopNotesSchedule();
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("B");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
-        }
-        isOnStart = false;
+        stopNotesSchedule();
     }
 
     @Override
@@ -684,6 +634,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);
                     edit.apply();
+                    view.performClick();
                     break;
                 default:
                     break;
@@ -699,6 +650,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 view.setPressed(false);
                 stopAddOrSubtract();
                 busyAnim = false;
+                view.performClick();
             }
         }
         return true;

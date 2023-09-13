@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,8 +20,8 @@ import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
@@ -36,7 +35,6 @@ import java.util.List;
 public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public String sex = "f";
     public Bitmap none;
-    public Context context;
     public TabHost tabhost;
     public OLPlayDressRoomHandler olPlayDressRoomHandler;
     public ImageView trousersImage;
@@ -82,10 +80,10 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public static int[] mHair = new int[0];
     public static int[] fEye = new int[0];
     public static int[] mEye = new int[0];
-    public static  int[] fJacket = new int[0];
+    public static int[] fJacket = new int[0];
     public static int[] mJacket = new int[0];
     public static int[] fTrousers = new int[0];
-    public static int[] mTrousers =new int[0];
+    public static int[] mTrousers = new int[0];
     public static int[] fShoes = new int[0];
     public static int[] mShoes = new int[0];
     // </editor-fold>
@@ -193,9 +191,8 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        context = this;
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
@@ -255,11 +252,8 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
             int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
             int childCount = tabhost.getTabWidget().getChildCount();
             for (int i = 0; i < childCount; i++) {
-                if (intValue == i) {
-                    tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_orange);
-                } else {
-                    tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
-                }
+                tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
+                        intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
             }
 
             // 商品标签

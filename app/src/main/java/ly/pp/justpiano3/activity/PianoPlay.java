@@ -460,8 +460,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpapplication = (JPApplication) getApplication();
         checkAnJian();

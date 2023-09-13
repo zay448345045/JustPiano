@@ -45,8 +45,8 @@ object SongPlay {
                 }
                 delay(1000)
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
-                if (callBack != null && !nextSongFilePath.isNullOrEmpty()) {
-                    callBack!!.onSongChangeNext(nextSongFilePath)
+                if (!nextSongFilePath.isNullOrEmpty()) {
+                    callBack?.onSongChangeNext(nextSongFilePath)
                 }
             }
         }

@@ -30,28 +30,28 @@ public final class OLPlayRoomHandler extends Handler {
                 case 1:
                     post(() -> {
                         olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
-                        String str1 = message.getData().getString("SI");
-                        if (!str1.isEmpty()) {
-                            int diao = message.getData().getInt("diao");
-                            olPlayRoom.setdiao(diao);
-                            str1 = "songs/" + str1 + ".pm";
-                            olPlayRoom.currentPlaySongPath = str1;
-                            String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
+                        String songFilePath = message.getData().getString("SI");
+                        if (!songFilePath.isEmpty()) {
+                            int tune = message.getData().getInt("diao");
+                            olPlayRoom.setTune(tune);
+                            songFilePath = "songs/" + songFilePath + ".pm";
+                            olPlayRoom.currentPlaySongPath = songFilePath;
+                            String[] a = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
                             String string = a[0];
                             String str2 = a[1];
                             if (string != null) {
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
                                 if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
-                                    if (diao > 0) {
-                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
-                                    } else if (diao < 0) {
-                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "" + diao);
+                                    if (tune > 0) {
+                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + tune);
+                                    } else if (tune < 0) {
+                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "" + tune);
                                     } else {
-                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
+                                        olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + tune);
                                     }
                                 }
                                 if (!olPlayRoom.isChangeScreen) {
-                                    SongPlay.INSTANCE.startPlay(olPlayRoom, str1, olPlayRoom.getdiao());
+                                    SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, olPlayRoom.getTune());
                                 }
                             }
                         }
@@ -71,25 +71,25 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 case 3:
                     post(() -> {
-                        String str1 = message.getData().getString("song_path");
-                        int diao = message.getData().getInt("diao");
-                        if (!str1.isEmpty()) {
-                            str1 = "songs/" + str1 + ".pm";
-                            olPlayRoom.currentPlaySongPath = str1;
-                            String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
-                            String string = a[0];
-                            String str2 = a[1];
-                            if (string != null) {
-                                olPlayRoom.setdiao(diao);
-                                if (diao > 0) {
-                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "+" + diao);
-                                } else if (diao < 0) {
-                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "" + diao);
+                        String songFilePath = message.getData().getString("song_path");
+                        int tune = message.getData().getInt("diao");
+                        if (!songFilePath.isEmpty()) {
+                            songFilePath = "songs/" + songFilePath + ".pm";
+                            olPlayRoom.currentPlaySongPath = songFilePath;
+                            String[] simpleSongInfo = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
+                            String songName = simpleSongInfo[0];
+                            String songRightHandDegree = simpleSongInfo[1];
+                            if (songName != null) {
+                                olPlayRoom.setTune(tune);
+                                if (tune > 0) {
+                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "+" + tune);
+                                } else if (tune < 0) {
+                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "" + tune);
                                 } else {
-                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "0" + diao);
+                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "0" + tune);
                                 }
-                                olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
-                                SongPlay.INSTANCE.startPlay(olPlayRoom, str1, diao);
+                                olPlayRoom.songNameText.setText(songName + "[难度:" + songRightHandDegree + "]");
+                                SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, tune);
                             }
                         }
                     });
@@ -108,7 +108,7 @@ public final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.startActivity(intent);
                             olPlayRoom.finish();
                         } else if (!str1.isEmpty()) {
-                            olPlayRoom.setdiao(message.getData().getInt("D"));
+                            olPlayRoom.setTune(message.getData().getInt("D"));
                             str1 = "songs/" + str1 + ".pm";
                             String str = olPlayRoom.querySongNameAndDiffByPath(str1)[0];
                             if (str != null) {
@@ -117,7 +117,7 @@ public final class OLPlayRoomHandler extends Handler {
                                 intent2.putExtra("head", 2);
                                 intent2.putExtra("path", str1);
                                 intent2.putExtra("name", str);
-                                intent2.putExtra("diao", olPlayRoom.getdiao());
+                                intent2.putExtra("diao", olPlayRoom.getTune());
                                 intent2.putExtra("roomMode", olPlayRoom.roomMode);
                                 intent2.putExtra("hand", olPlayRoom.currentHand);
                                 intent2.putExtra("bundle", olPlayRoom.bundle0);

@@ -8,7 +8,7 @@
             android:key="skin_list"
             android:title="皮肤" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="6"
+            android:defaultValue="6.00"
             app:minValue="0.5"
             app:maxValue="6"
             app:floatNumber="true"
@@ -17,7 +17,7 @@
             android:title="音块速率"
             android:dialogTitle="音块速率" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1"
+            android:defaultValue="1.00"
             android:dialogTitle="音块大小"
             app:minValue="0.5"
             app:maxValue="2"
@@ -70,7 +70,7 @@
             android:summaryOn="键盘缩略图已打开"
             android:title="键盘缩略图" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1.0"
+            android:defaultValue="1.00"
             app:minValue="0.5"
             app:maxValue="1.5"
             app:floatNumber="true"
@@ -98,7 +98,7 @@
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0.8"
+            android:defaultValue="0.80"
             android:dependency="@string/b_s_key"
             android:dialogTitle="@string/b_s_vol_title"
             app:minValue="0.1"
@@ -136,7 +136,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="瀑布流">
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1.0"
+            android:defaultValue="1.00"
             app:minValue="0.5"
             app:maxValue="1.5"
             app:floatNumber="true"
@@ -145,7 +145,7 @@
             android:title="瀑布流曲谱播放速度"
             android:dialogTitle="瀑布流曲谱播放速度" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0.8"
+            android:defaultValue="0.80"
             app:minValue="0.4"
             app:maxValue="1.2"
             app:floatNumber="true"

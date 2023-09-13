@@ -29,9 +29,8 @@ import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -41,7 +40,10 @@ import org.json.JSONObject;
 import protobuf.dto.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
     public int cl = 0;
@@ -428,8 +430,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);

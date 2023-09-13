@@ -13,8 +13,8 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.task.PlayFinishTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.util.Collections;
@@ -106,8 +106,8 @@ public class PlayFinish extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         nandu = 0;
         jpprogressBar = new JPProgressBar(this);

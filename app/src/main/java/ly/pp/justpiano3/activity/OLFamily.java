@@ -9,18 +9,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
@@ -28,7 +29,6 @@ import protobuf.dto.OnlineUserInfoDialogDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public ConnectionService cs;
     public JPProgressBar jpprogressBar;
-    public int position;  //0为族长 1为副族长 2为族员，3为非本家族的人
+    public FamilyPositionEnum position;
     public TextView declaration;
     public TextView info;
     public FamilyHandler familyHandler;
@@ -50,7 +50,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public String myFamilyName;
     public int listPosition;
     public byte[] myFamilyPicArray;
-    public List<HashMap<String, String>> peopleList = new ArrayList<>();
+    public List<Map<String, String>> peopleList = new ArrayList<>();
     public ListView peopleListView;
     public PopupWindow infoWindow;
     private LayoutInflater layoutinflater;
@@ -59,15 +59,15 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
 
     public void positionHandle() {
         switch (position) {
-            case 0:
+            case LEADER:
                 manageFamily.setEnabled(true);
                 inOut.setText("解散家族");
                 break;
-            case 1:
-            case 2:
+            case VICE_LEADER:
+            case MEMBER:
                 inOut.setText("退出家族");
                 break;
-            case 3:
+            case NOT_IN_FAMILY:
                 inOut.setText("申请加入");
                 break;
         }
@@ -77,14 +77,14 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         JPDialog jpdialog = new JPDialog(this);
         jpdialog.setTitle("提示");
         switch (position) {
-            case 0:
+            case LEADER:
                 jpdialog.setMessage("确定要解散你的家族吗?");
                 break;
-            case 1:
-            case 2:
+            case VICE_LEADER:
+            case MEMBER:
                 jpdialog.setMessage("确定要退出家族吗?");
                 break;
-            case 3:
+            case NOT_IN_FAMILY:
                 jpdialog.setMessage("申请加入家族需要族长或副族长的批准!");
                 break;
         }
@@ -104,7 +104,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         TextView info = inflate.findViewById(R.id.ol_family_levelup_info);
         info.setText(b.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
@@ -245,19 +245,19 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         familyHandler = new FamilyHandler(this);
         JPStack.push(this);
-        Bundle b = getIntent().getExtras();
-        familyID = b.getString("familyID");
-        familyPageNum = b.getInt("pageNum");
-        listPosition = b.getInt("position");
-        myFamilyContribution = b.getString("myFamilyContribution");
-        myFamilyCount = b.getString("myFamilyCount");
-        myFamilyName = b.getString("myFamilyName");
-        myFamilyPosition = b.getString("myFamilyPosition");
-        myFamilyPicArray = b.getByteArray("myFamilyPicArray");
+        Bundle bundle = getIntent().getExtras();
+        familyID = bundle.getString("familyID");
+        familyPageNum = bundle.getInt("pageNum");
+        listPosition = bundle.getInt("position");
+        myFamilyContribution = bundle.getString("myFamilyContribution");
+        myFamilyCount = bundle.getString("myFamilyCount");
+        myFamilyName = bundle.getString("myFamilyName");
+        myFamilyPosition = bundle.getString("myFamilyPosition");
+        myFamilyPicArray = bundle.getByteArray("myFamilyPicArray");
         familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
@@ -280,7 +280,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         info = findViewById(R.id.info_text);
     }
 
-    public PopupWindow loadInfoPopupWindow(String name, String positionStr) {
+    public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_buttonlist_view, null);
         Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
@@ -292,27 +292,28 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         kickOutButton.setText("移出家族");
         inflate.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(true);
-        if (position > 1 || (position == 1 && !positionStr.equals("2"))) {
+        if (position == FamilyPositionEnum.MEMBER || position == FamilyPositionEnum.NOT_IN_FAMILY
+                || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
             kickOutButton.setVisibility(View.GONE);
         }
         if (name.equals(jpapplication.getKitiName())) {
             kickOutButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
-        if (position > 0) {
+        if (position != FamilyPositionEnum.LEADER) {
             positionChangeButton.setVisibility(View.GONE);
         } else {
-            switch (positionStr) {
-                case "1":
+            switch (userPosition) {
+                case VICE_LEADER:
                     positionChangeButton.setText("撤职副族长");
                     break;
-                case "2":
+                case MEMBER:
                     positionChangeButton.setText("晋升副族长");
                     break;
                 default:
@@ -321,7 +322,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
             }
             positionChangeButton.setOnClickListener(this);
         }
-        if (position > 2) {
+        if (position == FamilyPositionEnum.NOT_IN_FAMILY) {
             showInfoButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
@@ -356,7 +357,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    public final void mo2907b(ListView listView, List<HashMap<String, String>> list) {
+    public final void mo2907b(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
     }
 

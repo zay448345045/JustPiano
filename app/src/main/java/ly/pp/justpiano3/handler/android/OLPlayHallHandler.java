@@ -77,7 +77,7 @@ public final class OLPlayHallHandler extends Handler {
                             FileWriter writer = new FileWriter(file, true);
                             if (message.getData().getString("M").startsWith("//")) {
                                 writer.close();
-                                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, GlobalSetting.INSTANCE.getShowChatTime());
+                                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
                                 return;
                             } else if (message.getData().getInt("T") == 2) {
                                 writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M"))+ '\n'));
@@ -91,7 +91,7 @@ public final class OLPlayHallHandler extends Handler {
                             e.printStackTrace();
                         }
                     }
-                    olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList, GlobalSetting.INSTANCE.getShowChatTime());
+                    olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
                 });
                 return;
             case 2:

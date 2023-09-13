@@ -12,14 +12,14 @@ import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.thread.PictureHandle;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class SearchPeopleAdapter extends BaseAdapter {
     final SearchSongs searchSongs;
-    private final List<HashMap> peopleList;
+    private final List<Map<String, Object>> peopleList;
 
-    public SearchPeopleAdapter(SearchSongs searchSongs, List<HashMap> list) {
+    public SearchPeopleAdapter(SearchSongs searchSongs, List<Map<String, Object>> list) {
         this.searchSongs = searchSongs;
         peopleList = list;
         searchSongs.searchSongsHandler = new Handler(searchSongs);

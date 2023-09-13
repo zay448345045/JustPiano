@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
@@ -74,9 +73,8 @@ public class OLTopUser extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_top_user);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button f4561l = findViewById(R.id.ol_level_b);

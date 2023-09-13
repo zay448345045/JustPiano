@@ -9,8 +9,8 @@ import ly.pp.justpiano3.R;
 public class AboutActivity extends Activity {
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
         TextView title = findViewById(R.id.title);
         title.setText("极品钢琴V" + BuildConfig.VERSION_NAME + " 浴火重生版");

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChatFilesAdapter;
 import ly.pp.justpiano3.listener.DialogDismissClick;
@@ -19,7 +18,7 @@ import java.io.File;
 import java.util.*;
 
 public class ChatFiles extends Activity {
-    public List<HashMap> f4917b = null;
+    public List<Map<String, Object>> dataList = null;
     private ListView f4919d;
     private TextView f4921f;
     private ChatFilesAdapter chatFilesAdapter;
@@ -28,7 +27,7 @@ public class ChatFiles extends Activity {
         File[] f4924i = file.listFiles();
         f4921f.setText("聊天记录存储目录为:SD卡\\JustPiano\\Chats");
         f4921f.setTextSize(20);
-        f4917b = new ArrayList<>();
+        dataList = new ArrayList<>();
         int i = 0;
         int j;
         try {
@@ -38,19 +37,19 @@ public class ChatFiles extends Activity {
             j = 0;
         }
         while (i < j) {
-            HashMap hashMap = new HashMap();
+            Map<String, Object> hashMap = new HashMap<>();
             if (f4924i[i].isFile() && f4924i[i].getName().endsWith(".txt")) {
                 hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
                 hashMap.put("time", DateUtil.format(new Date(f4924i[i].lastModified())));
                 hashMap.put("timelong", f4924i[i].lastModified());
-                f4917b.add(hashMap);
+                dataList.add(hashMap);
             }
             i++;
         }
-        Collections.sort(f4917b, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
-        chatFilesAdapter = new ChatFilesAdapter(f4917b, this);
+        Collections.sort(dataList, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
+        chatFilesAdapter = new ChatFilesAdapter(dataList, this);
         f4919d.setAdapter(chatFilesAdapter);
     }
 
@@ -59,8 +58,8 @@ public class ChatFiles extends Activity {
         if (file.exists()) {
             file.delete();
         }
-        f4917b.remove(i);
-        chatFilesAdapter.mo3422a(f4917b);
+        dataList.remove(i);
+        chatFilesAdapter.mo3422a(dataList);
         chatFilesAdapter.notifyDataSetChanged();
     }
 
@@ -92,9 +91,8 @@ public class ChatFiles extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);

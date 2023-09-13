@@ -296,8 +296,8 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.user_info);
         accountText = findViewById(R.id.user_name);

@@ -29,10 +29,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;
-    public List<HashMap> f4985a = null;
+    public List<Map<String, Object>> dataList;
     public LayoutInflater layoutInflater;
     public int f4987c = 0;
     public String f4988d = "";
@@ -58,9 +59,9 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         return nailFace;
     }
 
-    public List<HashMap> m3877a(String str) {
+    public List<Map<String, Object>> m3877a(String str) {
         JSONArray jSONArray;
-        List<HashMap> arrayList = new ArrayList<>();
+        List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
             jSONArray = new JSONArray(str);
         } catch (JSONException e) {
@@ -70,7 +71,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         f4987c = jSONArray.length();
         for (int i = 0; i < f4987c; i++) {
             try {
-                HashMap hashMap = new HashMap();
+                Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("userID", Integer.valueOf(jSONArray.getJSONObject(i).get("I").toString()));
                 hashMap.put("userName", jSONArray.getJSONObject(i).get("K").toString());
                 hashMap.put("faceID", jSONArray.getJSONObject(i).get("F").toString());
@@ -123,8 +124,8 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.showtopinfo);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));

@@ -20,11 +20,8 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
         int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
         int childCount = olPlayRoomActivity.roomTabs.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {
-            if (intValue == i) {
-                olPlayRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_orange);
-            } else {
-                olPlayRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
-            }
+            olPlayRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
+                    intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
         switch (str) {
             case "tab1":

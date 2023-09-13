@@ -1,6 +1,8 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.*;
 import android.text.Selection;
 import android.text.Spannable;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -22,9 +25,11 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import protobuf.dto.*;
 
@@ -38,6 +43,8 @@ import java.util.*;
  * 房间
  */
 public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callback, View.OnClickListener {
+    // 防止横竖屏切换时前后台状态错误
+    public boolean isChangeScreen;
     public int lv;
     public int cl;
     public Handler handler;
@@ -305,9 +312,9 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         }
     }
 
-    public void bindMsgListView(boolean showChatTime) {
+    private void bindMsgListView() {
         int position = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater, showChatTime));
+        msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater));
         if (position > 0) {
             msgListView.setSelection(position + 2);
         } else {
@@ -368,7 +375,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 String str = message.getData().getString("M");
                 if (str.startsWith("//")) {
                     writer.close();
-                    bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
+                    bindMsgListView();
                     return;
                 } else if (message.getData().getInt("T") == 2) {
                     writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
@@ -384,7 +391,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 e.printStackTrace();
             }
         }
-        bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
+        bindMsgListView();
     }
 
     public void handleFriendRequest(Message message) {
@@ -514,7 +521,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         jpdialog.showDialog();
     }
 
-    protected void initRoomActivity() {
+    protected void initRoomActivity(Bundle savedInstanceState) {
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         jpapplication.getRoomPlayerMap().clear();
@@ -536,8 +543,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         playerList.clear();
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
-        Button olSendButton = findViewById(R.id.ol_send_b);
-        olSendButton.setOnClickListener(this);
+        findViewById(R.id.ol_send_b).setOnClickListener(this);
         timeTextView = findViewById(R.id.time_text);
         findViewById(R.id.pre_button).setOnClickListener(this);
         findViewById(R.id.next_button).setOnClickListener(this);
@@ -557,7 +563,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 13));
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
@@ -567,7 +573,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         PopupWindow popupWindow3 = new PopupWindow(this);
         View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_changecolor, null);
         popupWindow3.setContentView(inflate3);
-        popupWindow3.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
+        popupWindow3.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow3.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow3.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         inflate3.findViewById(R.id.white).setOnClickListener(this);
@@ -598,6 +604,11 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         timeUpdateRunning = true;
         timeUpdateThread = new TimeUpdateThread(this);
         timeUpdateThread.start();
+        if (savedInstanceState != null) {
+            msgList = savedInstanceState.getParcelableArrayList("msgList");
+            isChangeScreen = savedInstanceState.getBoolean("isChangeScreen");
+            bindMsgListView();
+        }
     }
 
     protected void setTabTitleViewLayout(int i) {
@@ -606,6 +617,15 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+    }
+
+    protected void changeScreenOrientation() {
+        isChangeScreen = true;
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
     }
 
     @Override
@@ -680,6 +700,67 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 changeRoomTitleClick();
                 return;
             default:
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("msgList", new ArrayList<>(msgList));
+        outState.putBoolean("isChangeScreen", isChangeScreen);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (!isChangeScreen) {
+            SongPlay.INSTANCE.stopPlay();
+        }
+        timeUpdateRunning = false;
+        try {
+            timeUpdateThread.interrupt();
+        } catch (Exception ignored) {
+        }
+        msgList.clear();
+        playerList.clear();
+        invitePlayerList.clear();
+        friendPlayerList.clear();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!isOnStart) {
+            isOnStart = true;
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("N");
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (!isOnStart) {
+            isOnStart = true;
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("N");
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            roomTabs.setCurrentTab(1);
+            if (msgListView != null && msgListView.getAdapter() != null) {
+                msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isOnStart) {
+            isOnStart = false;
+            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
+            builder1.setStatus("B");
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
         }
     }
 }

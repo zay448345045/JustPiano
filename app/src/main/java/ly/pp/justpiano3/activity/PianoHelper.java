@@ -28,8 +28,8 @@ public class PianoHelper extends Activity implements OnGestureListener {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.piano_helper);
         viewFlipper = findViewById(R.id.viewflipper);
         gestureDetector = new GestureDetector(this, this);

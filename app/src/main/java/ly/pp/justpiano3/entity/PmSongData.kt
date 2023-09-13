@@ -52,9 +52,7 @@ data class PmSongData(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as PmSongData
-
         if (songName != other.songName) return false
         if (leftHandDegree != other.leftHandDegree) return false
         if (rightHandDegree != other.rightHandDegree) return false
@@ -64,7 +62,6 @@ data class PmSongData(
         if (!tickArray.contentEquals(other.tickArray)) return false
         if (!trackArray.contentEquals(other.trackArray)) return false
         if (!volumeArray.contentEquals(other.volumeArray)) return false
-
         return true
     }
 

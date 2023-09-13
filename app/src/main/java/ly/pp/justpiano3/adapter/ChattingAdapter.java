@@ -11,8 +11,8 @@ import android.widget.TextView;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.activity.OLPlayRoomActivity;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.ChangeRecommandSongClick;
@@ -24,21 +24,13 @@ public final class ChattingAdapter extends BaseAdapter {
     public Activity activity;
     private final List<Bundle> msgList;
     private final LayoutInflater layoutInflater;
-    private final boolean showTime;
     public JPApplication jpapplication;
 
-    public ChattingAdapter(JPApplication jpapplication, List<Bundle> list, LayoutInflater layoutInflater, boolean showTime) {
+    public ChattingAdapter(JPApplication jpapplication, List<Bundle> list, LayoutInflater layoutInflater) {
         msgList = list;
         this.jpapplication = jpapplication;
         this.layoutInflater = layoutInflater;
-        this.showTime = showTime;
-        if (JPStack.top() instanceof OLPlayRoom) {
-            activity = JPStack.top();
-        } else if (JPStack.top() instanceof OLPlayHall) {
-            activity = JPStack.top();
-        } else if (JPStack.top() instanceof OLPlayKeyboardRoom) {
-            activity = JPStack.top();
-        }
+        activity = JPStack.top();
     }
 
     @Override
@@ -60,7 +52,6 @@ public final class ChattingAdapter extends BaseAdapter {
         Bundle bundle = msgList.get(i);
         int i2 = bundle.getInt("T");
         view = layoutInflater.inflate(R.layout.ol_msg_view, null);
-        view.setKeepScreenOn(true);
 
         TextView userText = view.findViewById(R.id.ol_user_text);
         TextView msgMaoHao = view.findViewById(R.id.ol_user_mao);
@@ -86,18 +77,10 @@ public final class ChattingAdapter extends BaseAdapter {
         // 投递通知到房间内处理
         if (i2 != 3 && userText != null) {
             userText.setOnClickListener(v -> {
-                if (activity instanceof OLPlayRoom) {
-                    if (string != null) {
-                        ((OLPlayRoom) activity).setPrivateChatUserName(string);
-                    }
-                } else if (activity instanceof OLPlayHall) {
-                    if (string != null) {
-                        ((OLPlayHall) activity).setPrivateChatUserName(string);
-                    }
-                } else if (activity instanceof OLPlayKeyboardRoom) {
-                    if (string != null) {
-                        ((OLPlayKeyboardRoom) activity).setPrivateChatUserName(string);
-                    }
+                if (activity instanceof OLPlayRoomActivity && string != null) {
+                    ((OLPlayRoomActivity) activity).setPrivateChatUserName(string);
+                } else if (activity instanceof OLPlayHall && string != null) {
+                    ((OLPlayHall) activity).setPrivateChatUserName(string);
                 }
             });
         }
@@ -123,8 +106,8 @@ public final class ChattingAdapter extends BaseAdapter {
         String string2 = bundle.getString("M");
         if (!str1.isEmpty()) {
             str1 = "songs/" + str1 + ".pm";
-            ((OLPlayRoom) activity).setdiao(bundle.getInt("D"));
-            textView.setText((showTime ? bundle.getString("TIME") : "") + "[荐]" + string);
+            ((OLPlayRoom) activity).setTune(bundle.getInt("D"));
+            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + string);
             String[] a = ((OLPlayRoom) activity).querySongNameAndDiffByPath(str1);
             if (a[0] != null && a[1] != null) {
                 textView2.setText(string2 + a[0] + "[难度:" + a[1] + "]");
@@ -142,9 +125,9 @@ public final class ChattingAdapter extends BaseAdapter {
         String string2 = bundle.getString("M");
         int id = bundle.getInt("V");
         if (!string2.startsWith("//")) {
-            textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
+            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
             TextView textView2 = view.findViewById(R.id.ol_user_mao);
-            if (JPStack.top() instanceof OLPlayRoom || JPStack.top() instanceof OLPlayKeyboardRoom) {
+            if (JPStack.top() instanceof OLPlayRoomActivity) {
                 switch (id) {
                     case 1:
                         textView.setTextColor(0xffFFFACD);
@@ -211,10 +194,10 @@ public final class ChattingAdapter extends BaseAdapter {
             textView3.setText(string2);
         } else {
             try {
-                textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
+                textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
                 ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
             } catch (Exception e) {
-                textView.setText((showTime ? bundle.getString("TIME") : "") + "[公]" + string);
+                textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
                 switch (string2) {
                     case "//dalao0":
                         ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
@@ -304,7 +287,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handlePrivateMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
-        textView.setText((showTime ? bundle.getString("TIME") : "") + "[私]" + string);
+        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[私]" + string);
         textView.setTextColor(0xff00ff00);
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
         textView2.setText(string2);
@@ -314,19 +297,17 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handleSystemMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
-
-        textView.setText((showTime ? bundle.getString("TIME") : "") + "[系统消息]" + string);
-        textView.setTextColor(0xff00ffff);
-        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
+        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[系统消息]" + string);
+        textView.setTextColor(0xffffff00);
+        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffff00);
         textView2.setText(string2);
-        textView2.setTextColor(0xff00ffff);
+        textView2.setTextColor(0xffffff00);
     }
 
     private void handleServerMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
-
-        textView.setText((showTime ? bundle.getString("TIME") : "") + "[全服消息]" + string);
+        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[全服消息]" + string);
         textView.setTextColor(0xff00ffff);
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
         textView2.setText(string2);

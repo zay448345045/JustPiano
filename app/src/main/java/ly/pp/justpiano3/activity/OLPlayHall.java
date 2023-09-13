@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -33,9 +34,8 @@ import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.*;
@@ -165,9 +165,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         }).setSecondButton("取消", new DialogDismissClick()).showDialog();
     }
 
-    public void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
+    public void mo2828a(ListView listView, List<Bundle> list) {
         int posi = listView.getFirstVisiblePosition();
-        listView.setAdapter(new ChattingAdapter(jpapplication, list, layoutInflater1, showChatTime));
+        listView.setAdapter(new ChattingAdapter(jpapplication, list, layoutInflater1));
         if (posi > 0) {
             listView.setSelection(posi + 2);
         } else {
@@ -334,8 +334,8 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         roomTitleMap.clear();
@@ -350,27 +350,20 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
-        Button f4405u = findViewById(R.id.ol_send_b);
-        f4405u.setOnClickListener(this);
-        Button f4406v = findViewById(R.id.ol_createroom_b);
-        f4406v.setOnClickListener(this);
-        Button f4407w = findViewById(R.id.ol_testroom_b);
-        f4407w.setOnClickListener(this);
+        findViewById(R.id.ol_send_b).setOnClickListener(this);
+        findViewById(R.id.ol_createroom_b).setOnClickListener(this);
+        findViewById(R.id.ol_testroom_b).setOnClickListener(this);
         sendTextView = findViewById(R.id.ol_send_text);
-        TextView f4410z = findViewById(R.id.ol_playhall_title);
-        f4410z.setText(hallName);
+        TextView playHallTitleView = findViewById(R.id.ol_playhall_title);
+        playHallTitleView.setText(hallName);
         showTimeHandler = new Handler(this);
         timeTextView = findViewById(R.id.time_text);
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
-        Button f4389V = findViewById(R.id.pre_button);
-        Button f4390W = findViewById(R.id.next_button);
-        Button f4391X = findViewById(R.id.online_button);
-        Button challenge = findViewById(R.id.ol_challenge_b);
-        challenge.setOnClickListener(this);
-        f4389V.setOnClickListener(this);
-        f4390W.setOnClickListener(this);
-        f4391X.setOnClickListener(this);
+        findViewById(R.id.ol_challenge_b).setOnClickListener(this);
+        findViewById(R.id.pre_button).setOnClickListener(this);
+        findViewById(R.id.next_button).setOnClickListener(this);
+        findViewById(R.id.online_button).setOnClickListener(this);
         msgList.clear();
         roomListView = findViewById(R.id.ol_room_list);
         roomListView.setCacheColorHint(0);
@@ -385,8 +378,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
+                new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);

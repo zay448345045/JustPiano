@@ -34,7 +34,9 @@ import protobuf.dto.OnlineEnterHallDTO;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -316,12 +318,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                     return;
                 case 11:
                     post(() -> {
-                        List<HashMap> list = new ArrayList<>();
+                        List<Map<String, String>> list = new ArrayList<>();
                         Bundle data = message.getData();
                         boolean disabled = true;
                         int size = data.size() - 2;
                         for (int i = 0; i < size; i++) {
-                            HashMap hashMap = new HashMap();
+                            Map<String, String> hashMap = new HashMap<>();
                             String name = data.getBundle(String.valueOf(i)).getString("N");
                             String bonusGet = data.getBundle(String.valueOf(i)).getString("G");
                             hashMap.put("N", name);

@@ -19,8 +19,8 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.GetPrizeClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ColorUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.DrawPrizeView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -29,8 +29,8 @@ import protobuf.dto.OnlineChallengeDTO;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -45,7 +45,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public Button drawPrize;
     public Button viewChallenge;
     public ListView scoreListView;
-    public List<HashMap> scoreList = new ArrayList<>();
+    public List<Map<String, String>> scoreList = new ArrayList<>();
     private LayoutInflater layoutinflater;
 
     @Override
@@ -87,8 +87,8 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         challengeHandler = new ChallengeHandler(this);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
@@ -163,7 +163,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     }
 
 
-    public final void mo2907b(ListView listView, List<HashMap> list) {
+    public final void mo2907b(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new ChallengeListAdapter(list, layoutinflater));
     }
 

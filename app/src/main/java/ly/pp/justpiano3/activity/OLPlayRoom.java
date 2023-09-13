@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.paging.PagedList;
@@ -28,7 +28,6 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
@@ -39,20 +38,20 @@ import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.ScrollText;
-import org.jetbrains.annotations.NotNull;
 import protobuf.dto.OnlineChangeRoomHandDTO;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlinePlaySongDTO;
 import protobuf.dto.OnlinePlayStartDTO;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public final class OLPlayRoom extends OLPlayRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
     public ScrollText songNameText;
     public PopupWindow commonModeGroup;
-    // 防止横竖屏切换时，玩家前后台状态错误
-    public boolean isChangeScreen;
     public int roomMode;
     public User user;
     public Button groupButton;
@@ -195,11 +194,11 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         return roomMode;
     }
 
-    public void setdiao(int i) {
-        tune = i;
+    public void setTune(int tune) {
+        this.tune = tune;
     }
 
-    public int getdiao() {
+    public int getTune() {
         return tune;
     }
 
@@ -382,7 +381,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 if (roomMode == RoomModeEnum.NORMAL.getCode()) {
                     PopupWindow popupWindow2 = new PopupWindow(this);
                     View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_hand_list, null);
-                    popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+                    popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                     popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                     popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                     inflate2.findViewById(R.id.left_hand).setOnClickListener(this);
@@ -438,15 +437,6 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         }
     }
 
-    private void changeScreenOrientation() {
-        isChangeScreen = true;
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -454,12 +444,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.olplayroom);
-        initRoomActivity();
-        if (savedInstanceState != null) {
-            msgList = savedInstanceState.getParcelableArrayList("msgList");
-            isChangeScreen = savedInstanceState.getBoolean("isChangeScreen");
-            bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
-        }
+        initRoomActivity(savedInstanceState);
         Button olSearchButton = findViewById(R.id.ol_search_b);
         olSearchButton.setOnClickListener(this);
         playButton = findViewById(R.id.ol_ready_b);
@@ -468,11 +453,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         playSongsModeButton.setOnClickListener(this);
         groupButton = findViewById(R.id.ol_group_b);
         groupButton.setOnClickListener(this);
-        if (playerKind.equals("H")) {
-            playButton.setText("开始");
-        } else {
-            playButton.setText("准备");
-        }
+        playButton.setText(playerKind.equals("H") ? "开始" : "准备");
         searchText = findViewById(R.id.ol_search_text);
         ImageView soundStopButton = findViewById(R.id.ol_soundstop);
         soundStopButton.setOnClickListener(this);
@@ -507,7 +488,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         inflate2.findViewById(R.id.type_d).setOnClickListener(this);
         inflate2.findViewById(R.id.type_e).setOnClickListener(this);
         inflate2.findViewById(R.id.type_h).setOnClickListener(this);
-        popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+        popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow2.setFocusable(true);
@@ -522,7 +503,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 popupWindow2 = new PopupWindow(this);
                 inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_group_list, null);
                 popupWindow2.setContentView(inflate2);
-                popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                 inflate2.findViewById(R.id.group_1).setOnClickListener(this);
@@ -537,7 +518,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 popupWindow2 = new PopupWindow(this);
                 inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_couple_list, null);
                 popupWindow2.setContentView(inflate2);
-                popupWindow2.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                 inflate2.findViewById(R.id.couple_1).setOnClickListener(this);
@@ -555,7 +536,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         PopupWindow popupWindow4 = new PopupWindow(this);
         View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
         popupWindow4.setContentView(inflate4);
-        popupWindow4.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+        popupWindow4.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         popupWindow4.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow4.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         inflate4.findViewById(R.id.onetimeplay).setOnClickListener(this);
@@ -603,65 +584,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
 
     @Override
     protected void onDestroy() {
-        if (!isChangeScreen) {
-            SongPlay.INSTANCE.stopPlay();
-        }
-        timeUpdateRunning = false;
-        try {
-            timeUpdateThread.interrupt();
-        } catch (Exception ignored) {
-        }
-        msgList.clear();
-        playerList.clear();
-        invitePlayerList.clear();
-        friendPlayerList.clear();
         JPStack.pop(this);
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!isOnStart) {
-            OnlineChangeRoomUserStatusDTO.Builder builder = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
-        }
-        isOnStart = true;
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (!isOnStart) {
-            OnlineChangeRoomUserStatusDTO.Builder builder = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
-            roomTabs.setCurrentTab(1);
-            if (msgListView != null && msgListView.getAdapter() != null) {
-                msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
-            }
-        }
-        isOnStart = true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // 确定从前台切换到后台才会调用下面的代码，防止玩家手动横竖屏切换，导致后台状态错乱
-        if (isOnStart && !isChangeScreen) {
-            isOnStart = false;
-            OnlineChangeRoomUserStatusDTO.Builder builder = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder.setStatus("B");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder.build());
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("msgList", new ArrayList<>(msgList));
-        outState.putBoolean("isChangeScreen", isChangeScreen);
     }
 
     /**

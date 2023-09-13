@@ -9,6 +9,7 @@ import android.widget.Toast;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import protobuf.dto.OnlineFamilyDTO;
 
 import java.lang.ref.WeakReference;
@@ -62,16 +63,16 @@ public final class FamilyHandler extends Handler {
                                 + "\n家族总贡献:" + data.getString("C"));
                         switch (data.getString("P")) {
                             case "族长":
-                                family.position = 0;
+                                family.position = FamilyPositionEnum.LEADER;
                                 break;
                             case "副族长":
-                                family.position = 1;
+                                family.position = FamilyPositionEnum.VICE_LEADER;
                                 break;
                             case "族员":
-                                family.position = 2;
+                                family.position = FamilyPositionEnum.MEMBER;
                                 break;
                             default:
-                                family.position = 3;
+                                family.position = FamilyPositionEnum.NOT_IN_FAMILY;
                                 break;
                         }
                         family.positionHandle();

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.enums.GameModeEnum;
@@ -63,18 +62,14 @@ public class PlayModeSelect extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.play_select);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        Button f4685c = findViewById(R.id.game_mode);
-        f4685c.setOnClickListener(this);
-        Button f4687e = findViewById(R.id.keyboard);
-        f4687e.setOnClickListener(this);
-        Button f4688f = findViewById(R.id.practice_mode);
-        f4688f.setOnClickListener(this);
-        Button f4689g = findViewById(R.id.listen_mode);
-        f4689g.setOnClickListener(this);
+        findViewById(R.id.game_mode).setOnClickListener(this);
+        findViewById(R.id.keyboard).setOnClickListener(this);
+        findViewById(R.id.practice_mode).setOnClickListener(this);
+        findViewById(R.id.listen_mode).setOnClickListener(this);
     }
 }

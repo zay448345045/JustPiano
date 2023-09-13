@@ -26,8 +26,8 @@ public class UserListPage extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.userlistpage);
         listView = findViewById(R.id.list_view);

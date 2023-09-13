@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+import androidx.core.content.res.ResourcesCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
@@ -69,7 +70,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             });
         }
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(olPlayRoomActivity.getResources().getDrawable(R.drawable._none));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olPlayRoomActivity.getResources(), R.drawable._none, olPlayRoomActivity.getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);

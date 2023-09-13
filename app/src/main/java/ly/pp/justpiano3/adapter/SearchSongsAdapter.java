@@ -11,14 +11,14 @@ import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.SearchSongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class SearchSongsAdapter extends BaseAdapter {
     public final SearchSongs searchSongs;
-    private final List<HashMap> songsList;
+    private final List<Map<String, Object>> songsList;
 
-    public SearchSongsAdapter(SearchSongs searchSongs, int i, List<HashMap> list) {
+    public SearchSongsAdapter(SearchSongs searchSongs, int i, List<Map<String, Object>> list) {
         this.searchSongs = searchSongs;
         songsList = list;
     }

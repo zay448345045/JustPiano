@@ -12,6 +12,7 @@ import ly.pp.justpiano3.view.JPDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
 
 public final class ChallengeHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -31,7 +32,7 @@ public final class ChallengeHandler extends Handler {
                         Bundle data = message.getData();
                         int size = data.size() - 4;
                         for (int i = 0; i < size; i++) {
-                            HashMap<String, String> hashMap = new HashMap<>();
+                            Map<String, String> hashMap = new HashMap<>();
                             hashMap.put("S", data.getBundle(String.valueOf(i)).getString("S"));
                             hashMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
                             hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));

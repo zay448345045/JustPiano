@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShowSongsInfo extends Activity implements OnClickListener {
     public JPApplication jpapplication;
@@ -39,11 +40,11 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
     public int page;
     private TextView pageText;
     private ShowSongsInfoAdapter showSongsInfoAdapter;
-    private List<HashMap> songsList;
+    private List<Map<String, Object>> songsList;
 
-    private List<HashMap> m3857a(String str) {
+    private List<Map<String, Object>> m3857a(String str) {
         JSONArray jSONArray;
-        List<HashMap> arrayList = new ArrayList<>();
+        List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
             jSONArray = new JSONArray(str);
         } catch (JSONException e) {
@@ -52,7 +53,7 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
         }
         for (int i = 0; i < jSONArray.length(); i++) {
             try {
-                HashMap hashMap = new HashMap();
+                Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("songID", jSONArray.getJSONObject(i).get("SI").toString());
                 hashMap.put("songName", jSONArray.getJSONObject(i).get("SN").toString());
                 hashMap.put("degree", Double.valueOf(jSONArray.getJSONObject(i).get("DG").toString()));
@@ -121,8 +122,8 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         Bundle extras = getIntent().getExtras();
         head = extras.getString("head");

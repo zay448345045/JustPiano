@@ -12,14 +12,14 @@ import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.ShowTopInfo;
 import ly.pp.justpiano3.thread.PictureHandle;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class TopUserAdapter extends BaseAdapter {
     final ShowTopInfo showTopInfo;
-    private final List<HashMap> peopleList;
+    private final List<Map<String, Object>> peopleList;
 
-    public TopUserAdapter(ShowTopInfo showTopInfo, int i, List<HashMap> list) {
+    public TopUserAdapter(ShowTopInfo showTopInfo, int i, List<Map<String, Object>> list) {
         this.showTopInfo = showTopInfo;
         peopleList = list;
         showTopInfo.handler = new Handler(showTopInfo);

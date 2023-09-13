@@ -1,20 +1,13 @@
 package ly.pp.justpiano3.utils;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.ImageView;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.view.GoldConvertView;
 import ly.pp.justpiano3.view.JPDialog;
 import protobuf.dto.OnlineDialogDTO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author as

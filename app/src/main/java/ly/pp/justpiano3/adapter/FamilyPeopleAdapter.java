@@ -10,17 +10,18 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.enums.FamilyPositionEnum;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
-    private final List<HashMap<String, String>> list;
+    private final List<Map<String, String>> list;
     private final JPApplication jpApplication;
     private final LayoutInflater li;
     private final OLFamily family;
 
-    public FamilyPeopleAdapter(List<HashMap<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
+    public FamilyPeopleAdapter(List<Map<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.jpApplication = jpApplication;
         this.list = list;
         li = layoutInflater;
@@ -75,15 +76,15 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         dateText.setText(loginDate);
         contributionText.setText(contribution);
 
-        final String position = list.get(i).get("P");
-        switch (position) {
-            case "0":
+        FamilyPositionEnum userPosition = FamilyPositionEnum.ofCode(list.get(i).get("P"), FamilyPositionEnum.NOT_IN_FAMILY);
+        switch (userPosition) {
+            case LEADER:
                 positionText.setText("族长");
                 break;
-            case "1":
+            case VICE_LEADER:
                 positionText.setText("副族长");
                 break;
-            case "2":
+            case MEMBER:
                 positionText.setText("族员");
                 break;
             default:
@@ -106,7 +107,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
-            PopupWindow a = family.loadInfoPopupWindow(name, position);
+            PopupWindow a = family.loadInfoPopupWindow(name, userPosition);
             if (a != null) {
                 int[] iArr = new int[2];
                 linearLayout.getLocationOnScreen(iArr);
