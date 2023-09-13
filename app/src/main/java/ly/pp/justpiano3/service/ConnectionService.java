@@ -30,6 +30,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
+import ly.pp.justpiano3.task.ReceiveTask;
 import ly.pp.justpiano3.utils.*;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
@@ -173,7 +174,10 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                Receive.receive(msg.getResponseCase().getNumber(), msg);
+                                ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
+                                if (receiveTask != null) {
+                                    receiveTask.run(msg, JPStack.top(), Message.obtain());
+                                }
                             }
 
                             @Override

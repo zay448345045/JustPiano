@@ -2,21 +2,23 @@ package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.task.ReceiveTask;
-import org.json.JSONException;
 import org.json.JSONObject;
 import protobuf.vo.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public final class Receive {
+public final class ReceiveTasks {
 
-    private static final Map<Integer, ReceiveTask> receiveTaskMap = new HashMap<>();
+    public static final Map<Integer, ReceiveTask> receiveTaskMap = new ConcurrentHashMap<>();
 
     static {
         receiveTaskMap.put(OnlineProtocolType.USER_INFO_DIALOG, (receivedMessage, topActivity, message) -> {
@@ -52,47 +54,44 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.PLAY_START, (receivedMessage, topActivity, message) -> {
-            message.what = 5;
-            Bundle bundle2 = new Bundle();
-            bundle2.putString("S", receivedMessage.getPlayStart().getSongPath());
-            bundle2.putInt("D", receivedMessage.getPlayStart().getTune());
-            message.setData(bundle2);
             if (topActivity instanceof OLPlayRoom) {
+                message.what = 5;
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("S", receivedMessage.getPlayStart().getSongPath());
+                bundle2.putInt("D", receivedMessage.getPlayStart().getTune());
+                message.setData(bundle2);
                 ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-            } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.PLAY_FINISH, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 3;
-            OnlinePlayFinishVO playFinish = receivedMessage.getPlayFinish();
-            for (int j = 0; j < playFinish.getPlayGradeList().size(); j++) {
-                OnlinePlayGradeVO playGrade = playFinish.getPlayGradeList().get(j);
-                Bundle bundle3 = new Bundle();
-                bundle3.putString("I", playGrade.getIsPlaying() ? "P" : "");
-                bundle3.putString("N", playGrade.getName());
-                bundle3.putString("SC", String.valueOf(playGrade.getScore()));
-                bundle3.putString("P", String.valueOf(playGrade.getGrade().getPerfect()));
-                bundle3.putString("C", String.valueOf(playGrade.getGrade().getCool()));
-                bundle3.putString("G", String.valueOf(playGrade.getGrade().getGreat()));
-                bundle3.putString("B", String.valueOf(playGrade.getGrade().getBad()));
-                bundle3.putString("M", String.valueOf(playGrade.getGrade().getMiss()));
-                bundle3.putString("T", String.valueOf(playGrade.getGrade().getCombo()));
-                bundle3.putString("E", String.valueOf(playGrade.getGrade().getExp()));
-                bundle3.putString("GR", String.valueOf(playGrade.getGrade().getGradeColor()));
-                bundle.putBundle(String.valueOf(j), bundle3);
-            }
-            message.setData(bundle);
             if (topActivity instanceof PianoPlay) {
+                Bundle bundle = new Bundle();
+                message.what = 3;
+                OnlinePlayFinishVO playFinish = receivedMessage.getPlayFinish();
+                for (int j = 0; j < playFinish.getPlayGradeList().size(); j++) {
+                    OnlinePlayGradeVO playGrade = playFinish.getPlayGradeList().get(j);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putString("I", playGrade.getIsPlaying() ? "P" : "");
+                    bundle3.putString("N", playGrade.getName());
+                    bundle3.putString("SC", String.valueOf(playGrade.getScore()));
+                    bundle3.putString("P", String.valueOf(playGrade.getGrade().getPerfect()));
+                    bundle3.putString("C", String.valueOf(playGrade.getGrade().getCool()));
+                    bundle3.putString("G", String.valueOf(playGrade.getGrade().getGreat()));
+                    bundle3.putString("B", String.valueOf(playGrade.getGrade().getBad()));
+                    bundle3.putString("M", String.valueOf(playGrade.getGrade().getMiss()));
+                    bundle3.putString("T", String.valueOf(playGrade.getGrade().getCombo()));
+                    bundle3.putString("E", String.valueOf(playGrade.getGrade().getExp()));
+                    bundle3.putString("GR", String.valueOf(playGrade.getGrade().getGradeColor()));
+                    bundle.putBundle(String.valueOf(j), bundle3);
+                }
+                message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.CREATE_ROOM, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLPlayHall) {
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 Bundle bundle = new Bundle();
                 if (receivedMessage.getCreateRoom().getIsSuccess()) {
                     message.what = 2;
@@ -105,13 +104,12 @@ public final class Receive {
                     message.what = 4;
                 }
                 message.setData(bundle);
-                olPlayHall.olPlayHallHandler.handleMessage(message);
+                ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.ENTER_ROOM, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLPlayHall) {
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 Bundle bundle = new Bundle();
                 switch (receivedMessage.getEnterRoom().getStatus()) {
                     case 0:
@@ -141,7 +139,7 @@ public final class Receive {
                         break;
                 }
                 message.setData(bundle);
-                olPlayHall.olPlayHallHandler.handleMessage(message);
+                ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
             }
         });
 
@@ -156,31 +154,28 @@ public final class Receive {
 
         receiveTaskMap.put(OnlineProtocolType.LOGIN, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLMainMode) {
-                OLMainMode oLMainMode = (OLMainMode) topActivity;
-                Message message2 = Message.obtain(oLMainMode.olMainModeHandler);
                 switch (receivedMessage.getLogin().getStatus()) {
                     case "N":
-                        message2.what = 4;
+                        message.what = 4;
                         break;
                     case "E":
-                        message2.what = 5;
+                        message.what = 5;
                         break;
                     case "V":
-                        message2.what = 6;
+                        message.what = 6;
                         break;
                     default:
-                        message2.what = 1;
+                        message.what = 1;
                         break;
                 }
                 EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
-                oLMainMode.olMainModeHandler.handleMessage(message2);
+                ((OLMainMode) topActivity).olMainModeHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.HALL_CHAT, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLPlayHall) {
                 Bundle bundle = new Bundle();
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 OnlineHallChatVO hallChat = receivedMessage.getHallChat();
                 message.what = 1;
                 bundle.putString("M", hallChat.getMessage());
@@ -190,7 +185,7 @@ public final class Receive {
                     bundle.putInt("V", 0);
                 }
                 message.setData(bundle);
-                olPlayHall.olPlayHallHandler.handleMessage(message);
+                ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
             }
         });
 
@@ -215,27 +210,27 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_INFO, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 10;
-            bundle.putString("R", receivedMessage.getChangeRoomInfo().getRoomName());
-            message.setData(bundle);
-            if (topActivity instanceof OLPlayRoom) {
-                ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-            } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
+            if (topActivity instanceof OLPlayRoomActivity) {
+                Bundle bundle = new Bundle();
+                message.what = 10;
+                bundle.putString("R", receivedMessage.getChangeRoomInfo().getRoomName());
+                message.setData(bundle);
+                if (topActivity instanceof OLPlayRoom) {
+                    ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
+                } else if (topActivity instanceof OLPlayKeyboardRoom) {
+                    ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
+                }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.PLAY_SONG, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 3;
-            bundle.putString("song_path", receivedMessage.getPlaySong().getSongPath().replace("\\/", "/"));
-            bundle.putInt("diao", receivedMessage.getPlaySong().getTune());
-            message.setData(bundle);
             if (topActivity instanceof OLPlayRoom) {
+                Bundle bundle = new Bundle();
+                message.what = 3;
+                bundle.putString("song_path", receivedMessage.getPlaySong().getSongPath().replace("\\/", "/"));
+                bundle.putInt("diao", receivedMessage.getPlaySong().getTune());
+                message.setData(bundle);
                 ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-            } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
             }
         });
 
@@ -244,7 +239,6 @@ public final class Receive {
             switch (challenge.getType()) {
                 case 1:
                     if (topActivity instanceof OLChallenge) {
-                        OLChallenge olChallenge = (OLChallenge) topActivity;
                         message.what = 1;
                         Bundle bundle = new Bundle();
                         for (int i = 0; i < challenge.getChallengeEnter().getUserScoreList().size(); i++) {
@@ -260,7 +254,7 @@ public final class Receive {
                         bundle.putString("T", String.valueOf(challenge.getChallengeEnter().getChallengeNum()));
                         bundle.putString("Z", challenge.getChallengeEnter().getYesterdayPosition());
                         message.setData(bundle);
-                        olChallenge.challengeHandler.handleMessage(message);
+                        ((OLChallenge) topActivity).challengeHandler.handleMessage(message);
                         return;
                     }
                     break;
@@ -279,33 +273,30 @@ public final class Receive {
                     break;
                 case 3:
                     if (topActivity instanceof PianoPlay) {
-                        PianoPlay pianoPlay = (PianoPlay) topActivity;
                         message.setData(new Bundle());
                         message.what = 5;
-                        pianoPlay.pianoPlayHandler.handleMessage(message);
+                        ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
                         return;
                     }
                     break;
                 case 4:
                     if (topActivity instanceof PianoPlay) {
-                        PianoPlay pianoPlay = (PianoPlay) topActivity;
                         Bundle bundle = new Bundle();
                         bundle.putString("I", challenge.getChallengeFinish().getMessage());
                         message.setData(bundle);
                         message.what = 9;
-                        pianoPlay.pianoPlayHandler.handleMessage(message);
+                        ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
                         return;
                     }
                     break;
                 case 5:
                     if (topActivity instanceof OLChallenge) {
-                        OLChallenge olChallenge = (OLChallenge) topActivity;
                         message.what = 5;
                         Bundle bundle = new Bundle();
                         bundle.putInt("P", challenge.getChallengePrize().getPrizeType());
                         bundle.putString("N", challenge.getChallengePrize().getPrizeName());
                         message.setData(bundle);
-                        olChallenge.challengeHandler.handleMessage(message);
+                        ((OLChallenge) topActivity).challengeHandler.handleMessage(message);
                     }
                     break;
                 default:
@@ -379,24 +370,22 @@ public final class Receive {
                     break;
                 case 3:
                     if (topActivity instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
                         Bundle bundle = new Bundle();
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         bundle.putInt("R", family.getFamilyDialog().getAllowed() ? 1 : 0);
                         message.setData(bundle);
                         message.what = 9;
-                        olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
+                        ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
                         return;
                     }
                     break;
                 case 4:
                     if (topActivity instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
                         Bundle bundle = new Bundle();
                         bundle.putInt("R", family.getFamilyCreate().getResult());
                         message.setData(bundle);
                         message.what = 10;
-                        olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
+                        ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
                         return;
                     }
                     break;
@@ -405,18 +394,16 @@ public final class Receive {
                 case 7:
                 case 10:
                     if (topActivity instanceof OLFamily) {
-                        OLFamily olFamily = (OLFamily) topActivity;
                         Bundle bundle = new Bundle();
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         message.setData(bundle);
                         message.what = 5;
-                        olFamily.familyHandler.handleMessage(message);
+                        ((OLFamily) topActivity).familyHandler.handleMessage(message);
                         return;
                     }
                     break;
                 case 8:
                     if (topActivity instanceof OLFamily) {
-                        OLFamily olFamily = (OLFamily) topActivity;
                         Bundle bundle = new Bundle();
                         try {
                             bundle.putString("I", family.getFamilyDialog().getMessage());
@@ -426,7 +413,7 @@ public final class Receive {
                         }
                         message.setData(bundle);
                         message.what = 8;
-                        olFamily.familyHandler.handleMessage(message);
+                        ((OLFamily) topActivity).familyHandler.handleMessage(message);
                         return;
                     }
                     break;
@@ -434,10 +421,10 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_LIST, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 3;
-            OnlineLoadRoomListVO loadRoomList = receivedMessage.getLoadRoomList();
             if (topActivity instanceof OLPlayHall) {
+                Bundle bundle = new Bundle();
+                message.what = 3;
+                OnlineLoadRoomListVO loadRoomList = receivedMessage.getLoadRoomList();
                 OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 for (int i = 0; i < loadRoomList.getRoomList().size(); i++) {
                     OnlineRoomVO roomRaw = loadRoomList.getRoomList().get(i);
@@ -462,9 +449,9 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            OnlineChangeRoomPositionVO changeRoomPosition = receivedMessage.getChangeRoomPosition();
-            message.what = 1;
             if (topActivity instanceof OLPlayRoomActivity) {
+                OnlineChangeRoomPositionVO changeRoomPosition = receivedMessage.getChangeRoomPosition();
+                message.what = 1;
                 OLPlayRoomActivity olPlayRoomActivity = (OLPlayRoomActivity) topActivity;
                 for (OnlineRoomPositionUserVO roomPositionUser : changeRoomPosition.getRoomPositionUserList()) {
                     buildAndPutUser(olPlayRoomActivity, roomPositionUser);
@@ -479,15 +466,13 @@ public final class Receive {
                 bundle.putInt("diao", 0);
                 message.setData(bundle);
                 if (topActivity instanceof OLPlayRoom) {
-                    OLPlayRoom olPlayRoom = (OLPlayRoom) topActivity;
                     bundle.putString("MSG_C", "");
                     bundle.putInt("MSG_CI", 0);
                     bundle.putInt("MSG_CT", 0);
                     bundle.putBoolean("MSG_I", false);
-                    olPlayRoom.olPlayRoomHandler.handleMessage(message);
+                    ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
                 } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                    OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) topActivity;
-                    olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
+                    ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
             }
         });
@@ -506,27 +491,24 @@ public final class Receive {
                 bundle.putInt("diao", loadRoomPosition.getTune());
                 message.setData(bundle);
                 if (topActivity instanceof OLPlayRoom) {
-                    OLPlayRoom olPlayRoom = (OLPlayRoom) topActivity;
                     bundle.putString("MSG_C", loadRoomPosition.getRoomPositionCouple().getCoupleName());
                     bundle.putInt("MSG_CI", loadRoomPosition.getRoomPositionCouple().getCouplePosition());
                     bundle.putInt("MSG_CT", loadRoomPosition.getRoomPositionCouple().getCoupleType());
                     bundle.putBoolean("MSG_I", loadRoomPosition.getRoomPositionCouple().getInvite());
                     message.setData(bundle);
-                    olPlayRoom.olPlayRoomHandler.handleMessage(message);
+                    ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
                 } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                    OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) topActivity;
                     message.setData(bundle);
-                    olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
+                    ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
                 }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_LIST, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 3;
-            if (JPStack.top() instanceof OLPlayHall) {
-                OLPlayHall olPlayHall = (OLPlayHall) JPStack.top();
-                assert olPlayHall != null;
+            if (topActivity instanceof OLPlayHall) {
+                Bundle bundle = new Bundle();
+                message.what = 3;
+                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 OnlineRoomVO roomRaw = receivedMessage.getChangeRoomList();
                 Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                         roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
@@ -556,21 +538,21 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_PLAY_USER, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 1;
-            message.arg1 = 0;
-            OnlineLoadPlayUserVO loadPlayUser = receivedMessage.getLoadPlayUser();
-            List<OnlinePlayUserVO> playUserList = loadPlayUser.getPlayUserList();
-            for (int j = 0; j < playUserList.size(); j++) {
-                OnlinePlayUserVO playUser = playUserList.get(j);
-                Bundle bundle3 = new Bundle();
-                bundle3.putString("G", String.valueOf(playUser.getHand()));
-                bundle3.putString("U", playUser.getName());
-                bundle3.putString("M", String.valueOf(playUser.getMode()));
-                bundle.putBundle(String.valueOf(j), bundle3);
-            }
-            message.setData(bundle);
             if (topActivity instanceof PianoPlay) {
+                Bundle bundle = new Bundle();
+                message.what = 1;
+                message.arg1 = 0;
+                OnlineLoadPlayUserVO loadPlayUser = receivedMessage.getLoadPlayUser();
+                List<OnlinePlayUserVO> playUserList = loadPlayUser.getPlayUserList();
+                for (int j = 0; j < playUserList.size(); j++) {
+                    OnlinePlayUserVO playUser = playUserList.get(j);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putString("G", String.valueOf(playUser.getHand()));
+                    bundle3.putString("U", playUser.getName());
+                    bundle3.putString("M", String.valueOf(playUser.getMode()));
+                    bundle.putBundle(String.valueOf(j), bundle3);
+                }
+                message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
             }
         });
@@ -617,14 +599,14 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.SHOP, (receivedMessage, topActivity, message) -> {
-            OnlineShopVO shop = receivedMessage.getShop();
-            switch (shop.getType()) {
-                case 1:  // 加载商品
-                    if (topActivity instanceof OLPlayDressRoom) {
-                        OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) topActivity;
+            if (topActivity instanceof OLPlayDressRoom) {
+                OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) topActivity;
+                OnlineShopVO shop = receivedMessage.getShop();
+                Bundle bundle = new Bundle();
+                switch (shop.getType()) {
+                    case 1:  // 加载商品
                         message.what = 3;
                         olPlayDressRoom.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
                         for (int i = 0; i < shop.getShopProductShow().getProductList().size(); i++) {
                             OnlineShopProductVO shopProduct = shop.getShopProductShow().getProductList().get(i);
                             Bundle bundle2 = new Bundle();
@@ -638,89 +620,82 @@ public final class Receive {
                         bundle.putString("G", String.valueOf(shop.getShopProductShow().getGold()));
                         message.setData(bundle);
                         olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
-                    }
-                    break;
-                case 2:  // 购买商品
-                    if (topActivity instanceof OLPlayDressRoom) {
-                        OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) topActivity;
-                        Bundle bundle = new Bundle();
+                        break;
+                    case 2:  // 购买商品
                         bundle.putString("I", shop.getShopProductBuy().getMessage());
                         bundle.putString("G", String.valueOf(shop.getShopProductBuy().getGold()));
                         message.setData(bundle);
                         message.what = 4;
                         olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
-                        return;
-                    }
-                    break;
+                        break;
+                }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.RECOMMEND_SONG, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 4;
-            bundle.putString("U", receivedMessage.getRecommendSong().getName());
-            bundle.putString("M", "推荐歌曲:");
-            bundle.putString("I", receivedMessage.getRecommendSong().getSongPath());
-            bundle.putInt("D", 0);
-            bundle.putInt("T", 0);
-            message.setData(bundle);
             if (topActivity instanceof OLPlayRoom) {
+                Bundle bundle = new Bundle();
+                message.what = 4;
+                bundle.putString("U", receivedMessage.getRecommendSong().getName());
+                bundle.putString("M", "推荐歌曲:");
+                bundle.putString("I", receivedMessage.getRecommendSong().getSongPath());
+                bundle.putInt("D", 0);
+                bundle.putInt("T", 0);
+                message.setData(bundle);
                 ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-            } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_USER, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            Bundle bundle3 = new Bundle();
-            message.what = 0;
-            OnlineLoadUserVO loadUser = receivedMessage.getLoadUser();
-            for (int i = 0; i < loadUser.getHallList().size(); i++) {
-                OnlineHallVO hall = loadUser.getHallList().get(i);
-                Bundle bundle4 = new Bundle();
-                bundle4.putByte("I", (byte) hall.getId());
-                bundle4.putString("N", hall.getName());
-                bundle4.putInt("PN", hall.getSize());
-                bundle4.putInt("TN", hall.getCapacity());
-                bundle4.putInt("W", hall.getEncrypt() ? 1 : 0);
-                bundle3.putBundle(String.valueOf(i), bundle4);
-            }
-            bundle.putBundle("L", bundle3);
-            bundle.putString("U", loadUser.getName());
-            bundle.putString("S", loadUser.getGender());
-            bundle.putString("I", String.valueOf(loadUser.getFamily()));
-            bundle.putInt("LV", loadUser.getLv());
-            bundle.putInt("CL", loadUser.getCl());
-            bundle.putInt("E", loadUser.getExp());
-            bundle.putInt("M", loadUser.getMessageNum());
-            bundle.putInt("DR_H", loadUser.getClothes().getHair());
-            bundle.putInt("DR_E", loadUser.getClothes().getEye());
-            bundle.putInt("DR_J", loadUser.getClothes().getJacket());
-            bundle.putInt("DR_T", loadUser.getClothes().getTrousers());
-            bundle.putInt("DR_S", loadUser.getClothes().getShoes());
-            bundle.putInt("CP", loadUser.getCoupleType());
-            message.setData(bundle);
             if (topActivity instanceof OLPlayHallRoom) {
+                Bundle bundle = new Bundle();
+                Bundle bundle3 = new Bundle();
+                message.what = 0;
+                OnlineLoadUserVO loadUser = receivedMessage.getLoadUser();
+                for (int i = 0; i < loadUser.getHallList().size(); i++) {
+                    OnlineHallVO hall = loadUser.getHallList().get(i);
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putByte("I", (byte) hall.getId());
+                    bundle4.putString("N", hall.getName());
+                    bundle4.putInt("PN", hall.getSize());
+                    bundle4.putInt("TN", hall.getCapacity());
+                    bundle4.putInt("W", hall.getEncrypt() ? 1 : 0);
+                    bundle3.putBundle(String.valueOf(i), bundle4);
+                }
+                bundle.putBundle("L", bundle3);
+                bundle.putString("U", loadUser.getName());
+                bundle.putString("S", loadUser.getGender());
+                bundle.putString("I", String.valueOf(loadUser.getFamily()));
+                bundle.putInt("LV", loadUser.getLv());
+                bundle.putInt("CL", loadUser.getCl());
+                bundle.putInt("E", loadUser.getExp());
+                bundle.putInt("M", loadUser.getMessageNum());
+                bundle.putInt("DR_H", loadUser.getClothes().getHair());
+                bundle.putInt("DR_E", loadUser.getClothes().getEye());
+                bundle.putInt("DR_J", loadUser.getClothes().getJacket());
+                bundle.putInt("DR_T", loadUser.getClothes().getTrousers());
+                bundle.putInt("DR_S", loadUser.getClothes().getShoes());
+                bundle.putInt("CP", loadUser.getCoupleType());
+                message.setData(bundle);
                 ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.ENTER_HALL, (receivedMessage, topActivity, message) -> {
-            OnlineEnterHallVO enterHall = receivedMessage.getEnterHall();
-            Bundle bundle = new Bundle();
-            if (enterHall.getAllowed()) {
-                bundle.putInt("T", 0);
-                bundle.putByte("hallID", Byte.parseByte(enterHall.getHallIdOrMsg()));
-                bundle.putString("hallName", enterHall.getNameOrTitle());
-            } else {
-                bundle.putInt("T", 1);
-                bundle.putString("I", enterHall.getHallIdOrMsg());
-                bundle.putString("N", enterHall.getNameOrTitle());
-            }
-            message.what = 1;
-            message.setData(bundle);
             if (topActivity instanceof OLPlayHallRoom) {
+                OnlineEnterHallVO enterHall = receivedMessage.getEnterHall();
+                Bundle bundle = new Bundle();
+                if (enterHall.getAllowed()) {
+                    bundle.putInt("T", 0);
+                    bundle.putByte("hallID", Byte.parseByte(enterHall.getHallIdOrMsg()));
+                    bundle.putString("hallName", enterHall.getNameOrTitle());
+                } else {
+                    bundle.putInt("T", 1);
+                    bundle.putString("I", enterHall.getHallIdOrMsg());
+                    bundle.putString("N", enterHall.getNameOrTitle());
+                }
+                message.what = 1;
+                message.setData(bundle);
                 ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
             }
         });
@@ -729,16 +704,14 @@ public final class Receive {
             OnlineSetUserInfoVO setUserInfo = receivedMessage.getSetUserInfo();
             int type = setUserInfo.getType();
             if (type == 3 || type == 4) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("T", 1);
-                bundle.putString("I", setUserInfo.getMessage());
-                bundle.putString("N", setUserInfo.getCoupleTitle());
-                message = Message.obtain();
-                message.what = 1;
-                message.setData(bundle);
                 if (topActivity instanceof OLPlayHallRoom) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("T", 1);
+                    bundle.putString("I", setUserInfo.getMessage());
+                    bundle.putString("N", setUserInfo.getCoupleTitle());
+                    message.what = 1;
+                    message.setData(bundle);
                     ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                    return;
                 }
                 return;
             }
@@ -787,55 +760,55 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.SET_MINI_GRADE, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 1;
-            message.arg1 = 1;
-            OnlineSetMiniGradeVO setMiniGrade = receivedMessage.getSetMiniGrade();
-            for (int i = 0; i < setMiniGrade.getMiniGradeOnList().size(); i++) {
-                OnlineMiniGradeOnVO miniGradeOn = setMiniGrade.getMiniGradeOnList().get(i);
-                Bundle innerBundle = new Bundle();
-                innerBundle.putString("G", String.valueOf(miniGradeOn.getHand()));
-                innerBundle.putString("U", miniGradeOn.getName());
-                innerBundle.putString("M", String.valueOf(miniGradeOn.getMode()));
-                bundle.putBundle(String.valueOf(i), innerBundle);
-            }
-            message.setData(bundle);
             if (topActivity instanceof PianoPlay) {
+                Bundle bundle = new Bundle();
+                message.what = 1;
+                message.arg1 = 1;
+                OnlineSetMiniGradeVO setMiniGrade = receivedMessage.getSetMiniGrade();
+                for (int i = 0; i < setMiniGrade.getMiniGradeOnList().size(); i++) {
+                    OnlineMiniGradeOnVO miniGradeOn = setMiniGrade.getMiniGradeOnList().get(i);
+                    Bundle innerBundle = new Bundle();
+                    innerBundle.putString("G", String.valueOf(miniGradeOn.getHand()));
+                    innerBundle.putString("U", miniGradeOn.getName());
+                    innerBundle.putString("M", String.valueOf(miniGradeOn.getMode()));
+                    bundle.putBundle(String.valueOf(i), innerBundle);
+                }
+                message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_CLOTHES, (receivedMessage, topActivity, message) -> {
-            OnlineChangeClothesVO changeClothes = receivedMessage.getChangeClothes();
-            int type = changeClothes.getType();
-            message.what = type;
-            Bundle bundle5 = new Bundle();
-            switch (type) {
-                case 0:  // 保存服装
-                    bundle5.putString("I", changeClothes.getMessage());
-                    break;
-                case 1:  // 进入换衣间加载音符和解锁情况
-                    bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                    bundle5.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
-                    break;
-                case 2:  // 购买服装
-                    bundle5.putString("I", changeClothes.getMessage());
-                    bundle5.putString("G", String.valueOf(changeClothes.getGold()));
-                    bundle5.putInt("U_T", changeClothes.getBuyClothesType());
-                    bundle5.putInt("U_I", changeClothes.getBuyClothesId());
-                    break;
-                case 3:  // 服务器下发服装价格
-                    message.what = 5;
-                    int[] priseArr = new int[changeClothes.getBuyClothesPricesCount()];
-                    for (int y = 0; y < changeClothes.getBuyClothesPricesCount(); y++) {
-                        priseArr[y] = changeClothes.getBuyClothesPricesList().get(y);
-                    }
-                    bundle5.putInt("C_T", changeClothes.getBuyClothesType());
-                    bundle5.putIntArray("P", priseArr);
-                    break;
-            }
-            message.setData(bundle5);
             if (topActivity instanceof OLPlayDressRoom) {
+                OnlineChangeClothesVO changeClothes = receivedMessage.getChangeClothes();
+                int type = changeClothes.getType();
+                message.what = type;
+                Bundle bundle5 = new Bundle();
+                switch (type) {
+                    case 0:  // 保存服装
+                        bundle5.putString("I", changeClothes.getMessage());
+                        break;
+                    case 1:  // 进入换衣间加载音符和解锁情况
+                        bundle5.putString("G", String.valueOf(changeClothes.getGold()));
+                        bundle5.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
+                        break;
+                    case 2:  // 购买服装
+                        bundle5.putString("I", changeClothes.getMessage());
+                        bundle5.putString("G", String.valueOf(changeClothes.getGold()));
+                        bundle5.putInt("U_T", changeClothes.getBuyClothesType());
+                        bundle5.putInt("U_I", changeClothes.getBuyClothesId());
+                        break;
+                    case 3:  // 服务器下发服装价格
+                        message.what = 5;
+                        int[] priseArr = new int[changeClothes.getBuyClothesPricesCount()];
+                        for (int y = 0; y < changeClothes.getBuyClothesPricesCount(); y++) {
+                            priseArr[y] = changeClothes.getBuyClothesPricesList().get(y);
+                        }
+                        bundle5.putInt("C_T", changeClothes.getBuyClothesType());
+                        bundle5.putIntArray("P", priseArr);
+                        break;
+                }
+                message.setData(bundle5);
                 ((OLPlayDressRoom) topActivity).olPlayDressRoomHandler.handleMessage(message);
             }
         });
@@ -1011,16 +984,14 @@ public final class Receive {
         });
 
         receiveTaskMap.put(OnlineProtocolType.DAILY, (receivedMessage, topActivity, message) -> {
-            OnlineDailyVO daily = receivedMessage.getDaily();
-            switch (daily.getType()) {
-                case 0:
-                    break;
-                case 1:
-                    if (topActivity instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
+            if (topActivity instanceof OLPlayHallRoom) {
+                OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
+                Bundle bundle = new Bundle();
+                OnlineDailyVO daily = receivedMessage.getDaily();
+                switch (daily.getType()) {
+                    case 1:
                         message.what = 11;
                         olPlayHallRoom.jpprogressBar.dismiss();
-                        Bundle bundle = new Bundle();
                         for (int i = 0; i < daily.getDailyTimeList().getDailyTimeUserList().size(); i++) {
                             OnlineDailyTimeUserVO dailyTimeUser = daily.getDailyTimeList().getDailyTimeUserList().get(i);
                             Bundle bundle2 = new Bundle();
@@ -1034,44 +1005,32 @@ public final class Receive {
                         bundle.putString("T", String.valueOf(daily.getDailyTimeList().getTodayOnlineTime()));
                         message.setData(bundle);
                         olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
-                    }
-                    break;
-                case 2:
-                    if (topActivity instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
-                        Bundle bundle = new Bundle();
+                        break;
+                    case 2:
                         bundle.putString("M", daily.getDailyPrizeGet().getMessage());
                         message.setData(bundle);
                         message.what = 12;
                         olPlayHallRoom.jpprogressBar.dismiss();
                         olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
-                        return;
-                    }
-                    break;
+                        break;
+                }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.KEYBOARD, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof OLPlayKeyboardRoom) {
-                OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) topActivity;
-                try {
-                    byte[] keyboardNotes = receivedMessage.getKeyboardNote().getData().toByteArray();
-                    Bundle bundle = new Bundle();
-                    bundle.putByteArray("NOTES", keyboardNotes);
-                    message.what = 5;
-                    message.setData(bundle);
-                    olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                byte[] keyboardNotes = receivedMessage.getKeyboardNote().getData().toByteArray();
+                Bundle bundle = new Bundle();
+                bundle.putByteArray("NOTES", keyboardNotes);
+                message.what = 5;
+                message.setData(bundle);
+                ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.CL_TEST, (receivedMessage, topActivity, message) -> {
             OnlineClTestVO clTest = receivedMessage.getClTest();
             Bundle bundle = new Bundle();
-            message = Message.obtain();
-            PianoPlay pianoPlay;
             switch (clTest.getType()) {
                 case 0:
                     if (topActivity instanceof OLPlayHall) {
@@ -1100,32 +1059,29 @@ public final class Receive {
                     return;
                 case 2:
                     if (topActivity instanceof PianoPlay) {
-                        pianoPlay = (PianoPlay) topActivity;
                         message.setData(bundle);
                         message.what = 5;
-                        pianoPlay.pianoPlayHandler.handleMessage(message);
+                        ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
                         return;
                     }
                     return;
                 case 3:
                     if (topActivity instanceof PianoPlay) {
-                        pianoPlay = (PianoPlay) topActivity;
                         bundle.putInt("R", clTest.getClTestFinish().getStatus());
                         bundle.putInt("G", clTest.getClTestFinish().getTargetScore());
                         bundle.putString("S", clTest.getClTestFinish().getScore());
                         bundle.putString("E", clTest.getClTestFinish().getExp());
                         message.setData(bundle);
                         message.what = 6;
-                        pianoPlay.pianoPlayHandler.handleMessage(message);
+                        ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
                     }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_USER_LIST, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            OnlineLoadRoomUserListVO loadRoomUserList = receivedMessage.getLoadRoomUserList();
             if (topActivity instanceof OLPlayHall) {
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
+                Bundle bundle = new Bundle();
+                OnlineLoadRoomUserListVO loadRoomUserList = receivedMessage.getLoadRoomUserList();
                 Bundle bundle2 = new Bundle();
                 List<OnlineLoadRoomUserVO> roomUserList = loadRoomUserList.getLoadRoomUserList();
                 for (int i = 0; i < roomUserList.size(); i++) {
@@ -1143,29 +1099,29 @@ public final class Receive {
                 bundle.putInt("P", loadRoomUserList.getIsEncrypt() ? 1 : 0);
                 message.setData(bundle);
                 message.what = 12;
-                olPlayHall.olPlayHallHandler.handleMessage(message);
+                ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.COUPLE, (receivedMessage, topActivity, message) -> {
-            Bundle bundle = new Bundle();
-            message.what = 22;
-            OnlineCoupleVO couple = receivedMessage.getCouple();
-            switch (couple.getType()) {
-                case 2:
-                case 3:
-                case 5:
-                    bundle.putString("MSG_C", couple.getContent());
-                    bundle.putInt("MSG_CI", couple.getCoupleRoomPosition());
-                    bundle.putInt("MSG_CT", couple.getCoupleType());
-                    bundle.putInt("MSG_T", couple.getType());
-                    break;
-                case 4:
-                    JSONObject jsonObject = new JSONObject();
-                    JSONObject jsonObjectP = new JSONObject();
-                    JSONObject jsonObjectC = new JSONObject();
-                    JSONObject jsonObjectI = new JSONObject();
-                    try {
+            if (topActivity instanceof OLPlayRoomActivity) {
+                Bundle bundle = new Bundle();
+                message.what = 22;
+                OnlineCoupleVO couple = receivedMessage.getCouple();
+                switch (couple.getType()) {
+                    case 2:
+                    case 3:
+                    case 5:
+                        bundle.putString("MSG_C", couple.getContent());
+                        bundle.putInt("MSG_CI", couple.getCoupleRoomPosition());
+                        bundle.putInt("MSG_CT", couple.getCoupleType());
+                        bundle.putInt("MSG_T", couple.getType());
+                        break;
+                    case 4:
+                        JSONObject jsonObject = new JSONObject();
+                        JSONObject jsonObjectP = new JSONObject();
+                        JSONObject jsonObjectC = new JSONObject();
+                        JSONObject jsonObjectI = new JSONObject();
                         jsonObjectP.put("D_H", couple.getCoupleDialog().getDialogUser().getClothes().getHair());
                         jsonObjectP.put("D_E", couple.getCoupleDialog().getDialogUser().getClothes().getEye());
                         jsonObjectP.put("D_J", couple.getCoupleDialog().getDialogUser().getClothes().getJacket());
@@ -1191,30 +1147,20 @@ public final class Receive {
                         jsonObjectI.put("T", couple.getCoupleDialog().getCoupleDialogInfo().getType());
                         jsonObjectI.put("I", couple.getCoupleDialog().getCoupleDialogInfo().getRoomPosition());
                         jsonObject.put("I", jsonObjectI);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    bundle.putString("MSG_C", jsonObject.toString());
-                    bundle.putInt("MSG_CI", couple.getCoupleRoomPosition());
-                    bundle.putInt("MSG_CT", couple.getCoupleType());
-                    bundle.putInt("MSG_T", couple.getType());
-                    break;
-            }
-            if (topActivity instanceof OLPlayRoom) {
+                        bundle.putString("MSG_C", jsonObject.toString());
+                        bundle.putInt("MSG_CI", couple.getCoupleRoomPosition());
+                        bundle.putInt("MSG_CT", couple.getCoupleType());
+                        bundle.putInt("MSG_T", couple.getType());
+                        break;
+                }
                 message.setData(bundle);
-                ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-            } else if (topActivity instanceof OLPlayKeyboardRoom) {
-                message.setData(bundle);
-                ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
+                if (topActivity instanceof OLPlayRoom) {
+                    ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
+                } else if (topActivity instanceof OLPlayKeyboardRoom) {
+                    ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
+                }
             }
         });
-    }
-
-    public static void receive(int msgType, OnlineBaseVO receivedMessage) throws Exception {
-        ReceiveTask receiveTask = receiveTaskMap.get(msgType);
-        if (receiveTask != null) {
-            receiveTask.run(receivedMessage, JPStack.top(), Message.obtain());
-        }
     }
 
     private static User buildAndPutUser(OLPlayRoomActivity olPlayRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {
