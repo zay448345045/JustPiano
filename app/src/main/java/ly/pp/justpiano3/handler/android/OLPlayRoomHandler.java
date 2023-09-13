@@ -36,9 +36,9 @@ public final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.setTune(tune);
                             songFilePath = "songs/" + songFilePath + ".pm";
                             olPlayRoom.currentPlaySongPath = songFilePath;
-                            String[] a = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
-                            String string = a[0];
-                            String str2 = a[1];
+                            String[] simpleSongInfo = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
+                            String string = simpleSongInfo[0];
+                            String str2 = simpleSongInfo[1];
                             if (string != null) {
                                 olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
                                 if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
@@ -50,7 +50,7 @@ public final class OLPlayRoomHandler extends Handler {
                                         olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + tune);
                                     }
                                 }
-                                if (!olPlayRoom.isChangeScreen) {
+                                if (!olPlayRoom.isChangeScreen && !SongPlay.INSTANCE.isPlaying()) {
                                     SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, olPlayRoom.getTune());
                                 }
                             }

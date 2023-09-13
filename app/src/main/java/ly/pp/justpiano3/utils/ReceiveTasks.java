@@ -69,8 +69,8 @@ public final class ReceiveTasks {
                 Bundle bundle = new Bundle();
                 message.what = 3;
                 OnlinePlayFinishVO playFinish = receivedMessage.getPlayFinish();
-                for (int j = 0; j < playFinish.getPlayGradeList().size(); j++) {
-                    OnlinePlayGradeVO playGrade = playFinish.getPlayGradeList().get(j);
+                for (int i = 0; i < playFinish.getPlayGradeList().size(); i++) {
+                    OnlinePlayGradeVO playGrade = playFinish.getPlayGradeList().get(i);
                     Bundle innerBundle = new Bundle();
                     innerBundle.putString("I", playGrade.getIsPlaying() ? "P" : "");
                     innerBundle.putString("N", playGrade.getName());
@@ -83,7 +83,7 @@ public final class ReceiveTasks {
                     innerBundle.putString("T", String.valueOf(playGrade.getGrade().getCombo()));
                     innerBundle.putString("E", String.valueOf(playGrade.getGrade().getExp()));
                     innerBundle.putString("GR", String.valueOf(playGrade.getGrade().getGradeColor()));
-                    bundle.putBundle(String.valueOf(j), innerBundle);
+                    bundle.putBundle(String.valueOf(i), innerBundle);
                 }
                 message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
@@ -539,13 +539,13 @@ public final class ReceiveTasks {
                 message.arg1 = 0;
                 OnlineLoadPlayUserVO loadPlayUser = receivedMessage.getLoadPlayUser();
                 List<OnlinePlayUserVO> playUserList = loadPlayUser.getPlayUserList();
-                for (int j = 0; j < playUserList.size(); j++) {
-                    OnlinePlayUserVO playUser = playUserList.get(j);
+                for (int i = 0; i < playUserList.size(); i++) {
+                    OnlinePlayUserVO playUser = playUserList.get(i);
                     Bundle innerBundle = new Bundle();
                     innerBundle.putString("G", String.valueOf(playUser.getHand()));
                     innerBundle.putString("U", playUser.getName());
                     innerBundle.putString("M", String.valueOf(playUser.getMode()));
-                    bundle.putBundle(String.valueOf(j), innerBundle);
+                    bundle.putBundle(String.valueOf(i), innerBundle);
                 }
                 message.setData(bundle);
                 ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
