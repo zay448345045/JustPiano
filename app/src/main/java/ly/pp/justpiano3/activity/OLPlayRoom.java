@@ -28,7 +28,6 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
@@ -50,23 +49,21 @@ import java.util.Objects;
 
 public final class OLPlayRoom extends OLPlayRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
-    public ScrollText songNameText;
-    public PopupWindow commonModeGroup;
-    public int roomMode;
-    public User user;
-    public Button groupButton;
+    public LiveData<PagedList<Song>> pagedListLiveData;
+    public String currentPlaySongPath;
+    public ScrollText songNameScrollText;
+    public Button settingButton;
     public Button playButton;
     public int currentHand;
     private int tune;
     private Button playSongsModeButton;
-    private TextView searchText;
-    private PopupWindow moreSongs;
-    private PopupWindow groupModeGroup;
-    private PopupWindow coupleModeGroup;
-    private PopupWindow playSongsMode;
-    private RecyclerView songsListView;
-    public LiveData<PagedList<Song>> pagedListLiveData;
-    public String currentPlaySongPath;
+    private TextView searchTextView;
+    private PopupWindow normalModePopupWindow;
+    private PopupWindow moreSongsPopupWindow;
+    private PopupWindow groupModePopupWindow;
+    private PopupWindow coupleModePopupWindow;
+    private PopupWindow playSongsModePopupWindow;
+    private RecyclerView songsRecyclerView;
 
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
         List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(startDegree, endDegree);
@@ -76,8 +73,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         builder.setTune(tune);
         builder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));
         sendMsg(OnlineProtocolType.PLAY_SONG, builder.build());
-        if (moreSongs != null) {
-            moreSongs.dismiss();
+        if (moreSongsPopupWindow != null) {
+            moreSongsPopupWindow.dismiss();
         }
     }
 
@@ -96,8 +93,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1]);
         pagedListLiveData.removeObservers(this);
         pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
-        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
-        moreSongs.dismiss();
+        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
+        moreSongsPopupWindow.dismiss();
     }
 
     private void randomSongBetweenTwoDegree(int i, int j) {
@@ -106,8 +103,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         DataSource.Factory<Integer, Song> songsByCategoryWithDataSource = songDao.getSongsByCategoriesWithDataSource(Consts.items[i + 1], Consts.items[j + 1]);
         pagedListLiveData.removeObservers(this);
         pagedListLiveData = songDao.getPageListByDatasourceFactory(songsByCategoryWithDataSource);
-        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
-        moreSongs.dismiss();
+        pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
+        moreSongsPopupWindow.dismiss();
     }
 
     public void mo2860a(int i, String str, int i2, byte b) {
@@ -225,45 +222,45 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 DataSource.Factory<Integer, Song> favoriteSongList = songDao.getFavoriteSongsWithDataSource();
                 pagedListLiveData.removeObservers(this);
                 pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
-                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
-                moreSongs.dismiss();
+                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
+                moreSongsPopupWindow.dismiss();
                 return;
             case R.id.couple_1:
-                setGroupOrHand(1, coupleModeGroup);
+                setGroupOrHand(1, coupleModePopupWindow);
                 return;
             case R.id.couple_2:
-                setGroupOrHand(2, coupleModeGroup);
+                setGroupOrHand(2, coupleModePopupWindow);
                 return;
             case R.id.couple_6:
-                setGroupOrHand(6, coupleModeGroup);
+                setGroupOrHand(6, coupleModePopupWindow);
                 return;
             case R.id.couple_4:
-                setGroupOrHand(4, coupleModeGroup);
+                setGroupOrHand(4, coupleModePopupWindow);
                 return;
             case R.id.couple_5:
-                setGroupOrHand(5, coupleModeGroup);
+                setGroupOrHand(5, coupleModePopupWindow);
                 return;
             case R.id.couple_3:
-                setGroupOrHand(3, coupleModeGroup);
+                setGroupOrHand(3, coupleModePopupWindow);
                 return;
             case R.id.group_1:
-                setGroupOrHand(1, groupModeGroup);
+                setGroupOrHand(1, groupModePopupWindow);
                 return;
             case R.id.group_2:
-                setGroupOrHand(2, groupModeGroup);
+                setGroupOrHand(2, groupModePopupWindow);
                 return;
             case R.id.group_3:
-                setGroupOrHand(3, groupModeGroup);
+                setGroupOrHand(3, groupModePopupWindow);
                 return;
             case R.id.left_hand:
                 currentHand = 1;
-                setGroupOrHand(1, commonModeGroup);
-                groupButton.setText("左" + groupButton.getText().toString().substring(1));
+                setGroupOrHand(1, normalModePopupWindow);
+                settingButton.setText("左" + settingButton.getText().toString().substring(1));
                 return;
             case R.id.right_hand:
                 currentHand = 0;
-                setGroupOrHand(0, commonModeGroup);
-                groupButton.setText("右" + groupButton.getText().toString().substring(1));
+                setGroupOrHand(0, normalModePopupWindow);
+                settingButton.setText("右" + settingButton.getText().toString().substring(1));
                 return;
             case R.id.changeScreenOrientation:
                 changeScreenOrientation();
@@ -286,10 +283,10 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             case R.id.add_favor:
                 if (!StringUtil.isNullOrEmpty(currentPlaySongPath)) {
                     if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(currentPlaySongPath, 1) > 0) {
-                        Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameText.getText()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollText.getText()), Toast.LENGTH_SHORT).show();
                     }
                 }
-                moreSongs.dismiss();
+                moreSongsPopupWindow.dismiss();
                 return;
             case R.id.type_l:
                 randomSongBetweenTwoDegree(1, 2);
@@ -307,15 +304,15 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 randomSongWithDegree(7);
                 return;
             case R.id.ol_search_b:
-                String keywords = String.valueOf(searchText.getText());
+                String keywords = String.valueOf(searchTextView.getText());
                 if (keywords.isEmpty()) {
                     return;
                 }
-                searchText.setText("");
+                searchTextView.setText("");
                 DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
                 pagedListLiveData.removeObservers(this);
                 pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
-                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
                 return;
             case R.id.ol_soundstop:
                 SongPlay.INSTANCE.stopPlay();
@@ -327,7 +324,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
-                playSongsMode.dismiss();
+                playSongsModePopupWindow.dismiss();
                 return;
             case R.id.circulateplay:
                 if (playerKind.equals("H")) {
@@ -336,7 +333,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
-                playSongsMode.dismiss();
+                playSongsModePopupWindow.dismiss();
                 return;
             case R.id.randomplay:
                 if (playerKind.equals("H")) {
@@ -345,7 +342,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
-                playSongsMode.dismiss();
+                playSongsModePopupWindow.dismiss();
                 return;
             case R.id.favorplay:
                 if (playerKind.equals("H")) {
@@ -354,7 +351,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
-                playSongsMode.dismiss();
+                playSongsModePopupWindow.dismiss();
                 return;
             case R.id.favorlist:
                 if (playerKind.equals("H")) {
@@ -363,7 +360,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
                 }
-                playSongsMode.dismiss();
+                playSongsModePopupWindow.dismiss();
                 return;
             case R.id.ol_ready_b:
                 if (playerKind.equals("G")) {
@@ -375,7 +372,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 }
                 return;
             case R.id.ol_songlist_b:
-                moreSongs.showAtLocation(playSongsModeButton, Gravity.CENTER, 0, 0);
+                moreSongsPopupWindow.showAtLocation(playSongsModeButton, Gravity.CENTER, 0, 0);
                 return;
             case R.id.ol_group_b:
                 if (roomMode == RoomModeEnum.NORMAL.getCode()) {
@@ -393,22 +390,22 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                     popupWindow2.setTouchable(true);
                     popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
-                    commonModeGroup = popupWindow2;
-                    popupWindow2.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
+                    normalModePopupWindow = popupWindow2;
+                    popupWindow2.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
                     return;
-                } else if (roomMode == RoomModeEnum.TEAM.getCode() && groupModeGroup != null) {
-                    groupModeGroup.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
+                } else if (roomMode == RoomModeEnum.TEAM.getCode() && groupModePopupWindow != null) {
+                    groupModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
                     return;
-                } else if (roomMode == RoomModeEnum.COUPLE.getCode() && coupleModeGroup != null) {
-                    coupleModeGroup.showAtLocation(groupButton, Gravity.CENTER, 0, 0);
+                } else if (roomMode == RoomModeEnum.COUPLE.getCode() && coupleModePopupWindow != null) {
+                    coupleModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
                     return;
                 }
                 return;
             case R.id.ol_more_b:
-                if (playSongsMode != null) {
+                if (playSongsModePopupWindow != null) {
                     int[] iArr = new int[2];
                     playSongsModeButton.getLocationOnScreen(iArr);
-                    playSongsMode.showAtLocation(songNameText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
+                    playSongsModePopupWindow.showAtLocation(songNameScrollText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
                 }
                 return;
             case R.id.shengdiao:
@@ -418,8 +415,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
                 }
-                if (commonModeGroup != null) {
-                    commonModeGroup.dismiss();
+                if (normalModePopupWindow != null) {
+                    normalModePopupWindow.dismiss();
                 }
                 return;
             case R.id.jiangdiao:
@@ -429,8 +426,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 } else {
                     Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
                 }
-                if (commonModeGroup != null) {
-                    commonModeGroup.dismiss();
+                if (normalModePopupWindow != null) {
+                    normalModePopupWindow.dismiss();
                 }
                 return;
             default:
@@ -451,28 +448,28 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         playButton.setOnClickListener(this);
         playSongsModeButton = findViewById(R.id.ol_more_b);
         playSongsModeButton.setOnClickListener(this);
-        groupButton = findViewById(R.id.ol_group_b);
-        groupButton.setOnClickListener(this);
+        settingButton = findViewById(R.id.ol_group_b);
+        settingButton.setOnClickListener(this);
         playButton.setText(playerKind.equals("H") ? "开始" : "准备");
-        searchText = findViewById(R.id.ol_search_text);
+        searchTextView = findViewById(R.id.ol_search_text);
         ImageView soundStopButton = findViewById(R.id.ol_soundstop);
         soundStopButton.setOnClickListener(this);
-        songsListView = findViewById(R.id.ol_song_list);
-        songsListView.setLayoutManager(new LinearLayoutManager(this));
-        OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this, songsListView);
-        songsListView.setAdapter(olRoomSongsAdapter);
+        songsRecyclerView = findViewById(R.id.ol_song_list);
+        songsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this, songsRecyclerView);
+        songsRecyclerView.setAdapter(olRoomSongsAdapter);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
         pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
-        songNameText = findViewById(R.id.ol_songlist_b);
-        songNameText.setSingleLine(true);
-        songNameText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        songNameText.setMarqueeRepeatLimit(-1);
-        songNameText.setSelected(true);
-        songNameText.setFocusable(true);
-        songNameText.setFocusableInTouchMode(true);
-        songNameText.setOnClickListener(this);
+        songNameScrollText = findViewById(R.id.ol_songlist_b);
+        songNameScrollText.setSingleLine(true);
+        songNameScrollText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        songNameScrollText.setMarqueeRepeatLimit(-1);
+        songNameScrollText.setSelected(true);
+        songNameScrollText.setFocusable(true);
+        songNameScrollText.setFocusableInTouchMode(true);
+        songNameScrollText.setOnClickListener(this);
         PopupWindow popupWindow2 = new PopupWindow(this);
         View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_songpop_list, null);
         popupWindow2.setContentView(inflate2);
@@ -494,10 +491,10 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         popupWindow2.setFocusable(true);
         popupWindow2.setTouchable(true);
         popupWindow2.setOutsideTouchable(true);
-        moreSongs = popupWindow2;
+        moreSongsPopupWindow = popupWindow2;
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
             case NORMAL:
-                groupButton.setText("右00");
+                settingButton.setText("右00");
                 break;
             case TEAM:
                 popupWindow2 = new PopupWindow(this);
@@ -512,7 +509,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 popupWindow2.setFocusable(true);
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
-                groupModeGroup = popupWindow2;
+                groupModePopupWindow = popupWindow2;
                 break;
             case COUPLE:
                 popupWindow2 = new PopupWindow(this);
@@ -530,7 +527,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 popupWindow2.setFocusable(true);
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
-                coupleModeGroup = popupWindow2;
+                coupleModePopupWindow = popupWindow2;
                 break;
         }
         PopupWindow popupWindow4 = new PopupWindow(this);
@@ -547,7 +544,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         popupWindow4.setFocusable(true);
         popupWindow4.setTouchable(true);
         popupWindow4.setOutsideTouchable(true);
-        playSongsMode = popupWindow4;
+        playSongsModePopupWindow = popupWindow4;
         TabSpec newTabSpec = roomTabs.newTabSpec("tab3");
         newTabSpec.setContent(R.id.songs_tab);
         newTabSpec.setIndicator("曲目");

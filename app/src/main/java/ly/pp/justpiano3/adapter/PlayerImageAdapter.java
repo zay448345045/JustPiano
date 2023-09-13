@@ -128,7 +128,6 @@ public final class PlayerImageAdapter extends BaseAdapter {
                     olPlayRoom.currentHand = playerList.get(i).getInt("GR");
                     break;
             }
-            olPlayRoom.user = olPlayRoom.jpapplication.getRoomPlayerMap().get(b);
             if ("H".equals(olPlayRoom.playerKind)) {
                 olPlayRoom.playButton.setText("开始");
                 olPlayRoom.playButton.setTextSize(20);

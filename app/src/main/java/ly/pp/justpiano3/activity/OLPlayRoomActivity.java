@@ -64,6 +64,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     public ListView friendsListView;
     public int page;
     public byte roomId;
+    public int roomMode;
     public TextView roomNameView;
     public String roomName;
     public JPApplication jpapplication;
@@ -535,6 +536,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         roomId = roomInfoBundle.getByte("ID");
         roomName = roomInfoBundle.getString("R");
         playerKind = roomInfoBundle.getString("isHost");
+        roomMode = roomInfoBundle.getInt("mode");
         roomNameView.setText("[" + roomId + "]" + roomName);
         roomNameView.setOnClickListener(this);
         playerGrid = findViewById(R.id.ol_player_grid);

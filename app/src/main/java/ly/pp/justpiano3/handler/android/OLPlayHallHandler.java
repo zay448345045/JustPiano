@@ -14,6 +14,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
@@ -80,7 +81,7 @@ public final class OLPlayHallHandler extends Handler {
                                 olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
                                 return;
                             } else if (message.getData().getInt("T") == 2) {
-                                writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M"))+ '\n'));
+                                writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                             } else if (message.getData().getInt("T") == 18) {
                                 writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                             } else if (message.getData().getInt("T") == 1) {
@@ -99,11 +100,7 @@ public final class OLPlayHallHandler extends Handler {
                 data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
                 Intent intent;
-                if (mode == 3) {
-                    intent = new Intent(olPlayHall, OLPlayKeyboardRoom.class);
-                } else {
-                    intent = new Intent(olPlayHall, OLPlayRoom.class);
-                }
+                intent = new Intent(olPlayHall, mode == RoomModeEnum.KEYBOARD.getCode() ? OLPlayKeyboardRoom.class : OLPlayRoom.class);
                 intent.putExtras(data);
                 olPlayHall.startActivity(intent);
                 olPlayHall.finish();

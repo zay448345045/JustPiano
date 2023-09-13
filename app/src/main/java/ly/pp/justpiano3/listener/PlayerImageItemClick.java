@@ -17,6 +17,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.adapter.PlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -65,7 +66,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             soundMuteButton.setOnClickListener(v -> {
                 olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted());
                 if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
-                    ((PlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                    ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                 }
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
