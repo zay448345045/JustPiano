@@ -20,7 +20,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,16 +46,16 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public Handler handler;
     private TextView f4993i;
     private final int f4998n = 20;
-    private Bitmap f5003s = null;
+    private Bitmap nailFace = null;
 
     public Bitmap m3874a(Context context) {
         try {
-            if (f5003s == null) {
-                f5003s = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
+            if (nailFace == null) {
+                nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
             }
         } catch (IOException ignored) {
         }
-        return f5003s;
+        return nailFace;
     }
 
     public List<HashMap> m3877a(String str) {
@@ -127,7 +127,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         super.onCreate(bundle);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.showtopinfo);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         f4989e = findViewById(R.id.ol_top_list);

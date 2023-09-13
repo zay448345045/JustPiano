@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.adapter;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,17 +7,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.ColorUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
@@ -65,16 +61,12 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         isPlayingView.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isPlaying() ? View.VISIBLE : View.INVISIBLE);
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
         imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.drawable.stop : R.drawable.null_pic);
-        try {
-            if (string4.equals("O")) {
-                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_none.png")));
-                return view;
-            } else if (string4.equals("C")) {
-                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayKeyboardRoom.getResources().getAssets().open("mod/_close.png")));
-                return view;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (string4.equals("O")) {
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png"));
+            return view;
+        } else if (string4.equals("C")) {
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.png"));
+            return view;
         }
         TextView textView2 = view.findViewById(R.id.ol_ready_text);
         TextView textView3 = view.findViewById(R.id.ol_player_level);
@@ -98,54 +90,35 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         if (cpKind >= 0 && cpKind <= 3) {
             imageView6.setImageResource(Consts.couples[cpKind]);
         }
-        if (!familyID.equals("0")) {
-            File file = new File(olPlayKeyboardRoom.getFilesDir(), familyID + ".jpg");
-            if (file.exists()) {
-                try (InputStream inputStream = new FileInputStream(file)) {
-                    int length = (int) file.length();
-                    byte[] pic = new byte[length];
-                    inputStream.read(pic);
-                    imageView7.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                imageView7.setImageResource(R.drawable.family);
-            }
-        }
-
+        ImageLoadUtil.setFamilyImageBitmap(olPlayKeyboardRoom, familyID, imageView7);
         if (!"H".equals(string4)) {
             if ("R".equals(string3)) {
                 textView2.setText("准备");
-                textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayKeyboardRoom, R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
-                textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayKeyboardRoom, R.color.online));
             }
         } else {
             textView2.setText("房主");
-            textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.exit));
+            textView2.setBackgroundColor(ContextCompat.getColor(olPlayKeyboardRoom, R.color.exit));
         }
         if ("B".equals(string3)) {
             textView2.setText("后台");
-            textView2.setBackgroundColor(olPlayKeyboardRoom.getResources().getColor(R.color.green_y));
+            textView2.setBackgroundColor(ContextCompat.getColor(olPlayKeyboardRoom, R.color.green_y));
         }
-        try {
-            int i6 = playerList.get(i).getInt("TR");
-            int i7 = playerList.get(i).getInt("JA");
-            int i8 = playerList.get(i).getInt("HA");
-            int i8e = playerList.get(i).getInt("EY");
-            int i9 = playerList.get(i).getInt("SH");
-            textView3.setText("LV." + lv);
-            textView4.setText("CL." + cl);
-            textView4.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[cl]));
-            textView5.setText(Consts.nameCL[cl]);
-            textView5.setTextColor(olPlayKeyboardRoom.getResources().getColor(Consts.colors[cl]));
-            DialogUtil.setUserDressImageBitmap(olPlayKeyboardRoom, gender, i6, i7, i8, i8e, i9,
-                    imageView, imageView2, imageView3, imageView5, imageView5e, imageView4);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        int i6 = playerList.get(i).getInt("TR");
+        int i7 = playerList.get(i).getInt("JA");
+        int i8 = playerList.get(i).getInt("HA");
+        int i8e = playerList.get(i).getInt("EY");
+        int i9 = playerList.get(i).getInt("SH");
+        textView3.setText("LV." + lv);
+        textView4.setText("CL." + cl);
+        textView4.setTextColor(ContextCompat.getColor(olPlayKeyboardRoom, Consts.colors[cl]));
+        textView5.setText(Consts.nameCL[cl]);
+        textView5.setTextColor(ContextCompat.getColor(olPlayKeyboardRoom, Consts.colors[cl]));
+        ImageLoadUtil.setUserDressImageBitmap(olPlayKeyboardRoom, gender, i6, i7, i8, i8e, i9,
+                imageView, imageView2, imageView3, imageView5, imageView5e, imageView4);
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(userName);
         ImageView imageView1 = view.findViewById(R.id.ol_player_midi);

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,25 +11,27 @@ import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.listener.GoToFamilyCenterClick;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class FamilyAdapter extends BaseAdapter {
     public OLPlayHallRoom olPlayHallRoom;
-    private List<HashMap> list;
-    private final LayoutInflater li;
+    private List<Map<String, Object>> list;
+    private final LayoutInflater layoutInflater;
 
-    public FamilyAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
+    public FamilyAdapter(List<Map<String, Object>> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
         this.list = list;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         this.olPlayHallRoom = olPlayHallRoom;
     }
 
-    public void upDateList(List<HashMap> list) {
+    public void upDateList(List<Map<String, Object>> list) {
         this.list = list;
     }
 
@@ -50,7 +53,7 @@ public final class FamilyAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_o_family_view, null);
+            view = layoutInflater.inflate(R.layout.ol_o_family_view, null);
         }
         if (list.size() == 0) {
             return view;
@@ -72,26 +75,31 @@ public final class FamilyAdapter extends BaseAdapter {
         String position = (String) list.get(i).get("P");
         positionText.setText(position);
         ImageView img = view.findViewById(R.id.ol_family_pic);
-        if (position.equals("0")) {
+        if (position == null || position.equals("0")) {
             img.setImageResource(R.drawable.null_pic);
         }
         view.setOnClickListener(new GoToFamilyCenterClick(this, id, i));
         byte[] pic = ((byte[]) list.get(i).get("J"));
         if (pic == null || pic.length <= 1) {
+            ImageLoadUtil.familyBitmapCacheMap.put(id, null);
             img.setImageResource(R.drawable.family);
         } else {
-            img.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
-            File file1 = new File(olPlayHallRoom.getFilesDir(), id + ".jpg");
-            try {
-                if (!file1.exists()) {
-                    file1.createNewFile();
+            Bitmap familyBitmap = BitmapFactory.decodeByteArray(pic, 0, pic.length);
+            img.setImageBitmap(familyBitmap);
+            ImageLoadUtil.familyBitmapCacheMap.put(id, familyBitmap);
+            ThreadPoolUtils.execute(() -> {
+                File file1 = new File(olPlayHallRoom.getFilesDir(), id + ".jpg");
+                try {
+                    if (!file1.exists()) {
+                        file1.createNewFile();
+                    }
+                    OutputStream outputStream1 = new FileOutputStream(file1);
+                    outputStream1.write(pic);
+                    outputStream1.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                OutputStream outputStream1 = new FileOutputStream(file1);
-                outputStream1.write(pic);
-                outputStream1.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            });
         }
         switch (i) {
             case 0:

@@ -19,7 +19,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -105,7 +105,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         jpprogressBar = new JPProgressBar(this, jpapplication);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olmainmode);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         Button topButton = findViewById(R.id.ol_top_b);

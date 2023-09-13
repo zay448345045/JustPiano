@@ -5,7 +5,7 @@ import android.graphics.*;
 import android.graphics.Paint.Align;
 import android.view.View;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 import java.io.IOException;
 
@@ -41,8 +41,8 @@ public class JustPianoView extends View {
         allScreenRect = new RectF(0, 0, widthPixels, heightPixels);
         try {
             logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
-            progressBarBitmap = SkinImageLoadUtil.loadImage(jPApplication, "progress_bar");
-            progressBarBaseBitmap = SkinImageLoadUtil.loadImage(jPApplication, "progress_bar_base");
+            progressBarBitmap = ImageLoadUtil.loadSkinImage(jPApplication, "progress_bar");
+            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(jPApplication, "progress_bar_base");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -9,7 +9,7 @@ import android.widget.*;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.RegisterTask;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.util.regex.Pattern;
@@ -80,7 +80,7 @@ public class Register extends Activity implements OnClickListener {
         super.onCreate(bundle);
         setContentView(R.layout.register);
         jpapplication = (JPApplication) getApplication();
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         sex = "";
         account = "";
         kitiName = "";

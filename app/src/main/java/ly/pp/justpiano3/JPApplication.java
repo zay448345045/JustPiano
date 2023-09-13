@@ -30,7 +30,9 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
 import org.jetbrains.annotations.NotNull;
@@ -279,6 +281,8 @@ public final class JPApplication extends Application {
         // 设置拦截app中未捕获的异常
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
+        // 初始化一些图像缓存
+        ImageLoadUtil.init(this);
         // 从app应用数据中加载设置
         GlobalSetting.INSTANCE.loadSettings(this, false);
         // 从app应用数据中加载账号信息

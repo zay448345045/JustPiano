@@ -20,7 +20,7 @@ import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
@@ -30,6 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -41,7 +42,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public FamilyHandler familyHandler;
     public String familyID;
     public String peopleNow;  //目前选择人的名字
-    public List<HashMap> familyList;
+    public List<Map<String, Object>> familyList;
     public int familyPageNum;
     public String myFamilyPosition;
     public String myFamilyContribution;
@@ -130,7 +131,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            DialogUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
@@ -257,7 +258,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         myFamilyName = b.getString("myFamilyName");
         myFamilyPosition = b.getString("myFamilyPosition");
         myFamilyPicArray = b.getByteArray("myFamilyPicArray");
-        familyList = (List<HashMap>) getIntent().getSerializableExtra("familyList");
+        familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
@@ -265,7 +266,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.family);
         cs = jpapplication.getConnectionService();
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));

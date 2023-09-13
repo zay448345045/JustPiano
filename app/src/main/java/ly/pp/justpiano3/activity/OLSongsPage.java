@@ -10,7 +10,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.GameModeEnum;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class OLSongsPage extends Activity implements OnClickListener {
 
@@ -82,7 +82,7 @@ public class OLSongsPage extends Activity implements OnClickListener {
         JPApplication jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_songs_page);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         Button f4544b = findViewById(R.id.ol_melodyList_b);
         f4544b.setOnClickListener(this);

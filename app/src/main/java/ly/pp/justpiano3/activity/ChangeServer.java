@@ -13,7 +13,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.IPUtil;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class ChangeServer extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -81,7 +81,7 @@ public class ChangeServer extends OLBaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.changeserver);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button f4189o = findViewById(R.id.server1);
         f4189o.setOnClickListener(this);
         Button f4192r = findViewById(R.id.server2);

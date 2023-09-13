@@ -35,7 +35,7 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.*;
@@ -105,7 +105,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            DialogUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
@@ -347,7 +347,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         jpapplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olplayhall);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         Button f4405u = findViewById(R.id.ol_send_b);

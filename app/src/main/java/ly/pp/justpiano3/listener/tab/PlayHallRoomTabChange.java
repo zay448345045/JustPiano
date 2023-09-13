@@ -57,11 +57,11 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
                     olPlayHallRoom.jpprogressBar.show();
                     olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder1.build());
                 } else {
-                    FamilyAdapter fa = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
-                    if (fa == null) {
+                    FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
+                    if (familyAdapter == null) {
                         olPlayHallRoom.mo2907b(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     } else {
-                        olPlayHallRoom.mo2905a(fa, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                        olPlayHallRoom.mo2905a(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     }
                     olPlayHallRoom.familyListView.post(() -> olPlayHallRoom.familyListView.setSelection(olPlayHallRoom.familyListPosition));
                 }

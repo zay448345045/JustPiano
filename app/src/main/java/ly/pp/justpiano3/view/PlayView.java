@@ -196,18 +196,18 @@ public final class PlayView extends SurfaceView implements Callback {
 
     private void loadImages() {
         Matrix matrix = new Matrix();
-        barImage = SkinImageLoadUtil.loadImage(jpapplication, "bar");
-        keyboardImage = SkinImageLoadUtil.loadImage(jpapplication, "key_board_hd");
-        backgroundImage = SkinImageLoadUtil.loadImage(jpapplication, "background_hd");
-        perfectImage = SkinImageLoadUtil.loadImage(jpapplication, "perfect_img");
-        coolImage = SkinImageLoadUtil.loadImage(jpapplication, "cool_img");
-        greatImage = SkinImageLoadUtil.loadImage(jpapplication, "great_img");
-        badImage = SkinImageLoadUtil.loadImage(jpapplication, "bad_img");
-        missImage = SkinImageLoadUtil.loadImage(jpapplication, "miss_img");
-        maxImage = SkinImageLoadUtil.loadImage(jpapplication, "max_img");
-        xImage = SkinImageLoadUtil.loadImage(jpapplication, "x_img");
-        scoreImage = SkinImageLoadUtil.loadImage(jpapplication, "score");
-        scoreNumImage = SkinImageLoadUtil.loadImage(jpapplication, "number");
+        barImage = ImageLoadUtil.loadSkinImage(jpapplication, "bar");
+        keyboardImage = ImageLoadUtil.loadSkinImage(jpapplication, "key_board_hd");
+        backgroundImage = ImageLoadUtil.loadSkinImage(jpapplication, "background_hd");
+        perfectImage = ImageLoadUtil.loadSkinImage(jpapplication, "perfect_img");
+        coolImage = ImageLoadUtil.loadSkinImage(jpapplication, "cool_img");
+        greatImage = ImageLoadUtil.loadSkinImage(jpapplication, "great_img");
+        badImage = ImageLoadUtil.loadSkinImage(jpapplication, "bad_img");
+        missImage = ImageLoadUtil.loadSkinImage(jpapplication, "miss_img");
+        maxImage = ImageLoadUtil.loadSkinImage(jpapplication, "max_img");
+        xImage = ImageLoadUtil.loadSkinImage(jpapplication, "x_img");
+        scoreImage = ImageLoadUtil.loadSkinImage(jpapplication, "score");
+        scoreNumImage = ImageLoadUtil.loadSkinImage(jpapplication, "number");
         if (jpapplication.getHeightPixels() < 1080) {
             matrix.postScale(0.7f, 0.7f);
             perfectImage = Bitmap.createBitmap(perfectImage, 0, 0, perfectImage.getWidth(), perfectImage.getHeight(), matrix, true);
@@ -219,30 +219,30 @@ public final class PlayView extends SurfaceView implements Callback {
             scoreImage = Bitmap.createBitmap(scoreImage, 0, 0, scoreImage.getWidth(), scoreImage.getHeight(), matrix, true);
             scoreNumImage = Bitmap.createBitmap(scoreNumImage, 0, 0, scoreNumImage.getWidth(), scoreNumImage.getHeight(), matrix, true);
         }
-        noteImage = SkinImageLoadUtil.loadImage(jpapplication, "white_note_hd");
-        blackNoteImage = SkinImageLoadUtil.loadImage(jpapplication, "black_note_hd");
-        playNoteImage = SkinImageLoadUtil.loadImage(jpapplication, "play_note_hd");
-        practiceNoteImage = SkinImageLoadUtil.loadImage(jpapplication, "play_note_hd");
-        whiteKeyRightImage = SkinImageLoadUtil.loadImage(jpapplication, "white_r");
-        whiteKeyMiddleImage = SkinImageLoadUtil.loadImage(jpapplication, "white_m");
-        whiteKeyLeftImage = SkinImageLoadUtil.loadImage(jpapplication, "white_l");
-        blackKeyImage = SkinImageLoadUtil.loadImage(jpapplication, "black");
-        fireImage = SkinImageLoadUtil.loadImage(jpapplication, "fire");
-        longKeyboardImage = SkinImageLoadUtil.loadImage(jpapplication, "keyboard_long");
-        nullImage = SkinImageLoadUtil.loadImage(jpapplication, "null");
+        noteImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_note_hd");
+        blackNoteImage = ImageLoadUtil.loadSkinImage(jpapplication, "black_note_hd");
+        playNoteImage = ImageLoadUtil.loadSkinImage(jpapplication, "play_note_hd");
+        practiceNoteImage = ImageLoadUtil.loadSkinImage(jpapplication, "play_note_hd");
+        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_r");
+        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_m");
+        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_l");
+        blackKeyImage = ImageLoadUtil.loadSkinImage(jpapplication, "black");
+        fireImage = ImageLoadUtil.loadSkinImage(jpapplication, "fire");
+        longKeyboardImage = ImageLoadUtil.loadSkinImage(jpapplication, "keyboard_long");
+        nullImage = ImageLoadUtil.loadSkinImage(jpapplication, "null");
         switch (GlobalSetting.INSTANCE.getRoughLine()) {
             case 1:
                 roughLineImage = nullImage;
                 break;
             case 2:
-                roughLineImage = SkinImageLoadUtil.loadImage(jpapplication, "rough_line1");
+                roughLineImage = ImageLoadUtil.loadSkinImage(jpapplication, "rough_line1");
                 break;
             case 3:
-                roughLineImage = SkinImageLoadUtil.loadImage(jpapplication, "rough_line");
+                roughLineImage = ImageLoadUtil.loadSkinImage(jpapplication, "rough_line");
                 break;
         }
-        progressBarImage = SkinImageLoadUtil.loadImage(jpapplication, "progress_bar");
-        progressBarBaseImage = SkinImageLoadUtil.loadImage(jpapplication, "progress_bar_base");
+        progressBarImage = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar");
+        progressBarBaseImage = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar_base");
         Bitmap bitmap = noteImage;
         float noteSize = GlobalSetting.INSTANCE.getNoteSize();
         matrix.postScale(noteSize, noteSize);

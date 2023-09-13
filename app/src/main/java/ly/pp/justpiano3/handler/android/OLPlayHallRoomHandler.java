@@ -2,6 +2,7 @@ package ly.pp.justpiano3.handler.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -20,7 +22,9 @@ import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.DialogDismissClick;
+import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.DialogUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +39,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -67,34 +72,27 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.userLevelView.setText("LV." + lv);
                         i = data.getInt("CL");
                         olPlayHallRoom.userClassView.setText("CL." + i);
-                        olPlayHallRoom.userClassView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.userClassView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
                         olPlayHallRoom.userClassNameView.setText(Consts.nameCL[i]);
-                        olPlayHallRoom.userClassNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.userClassNameView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
                         olPlayHallRoom.cp = data.getInt("CP");
                         olPlayHallRoom.familyID = data.getString("I");
                         if (olPlayHallRoom.cp >= 0 && olPlayHallRoom.cp <= 3) {
                             olPlayHallRoom.coupleView.setImageResource(Consts.couples[olPlayHallRoom.cp]);
                         }
-                        if (!olPlayHallRoom.familyID.equals("0")) {
-                            File file = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
-                            if (file.exists()) {
-                                try (InputStream inputStream = new FileInputStream(file)) {
-                                    int length = (int) file.length();
-                                    byte[] pic = new byte[length];
-                                    inputStream.read(pic);
-                                    olPlayHallRoom.familyView.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                olPlayHallRoom.familyView.setImageResource(R.drawable.family);
-                            }
-                        }
+                        ImageLoadUtil.setFamilyImageBitmap(olPlayHallRoom, olPlayHallRoom.familyID, olPlayHallRoom.familyView);
                         olPlayHallRoom.lv = data.getInt("LV");
                         olPlayHallRoom.cl = data.getInt("CL");
                         olPlayHallRoom.userSex = data.getString("S");
-                        olPlayHallRoom.loadDress(data.getInt("DR_H"), data.getInt("DR_E"),
-                                data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
+                        olPlayHallRoom.userTrousersIndex = data.getInt("DR_T");
+                        olPlayHallRoom.userJacketIndex = data.getInt("DR_J");
+                        olPlayHallRoom.userHairIndex = data.getInt("DR_H");
+                        olPlayHallRoom.userEyeIndex = data.getInt("DR_E");
+                        olPlayHallRoom.userShoesIndex = data.getInt("DR_S");
+                        ImageLoadUtil.setUserDressImageBitmap(olPlayHallRoom, olPlayHallRoom.userSex, olPlayHallRoom.userTrousersIndex,
+                                olPlayHallRoom.userJacketIndex, olPlayHallRoom.userHairIndex, olPlayHallRoom.userEyeIndex, olPlayHallRoom.userShoesIndex,
+                                olPlayHallRoom.userModView, olPlayHallRoom.userTrousersView, olPlayHallRoom.userJacketsView,
+                                olPlayHallRoom.userHairView, olPlayHallRoom.userEyeView, olPlayHallRoom.userShoesView);
                         i = data.getInt("M");
                         if (i > 0) {
                             olPlayHallRoom.mailCountsView.setText(String.valueOf(i));
@@ -123,21 +121,21 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                         int preSize = olPlayHallRoom.familyList.size();
                         for (int i = 0; i < size; i++) {
-                            HashMap hashMap = new HashMap();
-                            hashMap.put("C", data.getBundle(String.valueOf(i)).getString("C"));
-                            hashMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
-                            hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
-                            hashMap.put("U", data.getBundle(String.valueOf(i)).getString("U"));
-                            hashMap.put("I", data.getBundle(String.valueOf(i)).getString("I"));
-                            hashMap.put("J", data.getBundle(String.valueOf(i)).getByteArray("J"));
-                            hashMap.put("P", String.valueOf(i + 1 + preSize));
-                            olPlayHallRoom.familyList.add(hashMap);
+                            Map<String, Object> familyDataMap = new HashMap<>();
+                            familyDataMap.put("C", data.getBundle(String.valueOf(i)).getString("C"));
+                            familyDataMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
+                            familyDataMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
+                            familyDataMap.put("U", data.getBundle(String.valueOf(i)).getString("U"));
+                            familyDataMap.put("I", data.getBundle(String.valueOf(i)).getString("I"));
+                            familyDataMap.put("J", data.getBundle(String.valueOf(i)).getByteArray("J"));
+                            familyDataMap.put("P", String.valueOf(i + 1 + preSize));
+                            olPlayHallRoom.familyList.add(familyDataMap);
                         }
-                        FamilyAdapter fa = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
-                        if (fa == null) {
+                        FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
+                        if (familyAdapter == null) {
                             olPlayHallRoom.mo2907b(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                         } else {
-                            olPlayHallRoom.mo2905a(fa, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                            olPlayHallRoom.mo2905a(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                         }
                         olPlayHallRoom.myFamilyPosition.setText(data.getString("P"));
                         olPlayHallRoom.myFamilyName.setText(data.getString("N"));
@@ -146,22 +144,26 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.familyID = data.getString("I");
                         olPlayHallRoom.myFamilyPicArray = data.getByteArray("J");
                         if (olPlayHallRoom.myFamilyPicArray == null || olPlayHallRoom.myFamilyPicArray.length <= 1) {
+                            ImageLoadUtil.familyBitmapCacheMap.put(olPlayHallRoom.familyID, null);
                             olPlayHallRoom.myFamilyPic.setImageResource(R.drawable.family);
                         } else {
-                            olPlayHallRoom.myFamilyPic.setImageBitmap(
-                                    BitmapFactory.decodeByteArray(olPlayHallRoom.myFamilyPicArray,
-                                            0, olPlayHallRoom.myFamilyPicArray.length));
-                            File file1 = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
-                            try {
-                                if (!file1.exists()) {
-                                    file1.createNewFile();
+                            Bitmap myFamilyBitmap = BitmapFactory.decodeByteArray(olPlayHallRoom.myFamilyPicArray,
+                                    0, olPlayHallRoom.myFamilyPicArray.length);
+                            olPlayHallRoom.myFamilyPic.setImageBitmap(myFamilyBitmap);
+                            ImageLoadUtil.familyBitmapCacheMap.put(olPlayHallRoom.familyID, myFamilyBitmap);
+                            ThreadPoolUtils.execute(() -> {
+                                File file1 = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
+                                try {
+                                    if (!file1.exists()) {
+                                        file1.createNewFile();
+                                    }
+                                    OutputStream outputStream1 = new FileOutputStream(file1);
+                                    outputStream1.write(olPlayHallRoom.myFamilyPicArray);
+                                    outputStream1.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                                OutputStream outputStream1 = new FileOutputStream(file1);
-                                outputStream1.write(olPlayHallRoom.myFamilyPicArray);
-                                outputStream1.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            });
                         }
                     });
                     return;
@@ -378,12 +380,14 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.couplePointsView.setText("祝福点数:" + data.getInt("CP"));
                         int i = data.getInt("CL");
                         olPlayHallRoom.coupleClView.setText("CL." + i);
-                        olPlayHallRoom.coupleClView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.coupleClView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
                         olPlayHallRoom.coupleClNameView.setText(Consts.nameCL[i]);
-                        olPlayHallRoom.coupleClNameView.setTextColor(olPlayHallRoom.getResources().getColor(Consts.colors[i]));
+                        olPlayHallRoom.coupleClNameView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
                         olPlayHallRoom.coupleSex = data.getString("S");
-                        olPlayHallRoom.loadClothes(data.getInt("DR_H"), data.getInt("DR_E"),
-                                data.getInt("DR_J"), data.getInt("DR_T"), data.getInt("DR_S"));
+                        ImageLoadUtil.setUserDressImageBitmap(olPlayHallRoom, olPlayHallRoom.coupleSex, data.getInt("DR_T"),
+                                data.getInt("DR_J"), data.getInt("DR_H"), data.getInt("DR_E"), data.getInt("DR_S"),
+                                olPlayHallRoom.coupleModView, olPlayHallRoom.coupleTrousersView, olPlayHallRoom.coupleJacketView,
+                                olPlayHallRoom.coupleHairView, olPlayHallRoom.coupleEyeView, olPlayHallRoom.coupleShoesView);
                     });
                     return;
                 case 23:

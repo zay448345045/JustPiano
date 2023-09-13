@@ -15,7 +15,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 
 import java.io.File;
@@ -82,7 +82,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                 edit.apply();
                 olPlayKeyboardRoom.runOnUiThread(() -> {
                     olPlayKeyboardRoom.keyboardView.changeSkinKeyboardImage(olPlayKeyboardRoom);
-                    SkinImageLoadUtil.setBackGround(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));
+                    ImageLoadUtil.setBackGround(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));
                     olPlayKeyboardRoom.jpprogressBar.dismiss();
                     Toast.makeText(olPlayKeyboardRoom, "皮肤设置成功", Toast.LENGTH_SHORT).show();
                 });

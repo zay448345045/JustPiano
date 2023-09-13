@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.SkinDownload;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 import java.io.File;
 
@@ -50,7 +50,7 @@ public final class SkinDownloadClick implements OnClickListener {
                         }
                     }
                 }
-                SkinImageLoadUtil.setBackGround(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
+                ImageLoadUtil.setBackGround(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
                 break;
         }
     }

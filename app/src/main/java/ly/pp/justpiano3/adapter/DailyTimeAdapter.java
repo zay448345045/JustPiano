@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
@@ -62,10 +63,10 @@ public final class DailyTimeAdapter extends BaseAdapter {
         TextView bonusGetText = view.findViewById(R.id.ol_bonus_get);
         if (bonusGet.equals("0")) {
             bonusGetText.setText("未领");
-            bonusGetText.setBackgroundColor(olPlayHallRoom.getResources().getColor(R.color.exit));
+            bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.exit));
         } else {
             bonusGetText.setText("已领");
-            bonusGetText.setBackgroundColor(olPlayHallRoom.getResources().getColor(R.color.online));
+            bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.online));
         }
         if (JPApplication.kitiName.equals(name)) {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_a);

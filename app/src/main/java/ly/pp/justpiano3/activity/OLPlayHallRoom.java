@@ -1,10 +1,8 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -33,7 +31,7 @@ import ly.pp.justpiano3.task.OLPlayHallRoomTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -42,12 +40,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import protobuf.dto.*;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
     public int cl = 0;
@@ -79,7 +73,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public TextView coupleBlessView;
     public List<Bundle> friendList = new ArrayList<>();
     public ListView friendListView;
-    public List<HashMap> familyList = new ArrayList<>();
+    public List<Map<String, Object>> familyList = new ArrayList<>();
     public FamilyListView familyListView;
     public int familyPageNum;
     public int cp;
@@ -92,45 +86,29 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public List<Bundle> mailList = new ArrayList<>();
     public ListView mailListView;
     public ConnectionService connectionService;
-    private ImageView userModView;
-    private ImageView userTrousersView;
-    private ImageView userJacketsView;
-    private ImageView userHairView;
-    private ImageView userEyeView;
-    private ImageView userShoesView;
-    private int userTrousersIndex;
-    private int userJacketIndex;
-    private int userHairIndex;
-    private int userEyeIndex;
-    private int userShoesIndex;
+    public ImageView userModView;
+    public ImageView userTrousersView;
+    public ImageView userJacketsView;
+    public ImageView userHairView;
+    public ImageView userEyeView;
+    public ImageView userShoesView;
+    public int userTrousersIndex;
+    public int userJacketIndex;
+    public int userHairIndex;
+    public int userEyeIndex;
+    public int userShoesIndex;
     public String userSex = "f";
     private MainGameAdapter mailListAdapter = null;
     private MainGameAdapter hallListAdapter = null;
     private MainGameAdapter userListAdapter = null;
-    private ImageView coupleModView;
-    private ImageView coupleTrousersView;
-    private ImageView coupleJacketView;
-    private ImageView coupleHairView;
-    private ImageView coupleEyeView;
-    private ImageView coupleShoesView;
+    public ImageView coupleModView;
+    public ImageView coupleTrousersView;
+    public ImageView coupleJacketView;
+    public ImageView coupleHairView;
+    public ImageView coupleEyeView;
+    public ImageView coupleShoesView;
     public String coupleSex;
     private LayoutInflater layoutinflater;
-
-    private static Bitmap setDress(Context context, String str, String str2, int i) {
-        int i2 = i - 1;
-        if (i2 >= 0) {
-            try {
-                return BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + str + "_" + str2 + i2 + ".png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            return BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png"));
-        } catch (IOException e) {
-            return null;
-        }
-    }
 
     public void sendMsg(int type, MessageLite message) {
         if (connectionService != null) {
@@ -153,7 +131,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            DialogUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
@@ -170,13 +148,13 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         }
     }
 
-    public void mo2907b(ListView listView, List<HashMap> list) {
+    public void mo2907b(ListView listView, List<Map<String, Object>> list) {
         listView.setAdapter(new FamilyAdapter(list, layoutinflater, this));
     }
 
-    public void mo2905a(FamilyAdapter fa, FamilyListView listView, List<HashMap> list) {
-        fa.upDateList(list);
-        fa.notifyDataSetChanged();
+    public void mo2905a(FamilyAdapter familyAdapter, FamilyListView listView, List<Map<String, Object>> list) {
+        familyAdapter.upDateList(list);
+        familyAdapter.notifyDataSetChanged();
         listView.loadComplete();
     }
 
@@ -220,20 +198,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         hallListAdapter.notifyDataSetChanged();
     }
 
-    public void loadDress(int hair, int eye, int jacket, int trousers, int shoes) {
-        userTrousersIndex = trousers;
-        userJacketIndex = jacket;
-        userHairIndex = hair;
-        userEyeIndex = eye;
-        userShoesIndex = shoes;
-        userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
-        userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
-        userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
-        userHairView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "h", userHairIndex));
-        userEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "e", userEyeIndex));
-        userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
-    }
-
     public void sendMail(String str, int i) {
         String str2;
         String str3;
@@ -267,15 +231,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         }
         userListAdapter.updateList(list);
         userListAdapter.notifyDataSetChanged();
-    }
-
-    public void loadClothes(int hair, int eye, int jacket, int trousers, int shoes) {
-        coupleModView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "m", 1));
-        coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", trousers));
-        coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", jacket));
-        coupleHairView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "h", hair));
-        coupleEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "e", eye));
-        coupleShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "s", shoes));
     }
 
     public void mo2848c() {
@@ -313,7 +268,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         if (!str.isEmpty()) {
             JPDialog jpdialog = new JPDialog(this);
             jpdialog.setTitle("好友请求");
-            jpdialog.setMessage("[" + str + "]请求加您为好友,同意吗?");
+            jpdialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
             jpdialog.setFirstButton("同意", (dialog, which) -> {
                 dialog.dismiss();
                 JSONObject jSONObject = new JSONObject();
@@ -342,12 +297,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             userHairIndex = extras.getInt("H");
             userEyeIndex = extras.getInt("E");
             userShoesIndex = extras.getInt("O");
-            userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
-            userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
-            userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
-            userHairView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "h", userHairIndex));
-            userEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "e", userEyeIndex));
-            userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
+            ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
+                    userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
         }
     }
 
@@ -369,7 +320,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             case R.id.ol_player_mod:
             case R.id.ol_dress_button:
                 if (lv < 8) {
-                    Toast.makeText(this, "您的等级未达到8级,不能进入换衣间!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "您的等级未达到8级，不能进入换衣间", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent.setClass(this, OLPlayDressRoom.class);
@@ -486,7 +437,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olplayhallroom);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);
@@ -625,7 +576,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 } else {
                     myFamilyPic.setImageBitmap(BitmapFactory.decodeByteArray(myFamilyPicArray, 0, myFamilyPicArray.length));
                 }
-                familyList = (List<HashMap>) getIntent().getSerializableExtra("familyList");
+                familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
                 tabHost.setCurrentTab(4);
                 mo2907b(familyListView, familyList);
                 try {

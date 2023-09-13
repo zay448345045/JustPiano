@@ -22,7 +22,7 @@ import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
@@ -210,7 +210,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         shoesNow = extras.getInt("O");
         sex = extras.getString("S");
         setContentView(R.layout.olplaydressroom);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button dressOK = findViewById(R.id.ol_dress_ok);
         Button dressCancel = findViewById(R.id.ol_dress_cancel);
         dressOK.setOnClickListener(this);
@@ -284,8 +284,8 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         shoesImage = findViewById(R.id.ol_dress_shoes);
         goldNum = findViewById(R.id.gold_num);
         try {
-            body = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_m0.png"));
-            none = BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png"));
+            body = ImageLoadUtil.dressBitmapCacheMap.get(sex.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png");
+            none = ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png");
         } catch (Exception e) {
             e.printStackTrace();
         }

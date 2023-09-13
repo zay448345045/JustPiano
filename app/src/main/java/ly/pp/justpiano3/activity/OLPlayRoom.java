@@ -454,12 +454,12 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.olplayroom);
+        initRoomActivity();
         if (savedInstanceState != null) {
             msgList = savedInstanceState.getParcelableArrayList("msgList");
             isChangeScreen = savedInstanceState.getBoolean("isChangeScreen");
             bindMsgListView(GlobalSetting.INSTANCE.getShowChatTime());
         }
-        initRoomActivity();
         Button olSearchButton = findViewById(R.id.ol_search_b);
         olSearchButton.setOnClickListener(this);
         playButton = findViewById(R.id.ol_ready_b);

@@ -10,7 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.utils.MidiUtil
-import ly.pp.justpiano3.utils.SkinImageLoadUtil
+import ly.pp.justpiano3.utils.ImageLoadUtil
 import kotlin.math.roundToInt
 
 class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -103,12 +103,12 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     init {
         handleCustomAttrs(context, attrs)
-        val keyBoardHd = SkinImageLoadUtil.loadImage(context, "key_board_hd")!!
+        val keyBoardHd = ImageLoadUtil.loadSkinImage(context, "key_board_hd")!!
         keyboardImage = cropKeyboardBitmap(keyBoardHd)
-        whiteKeyRightImage = SkinImageLoadUtil.loadImage(context, "white_r")
-        whiteKeyMiddleImage = SkinImageLoadUtil.loadImage(context, "white_m")
-        whiteKeyLeftImage = SkinImageLoadUtil.loadImage(context, "white_l")
-        blackKeyImage = SkinImageLoadUtil.loadImage(context, "black")
+        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(context, "white_r")
+        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(context, "white_m")
+        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
+        blackKeyImage = ImageLoadUtil.loadSkinImage(context, "black")
     }
 
     private fun handleCustomAttrs(context: Context, attrs: AttributeSet?) {
@@ -130,12 +130,12 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     fun changeSkinKeyboardImage(context: Context?) {
-        val keyBoardHd = SkinImageLoadUtil.loadImage(context, "key_board_hd")!!
+        val keyBoardHd = ImageLoadUtil.loadSkinImage(context, "key_board_hd")!!
         keyboardImage = cropKeyboardBitmap(keyBoardHd)
-        whiteKeyRightImage = SkinImageLoadUtil.loadImage(context, "white_r")
-        whiteKeyMiddleImage = SkinImageLoadUtil.loadImage(context, "white_m")
-        whiteKeyLeftImage = SkinImageLoadUtil.loadImage(context, "white_l")
-        blackKeyImage = SkinImageLoadUtil.loadImage(context, "black")
+        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(context, "white_r")
+        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(context, "white_m")
+        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
+        blackKeyImage = ImageLoadUtil.loadSkinImage(context, "black")
         postInvalidate()
     }
 

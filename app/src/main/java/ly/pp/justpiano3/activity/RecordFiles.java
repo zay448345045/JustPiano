@@ -14,7 +14,7 @@ import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.listener.DeleteRecordFilesClick;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 import java.io.File;
 import java.util.*;
@@ -92,7 +92,7 @@ public class RecordFiles extends Activity {
         super.onCreate(bundle);
         JPApplication jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.record_list);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);
         f4919d.setCacheColorHint(0);
         f4921f = findViewById(R.id.txt1);

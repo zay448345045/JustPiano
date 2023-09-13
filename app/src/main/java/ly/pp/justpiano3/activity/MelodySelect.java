@@ -33,7 +33,7 @@ import ly.pp.justpiano3.listener.DoNotShowDialogClick;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialog;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -150,7 +150,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
 
@@ -205,7 +205,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         layoutInflater2 = LayoutInflater.from(this);
         LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
         setContentView(linearLayout);
-        SkinImageLoadUtil.setBackGround(this, "ground", linearLayout);
+        ImageLoadUtil.setBackGround(this, "ground", linearLayout);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);

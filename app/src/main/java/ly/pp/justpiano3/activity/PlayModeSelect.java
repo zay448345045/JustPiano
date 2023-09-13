@@ -9,7 +9,7 @@ import android.widget.Button;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.enums.GameModeEnum;
-import ly.pp.justpiano3.utils.SkinImageLoadUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class PlayModeSelect extends Activity implements OnClickListener {
     private JPApplication jpApplication;
@@ -67,7 +67,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
         super.onCreate(bundle);
         jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.play_select);
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button f4685c = findViewById(R.id.game_mode);
         f4685c.setOnClickListener(this);
         Button f4687e = findViewById(R.id.keyboard);

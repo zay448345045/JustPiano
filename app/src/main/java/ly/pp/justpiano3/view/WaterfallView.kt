@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
-import ly.pp.justpiano3.utils.SkinImageLoadUtil
+import ly.pp.justpiano3.utils.ImageLoadUtil
 import java.util.*
 import kotlin.math.abs
 
@@ -133,9 +133,9 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
-        backgroundImage = SkinImageLoadUtil.loadImage(context, "waterfall")
-        progressBarImage = SkinImageLoadUtil.loadImage(context, "progress_bar")
-        progressBarBaseImage = SkinImageLoadUtil.loadImage(context, "progress_bar_base")
+        backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
+        progressBarImage = ImageLoadUtil.loadSkinImage(context, "progress_bar")
+        progressBarBaseImage = ImageLoadUtil.loadSkinImage(context, "progress_bar_base")
     }
 
     /**

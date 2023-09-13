@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLBaseActivity;
@@ -17,12 +17,8 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ColorUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public final class PlayerImageAdapter extends BaseAdapter {
@@ -80,9 +76,9 @@ public final class PlayerImageAdapter extends BaseAdapter {
         ImageView imageView5e = view.findViewById(R.id.ol_player_eye);
         ImageView imageView6 = view.findViewById(R.id.ol_player_couple);
         ImageView imageView7 = view.findViewById(R.id.ol_player_family);
-        int ori = olPlayRoom.getResources().getConfiguration().orientation;
+        int orientation = olPlayRoom.getResources().getConfiguration().orientation;
         DisplayMetrics dm = olPlayRoom.getResources().getDisplayMetrics();
-        if (ori == Configuration.ORIENTATION_PORTRAIT) {
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (OLBaseActivity.px2dp(olPlayRoom, dm.widthPixels) <= 360) {
                 imageView.getLayoutParams().width = dm.widthPixels / 3;
                 imageView1.getLayoutParams().width = dm.widthPixels / 3;
@@ -108,19 +104,13 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 imageView5e.getLayoutParams().height = dm.widthPixels / 6;
             }
         }
-
-        try {
-            if (string4.equals("O")) {
-                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_none.png")));
-                return view;
-            } else if (string4.equals("C")) {
-                imageView.setImageBitmap(BitmapFactory.decodeStream(olPlayRoom.getResources().getAssets().open("mod/_close.png")));
-                return view;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (string4.equals("O")) {
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png"));
+            return view;
+        } else if (string4.equals("C")) {
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.png"));
+            return view;
         }
-
         int i3 = playerList.get(i).getInt("LV");
         int i4 = playerList.get(i).getInt("CL");
         if (JPApplication.kitiName.equals(string)) {
@@ -150,74 +140,54 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 olPlayRoom.playButton.setTextSize(20);
             }
         }
-
         int i5 = playerList.get(i).getInt("CP");
-        if (i5 >= 0 && i5 <= 3) {
+        if (i5 >= 0 && i5 < Consts.couples.length) {
             imageView6.setImageResource(Consts.couples[i5]);
         }
-        if (!familyID.equals("0")) {
-            File file = new File(olPlayRoom.getFilesDir(), familyID + ".jpg");
-            if (file.exists()) {
-                try (InputStream inputStream = new FileInputStream(file)) {
-                    int length = (int) file.length();
-                    byte[] pic = new byte[length];
-                    inputStream.read(pic);
-                    imageView7.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                imageView7.setImageResource(R.drawable.family);
-            }
-        }
+        ImageLoadUtil.setFamilyImageBitmap(olPlayRoom, familyID, imageView7);
         if (!string4.equals("H")) {
             if ("R".equals(string3)) {
                 textView2.setText("准备");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.online));
             } else if ("N".equals(string3)) {
                 textView2.setText("");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.online));
             }
         } else {
             textView2.setText("房主");
-            textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.exit));
+            textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.exit));
         }
         switch (string3) {
             case "P":
                 textView2.setText("弹奏中");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.online));
                 break;
             case "F":
                 textView2.setText("查看成绩");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.online));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.online));
                 break;
             case "B":
                 textView2.setText("后台");
-                textView2.setBackgroundColor(olPlayRoom.getResources().getColor(R.color.green_y));
+                textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.green_y));
                 break;
         }
-        try {
-            int i6 = playerList.get(i).getInt("TR");
-            int i7 = playerList.get(i).getInt("JA");
-            int i8 = playerList.get(i).getInt("HA");
-            int i8e = playerList.get(i).getInt("EY");
-            int i9 = playerList.get(i).getInt("SH");
-            if (ori == Configuration.ORIENTATION_PORTRAIT) {
-                textView3.setText(String.valueOf(i3));
-                textView4.setText(String.valueOf(i4));
-            } else {
-                textView3.setText("LV." + i3);
-                textView4.setText("CL." + i4);
-            }
-            textView4.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
-            textView5.setText(Consts.nameCL[i4]);
-            textView5.setTextColor(olPlayRoom.getResources().getColor(Consts.colors[i4]));
-            DialogUtil.setUserDressImageBitmap(olPlayRoom, str, i6, i7, i8, i8e, i9,
-                    imageView, imageView2, imageView3, imageView5, imageView5e, imageView4);
-        } catch (Exception e) {
-            e.printStackTrace();
+        int i6 = playerList.get(i).getInt("TR");
+        int i7 = playerList.get(i).getInt("JA");
+        int i8 = playerList.get(i).getInt("HA");
+        int i8e = playerList.get(i).getInt("EY");
+        int i9 = playerList.get(i).getInt("SH");
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            textView3.setText(String.valueOf(i3));
+            textView4.setText(String.valueOf(i4));
+        } else {
+            textView3.setText("LV." + i3);
+            textView4.setText("CL." + i4);
         }
-
+        textView4.setTextColor(ContextCompat.getColor(olPlayRoom, Consts.colors[i4]));
+        textView5.setText(Consts.nameCL[i4]);
+        textView5.setTextColor(ContextCompat.getColor(olPlayRoom, Consts.colors[i4]));
+        ImageLoadUtil.setUserDressImageBitmap(olPlayRoom, str, i6, i7, i8, i8e, i9,
+                imageView, imageView2, imageView3, imageView5, imageView5e, imageView4);
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(string);
         textView = view.findViewById(R.id.ol_player_hand);
@@ -235,11 +205,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR") - 1) / 2]);
                 break;
         }
-        if (i2 == 0) {
-            textView2.setBackgroundResource(R.drawable.back_puased);
-        } else {
-            textView2.setBackgroundResource(ColorUtil.kuang[i2]);
-        }
+        textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.kuang[i2]);
         imageView.setBackgroundResource(ColorUtil.filledKuang[i2]);
         return view;
     }

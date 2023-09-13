@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.MidiConstants;
@@ -355,7 +356,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
             keyboardMode1View.changeSkinKeyboardImage(this);
             keyboardMode2View.changeSkinKeyboardImage(this);
         }
@@ -386,14 +387,14 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
-                            recordButton.setTextColor(getResources().getColor(R.color.dark));
+                            recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
                             recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
                         jpdialog.showDialog();
                     } else {
                         recordButton.setText("●");
-                        recordButton.setTextColor(getResources().getColor(R.color.v3));
+                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
                         recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
                         SoundEngineUtil.setRecord(false);
                         recordStart = false;

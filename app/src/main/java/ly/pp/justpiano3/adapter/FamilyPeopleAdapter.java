@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import androidx.core.content.ContextCompat;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -90,17 +91,17 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
                 break;
         }
         if (list.get(i).get("O").equals("0")) {
-            nameText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            positionText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            contributionText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            lvText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            dateText.setTextColor(jpApplication.getResources().getColor(R.color.white));
+            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
         } else {
-            nameText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            positionText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            contributionText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            lvText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            dateText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
+            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
         }
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import androidx.core.content.ContextCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -30,13 +31,13 @@ public final class MainGameAdapter extends BaseAdapter {
     public Activity activity;
     public ConnectionService connectionService;
     private List<Bundle> list;
-    private final JPApplication jpapplication;
+    private final JPApplication jpApplication;
     private final int type;
 
-    public MainGameAdapter(List<Bundle> list, JPApplication jPApplication, int i, Activity act) {
+    public MainGameAdapter(List<Bundle> list, JPApplication jpApplication, int i, Activity act) {
         this.list = list;
-        jpapplication = jPApplication;
-        connectionService = jPApplication.getConnectionService();
+        this.jpApplication = jpApplication;
+        connectionService = jpApplication.getConnectionService();
         type = i;
         if (act instanceof OLPlayHall) {
             activity = JPStack.top();
@@ -176,13 +177,13 @@ public final class MainGameAdapter extends BaseAdapter {
                 ((TextView) view.findViewById(R.id.ol_friend_level)).setText("LV." + i5);
                 textView2.setText(string2);
                 if (i3 == 0) {
-                    textView2.setTextColor(jpapplication.getResources().getColor(R.color.white));
-                    button2.setTextColor(jpapplication.getResources().getColor(R.color.white));
-                    button.setTextColor(jpapplication.getResources().getColor(R.color.white));
+                    textView2.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+                    button2.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+                    button.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
                 } else {
-                    textView2.setTextColor(jpapplication.getResources().getColor(R.color.white1));
-                    button2.setTextColor(jpapplication.getResources().getColor(R.color.white1));
-                    button.setTextColor(jpapplication.getResources().getColor(R.color.white1));
+                    textView2.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+                    button2.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+                    button.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
                     button2.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
                         OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
@@ -220,7 +221,7 @@ public final class MainGameAdapter extends BaseAdapter {
                                 return;
                             }
                         }
-                        Toast.makeText(jpapplication, "对方不在线,无法进行私聊!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(jpApplication, "对方不在线,无法进行私聊!", Toast.LENGTH_SHORT).show();
                     });
                 }
                 view.findViewById(R.id.ol_friend_send).setOnClickListener(v -> {

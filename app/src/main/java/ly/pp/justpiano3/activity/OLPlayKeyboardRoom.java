@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.*;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+import androidx.core.content.ContextCompat;
 import com.google.protobuf.ByteString;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -330,14 +331,14 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
-                            recordButton.setTextColor(getResources().getColor(R.color.dark));
+                            recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
                             recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
                         jpdialog.showDialog();
                     } else {
                         recordButton.setText("●");
-                        recordButton.setTextColor(getResources().getColor(R.color.v3));
+                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
                         recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
                         SoundEngineUtil.setRecord(false);
                         recordStart = false;

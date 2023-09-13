@@ -122,8 +122,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             textView7.setText(Consts.nameCL[user2.getClevel()]);
             textView8.setText(jSONObject4.getString("B"));
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
-            DialogUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            DialogUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
+            ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
             new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
                 try {
                     OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
@@ -153,7 +153,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            DialogUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
@@ -519,7 +519,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         jpapplication = (JPApplication) getApplication();
         jpapplication.getRoomPlayerMap().clear();
         connectionService = jpapplication.getConnectionService();
-        SkinImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         bundle0 = getIntent().getExtras();
         bundle2 = bundle0.getBundle("bundle");
