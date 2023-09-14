@@ -61,12 +61,16 @@ namespace iolib {
             return mCurFrameIndexQueue.size();
         }
 
-        std::pair<int32_t, int32_t> &frontCurFrameIndexQueue() {
-            return mCurFrameIndexQueue.front();
+        std::pair<int32_t, int32_t> *frontCurFrameIndexQueue() {
+            if (!mCurFrameIndexQueue.empty()) {
+                return &mCurFrameIndexQueue.front();
+            } else {
+                return nullptr;
+            }
         }
 
-        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> &pair) {
-            mCurFrameIndexQueue.push(pair);
+        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> *pair) {
+            mCurFrameIndexQueue.push(*pair);
         }
 
         void popCurFrameIndexQueue() {

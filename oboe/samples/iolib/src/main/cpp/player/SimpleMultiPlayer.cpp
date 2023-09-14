@@ -59,15 +59,19 @@ namespace iolib {
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             int count = 0;
             for (int32_t i = 0; i < queueSize; i++) {
-                std::pair<int32_t, int32_t> curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
-                if (curFrameIndex.first >= numSampleFrames) {
-                    count++;
+                std::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                if (curFrameIndex != nullptr) {
+                    sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
+                    if ((*curFrameIndex).first >= numSampleFrames) {
+                        count++;
+                    } else {
+                        sampleCount++;
+                    }
+                    sampleSource->pushCurFrameIndexQueue(curFrameIndex);
+                    sampleSource->popCurFrameIndexQueue();
                 } else {
-                    sampleCount++;
+                    count = 0;
                 }
-                sampleSource->pushCurFrameIndexQueue(curFrameIndex);
-                sampleSource->popCurFrameIndexQueue();
             }
             while (count--) {
                 sampleSource->popCurFrameIndexQueue();
