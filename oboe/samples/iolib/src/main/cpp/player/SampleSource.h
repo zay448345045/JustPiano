@@ -62,11 +62,7 @@ namespace iolib {
         }
 
         std::pair<int32_t, int32_t> *frontCurFrameIndexQueue() {
-            if (!mCurFrameIndexQueue.empty()) {
-                return &mCurFrameIndexQueue.front();
-            } else {
-                return nullptr;
-            }
+            return mCurFrameIndexQueue.empty() ? nullptr : &mCurFrameIndexQueue.front();
         }
 
         void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> *pair) {
@@ -74,7 +70,9 @@ namespace iolib {
         }
 
         void popCurFrameIndexQueue() {
-            mCurFrameIndexQueue.pop();
+            if (!mCurFrameIndexQueue.empty()) {
+                mCurFrameIndexQueue.pop();
+            }
         }
 
     protected:
