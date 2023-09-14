@@ -60,7 +60,7 @@ public class ChatBlackUserUtil {
      */
     public static void chatBlackButtonHandle(Context context, User user, Button chatBlackButton,
                                              Button chatBlackCancelButton, PopupWindow popupWindow) {
-        if (isUserInChatBlackList(user.getPlayerName())) {
+        if (isUserInChatBlackList(context, user.getPlayerName())) {
             chatBlackCancelButton.setVisibility(View.VISIBLE);
             chatBlackButton.setVisibility(View.GONE);
             chatBlackCancelButton.setOnClickListener(v -> {
@@ -84,7 +84,10 @@ public class ChatBlackUserUtil {
     /**
      * 用户是否在屏蔽名单内
      */
-    public static boolean isUserInChatBlackList(String userName) {
+    public static boolean isUserInChatBlackList(Context context, String userName) {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+        }
         for (SimpleUser simpleUser : chatBlackList) {
             if (Objects.equals(simpleUser.getName(), userName)) {
                 return true;
