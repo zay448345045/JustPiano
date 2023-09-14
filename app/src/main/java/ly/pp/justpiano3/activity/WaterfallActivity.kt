@@ -50,6 +50,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
      */
     private var midiFramer: MidiReceiver? = null
 
+    /**
+     * 记录目前是否有按钮处于按压状态，避免多个按钮重复按下
+     */
+    private var buttonPressing = false
+
     companion object {
         /**
          * 瀑布的宽度占键盘黑键宽度的百分比
@@ -326,13 +331,16 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     override fun onTouch(view: View, event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                view.isPressed = true
-                updateAddOrSubtract(view.id)
+                if (!buttonPressing) {
+                    view.isPressed = true
+                    updateAddOrSubtract(view.id)
+                    buttonPressing = true;
+                }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 view.isPressed = false
                 stopAddOrSubtract()
-                view.performClick()
+                buttonPressing = false
             }
         }
         return true

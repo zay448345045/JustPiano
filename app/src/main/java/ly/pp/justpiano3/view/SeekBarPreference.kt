@@ -46,7 +46,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         layout.setPadding(6, 6, 6, 60)
         valueText = TextView(context)
         valueText!!.gravity = Gravity.CENTER_HORIZONTAL
-        valueText!!.textSize = 24f
+        valueText!!.textSize = 22f
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -92,9 +92,9 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     override fun onProgressChanged(seekBar: SeekBar, value: Int, fromTouch: Boolean) {
         val floatValue = minValue + value / 100f * (maxValue - minValue)
         val showValue = if (floatNumber) String.format("%.2f", floatValue) else floatValue.roundToInt().toString()
-        valueText!!.text = if (suffix == null) showValue else showValue + suffix
+        val showText = if (suffix == null) showValue else showValue + suffix
         // 标记默认值
-        valueText!!.text = if (valueText!!.text == defaultValue) "${valueText!!.text} (默认)" else valueText!!.text
+        valueText!!.text = if (showValue.toFloat() == defaultValue.toFloat()) "$showText (默认)" else showText
         if (shouldPersist()) {
             persistString(showValue)
         }
