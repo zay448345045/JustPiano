@@ -16,7 +16,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.SendMessageClick;
 import ly.pp.justpiano3.task.PopUserInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,7 +82,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
             case R.id.add_friend:
                 if (!kitiName.equals(JPApplication.kitiName)) {
                     headType = 2;
-                    JPDialog jpdialog = new JPDialog(this);
+                    JPDialogBuilder jpdialog = new JPDialogBuilder(this);
                     jpdialog.setTitle("好友请求");
                     jpdialog.setMessage("添加[" + kitiName + "]为好友,确定吗?");
                     jpdialog.setFirstButton("确定", (dialog, which) -> {
@@ -102,7 +102,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                         }
                     });
                     jpdialog.setSecondButton("取消", new DialogDismissClick());
-                    jpdialog.showDialog();
+                    jpdialog.buildAndShowDialog();
                     return;
                 }
                 return;
@@ -118,7 +118,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                     inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
                     textView3.setVisibility(View.GONE);
                     textView2.setText("消息:");
-                    new JPDialog(this).setTitle("发私信给" + str).loadInflate(inflate).setFirstButton("发送", new SendMessageClick(this, textView, str, P)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                    new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate).setFirstButton("发送", new SendMessageClick(this, textView, str, P)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
                     return;
                 }
                 return;

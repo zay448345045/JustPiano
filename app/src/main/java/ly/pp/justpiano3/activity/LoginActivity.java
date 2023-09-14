@@ -26,7 +26,7 @@ import ly.pp.justpiano3.task.LoginTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -93,15 +93,15 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 finish();
                 return;
             case 4:
-                new JPDialog(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
+                new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
                     Toast.makeText(this, "登陆成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     dialog.dismiss();
                     finish();
-                }).showDialog();
+                }).buildAndShowDialog();
                 return;
             case 5:
-                new JPDialog(this).setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).buildAndShowDialog();
                 return;
             default:
         }
@@ -156,8 +156,8 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                         }
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
-                        JPDialog.JDialog b = new JPDialog(this).setTitle("切换账号").loadInflate(inflate)
-                                .setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                        JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
+                                .setFirstButton("取消", new DialogDismissClick()).createJPDialog();
                         listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
                         b.show();
                     }
@@ -243,12 +243,12 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     }
 
     public final void addVersionUpdateDialog(String str3, String newVersion) {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle("版本更新");
         jpdialog.setMessage(str3);
         jpdialog.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
         jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     private String getApkUrlByVersion(String version) {

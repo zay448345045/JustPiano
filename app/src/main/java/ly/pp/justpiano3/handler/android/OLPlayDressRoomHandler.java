@@ -10,7 +10,7 @@ import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 import java.lang.ref.WeakReference;
 
@@ -40,11 +40,11 @@ public final class OLPlayDressRoomHandler extends Handler {
                     post(() -> {
                         olPlayDressRoom.goldNum.setText(message.getData().getString("G"));
                         String info = message.getData().getString("I");
-                        JPDialog jpDialog = new JPDialog(olPlayDressRoom);
-                        jpDialog.setTitle("提示");
-                        jpDialog.setMessage(info);
-                        jpDialog.setFirstButton("确定", new DialogDismissClick());
-                        jpDialog.showDialog();
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
+                        jpDialogBuilder.setTitle("提示");
+                        jpDialogBuilder.setMessage(info);
+                        jpDialogBuilder.setFirstButton("确定", new DialogDismissClick());
+                        jpDialogBuilder.buildAndShowDialog();
                         if (info.startsWith("购买成功")) {
                             int buyClothesType = message.getData().getInt("U_T");
                             int buyClothesId = message.getData().getInt("U_I");
@@ -83,11 +83,11 @@ public final class OLPlayDressRoomHandler extends Handler {
                         olPlayDressRoom.jpprogressBar.dismiss();
                         Bundle data = message.getData();
                         olPlayDressRoom.goldNum.setText(data.getString("G"));
-                        JPDialog jpdialog = new JPDialog(olPlayDressRoom);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayDressRoom);
                         jpdialog.setTitle("提示");
                         jpdialog.setMessage(data.getString("I"));
                         jpdialog.setFirstButton("确定", new DialogDismissClick());
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                     });
                     break;
                 case 5:  // 接收服务器下发的服装价格

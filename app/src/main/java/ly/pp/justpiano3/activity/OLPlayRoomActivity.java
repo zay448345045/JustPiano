@@ -27,7 +27,7 @@ import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import protobuf.dto.*;
@@ -131,7 +131,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
-            new JPDialog(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
+            new JPDialogBuilder(this).setTitle(str).loadInflate(inflate).setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
                 try {
                     OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                     builder.setType(5);
@@ -141,7 +141,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            }).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,7 +171,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         ((JPApplication) getApplication()).getRoomPlayerMap().put(b, user);
     }
 
-    public void mo2863a(ListView listView, List<Bundle> list, int i) {
+    public void bindViewAdapter(ListView listView, List<Bundle> list, int i) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
@@ -204,9 +204,9 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView3.setVisibility(View.GONE);
         textView2.setText("内容:");
-        new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate)
+        new JPDialogBuilder(this).setTitle("发送私信给:" + str).loadInflate(inflate)
                 .setFirstButton("发送", new SendMailClick(this, textView, str))
-                .setSecondButton("取消", new DialogDismissClick()).showDialog();
+                .setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public void setPrivateChatUserName(String str) {
@@ -222,31 +222,30 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
 
     @Override
     public void onBackPressed() {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle("提示");
         jpdialog.setMessage("退出房间并返回大厅?");
         jpdialog.setFirstButton("确定", new ReturnHallClick(this));
         jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
-    protected void sendMailClick(boolean isBroadcast) {
-        String str;
-        OnlineRoomChatDTO.Builder builder2 = OnlineRoomChatDTO.newBuilder();
-        builder2.setIsBroadcast(isBroadcast);
-        str = String.valueOf(sendTextView.getText());
+    protected void sendMessageClick(boolean isBroadcast) {
+        OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
+        builder.setIsBroadcast(isBroadcast);
+        String str = String.valueOf(sendTextView.getText());
         if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
-            builder2.setUserName("");
-            builder2.setMessage(str);
+            builder.setUserName("");
+            builder.setMessage(str);
         } else {
-            builder2.setUserName(userTo);
+            builder.setUserName(userTo);
             str = str.substring(userTo.length());
-            builder2.setMessage(str);
+            builder.setMessage(str);
         }
         sendTextView.setText("");
-        builder2.setColor(colorNum);
+        builder.setColor(colorNum);
         if (!str.isEmpty()) {
-            sendMsg(OnlineProtocolType.ROOM_CHAT, builder2.build());
+            sendMsg(OnlineProtocolType.ROOM_CHAT, builder.build());
         }
         userTo = "";
     }
@@ -270,7 +269,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             View inflate = getLayoutInflater().inflate(R.layout.ol_roomtitle_change, findViewById(R.id.dialog));
             EditText text1 = inflate.findViewById(R.id.text_1);
             EditText text2 = inflate.findViewById(R.id.text_2);
-            new JPDialog(this).setTitle("修改房名").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
         }
     }
 
@@ -324,7 +323,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     }
 
     public void handleKicked() {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setCancelableFalse();
         jpdialog.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
             onStart = false;
@@ -335,7 +334,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
-        }).showDialog();
+        }).buildAndShowDialog();
     }
 
     public void handleChat(Message message) {
@@ -400,7 +399,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         switch (message.getData().getInt("T")) {
             case 0:
                 if (!string.isEmpty()) {
-                    JPDialog jpdialog = new JPDialog(this);
+                    JPDialogBuilder jpdialog = new JPDialogBuilder(this);
                     jpdialog.setTitle("好友请求");
                     jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
                     String finalString = string;
@@ -420,27 +419,32 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                         sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         dialog.dismiss();
                     });
-                    jpdialog.showDialog();
+                    jpdialog.buildAndShowDialog();
                 }
                 return;
             case 1:
                 DialogUtil.setShowDialog(false);
                 string = message.getData().getString("F");
                 int i = message.getData().getInt("I");
-                JPDialog jpdialog2 = new JPDialog(this);
-                jpdialog2.setTitle("请求结果");
-                if (i == 0) {
-                    jpdialog2.setMessage("[" + string + "]同意添加您为好友!");
-                } else if (i == 1) {
-                    jpdialog2.setMessage("对方拒绝了你的好友请求!");
-                } else if (i == 2) {
-                    jpdialog2.setMessage("对方已经是你的好友!");
-                } else if (i == 3) {
-                    jpdialog2.setTitle(message.getData().getString("title"));
-                    jpdialog2.setMessage(message.getData().getString("Message"));
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("请求结果");
+                switch (i) {
+                    case 0:
+                        jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
+                        break;
+                    case 1:
+                        jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
+                        break;
+                    case 2:
+                        jpDialogBuilder.setMessage("对方已经是你的好友!");
+                        break;
+                    case 3:
+                        jpDialogBuilder.setTitle(message.getData().getString("title"));
+                        jpDialogBuilder.setMessage(message.getData().getString("Message"));
+                        break;
                 }
-                jpdialog2.setFirstButton("确定", new DialogDismissClick());
-                jpdialog2.showDialog();
+                jpDialogBuilder.setFirstButton("确定", new DialogDismissClick());
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
         }
@@ -461,7 +465,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         builder.setName(data.getString("F"));
         friendPlayerList.remove(message.arg1);
         sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
-        mo2863a(friendsListView, friendPlayerList, 1);
+        bindViewAdapter(friendsListView, friendPlayerList, 1);
     }
 
     public void handleInvitePlayerList(Message message) {
@@ -489,7 +493,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             for (int i = 0; i < size; i++) {
                 friendPlayerList.add(data.getBundle(String.valueOf(i)));
             }
-            mo2863a(friendsListView, friendPlayerList, 1);
+            bindViewAdapter(friendsListView, friendPlayerList, 1);
         }
         canNotNextPage = size < 20;
     }
@@ -506,7 +510,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             for (int i = 0; i < size; i++) {
                 friendPlayerList.add(data.getBundle(String.valueOf(i)));
             }
-            mo2863a(friendsListView, friendPlayerList, 3);
+            bindViewAdapter(friendsListView, friendPlayerList, 3);
         }
     }
 
@@ -514,12 +518,12 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         Bundle data = message.getData();
         String string = data.getString("Ti");
         String string2 = data.getString("I");
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle(string);
         jpdialog.setMessage(string2);
         jpdialog.setFirstButton("确定", new DialogDismissClick());
         DialogUtil.handleGoldSend(jpapplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     protected void initRoomActivity(Bundle savedInstanceState) {
@@ -661,7 +665,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 nextFriendPageClick();
                 return;
             case R.id.ol_send_b:
-                sendMailClick(false);
+                sendMessageClick(false);
                 return;
             case R.id.ol_express_b:
                 expressWindow.showAtLocation(expressImageView, Gravity.CENTER, 0, 0);
@@ -769,15 +773,16 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         if (vid == R.id.ol_send_b) {
             String text = sendTextView.getText().toString();
             if (!text.isEmpty()) {
-                new JPDialog(this)
+                new JPDialogBuilder(this)
+                        .setWidthWeight(0.8f)
                         .setTitle("发送'全服广播'")
                         .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + text)
                         .setFirstButton("希望", (dialog, i) -> {
-                            sendMailClick(true);
+                            sendMessageClick(true);
                             dialog.dismiss();
                         })
                         .setSecondButton("再想想", new DialogDismissClick())
-                        .showDialog();
+                        .buildAndShowDialog();
             }
             return true;
         }

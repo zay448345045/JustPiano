@@ -374,7 +374,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
 
     @Override
     public void onBackPressed() {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         switch (playKind) {
             case 0:
                 m3785a(playKind, true);
@@ -420,7 +420,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.setCancelableFalse();
-                jpdialog.showDialog();
+                jpdialog.buildAndShowDialog();
                 return;
             case 3:
                 jpdialog.setTitle("提示");
@@ -435,7 +435,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.setCancelableFalse();
-                jpdialog.showDialog();
+                jpdialog.buildAndShowDialog();
                 return;
             case 4:
                 jpdialog.setTitle("提示");
@@ -450,7 +450,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 });
                 jpdialog.setSecondButton("取消", new DialogDismissClick());
                 jpdialog.setCancelableFalse();
-                jpdialog.showDialog();
+                jpdialog.buildAndShowDialog();
                 return;
             default:
         }

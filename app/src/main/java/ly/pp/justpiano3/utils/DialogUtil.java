@@ -4,7 +4,7 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.view.GoldConvertView;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineDialogDTO;
 
 import java.math.BigDecimal;
@@ -31,10 +31,10 @@ public class DialogUtil {
     /**
      * 赠送音符消息接收-对话框处理
      */
-    public static void handleGoldSend(JPApplication jpApplication, JPDialog jpDialog, int messageType, String userName, String handlingFee) {
+    public static void handleGoldSend(JPApplication jpApplication, JPDialogBuilder jpDialogBuilder, int messageType, String userName, String handlingFee) {
         if (messageType == 2 && !StringUtil.isNullOrEmpty(handlingFee)) {
-            jpDialog.setVisibleGoldConvertView(true);
-            jpDialog.getGoldConvertView().setGoldValueConvertRule(new GoldConvertView.GoldValueConvertRule() {
+            jpDialogBuilder.setVisibleGoldConvertView(true);
+            jpDialogBuilder.getGoldConvertView().setGoldValueConvertRule(new GoldConvertView.GoldValueConvertRule() {
                 @Override
                 public BigDecimal convertToShow(BigDecimal actualValue) {
                     return actualValue;
@@ -55,17 +55,17 @@ public class DialogUtil {
                     return showValue.divide(BigDecimal.ONE.subtract(new BigDecimal(handlingFee)), 0, RoundingMode.UP);
                 }
             });
-            jpDialog.setSecondButton("取消", (dialog, which) -> {
+            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> {
                 dialog.dismiss();
                 DialogUtil.setShowDialog(false);
             });
-            jpDialog.setFirstButton("确定", ((dialog, which) -> {
+            jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> {
                 dialog.dismiss();
                 DialogUtil.setShowDialog(false);
                 OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                 builder.setType(3);
                 builder.setName(userName);
-                builder.setGold(jpDialog.getGoldConvertView().getActualValue().intValue());
+                builder.setGold(jpDialogBuilder.getGoldConvertView().getActualValue().intValue());
                 jpApplication.getConnectionService().writeData(OnlineProtocolType.DIALOG, builder.build());
             }));
         }

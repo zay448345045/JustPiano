@@ -21,7 +21,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.*;
@@ -120,7 +120,7 @@ public class SoundDownload extends Activity implements Callback {
     }
 
     public final void mo3005a(int i, String str, String str2, int i2, String str3) {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         String str4 = "使用";
         jpdialog.setTitle("提示");
         if (i == 0) {
@@ -135,7 +135,7 @@ public class SoundDownload extends Activity implements Callback {
         }
         jpdialog.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
         jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     public final void changeSound(String str) {

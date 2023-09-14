@@ -22,7 +22,7 @@ import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.DrawPrizeView;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChallengeDTO;
 
@@ -139,7 +139,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
                 prizeColorView.setVisibility(View.VISIBLE);
             }
             try {
-                new JPDialog(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrizeClick(this)).setSecondButton("放弃领取", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrizeClick(this)).setSecondButton("放弃领取", new DialogDismissClick()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -147,7 +147,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             prizePointerImageView.setVisibility(View.GONE);
             drawPrizeView.setVisibility(View.GONE);
             try {
-                new JPDialog(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }

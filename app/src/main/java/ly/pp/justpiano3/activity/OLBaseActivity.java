@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity;
 import ly.pp.justpiano3.handler.android.OLBaseActivityHandler;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class OLBaseActivity extends ComponentActivity {
@@ -23,18 +23,18 @@ public class OLBaseActivity extends ComponentActivity {
     }
 
     public final void addDialog(String str, String str2, String str3) {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle(str);
         jpdialog.setMessage(str3);
         jpdialog.setFirstButton(str2, new DialogDismissClick());
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     public final void outLine() {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle("提示");
         jpdialog.setMessage("非常抱歉,可能由于网络质量不稳定，服务器未能响应，点击确定回到到联网主界面重新登录");
         jpdialog.setCancelableFalse();
@@ -43,7 +43,7 @@ public class OLBaseActivity extends ComponentActivity {
             SongPlay.INSTANCE.stopPlay();
             OLBaseActivity.returnMainMode(OLBaseActivity.this);
         });
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     // 根据手机的分辨率从 dp 的单位 转成为 px(像素)

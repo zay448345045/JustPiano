@@ -8,7 +8,7 @@ import android.os.Message;
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public final class ChallengeHandler extends Handler {
                                 str2 = "开始挑战";
                                 break;
                         }
-                        JPDialog jpdialog = new JPDialog(challenge);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(challenge);
                         jpdialog.setTitle(str);
                         jpdialog.setMessage(string);
                         jpdialog.setFirstButton(str2, (dialog, which) -> {
@@ -91,7 +91,7 @@ public final class ChallengeHandler extends Handler {
                         if (i == 1) {
                             jpdialog.setSecondButton("取消", new DialogDismissClick());
                         }
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                     });
                     return;
                 case 5:

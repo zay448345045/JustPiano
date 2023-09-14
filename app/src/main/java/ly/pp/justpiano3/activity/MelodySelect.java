@@ -35,7 +35,7 @@ import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.text.SimpleDateFormat;
@@ -68,12 +68,12 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
 
     protected final void mo2785a(String str2, int i) {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle("提示");
         jpdialog.setMessage(str2);
         jpdialog.setFirstButton("确定", new DialogDismissClick());
         jpdialog.setSecondButton("不再提示", new DoNotShowDialogClick(this, i));
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                         new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
                         break;
                     case 2:  // 数据导出
-                        JPDialog jpdialog = new JPDialog(this);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
                         jpdialog.setTitle("数据导入导出");
                         jpdialog.setMessage("此功能可将本地收藏夹、弹奏分数数据进行导入导出，导出路径为SD卡\\JustPiano\\local_data.db。导入文件后将清除当前本地曲谱分数及收藏数据，请谨慎操作");
                         jpdialog.setVisibleRadioGroup(true);
@@ -125,7 +125,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                             new LocalDataImportExportTask(this, jpdialog.getRadioGroupCheckedId()).execute();
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                         break;
                     case 3:  // 录音文件
                         intent.setClass(this, RecordFiles.class);

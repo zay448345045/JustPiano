@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,10 +19,10 @@ public final class ChangeAccountAdapter extends BaseAdapter {
     private final LoginActivity loginActivity;
     private final List<String> list;
     private final LayoutInflater li;
-    private final JPDialog.JDialog dialog;
+    private final JPDialogBuilder.JPDialog dialog;
     private final JSONObject jsonObject;
 
-    public ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialog.JDialog dialog, JSONObject jsonObject) {
+    public ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialogBuilder.JPDialog dialog, JSONObject jsonObject) {
         this.list = list;
         li = layoutInflater;
         this.loginActivity = loginActivity;

@@ -11,11 +11,12 @@ import android.view.WindowManager;
 import android.widget.*;
 import ly.pp.justpiano3.R;
 
-public final class JPDialog {
+public final class JPDialogBuilder {
     private EditText editText;
     private GoldConvertView goldConvertView;
     private RadioGroup radioGroup;
     private View inflate;
+    private double widthWeight = 0.5;
     private final Context context;
     private OnClickListener listener2;
     private String title;
@@ -27,27 +28,32 @@ public final class JPDialog {
     private boolean cancelable = true;
     private OnClickListener listener;
 
-    public JPDialog(Context context) {
+    public JPDialogBuilder(Context context) {
         this.context = context;
     }
 
-    public JPDialog loadInflate(View view) {
+    public JPDialogBuilder loadInflate(View view) {
         this.view = view;
         return this;
     }
 
-    public JPDialog setMessage(String str) {
+    public JPDialogBuilder setWidthWeight(double widthWeight) {
+        this.widthWeight = widthWeight;
+        return this;
+    }
+
+    public JPDialogBuilder setMessage(String str) {
         message = str;
         return this;
     }
 
-    public JPDialog setFirstButton(String str, OnClickListener onClickListener) {
+    public JPDialogBuilder setFirstButton(String str, OnClickListener onClickListener) {
         positiveText = str;
         listener2 = onClickListener;
         return this;
     }
 
-    public JPDialog setFirstButtonDisabled(boolean disabled) {
+    public JPDialogBuilder setFirstButtonDisabled(boolean disabled) {
         positiveButtonDisabled = disabled;
         return this;
     }
@@ -56,19 +62,19 @@ public final class JPDialog {
         cancelable = false;
     }
 
-    public JDialog createJDialog() {
+    public JPDialog createJPDialog() {
         if (inflate == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             inflate = layoutInflater.inflate(R.layout.mydialog, null);
         }
-        JDialog jDialog = new JDialog(context);
-        jDialog.addContentView(inflate, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        JPDialog JPDialog = new JPDialog(context);
+        JPDialog.addContentView(inflate, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         ((TextView) inflate.findViewById(R.id.title)).setText(title);
         if (positiveText != null) {
             ((Button) inflate.findViewById(R.id.positiveButton)).setText(positiveText);
             inflate.findViewById(R.id.positiveButton).setEnabled(!positiveButtonDisabled);
             if (listener2 != null) {
-                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(jDialog, -1));
+                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(JPDialog, -1));
             }
         } else {
             inflate.findViewById(R.id.positiveButton).setVisibility(View.GONE);
@@ -76,7 +82,7 @@ public final class JPDialog {
         if (negativeText != null) {
             ((Button) inflate.findViewById(R.id.negativeButton)).setText(negativeText);
             if (listener != null) {
-                inflate.findViewById(R.id.negativeButton).setOnClickListener(v -> listener.onClick(jDialog, -2));
+                inflate.findViewById(R.id.negativeButton).setOnClickListener(v -> listener.onClick(JPDialog, -2));
             }
         } else {
             inflate.findViewById(R.id.negativeButton).setVisibility(View.GONE);
@@ -88,14 +94,14 @@ public final class JPDialog {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
             ((LinearLayout) inflate.findViewById(R.id.content)).addView(view, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
-        jDialog.setContentView(inflate);
-        jDialog.setCanceledOnTouchOutside(false);
-        jDialog.setCancelable(cancelable);
+        JPDialog.setContentView(inflate);
+        JPDialog.setCanceledOnTouchOutside(false);
+        JPDialog.setCancelable(cancelable);
         cancelable = true;
-        return jDialog;
+        return JPDialog;
     }
 
-    public JPDialog setTitle(String str) {
+    public JPDialogBuilder setTitle(String str) {
         title = str;
         return this;
     }
@@ -144,20 +150,23 @@ public final class JPDialog {
         return goldConvertView;
     }
 
-    public JPDialog setSecondButton(String str, OnClickListener onClickListener) {
+    public JPDialogBuilder setSecondButton(String str, OnClickListener onClickListener) {
         negativeText = str;
         listener = onClickListener;
         return this;
     }
 
-    public void showDialog() {
+    public void buildAndShowDialog() {
         try {
-            JDialog dia = createJDialog();
-            if (!dia.isShowing()) {
-                Window window = dia.getWindow();
+            JPDialog dialog = createJPDialog();
+            if (!dialog.isShowing()) {
+                Window window = dialog.getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 focusNotAle(window);
-                dia.show();
+                dialog.show();
+                WindowManager.LayoutParams layoutParams = window.getAttributes();
+                layoutParams.width = (int) (window.getWindowManager().getDefaultDisplay().getWidth() * widthWeight);
+                window.setAttributes(layoutParams);
                 hideNavigationBar(window);
                 clearFocusNotAle(window);
             }
@@ -175,9 +184,9 @@ public final class JPDialog {
         }
     }
 
-    public static class JDialog extends Dialog {
+    public static class JPDialog extends Dialog {
 
-        JDialog(Context context) {
+        JPDialog(Context context) {
             super(context, R.style.Dialog);
         }
 
@@ -188,7 +197,7 @@ public final class JPDialog {
     }
 
     public void hideNavigationBar(Window window) {
- //     window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         window.getDecorView().setOnSystemUiVisibilityChangeListener(visibility -> {
             try {
                 int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE |

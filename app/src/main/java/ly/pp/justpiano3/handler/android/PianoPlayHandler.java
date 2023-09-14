@@ -7,7 +7,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
 import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 import java.lang.ref.WeakReference;
 
@@ -87,7 +87,7 @@ public final class PianoPlayHandler extends Handler {
                 return;
             case 6:
                 post(() -> {
-                    JPDialog jpdialog = new JPDialog(pianoPlay);
+                    JPDialogBuilder jpdialog = new JPDialogBuilder(pianoPlay);
                     jpdialog.setTitle("考级结果");
                     Bundle data = message.getData();
                     int i = data.getInt("R");
@@ -112,7 +112,7 @@ public final class PianoPlayHandler extends Handler {
                         dialog.dismiss();
                         pianoPlay.finish();
                     });
-                    jpdialog.showDialog();
+                    jpdialog.buildAndShowDialog();
                 });
                 return;
             case 7:
@@ -142,7 +142,7 @@ public final class PianoPlayHandler extends Handler {
                 return;
             case 9:
                 post(() -> {
-                    JPDialog jpdialog = new JPDialog(pianoPlay);
+                    JPDialogBuilder jpdialog = new JPDialogBuilder(pianoPlay);
                     jpdialog.setTitle("挑战结束");
                     jpdialog.setMessage(message.getData().getString("I"));
                     jpdialog.setCancelableFalse();
@@ -150,7 +150,7 @@ public final class PianoPlayHandler extends Handler {
                         dialog.dismiss();
                         pianoPlay.finish();
                     });
-                    jpdialog.showDialog();
+                    jpdialog.buildAndShowDialog();
                 });
                 return;
             case 21:

@@ -31,7 +31,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardModeView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
@@ -115,9 +115,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         if (i == 4) {
             showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
         } else if (i == 5) {
-            JPDialog jpdialog = new JPDialog(this);
+            JPDialogBuilder jpdialog = new JPDialogBuilder(this);
             jpdialog.setCancelableFalse();
-            jpdialog.setTitle("提示").setMessage(str).setFirstButton("确定", new DialogDismissClick()).setSecondButton("取消", new DialogDismissClick()).showDialog();
+            jpdialog.setTitle("提示").setMessage(str).setFirstButton("确定", new DialogDismissClick()).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
         }
     }
 
@@ -273,7 +273,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     }
                     View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                     ListView listView = inflate.findViewById(R.id.account_list);
-                    JPDialog.JDialog b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                    JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJPDialog();
                     listView.setAdapter(new SimpleSkinListAdapter(skinList, localSkinList, layoutInflater, this, b));
                     b.show();
                     if (keyboardSettingPopup != null) {
@@ -294,7 +294,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     }
                     View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                     ListView listView = inflate.findViewById(R.id.account_list);
-                    JPDialog.JDialog b = new JPDialog(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                    JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换皮肤").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJPDialog();
                     listView.setAdapter(new SimpleSoundListAdapter(soundList, localSoundList, layoutInflater, this, b));
                     b.show();
                     if (keyboardSettingPopup != null) {
@@ -308,7 +308,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
-                        JPDialog jpdialog = new JPDialog(this);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
                         jpdialog.setTitle("提示");
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
@@ -325,7 +325,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                             recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                     } else {
                         recordButton.setText("●");
                         recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
@@ -346,9 +346,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         int viewId = view.getId();
         if (viewId == R.id.keyboard_sync_mode_text) {
             try {
-                new JPDialog(this).setTitle(getString(R.string.msg_this_is_what))
+                new JPDialogBuilder(this).setTitle(getString(R.string.msg_this_is_what))
                         .setMessage(getString(R.string.ol_keyboard_sync_mode_help))
-                        .setFirstButton("确定", new DialogDismissClick()).createJDialog().show();
+                        .setFirstButton("确定", new DialogDismissClick()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -11,7 +11,7 @@ import ly.pp.justpiano3.activity.OLPlayDressRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineShopDTO;
 
 public final class ShopAdapter extends BaseAdapter {
@@ -57,7 +57,7 @@ public final class ShopAdapter extends BaseAdapter {
         }
         Button shopItemBuyButton = view.findViewById(R.id.ol_shop_item_buy);
         shopItemBuyButton.setOnClickListener(v -> {
-            JPDialog jpdialog = new JPDialog(olPlayDressRoom);
+            JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayDressRoom);
             jpdialog.setTitle("提示");
             jpdialog.setMessage("确定花费" + shopProduct.getPrice() + "音符购买此商品吗?");
             jpdialog.setFirstButton("购买", (dialog, which) -> {
@@ -69,7 +69,7 @@ public final class ShopAdapter extends BaseAdapter {
                 olPlayDressRoom.sendMsg(OnlineProtocolType.SHOP, builder.build());
             });
             jpdialog.setSecondButton("取消", new DialogDismissClick());
-            jpdialog.showDialog();
+            jpdialog.buildAndShowDialog();
         });
         return view;
     }

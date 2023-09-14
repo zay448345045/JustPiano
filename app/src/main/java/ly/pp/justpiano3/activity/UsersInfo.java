@@ -21,7 +21,7 @@ import ly.pp.justpiano3.task.UserFaceChangeTask;
 import ly.pp.justpiano3.task.UserInfoChangeTask;
 import ly.pp.justpiano3.task.UsersInfoGetTask;
 import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -265,13 +265,13 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
                 autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
                 CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
                 remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
-                JPDialog jpdialog = new JPDialog(this);
+                JPDialogBuilder jpdialog = new JPDialogBuilder(this);
                 jpdialog
                         .setTitle("修改密码").loadInflate(inflate)
                         .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
                                 newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
                         .setSecondButton("取消", new DialogDismissClick())
-                        .showDialog();
+                        .buildAndShowDialog();
                 return;
             case R.id.modify_button:
                 String charSequence = ageText.getText().toString();

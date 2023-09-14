@@ -25,7 +25,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -227,7 +227,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         String title = data.getString("Ti");
                         String messageStr = data.getString("I");
                         String str = "确定";
-                        JPDialog jpdialog = new JPDialog(olPlayHallRoom);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHallRoom);
                         jpdialog.setTitle(title);
                         if (b > 0) {
                             jpdialog.setMessage(messageStr);
@@ -243,7 +243,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             jpdialog.setFirstButton(str, new DialogDismissClick());
                         }
                         DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                     });
                     return;
                 case 6:
@@ -268,7 +268,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         Bundle data = message.getData();
                         byte b = (byte) data.getInt("R");
                         String string2 = data.getString("I");
-                        JPDialog jpdialog = new JPDialog(olPlayHallRoom);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHallRoom);
                         jpdialog.setTitle("创建家族");
                         jpdialog.setMessage(string2);
                         if (b > 0) {
@@ -291,7 +291,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         } else {
                             jpdialog.setFirstButton("确定", new DialogDismissClick());
                         }
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                     });
                     return;
                 case 10:
@@ -346,7 +346,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         TextView textView = inflate.findViewById(R.id.account_msg);
                         textView.setVisibility(View.VISIBLE);
                         textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得" + tomorrowExp + "\n以下为昨日在线时长排名：");
-                        JPDialog jpDialog = new JPDialog(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
                                 .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
                                     dialog.dismiss();
                                     olPlayHallRoom.jpprogressBar.show();
@@ -355,7 +355,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                                     olPlayHallRoom.sendMsg(OnlineProtocolType.DAILY, builder.build());
                                 });
                         listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
-                        jpDialog.showDialog();
+                        jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
                 case 12:

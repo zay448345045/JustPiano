@@ -15,7 +15,7 @@ import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -25,9 +25,9 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
     private final List<String> list;
     private final List<File> fileList;
     private final LayoutInflater li;
-    private final JPDialog.JDialog dialog;
+    private final JPDialogBuilder.JPDialog dialog;
 
-    public SimpleSoundListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
+    public SimpleSoundListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialogBuilder.JPDialog dialog) {
         this.list = list;
         this.fileList = file;
         li = layoutInflater;

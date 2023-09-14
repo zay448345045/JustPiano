@@ -6,7 +6,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineChangeClothesDTO;
 
 public final class TrousersClick implements OnItemClickListener {
@@ -29,7 +29,7 @@ public final class TrousersClick implements OnItemClickListener {
             olPlayDressRoom.trousersNow = i;
         } else {
             int[] priceArr = "f".equals(olPlayDressRoom.sex) ? OLPlayDressRoom.fTrousers : OLPlayDressRoom.mTrousers;
-            JPDialog jpdialog = new JPDialog(olPlayDressRoom);
+            JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayDressRoom);
             jpdialog.setTitle("解锁服装");
             // 如果为获取到价格，则只允许试穿
             if (priceArr.length - 1 < i) {
@@ -62,7 +62,7 @@ public final class TrousersClick implements OnItemClickListener {
                     olPlayDressRoom.trousersTry.add(i);
                 });
             }
-            jpdialog.showDialog();
+            jpdialog.buildAndShowDialog();
         }
     }
 }

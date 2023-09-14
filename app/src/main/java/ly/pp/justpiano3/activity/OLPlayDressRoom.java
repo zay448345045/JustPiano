@@ -22,7 +22,7 @@ import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
 import protobuf.dto.OnlineShopDTO;
@@ -175,11 +175,11 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
                     intent.putExtra("S", sex);
                     setResult(-1, intent);
                 } else {
-                    JPDialog jpDialog = new JPDialog(this);
-                    jpDialog.setTitle("提示");
-                    jpDialog.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
-                    jpDialog.setFirstButton("确定", new DialogDismissClick());
-                    jpDialog.showDialog();
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("提示");
+                    jpDialogBuilder.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
+                    jpDialogBuilder.setFirstButton("确定", new DialogDismissClick());
+                    jpDialogBuilder.buildAndShowDialog();
                 }
                 break;
             case R.id.ol_dress_cancel:

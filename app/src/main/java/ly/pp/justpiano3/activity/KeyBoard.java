@@ -24,7 +24,7 @@ import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardModeView;
 
 import java.io.File;
@@ -377,7 +377,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
-                        JPDialog jpdialog = new JPDialog(this);
+                        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
                         jpdialog.setTitle("提示");
                         jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
@@ -394,7 +394,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                             recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
                         jpdialog.setSecondButton("取消", new DialogDismissClick());
-                        jpdialog.showDialog();
+                        jpdialog.buildAndShowDialog();
                     } else {
                         recordButton.setText("●");
                         recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));

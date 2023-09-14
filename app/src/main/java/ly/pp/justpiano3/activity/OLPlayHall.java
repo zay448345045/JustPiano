@@ -36,7 +36,7 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.*;
 
@@ -116,7 +116,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,7 +138,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 textView1.setVisibility(View.GONE);
                 textView2.setVisibility(View.GONE);
                 textView.setSingleLine(true);
-                new JPDialog(this).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new RoomPasswordClick2(this, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new RoomPasswordClick2(this, textView, b)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
                 return;
             default:
         }
@@ -159,10 +159,10 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         listView.setCacheColorHint(0);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+        new JPDialogBuilder(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             enterRoomHandle(bundle.getInt("P"), (byte) i2);
-        }).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        }).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public void mo2828a(ListView listView, List<Bundle> list) {
@@ -190,9 +190,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView3.setVisibility(View.GONE);
         textView2.setText("内容:");
-        new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate)
+        new JPDialogBuilder(this).setTitle("发送私信给:" + str).loadInflate(inflate)
                 .setFirstButton("发送", new SendMailClick(this, textView, str))
-                .setSecondButton("取消", new DialogDismissClick()).showDialog();
+                .setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public void mo2831b(ListView listView, List<Bundle> list) {
@@ -261,7 +261,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 textView.setText(stringBuilder);
                 textView.setSingleLine(true);
                 textView2.setSingleLine(true);
-                new JPDialog(this).setTitle("创建房间").loadInflate(inflate).setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate).setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
                 return;
             case R.id.ol_testroom_b:
                 OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
@@ -451,7 +451,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         if (vid == R.id.ol_send_b) {
             String text = sendTextView.getText().toString();
             if (!text.isEmpty()) {
-                new JPDialog(this)
+                new JPDialogBuilder(this)
                         .setTitle("发送'全服广播'")
                         .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + sendTextView.getText())
                         .setFirstButton("希望", (dialog, i) -> {
@@ -459,7 +459,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                             dialog.dismiss();
                         })
                         .setSecondButton("再想想", new DialogDismissClick())
-                        .showDialog();
+                        .buildAndShowDialog();
             }
             return true;
         }

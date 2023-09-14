@@ -15,7 +15,7 @@ import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -107,7 +107,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
         } else if (activity.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) activity.get();
             melodySelect.jpprogressBar.dismiss();
-            JPDialog jpdialog = new JPDialog(melodySelect);
+            JPDialogBuilder jpdialog = new JPDialogBuilder(melodySelect);
             jpdialog.setTitle("在线曲库同步");
             jpdialog.setCancelableFalse();
             jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
@@ -116,7 +116,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 melodySelect.getTotalSongInfoMutableLiveData().setValue(allSongsCountAndScore.get(0));
                 dialogInterface.dismiss();
             }));
-            jpdialog.showDialog();
+            jpdialog.buildAndShowDialog();
         }
     }
 

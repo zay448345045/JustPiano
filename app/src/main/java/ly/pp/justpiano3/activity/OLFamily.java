@@ -22,7 +22,7 @@ import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
@@ -74,7 +74,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     private void inOutFamily() {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle("提示");
         switch (position) {
             case LEADER:
@@ -88,7 +88,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 jpdialog.setMessage("申请加入家族需要族长或副族长的批准!");
                 break;
         }
-        jpdialog.setFirstButton("确定", new InOutFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        jpdialog.setFirstButton("确定", new InOutFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
@@ -142,7 +142,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsMailClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsMailClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -196,10 +196,10 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 if (infoWindow != null && infoWindow.isShowing()) {
                     infoWindow.dismiss();
                 }
-                JPDialog jpDialog = new JPDialog(this);
-                jpDialog.setTitle("提示");
-                jpDialog.setMessage("确定要将Ta移出家族吗?");
-                jpDialog.setFirstButton("确定", new KickFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("确定要将Ta移出家族吗?");
+                jpDialogBuilder.setFirstButton("确定", new KickFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
                 break;
             case R.id.ol_showinfo_b:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -354,7 +354,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         } else {
             return;
         }
-        new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public final void mo2907b(ListView listView, List<Map<String, String>> list) {

@@ -35,7 +35,7 @@ import ly.pp.justpiano3.listener.CpRequestClick;
 import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.ScrollText;
 import protobuf.dto.OnlineChangeRoomHandDTO;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
@@ -148,9 +148,9 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             str4 = str3;
             str3 = str2;
         }
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setCancelableFalse();
-        jpdialog.setTitle(str3).setMessage(str).setFirstButton(str4, new CpRequestClick(this, i, b, i2)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        jpdialog.setTitle(str3).setMessage(str).setFirstButton(str4, new CpRequestClick(this, i, b, i2)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public void mo2861a(GridView gridView, Bundle bundle) {

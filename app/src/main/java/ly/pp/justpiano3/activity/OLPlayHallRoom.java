@@ -32,7 +32,7 @@ import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.FamilyListView;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -144,7 +144,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,11 +171,11 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         if (i == 3) {
             tabHost.setCurrentTab(1);
         }
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
         jpdialog.setTitle(str);
         jpdialog.setMessage(str2);
         jpdialog.setFirstButton("确定", new DialogDismissClick());
-        jpdialog.showDialog();
+        jpdialog.buildAndShowDialog();
     }
 
     public void mo2842a(Bundle bundle) {
@@ -219,7 +219,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         } else {
             return;
         }
-        new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
     }
 
     public void mo2846b(ListView listView, List<Bundle> list) {
@@ -268,7 +268,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     public void addFriends(String str) {
         if (!str.isEmpty()) {
-            JPDialog jpdialog = new JPDialog(this);
+            JPDialogBuilder jpdialog = new JPDialogBuilder(this);
             jpdialog.setTitle("好友请求");
             jpdialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
             jpdialog.setFirstButton("同意", (dialog, which) -> {
@@ -284,7 +284,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 }
             });
             jpdialog.setSecondButton("拒绝", new DialogDismissClick());
-            jpdialog.showDialog();
+            jpdialog.buildAndShowDialog();
         }
     }
 
@@ -407,7 +407,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     public void deleteCp(boolean flag) {
         if (cp > 0) {
-            JPDialog jpdialog = new JPDialog(this);
+            JPDialogBuilder jpdialog = new JPDialogBuilder(this);
             jpdialog.setTitle("警告");
             jpdialog.setMessage("确定要解除搭档关系吗?");
             jpdialog.setFirstButton("同意", (dialog, which) -> {
@@ -417,7 +417,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialog.dismiss();
             }).setSecondButton("取消", new DialogDismissClick());
-            jpdialog.showDialog();
+            jpdialog.buildAndShowDialog();
         }
     }
 
