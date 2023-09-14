@@ -67,8 +67,11 @@ namespace iolib {
                     } else {
                         sampleCount++;
                     }
-                    sampleSource->pushCurFrameIndexQueue(curFrameIndex);
-                    sampleSource->popCurFrameIndexQueue();
+                    // the size of queue equals one, can avoid pair auto-copy
+                    if (queueSize > 1) {
+                        sampleSource->pushCurFrameIndexQueue(curFrameIndex);
+                        sampleSource->popCurFrameIndexQueue();
+                    }
                 } else {
                     count = 0;
                 }
