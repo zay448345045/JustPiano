@@ -50,7 +50,7 @@ public final class OLPlayRoomHandler extends Handler {
                                         olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "0" + tune);
                                     }
                                 }
-                                if (!olPlayRoom.isChangeScreen) {
+                                if (!SongPlay.INSTANCE.isPlaying()) {
                                     SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, olPlayRoom.getTune());
                                 }
                             }
@@ -62,7 +62,6 @@ public final class OLPlayRoomHandler extends Handler {
                         if (!string.isEmpty()) {
                             olPlayRoom.mo2860a(i, string, i2, b);
                         }
-                        olPlayRoom.isChangeScreen = false;
                     });
                     return;
                 case 2:

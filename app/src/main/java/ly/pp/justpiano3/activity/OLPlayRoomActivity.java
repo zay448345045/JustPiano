@@ -25,7 +25,6 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.listener.*;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialog;
@@ -186,8 +185,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         }
     }
 
-    public void putRoomPlayerMap(byte b, User User) {
-        jpapplication.getRoomPlayerMap().put(b, User);
+    public void putRoomPlayerMap(byte b, User user) {
+        ((JPApplication) getApplication()).getRoomPlayerMap().put(b, user);
     }
 
     public void mo2863a(ListView listView, List<Bundle> list, int i) {
@@ -562,6 +561,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         expressImageView.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         handler = new Handler(this);
+        // 注意这里在向服务端发消息
         sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
@@ -610,7 +610,6 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         timeUpdateThread.start();
         if (savedInstanceState != null) {
             msgList = savedInstanceState.getParcelableArrayList("msgList");
-            isChangeScreen = savedInstanceState.getBoolean("isChangeScreen");
             bindMsgListView();
         }
     }
@@ -711,14 +710,10 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("msgList", new ArrayList<>(msgList));
-        outState.putBoolean("isChangeScreen", isChangeScreen);
     }
 
     @Override
     protected void onDestroy() {
-        if (!isChangeScreen) {
-            SongPlay.INSTANCE.stopPlay();
-        }
         timeUpdateRunning = false;
         try {
             timeUpdateThread.interrupt();
@@ -760,7 +755,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     @Override
     protected void onStop() {
         super.onStop();
-        if (onStart) {
+        if (onStart && !isChangeScreen) {
             onStart = false;
             OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
             builder1.setStatus("B");

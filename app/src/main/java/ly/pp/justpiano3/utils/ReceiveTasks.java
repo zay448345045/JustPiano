@@ -3,6 +3,7 @@ package ly.pp.justpiano3.utils;
 import android.os.Bundle;
 import android.os.Handler;
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
@@ -453,7 +454,7 @@ public final class ReceiveTasks {
                     buildAndPutUser(olPlayRoomActivity, roomPositionUser);
                 }
                 Bundle bundle = new Bundle();
-                Iterator<User> it = olPlayRoomActivity.jpapplication.getRoomPlayerMap().values().iterator();
+                Iterator<User> it = ((JPApplication) (olPlayRoomActivity.getApplication())).getRoomPlayerMap().values().iterator();
                 for (int i = 0; it.hasNext(); i++) {
                     User user = it.next();
                     fillUserBundle(bundle, i, user);
@@ -556,7 +557,7 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.MINI_GRADE, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof PianoPlay) {
                 PianoPlay pianoPlay = (PianoPlay) topActivity;
-                User user = pianoPlay.jpapplication.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
+                User user = ((JPApplication) (pianoPlay.getApplication())).getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
                 if (user == null) {
                     return;
                 }
@@ -572,7 +573,7 @@ public final class ReceiveTasks {
                 }
                 int i = 0;
                 for (byte b = 1; b <= 6; b++) {
-                    User currentUser = pianoPlay.jpapplication.getRoomPlayerMap().get(b);
+                    User currentUser = ((JPApplication) (pianoPlay.getApplication())).getRoomPlayerMap().get(b);
                     if (currentUser == null) {
                         continue;
                     }
