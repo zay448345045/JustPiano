@@ -237,7 +237,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.setGameMode(GameModeEnum.NORMAL.getCode());
+        jpapplication.setGameMode(GameModeEnum.NORMAL);
         try {
             GlobalSetting.INSTANCE.loadSettings(this, true);
             GlobalSetting.INSTANCE.setTempSpeed(1f);

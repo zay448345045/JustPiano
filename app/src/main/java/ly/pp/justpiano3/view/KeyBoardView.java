@@ -40,7 +40,38 @@ public class KeyBoardView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(keyBoardImage, null, keyBoardRect, null);
         for (int i : touchNoteSet.keySet()) {
-            playView.jpapplication.m3520a(canvas, fireRectArray.get(i), keyRectArray.get(i), playView, i);
+            m3520a(canvas, fireRectArray.get(i), keyRectArray.get(i), playView, i);
+        }
+    }
+
+    private void m3520a(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
+        switch (i) {
+            case 0:
+            case 12:
+            case 5:
+                canvas.drawBitmap(playView.fireImage, null, rect, null);
+                canvas.drawBitmap(playView.whiteKeyRightImage, null, rect2, null);
+                return;
+            case 1:
+            case 10:
+            case 8:
+            case 6:
+            case 3:
+                canvas.drawBitmap(playView.fireImage, null, rect, null);
+                canvas.drawBitmap(playView.blackKeyImage, null, rect2, null);
+                return;
+            case 2:
+            case 9:
+            case 7:
+                canvas.drawBitmap(playView.fireImage, null, rect, null);
+                canvas.drawBitmap(playView.whiteKeyMiddleImage, null, rect2, null);
+                return;
+            case 4:
+            case 11:
+                canvas.drawBitmap(playView.fireImage, null, rect, null);
+                canvas.drawBitmap(playView.whiteKeyLeftImage, null, rect2, null);
+                return;
+            default:
         }
     }
 }

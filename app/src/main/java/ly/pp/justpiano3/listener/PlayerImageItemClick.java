@@ -171,8 +171,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             }
 
             // 屏蔽聊天按钮处理
-            ChatBlackUserUtil.chatBlackButtonHandle(user, olPlayRoomActivity.jpapplication,
-                    chatBlackButton, chatBlackCancelButton, popupWindow);
+            ChatBlackUserUtil.chatBlackButtonHandle(olPlayRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
         } else {
             if (user.getCpKind() > 0 && user.getCpKind() <= 3) {
                 showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);

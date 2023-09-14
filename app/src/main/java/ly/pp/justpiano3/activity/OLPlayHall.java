@@ -358,7 +358,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         setContentView(R.layout.olplayhall);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
+        jPApplication.setGameMode(GameModeEnum.NORMAL);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
         findViewById(R.id.ol_send_b).setOnLongClickListener(this);
         findViewById(R.id.ol_createroom_b).setOnClickListener(this);

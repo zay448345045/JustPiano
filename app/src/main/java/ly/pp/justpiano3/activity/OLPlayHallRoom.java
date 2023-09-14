@@ -440,7 +440,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olplayhallroom);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(GameModeEnum.NORMAL.getCode());
+        jpApplication.setGameMode(GameModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);
         hallList.clear();

@@ -1,11 +1,11 @@
 package ly.pp.justpiano3.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 import org.json.JSONArray;
@@ -24,18 +24,49 @@ public class ChatBlackUserUtil {
 
     public static final String CHAT_BLACK_LIST_STORE_KEY = "chatBlackList";
 
+    private static List<SimpleUser> chatBlackList;
+
+    public static List<SimpleUser> getChatBlackList(Context context) {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+        }
+        return chatBlackList;
+    }
+
+    public static void chatBlackListAddUser(Context context, SimpleUser simpleUser) {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+        }
+        chatBlackList.add(simpleUser);
+        ChatBlackUserUtil.saveChatBlackList(context);
+    }
+
+    public static void chatBlackListRemoveUser(Context context, String userName) {
+        if (chatBlackList == null) {
+            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+        }
+        List<SimpleUser> simpleUserList = new ArrayList<>();
+        for (SimpleUser simpleUser : chatBlackList) {
+            if (!Objects.equals(simpleUser.getName(), userName)) {
+                simpleUserList.add(simpleUser);
+            }
+        }
+        chatBlackList = simpleUserList;
+        ChatBlackUserUtil.saveChatBlackList(context);
+    }
+
     /**
      * 屏蔽聊天用户的按钮展示处理
      */
-    public static void chatBlackButtonHandle(User user, JPApplication jpApplication,
-                                             Button chatBlackButton, Button chatBlackCancelButton, PopupWindow popupWindow) {
-        if (isUserInChatBlackList(jpApplication.getChatBlackList(), user.getPlayerName())) {
+    public static void chatBlackButtonHandle(Context context, User user, Button chatBlackButton,
+                                             Button chatBlackCancelButton, PopupWindow popupWindow) {
+        if (isUserInChatBlackList(user.getPlayerName())) {
             chatBlackCancelButton.setVisibility(View.VISIBLE);
             chatBlackButton.setVisibility(View.GONE);
             chatBlackCancelButton.setOnClickListener(v -> {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
-                    jpApplication.chatBlackListRemoveUser(user.getPlayerName());
+                    chatBlackListRemoveUser(context, user.getPlayerName());
                 }
             });
         } else {
@@ -44,7 +75,7 @@ public class ChatBlackUserUtil {
             chatBlackButton.setOnClickListener(v -> {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
-                    jpApplication.chatBlackListAddUser(new SimpleUser(user.getSex(), user.getPlayerName(), user.getLevel(), DateUtil.now()));
+                    chatBlackListAddUser(context, new SimpleUser(user.getSex(), user.getPlayerName(), user.getLevel(), DateUtil.now()));
                 }
             });
         }
@@ -53,7 +84,7 @@ public class ChatBlackUserUtil {
     /**
      * 用户是否在屏蔽名单内
      */
-    public static boolean isUserInChatBlackList(List<SimpleUser> chatBlackList, String userName) {
+    public static boolean isUserInChatBlackList(String userName) {
         for (SimpleUser simpleUser : chatBlackList) {
             if (Objects.equals(simpleUser.getName(), userName)) {
                 return true;
@@ -65,7 +96,8 @@ public class ChatBlackUserUtil {
     /**
      * 持久化存储用户屏蔽聊天名单
      */
-    public static void saveChatBlackList(SharedPreferences accountListSharedPreferences, List<SimpleUser> chatBlackList) {
+    private static void saveChatBlackList(Context context) {
+        SharedPreferences accountListSharedPreferences = context.getSharedPreferences("account_list", Context.MODE_PRIVATE);
         try {
             JSONArray jsonArray = new JSONArray();
             for (SimpleUser user : chatBlackList) {
@@ -86,7 +118,8 @@ public class ChatBlackUserUtil {
     /**
      * 从持久化存储中获取用户屏蔽聊天名单
      */
-    public static List<SimpleUser> getStoredChatBlackList(SharedPreferences accountListSharedPreferences) {
+    private static List<SimpleUser> getStoredChatBlackList(Context context) {
+        SharedPreferences accountListSharedPreferences = context.getSharedPreferences("account_list", Context.MODE_PRIVATE);
         List<SimpleUser> chatBlackList = new ArrayList<>();
         try {
             String chatBlackListJson = accountListSharedPreferences.getString(CHAT_BLACK_LIST_STORE_KEY, "");

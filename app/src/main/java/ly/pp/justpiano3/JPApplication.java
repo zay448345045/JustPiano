@@ -25,12 +25,11 @@ import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
@@ -39,7 +38,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class JPApplication extends Application {
 
@@ -68,12 +70,11 @@ public final class JPApplication extends Application {
     /**
      * 游戏模式
      */
-    private int gameMode;
+    private GameModeEnum gameMode;
 
     private final Map<Byte, User> roomPlayerMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
-    private List<SimpleUser> chatBlackList;
     private String server = Consts.ONLINE_SERVER_URL;
     private int widthPixels;
     private int heightPixels;
@@ -93,37 +94,6 @@ public final class JPApplication extends Application {
             setConnectionService(null);
         }
     };
-
-    public void m3520a(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
-        switch (i) {
-            case 0:
-            case 12:
-            case 5:
-                canvas.drawBitmap(playView.fireImage, null, rect, null);
-                canvas.drawBitmap(playView.whiteKeyRightImage, null, rect2, null);
-                return;
-            case 1:
-            case 10:
-            case 8:
-            case 6:
-            case 3:
-                canvas.drawBitmap(playView.fireImage, null, rect, null);
-                canvas.drawBitmap(playView.blackKeyImage, null, rect2, null);
-                return;
-            case 2:
-            case 9:
-            case 7:
-                canvas.drawBitmap(playView.fireImage, null, rect, null);
-                canvas.drawBitmap(playView.whiteKeyMiddleImage, null, rect2, null);
-                return;
-            case 4:
-            case 11:
-                canvas.drawBitmap(playView.fireImage, null, rect, null);
-                canvas.drawBitmap(playView.whiteKeyLeftImage, null, rect2, null);
-                return;
-            default:
-        }
-    }
 
     public List<Rect> getKeyRectArray() {
         List<Rect> arrayList = new ArrayList<>();
@@ -174,35 +144,6 @@ public final class JPApplication extends Application {
             kitiName = accountListSharedPreferences.getString("userKitiName", "");
         }
         return kitiName;
-    }
-
-    public List<SimpleUser> getChatBlackList() {
-        if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(accountListSharedPreferences);
-        }
-        return chatBlackList;
-    }
-
-    public void chatBlackListAddUser(SimpleUser simpleUser) {
-        if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(accountListSharedPreferences);
-        }
-        chatBlackList.add(simpleUser);
-        ChatBlackUserUtil.saveChatBlackList(accountListSharedPreferences, chatBlackList);
-    }
-
-    public void chatBlackListRemoveUser(String userName) {
-        if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(accountListSharedPreferences);
-        }
-        List<SimpleUser> simpleUserList = new ArrayList<>();
-        for (SimpleUser simpleUser : chatBlackList) {
-            if (!Objects.equals(simpleUser.getName(), userName)) {
-                simpleUserList.add(simpleUser);
-            }
-        }
-        chatBlackList = simpleUserList;
-        ChatBlackUserUtil.saveChatBlackList(accountListSharedPreferences, chatBlackList);
     }
 
     public void setKitiName(String str) {
@@ -481,11 +422,11 @@ public final class JPApplication extends Application {
         this.bindService = bindService;
     }
 
-    public int getGameMode() {
+    public GameModeEnum getGameMode() {
         return gameMode;
     }
 
-    public void setGameMode(int gameMode) {
+    public void setGameMode(GameModeEnum gameMode) {
         this.gameMode = gameMode;
     }
 

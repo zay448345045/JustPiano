@@ -107,7 +107,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         setContentView(R.layout.olmainmode);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
+        jPApplication.setGameMode(GameModeEnum.NORMAL);
         Button topButton = findViewById(R.id.ol_top_b);
         topButton.setOnClickListener(this);
         Button userButton = findViewById(R.id.ol_users_b);

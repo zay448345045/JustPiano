@@ -706,7 +706,7 @@ public final class PlayView extends SurfaceView implements Callback {
                             }
                         }
                     }
-                    if (jpapplication.getGameMode() == GameModeEnum.PRACTISE.getCode() && !hasTouched && !currentPlayNote.hideNote
+                    if (jpapplication.getGameMode() == GameModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
                             && currentPlayNote.posiAdd15AddAnim > jpapplication.getWhiteKeyHeight() - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
@@ -862,7 +862,7 @@ public final class PlayView extends SurfaceView implements Callback {
         loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
-        if (jpapplication.getGameMode() != GameModeEnum.HEAR.getCode()) {
+        if (jpapplication.getGameMode() != GameModeEnum.HEAR) {
             setOnTouchListener(new TouchNotes(this));
             setAccessibilityDelegate(new View.AccessibilityDelegate() {
                 @Override

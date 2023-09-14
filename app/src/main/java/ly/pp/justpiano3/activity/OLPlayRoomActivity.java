@@ -347,7 +347,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         }
         message.getData().putString("TIME", time);
         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
-        if (!ChatBlackUserUtil.isUserInChatBlackList(jpapplication.getChatBlackList(), message.getData().getString("U"))) {
+        if (!ChatBlackUserUtil.isUserInChatBlackList(message.getData().getString("U"))) {
             msgList.add(message.getData());
         }
 

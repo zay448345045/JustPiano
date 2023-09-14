@@ -31,7 +31,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication = jpApplication;
-                jPApplication.setGameMode(GameModeEnum.NORMAL.getCode());
+                jPApplication.setGameMode(GameModeEnum.NORMAL);
                 startActivity(intent);
                 finish();
                 return;
@@ -39,7 +39,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication2 = jpApplication;
-                jPApplication2.setGameMode(GameModeEnum.PRACTISE.getCode());
+                jPApplication2.setGameMode(GameModeEnum.PRACTISE);
                 startActivity(intent);
                 finish();
                 return;
@@ -47,7 +47,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication2 = jpApplication;
-                jPApplication2.setGameMode(GameModeEnum.HEAR.getCode());
+                jPApplication2.setGameMode(GameModeEnum.HEAR);
                 startActivity(intent);
                 finish();
                 return;
