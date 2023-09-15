@@ -20,17 +20,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/title"
-            android:paddingTop="20dp"
-            android:text=" 选择服务器 "
+            android:paddingTop="@dimen/dimen_20dp"
+            android:text="@string/changeserver_ti"
             android:textColor="@color/white1"
             android:textSize="31sp" />
 
         <LinearLayout
             android:id="@+id/linearLayout6"
-            android:layout_width="500dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="5dp"
+            android:layout_width="@dimen/dimen_500dp"
+            android:layout_height="@dimen/dimen_100dp"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:layout_marginBottom="@dimen/dimen_5dp"
             android:layout_weight="2"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
@@ -39,10 +39,10 @@
                 android:id="@+id/server1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="@dimen/dimen_12dp"
                 android:background="@drawable/selector_orange_button"
                 android:fontFamily="@font/title"
-                android:text="正式服\n(普通的服务器普通的用)"
+                android:text="@string/changeserver_prod"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -50,20 +50,20 @@
                 android:id="@+id/server2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/dimen_12dp"
                 android:background="@drawable/selector_ol_button"
                 android:fontFamily="@font/title"
-                android:text="测试服\n(测试用途或故障时备用)"
+                android:text="@string/changeserver_dev"
                 android:textColor="@color/white1"
                 android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout8"
-            android:layout_width="500dp"
+            android:layout_width="@dimen/dimen_500dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center_horizontal"
@@ -73,7 +73,8 @@
                 style="@style/InputBoxStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/server_ip"
@@ -81,7 +82,7 @@
                     android:layout_width="@dimen/dimen_260dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/title"
-                    android:hint="其他服务器(填写域名或IP):"
+                    android:hint="@string/changeserver_hint"
                     android:maxLines="1"
                     android:paddingTop="@dimen/dimen_3dp"
                     android:paddingBottom="@dimen/dimen_3dp"
@@ -95,8 +96,9 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/selector_ol_button_login"
                 android:fontFamily="@font/title"
-                android:text="确认"
-                android:textSize="15sp" />
+                android:text="@string/register_confirm"
+                android:textSize="15sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </LinearLayout>
