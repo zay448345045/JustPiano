@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.LoginActivity;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -34,9 +35,9 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         LoginActivity loginActivity = activity.get();
         loginActivity.accountX = loginActivity.accountTextView.getText().toString();
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
+        String ip = JPApplication.getServer();
+        loginActivity.loginServer = ip;
         if (!loginActivity.accountX.isEmpty() && !loginActivity.password.isEmpty()) {
-            String ip = loginActivity.jpapplication.getServer();
-            loginActivity.loginServer = ip;
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();

@@ -48,7 +48,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";
-    public String loginServer="";
+    public String loginServer = "";
     public String accountX = "";
     public TextView accountTextView;
     public TextView passwordTextView;
@@ -93,7 +93,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         jpapplication.setPassword(password);
         switch (i) {
             case 0:
-                if (loginServer == "server.justpiano.fun") {
+                if (loginServer.contains("server")) {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -103,15 +103,15 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 return;
             case 4:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
-                    if (loginServer == "server.justpiano.fun") {
+                    Toast.makeText(this, loginServer, Toast.LENGTH_SHORT).show();
+                    if (loginServer.contains("server")) {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
                     }
-                    startActivity(intent);
-                    dialog.dismiss();
-                    finish();
                 }).buildAndShowDialog();
+                startActivity(intent);
+                finish();
                 return;
             case 5:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).buildAndShowDialog();

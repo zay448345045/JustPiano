@@ -1,5 +1,8 @@
 package ly.pp.justpiano3.view;
 
+import static ly.pp.justpiano3.activity.OLBaseActivity.dp2px;
+import static ly.pp.justpiano3.activity.OLBaseActivity.px2dp;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
@@ -16,7 +19,7 @@ public final class JPDialogBuilder {
     private GoldConvertView goldConvertView;
     private RadioGroup radioGroup;
     private View inflate;
-    private double widthWeight = 0.5;
+    private int width = 360;
     private final Context context;
     private OnClickListener listener2;
     private String title;
@@ -37,8 +40,8 @@ public final class JPDialogBuilder {
         return this;
     }
 
-    public JPDialogBuilder setWidthWeight(double widthWeight) {
-        this.widthWeight = widthWeight;
+    public JPDialogBuilder setWidth(int width) {
+        this.width = width;
         return this;
     }
 
@@ -161,11 +164,12 @@ public final class JPDialogBuilder {
             JPDialog dialog = createJPDialog();
             if (!dialog.isShowing()) {
                 Window window = dialog.getWindow();
+                Context context=dialog.getContext();
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 focusNotAle(window);
                 dialog.show();
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
-                layoutParams.width = (int) (window.getWindowManager().getDefaultDisplay().getWidth() * widthWeight);
+                layoutParams.width = (int) (dp2px(context, this.width));
                 window.setAttributes(layoutParams);
                 hideNavigationBar(window);
                 clearFocusNotAle(window);
