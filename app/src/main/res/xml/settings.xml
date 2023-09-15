@@ -183,4 +183,13 @@
             android:summary="设置聊天字体显示大小"
             android:title="聊天字体大小" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="关于">
+        <Preference
+            android:summary="4.80.0915B"
+            android:title="软件版本" />
+            <!--版本号:Ver.Date.isBeta-->
+        <Preference
+            android:summary="京ICP备2020039885号-3A"
+            android:title="备案信息" />
+    </PreferenceCategory>
 </PreferenceScreen>

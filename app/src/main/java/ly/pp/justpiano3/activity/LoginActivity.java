@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+
 import androidx.core.content.FileProvider;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
@@ -29,6 +31,7 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +47,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";
+    public String loginServer="";
     public String accountX = "";
     public TextView accountTextView;
     public TextView passwordTextView;
@@ -87,13 +91,21 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         jpapplication.setPassword(password);
         switch (i) {
             case 0:
-                Toast.makeText(this, "登陆成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
+                if (loginServer == "server.justpiano.fun") {
+                    Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
+                }
                 startActivity(intent);
                 finish();
                 return;
             case 4:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
-                    Toast.makeText(this, "登陆成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
+                    if (loginServer == "server.justpiano.fun") {
+                        Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
+                    }
                     startActivity(intent);
                     dialog.dismiss();
                     finish();

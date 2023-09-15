@@ -57,6 +57,7 @@ public final class JPApplication extends Application {
 
     public static String kitiName = "";
     public static SharedPreferences accountListSharedPreferences;
+
     public String title = "";
     public String f4072f = "";
     public String f4073g = "";
@@ -75,7 +76,7 @@ public final class JPApplication extends Application {
     private final Map<Byte, User> roomPlayerMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
-    private String server = Consts.ONLINE_SERVER_URL;
+    private static String server = Consts.ONLINE_SERVER_URL;
     private int widthPixels;
     private int heightPixels;
     private int animPosition;
@@ -430,7 +431,7 @@ public final class JPApplication extends Application {
         this.gameMode = gameMode;
     }
 
-    public String getServer() {
+    public static String getServer() {
         return server;
     }
 
