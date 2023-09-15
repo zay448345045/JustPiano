@@ -38,22 +38,19 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";
-    public String loginServer="";
     public String accountX = "";
     public TextView accountTextView;
     public TextView passwordTextView;
     public JPProgressBar jpprogressBar;
     public SharedPreferences sharedPreferences;
     private LayoutInflater layoutInflater;
+    private CheckBox changeServerCheckBox;
     private CheckBox rememAccount;
     private CheckBox rememPassword;
     private CheckBox autoLogin;
@@ -91,7 +88,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         jpapplication.setPassword(password);
         switch (i) {
             case 0:
-                if (loginServer == "server.justpiano.fun") {
+                if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -101,7 +98,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 return;
             case 4:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
-                    if (loginServer == "server.justpiano.fun") {
+                    if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -147,6 +144,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                     Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                JPApplication.setServer(changeServerCheckBox.isChecked() ? Consts.TEST_ONLINE_SERVER_URL : Consts.ONLINE_SERVER_URL);
                 new LoginTask(this).execute();
                 return;
             case R.id.ol_register:
@@ -177,19 +175,6 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                     e.printStackTrace();
                 }
                 return;
-            case R.id.ol_change_server:
-                Editor edit = sharedPreferences.edit();
-                edit.putBoolean("remem_account", true);
-                edit.putBoolean("remem_password", true);
-                edit.putBoolean("auto_login", autoLogin.isChecked());
-                edit.putString("current_account", accountTextView.getText().toString());
-                edit.putString("current_password", passwordTextView.getText().toString());
-                edit.apply();
-                intent = new Intent();
-                intent.setClass(this, ChangeServer.class);
-                startActivity(intent);
-                finish();
-                return;
             default:
         }
     }
@@ -199,7 +184,6 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
-        jpapplication.setServer(s.getString("ip", Consts.ONLINE_SERVER_URL));
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
@@ -209,8 +193,8 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
-        Button changeServerButton = findViewById(R.id.ol_change_server);
-        changeServerButton.setOnClickListener(this);
+        changeServerCheckBox = findViewById(R.id.ol_change_server);
+        changeServerCheckBox.setChecked(JPApplication.getServer().equals(Consts.TEST_ONLINE_SERVER_URL));
         Button registerButton = findViewById(R.id.ol_register);
         registerButton.setOnClickListener(this);
         Button changeAccountButton = findViewById(R.id.ol_change_account);

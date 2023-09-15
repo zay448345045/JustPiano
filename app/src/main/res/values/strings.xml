@@ -50,7 +50,6 @@
     <string name="login_button">登录</string>
     <string name="reg_button">注册</string>
     <string name="login_sw_acc">切换账号</string>
-    <string name="login_sw_svr">切换服务器</string>
     <string name="account_name_del">删除</string>
     <string name="c_view_name">曲名</string>
     <string name="c_view_length">00:00</string>

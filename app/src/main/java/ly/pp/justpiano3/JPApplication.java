@@ -435,8 +435,8 @@ public final class JPApplication extends Application {
         return server;
     }
 
-    public void setServer(String server) {
-        this.server = server;
+    public static void setServer(String server) {
+        JPApplication.server = server;
     }
 
     public int getWidthPixels() {
