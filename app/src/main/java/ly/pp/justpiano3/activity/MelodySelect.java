@@ -66,6 +66,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
     private RecyclerView songsListView;
+    private ListView categoryListView;
     public LiveData<PagedList<Song>> pagedListLiveData;
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
 
@@ -170,16 +171,20 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 return;
             }
             File midiFile = fileList.get(0);
-            if (!midiFile.exists() || !midiFile.getName().endsWith(".mid") || !midiFile.getName().endsWith(".midi")) {
+            if (!midiFile.exists() || !(midiFile.getName().endsWith(".mid") || midiFile.getName().endsWith(".midi"))) {
                 Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
                 return;
             }
             String songName = midiFile.getName().substring(0, midiFile.getName().indexOf('.'));
             if (midiFile.length() > 1048576) {
-                Toast.makeText(this, "不接受大于1M的文件", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "midi文件大小必须小于1M", Toast.LENGTH_SHORT).show();
                 return;
             }
             File pmFile = new File(getFilesDir().getAbsolutePath() + "/Songs/" + songName + ".pm");
+            if (pmFile.exists()) {
+                Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
+                return;
+            }
             SongData songData = null;
             try {
                 songData = SongUtil.midiFileToPmFile(midiFile, pmFile);
@@ -195,7 +200,9 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                     0, 0, 0, songData.getDegree() / 10f, 0,
                     songData.getLeftDegree() / 10f, songData.getLength(), 0));
             JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
-            Toast.makeText(this, "成功导入本地曲目《" + songName + "》", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "成功导入曲目《" + songName + "》，可点击\"本地导入\"分类查看", Toast.LENGTH_SHORT).show();
+            categoryListView.performItemClick(categoryListView.getAdapter().getView(Consts.items.length - 1, null, null),
+                    Consts.items.length - 1, categoryListView.getItemIdAtPosition(Consts.items.length - 1));
         }
     }
 
@@ -269,7 +276,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             totalSongCountTextView.setText("曲谱:" + totalSongInfo.getTotalCount());
             totalSongScoreTextView.setText("总分:" + totalSongInfo.getTotalScore());
         });
-        ListView categoryListView = findViewById(R.id.f_list);
+        categoryListView = findViewById(R.id.f_list);
         songsListView = findViewById(R.id.c_list);
         songsListView.setLayoutManager(new LinearLayoutManager(this));
         LocalSongsAdapter localSongsAdapter = new LocalSongsAdapter(this, songsListView);
