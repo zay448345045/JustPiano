@@ -60,9 +60,23 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.1"
             android:background="@drawable/selector_orange_button"
+            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/melodylist1_sort_b"
+            android:textColor="@color/white1"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/local_import"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:background="@drawable/selector_orange_button"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/melodylist1_import"
             android:textColor="@color/white1"
             android:textSize="14sp" />
 
@@ -114,17 +128,6 @@
             android:layout_marginEnd="@dimen/dimen_8dp"
             android:gravity="center"
             android:text="@string/melodylist1_rec"
-            android:textSize="16sp" />
-
-        <CheckBox
-            android:id="@+id/check_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/dimen_8dp"
-            android:gravity="center"
-            android:text="@string/melodylist1_seq"
-            android:enabled="false"
             android:textSize="16sp" />
 
         <CheckBox

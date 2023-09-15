@@ -21,7 +21,6 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -116,10 +115,10 @@ public class MainMode extends Activity implements OnClickListener {
                 TextView textView2 = inflate.findViewById(R.id.text_2);
                 TextView textView2Title = inflate.findViewById(R.id.title_2);
                 textView2Title.setText("内容:");
-                JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-                jpdialog.setTitle("反馈");
-                jpdialog.loadInflate(inflate);
-                jpdialog.setFirstButton("提交", (dialog, which) -> {
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("反馈");
+                jpDialogBuilder.loadInflate(inflate);
+                jpDialogBuilder.setFirstButton("提交", (dialog, which) -> {
                     String userName = textView.getText().toString();
                     String message = textView2.getText().toString();
                     if (StringUtil.isNullOrEmpty(userName) || StringUtil.isNullOrEmpty(message)) {
@@ -129,8 +128,8 @@ public class MainMode extends Activity implements OnClickListener {
                     dialog.dismiss();
                     new FeedbackTask(this, userName, message).execute();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.buildAndShowDialog();
+                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
         }
@@ -179,15 +178,15 @@ public class MainMode extends Activity implements OnClickListener {
         f4211k.setOnClickListener(this);
         jpprogressBar = new JPProgressBar(this);
         if (jpApplication.title != null && jpApplication.f4072f != null && !jpApplication.title.isEmpty() && !jpApplication.f4072f.isEmpty()) {
-            JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-            jpdialog.setTitle(jpApplication.title);
-            jpdialog.setMessage(jpApplication.f4072f);
-            jpdialog.setFirstButton("确定", (dialog, which) -> {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle(jpApplication.title);
+            jpDialogBuilder.setMessage(jpApplication.f4072f);
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                 jpApplication.f4072f = "";
                 jpApplication.title = "";
                 dialog.dismiss();
             });
-            jpdialog.buildAndShowDialog();
+            jpDialogBuilder.buildAndShowDialog();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {

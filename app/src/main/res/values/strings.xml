@@ -4,7 +4,7 @@
     </string>
     <string name="app_name">极品钢琴</string>
     <string name="about">更新日志：\n
-        1、新增瀑布流播放曲谱功能\n
+        1、新增瀑布流播放曲谱功能，支持本地导入midi\n
         2、弹奏功能改善，音块速率支持任意调整\n
         3、房间对战弹奏结果打通本地模式计分\n
         4、优化选曲等界面，修复部分已知问题\n
@@ -121,8 +121,8 @@
     <string name="melodylist1_total_score_all">总分</string>
     <string name="melodylist1_all_mel">曲谱数</string>
     <string name="melodylist1_sort_b">排序方式</string>
+    <string name="melodylist1_import">本地导入</string>
     <string name="melodylist1_rec">录音</string>
-    <string name="melodylist1_seq">连续</string>
     <string name="melodylist1_hand">左手</string>
     <string name="message_send_name">房名:</string>
     <string name="ol_btn_lv_info">查看资料</string>

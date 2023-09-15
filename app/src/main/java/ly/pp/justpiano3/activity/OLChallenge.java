@@ -15,7 +15,6 @@ import ly.pp.justpiano3.adapter.ChallengeListAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.GetPrizeClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ColorUtil;
@@ -139,7 +138,9 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
                 prizeColorView.setVisibility(View.VISIBLE);
             }
             try {
-                new JPDialogBuilder(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrizeClick(this)).setSecondButton("放弃领取", new DialogDismissClick()).buildAndShowDialog();
+                new JPDialogBuilder(this).setTitle("抽取奖励").loadInflate(inflate)
+                        .setFirstButton("确认领取", new GetPrizeClick(this))
+                        .setSecondButton("放弃领取", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -147,7 +148,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             prizePointerImageView.setVisibility(View.GONE);
             drawPrizeView.setVisibility(View.GONE);
             try {
-                new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
+                new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }

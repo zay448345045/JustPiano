@@ -20,7 +20,6 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
 import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -101,7 +100,8 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 }).buildAndShowDialog();
                 return;
             case 5:
-                new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).buildAndShowDialog();
+                new JPDialogBuilder(this).setTitle(title).setMessage(message)
+                        .setFirstButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                 return;
             default:
         }
@@ -157,7 +157,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
                         JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
-                                .setFirstButton("取消", new DialogDismissClick()).createJPDialog();
+                                .setFirstButton("取消", ((dialog, which) -> dialog.dismiss())).createJPDialog();
                         listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
                         b.show();
                     }
@@ -243,12 +243,12 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     }
 
     public final void addVersionUpdateDialog(String str3, String newVersion) {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setTitle("版本更新");
-        jpdialog.setMessage(str3);
-        jpdialog.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
-        jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.buildAndShowDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle("版本更新");
+        jpDialogBuilder.setMessage(str3);
+        jpDialogBuilder.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
+        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     private String getApkUrlByVersion(String version) {

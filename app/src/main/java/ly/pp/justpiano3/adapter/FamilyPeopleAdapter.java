@@ -18,13 +18,13 @@ import java.util.Map;
 public final class FamilyPeopleAdapter extends BaseAdapter {
     private final List<Map<String, String>> list;
     private final JPApplication jpApplication;
-    private final LayoutInflater li;
+    private final LayoutInflater layoutInflater;
     private final OLFamily family;
 
     public FamilyPeopleAdapter(List<Map<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.jpApplication = jpApplication;
         this.list = list;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         family = olFamily;
     }
 
@@ -46,7 +46,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_c_family_view, null);
+            view = layoutInflater.inflate(R.layout.ol_c_family_view, null);
         }
         final String name = list.get(i).get("N");
         if (name == null) {

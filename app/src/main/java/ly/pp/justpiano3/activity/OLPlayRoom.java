@@ -32,7 +32,6 @@ import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.listener.CpRequestClick;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -148,9 +147,10 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             str4 = str3;
             str3 = str2;
         }
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setCancelableFalse();
-        jpdialog.setTitle(str3).setMessage(str).setFirstButton(str4, new CpRequestClick(this, i, b, i2)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setCancelableFalse();
+        jpDialogBuilder.setTitle(str3).setMessage(str).setFirstButton(str4, new CpRequestClick(this, i, b, i2)).
+                setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void mo2861a(GridView gridView, Bundle bundle) {

@@ -10,7 +10,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChatFilesAdapter;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
@@ -71,7 +70,7 @@ public class ChatFiles extends Activity {
             dialog.dismiss();
             remove(i, str2);
         });
-        builder.setNegativeButton("取消", new DialogDismissClick());
+        builder.setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()));
         builder.create().show();
     }
 

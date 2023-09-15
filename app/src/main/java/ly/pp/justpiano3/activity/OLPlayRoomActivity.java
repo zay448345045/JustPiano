@@ -141,7 +141,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+            }).setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,7 +171,9 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
+            new JPDialogBuilder(this).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
+                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,7 +208,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         textView2.setText("内容:");
         new JPDialogBuilder(this).setTitle("发送私信给:" + str).loadInflate(inflate)
                 .setFirstButton("发送", new SendMailClick(this, textView, str))
-                .setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void setPrivateChatUserName(String str) {
@@ -222,12 +224,12 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
 
     @Override
     public void onBackPressed() {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setTitle("提示");
-        jpdialog.setMessage("退出房间并返回大厅?");
-        jpdialog.setFirstButton("确定", new ReturnHallClick(this));
-        jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.buildAndShowDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle("提示");
+        jpDialogBuilder.setMessage("退出房间并返回大厅?");
+        jpDialogBuilder.setFirstButton("确定", new ReturnHallClick(this));
+        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     protected void sendMessageClick(boolean isBroadcast) {
@@ -269,7 +271,9 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             View inflate = getLayoutInflater().inflate(R.layout.ol_roomtitle_change, findViewById(R.id.dialog));
             EditText text1 = inflate.findViewById(R.id.text_1);
             EditText text2 = inflate.findViewById(R.id.text_2);
-            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate).setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate)
+                    .setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2))
+                    .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         }
     }
 
@@ -323,9 +327,9 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     }
 
     public void handleKicked() {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setCancelableFalse();
-        jpdialog.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setCancelableFalse();
+        jpDialogBuilder.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
             onStart = false;
             Intent intent = new Intent(this, OLPlayHall.class);
             Bundle bundle = new Bundle();
@@ -399,11 +403,11 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         switch (message.getData().getInt("T")) {
             case 0:
                 if (!string.isEmpty()) {
-                    JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-                    jpdialog.setTitle("好友请求");
-                    jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("好友请求");
+                    jpDialogBuilder.setMessage("[" + string + "]请求加您为好友,同意吗?");
                     String finalString = string;
-                    jpdialog.setFirstButton("同意", (dialog, which) -> {
+                    jpDialogBuilder.setFirstButton("同意", (dialog, which) -> {
                         OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setReject(false);
@@ -411,7 +415,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                         sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         dialog.dismiss();
                     });
-                    jpdialog.setSecondButton("拒绝", (dialog, which) -> {
+                    jpDialogBuilder.setSecondButton("拒绝", (dialog, which) -> {
                         OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                         builder.setType(1);
                         builder.setReject(true);
@@ -419,7 +423,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                         sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         dialog.dismiss();
                     });
-                    jpdialog.buildAndShowDialog();
+                    jpDialogBuilder.buildAndShowDialog();
                 }
                 return;
             case 1:
@@ -443,7 +447,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                         jpDialogBuilder.setMessage(message.getData().getString("Message"));
                         break;
                 }
-                jpDialogBuilder.setFirstButton("确定", new DialogDismissClick());
+                jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
                 jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
@@ -518,12 +522,12 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         Bundle data = message.getData();
         String string = data.getString("Ti");
         String string2 = data.getString("I");
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setTitle(string);
-        jpdialog.setMessage(string2);
-        jpdialog.setFirstButton("确定", new DialogDismissClick());
-        DialogUtil.handleGoldSend(jpapplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
-        jpdialog.buildAndShowDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle(string);
+        jpDialogBuilder.setMessage(string2);
+        jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+        DialogUtil.handleGoldSend(jpapplication, jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     protected void initRoomActivity(Bundle savedInstanceState) {
@@ -781,7 +785,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                             sendMessageClick(true);
                             dialog.dismiss();
                         })
-                        .setSecondButton("再想想", new DialogDismissClick())
+                        .setSecondButton("再想想", ((dialog, which) -> dialog.dismiss()))
                         .buildAndShowDialog();
             }
             return true;

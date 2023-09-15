@@ -21,7 +21,6 @@ import ly.pp.justpiano3.adapter.DailyTimeAdapter;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.thread.ThreadPoolUtils;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -227,23 +226,23 @@ public final class OLPlayHallRoomHandler extends Handler {
                         String title = data.getString("Ti");
                         String messageStr = data.getString("I");
                         String str = "确定";
-                        JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHallRoom);
-                        jpdialog.setTitle(title);
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom);
+                        jpDialogBuilder.setTitle(title);
                         if (b > 0) {
-                            jpdialog.setMessage(messageStr);
-                            jpdialog.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
+                            jpDialogBuilder.setMessage(messageStr);
+                            jpDialogBuilder.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
                                 dialog.dismiss();
                                 OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
                                 builder.setHallId(b);
                                 olPlayHallRoom.sendMsg(OnlineProtocolType.ENTER_HALL, builder.build());
                             });
-                            jpdialog.setSecondButton("取消", new DialogDismissClick());
+                            jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
                         } else {
-                            jpdialog.setMessage(messageStr);
-                            jpdialog.setFirstButton(str, new DialogDismissClick());
+                            jpDialogBuilder.setMessage(messageStr);
+                            jpDialogBuilder.setFirstButton(str, ((dialog, which) -> dialog.dismiss()));
                         }
-                        DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
-                        jpdialog.buildAndShowDialog();
+                        DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
+                        jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
                 case 6:
@@ -268,13 +267,13 @@ public final class OLPlayHallRoomHandler extends Handler {
                         Bundle data = message.getData();
                         byte b = (byte) data.getInt("R");
                         String string2 = data.getString("I");
-                        JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHallRoom);
-                        jpdialog.setTitle("创建家族");
-                        jpdialog.setMessage(string2);
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom);
+                        jpDialogBuilder.setTitle("创建家族");
+                        jpDialogBuilder.setMessage(string2);
                         if (b > 0) {
-                            jpdialog.setVisibleEditText(true, "请填写家族名称");
-                            jpdialog.setFirstButton("创建家族", (dialog, which) -> {
-                                String name = jpdialog.getEditTextString();
+                            jpDialogBuilder.setVisibleEditText(true, "请填写家族名称");
+                            jpDialogBuilder.setFirstButton("创建家族", (dialog, which) -> {
+                                String name = jpDialogBuilder.getEditTextString();
                                 if (name.isEmpty()) {
                                     Toast.makeText(olPlayHallRoom, "家族名称不能为空!", Toast.LENGTH_SHORT).show();
                                 } else if (name.length() > 8) {
@@ -287,11 +286,11 @@ public final class OLPlayHallRoomHandler extends Handler {
                                     olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder.build());
                                 }
                             });
-                            jpdialog.setSecondButton("取消", new DialogDismissClick());
+                            jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
                         } else {
-                            jpdialog.setFirstButton("确定", new DialogDismissClick());
+                            jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
                         }
-                        jpdialog.buildAndShowDialog();
+                        jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
                 case 10:
@@ -346,7 +345,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         TextView textView = inflate.findViewById(R.id.account_msg);
                         textView.setVisibility(View.VISIBLE);
                         textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得" + tomorrowExp + "\n以下为昨日在线时长排名：");
-                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom).setTitle("在线奖励").setSecondButton("取消", new DialogDismissClick())
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom).setTitle("在线奖励")
+                                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
                                 .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
                                     dialog.dismiss();
                                     olPlayHallRoom.jpprogressBar.show();

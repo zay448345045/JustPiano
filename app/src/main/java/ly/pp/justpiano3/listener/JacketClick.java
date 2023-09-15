@@ -29,14 +29,14 @@ public final class JacketClick implements OnItemClickListener {
             olPlayDressRoom.jacketNow = i;
         } else {
             int[] priceArr = "f".equals(olPlayDressRoom.sex) ? OLPlayDressRoom.fJacket : OLPlayDressRoom.mJacket;
-            JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayDressRoom);
-            jpdialog.setTitle("解锁服装");
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
+            jpDialogBuilder.setTitle("解锁服装");
             // 如果为获取到价格，则只允许试穿
             if (priceArr.length - 1 < i) {
-                jpdialog.setMessage("当前服装无法购买，只能试穿");
+                jpDialogBuilder.setMessage("当前服装无法购买，只能试穿");
             } else {
-                jpdialog.setMessage("确定花费" + (priceArr[i]) + "音符购买此服装吗?");
-                jpdialog.setFirstButton("购买", (dialog, which) -> {
+                jpDialogBuilder.setMessage("确定花费" + (priceArr[i]) + "音符购买此服装吗?");
+                jpDialogBuilder.setFirstButton("购买", (dialog, which) -> {
                     OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
                     builder.setType(2);
                     builder.setBuyClothesType(2);
@@ -48,7 +48,7 @@ public final class JacketClick implements OnItemClickListener {
 
 
             if (olPlayDressRoom.jacketTry.contains(i)) {
-                jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
+                jpDialogBuilder.setSecondButton("取消试穿", (dialog, which) -> {
                     dialog.dismiss();
                     olPlayDressRoom.jacketImage.setImageBitmap(olPlayDressRoom.none);
                     olPlayDressRoom.jacketNow = -1;
@@ -56,7 +56,7 @@ public final class JacketClick implements OnItemClickListener {
                     olPlayDressRoom.jacketTry.remove((Integer) i);
                 });
             } else {
-                jpdialog.setSecondButton("试穿", (dialog, which) -> {
+                jpDialogBuilder.setSecondButton("试穿", (dialog, which) -> {
                     dialog.dismiss();
                     olPlayDressRoom.jacketImage.setImageBitmap(olPlayDressRoom.jacketArray.get(i));
                     olPlayDressRoom.jacketNow = i;
@@ -64,7 +64,7 @@ public final class JacketClick implements OnItemClickListener {
                     olPlayDressRoom.jacketTry.add(i);
                 });
             }
-            jpdialog.buildAndShowDialog();
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 }

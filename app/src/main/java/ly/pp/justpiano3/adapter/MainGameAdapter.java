@@ -12,7 +12,6 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.HallPasswordClick;
 import ly.pp.justpiano3.listener.OLSendMailClick;
 import ly.pp.justpiano3.service.ConnectionService;
@@ -46,7 +45,9 @@ public final class MainGameAdapter extends BaseAdapter {
         inflate.findViewById(R.id.text_1).setVisibility(View.GONE);
         textView2.setVisibility(View.GONE);
         textView.setSingleLine(true);
-        new JPDialogBuilder(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new HallPasswordClick(mainGameAdapter, textView, b)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+        new JPDialogBuilder(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate)
+                .setFirstButton("确定", new HallPasswordClick(mainGameAdapter, textView, b))
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void updateList(List<Bundle> list) {
