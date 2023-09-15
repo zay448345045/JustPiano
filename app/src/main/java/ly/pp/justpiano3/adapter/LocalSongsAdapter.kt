@@ -22,6 +22,7 @@ import ly.pp.justpiano3.listener.LocalSongsStartPlayClick
 import ly.pp.justpiano3.thread.SongPlay.startPlay
 import ly.pp.justpiano3.thread.SongPlay.stopPlay
 import ly.pp.justpiano3.view.ScrollText
+import java.io.File
 
 class LocalSongsAdapter(private val melodySelect: MelodySelect, private val songsListView: RecyclerView) :
     PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
@@ -80,6 +81,7 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
                 favorImageView.setOnClickListener {
                     val songDao = JPApplication.getSongDatabase().songDao()
                     songDao.deleteSongs(listOf(song))
+                    File(melodySelect.filesDir.absolutePath + "/Songs/" + song.name + ".pm").delete()
                     Toast.makeText(melodySelect, song.name + ":已删除", Toast.LENGTH_SHORT).show()
                 }
             } else {
