@@ -22,7 +22,6 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
 import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -39,27 +38,23 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";
-    public String loginServer = "";
     public String accountX = "";
     public TextView accountTextView;
     public TextView passwordTextView;
     public JPProgressBar jpprogressBar;
     public SharedPreferences sharedPreferences;
     private LayoutInflater layoutInflater;
+    private CheckBox changeServerCheckBox;
     private CheckBox rememAccount;
     private CheckBox rememPassword;
     private CheckBox autoLogin;
     private String account;
-
 
     public final void loginSuccess(int i, String message, String title) {
         Intent intent = new Intent();
@@ -93,7 +88,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         jpapplication.setPassword(password);
         switch (i) {
             case 0:
-                if (loginServer.contains("server")) {
+                if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -103,8 +98,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 return;
             case 4:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
-                    Toast.makeText(this, loginServer, Toast.LENGTH_SHORT).show();
-                    if (loginServer.contains("server")) {
+                    if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -114,7 +108,8 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 finish();
                 return;
             case 5:
-                new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).buildAndShowDialog();
+                new JPDialogBuilder(this).setTitle(title).setMessage(message)
+                        .setFirstButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                 return;
             default:
         }
@@ -148,6 +143,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                     Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                JPApplication.setServer(changeServerCheckBox.isChecked() ? Consts.TEST_ONLINE_SERVER_URL : Consts.ONLINE_SERVER_URL);
                 new LoginTask(this).execute();
                 return;
             case R.id.ol_register:
@@ -169,26 +165,14 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                         }
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
-                        JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate).setFirstButton("取消", new DialogDismissClick()).createJPDialog();
+                        JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
+                                .setFirstButton("取消", ((dialog, which) -> dialog.dismiss())).createJPDialog();
                         listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
                         b.show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                return;
-            case R.id.ol_change_server:
-                Editor edit = sharedPreferences.edit();
-                edit.putBoolean("remem_account", true);
-                edit.putBoolean("remem_password", true);
-                edit.putBoolean("auto_login", autoLogin.isChecked());
-                edit.putString("current_account", accountTextView.getText().toString());
-                edit.putString("current_password", passwordTextView.getText().toString());
-                edit.apply();
-                intent = new Intent();
-                intent.setClass(this, ChangeServer.class);
-                startActivity(intent);
-                finish();
                 return;
             default:
         }
@@ -199,7 +183,6 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
-        jpapplication.setServer(s.getString("ip", Consts.ONLINE_SERVER_URL));
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
@@ -209,8 +192,8 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
-        Button changeServerButton = findViewById(R.id.ol_change_server);
-        changeServerButton.setOnClickListener(this);
+        changeServerCheckBox = findViewById(R.id.ol_change_server);
+        changeServerCheckBox.setChecked(JPApplication.getServer().equals(Consts.TEST_ONLINE_SERVER_URL));
         Button registerButton = findViewById(R.id.ol_register);
         registerButton.setOnClickListener(this);
         Button changeAccountButton = findViewById(R.id.ol_change_account);
@@ -255,12 +238,12 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     }
 
     public final void addVersionUpdateDialog(String str3, String newVersion) {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setTitle("版本更新");
-        jpdialog.setMessage(str3);
-        jpdialog.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
-        jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.buildAndShowDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle("版本更新");
+        jpDialogBuilder.setMessage(str3);
+        jpDialogBuilder.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
+        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     private String getApkUrlByVersion(String version) {
@@ -308,7 +291,8 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     private void getApkResponseAndInstall(File file, Response response) {
         long length = response.body().contentLength();
         // 下面从返回的输入流中读取字节数据并保存为本地文件
-        try (InputStream is = response.body().byteStream(); FileOutputStream fos = new FileOutputStream(file)) {
+        try (InputStream is = response.body().byteStream();
+             FileOutputStream fos = new FileOutputStream(file)) {
             byte[] buf = new byte[100 * 1024];
             int sum = 0, len;
             while ((len = is.read(buf)) != -1) {

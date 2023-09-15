@@ -11,7 +11,6 @@ import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.listener.DeleteRecordFilesClick;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
@@ -69,7 +68,7 @@ public class RecordFiles extends Activity {
         builder.setMessage("确认删除[" + str + "]吗?");
         builder.setTitle("提示");
         builder.setPositiveButton("确认", new DeleteRecordFilesClick(this, i, str2));
-        builder.setNegativeButton("取消", new DialogDismissClick());
+        builder.setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()));
         builder.create().show();
     }
 

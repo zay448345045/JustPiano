@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.*;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -120,22 +119,22 @@ public class SoundDownload extends Activity implements Callback {
     }
 
     public final void mo3005a(int i, String str, String str2, int i2, String str3) {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String str4 = "使用";
-        jpdialog.setTitle("提示");
+        jpDialogBuilder.setTitle("提示");
         if (i == 0) {
-            jpdialog.setMessage("名称:" + str + "\n作者:" + str3 + "\n大小:" + i2 + "KB\n您要下载并使用吗?");
+            jpDialogBuilder.setMessage("名称:" + str + "\n作者:" + str3 + "\n大小:" + i2 + "KB\n您要下载并使用吗?");
             str4 = "下载";
         } else if (i == 1) {
-            jpdialog.setMessage("[" + str + "]音源已下载，是否使用?");
+            jpDialogBuilder.setMessage("[" + str + "]音源已下载，是否使用?");
             str4 = "使用";
         } else if (i == 2) {
-            jpdialog.setMessage("您要还原极品钢琴的默认音源吗?");
+            jpDialogBuilder.setMessage("您要还原极品钢琴的默认音源吗?");
             str4 = "确定";
         }
-        jpdialog.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
-        jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.buildAndShowDialog();
+        jpDialogBuilder.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
+        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     public final void changeSound(String str) {

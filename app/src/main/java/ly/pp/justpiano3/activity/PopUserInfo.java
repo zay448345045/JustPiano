@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.SendMessageClick;
 import ly.pp.justpiano3.task.PopUserInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
@@ -82,10 +81,10 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
             case R.id.add_friend:
                 if (!kitiName.equals(JPApplication.kitiName)) {
                     headType = 2;
-                    JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-                    jpdialog.setTitle("好友请求");
-                    jpdialog.setMessage("添加[" + kitiName + "]为好友,确定吗?");
-                    jpdialog.setFirstButton("确定", (dialog, which) -> {
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("好友请求");
+                    jpDialogBuilder.setMessage("添加[" + kitiName + "]为好友,确定吗?");
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         JSONObject jSONObject = new JSONObject();
                         try {
                             jSONObject.put("H", 0);
@@ -101,8 +100,8 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                             e.printStackTrace();
                         }
                     });
-                    jpdialog.setSecondButton("取消", new DialogDismissClick());
-                    jpdialog.buildAndShowDialog();
+                    jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                    jpDialogBuilder.buildAndShowDialog();
                     return;
                 }
                 return;
@@ -118,7 +117,9 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                     inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
                     textView3.setVisibility(View.GONE);
                     textView2.setText("消息:");
-                    new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate).setFirstButton("发送", new SendMessageClick(this, textView, str, P)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+                    new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate)
+                            .setFirstButton("发送", new SendMessageClick(this, textView, str, P))
+                            .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                     return;
                 }
                 return;

@@ -116,7 +116,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
+                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,7 +140,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 textView1.setVisibility(View.GONE);
                 textView2.setVisibility(View.GONE);
                 textView.setSingleLine(true);
-                new JPDialogBuilder(this).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new RoomPasswordClick2(this, textView, b)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+                new JPDialogBuilder(this).setTitle("输入密码").loadInflate(inflate)
+                        .setFirstButton("确定", new RoomPasswordClick2(this, textView, b))
+                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                 return;
             default:
         }
@@ -162,7 +166,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         new JPDialogBuilder(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             enterRoomHandle(bundle.getInt("P"), (byte) i2);
-        }).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+        }).setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void mo2828a(ListView listView, List<Bundle> list) {
@@ -192,7 +196,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         textView2.setText("内容:");
         new JPDialogBuilder(this).setTitle("发送私信给:" + str).loadInflate(inflate)
                 .setFirstButton("发送", new SendMailClick(this, textView, str))
-                .setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void mo2831b(ListView listView, List<Bundle> list) {
@@ -261,7 +265,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 textView.setText(stringBuilder);
                 textView.setSingleLine(true);
                 textView2.setSingleLine(true);
-                new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate).setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+                new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate)
+                        .setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup))
+                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                 return;
             case R.id.ol_testroom_b:
                 OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
@@ -458,7 +464,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                             sendHallChat(true);
                             dialog.dismiss();
                         })
-                        .setSecondButton("再想想", new DialogDismissClick())
+                        .setSecondButton("再想想", ((dialog, which) -> dialog.dismiss()))
                         .buildAndShowDialog();
             }
             return true;

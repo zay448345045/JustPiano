@@ -24,7 +24,6 @@ import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
@@ -374,7 +373,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
 
     @Override
     public void onBackPressed() {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         switch (playKind) {
             case 0:
                 m3785a(playKind, true);
@@ -408,9 +407,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 }
                 return;
             case 2:
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("退出弹奏并返回大厅?");
-                jpdialog.setFirstButton("确定", (dialog, which) -> {
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("退出弹奏并返回大厅?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
@@ -418,14 +417,14 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     dialog.dismiss();
                     finish();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.setCancelableFalse();
-                jpdialog.buildAndShowDialog();
+                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             case 3:
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("退出考级并返回大厅?");
-                jpdialog.setFirstButton("确定", (dialog, which) -> {
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("退出考级并返回大厅?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
@@ -433,14 +432,14 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     dialog.dismiss();
                     finish();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.setCancelableFalse();
-                jpdialog.buildAndShowDialog();
+                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             case 4:
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("您将损失一次挑战机会!退出挑战并返回大厅?");
-                jpdialog.setFirstButton("确定", (dialog, which) -> {
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("您将损失一次挑战机会!退出挑战并返回大厅?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
@@ -448,9 +447,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     dialog.dismiss();
                     finish();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.setCancelableFalse();
-                jpdialog.buildAndShowDialog();
+                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
         }

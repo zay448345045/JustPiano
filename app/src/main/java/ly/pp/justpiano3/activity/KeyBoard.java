@@ -20,7 +20,6 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.*;
@@ -377,10 +376,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
-                        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-                        jpdialog.setTitle("提示");
-                        jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
-                        jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                        jpDialogBuilder.setTitle("提示");
+                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
+                        jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
@@ -393,8 +392,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                             recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
                             recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
-                        jpdialog.setSecondButton("取消", new DialogDismissClick());
-                        jpdialog.buildAndShowDialog();
+                        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                        jpDialogBuilder.buildAndShowDialog();
                     } else {
                         recordButton.setText("●");
                         recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));

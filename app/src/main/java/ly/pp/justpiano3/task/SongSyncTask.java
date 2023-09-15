@@ -70,22 +70,6 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                     if (pmSongData == null) {
                         continue;
                     }
-                    ContentValues contentvalues = new ContentValues();
-                    contentvalues.put("name", pmSongData.getSongName());
-                    contentvalues.put("item", Consts.items[item.charAt(0) - 'a' + 1]);
-                    contentvalues.put("path", "songs/" + item + '/' + file.getName());
-                    contentvalues.put("isnew", 1);
-                    contentvalues.put("ishot", 0);
-                    contentvalues.put("isfavo", 0);
-                    contentvalues.put("player", "");
-                    contentvalues.put("score", 0);
-                    contentvalues.put("date", 0);
-                    contentvalues.put("count", 0);
-                    contentvalues.put("diff", pmSongData.getRightHandDegree());
-                    contentvalues.put("online", 1);
-                    contentvalues.put("Ldiff", pmSongData.getLeftHandDegree());
-                    contentvalues.put("length", pmSongData.getSongTime());
-                    contentvalues.put("Lscore", 0);
                     insertSongList.add(new Song(null, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
                             "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
                             0, 0, 0, pmSongData.getRightHandDegree(), 1,
@@ -107,16 +91,16 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
         } else if (activity.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) activity.get();
             melodySelect.jpprogressBar.dismiss();
-            JPDialogBuilder jpdialog = new JPDialogBuilder(melodySelect);
-            jpdialog.setTitle("在线曲库同步");
-            jpdialog.setCancelableFalse();
-            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
-            jpdialog.setSecondButton("确定", ((dialogInterface, i) -> {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(melodySelect);
+            jpDialogBuilder.setTitle("在线曲库同步");
+            jpDialogBuilder.setCancelableFalse();
+            jpDialogBuilder.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
+            jpDialogBuilder.setSecondButton("确定", ((dialogInterface, i) -> {
                 List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
                 melodySelect.getTotalSongInfoMutableLiveData().setValue(allSongsCountAndScore.get(0));
                 dialogInterface.dismiss();
             }));
-            jpdialog.buildAndShowDialog();
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 

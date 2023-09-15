@@ -16,7 +16,6 @@ import android.widget.*;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.ChangePasswordClick;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.task.UserFaceChangeTask;
 import ly.pp.justpiano3.task.UserInfoChangeTask;
 import ly.pp.justpiano3.task.UsersInfoGetTask;
@@ -244,18 +243,13 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.user_face:
-//                JPDialog jpdialog = new JPDialog(this);
-//                jpdialog.setTitle("抱歉");
-//                jpdialog.setMessage("用户自制版服务器空间有限，暂不支持上传头像");
-//                jpdialog.setFirstButton("确定", new DialogDismissClick());
-//                jpdialog.setSecondButton("打开图库", new C1330na(this));
-//                try {f
-//                    jpdialog.showDialog();
-//                    return;
-//                } catch (Exception e) {
-//                    return;
-//                }
+            case R.id.user_face:
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("抱歉");
+                jpDialogBuilder.setMessage("暂不支持上传头像");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+                return;
             case R.id.password_button:
                 View inflate = getLayoutInflater().inflate(R.layout.password_change, findViewById(R.id.dialog));
                 TextView originalPasswordTextView = inflate.findViewById(R.id.original_password);
@@ -265,12 +259,11 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
                 autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
                 CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
                 remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
-                JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-                jpdialog
-                        .setTitle("修改密码").loadInflate(inflate)
+                jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("修改密码").loadInflate(inflate)
                         .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
                                 newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
-                        .setSecondButton("取消", new DialogDismissClick())
+                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
                         .buildAndShowDialog();
                 return;
             case R.id.modify_button:

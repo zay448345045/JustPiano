@@ -24,7 +24,6 @@ import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeBlessingClick;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
@@ -144,7 +143,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
+                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,11 +172,11 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         if (i == 3) {
             tabHost.setCurrentTab(1);
         }
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setTitle(str);
-        jpdialog.setMessage(str2);
-        jpdialog.setFirstButton("确定", new DialogDismissClick());
-        jpdialog.buildAndShowDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle(str);
+        jpDialogBuilder.setMessage(str2);
+        jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     public void mo2842a(Bundle bundle) {
@@ -219,7 +220,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         } else {
             return;
         }
-        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).
+                setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str))
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void mo2846b(ListView listView, List<Bundle> list) {
@@ -268,10 +271,10 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     public void addFriends(String str) {
         if (!str.isEmpty()) {
-            JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-            jpdialog.setTitle("好友请求");
-            jpdialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
-            jpdialog.setFirstButton("同意", (dialog, which) -> {
+            JPDialogBuilder buildAndShowDialog = new JPDialogBuilder(this);
+            buildAndShowDialog.setTitle("好友请求");
+            buildAndShowDialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
+            buildAndShowDialog.setFirstButton("同意", (dialog, which) -> {
                 dialog.dismiss();
                 JSONObject jSONObject = new JSONObject();
                 try {
@@ -283,8 +286,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                     e.printStackTrace();
                 }
             });
-            jpdialog.setSecondButton("拒绝", new DialogDismissClick());
-            jpdialog.buildAndShowDialog();
+            buildAndShowDialog.setSecondButton("拒绝", ((dialog, which) -> dialog.dismiss()));
+            buildAndShowDialog.buildAndShowDialog();
         }
     }
 
@@ -407,17 +410,17 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     public void deleteCp(boolean flag) {
         if (cp > 0) {
-            JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-            jpdialog.setTitle("警告");
-            jpdialog.setMessage("确定要解除搭档关系吗?");
-            jpdialog.setFirstButton("同意", (dialog, which) -> {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("警告");
+            jpDialogBuilder.setMessage("确定要解除搭档关系吗?");
+            jpDialogBuilder.setFirstButton("同意", (dialog, which) -> {
                 OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                 builder.setName(String.valueOf(flag));
                 builder.setType(3);
                 sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", new DialogDismissClick());
-            jpdialog.buildAndShowDialog();
+            }).setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 

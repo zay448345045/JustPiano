@@ -75,21 +75,30 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
                 intent.setClass(melodySelect, WaterfallActivity::class.java)
                 melodySelect.startActivity(intent)
             }
-            favorImageView.setImageResource(if (song.isFavorite == 0) R.drawable.favor_1 else R.drawable.favor)
-            favorImageView.setOnClickListener {
-                val songDao = JPApplication.getSongDatabase().songDao()
-                melodySelect.pagedListLiveData.removeObservers(melodySelect)
-                songDao.updateFavoriteSong(song.filePath, if (song.isFavorite == 0) 1 else 0)
-                val songsDataSource = songDao.getLocalSongsWithDataSource(0, melodySelect.orderPosition)
-                melodySelect.pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource)
-                melodySelect.pagedListLiveData.observe(melodySelect) { pagedList: PagedList<Song>? ->
-                    this@LocalSongsAdapter.submitList(pagedList)
+            if (song.category == Consts.items[Consts.items.size - 1]) {
+                favorImageView.setImageResource(R.drawable.dele)
+                favorImageView.setOnClickListener {
+                    val songDao = JPApplication.getSongDatabase().songDao()
+                    songDao.deleteSongs(listOf(song))
+                    Toast.makeText(melodySelect, song.name + ":已删除", Toast.LENGTH_SHORT).show()
                 }
-                Toast.makeText(
-                    melodySelect,
-                    song.name + if (song.isFavorite == 0) ":已加入收藏夹" else ":已移出收藏夹",
-                    Toast.LENGTH_SHORT
-                ).show()
+            } else {
+                favorImageView.setImageResource(if (song.isFavorite == 0) R.drawable.favor_1 else R.drawable.favor)
+                favorImageView.setOnClickListener {
+                    val songDao = JPApplication.getSongDatabase().songDao()
+                    melodySelect.pagedListLiveData.removeObservers(melodySelect)
+                    songDao.updateFavoriteSong(song.filePath, if (song.isFavorite == 0) 1 else 0)
+                    val songsDataSource = songDao.getLocalSongsWithDataSource(0, melodySelect.orderPosition)
+                    melodySelect.pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource)
+                    melodySelect.pagedListLiveData.observe(melodySelect) { pagedList: PagedList<Song>? ->
+                        this@LocalSongsAdapter.submitList(pagedList)
+                    }
+                    Toast.makeText(
+                        melodySelect,
+                        song.name + if (song.isFavorite == 0) ":已加入收藏夹" else ":已移出收藏夹",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
             songNameScrollText.text = song.name
             songNameScrollText.movementMethod = ScrollingMovementMethod.getInstance()

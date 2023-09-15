@@ -25,13 +25,13 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
     private final OLPlayKeyboardRoom olPlayKeyboardRoom;
     private final List<String> list;
     private final List<File> fileList;
-    private final LayoutInflater li;
+    private final LayoutInflater layoutInflater;
     private final JPDialogBuilder.JPDialog dialog;
 
     public SimpleSkinListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialogBuilder.JPDialog dialog) {
         this.list = list;
         this.fileList = file;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         this.olPlayKeyboardRoom = olPlayKeyboardRoom;
         this.dialog = dialog;
     }
@@ -54,7 +54,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.account_name, null);
+            view = layoutInflater.inflate(R.layout.account_name, null);
         }
         String name = list.get(index);
         TextView nameView = view.findViewById(R.id.account_name_text);

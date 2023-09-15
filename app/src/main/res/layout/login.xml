@@ -56,7 +56,6 @@
             android:id="@+id/app_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:maxLines="1"
             android:text="@string/login_acc_label"
             android:textColor="@color/white1"
@@ -94,7 +93,6 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="@string/login_pwd_label"
             android:textColor="@color/white1"
             android:textSize="20sp" />
@@ -110,7 +108,6 @@
                 style="@style/EditTextStyle"
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="wrap_content"
-
                 android:hint="输入密码"
                 android:inputType="textPassword"
                 android:maxLines="1"
@@ -132,7 +129,6 @@
             android:id="@+id/chec_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:paddingLeft="@dimen/dimen_8dp"
             android:paddingRight="@dimen/dimen_8dp"
             android:text="@string/login_rem_acc" />
@@ -141,7 +137,6 @@
             android:id="@+id/chec_psw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:paddingLeft="@dimen/dimen_8dp"
             android:paddingRight="@dimen/dimen_8dp"
             android:text="@string/login_rem_pwd" />
@@ -150,15 +145,10 @@
             android:id="@+id/chec_autologin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:paddingLeft="@dimen/dimen_8dp"
             android:paddingRight="@dimen/dimen_8dp"
             android:text="@string/login_auto" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_8dp" />
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -183,8 +173,7 @@
             android:layout_alignBaseline="@+id/ol_login"
             android:layout_alignParentTop="true"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginLeft="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/ol_login"
             android:background="@drawable/selector_ol_button"
             android:text="@string/reg_button"
@@ -198,24 +187,22 @@
             android:layout_alignBaseline="@+id/ol_login"
             android:layout_alignParentTop="true"
             android:layout_marginStart="@dimen/dimen_5dp"
-            android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_marginRight="@dimen/dimen_8dp"
+            android:layout_marginEnd="@dimen/dimen_8dp"
             android:layout_toEndOf="@+id/ol_register"
             android:background="@drawable/selector_orange_button"
             android:text="@string/login_sw_acc"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
-        <Button
+        <CheckBox
             android:id="@+id/ol_change_server"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:layout_alignBaseline="@+id/ol_change_account"
             android:layout_alignBottom="@+id/ol_change_account"
             android:layout_toEndOf="@+id/ol_change_account"
-            android:background="@drawable/selector_orange_button"
-            android:text="@string/login_sw_svr"
-            android:textColor="@color/black"
+            android:text="测试服"
             android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>

@@ -74,21 +74,22 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     private void inOutFamily() {
-        JPDialogBuilder jpdialog = new JPDialogBuilder(this);
-        jpdialog.setTitle("提示");
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle("提示");
         switch (position) {
             case LEADER:
-                jpdialog.setMessage("确定要解散你的家族吗?");
+                jpDialogBuilder.setMessage("确定要解散你的家族吗?");
                 break;
             case VICE_LEADER:
             case MEMBER:
-                jpdialog.setMessage("确定要退出家族吗?");
+                jpDialogBuilder.setMessage("确定要退出家族吗?");
                 break;
             case NOT_IN_FAMILY:
-                jpdialog.setMessage("申请加入家族需要族长或副族长的批准!");
+                jpDialogBuilder.setMessage("申请加入家族需要族长或副族长的批准!");
                 break;
         }
-        jpdialog.setFirstButton("确定", new InOutFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+        jpDialogBuilder.setFirstButton("确定", new InOutFamilyClick(this))
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
@@ -142,7 +143,9 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsMailClick(this, user.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).buildAndShowDialog();
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", new AddFriendsMailClick(this, user.getPlayerName()))
+                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,7 +202,8 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("提示");
                 jpDialogBuilder.setMessage("确定要将Ta移出家族吗?");
-                jpDialogBuilder.setFirstButton("确定", new KickFamilyClick(this)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+                jpDialogBuilder.setFirstButton("确定", new KickFamilyClick(this))
+                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                 break;
             case R.id.ol_showinfo_b:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -225,14 +229,15 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 showSendDialog(" ", 1);
                 break;
             case R.id.ol_family_changepic:
-                /*jpDialog = new JPDialog(this);
-                jpDialog.setTitle("抱歉");
-                jpDialog.setMessage("当前客户端不支持家族族徽的上传，可联系开发者上传或等待日后的版本更新!");
-                jpDialog.setFirstButton("确定", new DialogDismissClick());
-                Intent intent = new Intent("android.intent.action.GET_CONTENT");
-                intent.addCategory("android.intent.category.OPENABLE");
-                intent.setType("image/*");
-                startActivityForResult(intent, 2);*/
+                jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("抱歉");
+                jpDialogBuilder.setMessage("当前客户端不支持家族族徽的上传，请至官网上传");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+//                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+//                intent.addCategory("android.intent.category.OPENABLE");
+//                intent.setType("image/*");
+//                startActivityForResult(intent, 2);
                 break;
             case R.id.ol_family_changetest:
                 break;
@@ -354,7 +359,9 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         } else {
             return;
         }
-        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog();
+        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate)
+                .setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str))
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
     }
 
     public final void mo2907b(ListView listView, List<Map<String, String>> list) {

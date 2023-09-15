@@ -17,7 +17,7 @@ public final class OLMelodySelectTypeAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return Consts.items.length - 1;
+        return Consts.items.length - 2;
     }
 
     @Override

@@ -15,7 +15,6 @@ import ly.pp.justpiano3.activity.*;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.RoomModeEnum;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineClTestDTO;
@@ -166,11 +165,11 @@ public final class OLPlayHallHandler extends Handler {
                     switch (message.getData().getInt("T")) {
                         case 0:
                             if (!string.isEmpty()) {
-                                JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHall);
-                                jpdialog.setTitle("好友请求");
-                                jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
+                                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
+                                jpDialogBuilder.setTitle("好友请求");
+                                jpDialogBuilder.setMessage("[" + string + "]请求加您为好友,同意吗?");
                                 String finalString = string;
-                                jpdialog.setFirstButton("同意", (dialog, which) -> {
+                                jpDialogBuilder.setFirstButton("同意", (dialog, which) -> {
                                     dialog.dismiss();
                                     OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                                     builder.setType(1);
@@ -178,7 +177,7 @@ public final class OLPlayHallHandler extends Handler {
                                     builder.setReject(false);
                                     olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                 });
-                                jpdialog.setSecondButton("拒绝", (dialog, which) -> {
+                                jpDialogBuilder.setSecondButton("拒绝", (dialog, which) -> {
                                     dialog.dismiss();
                                     OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                                     builder.setType(1);
@@ -186,32 +185,32 @@ public final class OLPlayHallHandler extends Handler {
                                     builder.setReject(true);
                                     olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                                 });
-                                jpdialog.buildAndShowDialog();
+                                jpDialogBuilder.buildAndShowDialog();
                             }
                             return;
                         case 1:
                             DialogUtil.setShowDialog(false);
                             string = message.getData().getString("F");
                             int i = message.getData().getInt("I");
-                            JPDialogBuilder jpdialog2 = new JPDialogBuilder(olPlayHall);
-                            jpdialog2.setTitle("请求结果");
+                            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
+                            jpDialogBuilder.setTitle("请求结果");
                             switch (i) {
                                 case 0:
-                                    jpdialog2.setMessage("[" + string + "]同意添加您为好友!");
+                                    jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
                                     break;
                                 case 1:
-                                    jpdialog2.setMessage("对方拒绝了你的好友请求!");
+                                    jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
                                     break;
                                 case 2:
-                                    jpdialog2.setMessage("对方已经是你的好友!");
+                                    jpDialogBuilder.setMessage("对方已经是你的好友!");
                                     break;
                                 case 3:
-                                    jpdialog2.setTitle(message.getData().getString("title"));
-                                    jpdialog2.setMessage(message.getData().getString("Message"));
+                                    jpDialogBuilder.setTitle(message.getData().getString("title"));
+                                    jpDialogBuilder.setMessage(message.getData().getString("Message"));
                                     break;
                             }
-                            jpdialog2.setFirstButton("确定", new DialogDismissClick());
-                            jpdialog2.buildAndShowDialog();
+                            jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+                            jpDialogBuilder.buildAndShowDialog();
                             return;
                         default:
                     }
@@ -227,12 +226,12 @@ public final class OLPlayHallHandler extends Handler {
                         int i2 = data14.getInt("C");
                         String messageStr = data14.getString("I");
                         String title = data14.getString("Ti");
-                        JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHall);
-                        jpdialog.setTitle(title);
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
+                        jpDialogBuilder.setTitle(title);
                         title = "确定";
                         if (i2 == 1 && b2 == olPlayHall.hallID && b2 > (byte) 0) {
-                            jpdialog.setMessage(messageStr);
-                            jpdialog.setFirstButton("进入房间", (dialog, which) -> {
+                            jpDialogBuilder.setMessage(messageStr);
+                            jpDialogBuilder.setFirstButton("进入房间", (dialog, which) -> {
                                 dialog.dismiss();
                                 DialogUtil.setShowDialog(false);
                                 if (i == 0) {
@@ -244,19 +243,19 @@ public final class OLPlayHallHandler extends Handler {
                                     olPlayHall.sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                                 }
                             });
-                            jpdialog.setSecondButton("取消", (dialog, which) -> {
+                            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> {
                                 dialog.dismiss();
                                 DialogUtil.setShowDialog(false);
                             });
                         } else {
-                            jpdialog.setMessage(messageStr);
-                            jpdialog.setFirstButton(title, (dialog, which) -> {
+                            jpDialogBuilder.setMessage(messageStr);
+                            jpDialogBuilder.setFirstButton(title, (dialog, which) -> {
                                 dialog.dismiss();
                                 DialogUtil.setShowDialog(false);
                             });
                         }
-                        DialogUtil.handleGoldSend(olPlayHall.jpapplication, jpdialog, i, data14.getString("N"), data14.getString("F"));
-                        jpdialog.buildAndShowDialog();
+                        DialogUtil.handleGoldSend(olPlayHall.jpapplication, jpDialogBuilder, i, data14.getString("N"), data14.getString("F"));
+                        jpDialogBuilder.buildAndShowDialog();
                         DialogUtil.setShowDialog(true);
                     }
                 });
@@ -287,22 +286,22 @@ public final class OLPlayHallHandler extends Handler {
                             str2 = "开始考级";
                             break;
                     }
-                    JPDialogBuilder jpdialog = new JPDialogBuilder(olPlayHall);
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
                     if (msg.length > 1) {
-                        jpdialog.setVisibleRadioGroup(true);
+                        jpDialogBuilder.setVisibleRadioGroup(true);
                     }
-                    jpdialog.setTitle(str);
-                    jpdialog.setMessage(msg[0]);
+                    jpDialogBuilder.setTitle(str);
+                    jpDialogBuilder.setMessage(msg[0]);
                     for (int j = 1; j < msg.length; j++) {
                         RadioButton radioButton = new RadioButton(olPlayHall);
                         radioButton.setText(msg[j]);
                         radioButton.setTextSize(12);
                         radioButton.setTag(j - 1);
                         radioButton.setHeight(114);
-                        jpdialog.addRadioButton(radioButton);
+                        jpDialogBuilder.addRadioButton(radioButton);
                     }
-                    jpdialog.setFirstButton(str2, (dialog, which) -> {
-                        int checkedId = jpdialog.getRadioGroupCheckedId();
+                    jpDialogBuilder.setFirstButton(str2, (dialog, which) -> {
+                        int checkedId = jpDialogBuilder.getRadioGroupCheckedId();
                         if (checkedId == -1 && msg.length > 1) {
                             Toast.makeText(olPlayHall, "请选择一首考级曲", Toast.LENGTH_SHORT).show();
                         } else {
@@ -317,9 +316,9 @@ public final class OLPlayHallHandler extends Handler {
                         }
                     });
                     if (i == 1) {
-                        jpdialog.setSecondButton("取消", new DialogDismissClick());
+                        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
                     }
-                    jpdialog.buildAndShowDialog();
+                    jpDialogBuilder.buildAndShowDialog();
                 });
                 return;
             case 12:

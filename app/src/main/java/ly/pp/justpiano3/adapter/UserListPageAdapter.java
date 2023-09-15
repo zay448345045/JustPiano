@@ -9,7 +9,6 @@ import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -66,7 +65,7 @@ public final class UserListPageAdapter extends BaseAdapter {
                     userListPage.listView.setAdapter(new UserListPageAdapter(userListPage, ChatBlackUserUtil.getChatBlackList(userListPage)));
                     dialogInterface.dismiss();
                 })
-                .setSecondButton("取消", new DialogDismissClick()).buildAndShowDialog());
+                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog());
         return view;
     }
 }

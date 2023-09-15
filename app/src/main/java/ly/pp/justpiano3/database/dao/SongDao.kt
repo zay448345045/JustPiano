@@ -10,17 +10,20 @@ import ly.pp.justpiano3.database.entity.Song
 @Dao
 interface SongDao {
 
-    @Query("SELECT * FROM song")
+    @Query("SELECT * FROM song WHERE online = 1")
     fun getAllSongs(): List<Song>
 
-    @Query("SELECT * FROM song")
+    @Query("SELECT * FROM song WHERE online = 1")
     fun getAllSongsWithDataSource(): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE item IN (:category)")
+    @Query("SELECT * FROM song WHERE online = 1 AND item IN (:category)")
     fun getSongsByCategoriesWithDataSource(vararg category: String): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE name LIKE '%' || :keyWord || '%'")
+    @Query("SELECT * FROM song WHERE online = 1 AND name LIKE '%' || :keyWord || '%'")
     fun getSongsByNameKeywordsWithDataSource(keyWord: String): DataSource.Factory<Int, Song>
+
+    @Query("SELECT * FROM song WHERE online = 0")
+    fun getLocalImportSongs(): DataSource.Factory<Int, Song>
 
     enum class Category(val code: Int, val desc: String) {
         CLASSICS(1, "经典乐章"), POP(2, "流行空间"), FILM(3, "影视剧场"), CHILD(4, "儿时回忆"),
@@ -51,40 +54,40 @@ interface SongDao {
         }
     }
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name ASC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name ASC")
     fun getNameAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name DESC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name DESC")
     fun getNameDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY isnew ASC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY isnew ASC")
     fun getIsNewAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY date DESC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY date DESC")
     fun getDateDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff ASC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff ASC")
     fun getDegreeAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff DESC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff DESC")
     fun getDegreeDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score ASC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score ASC")
     fun getScoreAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score DESC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score DESC")
     fun getScoreDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length ASC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length ASC")
     fun getLengthAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length DESC")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length DESC")
     fun getLengthDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
 
-    @Query("SELECT * FROM song WHERE isfavo = 1")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo = 1")
     fun getFavoriteSongs(): List<Song>
 
-    @Query("SELECT * FROM song WHERE isfavo = 1")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo = 1")
     fun getFavoriteSongsWithDataSource(): DataSource.Factory<Int, Song>
 
     @Query("SELECT COUNT(1) AS totalCount, (SUM(score) + SUM(Lscore)) AS totalScore FROM song")
@@ -115,22 +118,22 @@ interface SongDao {
     @Delete
     fun deleteSongs(deleteSongs: List<Song>)
 
-    @Query("UPDATE song SET isfavo = :isFavorite, score = :rightHandHighScore, Lscore = :leftHandHeightScore WHERE path = :path")
+    @Query("UPDATE song SET isfavo = :isFavorite, score = :rightHandHighScore, Lscore = :leftHandHeightScore WHERE online = 1 AND path = :path")
     fun updateSongInfoByPath(isFavorite: Int, rightHandHighScore: Int, leftHandHeightScore: Int, path: String): Int
 
-    @Query("SELECT * FROM song WHERE name = :name")
+    @Query("SELECT * FROM song WHERE online = 1 AND name = :name")
     fun getSongByName(name: String): List<Song>
 
-    @Query("SELECT * FROM song WHERE path = :filePath")
+    @Query("SELECT * FROM song WHERE online = 1 AND path = :filePath")
     fun getSongByFilePath(filePath: String): List<Song>
 
-    @Query("SELECT * FROM song WHERE diff BETWEEN :startDegree AND :endDegree ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT * FROM song WHERE online = 1 AND diff BETWEEN :startDegree AND :endDegree ORDER BY RANDOM() LIMIT 1")
     fun getSongByRightHandDegreeWithRandom(startDegree: Int, endDegree: Int): List<Song>
 
-    @Query("SELECT * FROM song WHERE isfavo = 1 ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT * FROM song WHERE online = 1 AND isfavo = 1 ORDER BY RANDOM() LIMIT 1")
     fun getSongInFavoriteWithRandom(): List<Song>
 
-    @Query("UPDATE song SET isfavo = :isFavorite WHERE path = :filePath")
+    @Query("UPDATE song SET isfavo = :isFavorite WHERE online = 1 AND path = :filePath")
     fun updateFavoriteSong(filePath: String, isFavorite: Int): Int
 
     private val _config: PagedList.Config

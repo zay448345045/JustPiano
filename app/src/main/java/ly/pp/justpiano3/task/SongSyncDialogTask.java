@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
@@ -61,16 +60,16 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 olMainMode.get().loginOnline();
                 i = 0;
             }
-            JPDialogBuilder jpdialog = new JPDialogBuilder(olMainMode.get());
-            jpdialog.setTitle("在线曲库同步");
-            jpdialog.setMessage(message);
-            jpdialog.setFirstButton("开始同步", (dialog, which) -> {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olMainMode.get());
+            jpDialogBuilder.setTitle("在线曲库同步");
+            jpDialogBuilder.setMessage(message);
+            jpDialogBuilder.setFirstButton("开始同步", (dialog, which) -> {
                 dialog.dismiss();
                 new SongSyncTask(olMainMode.get(), maxSongId).execute();
             });
-            jpdialog.setSecondButton("取消", new DialogDismissClick());
+            jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
             if (i != 0) {
-                jpdialog.buildAndShowDialog();
+                jpDialogBuilder.buildAndShowDialog();
             }
         } catch (Exception e) {
             Toast.makeText(olMainMode.get(), "无法检查曲库同步，请尝试重新登录", Toast.LENGTH_SHORT).show();
