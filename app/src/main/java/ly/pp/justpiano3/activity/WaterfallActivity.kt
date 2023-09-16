@@ -279,8 +279,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                     startTime = System.currentTimeMillis()
                     withContext(Dispatchers.Main) {
                         progressBar.text = String.format(
-                            "瀑布流正在加载中...%.2f%%",
-                            i.toFloat() / it.pitchArray.size * 100
+                            "瀑布流正在加载中...%.2f%%", i.toFloat() / it.pitchArray.size * 100
                         )
                         if (!progressBar.isShowing) {
                             progressBar.show()

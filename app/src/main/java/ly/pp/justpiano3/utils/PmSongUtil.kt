@@ -98,14 +98,17 @@ object PmSongUtil {
                         noteArray[i1] = pmData[index]
                         i1++
                     }
+
                     1 -> {
                         volumeArray[i2] = pmData[index]
                         i2++
                     }
+
                     2 -> {
                         tickArray[i3] = pmData[index]
                         i3++
                     }
+
                     3 -> {
                         trackArray[i4] = pmData[index]
                         i4++
@@ -136,7 +139,7 @@ object PmSongUtil {
      */
     fun midiFileToPmFile(midiFile: File, pmFile: File): SongData {
         val originalNoteList = parseMidiOriginalNote(midiFile)
-        originalNoteList.sortedBy { it.playTime }
+            .sortedBy { originalNote -> originalNote.playTime }
         // 获取左手和右手的音符列表
         val leftHandNoteList: MutableList<OriginalNote> = ArrayList()
         val rightHandNoteList: MutableList<OriginalNote> = ArrayList()
@@ -151,9 +154,15 @@ object PmSongUtil {
         val rightHandDegree = calculateDegree(rightHandNoteList)
         val leftHandDegree = calculateDegree(leftHandNoteList)
         return SongData(
-            calculateSongLength(originalNoteList), rightHandDegree, leftHandDegree,
-            0, 0, 0, 0,
-            createPmFile(pmFile, songName, rightHandDegree, leftHandDegree, originalNoteList), midiFile
+            calculateSongLength(originalNoteList),
+            rightHandDegree,
+            leftHandDegree,
+            0,
+            0,
+            0,
+            0,
+            createPmFile(pmFile, songName, rightHandDegree, leftHandDegree, originalNoteList),
+            midiFile
         )
     }
 
@@ -168,35 +177,31 @@ object PmSongUtil {
             pmFile.delete()
             pmFile.createNewFile()
         }
-        try {
-            FileOutputStream(pmFile).use { fileOutputStream ->
-                fileOutputStream.write(songName.toByteArray(StandardCharsets.UTF_8))
-                fileOutputStream.write('\n'.code)
-                fileOutputStream.write(leftHandDegree)
-                // 记录上一个音符的起始播放时间，用于计算时间间隔
-                var lastNotePlayTime = 0L
-                for ((playTime, leftHand, pitch, volume) in originalNoteList) {
-                    // 实际的音符时间间隔 = 当前音符的起始播放时间 - 上一个音符的起始播放时间
-                    var intervalTime = (playTime - lastNotePlayTime).toInt()
-                    // 若时间间隔过高，防止byte字节溢出，则需进行拆解（先循环填充空音符的时间间隔，之后填充剩余的时间间隔）
-                    while (intervalTime > PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED) {
-                        fileOutputStream.write(PM_DEFAULT_FILLED_DATA)
-                        intervalTime -= PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED
-                    }
-                    // 写入pm音符数据，元素依次为：时间间隔/全局速度、左右手、音高、力度
-                    fileOutputStream.write(intervalTime / PM_GLOBAL_SPEED)
-                    fileOutputStream.write(if (leftHand) 1 else 0)
-                    fileOutputStream.write(pitch.toInt())
-                    fileOutputStream.write(ceil(volume * 100.0 / 128).toInt())
-                    // 更新上一个音符的起始播放时间
-                    lastNotePlayTime = playTime
+        FileOutputStream(pmFile).use { fileOutputStream ->
+            fileOutputStream.write(songName.toByteArray(StandardCharsets.UTF_8))
+            fileOutputStream.write('\n'.code)
+            fileOutputStream.write(leftHandDegree)
+            // 记录上一个音符的起始播放时间，用于计算时间间隔
+            var lastNotePlayTime = 0L
+            for ((playTime, leftHand, pitch, volume) in originalNoteList) {
+                // 实际的音符时间间隔 = 当前音符的起始播放时间 - 上一个音符的起始播放时间
+                var intervalTime = (playTime - lastNotePlayTime).toInt()
+                // 若时间间隔过高，防止byte字节溢出，则需进行拆解（先循环填充空音符的时间间隔，之后填充剩余的时间间隔）
+                while (intervalTime > PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED) {
+                    fileOutputStream.write(PM_DEFAULT_FILLED_DATA)
+                    intervalTime -= PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED
                 }
-                fileOutputStream.write(PM_GLOBAL_SPEED)
-                fileOutputStream.write(rightHandDegree)
-                fileOutputStream.flush()
+                // 写入pm音符数据，元素依次为：时间间隔/全局速度、左右手、音高、力度
+                fileOutputStream.write(intervalTime / PM_GLOBAL_SPEED)
+                fileOutputStream.write(if (leftHand) 1 else 0)
+                fileOutputStream.write(pitch.toInt())
+                fileOutputStream.write(ceil(volume * 100.0 / 128).toInt())
+                // 更新上一个音符的起始播放时间
+                lastNotePlayTime = playTime
             }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
+            fileOutputStream.write(PM_GLOBAL_SPEED)
+            fileOutputStream.write(rightHandDegree)
+            fileOutputStream.flush()
         }
         return pmFile
     }
@@ -212,8 +217,7 @@ object PmSongUtil {
         val tempoCache = MidiUtils.TempoCache(sequence)
         // 提取midi的所有音轨，过滤掉无音符的音轨
         val filteredTracks: MutableList<Track> = ArrayList()
-        for (i in sequence.tracks.indices) {
-            val track = sequence.tracks[i]
+        for (track in sequence.tracks) {
             if (hasNote(track)) {
                 filteredTracks.add(track)
             }
@@ -234,7 +238,14 @@ object PmSongUtil {
                         if (velocity > 0) {
                             // tick换算为实际的时间，看JDK源码得知，考虑到了变速，按tick划分变速，计算没有问题
                             val time = MidiUtils.tick2microsecond(sequence, event.tick, tempoCache)
-                            originalNoteList.add(OriginalNote(time / 1000, i > 0, note.toByte(), velocity.toByte()))
+                            originalNoteList.add(
+                                OriginalNote(
+                                    time / 1000,
+                                    i > 0,
+                                    note.toByte(),
+                                    velocity.toByte()
+                                )
+                            )
                         }
                     }
                 }
@@ -279,7 +290,7 @@ object PmSongUtil {
      * 给定音符列表，计算难度（客户端显示难度 * 10，返回参数范围在0～100之间）
      */
     private fun calculateDegree(originalNoteList: List<OriginalNote>?): Int {
-        if (originalNoteList == null || originalNoteList.isEmpty()) {
+        if (originalNoteList.isNullOrEmpty()) {
             return 0
         }
         // 非隐藏键音块数量

@@ -13,7 +13,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.*;
+
 import androidx.activity.ComponentActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
@@ -22,6 +24,7 @@ import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.LocalSongsAdapter;
@@ -34,6 +37,7 @@ import ly.pp.justpiano3.entity.SongData;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
@@ -165,7 +169,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         if (requestCode == JPApplication.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            List<Song> insertSongList = new ArrayList<>();
             List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);
             if (fileList.isEmpty()) {
                 return;
@@ -176,33 +179,44 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 return;
             }
             String songName = midiFile.getName().substring(0, midiFile.getName().indexOf('.'));
-            if (midiFile.length() > 1048576) {
-                Toast.makeText(this, "midi文件大小必须小于1M", Toast.LENGTH_SHORT).show();
-                return;
-            }
             File pmFile = new File(getFilesDir().getAbsolutePath() + "/Songs/" + songName + ".pm");
             if (pmFile.exists()) {
                 Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
                 return;
             }
-            SongData songData = null;
-            try {
-                songData = PmSongUtil.INSTANCE.midiFileToPmFile(midiFile, pmFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (!pmFile.exists() || songData == null) {
-                Toast.makeText(this, "导入《" + songName + "》失败，请确认midi文件是否合法", Toast.LENGTH_SHORT).show();
+            if (midiFile.length() > 10 * 1024 * 1024) {
+                Toast.makeText(this, "不接受超过10MB的midi文件", Toast.LENGTH_SHORT).show();
                 return;
+            } else if (midiFile.length() > 256 * 1024) {
+                Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
             }
-            insertSongList.add(new Song(null, songName, Consts.items[Consts.items.length - 1],
-                    "songs/p/" + pmFile.getName(), 1, 0, 0, "",
-                    0, 0, 0, songData.getRightHandDegree() / 10f, 0,
-                    songData.getLeftHandDegree() / 10f, songData.getLength(), 0));
-            JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
-            Toast.makeText(this, "成功导入曲目《" + songName + "》，可点击\"本地导入\"分类查看", Toast.LENGTH_SHORT).show();
-            categoryListView.performItemClick(categoryListView.getAdapter().getView(Consts.items.length - 1, null, null),
-                    Consts.items.length - 1, categoryListView.getItemIdAtPosition(Consts.items.length - 1));
+            jpprogressBar.setCancelable(false);
+            jpprogressBar.show();
+            ThreadPoolUtil.execute(() -> {
+                String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
+                try {
+                    SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(midiFile, pmFile);
+                    if (!pmFile.exists()) {
+                        throw new RuntimeException("导入《" + songName + "》失败，请确认midi文件是否合法");
+                    }
+                    List<Song> insertSongList = Collections.singletonList(new Song(null, songName, Consts.items[Consts.items.length - 1],
+                            "songs/p/" + pmFile.getName(), 1, 0, 0, "",
+                            0, 0, 0, songData.getRightHandDegree() / 10f, 0,
+                            songData.getLeftHandDegree() / 10f, songData.getLength(), 0));
+                    JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
+                } catch (Exception e) {
+                    message = e.getMessage();
+                    e.printStackTrace();
+                } finally {
+                    String finalMessage = message;
+                    runOnUiThread(() -> {
+                        jpprogressBar.dismiss();
+                        Toast.makeText(this, finalMessage, Toast.LENGTH_SHORT).show();
+                        categoryListView.performItemClick(categoryListView.getAdapter().getView(Consts.items.length - 1, null, null),
+                                Consts.items.length - 1, categoryListView.getItemIdAtPosition(Consts.items.length - 1));
+                    });
+                }
+            });
         }
     }
 
@@ -356,7 +370,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             ListView listView = inflate.findViewById(R.id.list);
             PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
+            sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 30, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             sortPopupWindow.setOutsideTouchable(true);
             sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();
@@ -366,7 +380,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
             listView.setAdapter(popupWindowSelectAdapter);
             listView.setDivider(null);
-            menuPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 20, -2, true);
+            menuPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 30, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             menuPopupWindow.setOutsideTouchable(true);
             menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             firstLoadFocusFinish = true;

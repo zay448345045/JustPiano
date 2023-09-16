@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.core.content.res.ResourcesCompat;
 import ly.pp.justpiano3.JPApplication;
@@ -302,7 +303,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             ListView listView = inflate.findViewById(R.id.list);
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, pageList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            popupWindow = new PopupWindow(inflate, width, -2, true);
+            popupWindow = new PopupWindow(inflate, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             popupWindow.setOutsideTouchable(true);
             popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_face, getTheme()));
             firstLoadFocusFinish = true;
