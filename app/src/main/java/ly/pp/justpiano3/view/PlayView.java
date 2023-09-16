@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -45,7 +44,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class PlayView extends SurfaceView implements Callback {
     // 总分显示向左偏移的数量，解决曲面屏右上角总分显示不全的问题
     private static final int TOTAL_SCORE_SHOW_OFFSET = 50;
-    public static long serialID = 2825651233768L;
     public Bitmap whiteKeyRightImage;
     public Bitmap whiteKeyMiddleImage;
     public Bitmap whiteKeyLeftImage;
@@ -68,7 +66,7 @@ public final class PlayView extends SurfaceView implements Callback {
     public Bitmap backgroundImage;
     public Bitmap barImage;
     public float positionAdd15AddAnim;
-    public int f4813n;
+    public int currentNotePitch;
     public Bitmap missImage;
     public Bitmap perfectImage;
     public Bitmap coolImage;
@@ -134,7 +132,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private byte[] tickArray;
     private byte[] trackArray;
     private boolean f4713V = true;
-    private int noteCounts;
     private Rect f4801bz;
     private final Paint line = new Paint();
     private float widthDiv8;
@@ -358,7 +355,6 @@ public final class PlayView extends SurfaceView implements Callback {
                         });
                     }
                 } else {
-                    noteCounts = notesList.size();
                     pianoPlay.runOnUiThread(() -> {
                         pianoPlay.setContentView(this);
                         pianoPlay.keyboardview = new KeyBoardView(pianoPlay, this);
@@ -579,6 +575,7 @@ public final class PlayView extends SurfaceView implements Callback {
             int size2;
             byte[] bArr;
             Message message;
+            long serialID = 2825651233768L;
             switch (gameType) {
                 case 4:
                     size2 = uploadTouchStatusList.size();
@@ -713,7 +710,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     newNote = false;
                 }
                 if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
-                    f4813n = currentPlayNote.noteValue;
+                    currentNotePitch = currentPlayNote.noteValue;
                     f4713V = false;
                 }
                 if (gameType > 0) {
@@ -836,7 +833,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     newNote = false;
                 }
                 if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
-                    f4813n = currentPlayNote.noteValue;
+                    currentNotePitch = currentPlayNote.noteValue;
                     f4713V = false;
                 }
                 currentPlayNote.noCompatibleMode(canvas);
