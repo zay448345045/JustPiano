@@ -33,6 +33,9 @@ namespace iolib {
             // Mix in the samples
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
+            if (data == nullptr) {
+                return;
+            }
             if (numChannels == 1) {
                 // MONO output
                 // do not use, because of clipping wave.
@@ -44,16 +47,6 @@ namespace iolib {
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
                     float value = data[trueIndex] * trueVolume / 128;
-                    outBuff[dstSampleIndex++] += value;
-                    outBuff[dstSampleIndex++] += value;
-                    trueIndex++;
-                }
-            } else if (numChannels == 4) {
-                int dstSampleIndex = 0;
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    float value = data[trueIndex] * trueVolume / 256;
-                    outBuff[dstSampleIndex++] += value;
-                    outBuff[dstSampleIndex++] += value;
                     outBuff[dstSampleIndex++] += value;
                     outBuff[dstSampleIndex++] += value;
                     trueIndex++;

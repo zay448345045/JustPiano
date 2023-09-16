@@ -345,7 +345,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         TextView textView = inflate.findViewById(R.id.account_msg);
                         textView.setVisibility(View.VISIBLE);
                         textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得" + tomorrowExp + "\n以下为昨日在线时长排名：");
-                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom).setWidthWeight(0.52).setTitle("在线奖励")
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom).setWidth(375).setTitle("在线奖励")
                                 .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
                                 .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
                                     dialog.dismiss();

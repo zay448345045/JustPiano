@@ -35,6 +35,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         LoginActivity loginActivity = activity.get();
         loginActivity.accountX = loginActivity.accountTextView.getText().toString();
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
+        String ip = JPApplication.getServer();
         if (!loginActivity.accountX.isEmpty() && !loginActivity.password.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + JPApplication.getServer() + ":8910/JustPianoServer/server/LoginServlet").newBuilder();

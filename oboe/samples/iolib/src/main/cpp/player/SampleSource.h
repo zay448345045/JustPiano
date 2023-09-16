@@ -34,27 +34,22 @@ namespace iolib {
     class SampleSource : public DataSource {
     public:
 
-        SampleSource(SampleBuffer *sampleBuffer)
-                : mSampleBuffer(sampleBuffer), mGain(1.0f) {}
+        SampleSource(SampleBuffer *sampleBuffer) : mSampleBuffer(sampleBuffer) {}
 
         virtual ~SampleSource() {}
 
         void setPlayMode(int32_t volume) {
-            mCurFrameIndexQueue.push(std::make_pair(0, volume));
+            std::pair<int32_t, int32_t> pair = std::make_pair(0, volume);
+            if (mCurFrameIndexQueue.size() > 10) {
+                mCurFrameIndexQueue.pop();
+            }
+            mCurFrameIndexQueue.push(pair);
         }
 
         void setStopMode() {
             while (!mCurFrameIndexQueue.empty()) {
                 mCurFrameIndexQueue.pop();
             }
-        }
-
-        void setGain(float gain) {
-            mGain = gain;
-        }
-
-        float getGain() const {
-            return mGain;
         }
 
         int32_t getCurFrameIndexQueueSize() {
@@ -79,9 +74,6 @@ namespace iolib {
         SampleBuffer *mSampleBuffer;
 
         std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
-
-        // Overall gain
-        float mGain;
     };
 
 } // namespace wavlib

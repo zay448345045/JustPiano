@@ -208,14 +208,6 @@ namespace iolib {
         }
     }
 
-    void SimpleMultiPlayer::setGain(int index, float gain) {
-        mSampleSources[index]->setGain(gain);
-    }
-
-    float SimpleMultiPlayer::getGain(int index) {
-        return mSampleSources[index]->getGain();
-    }
-
     void SimpleMultiPlayer::setRecord(bool r) {
         if (r) {
             mRecordingIO->reserveRecordingBuffer(mSampleRate);

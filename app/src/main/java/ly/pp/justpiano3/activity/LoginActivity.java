@@ -103,10 +103,9 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                     } else {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
                     }
-                    startActivity(intent);
-                    dialog.dismiss();
-                    finish();
                 }).buildAndShowDialog();
+                startActivity(intent);
+                finish();
                 return;
             case 5:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message)

@@ -131,7 +131,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
-            new JPDialogBuilder(this).setWidthWeight(0.40).setTitle(str).loadInflate(inflate)
+            new JPDialogBuilder(this).setWidth(288).setTitle(str).loadInflate(inflate)
                     .setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
                 try {
                     OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
@@ -172,7 +172,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidthWeight(0.45).setTitle("个人资料").loadInflate(inflate)
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
         } catch (Exception e) {
@@ -779,7 +779,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             String text = sendTextView.getText().toString();
             if (!text.isEmpty()) {
                 new JPDialogBuilder(this)
-                        .setWidthWeight(0.8f)
+                        .setWidth(576)
                         .setTitle("发送'全服广播'")
                         .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + text)
                         .setFirstButton("希望", (dialog, i) -> {

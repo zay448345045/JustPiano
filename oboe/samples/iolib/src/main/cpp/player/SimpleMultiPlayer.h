@@ -77,14 +77,6 @@ namespace iolib {
 
         void clearOutputReset() { mOutputReset = false; }
 
-        void setPan(int index, float pan);
-
-        float getPan(int index);
-
-        void setGain(int index, float gain);
-
-        float getGain(int index);
-
         void setRecord(bool r);
 
         void setRecordFilePath(char* s);

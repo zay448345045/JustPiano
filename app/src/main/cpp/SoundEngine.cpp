@@ -111,16 +111,6 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_restartStream
     }
 }
 
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setGain(
-        JNIEnv *env, jclass thiz, jint index, jfloat gain) {
-    sDTPlayer.setGain(index, gain);
-}
-
-JNIEXPORT jfloat JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_getGain(
-        JNIEnv *env, jclass thiz, jint index) {
-    return sDTPlayer.getGain(index);
-}
-
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecord(
         JNIEnv *env, jclass thiz, jboolean record) {
     sDTPlayer.setRecord(record);
