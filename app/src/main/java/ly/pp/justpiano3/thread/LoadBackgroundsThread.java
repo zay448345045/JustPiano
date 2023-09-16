@@ -74,7 +74,8 @@ public final class LoadBackgroundsThread extends Thread {
                 playIntervalTime -= updatePauseOffset;
                 pauseProgress = null;
             }
-            jpapplication.setAnimPosition(isPause ? pauseProgress : playIntervalTime);
+            int progress = isPause ? pauseProgress : playIntervalTime;
+            jpapplication.setAnimPosition(progress);
             // 绘制部分
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);
@@ -135,7 +136,7 @@ public final class LoadBackgroundsThread extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                playView.mo2929a(canvas);
+                playView.drawProgressAndFinish(progress, canvas);
                 if (canvas != null && surfaceholder.getSurface().isValid()) {
                     surfaceholder.unlockCanvasAndPost(canvas);
                 }

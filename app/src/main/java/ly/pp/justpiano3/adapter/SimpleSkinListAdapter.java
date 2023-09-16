@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -62,7 +62,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
         nameView.setOnClickListener(v -> {
             dialog.dismiss();
             olPlayKeyboardRoom.jpprogressBar.show();
-            ThreadPoolUtils.execute(() -> {
+            ThreadPoolUtil.execute(() -> {
                 File dir = olPlayKeyboardRoom.getDir("Skin", Context.MODE_PRIVATE);
                 if (dir.isDirectory()) {
                     File[] listFiles = dir.listFiles();

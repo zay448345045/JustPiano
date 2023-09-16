@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.PlayFinish;
@@ -21,7 +23,7 @@ import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.listener.touch.TouchNotes;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.play.PlayNote;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
@@ -34,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -87,6 +90,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private boolean newNote = true;
     private PlayNote judgingNote;
     private int pm_2;
+    private int songTimeLength;
     private int position;
     private float lastPosition;
     private boolean hasTouched;
@@ -152,7 +156,7 @@ public final class PlayView extends SurfaceView implements Callback {
     /**
      * 本地弹奏或房间对战-初始化弹奏view
      */
-    public PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int diao) {
+    public PlayView(JPApplication jPApplication, Context context, String str, PianoPlay pianoPlay, double d1, double d2, int i, int kind, int i3, int i4, int i5, int tune) {
         super(context);
         jpapplication = jPApplication;
         this.pianoPlay = pianoPlay;
@@ -166,8 +170,7 @@ public final class PlayView extends SurfaceView implements Callback {
         songsTime = i5;
         loadParams();
         try {
-            loadPm(context, str, diao);
-            noteCounts = notesList.size();
+            loadPm(context, str, tune);
         } catch (Exception e) {
             pianoPlay.finish();
         }
@@ -187,8 +190,7 @@ public final class PlayView extends SurfaceView implements Callback {
         score = i;
         loadParams();
         try {
-            loadPm(jPApplication, bArr);
-            noteCounts = notesList.size();
+            loadPm(bArr);
         } catch (Exception e) {
             pianoPlay.finish();
         }
@@ -276,56 +278,18 @@ public final class PlayView extends SurfaceView implements Callback {
         rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
-        if (pm_2 <= 0) {
-            pm_2 += 256;
-        }
-        int length = tickArray.length;
+        songTimeLength = pmSongData.getSongTime();
+        arrayLength = tickArray.length;
+        lastPosition = 0;
         if (tune != 0) {
             for (int i = 0; i < tickArray.length; i++) {
                 noteArray[i] += tune;
             }
         }
-        arrayLength = length;
-        int i3 = 0;
-        lastPosition = 0;
-        int actualTime;
-        int lastActualTime = 0;
-        length = 0;
-        while (true) {
-            int i4 = length;
-            if (i4 < arrayLength) {
-                tick += tickArray[i4];
-                actualTime = -tick * pm_2;
-                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
-                if (trackArray[i4] != handValue) {
-                    notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
-                    hideNote = true;
-                } else if (lastPosition < position) {
-                    notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
-                    hideNote = true;
-                } else {
-                    if (lastActualTime - actualTime >= 100 || i4 == 0) {
-                        hideNote = false;
-                    }
-                    lastPosition = position;
-                    lastActualTime = actualTime;
-                    if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
-                        i3 = noteArray[i4] / 12;
-                    }
-                    if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
-                        trackArray[i4] = 2;
-                    }
-                    notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
-                    hideNote = true;
-                }
-                length = i4 + 1;
-            } else {
-                return;
-            }
-        }
+        computePlayNotes(tune);
     }
 
-    private void loadPm(JPApplication jPApplication, byte[] bArr) {
+    private void loadPm(byte[] bArr) {
         PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(bArr);
         if (pmSongData == null) {
             return;
@@ -337,47 +301,78 @@ public final class PlayView extends SurfaceView implements Callback {
         rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
+        songTimeLength = pmSongData.getSongTime();
         arrayLength = tickArray.length;
-        int i = 0;
-        if (pm_2 <= 0) {
-            pm_2 += 256;
-        }
         lastPosition = 0;
-        int i2 = 0;
-        int actualTime;
-        int lastActualTime = 0;
-        while (true) {
-            int i3 = i2;
-            if (i3 < arrayLength) {
-                tick += tickArray[i3];
-                actualTime = -tick * pm_2;
-                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
-                if (trackArray[i3] != handValue) {
-                    notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
-                    hideNote = true;
-                } else if (lastPosition < position) {
-                    notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
-                    hideNote = true;
+        computePlayNotes(0);
+    }
+
+    private void computePlayNotes(int tune) {
+        ThreadPoolUtil.execute(() -> {
+            long startTime = System.currentTimeMillis();
+            int i3 = 0;
+            int actualTime;
+            int lastActualTime = 0;
+            int length = 0;
+            while (true) {
+                int i4 = length;
+                if (i4 < arrayLength) {
+                    tick += tickArray[i4];
+                    actualTime = -tick * pm_2;
+                    position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
+                    if (trackArray[i4] != handValue) {
+                        notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                        hideNote = true;
+                    } else if (lastPosition < position) {
+                        notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                        hideNote = true;
+                    } else {
+                        if (lastActualTime - actualTime >= 100 || i4 == 0) {
+                            hideNote = false;
+                        }
+                        lastPosition = position;
+                        lastActualTime = actualTime;
+                        if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
+                            i3 = noteArray[i4] / 12;
+                        }
+                        if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
+                            trackArray[i4] = 2;
+                        }
+                        notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                        hideNote = true;
+                    }
+                    length = i4 + 1;
+                    if (System.currentTimeMillis() - startTime > 200) {
+                        startTime = System.currentTimeMillis();
+                        int finalLength = length;
+                        pianoPlay.runOnUiThread(() -> {
+                            if (pianoPlay.jpprogressbar == null) {
+                                pianoPlay.jpprogressbar = new JPProgressBar(pianoPlay);
+                                pianoPlay.jpprogressbar.setCancelable(false);
+                            }
+                            pianoPlay.jpprogressbar.setText(String.format(Locale.getDefault(),
+                                    "弹奏界面正在准备中...%.2f%%", (float) finalLength / arrayLength * 100));
+                            if (!pianoPlay.jpprogressbar.isShowing()) {
+                                pianoPlay.jpprogressbar.show();
+                            }
+                        });
+                    }
                 } else {
-                    if (lastActualTime - actualTime >= 100 || i3 == 0) {
-                        hideNote = false;
-                    }
-                    lastPosition = position;
-                    lastActualTime = actualTime;
-                    if (noteArray[i3] < i * 12 || noteArray[i3] > (i * 12) + 12) {
-                        i = noteArray[i3] / 12;
-                    }
-                    if (noteArray[i3] == 110 && volumeArray[i3] == 3) {
-                        trackArray[i3] = 2;
-                    }
-                    notesList.add(new PlayNote(jPApplication, this, noteArray[i3], trackArray[i3], volumeArray[i3], position, i, hideNote, handValue));
-                    hideNote = true;
+                    noteCounts = notesList.size();
+                    pianoPlay.runOnUiThread(() -> {
+                        pianoPlay.setContentView(this);
+                        pianoPlay.keyboardview = new KeyBoardView(pianoPlay, this);
+                        pianoPlay.addContentView(pianoPlay.keyboardview, pianoPlay.layoutParams2);
+                        pianoPlay.m3785a(pianoPlay.playKind, false);
+                        pianoPlay.isPlayingStart = true;
+                        if (pianoPlay.jpprogressbar != null && pianoPlay.jpprogressbar.isShowing()) {
+                            pianoPlay.jpprogressbar.dismiss();
+                        }
+                    });
+                    return;
                 }
-                i2 = i3 + 1;
-            } else {
-                return;
             }
-        }
+        });
     }
 
     private void loadParams() {
@@ -568,13 +563,13 @@ public final class PlayView extends SurfaceView implements Callback {
         return trueNote;
     }
 
-    public void mo2929a(Canvas canvas) {
-        int size = (noteCounts - notesList.size()) * (jpapplication.getWidthPixels() - 2) / noteCounts;
+    public void drawProgressAndFinish(int progress, Canvas canvas) {
+        float size = (float) progress / songTimeLength / 1000 * jpapplication.getWidthPixels();
         if (canvas != null) {
             f4773bE.set(0, 0, progressBarWidth, progressBarHight);
             f4774bF.set(0, 0, (float) jpapplication.getWidthPixels(), (float) progressBarHight);
             canvas.drawBitmap(progressBarBaseImage, null, f4774bF, null);
-            f4774bF.set(0, 0, (float) size, (float) progressBarHight);
+            f4774bF.set(0, 0, size, (float) progressBarHight);
             canvas.drawBitmap(progressBarImage, f4773bE, f4774bF, null);
         }
         if (notesList.size() == 0) {
@@ -588,8 +583,8 @@ public final class PlayView extends SurfaceView implements Callback {
                 case 4:
                     size2 = uploadTouchStatusList.size();
                     bArr = new byte[size2];
-                    for (size = 0; size < size2; size++) {
-                        bArr[size] = uploadTouchStatusList.get(size);
+                    for (int i = 0; i < size2; i++) {
+                        bArr[i] = uploadTouchStatusList.get(i);
                     }
                     OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                     builder1.setType(4);
@@ -603,8 +598,8 @@ public final class PlayView extends SurfaceView implements Callback {
                 case 3:
                     size2 = uploadTouchStatusList.size();
                     bArr = new byte[size2];
-                    for (size = 0; size < size2; size++) {
-                        bArr[size] = uploadTouchStatusList.get(size);
+                    for (int i = 0; i < size2; i++) {
+                        bArr[i] = uploadTouchStatusList.get(i);
                     }
                     OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                     builder.setType(3);
@@ -617,7 +612,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     break;
                 case 2:
                     // 增加弹奏结果到本地数据库
-                    ThreadPoolUtils.execute(() -> {
+                    ThreadPoolUtil.execute(() -> {
                         List<Song> songByPath = JPApplication.getSongDatabase().songDao().getSongByFilePath(songsPath);
                         for (Song song : songByPath) {
                             int topScore = handValue == 0 ? song.getRightHandHighScore() : song.getLeftHandHighScore();
@@ -638,8 +633,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     pianoPlay.pianoPlayHandler.handleMessage(message);
                     size2 = uploadTouchStatusList.size();
                     bArr = new byte[size2];
-                    for (size = 0; size < size2; size++) {
-                        bArr[size] = uploadTouchStatusList.get(size);
+                    for (int i = 0; i < size2; i++) {
+                        bArr[i] = uploadTouchStatusList.get(i);
                     }
                     OnlinePlayFinishDTO.Builder builder2 = OnlinePlayFinishDTO.newBuilder();
                     builder2.setStatusArray(GZIPUtil.arrayToZIP(bArr));
@@ -657,8 +652,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("perf", perfectNum);
                     size2 = uploadTouchStatusList.size();
                     bArr = new byte[size2];
-                    for (size = 0; size < size2; size++) {
-                        bArr[size] = uploadTouchStatusList.get(size);
+                    for (int i = 0; i < size2; i++) {
+                        bArr[i] = uploadTouchStatusList.get(i);
                     }
                     intent.putExtra("scoreArray", bArr);
                     intent.putExtra("totalScore", showScoreAndLevelsThread.levelScore);

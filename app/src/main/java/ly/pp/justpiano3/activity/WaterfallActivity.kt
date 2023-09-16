@@ -9,6 +9,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.constant.MidiConstants
 import ly.pp.justpiano3.entity.GlobalSetting
@@ -17,9 +22,11 @@ import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.MidiConnectionListener
 import ly.pp.justpiano3.midi.MidiFramer
+import ly.pp.justpiano3.thread.ThreadPoolUtil
 import ly.pp.justpiano3.utils.MidiUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
+import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardModeView
 import ly.pp.justpiano3.view.ScrollText
 import ly.pp.justpiano3.view.WaterfallView
@@ -38,10 +45,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * 钢琴键盘view
      */
-    private lateinit var keyboardModeView: KeyboardModeView
+    private lateinit var keyboardView: KeyboardModeView
 
     /**
-     * 用于播放动画
+     * 定时任务执行器，用于播放动画
      */
     private var scheduledExecutor: ScheduledExecutorService? = null
 
@@ -54,6 +61,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
      * 记录目前是否有按钮处于按压状态，避免多个按钮重复按下
      */
     private var buttonPressing = false
+
+    /**
+     * 进度条
+     */
+    private lateinit var progressBar: JPProgressBar
 
     companion object {
         /**
@@ -76,6 +88,9 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.waterfall)
+        // 初始化进度条
+        progressBar = JPProgressBar(this)
+        progressBar.setCancelable(false)
         // 从extras中的数据确定曲目，解析pm文件
         val pmSongData = parsePmFileFromIntentExtras()
         val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
@@ -90,7 +105,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
             override fun onNoteFallDown(waterfallNote: WaterfallNote?) {
                 // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
                 SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
-                keyboardModeView.fireKeyDown(
+                keyboardView.fireKeyDown(
                     waterfallNote.pitch,
                     waterfallNote.volume,
                     if (waterfallNote.leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR
@@ -99,30 +114,27 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
             override fun onNoteLeave(waterfallNote: WaterfallNote?) {
                 // 瀑布流音符完全离开瀑布流view，触发键盘view的琴键抬起效果
-                keyboardModeView.fireKeyUp(waterfallNote!!.pitch)
+                keyboardView.fireKeyUp(waterfallNote!!.pitch)
             }
         })
-        keyboardModeView = findViewById(R.id.waterfall_keyboard)
+        keyboardView = findViewById(R.id.waterfall_keyboard)
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
-        keyboardModeView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
-                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 // 设置瀑布流音符的左右手颜色
                 waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR
                 waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
                 // 设置音块下落速率，播放速度
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
-                // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
-                val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardModeView)
-                waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
                 // 开启增减白键数量、移动键盘按钮的监听
                 findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
                 // 设置键盘的点击监听，键盘按下时播放对应琴键的声音
-                keyboardModeView.setMusicKeyListener(object : KeyboardModeView.MusicKeyListener {
+                keyboardView.setMusicKeyListener(object : KeyboardModeView.MusicKeyListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
                     }
@@ -132,10 +144,20 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                     }
                 })
                 // 移除布局监听，避免重复调用
-                keyboardModeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                keyboardView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                CoroutineScope(ThreadPoolUtil.threadPool.asCoroutineDispatcher()).launch {
+                    // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
+                    val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardView)
+                    waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
+                    withContext(Dispatchers.Main) {
+                        progressBar.dismiss()
+                    }
+                }
             }
         })
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
+        ) {
             if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                 midiFramer = MidiFramer(object : MidiReceiver() {
                     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
@@ -198,7 +220,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
+                PackageManager.FEATURE_MIDI
+            )
+        ) {
             if (MidiUtil.getMidiOutputPort() != null) {
                 if (midiFramer != null) {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -218,10 +243,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * pm文件解析结果转换为瀑布流音符
      */
-    private fun convertToWaterfallNote(
+    private suspend fun convertToWaterfallNote(
         pmSongData: PmSongData?,
         keyboardModeView: KeyboardModeView?
     ): Array<WaterfallNote> {
+        var startTime = System.currentTimeMillis()
         // 分别处理左右手的音符list，以便寻找每条音轨的上一个音符，插入上边界坐标
         val leftHandWaterfallNoteList: MutableList<WaterfallNote> = ArrayList()
         val rightHandWaterfallNoteList: MutableList<WaterfallNote> = ArrayList()
@@ -240,13 +266,27 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                     keyboardModeView!!.convertPitchToReact(pitch)
                 )
                 // 初始化瀑布流音符对象，上边界暂时置0
-                val waterfallNote = WaterfallNote(left, right, 0f, totalTime, leftHand, pitch, volume)
+                val waterfallNote =
+                    WaterfallNote(left, right, 0f, totalTime, leftHand, pitch, volume)
                 // 根据左右手拿到对应的list
                 val waterfallNoteListByHand: MutableList<WaterfallNote> =
                     if (leftHand) leftHandWaterfallNoteList else rightHandWaterfallNoteList
                 // 填充上一个音符的上边界 = 当前音符的下边界，如果之前的好几个音符的下边界相同（按和弦），那么统一都设置成当前音符的下边界
                 fillNoteEndTime(waterfallNoteListByHand, waterfallNote.bottom)
                 waterfallNoteListByHand.add(waterfallNote)
+                // 更新进度条
+                if (System.currentTimeMillis() - startTime > 200) {
+                    startTime = System.currentTimeMillis()
+                    withContext(Dispatchers.Main) {
+                        progressBar.text = String.format(
+                            "瀑布流正在加载中...%.2f%%",
+                            i.toFloat() / it.pitchArray.size * 100
+                        )
+                        if (!progressBar.isShowing) {
+                            progressBar.show()
+                        }
+                    }
+                }
             }
         }
         // 左右手音符列表合并，做后置处理
@@ -337,6 +377,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                     buttonPressing = true;
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 view.isPressed = false
                 stopAddOrSubtract()
@@ -374,38 +415,38 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     private val handler = Handler(Looper.getMainLooper()) { msg ->
         when (msg.what) {
             R.id.waterfall_sub_key -> {
-                keyboardModeView.setWhiteKeyNum(keyboardModeView.whiteKeyNum - 1, 0)
-                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum - 1, 0)
+                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                     waterfallView.waterfallNotes,
-                    keyboardModeView
+                    keyboardView
                 )
             }
 
             R.id.waterfall_add_key -> {
-                keyboardModeView.setWhiteKeyNum(keyboardModeView.whiteKeyNum + 1, 0)
-                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum + 1, 0)
+                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                     waterfallView.waterfallNotes,
-                    keyboardModeView
+                    keyboardView
                 )
             }
 
             R.id.waterfall_key_move_left -> {
-                keyboardModeView.setWhiteKeyOffset(keyboardModeView.whiteKeyOffset - 1, 0)
-                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset - 1, 0)
+                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                     waterfallView.waterfallNotes,
-                    keyboardModeView
+                    keyboardView
                 )
             }
 
             R.id.waterfall_key_move_right -> {
-                keyboardModeView.setWhiteKeyOffset(keyboardModeView.whiteKeyOffset + 1, 0)
-                waterfallView.octaveLineXList = keyboardModeView.allOctaveLineX
+                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset + 1, 0)
+                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 updateWaterfallNoteLeftRightLocation(
                     waterfallView.waterfallNotes,
-                    keyboardModeView
+                    keyboardView
                 )
             }
         }
@@ -413,7 +454,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
+                PackageManager.FEATURE_MIDI
+            )
+        ) {
             if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                 midiFramer = MidiFramer(object : MidiReceiver() {
                     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
@@ -428,7 +472,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
+                PackageManager.FEATURE_MIDI
+            )
+        ) {
             if (midiFramer != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     MidiUtil.getMidiOutputPort().disconnect(midiFramer)
@@ -441,10 +488,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     override fun onMidiReceiveMessage(pitch: Byte, volume: Byte) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (volume > 0) {
-                keyboardModeView.fireKeyDown(pitch, volume, null)
+                keyboardView.fireKeyDown(pitch, volume, null)
                 SoundEngineUtil.playSound(pitch, volume)
             } else {
-                keyboardModeView.fireKeyUp(pitch)
+                keyboardView.fireKeyUp(pitch)
             }
         }
     }
@@ -453,10 +500,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         val command = (data[0] and MidiConstants.STATUS_COMMAND_MASK)
         val pitch = (data[1] + midiKeyboardTune).toByte()
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardModeView.fireKeyDown(pitch, data[2], null)
+            keyboardView.fireKeyDown(pitch, data[2], null)
             SoundEngineUtil.playSound(pitch, data[2])
         } else if (command == MidiConstants.STATUS_NOTE_OFF || (command == MidiConstants.STATUS_NOTE_ON && data[2] <= 0)) {
-            keyboardModeView.fireKeyUp(pitch)
+            keyboardView.fireKeyUp(pitch)
         }
     }
 }

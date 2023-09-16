@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -61,7 +61,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
         nameView.setOnClickListener(v -> {
             dialog.dismiss();
             olPlayKeyboardRoom.jpprogressBar.show();
-            ThreadPoolUtils.execute(() -> {
+            ThreadPoolUtil.execute(() -> {
                 if (name.equals("原生音源")) {
                     SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {

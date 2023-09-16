@@ -7,7 +7,7 @@ import android.util.TypedValue;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 
 public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
@@ -132,7 +132,7 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
             mImgBitmap[i] = BitmapFactory.decodeResource(getResources(), mImgs[i]);
         }
         isRunning = true;
-        ThreadPoolUtils.execute(this);
+        ThreadPoolUtil.execute(this);
     }
 
     @Override

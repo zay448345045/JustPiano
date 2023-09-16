@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public class StreamUtils {
+public class StreamUtil {
 
     /**
      * 序列化,List

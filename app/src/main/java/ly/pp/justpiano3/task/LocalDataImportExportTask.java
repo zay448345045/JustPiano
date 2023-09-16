@@ -10,7 +10,7 @@ import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.LocalSongData;
-import ly.pp.justpiano3.utils.StreamUtils;
+import ly.pp.justpiano3.utils.StreamUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -33,7 +33,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
         if (type == 2) {
             if (file.exists()) {
                 try {
-                    List<LocalSongData> list = StreamUtils.readObjectForList(file);
+                    List<LocalSongData> list = StreamUtil.readObjectForList(file);
                     if (list == null) {
                         throw new RuntimeException();
                     }
@@ -60,7 +60,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                 if (!file.exists()) {
                     file.createNewFile();
                 }
-                if (!StreamUtils.writeObject(list, file)) {
+                if (!StreamUtil.writeObject(list, file)) {
                     file.delete();
                     throw new Exception();
                 }

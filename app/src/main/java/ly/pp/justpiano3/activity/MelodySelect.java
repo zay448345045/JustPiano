@@ -255,7 +255,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
-        jpprogressBar = new JPProgressBar(this, jpapplication);
+        jpprogressBar = new JPProgressBar(this);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);

@@ -3,7 +3,7 @@ package ly.pp.justpiano3.listener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 
 public final class VersionUpdateClick implements OnClickListener {
 
@@ -22,6 +22,6 @@ public final class VersionUpdateClick implements OnClickListener {
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
-        ThreadPoolUtils.execute(()-> loginActivity.downloadApk(version));
+        ThreadPoolUtil.execute(()-> loginActivity.downloadApk(version));
     }
 }

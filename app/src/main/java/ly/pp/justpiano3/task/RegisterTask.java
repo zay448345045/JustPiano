@@ -88,13 +88,6 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
 
     @Override
     protected void onPreExecute() {
-        register.get().jpprogressBar.setMessage("正在连接....");
         register.get().jpprogressBar.show();
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... numArr) {
-        register.get().jpprogressBar.setMessage("正在连接...." + numArr[0].toString());
-        register.get().jpprogressBar.setProgress(numArr[0]);
     }
 }
