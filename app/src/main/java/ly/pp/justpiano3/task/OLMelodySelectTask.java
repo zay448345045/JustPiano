@@ -81,7 +81,6 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        olMelodySelect.get().jpprogressBar.setMessage("正在载入曲库列表,请稍后...");
         olMelodySelect.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         olMelodySelect.get().jpprogressBar.show();
     }

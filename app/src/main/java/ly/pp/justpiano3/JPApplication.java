@@ -29,7 +29,7 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.GameModeEnum;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
@@ -316,7 +316,7 @@ public final class JPApplication extends Application {
 
         @Override
         public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
-            ThreadPoolUtils.execute(() -> {
+            ThreadPoolUtil.execute(() -> {
                 Looper.prepare();
                 Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
                 Looper.loop();
@@ -339,6 +339,7 @@ public final class JPApplication extends Application {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.exit(1);
         }
     }
 

@@ -74,11 +74,13 @@ public final class LoadBackgroundsThread extends Thread {
                 playIntervalTime -= updatePauseOffset;
                 pauseProgress = null;
             }
-            jpapplication.setAnimPosition(isPause ? pauseProgress : playIntervalTime);
+            int progress = isPause ? pauseProgress : playIntervalTime;
+            jpapplication.setAnimPosition(progress);
             // 绘制部分
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);
                 if (canvas != null) {
+                    // 绘制背景图、判断线
                     canvas.drawBitmap(playView.backgroundImage, null, f6028n, null);
                     canvas.drawBitmap(playView.barImage, null, f6029o, null);
                     if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
@@ -90,6 +92,7 @@ public final class LoadBackgroundsThread extends Thread {
                         playView.mo2931c(canvas);
                     }
                 }
+                // 绘制屏幕上方的小键盘
                 if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {
                     canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0.0f, 0.0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
                     canvas.drawRoundRect(new RectF((float) (((jpapplication.getWidthPixels() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((jpapplication.getWidthPixels() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
@@ -111,7 +114,7 @@ public final class LoadBackgroundsThread extends Thread {
                             f6021g = 10.0f;
                             break;
                     }
-                    switch (playView.f4813n % 12) {
+                    switch (playView.currentNotePitch % 12) {
                         case 0:
                         case 2:
                         case 4:
@@ -130,12 +133,13 @@ public final class LoadBackgroundsThread extends Thread {
                             break;
                     }
                     canvas.drawArc(new RectF(((float) playView.currentPlayNote.noteValue) * widthDiv120, f6021g, ((float) (playView.currentPlayNote.noteValue + 1)) * widthDiv120, f6021g + widthDiv120), 0.0f, 360.0f, false, f6024j);
-                    canvas.drawArc(new RectF(((float) playView.f4813n) * widthDiv120, f6022h, ((float) (playView.f4813n + 1)) * widthDiv120, f6022h + widthDiv120), 0.0f, 360.0f, false, f6025k);
+                    canvas.drawArc(new RectF(((float) playView.currentNotePitch) * widthDiv120, f6022h, ((float) (playView.currentNotePitch + 1)) * widthDiv120, f6022h + widthDiv120), 0.0f, 360.0f, false, f6025k);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                playView.mo2929a(canvas);
+                // 绘制进度条 + （若进度已满则）处理播放完成
+                playView.drawProgressAndFinish(progress, canvas);
                 if (canvas != null && surfaceholder.getSurface().isValid()) {
                     surfaceholder.unlockCanvasAndPost(canvas);
                 }

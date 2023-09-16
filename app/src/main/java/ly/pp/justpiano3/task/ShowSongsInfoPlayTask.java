@@ -73,7 +73,6 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
 
     @Override
     protected void onPreExecute() {
-        showSongsInfo.get().jpprogressBar.setMessage("此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除,正在载入曲谱,请稍后...");
         showSongsInfo.get().jpprogressBar.setCancelable(true);
         showSongsInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         showSongsInfo.get().jpprogressBar.show();

@@ -65,7 +65,6 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        showSongsInfo.get().jpprogressBar.setMessage("正在搜索曲库,请稍后...");
         showSongsInfo.get().jpprogressBar.setCancelable(true);
         showSongsInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         showSongsInfo.get().jpprogressBar.show();

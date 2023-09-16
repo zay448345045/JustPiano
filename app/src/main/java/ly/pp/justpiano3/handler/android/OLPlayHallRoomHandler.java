@@ -21,7 +21,7 @@ import ly.pp.justpiano3.adapter.DailyTimeAdapter;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -152,7 +152,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                                     0, olPlayHallRoom.myFamilyPicArray.length);
                             olPlayHallRoom.myFamilyPic.setImageBitmap(myFamilyBitmap);
                             ImageLoadUtil.familyBitmapCacheMap.put(olPlayHallRoom.familyID, myFamilyBitmap);
-                            ThreadPoolUtils.execute(() -> {
+                            ThreadPoolUtil.execute(() -> {
                                 File file1 = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
                                 try {
                                     if (!file1.exists()) {

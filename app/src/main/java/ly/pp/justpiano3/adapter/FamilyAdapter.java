@@ -11,7 +11,7 @@ import android.widget.TextView;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.listener.GoToFamilyCenterClick;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 import java.io.File;
@@ -87,7 +87,7 @@ public final class FamilyAdapter extends BaseAdapter {
             Bitmap familyBitmap = BitmapFactory.decodeByteArray(pic, 0, pic.length);
             img.setImageBitmap(familyBitmap);
             ImageLoadUtil.familyBitmapCacheMap.put(id, familyBitmap);
-            ThreadPoolUtils.execute(() -> {
+            ThreadPoolUtil.execute(() -> {
                 File file1 = new File(olPlayHallRoom.getFilesDir(), id + ".jpg");
                 try {
                     if (!file1.exists()) {

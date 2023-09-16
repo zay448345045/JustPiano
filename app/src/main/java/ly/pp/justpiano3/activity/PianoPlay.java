@@ -74,8 +74,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public JPApplication jpapplication;
     public MidiReceiver midiFramer;
     public View finishView;
-    private View f4592K;
-    private LayoutParams layoutParams2;
+    private View miniScoreView;
+    public LayoutParams layoutParams2;
     private ConnectionService connectionService;
     private ProgressBar progressbar;
     private Bundle hallBundle;
@@ -86,7 +86,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     private double localRNandu;
     private double localLNandu;
     private int localSongsTime;
-    private int playKind;
+    public int playKind;
 
     private List<Bundle> m3783a(List<Bundle> list, String str) {
         if (list != null && !list.isEmpty()) {
@@ -95,7 +95,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         return list;
     }
 
-    private void m3785a(int i, boolean z) {
+    public void m3785a(int i, boolean z) {
         if (z) {  //仅显示对话框就行了，其他不做不分析，用于按下后退键时
             if (i == 0) {
                 f4596O.setVisibility(View.VISIBLE);
@@ -153,8 +153,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 startPlayButton.setVisibility(View.GONE);
                 time_mid.setVisibility(View.GONE);
                 l_nandu.setVisibility(View.GONE);
-                addContentView(f4592K, layoutparams);
-                f4592K.setVisibility(View.VISIBLE);
+                addContentView(miniScoreView, layoutparams);
+                miniScoreView.setVisibility(View.VISIBLE);
                 addContentView(finishView, layoutParams2);
                 ImageButton finishOkButton = finishView.findViewById(R.id.ol_ok);
                 finishOkButton.setOnClickListener(v -> {
@@ -177,8 +177,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 startPlayButton.setVisibility(View.GONE);
                 time_mid.setVisibility(View.GONE);
                 l_nandu.setVisibility(View.GONE);
-                addContentView(f4592K, layoutparams);
-                f4592K.setVisibility(View.VISIBLE);
+                addContentView(miniScoreView, layoutparams);
+                miniScoreView.setVisibility(View.VISIBLE);
                 OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                 builder.setType(2);
                 sendMsg(OnlineProtocolType.CL_TEST, builder.build());
@@ -191,8 +191,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 startPlayButton.setVisibility(View.GONE);
                 time_mid.setVisibility(View.GONE);
                 l_nandu.setVisibility(View.GONE);
-                addContentView(f4592K, layoutparams);
-                f4592K.setVisibility(View.VISIBLE);
+                addContentView(miniScoreView, layoutparams);
+                miniScoreView.setVisibility(View.VISIBLE);
                 OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                 builder1.setType(3);
                 sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
@@ -201,7 +201,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         }
     }
 
-    public void m3794f() {
+    public void loadSong() {
         f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
         layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams2.gravity = android.view.Gravity.CENTER;
@@ -237,12 +237,12 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 hallID = hallBundle.getByte("hallID");
                 songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                int diao = extras.getInt("diao");
+                int tune = extras.getInt("diao");
                 hand = extras.getInt("hand");
                 roomMode = extras.getInt("roomMode");
-                f4592K = layoutinflater.inflate(R.layout.ol_score_view, null);
-                horizontalListView = f4592K.findViewById(R.id.ol_score_list);
-                showHideGrade = f4592K.findViewById(R.id.ol_score_button);
+                miniScoreView = layoutinflater.inflate(R.layout.ol_score_view, null);
+                horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
+                showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
                 int visibility = horizontalListView.getVisibility();
                 if (visibility == View.VISIBLE) {
                     showHideGrade.setText("隐藏成绩");
@@ -255,7 +255,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(0);
-                playView = new PlayView(jpapplication, this, songsPath, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
+                playView = new PlayView(jpapplication, this, songsPath, this, nandu, nandu, score, playKind, hand, 30, 0, tune);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
@@ -267,9 +267,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 songsName = extras.getString("name");
                 times = extras.getInt("times");
                 hand = extras.getInt("hand");
-                f4592K = layoutinflater.inflate(R.layout.ol_score_view, null);
-                horizontalListView = f4592K.findViewById(R.id.ol_score_list);
-                showHideGrade = f4592K.findViewById(R.id.ol_score_button);
+                miniScoreView = layoutinflater.inflate(R.layout.ol_score_view, null);
+                horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
+                showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
                 showHideGrade.setText("");
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
@@ -279,11 +279,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         if (isOpenRecord) {
             recordWavPath = getFilesDir().getAbsolutePath() + "/Records/" + songsName + ".raw";
         }
-        setContentView(playView);
-        keyboardview = new KeyBoardView(this, playView);
-        addContentView(keyboardview, layoutParams2);
-        m3785a(playKind, false);
-        isPlayingStart = true;
     }
 
     public void m3802m() {
@@ -467,9 +462,10 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         if (jpapplication.getHeightPixels() == 0) {
             jpprogressbar = new JPProgressBar(this);
+            jpprogressbar.setCancelable(false);
             new PianoPlayTask(this).execute();
         } else {
-            m3794f();
+            loadSong();
         }
     }
 

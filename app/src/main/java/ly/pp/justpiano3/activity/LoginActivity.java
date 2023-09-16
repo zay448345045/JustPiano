@@ -89,7 +89,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         switch (i) {
             case 0:
                 if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
-                    Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
                 }
@@ -99,7 +99,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
             case 4:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
                     if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
-                        Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:正式服", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
                     }
@@ -282,33 +282,35 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     private void apkDownloadFallHandle(String version) {
         // 回到主线程操纵界面
         runOnUiThread(() -> {
-            jpprogressBar.setText(null);
             jpprogressBar.dismiss();
             Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void getApkResponseAndInstall(File file, Response response) {
+        long start = System.currentTimeMillis();
         long length = response.body().contentLength();
         // 下面从返回的输入流中读取字节数据并保存为本地文件
-        try (InputStream is = response.body().byteStream();
-             FileOutputStream fos = new FileOutputStream(file)) {
+        try (InputStream inputStream = response.body().byteStream();
+             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             byte[] buf = new byte[100 * 1024];
             int sum = 0, len;
-            while ((len = is.read(buf)) != -1) {
-                fos.write(buf, 0, len);
+            while ((len = inputStream.read(buf)) != -1) {
+                fileOutputStream.write(buf, 0, len);
                 sum += len;
                 int progress = (int) (sum * 1.0f / length * 100);
                 String detail = String.format(Locale.getDefault(), "下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
                 // 回到主线程操纵界面
-                runOnUiThread(() -> jpprogressBar.setText(detail));
+                if (System.currentTimeMillis() - start > 200) {
+                    start = System.currentTimeMillis();
+                    runOnUiThread(() -> jpprogressBar.setText(detail));
+                }
             }
             installApk(LoginActivity.this, file);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             runOnUiThread(() -> {
-                jpprogressBar.setText(null);
                 jpprogressBar.dismiss();
             });
         }

@@ -21,7 +21,7 @@ public final class PianoPlayTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void v) {
         pianoPlay.get().jpprogressbar.cancel();
-        pianoPlay.get().m3794f();
+        pianoPlay.get().loadSong();
     }
 
     @Override

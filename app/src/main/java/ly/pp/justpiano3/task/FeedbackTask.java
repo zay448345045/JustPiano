@@ -6,7 +6,7 @@ import android.widget.Toast;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -40,7 +40,7 @@ public final class FeedbackTask {
                 .post(requestBody)
                 .build();
 
-        ThreadPoolUtils.execute(() -> {
+        ThreadPoolUtil.execute(() -> {
             try (Response response = OkHttpUtil.client().newCall(request).execute()) {
                 if (response.isSuccessful()) {
                     String responseStr = response.body().string();

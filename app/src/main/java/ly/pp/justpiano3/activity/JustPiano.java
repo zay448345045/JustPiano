@@ -12,7 +12,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
@@ -155,7 +155,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;
         handler.sendMessage(obtainMessage);
-        ThreadPoolUtils.execute(this);
+        ThreadPoolUtil.execute(this);
     }
 
     @Override
