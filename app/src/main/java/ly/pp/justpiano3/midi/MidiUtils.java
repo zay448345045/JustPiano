@@ -28,9 +28,6 @@ package ly.pp.justpiano3.midi;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO:
-// - define and use a global symbolic constant for 60000000 (see convertTempo)
-
 /**
  * Some utilities for MIDI (some stuff is used from javax.sound.midi)
  *
@@ -53,8 +50,7 @@ public final class MidiUtils {
      */
     public static boolean isMetaEndOfTrack(MidiMessage midiMsg) {
         // first check if it is a META message at all
-        if (midiMsg.getLength() != 3
-                || midiMsg.getStatus() != MetaMessage.META) {
+        if (midiMsg.getLength() != 3 || midiMsg.getStatus() != MetaMessage.META) {
             return false;
         }
         // now get message and check for end of track
@@ -62,14 +58,12 @@ public final class MidiUtils {
         return ((msg[1] & 0xFF) == META_END_OF_TRACK_TYPE) && (msg[2] == 0);
     }
 
-
     /**
      * return if the given message is a meta tempo message
      */
     public static boolean isMetaTempo(MidiMessage midiMsg) {
         // first check if it is a META message at all
-        if (midiMsg.getLength() != 6
-                || midiMsg.getStatus() != MetaMessage.META) {
+        if (midiMsg.getLength() != 6 || midiMsg.getStatus() != MetaMessage.META) {
             return false;
         }
         // now get message and check for tempo
@@ -78,27 +72,23 @@ public final class MidiUtils {
         return ((msg[1] & 0xFF) == META_TEMPO_TYPE) && (msg[2] == 3);
     }
 
-
     /**
      * parses this message for a META tempo message and returns
      * the tempo in MPQ, or -1 if this isn't a tempo message
      */
     public static int getTempoMPQ(MidiMessage midiMsg) {
         // first check if it is a META message at all
-        if (midiMsg.getLength() != 6
-                || midiMsg.getStatus() != MetaMessage.META) {
+        if (midiMsg.getLength() != 6 || midiMsg.getStatus() != MetaMessage.META) {
             return -1;
         }
         byte[] msg = midiMsg.getMessage();
         if (((msg[1] & 0xFF) != META_TEMPO_TYPE) || (msg[2] != 3)) {
             return -1;
         }
-        int tempo = (msg[5] & 0xFF)
+        return (msg[5] & 0xFF)
                 | ((msg[4] & 0xFF) << 8)
                 | ((msg[3] & 0xFF) << 16);
-        return tempo;
     }
-
 
     /**
      * converts<br>
@@ -111,7 +101,6 @@ public final class MidiUtils {
         }
         return ((double) 60000000L) / tempo;
     }
-
 
     /**
      * convert tick to microsecond with given tempo.
@@ -133,7 +122,6 @@ public final class MidiUtils {
         return (long) ((((double) us) * resolution) / tempoMPQ);
     }
 
-
     /**
      * Given a tick, convert to microsecond
      *
@@ -144,11 +132,9 @@ public final class MidiUtils {
             double seconds = ((double) tick / (double) (seq.getDivisionType() * seq.getResolution()));
             return (long) (1000000 * seconds);
         }
-
         if (cache == null) {
             cache = new TempoCache(seq);
         }
-
         int resolution = seq.getResolution();
 
         long[] ticks = cache.ticks;
@@ -214,7 +200,6 @@ public final class MidiUtils {
 
         long us = 0;
         long tick = 0;
-        int newReadPos = 0;
         int i = 1;
 
         // walk through all tempo changes and add time for the respective blocks
@@ -235,7 +220,6 @@ public final class MidiUtils {
         cache.currTempo = tempos[i - 1];
         return tick;
     }
-
 
     /**
      * Binary search for the event indexes of the track
@@ -273,14 +257,13 @@ public final class MidiUtils {
         return ret;
     }
 
-
     public static final class TempoCache {
         long[] ticks;
         int[] tempos; // in MPQ
         // index in ticks/tempos at the snapshot
-        int snapshotIndex = 0;
+        int snapshotIndex;
         // microsecond at the snapshot
-        int snapshotMicro = 0;
+        int snapshotMicro;
 
         int currTempo; // MPQ, used as return value for microsecond2tick
 
@@ -299,7 +282,6 @@ public final class MidiUtils {
             this();
             refresh(seq);
         }
-
 
         public synchronized void refresh(Sequence seq) {
             List<MidiEvent> list = new ArrayList<>();
@@ -362,6 +344,5 @@ public final class MidiUtils {
             }
             return tempos[tempos.length - 1];
         }
-
     }
 }

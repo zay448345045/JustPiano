@@ -69,7 +69,6 @@ package ly.pp.justpiano3.midi;
  * @see Track
  * @see Sequence
  */
-
 public abstract class MidiMessage implements Cloneable {
 
     // Instance variables

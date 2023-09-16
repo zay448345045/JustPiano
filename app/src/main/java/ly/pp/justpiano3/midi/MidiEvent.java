@@ -60,7 +60,6 @@ public class MidiEvent {
      * @param tick    the time-stamp for the event, in MIDI ticks
      */
     public MidiEvent(MidiMessage message, long tick) {
-
         this.message = message;
         this.tick = tick;
     }

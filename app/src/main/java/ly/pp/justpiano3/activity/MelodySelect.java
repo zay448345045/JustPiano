@@ -36,7 +36,7 @@ import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.SongUtil;
+import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -187,7 +187,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             }
             SongData songData = null;
             try {
-                songData = SongUtil.midiFileToPmFile(midiFile, pmFile);
+                songData = PmSongUtil.INSTANCE.midiFileToPmFile(midiFile, pmFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -197,8 +197,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             }
             insertSongList.add(new Song(null, songName, Consts.items[Consts.items.length - 1],
                     "songs/p/" + pmFile.getName(), 1, 0, 0, "",
-                    0, 0, 0, songData.getDegree() / 10f, 0,
-                    songData.getLeftDegree() / 10f, songData.getLength(), 0));
+                    0, 0, 0, songData.getRightHandDegree() / 10f, 0,
+                    songData.getLeftHandDegree() / 10f, songData.getLength(), 0));
             JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
             Toast.makeText(this, "成功导入曲目《" + songName + "》，可点击\"本地导入\"分类查看", Toast.LENGTH_SHORT).show();
             categoryListView.performItemClick(categoryListView.getAdapter().getView(Consts.items.length - 1, null, null),

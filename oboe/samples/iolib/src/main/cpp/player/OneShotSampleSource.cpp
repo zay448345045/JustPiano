@@ -29,7 +29,7 @@ namespace iolib {
         int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
-        if (numWriteFrames != 0) {
+        if (numWriteFrames != 0 && trueIndex < numSampleFrames) {
             // Mix in the samples
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();

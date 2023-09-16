@@ -63,7 +63,6 @@ public class Track {
 
     private final MidiEvent eotEvent;
 
-
     /**
      * Package-private constructor.  Constructs a new, empty Track object,
      * which initially contains one event, the meta-event End of Track.
@@ -91,10 +90,8 @@ public class Track {
             return false;
         }
         synchronized (eventsList) {
-
             if (!set.contains(event)) {
                 int eventsCount = eventsList.size();
-
                 // get the last event
                 MidiEvent lastEvent = null;
                 if (eventsCount > 0) {
@@ -162,10 +159,8 @@ public class Track {
                 return true;
             }
         }
-
         return false;
     }
-
 
     /**
      * Removes the specified event from the track.
@@ -175,7 +170,6 @@ public class Track {
      * otherwise <code>false</code>
      */
     public boolean remove(MidiEvent event) {
-
         // this implementation allows removing the EOT event.
         // pretty bad, but would probably be too risky to
         // change behavior now, in case someone does tricks like:
@@ -219,7 +213,6 @@ public class Track {
         }
     }
 
-
     /**
      * Obtains the number of events in this track.
      *
@@ -230,7 +223,6 @@ public class Track {
             return eventsList.size();
         }
     }
-
 
     /**
      * Obtains the length of the track, expressed in MIDI ticks.  (The
@@ -263,5 +255,4 @@ public class Track {
             throw new InvalidMidiDataException("cannot modify end of track message");
         }
     }
-
 }

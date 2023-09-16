@@ -74,36 +74,25 @@ package ly.pp.justpiano3.midi;
  */
 public class SysexMessage extends MidiMessage {
 
-
     // Status byte defines
-
 
     /**
      * Status byte for System Exclusive message (0xF0, or 240).
+     *
      * @see MidiMessage#getStatus
      */
-    public static final int SYSTEM_EXCLUSIVE                    = 0xF0; // 240
-
+    public static final int SYSTEM_EXCLUSIVE = 0xF0; // 240
 
     /**
      * Status byte for Special System Exclusive message (0xF7, or 247), which is used
      * in MIDI files.  It has the same value as END_OF_EXCLUSIVE, which
      * is used in the real-time "MIDI wire" protocol.
+     *
      * @see MidiMessage#getStatus
      */
-    public static final int SPECIAL_SYSTEM_EXCLUSIVE    = 0xF7; // 247
-
+    public static final int SPECIAL_SYSTEM_EXCLUSIVE = 0xF7; // 247
 
     // Instance variables
-
-
-    /*
-     * The data bytes for this system exclusive message.  These are
-     * initialized to <code>null</code> and are set explicitly
-     * by {@link #setMessage(int, byte[], int, long) setMessage}.
-     */
-    //protected byte[] data = null;
-
 
     /**
      * Constructs a new <code>SysexMessage</code>. The
@@ -111,6 +100,7 @@ public class SysexMessage extends MidiMessage {
      * a valid MIDI message.  Subsequently, you may set the
      * contents of the message using one of the <code>setMessage</code>
      * methods.
+     *
      * @see #setMessage
      */
     public SysexMessage() {
@@ -127,12 +117,12 @@ public class SysexMessage extends MidiMessage {
      * The contents of the message can be changed by using one of
      * the {@code setMessage} methods.
      *
-     * @param data the system exclusive message data including the status byte
+     * @param data   the system exclusive message data including the status byte
      * @param length the length of the valid message data in the array,
-     *     including the status byte; it should be non-negative and less than
-     *     or equal to {@code data.length}
+     *               including the status byte; it should be non-negative and less than
+     *               or equal to {@code data.length}
      * @throws InvalidMidiDataException if the parameter values
-     *     do not specify a valid MIDI meta message.
+     *                                  do not specify a valid MIDI meta message.
      * @see #setMessage(byte[], int)
      * @see #setMessage(int, byte[], int)
      * @see #getData()
@@ -150,13 +140,13 @@ public class SysexMessage extends MidiMessage {
      * the {@code setMessage} methods.
      *
      * @param status the status byte for the message; it must be a valid system
-     *     exclusive status byte (0xF0 or 0xF7)
-     * @param data the system exclusive message data (without the status byte)
+     *               exclusive status byte (0xF0 or 0xF7)
+     * @param data   the system exclusive message data (without the status byte)
      * @param length the length of the valid message data in the array;
-     *     it should be non-negative and less than or equal to
-     *     {@code data.length}
+     *               it should be non-negative and less than or equal to
+     *               {@code data.length}
      * @throws InvalidMidiDataException if the parameter values
-     *     do not specify a valid MIDI meta message.
+     *                                  do not specify a valid MIDI meta message.
      * @see #setMessage(byte[], int)
      * @see #setMessage(int, byte[], int)
      * @see #getData()
@@ -168,26 +158,26 @@ public class SysexMessage extends MidiMessage {
         setMessage(status, data, length);
     }
 
-
     /**
      * Constructs a new <code>SysexMessage</code>.
+     *
      * @param data an array of bytes containing the complete message.
-     * The message data may be changed using the <code>setMessage</code>
-     * method.
+     *             The message data may be changed using the <code>setMessage</code>
+     *             method.
      * @see #setMessage
      */
     protected SysexMessage(byte[] data) {
         super(data);
     }
 
-
     /**
      * Sets the data for the system exclusive message.   The
      * first byte of the data array must be a valid system
      * exclusive status byte (0xF0 or 0xF7).
-     * @param data the system exclusive message data
+     *
+     * @param data   the system exclusive message data
      * @param length the length of the valid message data in
-     * the array, including the status byte.
+     *               the array, including the status byte.
      */
     public void setMessage(byte[] data, int length) throws InvalidMidiDataException {
         int status = (data[0] & 0xFF);
@@ -197,25 +187,25 @@ public class SysexMessage extends MidiMessage {
         super.setMessage(data, length);
     }
 
-
     /**
      * Sets the data for the system exclusive message.
+     *
      * @param status the status byte for the message (0xF0 or 0xF7)
-     * @param data the system exclusive message data
+     * @param data   the system exclusive message data
      * @param length the length of the valid message data in
-     * the array
+     *               the array
      * @throws InvalidMidiDataException if the status byte is invalid for a sysex message
      */
     public void setMessage(int status, byte[] data, int length) throws InvalidMidiDataException {
-        if ( (status != 0xF0) && (status != 0xF7) ) {
+        if ((status != 0xF0) && (status != 0xF7)) {
             throw new InvalidMidiDataException("Invalid status byte for sysex message: 0x" + Integer.toHexString(status));
         }
         if (length < 0 || length > data.length) {
-            throw new IndexOutOfBoundsException("length out of bounds: "+length);
+            throw new IndexOutOfBoundsException("length out of bounds: " + length);
         }
         this.length = length + 1;
 
-        if (this.data==null || this.data.length < this.length) {
+        if (this.data == null || this.data.length < this.length) {
             this.data = new byte[this.length];
         }
 
@@ -225,10 +215,10 @@ public class SysexMessage extends MidiMessage {
         }
     }
 
-
     /**
      * Obtains a copy of the data for the system exclusive message.
      * The returned array of bytes does not include the status byte.
+     *
      * @return array containing the system exclusive message data.
      */
     public byte[] getData() {
@@ -237,16 +227,15 @@ public class SysexMessage extends MidiMessage {
         return returnedArray;
     }
 
-
     /**
      * Creates a new object of the same class and with the same contents
      * as this object.
+     *
      * @return a clone of this instance
      */
     public Object clone() {
         byte[] newData = new byte[length];
         System.arraycopy(data, 0, newData, 0, newData.length);
-        SysexMessage event = new SysexMessage(newData);
-        return event;
+        return new SysexMessage(newData);
     }
 }

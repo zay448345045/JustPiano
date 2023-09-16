@@ -148,7 +148,6 @@ public class MetaMessage extends MidiMessage {
      *                                  parameter values do not specify a valid MIDI meta message
      */
     public void setMessage(int type, byte[] data, int length) throws InvalidMidiDataException {
-
         if (type >= 128 || type < 0) {
             throw new InvalidMidiDataException("Invalid meta event with type " + type);
         }
@@ -205,7 +204,6 @@ public class MetaMessage extends MidiMessage {
     public Object clone() {
         byte[] newData = new byte[length];
         System.arraycopy(data, 0, newData, 0, newData.length);
-
         return new MetaMessage(newData);
     }
 
