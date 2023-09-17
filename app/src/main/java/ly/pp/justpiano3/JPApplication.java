@@ -329,16 +329,8 @@ public final class JPApplication extends Application {
         return widthPixels;
     }
 
-    public void setWidthPixels(int widthPixels) {
-        this.widthPixels = widthPixels;
-    }
-
     public int getHeightPixels() {
         return heightPixels;
-    }
-
-    public void setHeightPixels(int heightPixels) {
-        this.heightPixels = heightPixels;
     }
 
     public ServiceConnection getServiceConnection() {
