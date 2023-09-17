@@ -1,32 +1,25 @@
 package ly.pp.justpiano3;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
@@ -38,6 +31,13 @@ import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiUtil;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class JPApplication extends Application {
 
@@ -310,6 +310,19 @@ public final class JPApplication extends Application {
 
     public void setGameMode(LocalPlayModeEnum gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public void updateWidthAndHeightPixels(Activity activity) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        Configuration configuration = getResources().getConfiguration();
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.heightPixels = displayMetrics.heightPixels;
+            this.widthPixels = displayMetrics.widthPixels;
+        } else {
+            this.heightPixels = displayMetrics.widthPixels;
+            this.widthPixels = displayMetrics.heightPixels;
+        }
     }
 
     public int getWidthPixels() {

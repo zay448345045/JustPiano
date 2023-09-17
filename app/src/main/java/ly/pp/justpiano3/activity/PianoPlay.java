@@ -3,6 +3,7 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
 import android.os.Build;
@@ -300,10 +301,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     }
 
     public void m3802m() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        jpapplication.setHeightPixels(displayMetrics.heightPixels);
-        jpapplication.setWidthPixels(displayMetrics.widthPixels);
+        jpapplication.updateWidthAndHeightPixels(this);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         SoundEngineUtil.teardownAudioStreamNative();
         SoundEngineUtil.unloadWavAssetsNative();
