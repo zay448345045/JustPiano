@@ -120,7 +120,7 @@
     <string name="melodylist1_total_score_all">总分</string>
     <string name="melodylist1_all_mel">曲谱数</string>
     <string name="melodylist1_sort_b">排序方式</string>
-    <string name="melodylist1_import">midi导入</string>
+    <string name="melodylist1_export">数据导出</string>
     <string name="melodylist1_rec">录音</string>
     <string name="melodylist1_hand">左手</string>
     <string name="message_send_name">房名:</string>

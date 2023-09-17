@@ -38,12 +38,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                     if (list == null) {
                         throw new RuntimeException();
                     }
-                    int count = 0;
-                    SongDao songDao = JPApplication.getSongDatabase().songDao();
-                    for (LocalSongData localSongData : list) {
-                        count += songDao.updateSongInfoByPath(localSongData.getIsfavo(), localSongData.getScore(),
-                                localSongData.getLScore(), localSongData.getPath());
-                    }
+                    int count = JPApplication.getSongDatabase().songDao().updateSongsInfoByPaths(list);
                     result = "导入成功，更新" + count + "首曲谱数据";
                 } catch (Exception e) {
                     result = "导入失败 " + e.getMessage();

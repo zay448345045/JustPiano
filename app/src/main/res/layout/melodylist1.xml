@@ -68,7 +68,7 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/local_import"
+            android:id="@+id/data_export"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -76,7 +76,7 @@
             android:background="@drawable/selector_orange_button"
             android:gravity="center"
             android:maxLines="1"
-            android:text="@string/melodylist1_import"
+            android:text="@string/melodylist1_export"
             android:textColor="@color/white1"
             android:textSize="14sp" />
 

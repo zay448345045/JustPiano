@@ -6,6 +6,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.room.*
 import ly.pp.justpiano3.database.entity.Song
+import ly.pp.justpiano3.entity.LocalSongData
 
 @Dao
 interface SongDao {
@@ -120,6 +121,15 @@ interface SongDao {
 
     @Query("UPDATE song SET isfavo = :isFavorite, score = :rightHandHighScore, Lscore = :leftHandHeightScore WHERE online = 1 AND path = :path")
     fun updateSongInfoByPath(isFavorite: Int, rightHandHighScore: Int, leftHandHeightScore: Int, path: String): Int
+
+    @Transaction
+    fun updateSongsInfoByPaths(localSongDataList: List<LocalSongData>) : Int {
+        var count = 0
+        for (localSongData in localSongDataList) {
+            count += updateSongInfoByPath(localSongData.isfavo, localSongData.score, localSongData.lScore, localSongData.path)
+        }
+        return count
+    }
 
     @Query("SELECT * FROM song WHERE online = 1 AND name = :name")
     fun getSongByName(name: String): List<Song>
