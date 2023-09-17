@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import androidx.activity.ComponentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -170,7 +172,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);
-            if (fileList.isEmpty()) {
+            if (fileList.size() != 1) {
                 return;
             }
             File midiFile = fileList.get(0);

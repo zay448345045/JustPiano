@@ -1,6 +1,8 @@
 package ly.pp.justpiano3.utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +11,8 @@ import android.provider.MediaStore;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.netty.util.internal.StringUtil;
 
 public class FilePickerUtil {
 
@@ -19,17 +23,32 @@ public class FilePickerUtil {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultipleFiles);
-        activity.startActivityForResult(Intent.createChooser(intent, "选择文件"), PICK_FILE_REQUEST_CODE);
+
+        // special intent for Samsung file manager
+        Intent sIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+        // if you want any file type, you can skip next line
+        sIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Intent chooserIntent;
+        if (activity.getPackageManager().resolveActivity(sIntent, 0) != null) {
+            // it is device with Samsung file manager
+            chooserIntent = Intent.createChooser(sIntent, "Open file");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intent});
+        } else {
+            chooserIntent = Intent.createChooser(intent, "Open file");
+        }
+
+        activity.startActivityForResult(chooserIntent, PICK_FILE_REQUEST_CODE);
     }
 
-    public static List<File> getFilesFromIntent(Activity activity, Intent intent) {
+    public static List<File> getFilesFromIntent(Context context, Intent intent) {
         List<File> files = new ArrayList<>();
         if (intent != null) {
             List<Uri> uris = getFileUrisFromIntent(intent);
             for (Uri uri : uris) {
-                File file = getFileFromUri(activity, uri);
-                if (file != null) {
-                    files.add(file);
+                String filePath = FileUtil.INSTANCE.getPathByUri(context, uri);
+                if (!StringUtil.isNullOrEmpty(filePath)) {
+                    files.add(new File(filePath));
                 }
             }
         }
@@ -49,17 +68,5 @@ public class FilePickerUtil {
             }
         }
         return uris;
-    }
-
-    private static File getFileFromUri(Activity activity, Uri uri) {
-        String filePath = null;
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            filePath = cursor.getString(columnIndex);
-            cursor.close();
-        }
-        return filePath == null ? null : new File(filePath);
     }
 }

@@ -323,9 +323,9 @@ public final class JPApplication extends Application {
             });
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
-            new FeedbackTask(getApplicationContext(),
-                    StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
-                    BuildConfig.VERSION_NAME + '\n' + byteArrayOutputStream).execute();
+//            new FeedbackTask(getApplicationContext(),
+//                    StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
+//                    BuildConfig.VERSION_NAME + '\n' + byteArrayOutputStream).execute();
 
             if (connectionService != null) {
                 connectionService.outLine();

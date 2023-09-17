@@ -161,7 +161,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-            FileUtil.moveFile(srcFile, desFile);
+            FileUtil.INSTANCE.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
@@ -402,7 +402,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                         File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-                        FileUtil.moveFile(srcFile, desFile);
+                        FileUtil.INSTANCE.moveFile(srcFile, desFile);
                         Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {

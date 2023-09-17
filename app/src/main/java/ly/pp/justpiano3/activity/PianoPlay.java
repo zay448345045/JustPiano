@@ -349,7 +349,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
-            FileUtil.moveFile(srcFile, desFile);
+            FileUtil.INSTANCE.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
             recordStart = false;
         }
