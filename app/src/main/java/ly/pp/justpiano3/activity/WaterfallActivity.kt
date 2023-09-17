@@ -35,6 +35,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import kotlin.experimental.and
+import kotlin.math.roundToInt
 
 class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
@@ -145,11 +146,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 })
                 // 移除布局监听，避免重复调用
                 keyboardView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                CoroutineScope(ThreadPoolUtil.threadPool.asCoroutineDispatcher()).launch {
+                ThreadPoolUtil.execute {
                     // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                     val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardView)
                     waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
-                    withContext(Dispatchers.Main) {
+                    runOnUiThread {
                         progressBar.dismiss()
                     }
                 }
@@ -243,7 +244,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * pm文件解析结果转换为瀑布流音符
      */
-    private suspend fun convertToWaterfallNote(
+    private fun convertToWaterfallNote(
         pmSongData: PmSongData?,
         keyboardModeView: KeyboardModeView?
     ): Array<WaterfallNote> {
@@ -277,10 +278,8 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 // 更新进度条
                 if (System.currentTimeMillis() - startTime > 200) {
                     startTime = System.currentTimeMillis()
-                    withContext(Dispatchers.Main) {
-                        progressBar.text = String.format(
-                            "瀑布流正在加载中...%.2f%%", i.toFloat() / it.pitchArray.size * 100
-                        )
+                    runOnUiThread {
+                        progressBar.text = "瀑布流正在加载中..." + (100f * i / it.pitchArray.size).roundToInt() + "%"
                         if (!progressBar.isShowing) {
                             progressBar.show()
                         }

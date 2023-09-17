@@ -73,8 +73,16 @@ object FileUtil {
                 val type = split[0]
                 if ("primary".equals(type, ignoreCase = true)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-                            .toString() + File.separator + split[1]
+                        val file = File(
+                            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+                                .toString() + File.separator + split[1]
+                        )
+                        return if (file.exists()) {
+                            file.absolutePath
+                        } else {
+                            Environment.getExternalStorageDirectory()
+                                .toString() + File.separator + split[1]
+                        }
                     } else {
                         @Suppress("DEPRECATION")
                         return Environment.getExternalStorageDirectory()
