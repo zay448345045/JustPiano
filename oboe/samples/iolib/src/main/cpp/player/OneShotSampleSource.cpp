@@ -23,6 +23,9 @@
 namespace iolib {
 
     void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, std::pair<int32_t, int32_t> *curFrameIndex) {
+        if (curFrameIndex == nullptr) {
+            return;
+        }
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
         int32_t& trueIndex = (*curFrameIndex).first;
         auto trueVolume = (float) (*curFrameIndex).second;
@@ -33,9 +36,6 @@ namespace iolib {
             // Mix in the samples
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
-            if (data == nullptr) {
-                return;
-            }
             if (numChannels == 1) {
                 // MONO output
                 // do not use, because of clipping wave.
@@ -53,7 +53,6 @@ namespace iolib {
                 }
             }
         }
-
         // silence
         // no need as the output buffer would need to have been filled with silence
         // to be mixed into

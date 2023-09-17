@@ -198,8 +198,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (midiFile.length() > 10 * 1024 * 1024) {
-                Toast.makeText(this, "不接受超过10MB的midi文件", Toast.LENGTH_SHORT).show();
+            if (midiFile.length() > 2 * 1024 * 1024) {
+                Toast.makeText(this, "不接受超过2MB的midi文件", Toast.LENGTH_SHORT).show();
                 return;
             } else if (midiFile.length() > 256 * 1024) {
                 Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();

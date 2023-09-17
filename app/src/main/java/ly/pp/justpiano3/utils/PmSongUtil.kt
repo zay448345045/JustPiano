@@ -39,21 +39,22 @@ object PmSongUtil {
     private val PM_DEFAULT_FILLED_DATA = byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
 
     fun parsePmDataByFilePath(context: Context, filePath: String): PmSongData? {
-        var inputStream: InputStream? = null
-        try {
-            inputStream = context.resources.assets.open(filePath)
+        val inputStream: InputStream = try {
+            context.resources.assets.open(filePath)
         } catch (ignore: Exception) {
             try {
-                inputStream = FileInputStream(
+                FileInputStream(
                     context.filesDir.absolutePath + "/Songs/" + filePath.substring(8)
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
+                null
             }
-        }
-        if (inputStream == null) return null
+        } ?: return null
         val pmData = ByteArray(inputStream.available())
-        inputStream.read(pmData)
+        inputStream.use {
+            it.read(pmData)
+        }
         return parsePmDataByBytes(pmData)
     }
 
@@ -69,7 +70,6 @@ object PmSongUtil {
                     break
                 }
             }
-
             // 曲谱时长计算
             var i = songNameLength + 2
             var songTime = 0
@@ -78,10 +78,8 @@ object PmSongUtil {
                 i += 4
             }
             songTime /= 1000
-
             // 读取左手难度
             val leftHandDegree = pmData[songNameLength + 1] / 10f
-
             // 填充音符数据
             val pmDataGroupSize = (pmData.size - (songNameLength + 4)) / 4
             val noteArray = ByteArray(pmDataGroupSize)
@@ -95,30 +93,24 @@ object PmSongUtil {
             for (index in songNameLength + 2 until pmData.size - 2) {
                 when ((index - songNameLength) % 4) {
                     0 -> {
-                        noteArray[i1] = pmData[index]
-                        i1++
+                        noteArray[i1++] = pmData[index]
                     }
 
                     1 -> {
-                        volumeArray[i2] = pmData[index]
-                        i2++
+                        volumeArray[i2++] = pmData[index]
                     }
 
                     2 -> {
-                        tickArray[i3] = pmData[index]
-                        i3++
+                        tickArray[i3++] = pmData[index]
                     }
 
                     3 -> {
-                        trackArray[i4] = pmData[index]
-                        i4++
+                        trackArray[i4++] = pmData[index]
                     }
                 }
             }
-
             // 读取右手难度
             val rightHandDegree = pmData[pmData.size - 1] / 10f
-
             // 数据组装
             return PmSongData(
                 songName, leftHandDegree, rightHandDegree, songTime, PM_GLOBAL_SPEED,

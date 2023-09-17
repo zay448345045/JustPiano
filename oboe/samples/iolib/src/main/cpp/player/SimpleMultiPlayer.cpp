@@ -57,27 +57,21 @@ namespace iolib {
             SampleSource *sampleSource = mSampleSources[index];
             int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
-            int count = 0;
             for (int32_t i = 0; i < queueSize; i++) {
                 std::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                if (curFrameIndex != nullptr) {
-                    sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
-                    if ((*curFrameIndex).first >= numSampleFrames) {
-                        count++;
-                    } else {
-                        sampleCount++;
-                    }
-                    // the size of queue equals one, can avoid pair auto-copy
-                    if (queueSize > 1) {
-                        sampleSource->pushCurFrameIndexQueue(curFrameIndex);
-                        sampleSource->popCurFrameIndexQueue();
-                    }
+                sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
+                if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
+                    // this sample is finished
+                    delete curFrameIndex;
+                    sampleSource->popCurFrameIndexQueue();
                 } else {
-                    count = 0;
+                    sampleCount += 1;
+                    // the size of queue equals one, can avoid moving queue
+                    if (curFrameIndex != nullptr && queueSize > 1) {
+                        sampleSource->popCurFrameIndexQueue();
+                        sampleSource->pushCurFrameIndexQueue(curFrameIndex);
+                    }
                 }
-            }
-            while (count--) {
-                sampleSource->popCurFrameIndexQueue();
             }
         }
 

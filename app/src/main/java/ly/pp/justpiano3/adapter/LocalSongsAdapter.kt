@@ -19,8 +19,7 @@ import ly.pp.justpiano3.activity.WaterfallActivity
 import ly.pp.justpiano3.constant.Consts
 import ly.pp.justpiano3.database.entity.Song
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick
-import ly.pp.justpiano3.thread.SongPlay.startPlay
-import ly.pp.justpiano3.thread.SongPlay.stopPlay
+import ly.pp.justpiano3.thread.SongPlay
 import ly.pp.justpiano3.view.ScrollText
 import java.io.File
 
@@ -63,14 +62,15 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
             listenImageView.setOnClickListener {
                 if (song.filePath == melodySelect.songsPath) {
                     melodySelect.songsPath = ""
+                    SongPlay.stopPlay()
                     return@setOnClickListener
                 }
                 melodySelect.songsPath = song.filePath
-                startPlay(melodySelect, song.filePath, 0)
-                Toast.makeText(melodySelect, "正在播放:《" + song.name + "》", Toast.LENGTH_SHORT).show()
+                SongPlay.startPlay(melodySelect, song.filePath, 0)
+                Toast.makeText(melodySelect, "开始播放:《" + song.name + "》", Toast.LENGTH_SHORT).show()
             }
             waterFallImageView.setOnClickListener {
-                stopPlay()
+                SongPlay.stopPlay()
                 val intent = Intent()
                 intent.putExtra("songPath", song.filePath)
                 intent.setClass(melodySelect, WaterfallActivity::class.java)
