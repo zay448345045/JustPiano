@@ -26,17 +26,22 @@ class TestStreamWaitState : public ::testing::Test {
 
 protected:
 
-    void SetUp() {
+    void SetUp(){
         mBuilder.setPerformanceMode(PerformanceMode::None);
         mBuilder.setDirection(Direction::Output);
     }
 
     bool openStream(Direction direction, PerformanceMode perfMode) {
         mBuilder.setDirection(direction);
+        mBuilder.setPerformanceMode(perfMode);
         Result r = mBuilder.openStream(&mStream);
         EXPECT_EQ(r, Result::OK) << "Failed to open stream " << convertToText(r);
-        EXPECT_EQ(mStream->getDirection(), direction) << convertToText(mStream->getDirection());
-        return (r == Result::OK);
+        if (r != Result::OK)
+            return false;
+
+        Direction d = mStream->getDirection();
+        EXPECT_EQ(d, direction) << convertToText(mStream->getDirection());
+        return (d == direction);
     }
 
     bool openStream(AudioStreamBuilder &builder) {
@@ -45,19 +50,16 @@ protected:
         return (r == Result::OK);
     }
 
-    void closeStream() {
-        if (mStream != nullptr) {
-            Result r = mStream->close();
-            mStream = nullptr;
-            if (r != Result::OK && r != Result::ErrorClosed) {
-                FAIL() << "Failed to close stream. " << convertToText(r);
-            }
-        }
+    bool closeStream() {
+        Result r = mStream->close();
+        EXPECT_TRUE(r == Result::OK || r == Result::ErrorClosed) <<
+            "Failed to close stream. " << convertToText(r);
+        return (r == Result::OK || r == Result::ErrorClosed);
     }
 
-    void checkWaitZeroTimeout() {
+    // if zero then don't wait for a state change
+    void checkWaitForStateChangeTimeout(int64_t timeout = kTimeoutInNanos) {
         StreamState next = StreamState::Unknown;
-        int64_t timeout = 0; // don't wait for a state change
         Result result = mStream->waitForStateChange(mStream->getState(), &next, timeout);
         EXPECT_EQ(Result::ErrorTimeout, result);
     }
@@ -81,8 +83,7 @@ protected:
         EXPECT_EQ(r, Result::OK);
         // May have caught in stopping transition. Wait for full stop.
         if (next == StreamState::Stopping) {
-            r = mStream->waitForStateChange(StreamState::Stopping, &next,
-                                            1000 * kNanosPerMillisecond);
+            r = mStream->waitForStateChange(StreamState::Stopping, &next, 1000 * kNanosPerMillisecond);
             EXPECT_EQ(r, Result::OK);
         }
         ASSERT_EQ(next, StreamState::Stopped) << "next = " << convertToText(next);
@@ -119,169 +120,130 @@ protected:
 
 };
 
-TEST_F(TestStreamWaitState, OutputLowWaitZero
-) {
-openStream(Direction::Output, PerformanceMode::LowLatency
-);
-
-checkWaitZeroTimeout();
-
-closeStream();
-
+// Test return of error timeout when zero passed as the timeoutNanos.
+TEST_F(TestStreamWaitState, OutputLowWaitZero) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::LowLatency));
+    checkWaitForStateChangeTimeout(0);
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(TestStreamWaitState, OutputNoneWaitZero
-) {
-openStream(Direction::Output, PerformanceMode::None
-);
-
-checkWaitZeroTimeout();
-
-closeStream();
-
+TEST_F(TestStreamWaitState, OutputNoneWaitZero) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::None));
+    checkWaitForStateChangeTimeout(0);
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(TestStreamWaitState, OutputLowWaitZeroSLES
-) {
-AudioStreamBuilder builder;
-builder.
-setPerformanceMode(PerformanceMode::LowLatency);
-builder.
-setAudioApi(AudioApi::OpenSLES);
-openStream(builder);
-
-checkWaitZeroTimeout();
-
-closeStream();
-
+TEST_F(TestStreamWaitState, OutputLowWaitZeroSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::LowLatency);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkWaitForStateChangeTimeout(0);
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(TestStreamWaitState, OutputNoneWaitZeroSLES
-) {
-AudioStreamBuilder builder;
-builder.
-setPerformanceMode(PerformanceMode::None);
-builder.
-setAudioApi(AudioApi::OpenSLES);
-openStream(builder);
-
-checkWaitZeroTimeout();
-
-closeStream();
-
+TEST_F(TestStreamWaitState, OutputNoneWaitZeroSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::None);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkWaitForStateChangeTimeout(0);
+    ASSERT_TRUE(closeStream());
 }
 
-
-TEST_F(TestStreamWaitState, OutputLowStopWhileWaiting
-) {
-openStream(Direction::Output, PerformanceMode::LowLatency
-);
-
-checkStopWhileWaiting();
-
-closeStream();
-
+// Test actual timeout.
+TEST_F(TestStreamWaitState, OutputLowWaitNonZero) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::LowLatency));
+    checkWaitForStateChangeTimeout();
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(TestStreamWaitState, OutputNoneStopWhileWaiting
-) {
-openStream(Direction::Output, PerformanceMode::LowLatency
-);
-
-checkStopWhileWaiting();
-
-closeStream();
-
+TEST_F(TestStreamWaitState, OutputNoneWaitNonZero) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::None));
+    checkWaitForStateChangeTimeout();
+    ASSERT_TRUE(closeStream());
 }
 
+TEST_F(TestStreamWaitState, OutputLowWaitNonZeroSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::LowLatency);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkWaitForStateChangeTimeout();
+    ASSERT_TRUE(closeStream());
+}
 
-TEST_F(TestStreamWaitState, OutputLowStopWhileWaitingSLES
-) {
-AudioStreamBuilder builder;
-builder.
-setPerformanceMode(PerformanceMode::LowLatency);
-builder.
-setAudioApi(AudioApi::OpenSLES);
-openStream(builder);
+TEST_F(TestStreamWaitState, OutputNoneWaitNonZeroSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::None);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkWaitForStateChangeTimeout();
+    ASSERT_TRUE(closeStream());
+}
 
-checkStopWhileWaiting();
+TEST_F(TestStreamWaitState, OutputLowStopWhileWaiting) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::LowLatency));
+    checkStopWhileWaiting();
+    ASSERT_TRUE(closeStream());
+}
 
-closeStream();
-
+TEST_F(TestStreamWaitState, OutputNoneStopWhileWaiting) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::LowLatency));
+    checkStopWhileWaiting();
+    ASSERT_TRUE(closeStream());
 }
 
 
-TEST_F(TestStreamWaitState, OutputLowCloseWhileWaiting
-) {
-openStream(Direction::Output, PerformanceMode::LowLatency
-);
-
-checkCloseWhileWaiting();
-
-closeStream();
-
-}
-
-TEST_F(TestStreamWaitState, OutputNoneCloseWhileWaiting
-) {
-openStream(Direction::Output, PerformanceMode::None
-);
-
-checkCloseWhileWaiting();
-
-closeStream();
-
-}
-
-TEST_F(TestStreamWaitState, InputLowCloseWhileWaiting
-) {
-openStream(Direction::Input, PerformanceMode::LowLatency
-);
-
-checkCloseWhileWaiting();
-
-closeStream();
-
-}
-
-TEST_F(TestStreamWaitState, InputNoneCloseWhileWaiting
-) {
-openStream(Direction::Input, PerformanceMode::None
-);
-
-checkCloseWhileWaiting();
-
-closeStream();
-
-}
-
-TEST_F(TestStreamWaitState, OutputNoneCloseWhileWaitingSLES
-) {
-AudioStreamBuilder builder;
-builder.
-setPerformanceMode(PerformanceMode::None);
-builder.
-setAudioApi(AudioApi::OpenSLES);
-openStream(builder);
-
-checkCloseWhileWaiting();
-
-closeStream();
-
+TEST_F(TestStreamWaitState, OutputLowStopWhileWaitingSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::LowLatency);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkStopWhileWaiting();
+    ASSERT_TRUE(closeStream());
 }
 
 
-TEST_F(TestStreamWaitState, OutputLowCloseWhileWaitingSLES
-) {
-AudioStreamBuilder builder;
-builder.
-setPerformanceMode(PerformanceMode::LowLatency);
-builder.
-setAudioApi(AudioApi::OpenSLES);
-openStream(builder);
+TEST_F(TestStreamWaitState, OutputLowCloseWhileWaiting) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::LowLatency));
+    checkCloseWhileWaiting();
+    ASSERT_TRUE(closeStream());
+}
 
-checkCloseWhileWaiting();
+TEST_F(TestStreamWaitState, OutputNoneCloseWhileWaiting) {
+    ASSERT_TRUE(openStream(Direction::Output, PerformanceMode::None));
+    checkCloseWhileWaiting();
+    ASSERT_TRUE(closeStream());
+}
 
-closeStream();
+TEST_F(TestStreamWaitState, InputLowCloseWhileWaiting) {
+    ASSERT_TRUE(openStream(Direction::Input, PerformanceMode::LowLatency));
+    checkCloseWhileWaiting();
+    ASSERT_TRUE(closeStream());
+}
 
+TEST_F(TestStreamWaitState, InputNoneCloseWhileWaiting) {
+    ASSERT_TRUE(openStream(Direction::Input, PerformanceMode::None));
+    checkCloseWhileWaiting();
+    ASSERT_TRUE(closeStream());
+}
+
+TEST_F(TestStreamWaitState, OutputNoneCloseWhileWaitingSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::None);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkCloseWhileWaiting();
+    ASSERT_TRUE(closeStream());
+}
+
+
+TEST_F(TestStreamWaitState, OutputLowCloseWhileWaitingSLES) {
+    AudioStreamBuilder builder;
+    builder.setPerformanceMode(PerformanceMode::LowLatency);
+    builder.setAudioApi(AudioApi::OpenSLES);
+    ASSERT_TRUE(openStream(builder));
+    checkCloseWhileWaiting();
+    ASSERT_TRUE(closeStream());
 }

@@ -9,12 +9,11 @@
 
     <ScrollView
         android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <TextView
             android:id="@+id/output_view_text"
             android:layout_width="match_parent"
@@ -25,7 +24,8 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="bottom"
-            android:text="Running tests..." />
+            android:text="Running tests..."
+             />
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

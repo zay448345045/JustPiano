@@ -19,6 +19,7 @@
 
 #include "oboe/Definitions.h"
 #include "oboe/AudioStreamBase.h"
+#include "oboe/Utilities.h"
 #include "ResultWithValue.h"
 
 namespace oboe {
@@ -42,11 +43,35 @@ public:
      *
      * Default is kUnspecified. If the value is unspecified then
      * the application should query for the actual value after the stream is opened.
+     *
+     * As the channel count here may be different from the corresponding channel count of
+     * provided channel mask used in setChannelMask(). The last called will be respected
+     * if this function and setChannelMask() are called.
      */
     AudioStreamBuilder *setChannelCount(int channelCount) {
         mChannelCount = channelCount;
+        mChannelMask = ChannelMask::Unspecified;
         return this;
     }
+
+    /**
+     * Request a specific channel mask.
+     *
+     * Default is kUnspecified. If the value is unspecified then the application
+     * should query for the actual value after the stream is opened.
+     *
+     * As the corresponding channel count of provided channel mask here may be different
+     * from the channel count used in setChannelCount(). The last called will be respected
+     * if this function and setChannelCount() are called.
+     *
+     * As the setChannelMask API is available on Android 32+, this call will only take effects
+     * on Android 32+.
+     */
+     AudioStreamBuilder *setChannelMask(ChannelMask channelMask) {
+         mChannelMask = channelMask;
+         mChannelCount = getChannelCountFromChannelMask(channelMask);
+         return this;
+     }
 
     /**
      * Request the direction for a stream. The default is Direction::Output.
@@ -303,11 +328,14 @@ public:
      * In most cases, the primary device will be the appropriate device to use, and the
      * deviceId can be left kUnspecified.
      *
-     * On Android, for example, the ID could be obtained from the Java AudioManager.
-     * AudioManager.getDevices() returns an array of AudioDeviceInfo[], which contains
-     * a getId() method (as well as other type information), that should be passed
-     * to this method.
+     * The ID could be obtained from the Java AudioManager.
+     * AudioManager.getDevices() returns an array of AudioDeviceInfo,
+     * which contains a getId() method. That ID can be passed to this function.
      *
+     * It is possible that you may not get the device that you requested.
+     * So if it is important to you, you should call
+     * stream->getDeviceId() after the stream is opened to
+     * verify the actual ID.
      *
      * Note that when using OpenSL ES, this will be ignored and the created
      * stream will have deviceId kUnspecified.
@@ -326,11 +354,31 @@ public:
      * <strong>Important: See AudioStreamCallback for restrictions on what may be called
      * from the callback methods.</strong>
      *
+     * We pass a shared_ptr so that the sharedDataCallback object cannot be deleted
+     * before the stream is deleted.
+     *
      * @param dataCallback
      * @return pointer to the builder so calls can be chained
      */
-    AudioStreamBuilder *setDataCallback(oboe::AudioStreamDataCallback *dataCallback) {
+    AudioStreamBuilder *setDataCallback(std::shared_ptr<AudioStreamDataCallback> sharedDataCallback) {
+        // Use this raw pointer in the rest of the code to retain backwards compatibility.
+        mDataCallback = sharedDataCallback.get();
+        // Hold a shared_ptr to protect the raw pointer for the lifetime of the stream.
+        mSharedDataCallback = sharedDataCallback;
+        return this;
+    }
+
+    /**
+    * Pass a raw pointer to a data callback. This is not recommended because the dataCallback
+    * object might get deleted by the app while it is being used.
+    *
+    * @deprecated Call setDataCallback(std::shared_ptr<AudioStreamDataCallback>) instead.
+    * @param dataCallback
+    * @return pointer to the builder so calls can be chained
+    */
+    AudioStreamBuilder *setDataCallback(AudioStreamDataCallback *dataCallback) {
         mDataCallback = dataCallback;
+        mSharedDataCallback = nullptr;
         return this;
     }
 
@@ -346,11 +394,32 @@ public:
      * <strong>When an error callback occurs, the associated stream must be stopped and closed
      * in a separate thread.</strong>
      *
-     * @param errorCallback
+     * We pass a shared_ptr so that the errorCallback object cannot be deleted before the stream is deleted.
+     * If the stream was created using a shared_ptr then the stream cannot be deleted before the
+     * error callback has finished running.
+     *
+     * @param sharedErrorCallback
      * @return pointer to the builder so calls can be chained
      */
-    AudioStreamBuilder *setErrorCallback(oboe::AudioStreamErrorCallback *errorCallback) {
+    AudioStreamBuilder *setErrorCallback(std::shared_ptr<AudioStreamErrorCallback> sharedErrorCallback) {
+        // Use this raw pointer in the rest of the code to retain backwards compatibility.
+        mErrorCallback = sharedErrorCallback.get();
+        // Hold a shared_ptr to protect the raw pointer for the lifetime of the stream.
+        mSharedErrorCallback = sharedErrorCallback;
+        return this;
+    }
+
+    /**
+    * Pass a raw pointer to an error callback. This is not recommended because the errorCallback
+    * object might get deleted by the app while it is being used.
+    *
+    * @deprecated Call setErrorCallback(std::shared_ptr<AudioStreamErrorCallback>) instead.
+    * @param errorCallback
+    * @return pointer to the builder so calls can be chained
+    */
+    AudioStreamBuilder *setErrorCallback(AudioStreamErrorCallback *errorCallback) {
         mErrorCallback = errorCallback;
+        mSharedErrorCallback = nullptr;
         return this;
     }
 
@@ -391,7 +460,7 @@ public:
      * On some devices, mono streams might be broken, so a stereo stream might be opened
      * and converted to mono.
      *
-     * Default is true.
+     * Default is false.
      */
     AudioStreamBuilder *setChannelConversionAllowed(bool allowed) {
         mChannelConversionAllowed = allowed;

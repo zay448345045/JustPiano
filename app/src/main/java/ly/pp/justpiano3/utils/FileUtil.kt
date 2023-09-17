@@ -71,20 +71,15 @@ object FileUtil {
                 val split = docId.split(":").toTypedArray()
                 val type = split[0]
                 if ("primary".equals(type, ignoreCase = true)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        val file = File(
-                            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-                                .toString() + File.separator + split[1]
-                        )
-                        return if (file.exists()) {
-                            file.absolutePath
-                        } else {
-                            Environment.getExternalStorageDirectory()
-                                .toString() + File.separator + split[1]
-                        }
+                    val file = File(
+                        context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+                            .toString() + File.separator + split[1]
+                    )
+                    return if (file.exists()) {
+                        file.absolutePath
                     } else {
                         @Suppress("DEPRECATION")
-                        return Environment.getExternalStorageDirectory()
+                        Environment.getExternalStorageDirectory()
                             .toString() + File.separator + split[1]
                     }
                 } else if ("home".equals(type, ignoreCase = true)) {

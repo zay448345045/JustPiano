@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.4.1)
 # This may work on Linux.
 # set(ANDROID_NDK $ENV{HOME}/Android/sdk/ndk-bundle)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -std=c++17")
 
 # Include GoogleTest library
 set(GOOGLETEST_ROOT ${ANDROID_NDK}/sources/third_party/googletest)
@@ -16,24 +16,28 @@ target_include_directories(gtest PRIVATE ${GOOGLETEST_ROOT})
 target_include_directories(gtest PUBLIC ${GOOGLETEST_ROOT}/include)
 
 # Include Oboe sources
-set(OBOE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+set (OBOE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 add_subdirectory(${OBOE_DIR} ./oboe-bin)
 include_directories(
-        ${OBOE_DIR}/include
-        ${OBOE_DIR}/src
-)
+		${OBOE_DIR}/include
+		${OBOE_DIR}/src
+		)
 
 # Build the test binary
 add_executable(
-        testOboe
-        testAAudio.cpp
-        testUtilities.cpp
-        testFlowgraph.cpp
-        testStreamClosedMethods.cpp
-        testStreamWaitState.cpp
-        testXRunBehaviour.cpp
-        testStreamOpen.cpp
-        testStreamStates.cpp
-)
+		testOboe
+		testAAudio.cpp
+		testFlowgraph.cpp
+		testResampler.cpp
+		testReturnStop.cpp
+		testStreamClosedMethods.cpp
+		testStreamFramesProcessed.cpp
+		testStreamOpen.cpp
+		testStreamStates.cpp
+		testStreamStop.cpp
+		testStreamWaitState.cpp
+		testXRunBehaviour.cpp
+		testUtilities.cpp
+        )
 
 target_link_libraries(testOboe gtest oboe)

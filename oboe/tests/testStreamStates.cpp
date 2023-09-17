@@ -27,7 +27,7 @@ class StreamStates : public ::testing::Test {
 
 protected:
 
-    void SetUp() {
+    void SetUp(){
         mBuilder.setPerformanceMode(PerformanceMode::None);
         mBuilder.setDirection(Direction::Output);
     }
@@ -37,8 +37,12 @@ protected:
         mBuilder.setDirection(direction);
         Result r = mBuilder.openStream(&mStream);
         EXPECT_EQ(r, Result::OK) << "Failed to open stream " << convertToText(r);
-        EXPECT_EQ(mStream->getDirection(), direction) << convertToText(mStream->getDirection());
-        return (r == Result::OK);
+        if (r != Result::OK)
+            return false;
+
+        Direction d = mStream->getDirection();
+        EXPECT_EQ(d, direction) << convertToText(mStream->getDirection());
+        return (d == direction);
     }
 
     bool openStream() {
@@ -49,26 +53,14 @@ protected:
         return openStream(Direction::Input);
     }
 
-    void closeStream() {
-        if (mStream != nullptr) {
-            Result r = mStream->close();
-            mStream = nullptr;
-            if (r != Result::OK) {
-                FAIL() << "Failed to close stream. " << convertToText(r);
-            }
-        }
-    }
-
-    void openAndCloseStream() {
-
-        openStream();
-        closeStream();
-        ASSERT_EQ(mStream->getState(), StreamState::Closed) << "Stream state "
-                                                            << convertToText(mStream->getState());
+    bool closeStream() {
+        Result r = mStream->close();
+        EXPECT_EQ(r, Result::OK) << "Failed to close stream. " << convertToText(r);
+        return (r == Result::OK);
     }
 
     void checkStreamStateIsStartedAfterStartingTwice(Direction direction) {
-        openStream(direction);
+        ASSERT_TRUE(openStream(direction));
 
         StreamState next = StreamState::Unknown;
         auto r = mStream->requestStart();
@@ -85,11 +77,11 @@ protected:
         EXPECT_EQ(r, Result::OK);
         ASSERT_EQ(next, StreamState::Started);
 
-        closeStream();
+        ASSERT_TRUE(closeStream());
     }
 
     void checkStreamStateIsStoppedAfterStoppingTwice(Direction direction) {
-        openStream(direction);
+        ASSERT_TRUE(openStream(direction));
 
         StreamState next = StreamState::Unknown;
         auto r = mStream->requestStart();
@@ -108,28 +100,28 @@ protected:
         EXPECT_EQ(r, Result::OK);
         ASSERT_EQ(next, StreamState::Stopped);
 
-        closeStream();
+        ASSERT_TRUE(closeStream());
     }
 
     // TODO: This seems to fail intermittently on Pixel OC_MR1 !
     void checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction direction) {
-        openStream(direction);
+        ASSERT_TRUE(openStream(direction));
 
         auto r = mStream->requestStart();
         EXPECT_EQ(r, Result::OK);
         // It should be safe to close without stopping.
         // The underlying API should stop the stream.
-        closeStream();
+        ASSERT_TRUE(closeStream());
 
         usleep(kOboeOpenCloseSleepMSec * 1000); // avoid race condition in emulator
 
-        openInputStream();
+        ASSERT_TRUE(openInputStream());
         r = mStream->requestStart();
         ASSERT_EQ(r, Result::OK) << "requestStart returned: " << convertToText(r);
 
         r = mStream->requestStop();
         EXPECT_EQ(r, Result::OK) << "requestStop returned: " << convertToText(r);
-        closeStream();
+        ASSERT_TRUE(closeStream());
     }
 
     AudioStreamBuilder mBuilder;
@@ -138,250 +130,176 @@ protected:
 
 };
 
-TEST_F(StreamStates, OutputStreamStateIsOpenAfterOpening
-){
-openStream();
-
-StreamState next = StreamState::Unknown;
-Result r = mStream->waitForStateChange(StreamState::Uninitialized, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-) <<
-convertToText(r);
-ASSERT_EQ(next, StreamState::Open
-) <<
-convertToText(next);
-
-closeStream();
-
+TEST_F(StreamStates, OutputStreamStateIsOpenAfterOpening){
+    ASSERT_TRUE(openStream());
+    StreamState next = StreamState::Unknown;
+    Result r = mStream->waitForStateChange(StreamState::Uninitialized, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK) << convertToText(r);
+    ASSERT_EQ(next, StreamState::Open) << convertToText(next);
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, OutputStreamStateIsStartedAfterStarting
-){
+TEST_F(StreamStates, OutputStreamStateIsStartedAfterStarting){
 
-openStream();
+    ASSERT_TRUE(openStream());
 
-StreamState next = StreamState::Unknown;
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-);
+    StreamState next = StreamState::Unknown;
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK);
 
-r = mStream->waitForStateChange(StreamState::Starting, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-);
-ASSERT_EQ(next, StreamState::Started
-);
+    r = mStream->waitForStateChange(StreamState::Starting, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK);
+    ASSERT_EQ(next, StreamState::Started);
 
-closeStream();
-
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, OutputStreamStateIsPausedAfterPausing
-){
+TEST_F(StreamStates, OutputStreamStateIsPausedAfterPausing){
 
-openStream();
+    ASSERT_TRUE(openStream());
 
-StreamState next = StreamState::Unknown;
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-);
+    StreamState next = StreamState::Unknown;
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK);
 
-r = mStream->requestPause();
-EXPECT_EQ(r, Result::OK
-);
+    r = mStream->requestPause();
+    EXPECT_EQ(r, Result::OK);
 
-r = mStream->waitForStateChange(StreamState::Pausing, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-);
+    r = mStream->waitForStateChange(StreamState::Pausing, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK);
 
-ASSERT_EQ(next, StreamState::Paused
-);
+    ASSERT_EQ(next, StreamState::Paused);
 
-closeStream();
-
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, OutputStreamStateIsStoppedAfterStopping
-){
+TEST_F(StreamStates, OutputStreamStateIsStoppedAfterStopping){
 
-openStream();
+    ASSERT_TRUE(openStream());
 
-StreamState next = StreamState::Unknown;
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-);
+    StreamState next = StreamState::Unknown;
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK);
 
-r = mStream->requestStop();
-r = mStream->waitForStateChange(StreamState::Stopping, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-);
+    r = mStream->requestStop();
+    r = mStream->waitForStateChange(StreamState::Stopping, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK);
 
-ASSERT_EQ(next, StreamState::Stopped
-);
+    ASSERT_EQ(next, StreamState::Stopped);
 
-closeStream();
-
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, InputStreamStateIsOpenAfterOpening
-){
-openInputStream();
-
-StreamState next = StreamState::Unknown;
-Result r = mStream->waitForStateChange(StreamState::Uninitialized, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-) <<
-convertToText(r);
-ASSERT_EQ(next, StreamState::Open
-) <<
-convertToText(next);
-
-closeStream();
-
+TEST_F(StreamStates, InputStreamStateIsOpenAfterOpening){
+    ASSERT_TRUE(openInputStream());
+    StreamState next = StreamState::Unknown;
+    Result r = mStream->waitForStateChange(StreamState::Uninitialized, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK) << convertToText(r);
+    ASSERT_EQ(next, StreamState::Open) << convertToText(next);
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, InputStreamStateIsStartedAfterStarting
-){
+TEST_F(StreamStates, InputStreamStateIsStartedAfterStarting){
 
-openInputStream();
+    ASSERT_TRUE(openInputStream());
 
-StreamState next = StreamState::Unknown;
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-);
+    StreamState next = StreamState::Unknown;
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK);
 
-r = mStream->waitForStateChange(StreamState::Starting, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-);
+    r = mStream->waitForStateChange(StreamState::Starting, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK);
 
-ASSERT_EQ(next, StreamState::Started
-);
+    ASSERT_EQ(next, StreamState::Started);
 
-closeStream();
-
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, OutputStreamStateIsStartedAfterStartingTwice
-){
-checkStreamStateIsStartedAfterStartingTwice(Direction::Output);
+TEST_F(StreamStates, OutputStreamStateIsStartedAfterStartingTwice){
+    checkStreamStateIsStartedAfterStartingTwice(Direction::Output);
 }
 
-TEST_F(StreamStates, InputStreamStateIsStartedAfterStartingTwice
-){
-checkStreamStateIsStartedAfterStartingTwice(Direction::Input);
+TEST_F(StreamStates, InputStreamStateIsStartedAfterStartingTwice){
+    checkStreamStateIsStartedAfterStartingTwice(Direction::Input);
 }
 
-TEST_F(StreamStates, OutputStreamStateIsStoppedAfterStoppingTwice
-){
-checkStreamStateIsStoppedAfterStoppingTwice(Direction::Output);
+TEST_F(StreamStates, OutputStreamStateIsStoppedAfterStoppingTwice){
+    checkStreamStateIsStoppedAfterStoppingTwice(Direction::Output);
 }
 
-TEST_F(StreamStates, InputStreamStateIsStoppedAfterStoppingTwice
-){
-checkStreamStateIsStoppedAfterStoppingTwice(Direction::Input);
+TEST_F(StreamStates, InputStreamStateIsStoppedAfterStoppingTwice){
+    checkStreamStateIsStoppedAfterStoppingTwice(Direction::Input);
 }
 
-TEST_F(StreamStates, OutputStreamStateIsPausedAfterPausingTwice
-){
-openStream();
+TEST_F(StreamStates, OutputStreamStateIsPausedAfterPausingTwice){
+    ASSERT_TRUE(openStream());
 
-StreamState next = StreamState::Unknown;
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-);
+    StreamState next = StreamState::Unknown;
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK);
 
-r = mStream->requestPause();
-EXPECT_EQ(r, Result::OK
-);
-r = mStream->waitForStateChange(StreamState::Pausing, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-);
-EXPECT_EQ(next, StreamState::Paused
-);
+    r = mStream->requestPause();
+    EXPECT_EQ(r, Result::OK);
+    r = mStream->waitForStateChange(StreamState::Pausing, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK);
+    EXPECT_EQ(next, StreamState::Paused);
 
-// requestPause() while already paused could leave us in Pausing in AAudio O_MR1.
-r = mStream->requestPause();
-EXPECT_EQ(r, Result::OK
-);
-next = StreamState::Unknown;
-r = mStream->waitForStateChange(StreamState::Pausing, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-);
-ASSERT_EQ(next, StreamState::Paused
-);
+    // requestPause() while already paused could leave us in Pausing in AAudio O_MR1.
+    r = mStream->requestPause();
+    EXPECT_EQ(r, Result::OK);
+    next = StreamState::Unknown;
+    r = mStream->waitForStateChange(StreamState::Pausing, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK);
+    ASSERT_EQ(next, StreamState::Paused);
 
-closeStream();
-
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, InputStreamDoesNotSupportPause
-){
+TEST_F(StreamStates, InputStreamDoesNotSupportPause){
 
-openInputStream();
+    ASSERT_TRUE(openInputStream());
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK);
+    r = mStream->requestPause();
 
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-);
-r = mStream->requestPause();
-
-ASSERT_EQ(r, Result::ErrorUnimplemented
-) <<
-convertToText(r);
-mStream->
-
-requestStop();
-
-closeStream();
-
+    ASSERT_EQ(r, Result::ErrorUnimplemented) << convertToText(r);
+    mStream->requestStop();
+    ASSERT_TRUE(closeStream());
 }
 
-TEST_F(StreamStates, OutputStreamLeftRunningShouldNotInterfereWithNextOpen
-) {
-checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Output);
+TEST_F(StreamStates, OutputStreamLeftRunningShouldNotInterfereWithNextOpen) {
+    checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Output);
 }
 
-TEST_F(StreamStates, InputStreamLeftRunningShouldNotInterfereWithNextOpen
-) {
-checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Input);
+TEST_F(StreamStates, InputStreamLeftRunningShouldNotInterfereWithNextOpen) {
+    checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Input);
 }
 
-TEST_F(StreamStates, OutputLowLatencyStreamLeftRunningShouldNotInterfereWithNextOpen
-) {
-mBuilder.
-setPerformanceMode(PerformanceMode::LowLatency);
-checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Output);
+TEST_F(StreamStates, OutputLowLatencyStreamLeftRunningShouldNotInterfereWithNextOpen) {
+    mBuilder.setPerformanceMode(PerformanceMode::LowLatency);
+    checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Output);
 }
 
-TEST_F(StreamStates, InputLowLatencyStreamLeftRunningShouldNotInterfereWithNextOpen
-) {
-mBuilder.
-setPerformanceMode(PerformanceMode::LowLatency);
-checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Input);
+TEST_F(StreamStates, InputLowLatencyStreamLeftRunningShouldNotInterfereWithNextOpen) {
+    mBuilder.setPerformanceMode(PerformanceMode::LowLatency);
+    checkStreamLeftRunningShouldNotInterfereWithNextOpen(Direction::Input);
 }
 
-TEST_F(StreamStates, InputStreamStateIsStoppedAfterStopping
-){
+TEST_F(StreamStates, InputStreamStateIsStoppedAfterStopping){
 
-openInputStream();
+    ASSERT_TRUE(openInputStream());
 
-StreamState next = StreamState::Unknown;
-auto r = mStream->requestStart();
-EXPECT_EQ(r, Result::OK
-) << "requestStart returned: " <<
-convertToText(r);
+    StreamState next = StreamState::Unknown;
+    auto r = mStream->requestStart();
+    EXPECT_EQ(r, Result::OK) << "requestStart returned: " << convertToText(r);
 
-r = mStream->requestStop();
-EXPECT_EQ(r, Result::OK
-) << "requestStop returned: " <<
-convertToText(r);
+    r = mStream->requestStop();
+    EXPECT_EQ(r, Result::OK) << "requestStop returned: " << convertToText(r);
 
-r = mStream->waitForStateChange(StreamState::Stopping, &next, kTimeoutInNanos);
-EXPECT_EQ(r, Result::OK
-) << "waitForStateChange returned: " <<
-convertToText(r);
+    r = mStream->waitForStateChange(StreamState::Stopping, &next, kTimeoutInNanos);
+    EXPECT_EQ(r, Result::OK) << "waitForStateChange returned: " << convertToText(r);
 
-ASSERT_EQ(next, StreamState::Stopped
-);
+    ASSERT_EQ(next, StreamState::Stopped);
 
-closeStream();
-
+    ASSERT_TRUE(closeStream());
 }

@@ -79,7 +79,7 @@ namespace iolib {
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
         for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
             data[i] /= mDecayFactor;
-            mDecayFactor += (logSampleCount - mDecayFactor) / 128;
+            mDecayFactor += (logSampleCount - mDecayFactor) / 256;
         }
 
         if (record) {

@@ -9,9 +9,10 @@ The basic operation is:
 
 ## Prerequisites/caveats
 
-You must have compiled and executed one of the Oboe examples or OboeTester. That ensures that the NDK and cmake is installed.
-
-You must define `ANDROID_NDK` as an environment variable and make sure `cmake` is on your path.
+1. Java JDK installed.
+2. On Mac, you must agree to the XCode license. The script will prompt you.
+3. You must have compiled and executed one of the Oboe examples or OboeTester. That ensures that the NDK and cmake is installed.
+4. You must define `ANDROID_NDK` as an environment variable and make sure `cmake` is on your path.
 
 To test this on Mac or Linux enter:
 
@@ -31,9 +32,9 @@ Now we need to determine the latest installed version of the NDK. Enter:
     
     ls $ANDROID_HOME/ndk
     
-Make note of the folder name. Mine was "21.0.6113669" so I entered:
+Make note of the folder name. Mine was "21.3.6528147" so I entered:
 
-    export ANDROID_NDK=$ANDROID_HOME/ndk/21.0.6113669/
+    export ANDROID_NDK=$ANDROID_HOME/ndk/21.3.6528147/
 
 If you need to add `cmake` to your path then you can find it by entering:
 

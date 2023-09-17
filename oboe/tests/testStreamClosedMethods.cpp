@@ -19,22 +19,16 @@
 
 using namespace oboe;
 
-class MyCallback : public AudioStreamCallback {
+class MyCallback : public AudioStreamDataCallback {
 public:
-    DataCallbackResult
-    onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override {
+    DataCallbackResult onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override {
         return DataCallbackResult::Continue;
     }
 };
 
-
 class StreamClosedReturnValues : public ::testing::Test {
 
 protected:
-
-    void SetUp() {
-
-    }
 
     bool openStream() {
         Result r = mBuilder.openStream(&mStream);
@@ -42,608 +36,366 @@ protected:
         return (r == Result::OK);
     }
 
-    void closeStream() {
-        if (mStream != nullptr) {
-            Result r = mStream->close();
-            if (r != Result::OK) {
-                FAIL() << "Failed to close stream. " << convertToText(r);
-            }
-        }
+    bool closeStream() {
+        Result r = mStream->close();
+        EXPECT_EQ(r, Result::OK) << "Failed to close stream. " << convertToText(r);
+        return (r == Result::OK);
     }
 
-    void openAndCloseStream() {
-        openStream();
-        closeStream();
-        ASSERT_EQ(mStream->getState(), StreamState::Closed) << "Stream state "
-                                                            << convertToText(mStream->getState());
+    bool openAndCloseStream() {
+        if (!openStream() || !closeStream())
+            return false;
+        StreamState s = mStream->getState();
+        EXPECT_EQ(s, StreamState::Closed) << "Stream state " << convertToText(mStream->getState());
+        return (s == StreamState::Closed);
+    }
+
+    static int64_t getNanoseconds() {
+        struct timespec time;
+        int result = clock_gettime(CLOCK_MONOTONIC, &time);
+        if (result < 0) {
+            return result;
+        }
+        return (time.tv_sec * (int64_t)1e9) + time.tv_nsec;
+    }
+
+    int32_t mElapsedTimeMillis = 0; // used for passing back a value from a test function.
+	// ASSERT_* requires a void return type.
+    void measureCloseTime(int32_t delayMillis) {
+        ASSERT_TRUE(openStream());
+        mStream->setDelayBeforeCloseMillis(delayMillis);
+        ASSERT_EQ(delayMillis, mStream->getDelayBeforeCloseMillis());
+        // Measure time it takes to close.
+        int64_t startTimeMillis = getNanoseconds() / 1e6;
+        ASSERT_TRUE(closeStream());
+        int64_t stopTimeMillis = getNanoseconds() / 1e6;
+        int32_t elapsedTimeMillis = (int32_t)(stopTimeMillis - startTimeMillis);
+        ASSERT_GE(elapsedTimeMillis, delayMillis);
+        mElapsedTimeMillis = elapsedTimeMillis;
+    }
+
+    void testDelayBeforeClose() {
+        const int32_t delayMillis = 100;
+        measureCloseTime(0);
+        int32_t elapsedTimeMillis1 = mElapsedTimeMillis;
+        // Do it again with a longer sleep using setDelayBeforeCloseMillis.
+        // The increase in elapsed time should match the added delay.
+        measureCloseTime(delayMillis);
+        int32_t elapsedTimeMillis2 = mElapsedTimeMillis;
+        int32_t extraElapsedTime = elapsedTimeMillis2 - elapsedTimeMillis1;
+        // Expect the additional elapsed time to be close to the added delay.
+        ASSERT_LE(abs(extraElapsedTime - delayMillis), delayMillis / 5);
     }
 
     AudioStreamBuilder mBuilder;
-    AudioStream *mStream = nullptr;
+    AudioStream       *mStream = nullptr;
 
 };
 
-TEST_F(StreamClosedReturnValues, GetChannelCountReturnsLastKnownValue
-){
+TEST_F(StreamClosedReturnValues, GetChannelCountReturnsLastKnownValue){
 
-mBuilder.setChannelCount(2);
-
-openAndCloseStream();
-
-ASSERT_EQ(mStream
-->
-
-getChannelCount(),
-
-2);
+    mBuilder.setChannelCount(2);
+    ASSERT_TRUE(openAndCloseStream());
+    ASSERT_EQ(mStream->getChannelCount(), 2);
 }
 
-TEST_F(StreamClosedReturnValues, GetDirectionReturnsLastKnownValue
-){
+TEST_F(StreamClosedReturnValues, GetDirectionReturnsLastKnownValue){
 
-// Note that when testing on the emulator setting the direction to Input will result in ErrorInternal when
-// opening the stream
-mBuilder.
-setDirection(Direction::Input);
-
-openAndCloseStream();
-
-ASSERT_EQ(mStream
-->
-
-getDirection(), Direction::Input
-
-);
+    // Note that when testing on the emulator setting the direction to Input will result in ErrorInternal when
+    // opening the stream
+    mBuilder.setDirection(Direction::Input);
+    ASSERT_TRUE(openAndCloseStream());
+    ASSERT_EQ(mStream->getDirection(), Direction::Input);
 }
 
-TEST_F(StreamClosedReturnValues, GetSampleRateReturnsLastKnownValue
-){
+TEST_F(StreamClosedReturnValues, GetSampleRateReturnsLastKnownValue){
 
-mBuilder.setSampleRate(8000);
-
-openAndCloseStream();
-
-ASSERT_EQ(mStream
-->
-
-getSampleRate(),
-
-8000);
+    mBuilder.setSampleRate(8000);
+    ASSERT_TRUE(openAndCloseStream());
+    ASSERT_EQ(mStream->getSampleRate(), 8000);
 }
 
-TEST_F(StreamClosedReturnValues, GetFramesPerCallbackReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetFramesPerCallbackReturnsLastKnownValue) {
 
-mBuilder.setFramesPerCallback(192);
-
-openAndCloseStream();
-
-ASSERT_EQ(mStream
-->
-
-getFramesPerCallback(),
-
-192);
+    mBuilder.setFramesPerCallback(192);
+    ASSERT_TRUE(openAndCloseStream());
+    ASSERT_EQ(mStream->getFramesPerCallback(), 192);
 }
 
-TEST_F(StreamClosedReturnValues, GetFormatReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetFormatReturnsLastKnownValue) {
 
-mBuilder.
-setFormat(AudioFormat::I16);
-
-openAndCloseStream();
-
-ASSERT_EQ(mStream
-->
-
-getFormat(), AudioFormat::I16
-
-);
+    mBuilder.setFormat(AudioFormat::I16);
+    ASSERT_TRUE(openAndCloseStream());
+    ASSERT_EQ(mStream->getFormat(), AudioFormat::I16);
 }
 
-TEST_F(StreamClosedReturnValues, GetBufferSizeInFramesReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetBufferSizeInFramesReturnsLastKnownValue) {
 
-openStream();
-
-int32_t bufferSize = mStream->getBufferSizeInFrames();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getBufferSizeInFrames(), bufferSize
-
-);
+    ASSERT_TRUE(openStream());
+    int32_t bufferSize = mStream->getBufferSizeInFrames();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getBufferSizeInFrames(), bufferSize);
 }
 
-TEST_F(StreamClosedReturnValues, GetBufferCapacityInFramesReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetBufferCapacityInFramesReturnsLastKnownValue) {
 
-openStream();
-
-int32_t bufferCapacity = mStream->getBufferCapacityInFrames();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getBufferCapacityInFrames(), bufferCapacity
-
-);
+    ASSERT_TRUE(openStream());
+    int32_t bufferCapacity = mStream->getBufferCapacityInFrames();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getBufferCapacityInFrames(), bufferCapacity);
 }
 
-TEST_F(StreamClosedReturnValues, GetSharingModeReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetSharingModeReturnsLastKnownValue) {
 
-openStream();
-
-SharingMode s = mStream->getSharingMode();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getSharingMode(), s
-
-);
+    ASSERT_TRUE(openStream());
+    SharingMode s = mStream->getSharingMode();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getSharingMode(), s);
 }
 
-TEST_F(StreamClosedReturnValues, GetPerformanceModeReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetPerformanceModeReturnsLastKnownValue) {
 
-openStream();
-
-PerformanceMode p = mStream->getPerformanceMode();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getPerformanceMode(), p
-
-);
+    ASSERT_TRUE(openStream());
+    PerformanceMode p = mStream->getPerformanceMode();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getPerformanceMode(), p);
 }
 
-TEST_F(StreamClosedReturnValues, GetDeviceIdReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetDeviceIdReturnsLastKnownValue) {
 
-openStream();
-
-int32_t d = mStream->getDeviceId();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getDeviceId(), d
-
-);
+    ASSERT_TRUE(openStream());
+    int32_t d = mStream->getDeviceId();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getDeviceId(), d);
 }
 
-TEST_F(StreamClosedReturnValues, GetCallbackReturnsLastKnownValue
-) {
+TEST_F(StreamClosedReturnValues, GetDataCallbackReturnsLastKnownValue) {
 
-AudioStreamCallback *callback = new MyCallback();
-mBuilder.
-setCallback(callback);
+    AudioStreamDataCallback *callback = new MyCallback();
+    mBuilder.setDataCallback(callback);
+    ASSERT_TRUE(openAndCloseStream());
 
-openAndCloseStream();
-
-AudioStreamCallback *callback2 = mStream->getCallback();
-ASSERT_EQ(callback, callback2
-);
+    AudioStreamDataCallback *callback2 = mStream->getDataCallback();
+    ASSERT_EQ(callback, callback2);
 }
 
-TEST_F(StreamClosedReturnValues, GetUsageReturnsLastKnownValue
-){
-openStream();
-
-Usage u = mStream->getUsage();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getUsage(), u
-
-);
+TEST_F(StreamClosedReturnValues, GetUsageReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    Usage u = mStream->getUsage();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getUsage(), u);
 }
 
-TEST_F(StreamClosedReturnValues, GetContentTypeReturnsLastKnownValue
-){
-openStream();
-
-ContentType c = mStream->getContentType();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getContentType(), c
-
-);
+TEST_F(StreamClosedReturnValues, GetContentTypeReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    ContentType c = mStream->getContentType();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getContentType(), c);
 }
 
-TEST_F(StreamClosedReturnValues, GetInputPresetReturnsLastKnownValue
-){
-openStream();
-
-auto i = mStream->getInputPreset();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getInputPreset(), i
-
-);
+TEST_F(StreamClosedReturnValues, GetInputPresetReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    auto i = mStream->getInputPreset();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getInputPreset(), i);
 }
 
-TEST_F(StreamClosedReturnValues, GetSessionIdReturnsLastKnownValue
-){
-openStream();
-
-auto s = mStream->getSessionId();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getSessionId(), s
-
-);
+TEST_F(StreamClosedReturnValues, GetSessionIdReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    auto s = mStream->getSessionId();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getSessionId(), s);
 }
 
-TEST_F(StreamClosedReturnValues, StreamStateIsClosed
-){
-openAndCloseStream();
-
-ASSERT_EQ(mStream
-->
-
-getState(), StreamState::Closed
-
-);
+TEST_F(StreamClosedReturnValues, StreamStateIsClosed){
+    ASSERT_TRUE(openAndCloseStream());
+    ASSERT_EQ(mStream->getState(), StreamState::Closed);
 }
 
-TEST_F(StreamClosedReturnValues, GetXRunCountReturnsLastKnownValue
-){
+TEST_F(StreamClosedReturnValues, GetXRunCountReturnsLastKnownValue){
 
-openStream();
-
-if (mStream->
-
-isXRunCountSupported()
-
-){
-auto i = mStream->getXRunCount();
-ASSERT_EQ(mStream
-->
-
-getXRunCount(), i
-
-);
+    ASSERT_TRUE(openStream());
+    if (mStream->isXRunCountSupported()){
+        auto i = mStream->getXRunCount();
+        ASSERT_EQ(mStream->getXRunCount(), i);
+    }
+    ASSERT_TRUE(closeStream());
 }
 
-closeStream();
+TEST_F(StreamClosedReturnValues, GetFramesPerBurstReturnsLastKnownValue){
 
+    ASSERT_TRUE(openStream());
+    auto f = mStream->getFramesPerBurst();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getFramesPerBurst(), f);
 }
 
-TEST_F(StreamClosedReturnValues, GetFramesPerBurstReturnsLastKnownValue
-){
-
-openStream();
-
-auto f = mStream->getFramesPerBurst();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getFramesPerBurst(), f
-
-);
+TEST_F(StreamClosedReturnValues, GetBytesPerFrameReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    auto f = mStream->getBytesPerFrame();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getBytesPerFrame(), f);
 }
 
-TEST_F(StreamClosedReturnValues, GetBytesPerFrameReturnsLastKnownValue
-){
-openStream();
-
-auto f = mStream->getBytesPerFrame();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getBytesPerFrame(), f
-
-);
+TEST_F(StreamClosedReturnValues, GetBytesPerSampleReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    auto f = mStream->getBytesPerSample();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getBytesPerSample(), f);
 }
 
-TEST_F(StreamClosedReturnValues, GetBytesPerSampleReturnsLastKnownValue
-){
-openStream();
+TEST_F(StreamClosedReturnValues, GetFramesWrittenReturnsLastKnownValue){
+    mBuilder.setFormat(AudioFormat::I16);
+    mBuilder.setChannelCount(1);
+    ASSERT_TRUE(openStream());
+    ASSERT_EQ(mStream->setBufferSizeInFrames(mStream->getBufferCapacityInFrames()), Result::OK);
+    mStream->start();
 
-auto f = mStream->getBytesPerSample();
+    int16_t buffer[4] = { 1, 2, 3, 4 };
+    Result r = mStream->write(&buffer, 4, 0);
+    if (r != Result::OK) {
+        FAIL() << "Could not write to audio stream";
+    }
 
-closeStream();
+    auto f = mStream->getFramesWritten();
+    ASSERT_EQ(f, 4);
 
-ASSERT_EQ(mStream
-->
-
-getBytesPerSample(), f
-
-);
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getFramesWritten(), f);
 }
 
-TEST_F(StreamClosedReturnValues, GetFramesWrittenReturnsLastKnownValue
-){
-mBuilder.
-setFormat(AudioFormat::I16);
-mBuilder.setChannelCount(1);
+TEST_F(StreamClosedReturnValues, GetFramesReadReturnsLastKnownValue) {
 
-openStream();
+    mBuilder.setDirection(Direction::Input);
+    mBuilder.setFormat(AudioFormat::I16);
+    mBuilder.setChannelCount(1);
 
-mStream->
+    ASSERT_TRUE(openStream());
+    mStream->start();
 
-start();
+    int16_t buffer[192];
+    auto r = mStream->read(&buffer, 192, 1000 * kNanosPerMillisecond);
+    ASSERT_EQ(r.value(), 192);
 
-int16_t buffer[4] = {1, 2, 3, 4};
-Result r = mStream->write(&buffer, 4, 0);
-if (r != Result::OK){
-FAIL()
+    auto f = mStream->getFramesRead();
+    ASSERT_EQ(f, 192);
 
-<< "Could not write to audio stream";
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getFramesRead(), f);
 }
 
-auto f = mStream->getFramesWritten();
-ASSERT_EQ(f,
-4);
+TEST_F(StreamClosedReturnValues, GetTimestampReturnsErrorClosedIfSupported){
 
-closeStream();
+    ASSERT_TRUE(openStream());
 
-ASSERT_EQ(mStream
-->
+    int64_t framePosition;
+    int64_t presentationTime;
 
-getFramesWritten(), f
+    auto r = mStream->getTimestamp(CLOCK_MONOTONIC, &framePosition, &presentationTime);
+    bool isTimestampSupported = (r == Result::OK);
 
-);
+    ASSERT_TRUE(closeStream());
+
+    if (isTimestampSupported){
+        ASSERT_EQ(mStream->getTimestamp(CLOCK_MONOTONIC, &framePosition, &presentationTime), Result::ErrorClosed);
+    }
 }
 
-// TODO: Reading a positive value doesn't work on OpenSL ES in this test - why?
-TEST_F(StreamClosedReturnValues, GetFramesReadReturnsLastKnownValue
-) {
-
-mBuilder.
-setDirection(Direction::Input);
-mBuilder.
-setFormat(AudioFormat::I16);
-mBuilder.setChannelCount(1);
-
-if (
-
-openStream()
-
-){
-mStream->
-
-start();
-
-/*
-        int16_t buffer[192];
-        auto r = mStream->read(&buffer, 192, 0);
-        ASSERT_EQ(r.value(), 192);
-*/
-
-auto f = mStream->getFramesRead();
-//        ASSERT_EQ(f, 192);
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getFramesRead(), f
-
-);
-};
+TEST_F(StreamClosedReturnValues, GetAudioApiReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    AudioApi a = mStream->getAudioApi();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->getAudioApi(), a);
 }
 
-TEST_F(StreamClosedReturnValues, GetTimestampReturnsErrorClosedIfSupported
-){
-
-openStream();
-
-int64_t framePosition;
-int64_t presentationTime;
-
-auto r = mStream->getTimestamp(CLOCK_MONOTONIC, &framePosition, &presentationTime);
-bool isTimestampSupported = (r == Result::OK);
-
-closeStream();
-
-if (isTimestampSupported){
-ASSERT_EQ(mStream
-->
-getTimestamp(CLOCK_MONOTONIC, &framePosition, &presentationTime
-), Result::ErrorClosed);
-}
+TEST_F(StreamClosedReturnValues, GetUsesAAudioReturnsLastKnownValue){
+    ASSERT_TRUE(openStream());
+    bool a = mStream->usesAAudio();
+    ASSERT_TRUE(closeStream());
+    ASSERT_EQ(mStream->usesAAudio(), a);
 }
 
-TEST_F(StreamClosedReturnValues, GetAudioApiReturnsLastKnownValue
-){
-openStream();
+TEST_F(StreamClosedReturnValues, StreamStateControlsReturnClosed){
 
-AudioApi a = mStream->getAudioApi();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-getAudioApi(), a
-
-);
+    ASSERT_TRUE(openAndCloseStream());
+    Result r = mStream->close();
+    EXPECT_EQ(r, Result::ErrorClosed) << convertToText(r);
+    r = mStream->start();
+    EXPECT_EQ(r, Result::ErrorClosed) << convertToText(r);
+    EXPECT_EQ(mStream->pause(), Result::ErrorClosed);
+    EXPECT_EQ(mStream->flush(), Result::ErrorClosed);
+    EXPECT_EQ(mStream->stop(), Result::ErrorClosed);
+    EXPECT_EQ(mStream->requestStart(), Result::ErrorClosed);
+    EXPECT_EQ(mStream->requestPause(), Result::ErrorClosed);
+    EXPECT_EQ(mStream->requestFlush(), Result::ErrorClosed);
+    EXPECT_EQ(mStream->requestStop(), Result::ErrorClosed);
 }
 
-TEST_F(StreamClosedReturnValues, GetUsesAAudioReturnsLastKnownValue
-){
-openStream();
+TEST_F(StreamClosedReturnValues, WaitForStateChangeReturnsClosed){
 
-bool a = mStream->usesAAudio();
-
-closeStream();
-
-ASSERT_EQ(mStream
-->
-
-usesAAudio(), a
-
-);
+    ASSERT_TRUE(openAndCloseStream());
+    StreamState next;
+    Result r = mStream->waitForStateChange(StreamState::Open, &next, 0);
+    EXPECT_TRUE(r == Result::OK || r == Result::ErrorClosed) << convertToText(r);
 }
 
-TEST_F(StreamClosedReturnValues, StreamStateControlsReturnClosed
-){
+TEST_F(StreamClosedReturnValues, SetBufferSizeInFramesReturnsClosed){
 
-openAndCloseStream();
-
-Result r = mStream->close();
-EXPECT_EQ(r, Result::ErrorClosed
-) <<
-convertToText(r);
-r = mStream->start();
-EXPECT_EQ(r, Result::ErrorClosed
-) <<
-convertToText(r);
-EXPECT_EQ(mStream
-->
-
-pause(), Result::ErrorClosed
-
-);
-EXPECT_EQ(mStream
-->
-
-flush(), Result::ErrorClosed
-
-);
-EXPECT_EQ(mStream
-->
-
-stop(), Result::ErrorClosed
-
-);
-EXPECT_EQ(mStream
-->
-
-requestStart(), Result::ErrorClosed
-
-);
-EXPECT_EQ(mStream
-->
-
-requestPause(), Result::ErrorClosed
-
-);
-EXPECT_EQ(mStream
-->
-
-requestFlush(), Result::ErrorClosed
-
-);
-EXPECT_EQ(mStream
-->
-
-requestStop(), Result::ErrorClosed
-
-);
+    ASSERT_TRUE(openAndCloseStream());
+    auto r = mStream->setBufferSizeInFrames(192);
+    ASSERT_EQ(r.error(), Result::ErrorClosed);
 }
 
-TEST_F(StreamClosedReturnValues, WaitForStateChangeReturnsClosed
-){
+TEST_F(StreamClosedReturnValues, CalculateLatencyInMillisReturnsClosedIfSupported){
 
-openAndCloseStream();
+    ASSERT_TRUE(openAndCloseStream());
 
-StreamState next;
-Result r = mStream->waitForStateChange(StreamState::Open, &next, 0);
-ASSERT_EQ(r, Result::ErrorClosed
-) <<
-convertToText(r);
+    if (mStream->getAudioApi() == AudioApi::AAudio){
+        auto r = mStream->calculateLatencyMillis();
+        ASSERT_EQ(r.error(), Result::ErrorInvalidState);
+    }
 }
 
-TEST_F(StreamClosedReturnValues, SetBufferSizeInFramesReturnsClosed
-){
+TEST_F(StreamClosedReturnValues, ReadReturnsClosed){
 
-openAndCloseStream();
+    ASSERT_TRUE(openAndCloseStream());
 
-auto r = mStream->setBufferSizeInFrames(192);
-ASSERT_EQ(r
-.
-
-error(), Result::ErrorClosed
-
-);
+    int buffer[8]{0};
+    auto r = mStream->read(buffer, 1, 0);
+    ASSERT_EQ(r.error(), Result::ErrorClosed);
 }
 
-TEST_F(StreamClosedReturnValues, CalculateLatencyInMillisReturnsClosedIfSupported
-){
+TEST_F(StreamClosedReturnValues, WriteReturnsClosed){
 
-openAndCloseStream();
+    ASSERT_TRUE(openAndCloseStream());
 
-if (mStream->
-
-getAudioApi()
-
-== AudioApi::AAudio){
-auto r = mStream->calculateLatencyMillis();
-ASSERT_EQ(r
-.
-
-error(), Result::ErrorClosed
-
-);
-}
+    int buffer[8]{0};
+    auto r = mStream->write(buffer, 1, 0);
+    ASSERT_EQ(r.error(), Result::ErrorClosed);
 }
 
-TEST_F(StreamClosedReturnValues, ReadReturnsClosed
-){
-
-openAndCloseStream();
-
-int buffer[8]{0};
-auto r = mStream->read(buffer, 1, 0);
-ASSERT_EQ(r
-.
-
-error(), Result::ErrorClosed
-
-);
+TEST_F(StreamClosedReturnValues, DelayBeforeCloseInput){
+    if (AudioStreamBuilder::isAAudioRecommended()) {
+        mBuilder.setDirection(Direction::Input);
+        testDelayBeforeClose();
+    }
 }
 
-TEST_F(StreamClosedReturnValues, WriteReturnsClosed
-){
+TEST_F(StreamClosedReturnValues, DelayBeforeCloseOutput){
+    if (AudioStreamBuilder::isAAudioRecommended()) {
+        mBuilder.setDirection(Direction::Output);
+        testDelayBeforeClose();
+    }
+}
 
-openAndCloseStream();
+TEST_F(StreamClosedReturnValues, DelayBeforeCloseInputOpenSL){
+    mBuilder.setAudioApi(AudioApi::OpenSLES);
+    mBuilder.setDirection(Direction::Input);
+    testDelayBeforeClose();
+}
 
-int buffer[8]{0};
-auto r = mStream->write(buffer, 1, 0);
-ASSERT_EQ(r
-.
-
-error(), Result::ErrorClosed
-
-);
+TEST_F(StreamClosedReturnValues, DelayBeforeCloseOutputOpenSL){
+    mBuilder.setAudioApi(AudioApi::OpenSLES);
+    mBuilder.setDirection(Direction::Output);
+    testDelayBeforeClose();
 }
