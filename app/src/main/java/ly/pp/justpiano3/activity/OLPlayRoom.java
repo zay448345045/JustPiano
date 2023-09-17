@@ -255,11 +255,13 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             case R.id.left_hand:
                 currentHand = 1;
                 setGroupOrHand(1, normalModePopupWindow);
+                this.roomInfoBundle.putInt("myHand", currentHand);
                 settingButton.setText("左" + settingButton.getText().toString().substring(1));
                 return;
             case R.id.right_hand:
                 currentHand = 0;
                 setGroupOrHand(0, normalModePopupWindow);
+                this.roomInfoBundle.putInt("myHand", currentHand);
                 settingButton.setText("右" + settingButton.getText().toString().substring(1));
                 return;
             case R.id.changeScreenOrientation:
@@ -494,7 +496,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         moreSongsPopupWindow = popupWindow2;
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
             case NORMAL:
-                settingButton.setText("右00");
+                currentHand = this.roomInfoBundle.getInt("myHand");
+                settingButton.setText(currentHand == 0 ? "右" : "左" + "00");
                 break;
             case TEAM:
                 popupWindow2 = new PopupWindow(this);
