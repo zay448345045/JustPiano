@@ -39,7 +39,7 @@ namespace iolib {
         virtual ~SampleSource() {}
 
         void setPlayMode(int32_t volume) {
-            std::pair<int32_t, int32_t> *pair = new std::pair<int32_t, int32_t>(0, volume);
+            std::pair<int32_t, int32_t> pair = std::make_pair(0, volume);
             if (mCurFrameIndexQueue.size() > 10) {
                 mCurFrameIndexQueue.pop();
             }
@@ -57,13 +57,11 @@ namespace iolib {
         }
 
         std::pair<int32_t, int32_t> *frontCurFrameIndexQueue() {
-            return mCurFrameIndexQueue.empty() ? nullptr : mCurFrameIndexQueue.front();
+            return mCurFrameIndexQueue.empty() ? nullptr : &mCurFrameIndexQueue.front();
         }
 
-        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> *pair) {
-            if (pair != nullptr) {
-                mCurFrameIndexQueue.push(pair);
-            }
+        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> pair) {
+            mCurFrameIndexQueue.push(pair);
         }
 
         void popCurFrameIndexQueue() {
@@ -75,9 +73,9 @@ namespace iolib {
     protected:
         SampleBuffer *mSampleBuffer;
 
-        std::queue<std::pair<int32_t, int32_t>*> mCurFrameIndexQueue;
+        std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
     };
 
-} // namespace wavlib
+} // namespace iolib
 
 #endif //_PLAYER_SAMPLESOURCE_

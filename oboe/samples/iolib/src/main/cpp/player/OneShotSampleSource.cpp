@@ -58,4 +58,4 @@ namespace iolib {
         // to be mixed into
     }
 
-} // namespace wavlib
+} // namespace iolib

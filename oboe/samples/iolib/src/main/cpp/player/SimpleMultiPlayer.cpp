@@ -62,14 +62,13 @@ namespace iolib {
                 sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
                 if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
                     // this sample is finished
-                    delete curFrameIndex;
                     sampleSource->popCurFrameIndexQueue();
                 } else {
                     sampleCount += 1;
                     // the size of queue equals one, can avoid moving queue
                     if (curFrameIndex != nullptr && queueSize > 1) {
                         sampleSource->popCurFrameIndexQueue();
-                        sampleSource->pushCurFrameIndexQueue(curFrameIndex);
+                        sampleSource->pushCurFrameIndexQueue(*curFrameIndex);
                     }
                 }
             }
