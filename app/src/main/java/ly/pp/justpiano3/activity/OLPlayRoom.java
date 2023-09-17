@@ -506,7 +506,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
             case NORMAL:
                 currentHand = this.roomInfoBundle.getInt("myHand");
-                settingButton.setText(currentHand == 0 ? "右" : "左" + "00");
+                settingButton.setText((currentHand == 0 ? "右" : "左") + "00");
                 break;
             case TEAM:
                 popupWindow2 = new PopupWindow(this);
