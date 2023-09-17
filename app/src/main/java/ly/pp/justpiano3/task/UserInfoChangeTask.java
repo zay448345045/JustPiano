@@ -3,15 +3,21 @@ package ly.pp.justpiano3.task;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.*;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
@@ -66,7 +72,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
         String str = "";
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
-                .host(usersInfo.get().jpapplication.getServer())
+                .host(OnlineUtil.server)
                 .port(8910)
                 .addPathSegment("JustPianoServer")
                 .addPathSegment("server")

@@ -2,9 +2,10 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.activity.UsersInfo;
 
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.UsersInfo;
 
 public final class UserFaceChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> userInfo;

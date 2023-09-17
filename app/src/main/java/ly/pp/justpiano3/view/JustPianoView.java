@@ -1,13 +1,20 @@
 package ly.pp.justpiano3.view;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.view.View;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 import java.io.IOException;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class JustPianoView extends View {
     public JPApplication jpapplication;

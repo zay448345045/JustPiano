@@ -3,15 +3,17 @@ package ly.pp.justpiano3.task;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.lang.ref.WeakReference;
 
 public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
@@ -49,7 +51,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong")
                 .post(formBody)
                 .build();
         try {

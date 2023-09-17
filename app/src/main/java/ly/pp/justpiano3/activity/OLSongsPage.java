@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class OLSongsPage extends Activity implements OnClickListener {
@@ -83,7 +84,7 @@ public class OLSongsPage extends Activity implements OnClickListener {
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_songs_page);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(GameModeEnum.NORMAL);
+        jpApplication.setGameMode(LocalPlayModeEnum.NORMAL);
         Button f4544b = findViewById(R.id.ol_melodyList_b);
         f4544b.setOnClickListener(this);
         Button f4545c = findViewById(R.id.ol_hotSongs_b);

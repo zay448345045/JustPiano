@@ -10,14 +10,36 @@ import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.protobuf.ByteString;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
@@ -32,18 +54,17 @@ import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.midi.MidiFramer;
-import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.utils.ColorUtil;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.FileUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.MidiUtil;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardModeView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.*;
 
 public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiConnectionListener {
     public static final int NOTES_SEND_INTERVAL = 120;
@@ -691,7 +712,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 // 时间戳和size尽量严格放在一起
                 long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
-                // 刷新玩家弹奏闪烁（删除闪烁）
+                // 刷新用户弹奏闪烁（删除闪烁）
                 if (olKeyboardStates[roomPositionSub1].isPlaying()) {
                     olKeyboardStates[roomPositionSub1].setPlaying(false);
                     runOnUiThread(() -> {

@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.ShowTopInfo;
 import ly.pp.justpiano3.thread.PictureHandle;
-
-import java.util.List;
-import java.util.Map;
 
 public final class TopUserAdapter extends BaseAdapter {
     final ShowTopInfo showTopInfo;

@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import ly.pp.justpiano3.activity.OLChallenge;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.view.JPDialogBuilder;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+
+import ly.pp.justpiano3.activity.OLChallenge;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class ChallengeHandler extends Handler {
     private final WeakReference<Activity> weakReference;

@@ -10,9 +10,28 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.protobuf.MessageLite;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
@@ -20,7 +39,7 @@ import ly.pp.justpiano3.adapter.MainGameAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeBlessingClick;
@@ -33,16 +52,11 @@ import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import protobuf.dto.*;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import protobuf.dto.OnlineDailyDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineLoadUserDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
     public int cl = 0;
@@ -443,7 +457,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.olplayhallroom);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(GameModeEnum.NORMAL);
+        jpApplication.setGameMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);
         hallList.clear();

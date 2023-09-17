@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
 
 import java.util.List;
+
+import ly.pp.justpiano3.R;
 
 public final class MiniScoreAdapter extends BaseAdapter {
     private List<Bundle> list;

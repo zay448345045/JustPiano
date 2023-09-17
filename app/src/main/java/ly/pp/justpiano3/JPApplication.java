@@ -6,46 +6,40 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.activity.JustPiano;
-import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.database.SongDatabase;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.enums.GameModeEnum;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.task.FeedbackTask;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.MidiUtil;
-import ly.pp.justpiano3.view.PlayView;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public final class JPApplication extends Application {
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.activity.JustPiano;
+import ly.pp.justpiano3.database.SongDatabase;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
+import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.MidiUtil;
 
-    public static final int SETTING_MODE_CODE = 122;
+public final class JPApplication extends Application {
 
     /**
      * app最小支持版本code 38对应4.32版本，4.32版本对于所有曲谱文件及数据库结构进行了重新生成
@@ -63,27 +57,18 @@ public final class JPApplication extends Application {
     public String f4073g = "";
     public String f4074h = "";
     private ConnectionService connectionService;
-    private int whiteKeyHeight;
-    private float blackKeyHeight;
-    private float blackKeyWidth;
     private boolean bindService;
 
     /**
      * 游戏模式
      */
-    private GameModeEnum gameMode;
+    private LocalPlayModeEnum gameMode;
 
     private final Map<Byte, User> roomPlayerMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
-    private static String server = Consts.ONLINE_SERVER_URL;
     private int widthPixels;
     private int heightPixels;
-    private int animPosition;
-    private float widthDiv8;
-    private float halfHeightSub20;
-    private float halfHeightSub10;
-    private float whiteKeyHeightAdd90;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -95,24 +80,6 @@ public final class JPApplication extends Application {
             setConnectionService(null);
         }
     };
-
-    public List<Rect> getKeyRectArray() {
-        List<Rect> arrayList = new ArrayList<>();
-        arrayList.add(new Rect(0, whiteKeyHeight, (int) widthDiv8, heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) widthDiv8, whiteKeyHeight, (int) (widthDiv8 * 2), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 2 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 2), whiteKeyHeight, (int) (widthDiv8 * 3), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 3), whiteKeyHeight, (int) (widthDiv8 * 4), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 4 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 4), whiteKeyHeight, (int) (widthDiv8 * 5), heightPixels));
-        arrayList.add(new Rect((int) ((widthDiv8 * 5) - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 5 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 5), whiteKeyHeight, (int) (widthDiv8 * 6), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 6 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 6), whiteKeyHeight, (int) (widthDiv8 * 7), heightPixels));
-        arrayList.add(new Rect((int) (widthDiv8 * 7), whiteKeyHeight, (int) (widthDiv8 * 8), heightPixels));
-        return arrayList;
-    }
 
     public Map<Byte, User> getRoomPlayerMap() {
         return roomPlayerMap;
@@ -149,69 +116,6 @@ public final class JPApplication extends Application {
 
     public void setKitiName(String str) {
         kitiName = str;
-    }
-
-    public List<Rect> getFireRectArray(PlayView playView) {
-        List<Rect> arrayList = new ArrayList<>();
-        arrayList.add(new Rect(0, (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) widthDiv8, (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 + blackKeyWidth), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) widthDiv8, (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 * 2), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 * 2 + blackKeyWidth), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 2), ((int) halfHeightSub20) - playView.fireImage.getHeight(), (int) (widthDiv8 * 3), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 3), ((int) halfHeightSub20) - playView.fireImage.getHeight(), (int) (widthDiv8 * 4), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 * 4 + blackKeyWidth), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 4), ((int) halfHeightSub20) - playView.fireImage.getHeight(), (int) (widthDiv8 * 5), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 5 - blackKeyWidth), (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 * 5 + blackKeyWidth), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 5), ((int) halfHeightSub20) - playView.fireImage.getHeight(), (int) (widthDiv8 * 6), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), (int) (halfHeightSub20 - ((float) playView.fireImage.getHeight())), (int) (widthDiv8 * 6 + blackKeyWidth), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 6), ((int) halfHeightSub20) - playView.fireImage.getHeight(), (int) (widthDiv8 * 7), (int) halfHeightSub20));
-        arrayList.add(new Rect((int) (widthDiv8 * 7), ((int) halfHeightSub20) - playView.fireImage.getHeight(), (int) (widthDiv8 * 8), (int) halfHeightSub20));
-        return arrayList;
-    }
-
-    public void drawFire(PlayView playView, Canvas canvas, int i) {
-        switch (i) {
-            case 0:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(0, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8, halfHeightSub20), null);
-                return;
-            case 1:
-                canvas.drawBitmap(playView.fireImage, null, new RectF((widthDiv8 - blackKeyWidth), halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 + blackKeyWidth, halfHeightSub20), null);
-                return;
-            case 2:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 2, halfHeightSub20), null);
-                return;
-            case 3:
-                canvas.drawBitmap(playView.fireImage, null, new RectF((widthDiv8 * 2 - blackKeyWidth), halfHeightSub20 - playView.fireImage.getHeight(), (widthDiv8 * 2 + blackKeyWidth), halfHeightSub20), null);
-                return;
-            case 4:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8 * 2, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 3, halfHeightSub20), null);
-                return;
-            case 5:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8 * 3, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 4, halfHeightSub20), null);
-                return;
-            case 6:
-                canvas.drawBitmap(playView.fireImage, null, new RectF((widthDiv8 * 4 - blackKeyWidth), halfHeightSub20 - playView.fireImage.getHeight(), (widthDiv8 * 4 + blackKeyWidth), halfHeightSub20), null);
-                return;
-            case 7:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8 * 4, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 5, halfHeightSub20), null);
-                return;
-            case 8:
-                canvas.drawBitmap(playView.fireImage, null, new RectF((widthDiv8 * 5 - blackKeyWidth), halfHeightSub20 - playView.fireImage.getHeight(), (widthDiv8 * 5 + blackKeyWidth), halfHeightSub20), null);
-                return;
-            case 9:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8 * 5, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 6, halfHeightSub20), null);
-                return;
-            case 10:
-                canvas.drawBitmap(playView.fireImage, null, new RectF((widthDiv8 * 6 - blackKeyWidth), halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 6 + blackKeyWidth, halfHeightSub20), null);
-                return;
-            case 11:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8 * 6, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 7, halfHeightSub20), null);
-                return;
-            case 12:
-                canvas.drawBitmap(playView.fireImage, null, new RectF(widthDiv8 * 7, halfHeightSub20 - playView.fireImage.getHeight(), widthDiv8 * 8, halfHeightSub20), null);
-                return;
-            default:
-        }
     }
 
     @Override
@@ -392,30 +296,6 @@ public final class JPApplication extends Application {
         this.connectionService = connectionService;
     }
 
-    public int getWhiteKeyHeight() {
-        return whiteKeyHeight;
-    }
-
-    public void setWhiteKeyHeight(int whiteKeyHeight) {
-        this.whiteKeyHeight = whiteKeyHeight;
-    }
-
-    public float getBlackKeyHeight() {
-        return blackKeyHeight;
-    }
-
-    public void setBlackKeyHeight(float blackKeyHeight) {
-        this.blackKeyHeight = blackKeyHeight;
-    }
-
-    public float getBlackKeyWidth() {
-        return blackKeyWidth;
-    }
-
-    public void setBlackKeyWidth(float blackKeyWidth) {
-        this.blackKeyWidth = blackKeyWidth;
-    }
-
     public boolean isBindService() {
         return bindService;
     }
@@ -424,20 +304,12 @@ public final class JPApplication extends Application {
         this.bindService = bindService;
     }
 
-    public GameModeEnum getGameMode() {
+    public LocalPlayModeEnum getGameMode() {
         return gameMode;
     }
 
-    public void setGameMode(GameModeEnum gameMode) {
+    public void setGameMode(LocalPlayModeEnum gameMode) {
         this.gameMode = gameMode;
-    }
-
-    public static String getServer() {
-        return server;
-    }
-
-    public static void setServer(String server) {
-        JPApplication.server = server;
     }
 
     public int getWidthPixels() {
@@ -454,46 +326,6 @@ public final class JPApplication extends Application {
 
     public void setHeightPixels(int heightPixels) {
         this.heightPixels = heightPixels;
-    }
-
-    public int getAnimPosition() {
-        return animPosition;
-    }
-
-    public void setAnimPosition(int animPosition) {
-        this.animPosition = animPosition;
-    }
-
-    public float getWidthDiv8() {
-        return widthDiv8;
-    }
-
-    public void setWidthDiv8(float widthDiv8) {
-        this.widthDiv8 = widthDiv8;
-    }
-
-    public float getHalfHeightSub20() {
-        return halfHeightSub20;
-    }
-
-    public void setHalfHeightSub20(float halfHeightSub20) {
-        this.halfHeightSub20 = halfHeightSub20;
-    }
-
-    public float getHalfHeightSub10() {
-        return halfHeightSub10;
-    }
-
-    public void setHalfHeightSub10(float halfHeightSub10) {
-        this.halfHeightSub10 = halfHeightSub10;
-    }
-
-    public float getWhiteKeyHeightAdd90() {
-        return whiteKeyHeightAdd90;
-    }
-
-    public void setWhiteKeyHeightAdd90(float whiteKeyHeightAdd90) {
-        this.whiteKeyHeightAdd90 = whiteKeyHeightAdd90;
     }
 
     public ServiceConnection getServiceConnection() {

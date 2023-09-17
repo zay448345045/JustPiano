@@ -6,11 +6,24 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.ContextCompat;
+
+import java.util.List;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.activity.OLPlayRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.HallPasswordClick;
 import ly.pp.justpiano3.listener.OLSendMailClick;
@@ -20,8 +33,6 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineDialogDTO;
 import protobuf.dto.OnlineEnterHallDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
-
-import java.util.List;
 
 public final class MainGameAdapter extends BaseAdapter {
     public Activity activity;

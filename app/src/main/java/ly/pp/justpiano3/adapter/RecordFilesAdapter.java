@@ -6,11 +6,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.RecordFiles;
 
 import java.util.List;
 import java.util.Map;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.RecordFiles;
 
 public final class RecordFilesAdapter extends BaseAdapter {
     private List<Map<String, Object>> list;

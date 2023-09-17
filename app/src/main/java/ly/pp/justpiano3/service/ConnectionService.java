@@ -1,17 +1,26 @@
 package ly.pp.justpiano3.service;
 
-import android.app.*;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
+
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
 import com.king.anetty.Netty;
+
+import java.util.concurrent.TimeUnit;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -31,14 +40,16 @@ import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;
-import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.utils.DeviceUtil;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.ReceiveTasks;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
-
-import java.util.concurrent.TimeUnit;
 
 public class ConnectionService extends Service implements Runnable {
 
@@ -258,7 +269,7 @@ public class ConnectionService extends Service implements Runnable {
         // 更新客户端公钥
         EncryptUtil.updateDeviceKeyPair();
         initNetty();
-        mNetty.connect(jpapplication.getServer(), ONLINE_PORT);
+        mNetty.connect(OnlineUtil.server, ONLINE_PORT);
     }
 
     private void outLineAndDialog() {

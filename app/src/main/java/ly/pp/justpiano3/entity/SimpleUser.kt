@@ -1,6 +1,6 @@
 package ly.pp.justpiano3.entity
 
-import java.util.*
+import java.util.Date
 
 /**
  * @author as

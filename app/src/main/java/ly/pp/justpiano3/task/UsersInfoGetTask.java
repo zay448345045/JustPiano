@@ -2,14 +2,16 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.lang.ref.WeakReference;
 
 public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
@@ -31,7 +33,7 @@ public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()
-                    .url("http://" + userInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetUserInfo")
+                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetUserInfo")
                     .post(formBody) // 注意这里是POST方法
                     .build();
             try {

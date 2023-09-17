@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
@@ -12,8 +15,6 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.thread.SongPlay;
 import protobuf.dto.OnlineQuitRoomDTO;
-
-import java.lang.ref.WeakReference;
 
 public final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

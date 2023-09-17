@@ -12,7 +12,24 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.ChangePasswordClick;
@@ -20,14 +37,9 @@ import ly.pp.justpiano3.task.UserFaceChangeTask;
 import ly.pp.justpiano3.task.UserInfoChangeTask;
 import ly.pp.justpiano3.task.UsersInfoGetTask;
 import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class UsersInfo extends OLBaseActivity implements Callback, OnClickListener {
     public JPApplication jpapplication;
@@ -189,7 +201,7 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
                                 fileOutputStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg);
                                 try {
                                     bitmap.compress(CompressFormat.JPEG, 80, fileOutputStream);
-                                    new UserFaceChangeTask(this).execute("http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/UpLoadFace", Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg, accountJpg);
+                                    new UserFaceChangeTask(this).execute("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UpLoadFace", Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg, accountJpg);
                                     try {
                                         fileOutputStream.close();
                                     } catch (IOException e2) {

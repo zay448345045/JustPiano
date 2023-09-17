@@ -7,15 +7,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
+
+import java.util.List;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-
-import java.util.List;
 
 public final class KeyboardPlayerImageAdapter extends BaseAdapter {
     private final OLPlayKeyboardRoom olPlayKeyboardRoom;

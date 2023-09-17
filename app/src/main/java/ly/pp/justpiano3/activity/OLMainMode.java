@@ -8,21 +8,22 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.List;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-
-import java.util.List;
 
 public class OLMainMode extends OLBaseActivity implements OnClickListener {
     final OLMainMode context = this;
@@ -48,12 +49,12 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
             case R.id.ol_web_b:
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("提示");
-                jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址" + Consts.INSIDE_WEBSITE_URL + "\n" +
+                jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址" + OnlineUtil.INSIDE_WEBSITE_URL + "\n" +
                         "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
                 jpDialogBuilder.setFirstButton("访问官网", (dialog, which) -> {
                     dialog.dismiss();
                     Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("https://" + Consts.INSIDE_WEBSITE_URL));
+                    intent1.setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL));
                     startActivity(intent1);
                 });
                 jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
@@ -106,7 +107,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         setContentView(R.layout.olmainmode);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(GameModeEnum.NORMAL);
+        jPApplication.setGameMode(LocalPlayModeEnum.NORMAL);
         Button topButton = findViewById(R.id.ol_top_b);
         topButton.setOnClickListener(this);
         Button userButton = findViewById(R.id.ol_users_b);

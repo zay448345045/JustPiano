@@ -2,13 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.os.Handler;
 import android.os.Looper;
-import ly.pp.justpiano3.activity.SoundDownload;
-import ly.pp.justpiano3.adapter.SoundDownloadAdapter;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +10,15 @@ import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.adapter.SoundDownloadAdapter;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SoundDownloadTask {
     private final WeakReference<SoundDownload> soundDownload;
@@ -41,7 +44,7 @@ public class SoundDownloadTask {
         try {
             soundDownload.get().getLocalSoundList();
             Request request = new Request.Builder()
-                    .url("http://" + soundDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSoundList")
+                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSoundList")
                     .post(RequestBody.create("", null))
                     .build();
             Response response = OkHttpUtil.client().newCall(request).execute();

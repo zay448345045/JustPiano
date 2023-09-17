@@ -1,15 +1,17 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
-import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLPlayHallRoom> olPlayHallRoom;
@@ -30,7 +32,7 @@ public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + olPlayHallRoom.get().jpApplication.getServer() + ":8910/JustPianoServer/server/GetUserInfo")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetUserInfo")
                 .post(formBody)
                 .build();
         try {

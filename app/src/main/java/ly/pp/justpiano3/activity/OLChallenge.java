@@ -7,12 +7,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.protobuf.MessageLite;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.listener.GetPrizeClick;
@@ -20,16 +31,11 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.DrawPrizeView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChallengeDTO;
-
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -78,7 +84,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
                 return;
             case R.id.viewChallenge:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://" + Consts.WEBSITE_URL + "/pages/challenge.html"));
+                intent.setData(Uri.parse("https://" + OnlineUtil.WEBSITE_URL + "/pages/challenge.html"));
                 startActivity(intent);
                 return;
             default:

@@ -5,13 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
 import java.util.List;
 import java.util.Map;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
 public final class DailyTimeAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;

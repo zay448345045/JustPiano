@@ -26,9 +26,9 @@ public class KeyBoardView extends View {
         super(context);
         this.playView = playView;
         keyBoardImage = playView.keyboardImage;
-        keyBoardRect = new Rect(0, playView.jpapplication.getWhiteKeyHeight(), playView.jpapplication.getWidthPixels(), playView.jpapplication.getHeightPixels());
-        fireRectArray = playView.jpapplication.getFireRectArray(playView);
-        keyRectArray = playView.jpapplication.getKeyRectArray();
+        keyBoardRect = new Rect(0, playView.whiteKeyHeight, playView.jpapplication.getWidthPixels(), playView.jpapplication.getHeightPixels());
+        fireRectArray = playView.getFireRectArray();
+        keyRectArray = playView.getKeyRectArray();
     }
 
     public final void updateTouchNoteNum() {
@@ -40,11 +40,11 @@ public class KeyBoardView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(keyBoardImage, null, keyBoardRect, null);
         for (int i : touchNoteSet.keySet()) {
-            m3520a(canvas, fireRectArray.get(i), keyRectArray.get(i), playView, i);
+            drawKeyboardFire(canvas, fireRectArray.get(i), keyRectArray.get(i), playView, i);
         }
     }
 
-    private void m3520a(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
+    private void drawKeyboardFire(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
         switch (i) {
             case 0:
             case 12:

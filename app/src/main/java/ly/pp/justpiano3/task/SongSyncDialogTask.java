@@ -2,16 +2,19 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
 
 public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMainMode> olMainMode;
@@ -31,7 +34,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + olMainMode.get().jpapplication.getServer() + ":8910/JustPianoServer/server/SongSyncDialog")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SongSyncDialog")
                 .post(formBody)
                 .build();
         try {

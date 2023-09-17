@@ -6,20 +6,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -27,6 +33,15 @@ import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -46,10 +61,6 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class MelodySelect extends ComponentActivity implements Callback, OnClickListener {
     public Handler handler;
@@ -120,7 +131,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 switch (data.getInt("selIndex")) {
                     case 0:  // 参数设置
                         intent.setClass(this, SettingsMode.class);
-                        startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                        startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                         break;
                     case 1:  // 曲库同步
                         new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
@@ -169,7 +180,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);

@@ -13,10 +13,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.protobuf.MessageLite;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -28,9 +48,12 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallHandler;
-import ly.pp.justpiano3.listener.*;
+import ly.pp.justpiano3.listener.AddFriendsClick;
+import ly.pp.justpiano3.listener.CreateRoomClick;
+import ly.pp.justpiano3.listener.RoomPasswordClick2;
+import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
@@ -38,10 +61,13 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import protobuf.dto.*;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineEnterRoomDTO;
+import protobuf.dto.OnlineHallChatDTO;
+import protobuf.dto.OnlineLoadRoomListDTO;
+import protobuf.dto.OnlineLoadRoomUserListDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineQuitHallDTO;
 
 public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
     public ConnectionService connectionService;
@@ -364,7 +390,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         setContentView(R.layout.olplayhall);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(GameModeEnum.NORMAL);
+        jPApplication.setGameMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
         findViewById(R.id.ol_send_b).setOnLongClickListener(this);
         findViewById(R.id.ol_createroom_b).setOnClickListener(this);

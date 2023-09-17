@@ -1,16 +1,7 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +9,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
+
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class LoginTask extends AsyncTask<String, Void, String> {
     private final WeakReference<LoginActivity> activity;
@@ -35,10 +37,9 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         LoginActivity loginActivity = activity.get();
         loginActivity.accountX = loginActivity.accountTextView.getText().toString();
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
-        String ip = JPApplication.getServer();
         if (!loginActivity.accountX.isEmpty() && !loginActivity.password.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + JPApplication.getServer() + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("versionName", "4.3");
             formBuilder.add("packageNames", loginActivity.getPackageName());

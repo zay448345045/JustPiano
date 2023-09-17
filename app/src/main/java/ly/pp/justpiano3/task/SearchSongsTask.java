@@ -2,17 +2,20 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
 
 public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<SearchSongs> searchSongs;
@@ -43,7 +46,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()
-                    .url("http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + str)
+                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/" + str)
                     .post(formBody) // 注意这里是POST方法
                     .build();
             try {

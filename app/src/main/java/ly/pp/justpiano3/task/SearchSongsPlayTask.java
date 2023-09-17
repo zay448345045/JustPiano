@@ -2,21 +2,23 @@ package ly.pp.justpiano3.task;
 
 import android.content.Intent;
 import android.widget.Toast;
-import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.activity.SearchSongs;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public final class SearchSongsPlayTask {
     private final WeakReference<SearchSongs> searchSongs;
@@ -35,7 +37,7 @@ public final class SearchSongsPlayTask {
     public void execute() {
         future = executorService.submit(() -> {
             if (!searchSongs.get().songID.isEmpty()) {
-                String url = "http://" + searchSongs.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong";
+                String url = "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong";
 
                 FormBody.Builder formBuilder = new FormBody.Builder();
                 formBuilder.add("version", BuildConfig.VERSION_NAME);

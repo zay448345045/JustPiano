@@ -7,8 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.User;
 
 public class ImageLoadUtil {
 

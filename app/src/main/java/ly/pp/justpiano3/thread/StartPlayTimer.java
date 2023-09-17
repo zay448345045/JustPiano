@@ -1,10 +1,11 @@
 package ly.pp.justpiano3.thread;
 
 import android.os.Message;
-import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ly.pp.justpiano3.activity.PianoPlay;
 
 public final class StartPlayTimer extends TimerTask {
     private final PianoPlay pianoPlay;

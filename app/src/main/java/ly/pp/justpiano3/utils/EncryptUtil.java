@@ -3,10 +3,15 @@ package ly.pp.justpiano3.utils;
 import android.util.Base64;
 import android.util.Log;
 
-import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.Cipher;
 
 /**
  * @author as

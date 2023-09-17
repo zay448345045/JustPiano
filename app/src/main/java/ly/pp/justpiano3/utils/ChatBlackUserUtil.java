@@ -5,15 +5,17 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.entity.SimpleUser;
-import ly.pp.justpiano3.entity.User;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.entity.SimpleUser;
+import ly.pp.justpiano3.entity.User;
 
 /**
  * 屏蔽聊天处理

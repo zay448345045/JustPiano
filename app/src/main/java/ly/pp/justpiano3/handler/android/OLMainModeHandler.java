@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
 public final class OLMainModeHandler extends Handler {
     private final WeakReference<Activity> weakReference;

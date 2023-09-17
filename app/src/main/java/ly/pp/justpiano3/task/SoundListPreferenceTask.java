@@ -2,11 +2,12 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.io.File;
+
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.SoundListPreference;
-
-import java.io.File;
 
 public final class SoundListPreferenceTask extends AsyncTask<String, Void, String> {
     private final SoundListPreference soundListPreference;

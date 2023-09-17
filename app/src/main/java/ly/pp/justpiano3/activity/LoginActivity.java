@@ -12,25 +12,13 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
-
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
-import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.listener.VersionUpdateClick;
-import ly.pp.justpiano3.task.LoginTask;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +26,27 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
+import ly.pp.justpiano3.listener.VersionUpdateClick;
+import ly.pp.justpiano3.task.LoginTask;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -88,7 +96,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         jpapplication.setPassword(password);
         switch (i) {
             case 0:
-                if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
+                if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -98,7 +106,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 return;
             case 4:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
-                    if (Objects.equals(JPApplication.getServer(), Consts.ONLINE_SERVER_URL)) {
+                    if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
@@ -143,7 +151,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                     Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                JPApplication.setServer(changeServerCheckBox.isChecked() ? Consts.TEST_ONLINE_SERVER_URL : Consts.ONLINE_SERVER_URL);
+                OnlineUtil.server = changeServerCheckBox.isChecked() ? OnlineUtil.TEST_ONLINE_SERVER_URL : OnlineUtil.ONLINE_SERVER_URL;
                 new LoginTask(this).execute();
                 return;
             case R.id.ol_register:
@@ -193,7 +201,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
         changeServerCheckBox = findViewById(R.id.ol_change_server);
-        changeServerCheckBox.setChecked(JPApplication.getServer().equals(Consts.TEST_ONLINE_SERVER_URL));
+        changeServerCheckBox.setChecked(OnlineUtil.server.equals(OnlineUtil.TEST_ONLINE_SERVER_URL));
         Button registerButton = findViewById(R.id.ol_register);
         registerButton.setOnClickListener(this);
         Button changeAccountButton = findViewById(R.id.ol_change_account);
@@ -247,7 +255,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     }
 
     private String getApkUrlByVersion(String version) {
-        return "https://" + Consts.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
+        return "https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
     }
 
     private String getApkFileName(String version) {

@@ -1,5 +1,12 @@
 package ly.pp.justpiano3.handler;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.crypto.Cipher;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
@@ -9,12 +16,6 @@ import io.netty.channel.ChannelPromise;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
-
-import javax.crypto.Cipher;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.List;
 
 public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
 

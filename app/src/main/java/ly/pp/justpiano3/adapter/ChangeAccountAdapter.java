@@ -7,13 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.view.JPDialogBuilder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class ChangeAccountAdapter extends BaseAdapter {
     private final LoginActivity loginActivity;

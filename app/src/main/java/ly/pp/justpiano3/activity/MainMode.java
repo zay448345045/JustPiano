@@ -15,8 +15,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import java.io.File;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -25,8 +29,6 @@ import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-
-import java.io.File;
 
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;
@@ -99,7 +101,7 @@ public class MainMode extends Activity implements OnClickListener {
                 return;
             case R.id.settings:
                 intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                 return;
             case R.id.feed_back:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
@@ -138,7 +140,7 @@ public class MainMode extends Activity implements OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
+        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }

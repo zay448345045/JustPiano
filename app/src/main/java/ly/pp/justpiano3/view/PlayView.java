@@ -2,7 +2,13 @@ package ly.pp.justpiano3.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.SurfaceHolder;
@@ -11,26 +17,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.activity.PlayFinish;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.entity.PmSongData;
-import ly.pp.justpiano3.enums.GameModeEnum;
-import ly.pp.justpiano3.listener.touch.TouchNotes;
-import ly.pp.justpiano3.thread.LoadBackgroundsThread;
-import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.play.PlayNote;
-import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
-import protobuf.dto.OnlineChallengeDTO;
-import protobuf.dto.OnlineClTestDTO;
-import protobuf.dto.OnlineMiniGradeDTO;
-import protobuf.dto.OnlinePlayFinishDTO;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,10 +24,44 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.PlayFinish;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.PmSongData;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
+import ly.pp.justpiano3.listener.touch.TouchNotes;
+import ly.pp.justpiano3.thread.LoadBackgroundsThread;
+import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
+import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.PmSongUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.view.play.PlayNote;
+import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
+import protobuf.dto.OnlineChallengeDTO;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineMiniGradeDTO;
+import protobuf.dto.OnlinePlayFinishDTO;
+
 /**
- * 陈年代码，不建议修改
+ * 陈年屎山代码，谨慎修改
  */
 public final class PlayView extends SurfaceView implements Callback {
+    /**
+     * 整体进度
+     */
+    public int progress;
+    public int whiteKeyHeight;
+    public float blackKeyWidth;
+    public float blackKeyHeight;
+    public float halfHeightSub20;
+    public float halfHeightSub10;
+    public float whiteKeyHeightAdd90;
     // 总分显示向左偏移的数量，解决曲面屏右上角总分显示不全的问题
     private static final int TOTAL_SCORE_SHOW_OFFSET = 50;
     public Bitmap whiteKeyRightImage;
@@ -126,7 +146,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private byte[] uploadTimeArray;
     private int uploadNoteIndex;
     private final List<PlayNote> tempNotesArray = new ArrayList<>();
-    private float halfHeightSub10;
     private final List<Integer> currentTotalScoreNumberList = new ArrayList<>();
     private int handValue;
     private byte[] tickArray;
@@ -134,7 +153,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private boolean f4713V = true;
     private Rect f4801bz;
     private final Paint line = new Paint();
-    private float widthDiv8;
+    public float widthDiv8;
     private float width2Div8;
     private float width4Div8;
     private float width5Div8;
@@ -254,13 +273,12 @@ public final class PlayView extends SurfaceView implements Callback {
         width = playNoteImage.getWidth();
         height = playNoteImage.getHeight();
         playNoteImage = Bitmap.createBitmap(playNoteImage, 0, 0, width, height, matrix, true);
-        jpapplication.setWidthDiv8(jpapplication.getWidthPixels() / 8f);
-        jpapplication.setWhiteKeyHeight((int) (jpapplication.getHeightPixels() * 0.49));
-        jpapplication.setHalfHeightSub20(jpapplication.getWhiteKeyHeight() - 20);
-        jpapplication.setBlackKeyHeight(jpapplication.getHeightPixels() / 3.4f);
-        jpapplication.setBlackKeyWidth(jpapplication.getWidthPixels() * 0.0413f);
-        jpapplication.setHalfHeightSub10(jpapplication.getHeightPixels() * 0.5f - 10);
-        jpapplication.setWhiteKeyHeightAdd90(jpapplication.getWhiteKeyHeight() + 90f);
+        whiteKeyHeight = (int) (jpapplication.getHeightPixels() * 0.49);
+        halfHeightSub20 = whiteKeyHeight - 20;
+        blackKeyHeight = jpapplication.getHeightPixels() / 3.4f;
+        blackKeyWidth = jpapplication.getWidthPixels() * 0.0413f;
+        halfHeightSub10 = jpapplication.getHeightPixels() * 0.5f - 10;
+        whiteKeyHeightAdd90 = whiteKeyHeight + 90f;
     }
 
     private void loadPm(Context context, String songFilePath, int tune) {
@@ -379,7 +397,6 @@ public final class PlayView extends SurfaceView implements Callback {
         coolStandard = 300f / GlobalSetting.INSTANCE.getNotesDownSpeed();
         greatStandard = 400f / GlobalSetting.INSTANCE.getNotesDownSpeed();
         missStandard = 500f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        jpapplication.setAnimPosition(0);
         line.setColor(Color.argb(178, 244, 255, 64));
         line.setStrokeWidth(3);
         screenWidth = jpapplication.getWidthPixels();
@@ -392,7 +409,6 @@ public final class PlayView extends SurfaceView implements Callback {
         width8Div8 = jpapplication.getWidthPixels();
         progressBarHight = progressBarImage.getHeight();
         progressBarWidth = progressBarImage.getWidth();
-        halfHeightSub10 = jpapplication.getHalfHeightSub10();
         surfaceholder = getHolder();
         surfaceholder.addCallback(this);
         surfaceholder.setKeepScreenOn(true);
@@ -407,6 +423,43 @@ public final class PlayView extends SurfaceView implements Callback {
         uploadTouchStatusList = new ArrayList<>();
     }
 
+
+    public List<Rect> getKeyRectArray() {
+        List<Rect> arrayList = new ArrayList<>();
+        arrayList.add(new Rect(0, whiteKeyHeight, (int) widthDiv8, jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
+        arrayList.add(new Rect((int) widthDiv8, whiteKeyHeight, (int) (widthDiv8 * 2), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 2 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 2), whiteKeyHeight, (int) (widthDiv8 * 3), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 3), whiteKeyHeight, (int) (widthDiv8 * 4), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 4 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 4), whiteKeyHeight, (int) (widthDiv8 * 5), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) ((widthDiv8 * 5) - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 5 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 5), whiteKeyHeight, (int) (widthDiv8 * 6), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 6 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
+        arrayList.add(new Rect((int) (widthDiv8 * 6), whiteKeyHeight, (int) (widthDiv8 * 7), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 7), whiteKeyHeight, (int) (widthDiv8 * 8), jpapplication.getHeightPixels()));
+        return arrayList;
+    }
+
+    public List<Rect> getFireRectArray() {
+        List<Rect> arrayList = new ArrayList<>();
+        arrayList.add(new Rect(0, (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) widthDiv8, (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) (widthDiv8 + blackKeyWidth), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) widthDiv8, (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) (widthDiv8 * 2), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) (widthDiv8 * 2 + blackKeyWidth), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 2), ((int) halfHeightSub20) - fireImage.getHeight(), (int) (widthDiv8 * 3), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 3), ((int) halfHeightSub20) - fireImage.getHeight(), (int) (widthDiv8 * 4), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) (widthDiv8 * 4 + blackKeyWidth), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 4), ((int) halfHeightSub20) - fireImage.getHeight(), (int) (widthDiv8 * 5), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 5 - blackKeyWidth), (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) (widthDiv8 * 5 + blackKeyWidth), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 5), ((int) halfHeightSub20) - fireImage.getHeight(), (int) (widthDiv8 * 6), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), (int) (halfHeightSub20 - ((float) fireImage.getHeight())), (int) (widthDiv8 * 6 + blackKeyWidth), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 6), ((int) halfHeightSub20) - fireImage.getHeight(), (int) (widthDiv8 * 7), (int) halfHeightSub20));
+        arrayList.add(new Rect((int) (widthDiv8 * 7), ((int) halfHeightSub20) - fireImage.getHeight(), (int) (widthDiv8 * 8), (int) halfHeightSub20));
+        return arrayList;
+    }
+
     private int judgeTouchNote(int i, boolean isMidi) {
         int i2;
         int i3;
@@ -417,7 +470,7 @@ public final class PlayView extends SurfaceView implements Callback {
             isTouchRightNote = true;
             double abs;
             try {
-                abs = Math.abs(jpapplication.getWhiteKeyHeight() - judgingNote.posiAdd15AddAnim);
+                abs = Math.abs(whiteKeyHeight - judgingNote.posiAdd15AddAnim);
             } catch (Exception e) {
                 abs = 0;
             }
@@ -491,33 +544,78 @@ public final class PlayView extends SurfaceView implements Callback {
         return returnNoteValue;
     }
 
+    public void drawFire(Canvas canvas, int i) {
+        switch (i) {
+            case 0:
+                canvas.drawBitmap(fireImage, null, new RectF(0, halfHeightSub20 - fireImage.getHeight(), widthDiv8, halfHeightSub20), null);
+                return;
+            case 1:
+                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), widthDiv8 + blackKeyWidth, halfHeightSub20), null);
+                return;
+            case 2:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 2, halfHeightSub20), null);
+                return;
+            case 3:
+                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 2 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), (widthDiv8 * 2 + blackKeyWidth), halfHeightSub20), null);
+                return;
+            case 4:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 2, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 3, halfHeightSub20), null);
+                return;
+            case 5:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 3, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 4, halfHeightSub20), null);
+                return;
+            case 6:
+                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 4 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), (widthDiv8 * 4 + blackKeyWidth), halfHeightSub20), null);
+                return;
+            case 7:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 4, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 5, halfHeightSub20), null);
+                return;
+            case 8:
+                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 5 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), (widthDiv8 * 5 + blackKeyWidth), halfHeightSub20), null);
+                return;
+            case 9:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 5, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 6, halfHeightSub20), null);
+                return;
+            case 10:
+                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 6 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 6 + blackKeyWidth, halfHeightSub20), null);
+                return;
+            case 11:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 6, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 7, halfHeightSub20), null);
+                return;
+            case 12:
+                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 7, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 8, halfHeightSub20), null);
+                return;
+            default:
+        }
+    }
+
     public int eventPositionToTouchNoteNum(float f, float f2) {
         int i = 1;
-        float w = jpapplication.getWhiteKeyHeight() + jpapplication.getBlackKeyHeight();
-        if (f2 >= jpapplication.getWhiteKeyHeight()) {
+        float w = whiteKeyHeight + blackKeyHeight;
+        if (f2 >= whiteKeyHeight) {
             if (f2 <= w) {
-                if (Math.abs(widthDiv8 - f) < jpapplication.getBlackKeyWidth()) {
+                if (Math.abs(widthDiv8 - f) < blackKeyWidth) {
                     return 1;
                 }
-                if (Math.abs(width2Div8 - f) < jpapplication.getBlackKeyWidth()) {
+                if (Math.abs(width2Div8 - f) < blackKeyWidth) {
                     return 3;
                 }
-                if (Math.abs(width4Div8 - f) < jpapplication.getBlackKeyWidth()) {
+                if (Math.abs(width4Div8 - f) < blackKeyWidth) {
                     return 6;
                 }
-                if (Math.abs(width5Div8 - f) < jpapplication.getBlackKeyWidth()) {
+                if (Math.abs(width5Div8 - f) < blackKeyWidth) {
                     return 8;
                 }
-                if (Math.abs(width6Div8 - f) < jpapplication.getBlackKeyWidth()) {
+                if (Math.abs(width6Div8 - f) < blackKeyWidth) {
                     return 10;
                 }
-                if (Math.abs(width8Div8 - f) < jpapplication.getBlackKeyWidth()) {
+                if (Math.abs(width8Div8 - f) < blackKeyWidth) {
                     return 12;
                 }
             }
-            if (f2 >= jpapplication.getWhiteKeyHeight()) {
+            if (f2 >= whiteKeyHeight) {
                 while (i < 9) {
-                    if (f >= ((float) (i - 1)) * jpapplication.getWidthDiv8() && f < ((float) i) * jpapplication.getWidthDiv8()) {
+                    if (f >= ((float) (i - 1)) * widthDiv8 && f < ((float) i) * widthDiv8) {
                         switch (i) {
                             case 1:
                                 return 0;
@@ -679,8 +777,8 @@ public final class PlayView extends SurfaceView implements Callback {
         f4713V = true;
         for (PlayNote note : notesList) {
             currentPlayNote = note;
-            if (currentPlayNote.posiAdd15AddAnim < jpapplication.getHalfHeightSub20() + 60) {
-                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && newNote) {
+            if (currentPlayNote.posiAdd15AddAnim < halfHeightSub20 + 60) {
+                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && newNote) {
                     if (currentPlayNote.unPassed) {
                         hasTouched = false;
                         currentPlayNote.unPassed = false;
@@ -689,17 +787,17 @@ public final class PlayView extends SurfaceView implements Callback {
                         judgingNote = currentPlayNote;
                         if (currentPlayNote.posiAdd15AddAnim > -15f) {
                             if (GlobalSetting.INSTANCE.getShowLine() && canvas != null) {
-                                canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, jpapplication.getWhiteKeyHeight(), currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, 15 + currentPlayNote.posiAdd15AddAnim, line);
+                                canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, whiteKeyHeight, currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, 15 + currentPlayNote.posiAdd15AddAnim, line);
                             }
                             if (GlobalSetting.INSTANCE.getChangeNotesColor()) {
                                 currentPlayNote.noteImage = playNoteImage;
-                            } else if (currentPlayNote.posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
+                            } else if (currentPlayNote.posiAdd15AddAnim >= halfHeightSub20) {
                                 currentPlayNote.noteImage = playNoteImage;
                             }
                         }
                     }
-                    if (jpapplication.getGameMode() == GameModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
-                            && currentPlayNote.posiAdd15AddAnim > jpapplication.getWhiteKeyHeight() - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
+                    if (jpapplication.getGameMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
+                            && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
                     noteRightValue = currentPlayNote.noteValue;
@@ -709,7 +807,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
+                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && f4713V) {
                     currentNotePitch = currentPlayNote.noteValue;
                     f4713V = false;
                 }
@@ -825,14 +923,14 @@ public final class PlayView extends SurfaceView implements Callback {
         tempNotesArray.clear();
         for (PlayNote currentPlayNote : notesList) {
             if (currentPlayNote.posiAdd15AddAnim <= halfHeightSub10) {
-                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && newNote) {
+                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && newNote) {
                     if (!currentPlayNote.hideNote) {
                         noteMod12 = currentPlayNote.noteDiv12;
                     }
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < jpapplication.getWhiteKeyHeight() && f4713V) {
+                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && f4713V) {
                     currentNotePitch = currentPlayNote.noteValue;
                     f4713V = false;
                 }
@@ -854,7 +952,7 @@ public final class PlayView extends SurfaceView implements Callback {
         loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
-        if (jpapplication.getGameMode() != GameModeEnum.HEAR) {
+        if (jpapplication.getGameMode() != LocalPlayModeEnum.HEAR) {
             setOnTouchListener(new TouchNotes(this));
             setAccessibilityDelegate(new View.AccessibilityDelegate() {
                 @Override

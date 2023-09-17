@@ -8,13 +8,15 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
-import ly.pp.justpiano3.R;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import ly.pp.justpiano3.R;
 
 /**
  * 数据选择器

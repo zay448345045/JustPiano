@@ -8,9 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.protobuf.MessageLite;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
@@ -18,7 +31,10 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
-import ly.pp.justpiano3.listener.*;
+import ly.pp.justpiano3.listener.AddFriendsMailClick;
+import ly.pp.justpiano3.listener.ChangeDeclarationClick;
+import ly.pp.justpiano3.listener.InOutFamilyClick;
+import ly.pp.justpiano3.listener.KickFamilyClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
@@ -26,11 +42,6 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;

@@ -3,11 +3,15 @@ package ly.pp.justpiano3.activity;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+
 import androidx.annotation.NonNull;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 
 public class SettingsMode extends PreferenceActivity {
+
+    public static final int SETTING_MODE_CODE = 122;
 
     @Override
     public void onBackPressed() {

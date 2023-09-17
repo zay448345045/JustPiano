@@ -1,14 +1,15 @@
 package ly.pp.justpiano3.listener.tab;
 
 import android.widget.TabHost.OnTabChangeListener;
+
+import java.util.ArrayList;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineLoadUserInfoDTO;
-
-import java.util.ArrayList;
 
 public final class PlayHallRoomTabChange implements OnTabChangeListener {
     private final OLPlayHallRoom olPlayHallRoom;

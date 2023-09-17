@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.AttributeSet;
 import android.util.Xml;
+
 import androidx.core.content.ContextCompat;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.constant.Consts;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
 
 /**
  * 框框颜色处理工具

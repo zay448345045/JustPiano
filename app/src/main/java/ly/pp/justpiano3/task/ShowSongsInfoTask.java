@@ -2,14 +2,16 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.lang.ref.WeakReference;
 
 public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
@@ -32,7 +34,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
                     .build();
             // 创建一个Request对象，设置请求URL和请求体
             Request request = new Request.Builder()
-                    .url("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByKeywords")
+                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetListByKeywords")
                     .post(formBody)
                     .build();
             try {

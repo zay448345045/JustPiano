@@ -3,17 +3,19 @@ package ly.pp.justpiano3.task;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.lang.ref.WeakReference;
 
 public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
@@ -30,7 +32,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     protected String doInBackground(String... objects) {
         if (!showSongsInfo.get().songID.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + showSongsInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
             FormBody.Builder builder = new FormBody.Builder();
             builder.add("version", BuildConfig.VERSION_NAME);
             builder.add("songID", showSongsInfo.get().songID);

@@ -1,14 +1,14 @@
 package ly.pp.justpiano3.utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.view.GoldConvertView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineDialogDTO;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /**
  * @author as

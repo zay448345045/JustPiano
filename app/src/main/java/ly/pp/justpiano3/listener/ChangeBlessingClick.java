@@ -5,17 +5,19 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import protobuf.dto.OnlineSendMailDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import protobuf.dto.OnlineSendMailDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class ChangeBlessingClick implements OnClickListener {
 

@@ -4,16 +4,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
+
+import java.util.List;
+import java.util.Map;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
-
-import java.util.List;
-import java.util.Map;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
     private final List<Map<String, String>> list;

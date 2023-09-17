@@ -16,12 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.task.ShowTopInfoTask;
-import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.view.JPProgressBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -30,6 +25,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.task.ShowTopInfoTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;

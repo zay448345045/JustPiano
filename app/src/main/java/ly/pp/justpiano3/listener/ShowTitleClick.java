@@ -2,6 +2,7 @@ package ly.pp.justpiano3.listener;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import ly.pp.justpiano3.activity.OLMelodySelect;
 
 final class ShowTitleClick implements OnClickListener {

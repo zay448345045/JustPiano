@@ -2,34 +2,15 @@ package ly.pp.justpiano3.constant;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.database.entity.Song;
 
 import java.util.Objects;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.database.entity.Song;
 
 public interface Consts {
 
     String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
-
-    /**
-     * 官网地址
-     */
-    String WEBSITE_URL = "justpiano.fun";
-
-    /**
-     * 官网地址
-     */
-    String INSIDE_WEBSITE_URL = "i.justpiano.fun";
-
-    /**
-     * 对战服务器地址
-     */
-    String ONLINE_SERVER_URL = "server.justpiano.fun";
-
-    /**
-     * 测试对战服务器地址
-     */
-    String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
 
     String[] items = new String[]{"  收藏夹 ", "经典乐章", "流行空间", "影视剧场", "儿时回忆", "动漫原声", "游戏主题", "红色歌谣", "原创作品", "本地导入"};
     //    String[] f5601e = new String[]{"极尽琴乐", "琴心联语", "以琴会友", "高山流水", "剑胆琴心"};

@@ -8,6 +8,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.util.Collections;
+import java.util.List;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.database.entity.Song;
@@ -16,9 +20,6 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
-
-import java.util.Collections;
-import java.util.List;
 
 public class PlayFinish extends Activity implements OnClickListener {
     private int head;

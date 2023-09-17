@@ -2,6 +2,7 @@ package ly.pp.justpiano3.task;
 
 import android.app.Activity;
 import android.os.Message;
+
 import protobuf.vo.OnlineBaseVO;
 
 /**

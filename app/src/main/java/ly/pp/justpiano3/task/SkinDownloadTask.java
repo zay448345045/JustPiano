@@ -1,12 +1,5 @@
 package ly.pp.justpiano3.task;
 
-import ly.pp.justpiano3.activity.SkinDownload;
-import ly.pp.justpiano3.adapter.SkinDownloadAdapter;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14,6 +7,15 @@ import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.adapter.SkinDownloadAdapter;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class SkinDownloadTask {
     private final WeakReference<SkinDownload> skinDownload;
@@ -29,7 +31,7 @@ public final class SkinDownloadTask {
         future = executorService.submit(() -> {
             try {
                 skinDownload.get().getLocalSkinList();
-                String url = "http://" + skinDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSkinList";
+                String url = "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSkinList";
 
                 Request request = new Request.Builder()
                         .url(url)

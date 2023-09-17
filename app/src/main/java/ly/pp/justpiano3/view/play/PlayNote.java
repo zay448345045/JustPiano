@@ -2,6 +2,7 @@ package ly.pp.justpiano3.view.play;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
@@ -20,14 +21,12 @@ public final class PlayNote {
     public int handValue;
     private int playNote;
     private final PlayView playView;
-    private final JPApplication jpapplication;
     private final float halfWidth;
     private boolean newNote = true;
     private final int posiAdd15;
 
     public PlayNote(JPApplication jPApplication, PlayView playView, byte i, int i2, byte f, int f2, int i3, boolean z, int i4) {
         handValue = i4;
-        jpapplication = jPApplication;
         this.playView = playView;
         noteDiv12 = i3;
         noteValue = i;
@@ -38,7 +37,7 @@ public final class PlayNote {
         volumeValue = f;
         int widthPixels = playView.noteImage.getWidth();
         halfWidth = widthPixels / 2f;
-        int width = jpapplication.getWidthPixels() / 16;
+        int width = jPApplication.getWidthPixels() / 16;
         int f4 = widthPixels / 2;
         if (trackValue != handValue) {
             return;
@@ -106,13 +105,13 @@ public final class PlayNote {
     }
 
     public float mo3107b(Canvas canvas) {    // 联网模式
-        posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
-        if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
+        posiAdd15AddAnim = posiAdd15 + playView.progress;
+        if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (newNote && hideNote) {
                 playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
-            } else if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
+            } else if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
                 SoundEngineUtil.stopPlaySound(playNote);
                 return posiAdd15AddAnim;
             }
@@ -124,8 +123,8 @@ public final class PlayNote {
     }
 
     public float mo3108c(Canvas canvas) {
-        posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
-        if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
+        posiAdd15AddAnim = posiAdd15 + playView.progress;
+        if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (GlobalSetting.INSTANCE.getAutoPlay()) {
                 if (newNote && ((trackValue != handValue || hideNote) && GlobalSetting.INSTANCE.isOpenChord())) {
                     playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
@@ -137,7 +136,7 @@ public final class PlayNote {
                 newNote = false;
                 return posiAdd15AddAnim;
             }
-            if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
+            if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
                 SoundEngineUtil.stopPlaySound(playNote);
             }
         }
@@ -152,16 +151,16 @@ public final class PlayNote {
     }
 
     public void noCompatibleMode(Canvas canvas) {  // 欣赏模式
-        posiAdd15AddAnim = posiAdd15 + jpapplication.getAnimPosition();
-        if (posiAdd15AddAnim >= jpapplication.getHalfHeightSub20()) {
+        posiAdd15AddAnim = posiAdd15 + playView.progress;
+        if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (newNote && GlobalSetting.INSTANCE.isOpenChord()) {
                 if (trackValue == handValue) {
-                    jpapplication.drawFire(playView, canvas, noteValue % 12);
+                    playView.drawFire(canvas, noteValue % 12);
                 }
                 playNote = SoundEngineUtil.playSound(noteValue, volumeValue);
                 newNote = false;
             }
-            if (((double) posiAdd15AddAnim) >= jpapplication.getWhiteKeyHeightAdd90()) {
+            if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
                 SoundEngineUtil.stopPlaySound(playNote);
             }
         }

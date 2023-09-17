@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.utils;
 
+import static android.content.Context.MIDI_SERVICE;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.midi.MidiDevice;
@@ -10,14 +12,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MIDI_SERVICE;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 public class MidiUtil {
 

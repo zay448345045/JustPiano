@@ -6,14 +6,15 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-
-import java.util.List;
 
 public final class UserListPageAdapter extends BaseAdapter {
     private final UserListPage userListPage;

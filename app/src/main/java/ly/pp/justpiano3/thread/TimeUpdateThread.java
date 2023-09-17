@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.thread;
 
 import android.os.Message;
+
 import ly.pp.justpiano3.activity.OLPlayRoomActivity;
 
 public final class TimeUpdateThread extends Thread {

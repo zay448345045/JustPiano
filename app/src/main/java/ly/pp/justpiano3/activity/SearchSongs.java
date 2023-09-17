@@ -16,14 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.SearchSongsAdapter;
-import ly.pp.justpiano3.task.SearchSongsTask;
-import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.view.JPProgressBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +26,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.SearchSongsAdapter;
+import ly.pp.justpiano3.task.SearchSongsTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class SearchSongs extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;

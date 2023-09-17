@@ -6,10 +6,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.view.JPDialogBuilder;
 
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class PianoPlayHandler extends Handler {
     private final WeakReference<Activity> weakReference;

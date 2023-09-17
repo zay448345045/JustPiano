@@ -5,10 +5,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceHolder;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.view.PlayView;
 
 public final class LoadBackgroundsThread extends Thread {
@@ -52,9 +53,9 @@ public final class LoadBackgroundsThread extends Thread {
         f6024j.setColor(0xff00ff00);
         f6025k = new Paint();
         f6025k.setARGB(255, 255, 125, 25);
-        f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) jPApplication.getHalfHeightSub20());
-        f6029o = new Rect(0, (int) jPApplication.getHalfHeightSub20(), playView.screenWidth, jPApplication.getWhiteKeyHeight());
-        backgroundRect = new Rect(0, 0, playView.screenWidth, jPApplication.getWhiteKeyHeight());
+        f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) playView.halfHeightSub20);
+        f6029o = new Rect(0, (int) playView.halfHeightSub20, playView.screenWidth, playView.whiteKeyHeight);
+        backgroundRect = new Rect(0, 0, playView.screenWidth, playView.whiteKeyHeight);
         this.pianoPlay = pianoPlay;
     }
 
@@ -65,7 +66,7 @@ public final class LoadBackgroundsThread extends Thread {
             // 时间计算部分：和瀑布流原理相同，具体解释详见瀑布流
             int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.INSTANCE.getNotesDownSpeed() - progressPauseTime);
             boolean isPause = !pianoPlay.playView.startFirstNoteTouching ||
-                    (jpapplication.getGameMode() == GameModeEnum.PRACTISE && !pianoPlay.playView.isTouchRightNote);
+                    (jpapplication.getGameMode() == LocalPlayModeEnum.PRACTISE && !pianoPlay.playView.isTouchRightNote);
             if (isPause && pauseProgress == null) {
                 pauseProgress = playIntervalTime;
             } else if (!isPause && pauseProgress != null) {
@@ -75,7 +76,7 @@ public final class LoadBackgroundsThread extends Thread {
                 pauseProgress = null;
             }
             int progress = isPause ? pauseProgress : playIntervalTime;
-            jpapplication.setAnimPosition(progress);
+            playView.progress = progress;
             // 绘制部分
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);
@@ -86,7 +87,7 @@ public final class LoadBackgroundsThread extends Thread {
                     if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
-                    if (jpapplication.getGameMode() != GameModeEnum.HEAR) {  // 不是欣赏模式
+                    if (jpapplication.getGameMode() != LocalPlayModeEnum.HEAR) {  // 不是欣赏模式
                         playView.mo2930b(canvas);
                     } else {
                         playView.mo2931c(canvas);

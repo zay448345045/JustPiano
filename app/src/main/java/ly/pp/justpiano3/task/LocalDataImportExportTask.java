@@ -4,6 +4,12 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MelodySelect;
@@ -11,11 +17,6 @@ import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.LocalSongData;
 import ly.pp.justpiano3.utils.StreamUtil;
-
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class LocalDataImportExportTask extends AsyncTask<String, Void, String> {
     private final WeakReference<Activity> activity;

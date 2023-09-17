@@ -2,6 +2,7 @@ package ly.pp.justpiano3.listener;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+
 import ly.pp.justpiano3.activity.LoginActivity;
 import ly.pp.justpiano3.thread.ThreadPoolUtil;
 

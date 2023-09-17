@@ -10,6 +10,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Calendar;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SendMessageClick;
@@ -17,10 +23,6 @@ import ly.pp.justpiano3.task.PopUserInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Calendar;
 
 public class PopUserInfo extends Activity implements Callback, OnClickListener {
     public JPProgressBar jpprogressBar;

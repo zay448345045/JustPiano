@@ -3,7 +3,9 @@ package ly.pp.justpiano3.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+
 import androidx.activity.ComponentActivity;
+
 import ly.pp.justpiano3.handler.android.OLBaseActivityHandler;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.view.JPDialogBuilder;

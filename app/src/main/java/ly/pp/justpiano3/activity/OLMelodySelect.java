@@ -11,8 +11,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
 import androidx.core.content.res.ResourcesCompat;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.OLMelodySelectAdapter2;
@@ -20,15 +39,10 @@ import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.enums.GameModeEnum;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.text.Collator;
-import java.util.*;
 
 public class OLMelodySelect extends Activity implements Callback, OnClickListener {
     public static byte[] songBytes;
@@ -238,7 +252,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.setGameMode(GameModeEnum.NORMAL);
+        jpapplication.setGameMode(LocalPlayModeEnum.NORMAL);
         try {
             GlobalSetting.INSTANCE.loadSettings(this, true);
             GlobalSetting.INSTANCE.setTempSpeed(1f);

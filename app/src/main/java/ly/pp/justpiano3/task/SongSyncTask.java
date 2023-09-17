@@ -1,9 +1,16 @@
 package ly.pp.justpiano3.task;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MelodySelect;
@@ -14,18 +21,12 @@ import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
     private final WeakReference<Activity> activity;
@@ -46,7 +47,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + ((JPApplication) activity.get().getApplication()).getServer() + ":8910/JustPianoServer/server/SongSync")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SongSync")
                 .post(formBody)
                 .build();
         try {

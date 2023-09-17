@@ -1,15 +1,17 @@
 package ly.pp.justpiano3.thread;
 
 import android.app.Activity;
+
+import java.io.IOException;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-
-import java.io.IOException;
 
 public final class AcceptFavorThread extends Thread {
     private final String type;
@@ -27,7 +29,7 @@ public final class AcceptFavorThread extends Thread {
     @Override
     public void run() {
         if (!StringUtil.isNullOrEmpty(userName)) {
-            String url = "http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/AcceptFavorIn";
+            String url = "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/AcceptFavorIn";
 
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("version", BuildConfig.VERSION_NAME);

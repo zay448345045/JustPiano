@@ -8,13 +8,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChatFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-
-import java.io.File;
-import java.util.*;
 
 public class ChatFiles extends Activity {
     public List<Map<String, Object>> dataList = null;

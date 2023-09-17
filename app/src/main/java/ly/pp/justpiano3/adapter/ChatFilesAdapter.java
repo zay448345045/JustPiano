@@ -6,11 +6,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.ChatFiles;
 
 import java.util.List;
 import java.util.Map;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.ChatFiles;
 
 public final class ChatFilesAdapter extends BaseAdapter {
     private List<Map<String, Object>> list;

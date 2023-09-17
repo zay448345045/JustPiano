@@ -8,12 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+
+import java.util.List;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.ColorUtil;
-
-import java.util.List;
 
 public final class RoomTitleAdapter extends BaseAdapter {
     private List<Bundle> list;

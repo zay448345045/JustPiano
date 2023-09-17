@@ -2,13 +2,19 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.PlayFinish;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.PlayFinish;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     private final WeakReference<PlayFinish> playFinish;
@@ -23,7 +29,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
         if (!playFinish.get().jpapplication.getAccountName().isEmpty()) {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
-                    .host(playFinish.get().jpapplication.getServer())
+                    .host(OnlineUtil.server)
                     .port(8910)
                     .addPathSegment("JustPianoServer")
                     .addPathSegment("server")
