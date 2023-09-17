@@ -814,14 +814,13 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             String text = sendTextView.getText().toString();
             if (!text.isEmpty()) {
                 new JPDialogBuilder(this)
-                        .setWidth(576)
-                        .setTitle("发送'全服广播'")
-                        .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + text)
-                        .setFirstButton("希望", (dialog, i) -> {
+                        .setTitle("全服消息")
+                        .setMessage("您是否需要使用\"全服广播\"进行消息发送？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
+                        .setFirstButton("确定", (dialog, i) -> {
                             sendMessageClick(true);
                             dialog.dismiss();
                         })
-                        .setSecondButton("再想想", ((dialog, which) -> dialog.dismiss()))
+                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
                         .buildAndShowDialog();
             }
             return true;

@@ -13,30 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.core.content.res.ResourcesCompat;
-
 import com.google.protobuf.MessageLite;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -61,13 +41,10 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import protobuf.dto.OnlineClTestDTO;
-import protobuf.dto.OnlineEnterRoomDTO;
-import protobuf.dto.OnlineHallChatDTO;
-import protobuf.dto.OnlineLoadRoomListDTO;
-import protobuf.dto.OnlineLoadRoomUserListDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlineQuitHallDTO;
+import protobuf.dto.*;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
     public ConnectionService connectionService;
@@ -484,13 +461,13 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             String text = sendTextView.getText().toString();
             if (!text.isEmpty()) {
                 new JPDialogBuilder(this)
-                        .setTitle("发送'全服广播'")
-                        .setMessage("您是否希望使用'全服广播'进行发送？\n如果您没有，则会自动为您购买并发送（价格:5音符）。\n内容为：" + sendTextView.getText())
-                        .setFirstButton("希望", (dialog, i) -> {
+                        .setTitle("全服消息")
+                        .setMessage("您是否需要使用\"全服广播\"进行消息发送？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
+                        .setFirstButton("确定", (dialog, i) -> {
                             sendHallChat(true);
                             dialog.dismiss();
                         })
-                        .setSecondButton("再想想", ((dialog, which) -> dialog.dismiss()))
+                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
                         .buildAndShowDialog();
             }
             return true;
