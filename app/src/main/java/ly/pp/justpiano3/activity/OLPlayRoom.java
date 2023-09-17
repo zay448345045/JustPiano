@@ -177,9 +177,9 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         }
     }
 
-    public String[] querySongNameAndDiffByPath(String str) {
+    public String[] querySongNameAndDiffByPath(String songFilePath) {
         String[] strArr = new String[3];
-        List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(str);
+        List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(songFilePath);
         for (Song song : songByFilePath) {
             strArr[0] = song.getName();
             strArr[1] = String.format(Locale.getDefault(), "%.1f", song.getRightHandDegree());

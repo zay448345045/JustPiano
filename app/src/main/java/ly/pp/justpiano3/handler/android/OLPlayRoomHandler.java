@@ -97,7 +97,7 @@ public final class OLPlayRoomHandler extends Handler {
                 case 5:
                     post(() -> {
                         SongPlay.INSTANCE.stopPlay();
-                        String str1 = message.getData().getString("S");
+                        String songFilePath = message.getData().getString("S");
                         if (!olPlayRoom.onStart) {
                             olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
@@ -107,22 +107,22 @@ public final class OLPlayRoomHandler extends Handler {
                             intent.putExtras(bundle);
                             olPlayRoom.startActivity(intent);
                             olPlayRoom.finish();
-                        } else if (!str1.isEmpty()) {
+                        } else if (!songFilePath.isEmpty()) {
                             olPlayRoom.setTune(message.getData().getInt("D"));
-                            str1 = "songs/" + str1 + ".pm";
-                            String str = olPlayRoom.querySongNameAndDiffByPath(str1)[0];
-                            if (str != null) {
+                            songFilePath = "songs/" + songFilePath + ".pm";
+                            String songName = olPlayRoom.querySongNameAndDiffByPath(songFilePath)[0];
+                            if (songName != null) {
                                 olPlayRoom.onStart = false;
-                                Intent intent2 = new Intent(olPlayRoom, PianoPlay.class);
-                                intent2.putExtra("head", 2);
-                                intent2.putExtra("path", str1);
-                                intent2.putExtra("name", str);
-                                intent2.putExtra("diao", olPlayRoom.getTune());
-                                intent2.putExtra("roomMode", olPlayRoom.roomMode);
-                                intent2.putExtra("hand", olPlayRoom.currentHand);
-                                intent2.putExtra("bundle", olPlayRoom.roomInfoBundle);
-                                intent2.putExtra("bundleHall", olPlayRoom.hallInfoBundle);
-                                olPlayRoom.startActivity(intent2);
+                                Intent intent = new Intent(olPlayRoom, PianoPlay.class);
+                                intent.putExtra("head", 2);
+                                intent.putExtra("path", songFilePath);
+                                intent.putExtra("name", songName);
+                                intent.putExtra("diao", olPlayRoom.getTune());
+                                intent.putExtra("roomMode", olPlayRoom.roomMode);
+                                intent.putExtra("hand", olPlayRoom.currentHand);
+                                intent.putExtra("bundle", olPlayRoom.roomInfoBundle);
+                                intent.putExtra("bundleHall", olPlayRoom.hallInfoBundle);
+                                olPlayRoom.startActivity(intent);
                                 olPlayRoom.finish();
                             }
                         }

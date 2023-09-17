@@ -134,7 +134,7 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE online = 1 AND name = :name")
     fun getSongByName(name: String): List<Song>
 
-    @Query("SELECT * FROM song WHERE online = 1 AND path = :filePath")
+    @Query("SELECT * FROM song WHERE path = :filePath")
     fun getSongByFilePath(filePath: String): List<Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND diff BETWEEN :startDegree AND :endDegree ORDER BY RANDOM() LIMIT 1")
