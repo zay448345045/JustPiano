@@ -13,9 +13,12 @@ import android.util.DisplayMetrics;
 import android.view.*;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.protobuf.ByteString;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.adapter.SimpleSkinListAdapter;
@@ -443,21 +446,19 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                    midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            midiConnectHandle(data);
-                        }
-                    });
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                        MidiUtil.getMidiOutputPort().connect(midiFramer);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
+                midiFramer = new MidiFramer(new MidiReceiver() {
+                    @Override
+                    public void onSend(byte[] data, int offset, int count, long timestamp) {
+                        midiConnectHandle(data);
                     }
-                    MidiUtil.addMidiConnectionListener(this);
+                });
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    MidiUtil.getMidiOutputPort().connect(midiFramer);
                 }
             }
+            MidiUtil.addMidiConnectionListener(this);
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
