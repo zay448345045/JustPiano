@@ -51,7 +51,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
     private PopupWindow buildPopupWindow(User user) {
         ConnectionService connectionService = olPlayRoomActivity.jpapplication.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(olPlayRoomActivity);
-        View inflate = LayoutInflater.from(olPlayRoomActivity).inflate(R.layout.ol_buttonlist_view, null);
+        View inflate = LayoutInflater.from(olPlayRoomActivity).inflate(R.layout.ol_room_user_operation, null);
         Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);
         Button privateChatButton = inflate.findViewById(R.id.ol_chat_b);
         Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);

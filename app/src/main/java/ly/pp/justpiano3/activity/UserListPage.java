@@ -31,7 +31,7 @@ public class UserListPage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpApplication = (JPApplication) getApplication();
-        setContentView(R.layout.userlistpage);
+        setContentView(R.layout.ol_user_list);
         listView = findViewById(R.id.list_view);
         listView.setCacheColorHint(0);
         TextView textView = findViewById(R.id.ol_top_title);

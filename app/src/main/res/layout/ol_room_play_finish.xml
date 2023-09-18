@@ -11,7 +11,7 @@
         android:layout_width="@dimen/dimen_540dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/list"
+        android:background="@drawable/ol_rectangle_mask"
         android:gravity="center"
         android:orientation="vertical">
 

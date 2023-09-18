@@ -96,7 +96,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     }
 
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
             User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
@@ -251,7 +251,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ol_createroom_b:
-                View inflate = getLayoutInflater().inflate(R.layout.create_room, findViewById(R.id.dialog));
+                View inflate = getLayoutInflater().inflate(R.layout.ol_create_room, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.room_name);
                 TextView textView2 = inflate.findViewById(R.id.room_password);
                 RadioGroup radioGroup = inflate.findViewById(R.id.room_mode);
@@ -364,7 +364,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         layoutInflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
-        setContentView(R.layout.olplayhall);
+        setContentView(R.layout.ol_room_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(LocalPlayModeEnum.NORMAL);

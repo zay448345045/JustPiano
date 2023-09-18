@@ -20,7 +20,7 @@ class OLRoomSongsAdapter(private val olPlayRoom: OLPlayRoom, private val songsLi
     PagedListAdapter<Song, OLRoomSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(R.layout.song_view, parent, false)
+        val itemView = inflater.inflate(R.layout.olroom_songview, parent, false)
         itemView.setBackgroundResource(R.drawable.selector_list_c)
         return SongViewHolder(itemView)
     }

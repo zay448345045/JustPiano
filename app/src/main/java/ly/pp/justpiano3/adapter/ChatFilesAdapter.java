@@ -44,7 +44,7 @@ public final class ChatFilesAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(chatfiles).inflate(R.layout.fileimageandtext, null);
+            view = LayoutInflater.from(chatfiles).inflate(R.layout.chat_record_file_list, null);
         }
         view.setKeepScreenOn(true);
         String str = (String) list.get(i).get("filenames");

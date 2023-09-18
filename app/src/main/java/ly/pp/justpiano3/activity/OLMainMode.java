@@ -104,7 +104,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this);
         GlobalSetting.INSTANCE.loadSettings(this, true);
-        setContentView(R.layout.olmainmode);
+        setContentView(R.layout.ol_main_mode);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         JPApplication jPApplication = jpapplication;
         jPApplication.setGameMode(LocalPlayModeEnum.NORMAL);

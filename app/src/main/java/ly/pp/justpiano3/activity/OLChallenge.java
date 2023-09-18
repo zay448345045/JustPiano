@@ -104,7 +104,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         hallID = b.getByte("hallID");
         hallName = b.getString("hallName");
         jpapplication = (JPApplication) getApplication();
-        setContentView(R.layout.challenge);
+        setContentView(R.layout.ol_challenge);
         cs = jpapplication.getConnectionService();
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
@@ -124,7 +124,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     }
 
     public final void showDrawPrizeDialog(Bundle bundle) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_draw_prize, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_challenge_draw_prize, findViewById(R.id.dialog));
         TextView prizeResultTextView = inflate.findViewById(R.id.ol_prize_result);
         ImageView prizePointerImageView = inflate.findViewById(R.id.ol_prize_pointer);
         DrawPrizeView drawPrizeView = inflate.findViewById(R.id.ol_draw_prize_pan);

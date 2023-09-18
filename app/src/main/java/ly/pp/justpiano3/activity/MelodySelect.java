@@ -289,7 +289,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
-        LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.melodylist1, null);
+        LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.lo_melody_list, null);
         setContentView(linearLayout);
         ImageLoadUtil.setBackGround(this, "ground", linearLayout);
         sortButton = findViewById(R.id.list_sort_b);

@@ -23,6 +23,7 @@
     <color name="top_background">#ff26292f</color>
     <color name="green_r">#ff72ff00</color>
     <color name="yellow">#ffffff00</color>
+    <color name="mask">#3300133e</color>
     <color name="local">#ff54a4f0</color>
     <color name="online">#ff32cd32</color>
     <color name="settings">#ffffa500</color>

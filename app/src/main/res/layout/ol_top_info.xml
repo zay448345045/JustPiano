@@ -11,7 +11,7 @@
         android:id="@+id/ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/list"
+        android:background="@drawable/ol_transparent"
         android:orientation="horizontal">
 
         <TextView
@@ -79,7 +79,7 @@
             android:id="@+id/linearLayout14"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/filled_bar"
+            android:background="@drawable/ol_rectangle_mask"
             android:orientation="horizontal">
 
             <ListView

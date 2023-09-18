@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     android:background="@drawable/ground"
+    android:gravity="top|center_vertical|center_horizontal|center"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/list"
-        android:gravity="center_vertical"
+        android:background="@drawable/ol_transparent"
+        android:gravity="center"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/ol_search_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_42dp"
+            android:layout_height="@dimen/dimen_42dp"
+            android:scaleType="centerInside"
             android:background="@drawable/selector_ol_button"
             android:layout_alignParentEnd="true"
-
-            android:text="@string/olmelodylist_search"
-            android:textColor="@color/white1"
-            android:textSize="20sp" />
+            android:src="@drawable/search"/>
 
         <LinearLayout
             style="@style/InputBoxStyle"
@@ -75,7 +72,7 @@
             android:id="@+id/linearLayout14"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/filled_bar"
+            android:background="@drawable/ol_rectangle_mask"
             android:orientation="horizontal">
 
             <ListView

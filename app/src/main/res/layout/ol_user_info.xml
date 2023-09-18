@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ol_rectangle_blue"
+    android:background="@drawable/ground"
     android:gravity="top|center_vertical|center_horizontal|center"
     android:orientation="vertical">
 
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:background="@drawable/ol_rectangle_orange"
+            android:background="@drawable/ol_transparent"
             android:keepScreenOn="true"
             android:textStyle="bold"
             android:text="@string/user_info_title"
@@ -31,6 +31,7 @@
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
+        android:background="@drawable/filled_bar"
         android:layout_height="match_parent"
         android:gravity="center">
 
@@ -164,7 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/score"
             android:layout_toEndOf="@+id/age"
-            android:background="@color/local"
+            android:background="@color/mask"
             android:inputType="number"
             android:text="@string/user_info_1990"
             android:textColor="@color/white1"
@@ -182,7 +183,7 @@
                 android:id="@+id/users_info_msg"
                 android:layout_width="@dimen/dimen_240dp"
                 android:layout_height="match_parent"
-                android:background="@color/local"
+                android:background="@color/mask"
                 android:textColor="@color/green_r"
                 android:textSize="20sp" />
         </ScrollView>
@@ -213,7 +214,7 @@
             android:layout_toEndOf="@+id/ScrollView01"
             android:layout_alignTop="@+id/user_kitiname"
             android:background="@drawable/ol_rectangle_orange"
-            android:src="@drawable/defaultface" />
+            android:src="@drawable/_self" />
 
         <Button
             android:id="@+id/password_button"
