@@ -184,7 +184,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
     }
 
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
             User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
@@ -304,7 +304,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         if (playerKind.equals("G")) {
             Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
         } else {
-            View inflate = getLayoutInflater().inflate(R.layout.ol_roomtitle_change, findViewById(R.id.dialog));
+            View inflate = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
             EditText text1 = inflate.findViewById(R.id.text_1);
             EditText text2 = inflate.findViewById(R.id.text_2);
             new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate)
@@ -619,7 +619,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         popupWindow.setOutsideTouchable(true);
         expressWindow = popupWindow;
         PopupWindow popupWindow3 = new PopupWindow(this);
-        View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_changecolor, null);
+        View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
         popupWindow3.setContentView(inflate3);
         popupWindow3.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow3.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);

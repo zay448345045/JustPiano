@@ -105,7 +105,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
 
     public void loadManageFamilyPopupWindow(Bundle b) {
         PopupWindow popupWindow = new PopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_managefamily_view, null);
+        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
         Button button = inflate.findViewById(R.id.ol_family_levelup);
         Button button2 = inflate.findViewById(R.id.ol_family_changedecl);
         Button button3 = inflate.findViewById(R.id.ol_family_changepic);
@@ -131,7 +131,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
 
     //显示个人资料
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
             User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
@@ -280,7 +280,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         layoutinflater = LayoutInflater.from(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
-        setContentView(R.layout.family);
+        setContentView(R.layout.ol_family);
         cs = jpapplication.getConnectionService();
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
@@ -298,7 +298,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
 
     public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
         PopupWindow popupWindow = new PopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_buttonlist_view, null);
+        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
         Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
         Button mailSendButton = inflate.findViewById(R.id.ol_chat_b);  //私信
         Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);  //移出家族

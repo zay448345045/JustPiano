@@ -58,7 +58,7 @@
                 android:layout_below="@+id/ol_couple_mod"
                 android:layout_alignEnd="@+id/ol_couple_mod"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/list"
+                android:background="@drawable/ol_rectangle_mask"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:maxLines="1"
@@ -171,7 +171,7 @@
                 android:layout_below="@+id/ol_player_mod"
                 android:layout_alignEnd="@+id/ol_player_mod"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/list"
+                android:background="@drawable/ol_rectangle_mask"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:maxLines="1"
@@ -227,7 +227,7 @@
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_105dp"
-        android:background="@drawable/list"
+        android:background="@drawable/ol_rectangle_mask"
         android:scrollbars="none">
 
         <LinearLayout

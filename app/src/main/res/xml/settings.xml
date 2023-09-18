@@ -185,7 +185,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="关于">
         <Preference
-            android:summary="4.80.0915B"
+            android:summary="4.80.3919-Test"
             android:title="软件版本" />
             <!--版本号:Ver.Date.isBeta-->
         <Preference

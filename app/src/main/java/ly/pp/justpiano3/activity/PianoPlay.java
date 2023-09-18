@@ -3,14 +3,12 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -221,7 +219,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     }
 
     public void loadSong() {
-        f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
+        f4591J = LayoutInflater.from(this).inflate(R.layout.pused_play, null);
         layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams2.gravity = android.view.Gravity.CENTER;
         layoutparams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -259,7 +257,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 int tune = extras.getInt("diao");
                 hand = extras.getInt("hand");
                 roomMode = extras.getInt("roomMode");
-                miniScoreView = layoutinflater.inflate(R.layout.ol_score_view, null);
+                miniScoreView = layoutinflater.inflate(R.layout.ol_play_score_ranking, null);
                 horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
                 showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
                 int visibility = horizontalListView.getVisibility();
@@ -270,7 +268,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 }
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
-                finishView = layoutinflater.inflate(R.layout.ol_finish_view, null);
+                finishView = layoutinflater.inflate(R.layout.ol_room_play_finish, null);
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(0);
@@ -286,7 +284,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 songsName = extras.getString("name");
                 times = extras.getInt("times");
                 hand = extras.getInt("hand");
-                miniScoreView = layoutinflater.inflate(R.layout.ol_score_view, null);
+                miniScoreView = layoutinflater.inflate(R.layout.ol_play_score_ranking, null);
                 horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
                 showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
                 showHideGrade.setText("");

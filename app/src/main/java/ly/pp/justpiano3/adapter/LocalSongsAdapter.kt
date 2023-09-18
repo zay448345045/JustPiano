@@ -27,7 +27,7 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
     PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(R.layout.c_view, parent, false)
+        val itemView = inflater.inflate(R.layout.lo_songview, parent, false)
         itemView.setBackgroundResource(R.drawable.selector_list_c)
         return SongViewHolder(itemView)
     }

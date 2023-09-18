@@ -134,7 +134,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     }
 
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
             User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
@@ -455,7 +455,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
         GlobalSetting.INSTANCE.loadSettings(this, true);
-        setContentView(R.layout.olplayhallroom);
+        setContentView(R.layout.ol_hall_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         jpApplication.setGameMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);

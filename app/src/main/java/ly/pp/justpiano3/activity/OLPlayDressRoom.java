@@ -217,7 +217,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         level = extras.getInt("Lv");
         shoesNow = extras.getInt("O");
         sex = extras.getString("S");
-        setContentView(R.layout.olplaydressroom);
+        setContentView(R.layout.ol_dressroom);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button dressOK = findViewById(R.id.ol_dress_ok);
         Button dressCancel = findViewById(R.id.ol_dress_cancel);

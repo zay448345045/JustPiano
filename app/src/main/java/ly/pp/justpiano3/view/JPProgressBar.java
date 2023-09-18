@@ -26,7 +26,7 @@ public final class JPProgressBar extends Dialog {
 
     public JPProgressBar(Context context, JPApplication jPApplication) {
         super(context, R.style.Dialog);
-        setContentView(R.layout.prgdialog);
+        setContentView(R.layout.loading_view);
         imageView = findViewById(R.id.loading_img);
         textView = findViewById(R.id.loading_text);
         jpApplication = jPApplication;

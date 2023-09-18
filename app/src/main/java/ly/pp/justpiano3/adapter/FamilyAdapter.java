@@ -54,7 +54,7 @@ public final class FamilyAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.ol_o_family_view, null);
+            view = layoutInflater.inflate(R.layout.ol_family_view, null);
         }
         if (list.size() == 0) {
             return view;

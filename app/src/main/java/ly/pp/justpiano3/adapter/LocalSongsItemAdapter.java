@@ -34,7 +34,7 @@ public final class LocalSongsItemAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = melodySelect.layoutInflater1.inflate(R.layout.f_view, null);
+            view = melodySelect.layoutInflater1.inflate(R.layout.songs_sort_view, null);
         }
         view.setKeepScreenOn(true);
         ((TextView) view.findViewById(R.id.ol_s_p)).setText(Consts.items[i]);

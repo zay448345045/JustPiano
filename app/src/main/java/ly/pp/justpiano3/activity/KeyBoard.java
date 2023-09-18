@@ -73,7 +73,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.keyboard_mode);
+        setContentView(R.layout.lo_keyboard_mode);
         jpapplication = (JPApplication) getApplication();
         keyboardMode1View = findViewById(R.id.keyboard1_view);
         keyboardMode1View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {

@@ -76,7 +76,7 @@
                         android:layout_height="@dimen/dimen_0dp"
                         android:layout_marginBottom="@dimen/dimen_6dp"
                         android:layout_weight="3"
-                        android:background="@drawable/list"
+                        android:background="@drawable/ol_rectangle_mask"
                         android:text="@string/challenge_inf"
                         android:textColor="@color/white1"
                         android:textSize="14sp"/>
@@ -126,7 +126,7 @@
                             android:id="@+id/linearLayout71"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
-                            android:background="@drawable/list"
+                            android:background="@drawable/ol_rectangle_mask"
                             android:orientation="horizontal">
 
                         <TextView
@@ -174,7 +174,7 @@
                         android:id="@+id/challenge_score_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/list"
+                        android:background="@drawable/ol_rectangle_mask"
                         android:cacheColorHint="#00ffffff"
                         android:choiceMode="singleChoice"
                         android:divider="@null"

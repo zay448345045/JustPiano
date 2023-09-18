@@ -135,21 +135,18 @@
 
         <LinearLayout
             android:id="@+id/linearLayout13"
-            android:layout_width="@dimen/dimen_120dp"
+            android:layout_width="@dimen/dimen_95dp"
             android:layout_height="match_parent"
-            android:background="@drawable/filled_bar">
+            android:background="@drawable/filled_bar"
+            android:gravity="center_vertical">
 
             <ListView
                 android:id="@+id/ol_f_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cacheColorHint="@color/blue_l"
+                android:layout_height="wrap_content"
                 android:divider="@null"
-                android:drawSelectorOnTop="false"
                 android:fastScrollEnabled="false"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="false"
-                android:scrollbarAlwaysDrawVerticalTrack="false" />
+                android:listSelector="#00000000" />
         </LinearLayout>
 
         <LinearLayout

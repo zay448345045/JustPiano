@@ -38,7 +38,7 @@ public final class ChallengeListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.ol_c_challenge_view, null);
+            view = layoutInflater.inflate(R.layout.ol_challenge_ranking_view, null);
         }
         String name = list.get(i).get("N");
         if (name == null) {

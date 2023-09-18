@@ -73,7 +73,7 @@ public final class JPDialogBuilder {
     public JPDialog createJPDialog() {
         if (inflate == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            inflate = layoutInflater.inflate(R.layout.mydialog, null);
+            inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         }
         JPDialog JPDialog = new JPDialog(context);
         JPDialog.addContentView(inflate, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -116,7 +116,7 @@ public final class JPDialogBuilder {
 
     public void setVisibleEditText(boolean visibleEditText, String hint) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visibleEditText) {
             editText = (inflate.findViewById(R.id.Etext));
             editText.setVisibility(View.VISIBLE);
@@ -126,7 +126,7 @@ public final class JPDialogBuilder {
 
     public void setVisibleRadioGroup(boolean visibleRadioGroup) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visibleRadioGroup) {
             radioGroup = (inflate.findViewById(R.id.Rgroup));
             radioGroup.setVisibility(View.VISIBLE);
@@ -186,7 +186,7 @@ public final class JPDialogBuilder {
 
     public void setVisibleGoldConvertView(boolean visible) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflate = layoutInflater.inflate(R.layout.mydialog, null);
+        inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visible) {
             goldConvertView = (inflate.findViewById(R.id.gold_convert));
             goldConvertView.setVisibility(View.VISIBLE);
