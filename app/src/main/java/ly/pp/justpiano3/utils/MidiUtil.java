@@ -74,6 +74,12 @@ public class MidiUtil {
                 @Override
                 public void onDeviceRemoved(MidiDeviceInfo info) {
                     try {
+                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                            midiConnectionListener.onMidiDisconnect();
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            stopReadingMidi();
+                        }
                         if (midiOutputPort != null) {
                             midiOutputPort.close();
                             Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
@@ -84,12 +90,6 @@ public class MidiUtil {
                         e.printStackTrace();
                     } finally {
                         midiOutputPort = null;
-                    }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        stopReadingMidi();
-                    }
-                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                        midiConnectionListener.onMidiDisconnect();
                     }
                 }
             }, new Handler(Looper.getMainLooper()));
