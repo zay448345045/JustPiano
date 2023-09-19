@@ -46,7 +46,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public static final int NOTES_SEND_INTERVAL = 120;
     // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
-    public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
     public Integer keyboardNoteDownColor;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[6];
     public MidiReceiver midiFramer;
