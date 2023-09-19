@@ -761,7 +761,8 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         timeUpdateRunning = false;
         try {
             timeUpdateThread.interrupt();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         msgList.clear();
         playerList.clear();

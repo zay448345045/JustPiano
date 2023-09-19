@@ -12,11 +12,17 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.SearchSongsAdapter;
+import ly.pp.justpiano3.task.SearchSongsTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,15 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.SearchSongsAdapter;
-import ly.pp.justpiano3.task.SearchSongsTask;
-import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.view.JPProgressBar;
 
 public class SearchSongs extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;
@@ -58,7 +55,8 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
             if (nailface == null) {
                 nailface = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return nailface;
     }
@@ -177,13 +175,11 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutinflater = LayoutInflater.from(this);
         keywords = findViewById(R.id.ol_keywords);
-        ImageButton f4957l = findViewById(R.id.ol_search_b);
-        f4957l.setOnClickListener(this);
+        findViewById(R.id.ol_search_b).setOnClickListener(this);
         jpprogressBar = new JPProgressBar(this);
         songsListView = findViewById(R.id.ol_search_list);
-        TextView f4956k = findViewById(R.id.title_bar);
         if (headType == 6) {
-            f4956k.setText("查找用户:");
+            ((TextView) findViewById(R.id.title_bar)).setText("查找用户:");
         }
     }
 

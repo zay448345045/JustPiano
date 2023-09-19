@@ -231,7 +231,8 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
                                 e = e5;
                                 e.printStackTrace();
                                 super.onActivityResult(i, i2, intent);
-                            } catch (Throwable ignored) {
+                            } catch (Throwable e1) {
+                                e1.printStackTrace();
                             }
                         }
                     }
@@ -306,10 +307,8 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_user_info);
         accountText = findViewById(R.id.user_name);
-        Button modifyButton = findViewById(R.id.modify_button);
-        modifyButton.setOnClickListener(this);
-        Button passwordButton = findViewById(R.id.password_button);
-        passwordButton.setOnClickListener(this);
+        findViewById(R.id.modify_button).setOnClickListener(this);
+        findViewById(R.id.password_button).setOnClickListener(this);
         nameText = findViewById(R.id.user_kitiname);
         sexText = findViewById(R.id.user_sex);
         winnerNumText = findViewById(R.id.user_num);
@@ -319,8 +318,7 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
         faceImage.setOnClickListener(this);
         ageText = findViewById(R.id.user_age);
         jpprogressBar = new JPProgressBar(this);
-        Handler pictureHandler = new Handler(this);
-        pictureHandle = new PictureHandle(pictureHandler, 1);
+        pictureHandle = new PictureHandle(new Handler(this), 1);
         new UsersInfoGetTask(this).execute();
     }
 }

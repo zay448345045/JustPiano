@@ -886,7 +886,8 @@ public final class PlayView extends SurfaceView implements Callback {
                         canvas.drawBitmap(showTouchNotesLevel.playView.maxImage, ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)) + showTouchNotesLevel.playView.xImage.getWidth()), showTouchNotesLevel.screenHeight, null);
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         int i5 = showScoreAndLevelsThread.levelScore;

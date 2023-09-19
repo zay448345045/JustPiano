@@ -363,7 +363,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                         FileUtil.INSTANCE.moveFile(srcFile, desFile);
                         Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return;
             default:

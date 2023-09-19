@@ -444,7 +444,8 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         isTimeShowing = false;
         try {
             showTimeThread.interrupt();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         JPStack.pop(this);
         roomTitleMap.clear();

@@ -114,7 +114,8 @@ public final class FamilyHandler extends Handler {
                     return;
                 default:
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -56,7 +56,8 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
             if (nailFace == null) {
                 nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return nailFace;
     }

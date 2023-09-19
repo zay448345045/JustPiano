@@ -84,6 +84,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             try {
                 newVersion = jSONObject.getString("version");
             } catch (JSONException ignored) {
+
             }
             i = jSONObject.getInt("is");
             try {
@@ -95,7 +96,8 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
-        } catch (JSONException ignored) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         loginActivity.jpprogressBar.dismiss();
         switch (i) {

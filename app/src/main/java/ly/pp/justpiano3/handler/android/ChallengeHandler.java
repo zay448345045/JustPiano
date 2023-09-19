@@ -98,7 +98,8 @@ public final class ChallengeHandler extends Handler {
                     post(() -> challenge.showDrawPrizeDialog(message.getData()));
                 default:
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
