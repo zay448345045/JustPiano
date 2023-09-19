@@ -4,11 +4,7 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.RectF
 import android.media.midi.MidiReceiver
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -34,7 +30,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import kotlin.experimental.and
-import kotlin.math.roundToInt
 
 class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
@@ -220,17 +215,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
-                PackageManager.FEATURE_MIDI
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            if (MidiUtil.getMidiOutputPort() != null) {
-                if (midiFramer != null) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                        MidiUtil.getMidiOutputPort().disconnect(midiFramer)
-                    }
-                    midiFramer = null
-                }
+            if (MidiUtil.getMidiOutputPort() != null && midiFramer != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiUtil.getMidiOutputPort().disconnect(midiFramer)
             }
             MidiUtil.removeMidiConnectionListener(this)
         }
@@ -453,9 +442,8 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
-                PackageManager.FEATURE_MIDI
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
             if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
                 midiFramer = MidiFramer(object : MidiReceiver() {
@@ -471,12 +459,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
-                PackageManager.FEATURE_MIDI
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
             if (midiFramer != null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && MidiUtil.getMidiOutputPort() != null) {
                     MidiUtil.getMidiOutputPort().disconnect(midiFramer)
                 }
                 midiFramer = null
