@@ -9,7 +9,6 @@ import java.lang.ref.WeakReference;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 
@@ -61,7 +60,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                 olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
                             }
                         }
-                        ThreadPoolUtil.execute(() -> {
+                        olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
                             for (int i = 1; i < notes.length; i += 3) {
                                 int intervalTime = notes[i];
                                 if (intervalTime > 0) {
