@@ -10,7 +10,6 @@ import android.view.View.OnTouchListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.MidiUtil;
 import ly.pp.justpiano3.view.PlayView;
 
@@ -21,15 +20,15 @@ public final class TouchNotes implements OnTouchListener {
     public TouchNotes(PlayView playView) {
         this.playView = playView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && playView.pianoPlay.midiFramer == null) {
-                playView.pianoPlay.midiFramer = new MidiFramer(new MidiReceiver() {
+            if (MidiUtil.getMidiOutputPort() != null && playView.pianoPlay.midiReceiver == null) {
+                playView.pianoPlay.midiReceiver = new MidiReceiver() {
                     @Override
                     public void onSend(byte[] data, int offset, int count, long timestamp) {
                         playView.pianoPlay.midiConnectHandle(data);
                     }
-                });
+                };
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(playView.pianoPlay.midiFramer);
+                    MidiUtil.getMidiOutputPort().connect(playView.pianoPlay.midiReceiver);
                 }
             }
             MidiUtil.addMidiConnectionListener(playView.pianoPlay);

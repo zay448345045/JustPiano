@@ -74,7 +74,7 @@ public final class StandardMidiFileReader extends MidiFileReader {
         }
 
         int type;
-        int numtracks;
+        int numTracks;
         float divisionType;
         int resolution;
 
@@ -88,7 +88,7 @@ public final class StandardMidiFileReader extends MidiFileReader {
             // read header length
             int bytesRemaining = dis.readInt() - 6;
             type = dis.readShort();
-            numtracks = dis.readShort();
+            numTracks = dis.readShort();
             int timing = dis.readShort();
 
             // decipher the timing code
@@ -121,7 +121,7 @@ public final class StandardMidiFileReader extends MidiFileReader {
             if (smfParser != null) {
                 // remainder of this chunk
                 dis.skip(bytesRemaining);
-                smfParser.tracks = numtracks;
+                smfParser.tracks = numTracks;
             }
         } finally {
             // if only reading the file format, reset the stream
@@ -131,7 +131,6 @@ public final class StandardMidiFileReader extends MidiFileReader {
         }
         return new MidiFileFormat(type, divisionType, resolution, fileLength, duration);
     }
-
 
     public MidiFileFormat getMidiFileFormat(URL url) throws InvalidMidiDataException, IOException {
         InputStream urlStream = url.openStream(); // throws IOException
@@ -144,7 +143,6 @@ public final class StandardMidiFileReader extends MidiFileReader {
         }
         return fileFormat;
     }
-
 
     public MidiFileFormat getMidiFileFormat(File file) throws InvalidMidiDataException, IOException {
         FileInputStream fis = new FileInputStream(file); // throws IOException
@@ -163,7 +161,6 @@ public final class StandardMidiFileReader extends MidiFileReader {
         }
         return fileFormat;
     }
-
 
     public Sequence getSequence(InputStream stream) throws InvalidMidiDataException, IOException {
         SMFParser smfParser = new SMFParser();
@@ -190,7 +187,6 @@ public final class StandardMidiFileReader extends MidiFileReader {
         return sequence;
     }
 
-
     public Sequence getSequence(URL url) throws InvalidMidiDataException, IOException {
         InputStream is = url.openStream();  // throws IOException
         is = new BufferedInputStream(is, bisBufferSize);
@@ -202,7 +198,6 @@ public final class StandardMidiFileReader extends MidiFileReader {
         }
         return seq;
     }
-
 
     public Sequence getSequence(File file) throws InvalidMidiDataException, IOException {
         InputStream is = new FileInputStream(file); // throws IOException

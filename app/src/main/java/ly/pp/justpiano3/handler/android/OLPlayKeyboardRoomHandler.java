@@ -139,7 +139,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         byte b = (byte) message.getData().getInt("MSG_CI");
                         String string = message.getData().getString("MSG_C");
                         if (i != 0) {
-                            olPlayKeyboardRoom.mo2860a(i, string, i2, b);
+                            olPlayKeyboardRoom.mo2860a(i, string, i2);
                         }
                     });
                     return;

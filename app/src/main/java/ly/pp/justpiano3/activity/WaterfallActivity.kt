@@ -12,11 +12,9 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.constant.MidiConstants
 import ly.pp.justpiano3.entity.GlobalSetting
-import ly.pp.justpiano3.entity.GlobalSetting.midiKeyboardTune
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.MidiConnectionListener
-import ly.pp.justpiano3.midi.MidiFramer
 import ly.pp.justpiano3.thread.ThreadPoolUtil
 import ly.pp.justpiano3.utils.MidiUtil
 import ly.pp.justpiano3.utils.PmSongUtil
@@ -50,7 +48,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * midi键盘协议解析器
      */
-    private var midiFramer: MidiReceiver? = null
+    private var midiReceiver: MidiReceiver? = null
 
     /**
      * 记录目前是否有按钮处于按压状态，避免多个按钮重复按下
@@ -153,14 +151,14 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                midiFramer = MidiFramer(object : MidiReceiver() {
+            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
+                midiReceiver = object : MidiReceiver() {
                     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
                         midiConnectHandle(data)
                     }
-                })
+                }
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiFramer)
+                    MidiUtil.getMidiOutputPort().connect(midiReceiver)
                 }
             }
             MidiUtil.addMidiConnectionListener(this)
@@ -218,8 +216,8 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            if (MidiUtil.getMidiOutputPort() != null && midiFramer != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+            if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
             }
             MidiUtil.removeMidiConnectionListener(this)
         }
@@ -445,14 +443,14 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                midiFramer = MidiFramer(object : MidiReceiver() {
+            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
+                midiReceiver = object : MidiReceiver() {
                     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
                         midiConnectHandle(data)
                     }
-                })
+                }
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiFramer)
+                    MidiUtil.getMidiOutputPort().connect(midiReceiver)
                 }
             }
         }
@@ -462,11 +460,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            if (midiFramer != null) {
+            if (midiReceiver != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && MidiUtil.getMidiOutputPort() != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer)
+                    MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
                 }
-                midiFramer = null
+                midiReceiver = null
             }
         }
     }
@@ -484,7 +482,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     fun midiConnectHandle(data: ByteArray) {
         val command = (data[0] and MidiConstants.STATUS_COMMAND_MASK)
-        val pitch = (data[1] + midiKeyboardTune).toByte()
+        val pitch = (data[1] + GlobalSetting.midiKeyboardTune).toByte()
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
             keyboardView.fireKeyDown(pitch, data[2], null)
             SoundEngineUtil.playSound(pitch, data[2])

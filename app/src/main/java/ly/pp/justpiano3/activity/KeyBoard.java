@@ -21,7 +21,6 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
-import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardModeView;
@@ -38,7 +37,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public LinearLayout keyboard1Layout;
     public LinearLayout keyboard2Layout;
     public JPApplication jpapplication;
-    public MidiReceiver midiFramer;
+    public MidiReceiver midiReceiver;
     public ScheduledExecutorService scheduledExecutor;
     public SharedPreferences sharedPreferences;
     // 用于记录上次的移动
@@ -128,15 +127,15 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                midiFramer = new MidiFramer(new MidiReceiver() {
+            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
+                midiReceiver = new MidiReceiver() {
                     @Override
                     public void onSend(byte[] data, int offset, int count, long timestamp) {
                         midiConnectHandle(data);
                     }
-                });
+                };
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                    MidiUtil.getMidiOutputPort().connect(midiReceiver);
                 }
             }
             MidiUtil.addMidiConnectionListener(this);
@@ -146,8 +145,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     public void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiFramer != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+            if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
             }
             MidiUtil.removeMidiConnectionListener(this);
         }
@@ -299,15 +298,15 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     public void onMidiConnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiFramer == null) {
-                midiFramer = new MidiFramer(new MidiReceiver() {
+            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
+                midiReceiver = new MidiReceiver() {
                     @Override
                     public void onSend(byte[] data, int offset, int count, long timestamp) {
                         midiConnectHandle(data);
                     }
-                });
+                };
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiFramer);
+                    MidiUtil.getMidiOutputPort().connect(midiReceiver);
                 }
             }
         }
@@ -316,11 +315,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     public void onMidiDisconnect() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (midiFramer != null) {
+            if (midiReceiver != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && MidiUtil.getMidiOutputPort() != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiFramer);
+                    MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
                 }
-                midiFramer = null;
+                midiReceiver = null;
             }
         }
     }
