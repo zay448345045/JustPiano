@@ -19,8 +19,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -136,12 +136,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void buildAndConnectMidiReceiver() {
         if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new MidiReceiver() {
-                @Override
-                public void onSend(byte[] data, int offset, int count, long timestamp) {
-                    midiConnectHandle(data);
-                }
-            };
+            midiReceiver = new JPMidiReceiver(this);
             MidiUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
@@ -315,24 +310,12 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
+        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
             keyboardMode2View.fireKeyDown(pitch, volume, null);
             SoundEngineUtil.playSound(pitch, volume);
         } else {
-            keyboardMode2View.fireKeyUp(pitch);
-        }
-    }
-
-    public void midiConnectHandle(byte[] data) {
-        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        byte pitch = (byte) (data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune());
-        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardMode2View.fireKeyDown(pitch, data[2], null);
-            SoundEngineUtil.playSound(pitch, data[2]);
-        } else if (command == MidiConstants.STATUS_NOTE_OFF
-                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
             keyboardMode2View.fireKeyUp(pitch);
         }
     }

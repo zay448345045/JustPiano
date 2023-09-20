@@ -16,8 +16,10 @@ public interface MidiConnectionListener {
     void onMidiDisconnect();
 
     /**
-     * midi键盘接收到消息，不在主线程调用
-     * 注意：仅用于Android Q及以上，使用C++回调通知接收到设备消息的情形
+     * midi键盘接收到消息，不一定在主线程调用
+     *
+     * @param pitch  原始midi音高
+     * @param volume midi音符力度
      */
     void onMidiReceiveMessage(byte pitch, byte volume);
 }

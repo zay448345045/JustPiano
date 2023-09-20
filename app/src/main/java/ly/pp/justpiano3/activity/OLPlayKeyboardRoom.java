@@ -21,13 +21,13 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.adapter.SimpleSkinListAdapter;
 import ly.pp.justpiano3.adapter.SimpleSoundListAdapter;
-import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
 import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
+import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -511,12 +511,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     private void buildAndConnectMidiReceiver() {
         midiKeyboardOn = true;
         if (midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new MidiReceiver() {
-                @Override
-                public void onSend(byte[] data, int offset, int count, long timestamp) {
-                    midiConnectHandle(data);
-                }
-            };
+            midiReceiver = new JPMidiReceiver(this);
             MidiUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
@@ -540,22 +535,11 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
+        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
             onMidiReceiveKeyDownHandle(pitch, volume);
         } else {
-            onMidiReceiveKeyUpHandle(pitch);
-        }
-    }
-
-    public void midiConnectHandle(byte[] data) {
-        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        byte pitch = (byte) (data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune());
-        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            onMidiReceiveKeyDownHandle(pitch, data[2]);
-        } else if (command == MidiConstants.STATUS_NOTE_OFF
-                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
             onMidiReceiveKeyUpHandle(pitch);
         }
     }

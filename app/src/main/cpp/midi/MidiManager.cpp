@@ -33,9 +33,9 @@ static void sendTheReceivedData(uint8_t *data, int numBytes) {
 
     // send it to the (Java) callback
     for (int i = 0; i < numBytes; i += 3) {
-        if (((data[i] & 0xF0) >> 4) == 0x09) {
+        if ((data[i] & 0xF0) == 0x90) {
             env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], data[i + 2]);
-        } else if (((data[i] & 0xF0) >> 4) == 0x08) {
+        } else if ((data[i] & 0xF0) == 0x80) {
             env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], 0);
         }
     }

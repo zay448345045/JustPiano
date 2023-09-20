@@ -20,11 +20,11 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FinishScoreAdapter;
 import ly.pp.justpiano3.adapter.MiniScoreAdapter;
-import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
+import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
@@ -590,12 +590,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void buildAndConnectMidiReceiver() {
         if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new MidiReceiver() {
-                @Override
-                public void onSend(byte[] data, int offset, int count, long timestamp) {
-                    midiConnectHandle(data);
-                }
-            };
+            midiReceiver = new JPMidiReceiver(this);
             MidiUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
@@ -616,23 +611,12 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
+        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
             onMidiReceiveKeyDownHandle(pitch % 12);
         } else {
             onMidiReceiveKeyUpHandle(pitch % 12);
-        }
-    }
-
-    public void midiConnectHandle(byte[] data) {
-        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int touchNoteNum = data[1] % 12;
-        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            onMidiReceiveKeyDownHandle(touchNoteNum);
-        } else if (command == MidiConstants.STATUS_NOTE_OFF
-                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            onMidiReceiveKeyUpHandle(touchNoteNum);
         }
     }
 

@@ -11,10 +11,10 @@ import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.annotation.RequiresApi
 import ly.pp.justpiano3.R
-import ly.pp.justpiano3.constant.MidiConstants
 import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
+import ly.pp.justpiano3.midi.JPMidiReceiver
 import ly.pp.justpiano3.midi.MidiConnectionListener
 import ly.pp.justpiano3.thread.ThreadPoolUtil
 import ly.pp.justpiano3.utils.MidiUtil
@@ -28,7 +28,6 @@ import ly.pp.justpiano3.view.WaterfallView.NoteFallListener
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
-import kotlin.experimental.and
 
 class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
@@ -158,11 +157,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun buildAndConnectMidiReceiver() {
         if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = object : MidiReceiver() {
-                override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-                    midiConnectHandle(data)
-                }
-            }
+            midiReceiver = JPMidiReceiver(this)
             MidiUtil.getMidiOutputPort().connect(midiReceiver)
         }
     }
@@ -452,24 +447,13 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     override fun onMidiReceiveMessage(pitch: Byte, volume: Byte) {
+        val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte();
         if (volume > 0) {
-            keyboardView.fireKeyDown(pitch, volume, null)
-            SoundEngineUtil.playSound(pitch, volume)
+            keyboardView.fireKeyDown(pitchWithSettingTune, volume, null)
+            SoundEngineUtil.playSound(pitchWithSettingTune, volume)
         } else {
-            keyboardView.fireKeyUp(pitch)
-        }
-    }
-
-    fun midiConnectHandle(data: ByteArray) {
-        val command = (data[0] and MidiConstants.STATUS_COMMAND_MASK)
-        val pitch = (data[1] + GlobalSetting.midiKeyboardTune).toByte()
-        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardView.fireKeyDown(pitch, data[2], null)
-            SoundEngineUtil.playSound(pitch, data[2])
-        } else if (command == MidiConstants.STATUS_NOTE_OFF || (command == MidiConstants.STATUS_NOTE_ON && data[2] <= 0)) {
-            keyboardView.fireKeyUp(pitch)
+            keyboardView.fireKeyUp(pitchWithSettingTune)
         }
     }
 }
