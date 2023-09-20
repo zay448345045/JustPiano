@@ -25,7 +25,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
             switch (message.what) {
                 case 1:
                 case 7:
-                    post(() -> olPlayKeyboardRoom.mo2861a(olPlayKeyboardRoom.playerGrid, message.getData()));
+                    post(() -> olPlayKeyboardRoom.initPlayer(olPlayKeyboardRoom.playerGrid, message.getData()));
                     return;
                 case 2:
                 case 4:

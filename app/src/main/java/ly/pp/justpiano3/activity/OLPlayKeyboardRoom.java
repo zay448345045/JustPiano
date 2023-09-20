@@ -121,7 +121,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
     }
 
-    public void mo2861a(GridView gridView, Bundle bundle) {
+    public void initPlayer(GridView gridView, Bundle bundle) {
         playerList.clear();
         if (bundle != null) {
             int size = bundle.size() - 2;

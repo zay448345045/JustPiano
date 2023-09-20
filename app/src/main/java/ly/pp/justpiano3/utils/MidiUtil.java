@@ -109,17 +109,17 @@ public class MidiUtil {
                 for (MidiDeviceInfo.PortInfo port : ports) {
                     if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
                         midiOutputPort = device.openOutputPort(port.getPortNumber());
-                        // 更高版本的安卓：启动C++监听midi设备事件
+                        // 安卓版本10及以上：启动C++监听midi设备事件
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             startReadingMidi(device, port.getPortNumber());
                         }
                         for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
                             midiConnectionListener.onMidiConnect();
                         }
+                        Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
-                Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
             }
         }, new Handler(Looper.getMainLooper()));
     }
