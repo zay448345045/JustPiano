@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.*;
+import androidx.annotation.RequiresApi;
 import com.google.protobuf.MessageLite;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -44,7 +45,6 @@ import java.util.List;
 import java.util.Timer;
 
 public final class PianoPlay extends OLBaseActivity implements MidiConnectionListener {
-    public byte hallID;
     public TextView leftHandDegreeTextView;
     public TextView songLengthTextView;
     public HorizontalListView horizontalListView;
@@ -70,7 +70,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public JPProgressBar jpprogressbar;
     public ImageButton startPlayButton;
     public PlayView playView;
-    public double nandu;
+    public double onlineRightHandDegree;
     public int score;
     public JPApplication jpapplication;
     public MidiReceiver midiReceiver;
@@ -84,8 +84,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     private String recordWavPath;
     private int roomMode = 0;
     private LayoutParams layoutparams;
-    private double localRNandu;
-    private double localLNandu;
+    private double localRightHandDegree;
+    private double localLeftHandDegree;
     private int localSongsTime;
     public int playKind;
 
@@ -128,8 +128,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     startPlayButton.setVisibility(View.GONE);
                     mo2906a(false);
                 });
-                rightHandDegreeTextView.setText("右手难度:" + localRNandu);
-                leftHandDegreeTextView.setText("左手难度:" + localLNandu);
+                rightHandDegreeTextView.setText("右手难度:" + localRightHandDegree);
+                leftHandDegreeTextView.setText("左手难度:" + localLeftHandDegree);
                 String str1 = localSongsTime / 60 >= 10 ? "" + localSongsTime / 60 : "0" + localSongsTime / 60;
                 String str2 = localSongsTime % 60 >= 10 ? "" + localSongsTime % 60 : "0" + localSongsTime % 60;
                 songLengthTextView.setText("曲目时长:" + str1 + ":" + str2);
@@ -141,7 +141,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     startPlayButton.setVisibility(View.GONE);
                     mo2906a(false);
                 });
-                songLengthTextView.setText("难度:" + nandu);
+                songLengthTextView.setText("难度:" + onlineRightHandDegree);
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 leftHandDegreeTextView.setVisibility(View.GONE);
                 return;
@@ -215,27 +215,26 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             case 0:    //本地模式
                 String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                localRNandu = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
-                localLNandu = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localRightHandDegree = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localLeftHandDegree = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 localSongsTime = extras.getInt("songstime");
                 score = extras.getInt("score");
                 isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
-                playView = new PlayView(jpapplication, this, songsPath, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
+                playView = new PlayView(jpapplication, this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playKind, hand, 30, localSongsTime, 0);
                 break;
             case 1:    //在线曲库
                 songsName = extras.getString("songName");
-                nandu = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                onlineRightHandDegree = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
                 byte[] byteArray = extras.getByteArray("songBytes");
-                playView = new PlayView(jpapplication, this, byteArray, this, nandu, score, 1, 0, songId);
+                playView = new PlayView(jpapplication, this, byteArray, this, onlineRightHandDegree, score, 1, 0, songId);
                 break;
             case 2:    //房间对战
                 connectionService = jpapplication.getConnectionService();
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
-                hallID = hallBundle.getByte("hallID");
                 songsPath = extras.getString("path");
                 songsName = extras.getString("name");
                 int tune = extras.getInt("diao");
@@ -256,14 +255,13 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(0);
-                playView = new PlayView(jpapplication, this, songsPath, this, nandu, nandu, score, playKind, hand, 30, 0, tune);
+                playView = new PlayView(jpapplication, this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
                 connectionService = jpapplication.getConnectionService();
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
-                hallID = hallBundle.getByte("hallID");
                 String songBytes = extras.getString("songBytes");
                 songsName = extras.getString("name");
                 times = extras.getInt("times");
@@ -274,7 +272,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 showHideGrade.setText("");
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
-                playView = new PlayView(jpapplication, this, songBytes.getBytes(), this, nandu, score, playKind, hand, "");
+                playView = new PlayView(jpapplication, this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
                 break;
         }
         if (isOpenRecord) {
@@ -589,45 +587,41 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void buildAndConnectMidiReceiver() {
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = new MidiReceiver() {
+                @Override
+                public void onSend(byte[] data, int offset, int count, long timestamp) {
+                    midiConnectHandle(data);
+                }
+            };
+            MidiUtil.getMidiOutputPort().connect(midiReceiver);
+        }
+    }
+
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null) {
-                if (midiReceiver == null) {
-                    midiReceiver = new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            midiConnectHandle(data);
-                        }
-                    };
-                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiReceiver);
-                }
-            }
-        }
+        buildAndConnectMidiReceiver();
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (midiReceiver != null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && MidiUtil.getMidiOutputPort() != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
-                }
-                midiReceiver = null;
-            }
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+            midiReceiver = null;
         }
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (volume > 0) {
-                onMidiReceiveKeyDownHandle(pitch % 12);
-            } else {
-                onMidiReceiveKeyUpHandle(pitch % 12);
-            }
+        if (volume > 0) {
+            onMidiReceiveKeyDownHandle(pitch % 12);
+        } else {
+            onMidiReceiveKeyUpHandle(pitch % 12);
         }
     }
 

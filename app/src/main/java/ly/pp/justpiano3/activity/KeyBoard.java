@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import ly.pp.justpiano3.JPApplication;
@@ -127,18 +128,21 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
-                midiReceiver = new MidiReceiver() {
-                    @Override
-                    public void onSend(byte[] data, int offset, int count, long timestamp) {
-                        midiConnectHandle(data);
-                    }
-                };
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiReceiver);
-                }
-            }
+            buildAndConnectMidiReceiver();
             MidiUtil.addMidiConnectionListener(this);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void buildAndConnectMidiReceiver() {
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = new MidiReceiver() {
+                @Override
+                public void onSend(byte[] data, int offset, int count, long timestamp) {
+                    midiConnectHandle(data);
+                }
+            };
+            MidiUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
 
@@ -296,43 +300,28 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     });
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
-                midiReceiver = new MidiReceiver() {
-                    @Override
-                    public void onSend(byte[] data, int offset, int count, long timestamp) {
-                        midiConnectHandle(data);
-                    }
-                };
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiReceiver);
-                }
-            }
-        }
+        buildAndConnectMidiReceiver();
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (midiReceiver != null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && MidiUtil.getMidiOutputPort() != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
-                }
-                midiReceiver = null;
-            }
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+            midiReceiver = null;
         }
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (volume > 0) {
-                keyboardMode1View.fireKeyDown(pitch, volume, null);
-                SoundEngineUtil.playSound(pitch, volume);
-            } else {
-                keyboardMode1View.fireKeyUp(pitch);
-            }
+        if (volume > 0) {
+            keyboardMode2View.fireKeyDown(pitch, volume, null);
+            SoundEngineUtil.playSound(pitch, volume);
+        } else {
+            keyboardMode2View.fireKeyUp(pitch);
         }
     }
 
@@ -340,11 +329,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
         byte pitch = (byte) (data[1] + GlobalSetting.INSTANCE.getMidiKeyboardTune());
         if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardMode1View.fireKeyDown(pitch, data[2], null);
+            keyboardMode2View.fireKeyDown(pitch, data[2], null);
             SoundEngineUtil.playSound(pitch, data[2]);
         } else if (command == MidiConstants.STATUS_NOTE_OFF
                 || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardMode1View.fireKeyUp(pitch);
+            keyboardMode2View.fireKeyUp(pitch);
         }
     }
 

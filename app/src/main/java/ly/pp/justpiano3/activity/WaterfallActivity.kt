@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import androidx.annotation.RequiresApi
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.constant.MidiConstants
 import ly.pp.justpiano3.entity.GlobalSetting
@@ -148,20 +149,21 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 }
             }
         })
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-        ) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
-                midiReceiver = object : MidiReceiver() {
-                    override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-                        midiConnectHandle(data)
-                    }
-                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiReceiver)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            buildAndConnectMidiReceiver()
+            MidiUtil.addMidiConnectionListener(this)
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun buildAndConnectMidiReceiver() {
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = object : MidiReceiver() {
+                override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
+                    midiConnectHandle(data)
                 }
             }
-            MidiUtil.addMidiConnectionListener(this)
+            MidiUtil.getMidiOutputPort().connect(midiReceiver)
         }
     }
 
@@ -213,9 +215,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-        ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
             }
@@ -439,44 +439,26 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         false
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-        ) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null) {
-                midiReceiver = object : MidiReceiver() {
-                    override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-                        midiConnectHandle(data)
-                    }
-                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    MidiUtil.getMidiOutputPort().connect(midiReceiver)
-                }
-            }
-        }
+        buildAndConnectMidiReceiver()
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-        ) {
-            if (midiReceiver != null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && MidiUtil.getMidiOutputPort() != null) {
-                    MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
-                }
-                midiReceiver = null
-            }
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
+            midiReceiver = null
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     override fun onMidiReceiveMessage(pitch: Byte, volume: Byte) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (volume > 0) {
-                keyboardView.fireKeyDown(pitch, volume, null)
-                SoundEngineUtil.playSound(pitch, volume)
-            } else {
-                keyboardView.fireKeyUp(pitch)
-            }
+        if (volume > 0) {
+            keyboardView.fireKeyDown(pitch, volume, null)
+            SoundEngineUtil.playSound(pitch, volume)
+        } else {
+            keyboardView.fireKeyUp(pitch)
         }
     }
 
