@@ -122,8 +122,8 @@ public final class PianoPlayHandler extends Handler {
                         if (pianoPlay.f4591J != null) {
                             pianoPlay.f4591J.setVisibility(View.GONE);
                         }
-                        pianoPlay.f4596O.setVisibility(View.VISIBLE);
-                        pianoPlay.f4597P.setVisibility(View.VISIBLE);
+                        pianoPlay.rightHandDegreeTextView.setVisibility(View.VISIBLE);
+                        pianoPlay.highScoreTextView.setVisibility(View.VISIBLE);
                         pianoPlay.startPlayButton.setVisibility(View.VISIBLE);
                         pianoPlay.songName.setText(pianoPlay.songsName);
                         pianoPlay.isShowingSongsInfo = false;

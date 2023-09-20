@@ -13,17 +13,16 @@ import java.util.List;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MelodySelect;
-import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.LocalSongData;
 import ly.pp.justpiano3.utils.StreamUtil;
 
 public final class LocalDataImportExportTask extends AsyncTask<String, Void, String> {
-    private final WeakReference<Activity> activity;
+    private final WeakReference<Activity> weakReference;
     private final int type;
 
-    public LocalDataImportExportTask(Activity activity, int type) {
-        this.activity = new WeakReference<>(activity);
+    public LocalDataImportExportTask(Activity weakReference, int type) {
+        this.weakReference = new WeakReference<>(weakReference);
         this.type = type;
     }
 
@@ -71,8 +70,8 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
 
     @Override
     protected void onPostExecute(String str) {
-        if (activity.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) activity.get();
+        if (weakReference.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) weakReference.get();
             melodySelect.jpprogressBar.dismiss();
             if (!StringUtil.isNullOrEmpty(str)) {
                 Toast.makeText(melodySelect, str, Toast.LENGTH_LONG).show();
@@ -82,8 +81,8 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
 
     @Override
     protected void onPreExecute() {
-        if (activity.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) activity.get();
+        if (weakReference.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) weakReference.get();
             melodySelect.jpprogressBar.setCancelable(false);
             melodySelect.jpprogressBar.show();
             if (type == 2) {

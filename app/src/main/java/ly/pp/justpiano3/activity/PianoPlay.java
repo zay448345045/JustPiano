@@ -46,8 +46,8 @@ import java.util.Timer;
 
 public final class PianoPlay extends OLBaseActivity implements MidiConnectionListener {
     public byte hallID;
-    public TextView l_nandu;
-    public TextView time_mid;
+    public TextView leftHandDegreeTextView;
+    public TextView songLengthTextView;
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
     public boolean isOpenRecord;
@@ -56,8 +56,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public int times;
     public String songsName;
     public TextView songName;
-    public TextView f4596O;
-    public TextView f4597P;
+    public TextView rightHandDegreeTextView;
+    public TextView highScoreTextView;
     public ListView gradeListView;
     public TextView finishSongName;
     public List<Bundle> gradeList = new ArrayList<>();
@@ -100,12 +100,12 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public void m3785a(int i, boolean z) {
         if (z) {  //仅显示对话框就行了，其他不做不分析，用于按下后退键时
             if (i == 0) {
-                f4596O.setVisibility(View.VISIBLE);
+                rightHandDegreeTextView.setVisibility(View.VISIBLE);
             } else {
-                f4596O = findViewById(R.id.m_nandu);
-                f4596O.setVisibility(View.GONE);
+                rightHandDegreeTextView = findViewById(R.id.m_nandu);
+                rightHandDegreeTextView.setVisibility(View.GONE);
             }
-            f4597P.setVisibility(View.VISIBLE);
+            highScoreTextView.setVisibility(View.VISIBLE);
             startPlayButton.setVisibility(View.VISIBLE);
             songName.setText(songsName);
             return;
@@ -114,47 +114,47 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         addContentView(f4591J, layoutParams2);
         songName = findViewById(R.id.m_name);
         progressbar = findViewById(R.id.m_progress);
-        f4596O = findViewById(R.id.m_nandu);
-        l_nandu = findViewById(R.id.l_nandu);
-        time_mid = findViewById(R.id.time_mid);
-        f4597P = findViewById(R.id.m_score);
-        f4597P.setText("最高纪录:" + score);
+        rightHandDegreeTextView = findViewById(R.id.m_nandu);
+        leftHandDegreeTextView = findViewById(R.id.l_nandu);
+        songLengthTextView = findViewById(R.id.time_mid);
+        highScoreTextView = findViewById(R.id.m_score);
+        highScoreTextView.setText("最高纪录:" + score);
         startPlayButton = findViewById(R.id.p_start);
         songName.setText(songsName);
         switch (i) {
             case 0:    //本地
                 startPlayButton.setOnClickListener(v -> {
-                    f4596O.setVisibility(View.GONE);
-                    f4597P.setVisibility(View.GONE);
+                    rightHandDegreeTextView.setVisibility(View.GONE);
+                    highScoreTextView.setVisibility(View.GONE);
                     startPlayButton.setVisibility(View.GONE);
                     mo2906a(false);
                 });
-                f4596O.setText("右手难度:" + localRNandu);
-                l_nandu.setText("左手难度:" + localLNandu);
+                rightHandDegreeTextView.setText("右手难度:" + localRNandu);
+                leftHandDegreeTextView.setText("左手难度:" + localLNandu);
                 String str1 = localSongsTime / 60 >= 10 ? "" + localSongsTime / 60 : "0" + localSongsTime / 60;
                 String str2 = localSongsTime % 60 >= 10 ? "" + localSongsTime % 60 : "0" + localSongsTime % 60;
-                time_mid.setText("曲目时长:" + str1 + ":" + str2);
+                songLengthTextView.setText("曲目时长:" + str1 + ":" + str2);
                 return;
             case 1:    //在线曲库
                 startPlayButton.setOnClickListener(v -> {
-                    f4596O.setVisibility(View.GONE);
-                    f4597P.setVisibility(View.GONE);
+                    rightHandDegreeTextView.setVisibility(View.GONE);
+                    highScoreTextView.setVisibility(View.GONE);
                     startPlayButton.setVisibility(View.GONE);
                     mo2906a(false);
                 });
-                time_mid.setText("难度:" + nandu);
-                f4596O.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
+                songLengthTextView.setText("难度:" + nandu);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
                 return;
             case 2:    //联网对战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
-                f4596O.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
-                f4597P.setVisibility(View.GONE);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
+                highScoreTextView.setVisibility(View.GONE);
                 startPlayButton.setVisibility(View.GONE);
-                time_mid.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
+                songLengthTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
                 addContentView(finishView, layoutParams2);
@@ -174,11 +174,11 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             case 3:    //考级
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
-                f4596O.setVisibility(View.GONE);
-                f4597P.setVisibility(View.GONE);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                highScoreTextView.setVisibility(View.GONE);
                 startPlayButton.setVisibility(View.GONE);
-                time_mid.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
+                songLengthTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
                 OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
@@ -188,11 +188,11 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             case 4:    //挑战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
-                f4596O.setVisibility(View.GONE);
-                f4597P.setVisibility(View.GONE);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                highScoreTextView.setVisibility(View.GONE);
                 startPlayButton.setVisibility(View.GONE);
-                time_mid.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
+                songLengthTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
                 OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();

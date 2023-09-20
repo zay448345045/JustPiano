@@ -29,12 +29,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
-    private final WeakReference<Activity> activity;
+    private final WeakReference<Activity> weakReference;
     private final String maxSongId;
     private int count = 0;
 
-    public SongSyncTask(Activity activity, String maxSongId) {
-        this.activity = new WeakReference<>(activity);
+    public SongSyncTask(Activity weakReference, String maxSongId) {
+        this.weakReference = new WeakReference<>(weakReference);
         this.maxSongId = maxSongId;
     }
 
@@ -55,7 +55,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
             Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 byte[] bytes = response.body().bytes();
-                File zipFile = new File(activity.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
+                File zipFile = new File(weakReference.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
                 FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
                 fileOutputStream.write(bytes, 0, bytes.length);
                 fileOutputStream.close();
@@ -87,10 +87,10 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String str) {
-        if (activity.get() instanceof OLMainMode) {
-            ((OLMainMode) activity.get()).loginOnline();
-        } else if (activity.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) activity.get();
+        if (weakReference.get() instanceof OLMainMode) {
+            ((OLMainMode) weakReference.get()).loginOnline();
+        } else if (weakReference.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) weakReference.get();
             melodySelect.jpprogressBar.dismiss();
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(melodySelect);
             jpDialogBuilder.setTitle("在线曲库同步");
@@ -107,13 +107,13 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        if (activity.get() instanceof OLMainMode) {
-            OLMainMode olMainMode = (OLMainMode) activity.get();
+        if (weakReference.get() instanceof OLMainMode) {
+            OLMainMode olMainMode = (OLMainMode) weakReference.get();
             Toast.makeText(olMainMode, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
             olMainMode.jpprogressBar.setCancelable(false);
             olMainMode.jpprogressBar.show();
-        } else if (activity.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) activity.get();
+        } else if (weakReference.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) weakReference.get();
             Toast.makeText(melodySelect, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
             melodySelect.jpprogressBar.setCancelable(false);
             melodySelect.jpprogressBar.show();
