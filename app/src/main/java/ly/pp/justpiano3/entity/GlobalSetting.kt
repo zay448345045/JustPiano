@@ -123,6 +123,11 @@ object GlobalSetting{
     var showNotification: Boolean = false
 
     /**
+     * 是否显示按键标签(C1、C2等)
+     */
+    var showKeyboardOctaveTag: Boolean = false
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -155,6 +160,7 @@ object GlobalSetting{
         saveChatRecord = sharedPreferences.getBoolean("save_chats",false)
         showChatTime = sharedPreferences.getBoolean("chats_time_show",false)
         showNotification = sharedPreferences.getBoolean("show_notification",false)
+        showKeyboardOctaveTag = sharedPreferences.getBoolean("show_octave_tag",false)
     }
 
     /**
@@ -185,6 +191,7 @@ object GlobalSetting{
         edit.putBoolean("save_chats", saveChatRecord)
         edit.putBoolean("chats_time_show", showChatTime)
         edit.putBoolean("show_notification", showNotification)
+        edit.putBoolean("show_octave_tag", showKeyboardOctaveTag)
         edit.apply()
     }
 }

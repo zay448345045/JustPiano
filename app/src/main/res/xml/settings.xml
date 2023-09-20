@@ -108,13 +108,19 @@
             android:summary="@string/b_s_vol_sum"
             android:title="@string/b_s_vol_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="键盘模式">
+    <PreferenceCategory android:title="钢琴键盘">
         <SwitchPreference
             android:defaultValue="true"
             android:key="keyboard_anim"
             android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
             android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
             android:title="启用键盘移动缩放动画" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="show_octave_tag"
+            android:summaryOff="&lt;关闭&gt; 不显示钢琴键盘八度标签"
+            android:summaryOn="&lt;打开&gt; 显示钢琴键盘八度标签(C1、C2等)"
+            android:title="钢琴键盘八度标签" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="触屏点击声音移调"

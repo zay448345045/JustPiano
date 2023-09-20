@@ -4,17 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import ly.pp.justpiano3.R
+import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.MidiUtil
 import kotlin.math.roundToInt
@@ -54,6 +49,9 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     private var whiteKeyWidth = 0f
     private var blackKeyHeight = 0f
     private lateinit var keyboardImageRectArray: Array<RectF>
+
+    // 键盘上绘制的文字paint
+    private var keyboardTextPaint: Paint
 
     // 当前页面中显示的所在八度完整区域内的rect和是否按下的boolean标记
     private lateinit var whiteKeyRectArray: Array<RectF>
@@ -115,6 +113,10 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(context, "white_m")
         whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
         blackKeyImage = ImageLoadUtil.loadSkinImage(context, "black")
+        // 设置绘制显示C1、C2等文字的paint
+        keyboardTextPaint = Paint()
+        keyboardTextPaint.color = Color.BLACK
+        keyboardTextPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
 
     private fun handleCustomAttrs(context: Context, attrs: AttributeSet?) {
@@ -164,6 +166,10 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         // 计算黑白键的宽度
         whiteKeyWidth = viewWidth / whiteKeyNum
         val blackKeyWidth = whiteKeyWidth * BLACK_KEY_WIDTH_FACTOR
+        // 计算显示八度标签的文字大小
+        if (GlobalSetting.showKeyboardOctaveTag) {
+            calculateTextSize(whiteKeyWidth)
+        }
         // 计算一个八度内，白键的起始偏移个数
         val octaveWhiteKeyOffset = whiteKeyOffset % MidiUtil.WHITE_NOTES_PER_OCTAVE
         // 计算最左侧八度需要绘制的左右坐标点
@@ -217,9 +223,16 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // 先绘制所有八度的键盘图
-        for (rectF in keyboardImageRectArray) {
+        // 先绘制所有八度的键盘图和文字
+        for ((index, rectF) in keyboardImageRectArray.withIndex()) {
             canvas.drawBitmap(keyboardImage, null, rectF, null)
+            if (GlobalSetting.showKeyboardOctaveTag) {
+                canvas.drawText(
+                    "C" + (whiteKeyOffset / MidiUtil.WHITE_NOTES_PER_OCTAVE + index),
+                    rectF.left + (rectF.width() / 7 - keyboardTextPaint.measureText("C0")) / 2,
+                    rectF.bottom - keyboardTextPaint.descent(), keyboardTextPaint
+                )
+            }
         }
         // 没有在动画播放期间的话，开始按数组中的位置坐标值，拿图片进行绘制
         if (!isAnimRunning) {
@@ -248,6 +261,18 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
                     }
                 }
             }
+        }
+    }
+
+    private fun calculateTextSize(width: Float) {
+        // 计算文本宽度
+        keyboardTextPaint.textSize = 200f
+        var textWidth = keyboardTextPaint.measureText("C0")
+        // 循环调整字体大小，直到文本适合在指定的宽度下显示合适
+        while (textWidth > width * 0.8f) {
+            keyboardTextPaint.textSize -= 2
+            // 重新计算文本宽度
+            textWidth = keyboardTextPaint.measureText("C0")
         }
     }
 
