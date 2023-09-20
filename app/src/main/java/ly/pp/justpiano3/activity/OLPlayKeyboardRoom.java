@@ -493,6 +493,15 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         stopNotesSchedule();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void buildAndConnectMidiReceiver() {
+        midiKeyboardOn = true;
+        if (midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = new JPMidiReceiver(this);
+            MidiUtil.getMidiOutputPort().connect(midiReceiver);
+        }
+    }
+
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
@@ -504,15 +513,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             } else {
                 playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
             }
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void buildAndConnectMidiReceiver() {
-        midiKeyboardOn = true;
-        if (midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new JPMidiReceiver(this);
-            MidiUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
 
@@ -535,6 +535,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
         pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {

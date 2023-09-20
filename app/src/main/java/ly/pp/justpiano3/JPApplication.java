@@ -6,12 +6,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Environment;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.StrictMode;
+import android.os.*;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
@@ -135,8 +133,10 @@ public final class JPApplication extends Application {
         // 初始化数据库
         songDatabase = Room.databaseBuilder(this, SongDatabase.class, "data")
                 .addMigrations(generateMigrations()).allowMainThreadQueries().build();
-        // 初始化midi设备
-        MidiUtil.initMidiDevice(this);
+        // 支持midi设备功能时，初始化midi设备
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            MidiUtil.initMidiDevice(this);
+        }
     }
 
     /**

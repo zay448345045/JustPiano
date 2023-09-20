@@ -1,9 +1,6 @@
 package ly.pp.justpiano3.utils;
 
-import static android.content.Context.MIDI_SERVICE;
-
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.media.midi.MidiDevice;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -12,14 +9,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 public class MidiUtil {
 
@@ -61,43 +56,41 @@ public class MidiUtil {
 
     private static MidiOutputPort midiOutputPort;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void initMidiDevice(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            midiConnectionListeners = new ArrayList<>();
-            mMidiManager = (MidiManager) context.getSystemService(MIDI_SERVICE);
-            mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
-                @Override
-                public void onDeviceAdded(MidiDeviceInfo info) {
-                    openDevice(context, info);
-                }
-
-                @Override
-                public void onDeviceRemoved(MidiDeviceInfo info) {
-                    try {
-                        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                            midiConnectionListener.onMidiDisconnect();
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            stopReadingMidi();
-                        }
-                        if (midiOutputPort != null) {
-                            midiOutputPort.close();
-                            Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        midiOutputPort = null;
-                    }
-                }
-            }, new Handler(Looper.getMainLooper()));
-
-            // 如果在app开启前就已经连接了midi设备，需要如下的代码来直接尝试检测并开启midi设备
-            for (MidiDeviceInfo info : mMidiManager.getDevices()) {
+        midiConnectionListeners = new ArrayList<>();
+        mMidiManager = (MidiManager) context.getSystemService(Context.MIDI_SERVICE);
+        mMidiManager.registerDeviceCallback(new MidiManager.DeviceCallback() {
+            @Override
+            public void onDeviceAdded(MidiDeviceInfo info) {
                 openDevice(context, info);
             }
+
+            @Override
+            public void onDeviceRemoved(MidiDeviceInfo info) {
+                try {
+                    for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+                        midiConnectionListener.onMidiDisconnect();
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        stopReadingMidi();
+                    }
+                    if (midiOutputPort != null) {
+                        midiOutputPort.close();
+                        Toast.makeText(context, "MIDI设备已断开", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "请重新连接MIDI设备", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    midiOutputPort = null;
+                }
+            }
+        }, new Handler(Looper.getMainLooper()));
+        // 如果在app开启前就已经连接了midi设备，需要如下的代码来直接尝试检测并开启midi设备
+        for (MidiDeviceInfo info : mMidiManager.getDevices()) {
+            openDevice(context, info);
         }
     }
 
@@ -116,7 +109,8 @@ public class MidiUtil {
                         for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
                             midiConnectionListener.onMidiConnect();
                         }
-                        Toast.makeText(context, "MIDI设备已连接", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "MIDI设备[" + device.getInfo().getProperties()
+                                .getString(MidiDeviceInfo.PROPERTY_NAME) + "]已连接", Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -124,27 +118,33 @@ public class MidiUtil {
         }, new Handler(Looper.getMainLooper()));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void addMidiConnectionListener(MidiConnectionListener midiConnectionListener) {
         if (!midiConnectionListeners.contains(midiConnectionListener)) {
             midiConnectionListeners.add(midiConnectionListener);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void removeMidiConnectionListener(MidiConnectionListener midiConnectionListener) {
         midiConnectionListeners.remove(midiConnectionListener);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static MidiOutputPort getMidiOutputPort() {
         return midiOutputPort;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber);
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private static native void stopReadingMidi();
 
     /**
-     * Called from the native code when MIDI messages are received.
+     * Called from the native C++ code when MIDI messages are received.
      */
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private static void onNativeMessageReceive(byte pitch, byte volume) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {

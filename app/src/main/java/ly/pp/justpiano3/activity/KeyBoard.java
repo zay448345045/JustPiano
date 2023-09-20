@@ -133,14 +133,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void buildAndConnectMidiReceiver() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new JPMidiReceiver(this);
-            MidiUtil.getMidiOutputPort().connect(midiReceiver);
-        }
-    }
-
     @Override
     public void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
@@ -294,6 +286,14 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         }
     });
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void buildAndConnectMidiReceiver() {
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = new JPMidiReceiver(this);
+            MidiUtil.getMidiOutputPort().connect(midiReceiver);
+        }
+    }
+
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
@@ -310,6 +310,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
         pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {

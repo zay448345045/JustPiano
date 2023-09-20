@@ -611,6 +611,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiReceiveMessage(byte pitch, byte volume) {
         pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {

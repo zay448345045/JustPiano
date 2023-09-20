@@ -154,14 +154,6 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private fun buildAndConnectMidiReceiver() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = JPMidiReceiver(this)
-            MidiUtil.getMidiOutputPort().connect(midiReceiver)
-        }
-    }
-
     /**
      * 重新确定瀑布流音符长条的左侧和右侧的坐标值
      */
@@ -435,6 +427,14 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun buildAndConnectMidiReceiver() {
+        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = JPMidiReceiver(this)
+            MidiUtil.getMidiOutputPort().connect(midiReceiver)
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiConnect() {
         buildAndConnectMidiReceiver()
     }
@@ -447,6 +447,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiReceiveMessage(pitch: Byte, volume: Byte) {
         val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte();
         if (volume > 0) {
