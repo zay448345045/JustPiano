@@ -1,20 +1,14 @@
 package ly.pp.justpiano3.view
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.DashPathEffect
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
-import java.util.Arrays
+import java.util.*
 import kotlin.math.abs
 
 /**
@@ -46,7 +40,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
     /**
      * 瀑布流音块下落速率
      */
-    private var noteFallDownSpeed = 1f
+    private var noteFallDownSpeed = 0.8f
 
     /**
      * 曲谱播放速度
@@ -430,11 +424,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         /**
          * 执行绘制瀑布流
          */
-        private fun doDrawWaterfall(
-            notePaint: Paint,
-            octaveLinePaint: Paint,
-            octaveLinePath: Path
-        ) {
+        private fun doDrawWaterfall(notePaint: Paint, octaveLinePaint: Paint, octaveLinePath: Path) {
             var canvas: Canvas? = null
             try {
                 // 获取绘制canvas，优先使用硬件加速
