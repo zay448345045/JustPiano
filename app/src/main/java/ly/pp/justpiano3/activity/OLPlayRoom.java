@@ -48,6 +48,7 @@ import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.listener.CpRequestClick;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.ScrollText;
 import protobuf.dto.OnlineChangeRoomHandDTO;
@@ -572,13 +573,13 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 960;
-                if (px2dp(this, displayMetrics.widthPixels) <= 360) {
-                    int height = sp2px(this, 20) + dp2px(this, 224) + dm.widthPixels / 3;
+                if (UnitConvertUtil.px2dp(this, displayMetrics.widthPixels) <= 360) {
+                    int height = UnitConvertUtil.sp2px(this, 20) + UnitConvertUtil.dp2px(this, 224) + dm.widthPixels / 3;
                     RelativeLayout rs = this.findViewById(R.id.RelativeLayout1);
                     rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(3);
                 } else {
-                    int height = sp2px(this, 20) + dp2px(this, 76) + dm.widthPixels / 6;
+                    int height = UnitConvertUtil.sp2px(this, 20) + UnitConvertUtil.dp2px(this, 76) + dm.widthPixels / 6;
                     RelativeLayout rs = this.findViewById(R.id.RelativeLayout1);
                     rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(6);

@@ -22,6 +22,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.UnitConvertUtil;
 
 public final class PlayerImageAdapter extends BaseAdapter {
     private final OLPlayRoom olPlayRoom;
@@ -81,7 +82,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         int orientation = olPlayRoom.getResources().getConfiguration().orientation;
         DisplayMetrics dm = olPlayRoom.getResources().getDisplayMetrics();
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (OLBaseActivity.px2dp(olPlayRoom, dm.widthPixels) <= 360) {
+            if (UnitConvertUtil.px2dp(olPlayRoom, dm.widthPixels) <= 360) {
                 imageView.getLayoutParams().width = dm.widthPixels / 3;
                 imageView1.getLayoutParams().width = dm.widthPixels / 3;
                 imageView2.getLayoutParams().width = dm.widthPixels / 3;

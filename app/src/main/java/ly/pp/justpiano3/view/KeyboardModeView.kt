@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.utils.ImageLoadUtil
+import ly.pp.justpiano3.utils.UnitConvertUtil
 import kotlin.math.roundToInt
 
 class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -55,9 +56,6 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
 
         // midi音高转白键或黑键索引
         private val OCTAVE_PITCH_TO_KEY_INDEX = intArrayOf(0, 0, 1, 1, 2, 3, 2, 4, 3, 5, 4, 6)
-
-        // 按键标签显示的文字最大字号
-        private const val MAX_OCTAVE_TAG_FONT_SIZE = 40f
 
         // 按键标签用于测量标签宽度的文字，取最长的文字sol
         private const val OCTAVE_TAG_WORD_SAMPLE = "sol"
@@ -105,6 +103,9 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     // 键盘上绘制的标签文字paint
     private var keyboardTextPaint = Paint()
+
+    // 按键标签显示的文字最大字号
+    private var maxOctaveTagFontSize = 24f
 
     // 素材图片
     private var keyboardImage: Bitmap
@@ -162,6 +163,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         pianoKeyTouchable = typedArray.getBoolean(R.styleable.KeyboardModeView_pianoKeyTouchable, true)
         val octaveTagTypeInt = typedArray.getInteger(R.styleable.KeyboardModeView_octaveTagType, 0)
         octaveTagType = OctaveTagType.values().getOrElse(octaveTagTypeInt) { OctaveTagType.NONE }
+        maxOctaveTagFontSize = UnitConvertUtil.sp2px(context, maxOctaveTagFontSize).toFloat()
         typedArray.recycle()
     }
 
@@ -335,7 +337,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun calculateTextSize(width: Float) {
-        keyboardTextPaint.textSize = MAX_OCTAVE_TAG_FONT_SIZE
+        keyboardTextPaint.textSize = maxOctaveTagFontSize
         // 计算文本宽度
         var textWidth: Float
         do {

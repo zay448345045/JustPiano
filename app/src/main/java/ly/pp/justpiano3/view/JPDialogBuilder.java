@@ -1,7 +1,5 @@
 package ly.pp.justpiano3.view;
 
-import static ly.pp.justpiano3.activity.OLBaseActivity.dp2px;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
@@ -18,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.UnitConvertUtil;
 
 public final class JPDialogBuilder {
     private EditText editText;
@@ -174,7 +173,7 @@ public final class JPDialogBuilder {
                 focusNotAle(window);
                 dialog.show();
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
-                layoutParams.width = (int) (dp2px(context, this.width));
+                layoutParams.width = UnitConvertUtil.dp2px(context, this.width);
                 window.setAttributes(layoutParams);
                 hideNavigationBar(window);
                 clearFocusNotAle(window);
