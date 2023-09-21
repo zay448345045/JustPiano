@@ -57,7 +57,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         private val OCTAVE_PITCH_TO_KEY_INDEX = intArrayOf(0, 0, 1, 1, 2, 3, 2, 4, 3, 5, 4, 6)
 
         // 按键标签显示的文字最大字号
-        private const val MAX_OCTAVE_TAG_FONT_SIZE = 24f
+        private const val MAX_OCTAVE_TAG_FONT_SIZE = 40f
 
         // 按键标签用于测量标签宽度的文字，取最长的文字sol
         private const val OCTAVE_TAG_WORD_SAMPLE = "sol"
@@ -201,7 +201,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         // 计算黑白键的宽度
         whiteKeyWidth = viewWidth / whiteKeyNum
         val blackKeyWidth = whiteKeyWidth * BLACK_KEY_WIDTH_FACTOR
-        // 计算显示八度标签的文字大小
+        // 计算显示标签的文字大小
         if (octaveTagType != OctaveTagType.NONE) {
             calculateTextSize(whiteKeyWidth)
         }
@@ -265,9 +265,9 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         // 没有在动画播放期间的话，开始按数组中的位置坐标值，拿图片进行绘制
         if (!isAnimRunning) {
             drawNotesOn(canvas)
+            // 根据按键标签种类绘制按键标签
+            drawOctaveTagByType(canvas)
         }
-        // 根据按键标签种类绘制按键标签
-        drawOctaveTagByType(canvas)
     }
 
     private fun drawNotesOn(canvas: Canvas) {
@@ -315,7 +315,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
             OctaveTagType.PITCH_NAME -> {
                 for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
                     canvas.drawText(
-                        PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + ((whiteKeyOffset + index) / WHITE_NOTES_PER_OCTAVE),
+                        PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index / WHITE_NOTES_PER_OCTAVE + 1),
                         whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(OCTAVE_TAG_WORD_SAMPLE)) / 2,
                         whiteKeyRect.bottom - keyboardTextPaint.descent(), keyboardTextPaint
                     )
@@ -323,9 +323,10 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
             }
             OctaveTagType.SYLLABLE_NAME -> {
                 for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
+                    val text = SYLLABLE_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE]
                     canvas.drawText(
-                        SYLLABLE_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + ((whiteKeyOffset + index) / WHITE_NOTES_PER_OCTAVE),
-                        whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(OCTAVE_TAG_WORD_SAMPLE)) / 2,
+                        text,
+                        whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(text)) / 2,
                         whiteKeyRect.bottom - keyboardTextPaint.descent(), keyboardTextPaint
                     )
                 }
@@ -334,15 +335,14 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun calculateTextSize(width: Float) {
-        // 计算文本宽度
         keyboardTextPaint.textSize = MAX_OCTAVE_TAG_FONT_SIZE
-        var textWidth = keyboardTextPaint.measureText(OCTAVE_TAG_WORD_SAMPLE)
-        // 循环调整字体大小，直到文本适合在指定的宽度下显示合适
-        while (textWidth > width) {
-            keyboardTextPaint.textSize--
-            // 重新计算文本宽度
+        // 计算文本宽度
+        var textWidth: Float
+        do {
+            // 循环调整字体大小，直到文本适合在指定的宽度下显示合适
             textWidth = keyboardTextPaint.measureText(OCTAVE_TAG_WORD_SAMPLE)
-        }
+            keyboardTextPaint.textSize--
+        } while (textWidth > width * 0.8)
     }
 
     /**
@@ -406,7 +406,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun onFingerDown(id: Int, x: Float, y: Float) {
-        val (pitch: Byte, volume: Byte) = calcuatePitchAndVolumeByXY(y, x)
+        val (pitch: Byte, volume: Byte) = calculatePitchAndVolumeByXY(y, x)
         fireKeyDownAndHandleListener(pitch, volume, noteOnColor)
         mFingerMap[id] = pitch
     }
@@ -414,7 +414,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun onFingerMove(id: Int, x: Float, y: Float) {
         val previousPitch = mFingerMap[id]
         if (previousPitch != null) {
-            val (pitch: Byte, volume: Byte) = calcuatePitchAndVolumeByXY(y, x)
+            val (pitch: Byte, volume: Byte) = calculatePitchAndVolumeByXY(y, x)
             // Did we change to a new key.
             if (pitch >= 0 && pitch != previousPitch) {
                 fireKeyDownAndHandleListener(pitch, volume, noteOnColor)
@@ -424,7 +424,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         }
     }
 
-    private fun calcuatePitchAndVolumeByXY(y: Float, x: Float): Pair<Byte, Byte> {
+    private fun calculatePitchAndVolumeByXY(y: Float, x: Float): Pair<Byte, Byte> {
         var pitch: Byte = -1
         var volume: Byte = -1
         if (y < blackKeyHeight) {
