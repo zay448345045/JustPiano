@@ -17,7 +17,7 @@ import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.JPMidiReceiver
 import ly.pp.justpiano3.midi.MidiConnectionListener
 import ly.pp.justpiano3.thread.ThreadPoolUtil
-import ly.pp.justpiano3.utils.MidiUtil
+import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import ly.pp.justpiano3.view.JPProgressBar
@@ -61,6 +61,12 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     private lateinit var progressBar: JPProgressBar
 
     companion object {
+
+        /**
+         * 每个八度的音符数量
+         */
+        private const val NOTES_PER_OCTAVE = 12
+
         /**
          * 瀑布的宽度占键盘黑键宽度的百分比
          */
@@ -111,6 +117,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
             }
         })
         keyboardView = findViewById(R.id.waterfall_keyboard)
+        keyboardView.octaveTagType = KeyboardModeView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
         keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -150,7 +157,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         })
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             buildAndConnectMidiReceiver()
-            MidiUtil.addMidiConnectionListener(this)
+            MidiDeviceUtil.addMidiConnectionListener(this)
         }
     }
 
@@ -163,7 +170,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     ) {
         for (waterfallNote in waterfallNotes) {
             val (left, right) = convertWidthToWaterfallWidth(
-                MidiUtil.isBlackKey(waterfallNote.pitch),
+                isBlackKey(waterfallNote.pitch),
                 keyboardModeView.convertPitchToReact(waterfallNote.pitch)
             )
             waterfallNote.left = left
@@ -203,10 +210,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     override fun onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
+            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver)
             }
-            MidiUtil.removeMidiConnectionListener(this)
+            MidiDeviceUtil.removeMidiConnectionListener(this)
         }
         // 停止播放，释放资源
         waterfallView.stopPlay()
@@ -236,7 +243,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 val leftHand = it.trackArray[i] > 0
                 // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
                 val (left, right) = convertWidthToWaterfallWidth(
-                    MidiUtil.isBlackKey(pitch),
+                    isBlackKey(pitch),
                     keyboardModeView!!.convertPitchToReact(pitch)
                 )
                 // 初始化瀑布流音符对象，上边界暂时置0
@@ -339,6 +346,19 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     /**
+     * 根据一个midi音高，判断它是否为黑键
+     */
+    private fun isBlackKey(pitch: Byte): Boolean {
+        val pitchInOctave = pitch % NOTES_PER_OCTAVE
+        for (blackKeyOffsetInOctave in KeyboardModeView.BLACK_KEY_OFFSETS) {
+            if (pitchInOctave == blackKeyOffsetInOctave) {
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
      * 处理按钮触摸事件
      */
     override fun onTouch(view: View, event: MotionEvent): Boolean {
@@ -428,9 +448,9 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun buildAndConnectMidiReceiver() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             midiReceiver = JPMidiReceiver(this)
-            MidiUtil.getMidiOutputPort().connect(midiReceiver)
+            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver)
         }
     }
 
@@ -441,8 +461,8 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiDisconnect() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            MidiUtil.getMidiOutputPort().disconnect(midiReceiver)
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver)
             midiReceiver = null
         }
     }

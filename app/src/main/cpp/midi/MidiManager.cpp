@@ -93,7 +93,7 @@ extern "C" {
  * @param   midiDeviceObj   (Java) MidiDevice object.
  * @param   portNumber      The index of the "output" port to open.
  */
-void Java_ly_pp_justpiano3_utils_MidiUtil_startReadingMidi(
+void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
         JNIEnv *env, jclass clazz, jobject midiDeviceObj, jint portNumber) {
     env->GetJavaVM(&theJvm);
     // Setup the receive data callback (into Java)
@@ -116,7 +116,7 @@ void Java_ly_pp_justpiano3_utils_MidiUtil_startReadingMidi(
  * @param   (unnamed)   JNI Env pointer.
  * @param   (unnamed)   TBMidiManager (Java) object.
  */
-void Java_ly_pp_justpiano3_utils_MidiUtil_stopReadingMidi(JNIEnv *, jclass) {
+void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_stopReadingMidi(JNIEnv *, jclass) {
     // need some synchronization here
     isReading = false;
     pthread_join(sReadThread, nullptr);

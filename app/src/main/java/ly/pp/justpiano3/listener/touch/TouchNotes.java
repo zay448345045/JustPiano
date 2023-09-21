@@ -1,12 +1,11 @@
 package ly.pp.justpiano3.listener.touch;
 
 import android.content.pm.PackageManager;
-import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import ly.pp.justpiano3.utils.MidiUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.view.PlayView;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public final class TouchNotes implements OnTouchListener {
         this.playView = playView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             playView.pianoPlay.buildAndConnectMidiReceiver();
-            MidiUtil.addMidiConnectionListener(playView.pianoPlay);
+            MidiDeviceUtil.addMidiConnectionListener(playView.pianoPlay);
         }
     }
 

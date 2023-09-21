@@ -401,6 +401,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             olKeyboardStates[i] = new OLKeyboardState(false, false, false, false);
         }
         keyboardView = findViewById(R.id.keyboard_view);
+        keyboardView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
         keyboardView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
@@ -446,10 +447,10 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null) {
+            if (MidiDeviceUtil.getMidiOutputPort() != null) {
                 buildAndConnectMidiReceiver();
             }
-            MidiUtil.addMidiConnectionListener(this);
+            MidiDeviceUtil.addMidiConnectionListener(this);
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -464,10 +465,10 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     protected void onDestroy() {
         JPStack.pop(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             }
-            MidiUtil.removeMidiConnectionListener(this);
+            MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         stopNotesSchedule();
         if (recordStart) {
@@ -498,14 +499,14 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         midiKeyboardOn = true;
         if (midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             midiReceiver = new JPMidiReceiver(this);
-            MidiUtil.getMidiOutputPort().connect(midiReceiver);
+            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
-        if (MidiUtil.getMidiOutputPort() != null) {
+        if (MidiDeviceUtil.getMidiOutputPort() != null) {
             buildAndConnectMidiReceiver();
             olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
             if (playerGrid.getAdapter() != null) {
@@ -519,10 +520,10 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect() {
-        if (MidiUtil.getMidiOutputPort() != null) {
+        if (MidiDeviceUtil.getMidiOutputPort() != null) {
             midiKeyboardOn = false;
             if (midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
                 midiReceiver = null;
             }
         }

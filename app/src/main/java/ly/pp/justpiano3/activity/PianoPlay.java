@@ -485,10 +485,10 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             recordFinish();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             }
-            MidiUtil.removeMidiConnectionListener(this);
+            MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         super.onDestroy();
     }
@@ -589,9 +589,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void buildAndConnectMidiReceiver() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             midiReceiver = new JPMidiReceiver(this);
-            MidiUtil.getMidiOutputPort().connect(midiReceiver);
+            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
 
@@ -604,8 +604,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             midiReceiver = null;
         }
     }

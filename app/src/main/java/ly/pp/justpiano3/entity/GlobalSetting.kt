@@ -105,7 +105,7 @@ object GlobalSetting{
     /**
      * 瀑布流音块下落速率
      */
-    var waterfallDownSpeed: Float = 1f
+    var waterfallDownSpeed: Float = 0.8f
 
     /**
      * 是否存储聊天记录
@@ -123,9 +123,9 @@ object GlobalSetting{
     var showNotification: Boolean = false
 
     /**
-     * 是否显示按键标签(C1、C2等)
+     * 钢琴键盘显示按键标签种类
      */
-    var showKeyboardOctaveTag: Boolean = false
+    var keyboardOctaveTagType: Int = 0
 
     /**
      * 从sharedPreferences获取设置
@@ -156,11 +156,11 @@ object GlobalSetting{
         changeNotesColor = sharedPreferences.getBoolean("change_color", true)
         chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
-        waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "1.0")!!.toFloat()
+        waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "0.8")!!.toFloat()
         saveChatRecord = sharedPreferences.getBoolean("save_chats",false)
         showChatTime = sharedPreferences.getBoolean("chats_time_show",false)
         showNotification = sharedPreferences.getBoolean("show_notification",false)
-        showKeyboardOctaveTag = sharedPreferences.getBoolean("show_octave_tag",false)
+        keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type","0")!!.toInt()
     }
 
     /**
@@ -191,7 +191,7 @@ object GlobalSetting{
         edit.putBoolean("save_chats", saveChatRecord)
         edit.putBoolean("chats_time_show", showChatTime)
         edit.putBoolean("show_notification", showNotification)
-        edit.putBoolean("show_octave_tag", showKeyboardOctaveTag)
+        edit.putString("octave_tag_type", keyboardOctaveTagType.toString())
         edit.apply()
     }
 }

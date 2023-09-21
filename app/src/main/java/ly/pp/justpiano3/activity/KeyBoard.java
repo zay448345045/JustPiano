@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
@@ -32,13 +31,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
-
     public KeyboardModeView keyboardMode1View;
     public KeyboardModeView keyboardMode2View;
     public LinearLayout keyboard1Layout;
     public LinearLayout keyboard2Layout;
     public JPApplication jpapplication;
-    public MidiReceiver midiReceiver;
+    private MidiReceiver midiReceiver;
     public ScheduledExecutorService scheduledExecutor;
     public SharedPreferences sharedPreferences;
     // 用于记录上次的移动
@@ -66,53 +64,23 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         setContentView(R.layout.lo_keyboard_mode);
         jpapplication = (JPApplication) getApplication();
         keyboardMode1View = findViewById(R.id.keyboard1_view);
-        keyboardMode1View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
-            @Override
-            public void onKeyDown(byte pitch, byte volume) {
-                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
-            }
-
-            @Override
-            public void onKeyUp(byte pitch) {
-
-            }
-        });
+        initKeyboardModeView(keyboardMode1View);
         keyboardMode2View = findViewById(R.id.keyboard2_view);
-        keyboardMode2View.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
-            @Override
-            public void onKeyDown(byte pitch, byte volume) {
-                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
-            }
-
-            @Override
-            public void onKeyUp(byte pitch) {
-
-            }
-        });
+        initKeyboardModeView(keyboardMode2View);
         keyboard1Layout = findViewById(R.id.keyboard1_layout);
         keyboard1Layout.setOnTouchListener(this);
         keyboard2Layout = findViewById(R.id.keyboard2_layout);
         keyboard2Layout.setOnTouchListener(this);
-        Button keyboard1CountDown = findViewById(R.id.keyboard1_count_down);
-        keyboard1CountDown.setOnTouchListener(this);
-        Button keyboard2CountDown = findViewById(R.id.keyboard2_count_down);
-        keyboard2CountDown.setOnTouchListener(this);
-        Button keyboard1CountUp = findViewById(R.id.keyboard1_count_up);
-        keyboard1CountUp.setOnTouchListener(this);
-        Button keyboard2CountUp = findViewById(R.id.keyboard2_count_up);
-        keyboard2CountUp.setOnTouchListener(this);
-        Button keyboard1MoveLeft = findViewById(R.id.keyboard1_move_left);
-        keyboard1MoveLeft.setOnTouchListener(this);
-        Button keyboard2MoveLeft = findViewById(R.id.keyboard2_move_left);
-        keyboard2MoveLeft.setOnTouchListener(this);
-        Button keyboard1MoveRight = findViewById(R.id.keyboard1_move_right);
-        keyboard1MoveRight.setOnTouchListener(this);
-        Button keyboard2MoveRight = findViewById(R.id.keyboard2_move_right);
-        keyboard2MoveRight.setOnTouchListener(this);
-        ImageView keyboardSetting = findViewById(R.id.keyboard_setting);
-        keyboardSetting.setOnClickListener(this);
-        Button keyboardRecord = findViewById(R.id.keyboard_record);
-        keyboardRecord.setOnClickListener(this);
+        findViewById(R.id.keyboard1_count_down).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_count_down).setOnTouchListener(this);
+        findViewById(R.id.keyboard1_count_up).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_count_up).setOnTouchListener(this);
+        findViewById(R.id.keyboard1_move_left).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_move_left).setOnTouchListener(this);
+        findViewById(R.id.keyboard1_move_right).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_move_right).setOnTouchListener(this);
+        findViewById(R.id.keyboard_setting).setOnClickListener(this);
+        findViewById(R.id.keyboard_record).setOnClickListener(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int keyboard1WhiteKeyNum = sharedPreferences.getInt("keyboard1_white_key_num", 8);
         int keyboard2WhiteKeyNum = sharedPreferences.getInt("keyboard2_white_key_num", 8);
@@ -129,17 +97,32 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             buildAndConnectMidiReceiver();
-            MidiUtil.addMidiConnectionListener(this);
+            MidiDeviceUtil.addMidiConnectionListener(this);
         }
+    }
+
+    private void initKeyboardModeView(KeyboardModeView keyboardModeView) {
+        keyboardModeView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardModeView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
+            @Override
+            public void onKeyDown(byte pitch, byte volume) {
+                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
+            }
+
+            @Override
+            public void onKeyUp(byte pitch) {
+
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             }
-            MidiUtil.removeMidiConnectionListener(this);
+            MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         if (recordStart) {
             SoundEngineUtil.setRecord(false);
@@ -288,9 +271,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void buildAndConnectMidiReceiver() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             midiReceiver = new JPMidiReceiver(this);
-            MidiUtil.getMidiOutputPort().connect(midiReceiver);
+            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
         }
     }
 
@@ -303,8 +286,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect() {
-        if (MidiUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            MidiUtil.getMidiOutputPort().disconnect(midiReceiver);
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             midiReceiver = null;
         }
     }
@@ -328,6 +311,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
             keyboardMode1View.changeSkinKeyboardImage(this);
             keyboardMode2View.changeSkinKeyboardImage(this);
+            KeyboardModeView.OctaveTagType octaveTagType = KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];
+            keyboardMode1View.setOctaveTagType(octaveTagType);
+            keyboardMode2View.setOctaveTagType(octaveTagType);
         }
     }
 

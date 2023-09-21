@@ -28,7 +28,7 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.MidiUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -135,7 +135,7 @@ public final class JPApplication extends Application {
                 .addMigrations(generateMigrations()).allowMainThreadQueries().build();
         // 支持midi设备功能时，初始化midi设备
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            MidiUtil.initMidiDevice(this);
+            MidiDeviceUtil.initMidiDevice(this);
         }
     }
 

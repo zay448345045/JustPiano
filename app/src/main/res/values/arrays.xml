@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="rough_line">
-        <item>默认(不加粗)</item>
+        <item>不加粗(默认)</item>
         <item>灰色加粗</item>
         <item>红色加粗</item>
     </string-array>
     <string-array name="rough_linev">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="octave_tag_type_name">
+        <item>无(默认)</item>
+        <item>在每个八度的C键显示C1、C2…</item>
+        <item>在每个按键上显示C1、D1…</item>
+        <item>在每个按键上显示do、re…</item>
+    </string-array>
+    <string-array name="octave_tag_type_value">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>

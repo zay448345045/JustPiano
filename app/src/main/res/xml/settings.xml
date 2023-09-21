@@ -115,12 +115,14 @@
             android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
             android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
             android:title="启用键盘移动缩放动画" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="show_octave_tag"
-            android:summaryOff="&lt;关闭&gt; 不显示钢琴键盘八度标签"
-            android:summaryOn="&lt;打开&gt; 显示钢琴键盘八度标签(C1、C2等)"
-            android:title="钢琴键盘八度标签" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="钢琴键盘展示标签种类"
+            android:entries="@array/octave_tag_type_name"
+            android:entryValues="@array/octave_tag_type_value"
+            android:key="octave_tag_type"
+            android:summary="设置钢琴键盘中按键下方展示的标签种类"
+            android:title="钢琴键盘展示标签种类" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="触屏点击声音移调"
@@ -152,8 +154,8 @@
             android:dialogTitle="瀑布流曲谱播放速度" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0.8"
-            app:minValue="0.4"
-            app:maxValue="1.2"
+            app:minValue="0.1"
+            app:maxValue="1.5"
             app:floatNumber="true"
             android:key="waterfall_down_speed"
             android:summary="设置音符的下落速率，值越小，音符越矮，下落速度越慢"

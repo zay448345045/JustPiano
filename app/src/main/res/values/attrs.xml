@@ -4,6 +4,7 @@
         <attr name="whiteKeyNum" format="integer" />
         <attr name="whiteKeyOffset" format="integer" />
         <attr name="pianoKeyTouchable" format="boolean" />
+        <attr name="octaveTagType" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="DataSelectView">
