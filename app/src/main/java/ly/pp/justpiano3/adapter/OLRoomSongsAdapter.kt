@@ -86,7 +86,7 @@ class OLRoomSongsAdapter(private val olPlayRoom: OLPlayRoom, private val songsLi
             timeTextView = songView.findViewById(R.id.ol_sound_time)
             rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
             leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
-            songView.setOnClickListener { v: View ->
+            songView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     getItem(position)?.let {

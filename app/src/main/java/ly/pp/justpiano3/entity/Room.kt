@@ -1,6 +1,6 @@
 package ly.pp.justpiano3.entity
 
-class Room(b: Byte, str: String, i: Int, i2: Int, i3: Int, i4: Int, i5: Int, i6: Int, i7: Int) {
+class Room(b: Byte, str: String, j: Int, i2: Int, i3: Int, i4: Int, i5: Int, i6: Int, i7: Int) {
     val roomID: Byte
     val roomName: String
     val fcount: Int
@@ -17,7 +17,7 @@ class Room(b: Byte, str: String, i: Int, i2: Int, i3: Int, i4: Int, i5: Int, i6:
     }
 
     init {
-        var i = i
+        var i = j
         isPeopleFull = false
         roomID = b
         roomName = str

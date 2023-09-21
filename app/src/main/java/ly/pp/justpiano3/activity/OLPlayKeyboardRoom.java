@@ -706,15 +706,17 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
      * @param index 索引，楼号 - 1
      */
     public void blinkView(int index) {
-        View itemView = playerGrid.getChildAt(index);
-        if (itemView == null) {
-            return;
-        }
-        View playingView = itemView.findViewById(R.id.ol_player_playing);
-        if (playingView.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        playingView.setVisibility(View.VISIBLE);
-        playingView.postDelayed(() -> playingView.setVisibility(View.INVISIBLE), 200);
+        runOnUiThread(() -> {
+            View itemView = playerGrid.getChildAt(index);
+            if (itemView == null) {
+                return;
+            }
+            View playingView = itemView.findViewById(R.id.ol_player_playing);
+            if (playingView.getVisibility() == View.VISIBLE) {
+                return;
+            }
+            playingView.setVisibility(View.VISIBLE);
+            playingView.postDelayed(() -> playingView.setVisibility(View.INVISIBLE), 200);
+        });
     }
 }
