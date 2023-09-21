@@ -398,7 +398,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         Button keyboardRecord = findViewById(R.id.keyboard_record);
         keyboardRecord.setOnClickListener(this);
         for (int i = 0; i < olKeyboardStates.length; i++) {
-            olKeyboardStates[i] = new OLKeyboardState(false, false, false, false);
+            olKeyboardStates[i] = new OLKeyboardState(false, false, false);
         }
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
@@ -409,12 +409,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
                         SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
                     }
-                    if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
-                        olKeyboardStates[roomPositionSub1].setPlaying(true);
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        }
-                    }
+                    blinkView(roomPositionSub1);
                 }
                 if (hasAnotherUser()) {
                     broadNote(pitch, volume);
@@ -424,12 +419,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             @Override
             public void onKeyUp(byte pitch) {
                 if (roomPositionSub1 >= 0) {
-                    if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
-                        olKeyboardStates[roomPositionSub1].setPlaying(true);
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        }
-                    }
+                    blinkView(roomPositionSub1);
                 }
                 if (hasAnotherUser()) {
                     broadNote(pitch, 0);
@@ -551,14 +541,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             if (!olKeyboardStates[roomPositionSub1].isMuted()) {
                 SoundEngineUtil.playSound(pitch, volume);
             }
-            if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
-                olKeyboardStates[roomPositionSub1].setPlaying(true);
-                runOnUiThread(() -> {
-                    if (playerGrid.getAdapter() != null) {
-                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                    }
-                });
-            }
+            blinkView(roomPositionSub1);
         }
         keyboardView.fireKeyDown(pitch, volume, keyboardNoteDownColor);
         if (hasAnotherUser()) {
@@ -568,14 +551,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
 
     private void onMidiReceiveKeyUpHandle(byte pitch) {
         if (roomPositionSub1 >= 0) {
-            if (!olKeyboardStates[roomPositionSub1].isPlaying()) {
-                olKeyboardStates[roomPositionSub1].setPlaying(true);
-                runOnUiThread(() -> {
-                    if (playerGrid.getAdapter() != null) {
-                        ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                    }
-                });
-            }
+            blinkView(roomPositionSub1);
         }
         keyboardView.fireKeyUp(pitch);
         if (hasAnotherUser()) {
@@ -663,15 +639,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 // 时间戳和size尽量严格放在一起
                 long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
-                // 刷新用户弹奏闪烁（删除闪烁）
-                if (olKeyboardStates[roomPositionSub1].isPlaying()) {
-                    olKeyboardStates[roomPositionSub1].setPlaying(false);
-                    runOnUiThread(() -> {
-                        if (playerGrid.getAdapter() != null) {
-                            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                        }
-                    });
-                }
                 // 房间里没有其他人，停止发任何消息，清空弹奏队列（因为可能刚刚变为房间没人的状态，队列可能有遗留
                 if (!hasAnotherUser()) {
                     notesQueue.clear();
@@ -707,14 +674,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
                     builder.setData(ByteString.copyFrom(notes));
                     sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
-                    if (olKeyboardStates[roomPositionSub1].isPlaying()) {
-                        olKeyboardStates[roomPositionSub1].setPlaying(false);
-                        runOnUiThread(() -> {
-                            if (playerGrid.getAdapter() != null) {
-                                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-                            }
-                        });
-                    }
+                    blinkView(roomPositionSub1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -738,5 +698,23 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             noteScheduledExecutor.shutdownNow();
             noteScheduledExecutor = null;
         }
+    }
+
+    /**
+     * 指定楼的view的闪烁，用于键盘模式弹奏时
+     *
+     * @param index 索引，楼号 - 1
+     */
+    public void blinkView(int index) {
+        View itemView = playerGrid.getChildAt(index);
+        if (itemView == null) {
+            return;
+        }
+        View playingView = itemView.findViewById(R.id.ol_player_playing);
+        if (playingView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        playingView.setVisibility(View.VISIBLE);
+        playingView.postDelayed(() -> playingView.setVisibility(View.INVISIBLE), 200);
     }
 }

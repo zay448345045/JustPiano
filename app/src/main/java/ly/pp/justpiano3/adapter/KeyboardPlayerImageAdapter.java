@@ -59,8 +59,6 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         int i2 = playerList.get(i).getInt("IV");
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
-        ImageView isPlayingView = view.findViewById(R.id.ol_player_playing);
-        isPlayingView.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isPlaying() ? View.VISIBLE : View.INVISIBLE);
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
         imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.drawable.stop : R.drawable.null_pic);
         if (string4.equals("O")) {

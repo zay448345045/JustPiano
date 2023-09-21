@@ -18,9 +18,4 @@ data class OLKeyboardState (
      * 此位置是否有人
      */
     var isHasUser: Boolean,
-
-    /**
-     * 此位置是否正在弹奏（闪烁）
-     */
-    var isPlaying: Boolean,
 )

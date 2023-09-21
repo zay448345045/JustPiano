@@ -43,22 +43,15 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             return;
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
-                        boolean notify = false;
                         if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMidiKeyboardOn() != midiKeyboardOn) {
                             olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
-                            notify = true;
-                        }
-                        if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isPlaying()) {
-                            olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setPlaying(true);
-                            notify = true;
-                        }
-                        if (notify) {
                             if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
                                 ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                             } else {
                                 olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
                             }
                         }
+                        olPlayKeyboardRoom.blinkView(roomPositionSub1);
                         int totalIntervalTime = 0;
                         for (int i = 1; i < notes.length; i += 3) {
                             totalIntervalTime += notes[i];
@@ -70,10 +63,6 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     SoundEngineUtil.playSound(notes[i + 1], notes[i + 2]);
                                 }
                                 handleKeyboardView(olPlayKeyboardRoom, notes, user, i);
-                            }
-                            if (olPlayKeyboardRoom.playerGrid.getAdapter() != null && olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isPlaying()) {
-                                olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setPlaying(false);
-                                ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                             }
                         } else {
                             olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
@@ -90,10 +79,6 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     }
                                     int finalI = i;
                                     olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI));
-                                }
-                                if (olPlayKeyboardRoom.playerGrid.getAdapter() != null && olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isPlaying()) {
-                                    olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setPlaying(false);
-                                    olPlayKeyboardRoom.runOnUiThread(() -> ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged());
                                 }
                             });
                         }
