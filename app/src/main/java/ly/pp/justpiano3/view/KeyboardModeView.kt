@@ -480,6 +480,9 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
                 return
             }
+            if (notesOnArray[pitchInScreen]) {
+                return
+            }
             notesOnArray[pitchInScreen] = true
             if (notesOnPaintArray[pitchInScreen] == null) {
                 notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -519,6 +522,9 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         if (!isAnimRunning) {
             val pitchInScreen = getPitchInScreen(pitch.toInt())
             if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
+                return
+            }
+            if (!notesOnArray[pitchInScreen]) {
                 return
             }
             notesOnArray[pitchInScreen] = false
