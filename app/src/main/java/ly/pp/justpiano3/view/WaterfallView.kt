@@ -356,6 +356,16 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
          */
         var progressScrollOffset: Float = 0f
 
+        /**
+         * 音块绘制缓冲bitmap
+         */
+        var notesBufferBitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+        /**
+         * 音块绘制缓冲canvas
+         */
+        var notesBufferCanvas = Canvas(notesBufferBitmap)
+
         override fun run() {
             // 先初始化绘制Paint对象，避免绘制时进行频繁的创建对象
             val (notePaint, octaveLinePaint, octaveLinePath) = initPaint()
@@ -401,8 +411,10 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                 }
                 // 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
                 handleWaterfallNoteListener()
-                // 执行绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(notePaint, octaveLinePaint, octaveLinePath)
+                // 先在缓冲区执行计算所有音块
+                drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
+                // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
+                doDrawWaterfall(octaveLinePaint, octaveLinePath)
             }
         }
 
@@ -424,7 +436,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         /**
          * 执行绘制瀑布流
          */
-        private fun doDrawWaterfall(notePaint: Paint, octaveLinePaint: Paint, octaveLinePath: Path) {
+        private fun doDrawWaterfall(octaveLinePaint: Paint, octaveLinePath: Path) {
             var canvas: Canvas? = null
             try {
                 // 获取绘制canvas，优先使用硬件加速
@@ -441,8 +453,8 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                     it.drawBitmap(backgroundImage!!, null, backgroundRect!!, null)
                     // 八度虚线绘制
                     drawOctaveLine(it, octaveLinePaint, octaveLinePath)
-                    // 音块绘制
-                    drawNotes(it, notePaint)
+                    // 将缓冲区中计算好的所有音块进行统一绘制
+                    it.drawBitmap(notesBufferBitmap, 0f, 0f, null)
                     // 进度条绘制
                     drawProgressBar(it)
                 }
@@ -478,7 +490,9 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         /**
          * 绘制所有应该绘制的音块
          */
-        private fun drawNotes(canvas: Canvas, notePaint: Paint) {
+        private fun drawNotesOnBufferBitmap(canvas: Canvas, notePaint: Paint) {
+            // 先清空缓冲bitmap中的内容
+            notesBufferBitmap.eraseColor(Color.TRANSPARENT);
             for ((index, waterfallNote) in waterfallNotes.withIndex()) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
