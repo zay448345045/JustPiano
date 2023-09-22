@@ -57,7 +57,7 @@ void RecordingIO::clearRecordingBuffer() {
     mRecordingFile = -1;
 }
 
-void RecordingIO::flush_to_file(float *data, int32_t length, int32_t sampleRate,
+void RecordingIO::flush_to_file(float *data, int32_t length,
                                 char *recordingFilePath,
                                 int &recordingFile) {
     if (recordingFile == -1) {
@@ -90,7 +90,7 @@ void RecordingIO::flush_buffer() {
         int numItems = mData.size();
         copy(mData.begin(), mData.begin() + numItems, mBuff);
         pool.enqueue([&]() {
-            flush_to_file(mBuff, numItems, mSampleRate, mRecordingFilePath, mRecordingFile);
+            flush_to_file(mBuff, numItems, mRecordingFilePath, mRecordingFile);
         });
         mData.clear();
         ongoing_flush_completed = true;
@@ -103,7 +103,6 @@ void RecordingIO::init(int32_t sampleRate, int32_t channelCount) {
     mSampleRate = sampleRate;
     mChannelCount = channelCount;
 }
-
 
 void RecordingIO::generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate,
                                         int channels, int audioFormat) {

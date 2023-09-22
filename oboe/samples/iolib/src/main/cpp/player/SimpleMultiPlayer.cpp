@@ -109,6 +109,8 @@ namespace iolib {
         builder.setChannelCount(mChannelCount);
         builder.setSampleRate(mSampleRate);
         builder.setCallback(this);
+        builder.setChannelConversionAllowed(true);
+        builder.setFormatConversionAllowed(true);
         builder.setPerformanceMode(PerformanceMode::LowLatency);
         builder.setSharingMode(SharingMode::Exclusive);
         builder.setSampleRateConversionQuality(SampleRateConversionQuality::Medium);

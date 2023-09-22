@@ -12,9 +12,6 @@
 #define MODULE_NAME  "RecordingIO"
 #endif
 
-using namespace std;
-
-
 class RecordingIO {
 public:
 
@@ -33,7 +30,7 @@ public:
     void flush_buffer();
 
     void setRecordingFilePath(char *recordingFilePath) {
-        mRecordingFilePath = move(recordingFilePath);
+        mRecordingFilePath = std::move(recordingFilePath);
     }
 
     void reserveRecordingBuffer(int reserve);
@@ -50,15 +47,16 @@ private:
 
     int mRecordingFile;
 
-    vector<float> mData;
+    std::vector<float> mData;
     float *mBuff{};
 
-    static void
-    flush_to_file(float *data, int32_t length, int32_t sampleRate, char *recordingFilePath,
-                  int &recordingFile);
+    static void flush_to_file(float *data, int32_t length, char *recordingFilePath,
+                              int &recordingFile);
 
-    static mutex flushMtx;
-    static condition_variable flushed;
+    static std::mutex flushMtx;
+
+    static std::condition_variable flushed;
+
     static bool ongoing_flush_completed;
 
     static bool check_if_flush_completed();

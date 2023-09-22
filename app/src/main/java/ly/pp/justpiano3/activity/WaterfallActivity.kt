@@ -326,7 +326,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 lastWaterfallNote.top = lastWaterfallNote.bottom.coerceAtLeast(noteBottom)
                 index--
                 // 如果上一个音符的上边界和当前音符的上边界相同，则表示同时按下，此时循环，继续设定两个音符的结束时间相同即可
-            } while (index >= 0 && waterfallNoteList[index].bottom == waterfallNoteList[index + 1].bottom)
+            } while (index >= 0 && waterfallNoteList.size - index < 128 && waterfallNoteList[index].bottom == waterfallNoteList[index + 1].bottom)
         }
     }
 

@@ -99,7 +99,7 @@ namespace iolib {
         bool record{};
 
         bool mOutputReset;
-        shared_ptr<RecordingIO> mRecordingIO {
+        std::shared_ptr<RecordingIO> mRecordingIO {
                 new RecordingIO()
         };
     };
