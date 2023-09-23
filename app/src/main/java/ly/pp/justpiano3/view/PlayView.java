@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -660,7 +659,6 @@ public final class PlayView extends SurfaceView implements Callback {
 
     public void drawProgressAndFinish(int progress, Canvas canvas) {
         float size = (float) progress / (jpapplication.getHeightPixels() - whiteKeyHeight - position) * jpapplication.getWidthPixels();
-        Log.i("TAG", "drawProgressAndFinish: " + size);
         if (canvas != null) {
             f4773bE.set(0, 0, progressBarWidth, progressBarHight);
             f4774bF.set(0, 0, (float) jpapplication.getWidthPixels(), (float) progressBarHight);
