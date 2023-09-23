@@ -81,7 +81,7 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
                 favorImageView.setOnClickListener {
                     val songDao = JPApplication.getSongDatabase().songDao()
                     songDao.deleteSongs(listOf(song))
-                    File(melodySelect.filesDir.absolutePath + "/Songs/" + song.name + ".pm").delete()
+                    File(melodySelect.filesDir.absolutePath + "/ImportSongs/" + song.name + ".pm").delete()
                     Toast.makeText(melodySelect, song.name + ":已删除", Toast.LENGTH_SHORT).show()
                 }
             } else {

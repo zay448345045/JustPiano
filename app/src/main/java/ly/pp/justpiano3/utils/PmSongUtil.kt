@@ -46,9 +46,15 @@ object PmSongUtil {
                 FileInputStream(
                     context.filesDir.absolutePath + "/Songs/" + filePath.substring(8)
                 )
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
+            } catch (ignore: Exception) {
+                try {
+                    FileInputStream(
+                        context.filesDir.absolutePath + "/ImportSongs/" + filePath.substring(8)
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                }
             }
         } ?: return null
         val pmData = ByteArray(inputStream.available())

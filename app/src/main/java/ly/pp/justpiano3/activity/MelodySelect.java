@@ -172,10 +172,13 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 return;
             }
             String songName = midiFile.getName().substring(0, midiFile.getName().indexOf('.'));
-            File pmFile = new File(getFilesDir().getAbsolutePath() + "/Songs/" + songName + ".pm");
+            File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
             if (pmFile.exists()) {
                 Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            if (!pmFile.getParentFile().exists()) {
+                pmFile.getParentFile().mkdirs();
             }
             if (midiFile.length() > 2 * 1024 * 1024) {
                 Toast.makeText(this, "不接受超过2MB的midi文件", Toast.LENGTH_SHORT).show();
