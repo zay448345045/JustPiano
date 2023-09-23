@@ -85,9 +85,10 @@ public final class LoadBackgroundsThread extends Thread {
                     canvas.drawBitmap(playView.backgroundImage, null, f6028n, null);
                     canvas.drawBitmap(playView.barImage, null, f6029o, null);
                     if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
-                        canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
+                        canvas.drawBitmap(playView.roughLineImage, null, new RectF(0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
-                    if (jpapplication.getGameMode() != LocalPlayModeEnum.HEAR) {  // 不是欣赏模式
+                    // 绘制吊线和音块
+                    if (jpapplication.getGameMode() != LocalPlayModeEnum.HEAR) {
                         playView.mo2930b(canvas);
                     } else {
                         playView.mo2931c(canvas);
@@ -95,7 +96,7 @@ public final class LoadBackgroundsThread extends Thread {
                 }
                 // 绘制屏幕上方的小键盘
                 if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {
-                    canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0.0f, 0.0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
+                    canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0f, 0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
                     canvas.drawRoundRect(new RectF((float) (((jpapplication.getWidthPixels() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((jpapplication.getWidthPixels() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
                     switch (playView.currentPlayNote.noteValue % 12) {
                         case 0:
@@ -139,7 +140,7 @@ public final class LoadBackgroundsThread extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                // 绘制进度条 + （若进度已满则）处理播放完成
+                // 绘制进度条，（若进度已满则）处理播放完成
                 playView.drawProgressAndFinish(progress, canvas);
                 if (canvas != null && surfaceholder.getSurface().isValid()) {
                     surfaceholder.unlockCanvasAndPost(canvas);
