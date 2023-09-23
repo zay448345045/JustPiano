@@ -1,11 +1,13 @@
 package ly.pp.justpiano3.activity;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
 import androidx.annotation.NonNull;
 
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 
@@ -35,6 +37,10 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
+            Preference versionPreference = findPreference("app_version");
+            if (versionPreference != null) {
+                versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME);
+            }
         }
     }
 }
