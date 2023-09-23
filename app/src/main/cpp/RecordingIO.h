@@ -16,18 +16,22 @@ class RecordingIO {
 public:
     RecordingIO();
 
-    ~RecordingIO() {}
+    ~RecordingIO() {
+        delete mRecordBuff;
+    }
 
     void init(int32_t channelCount, int32_t sampleRate);
 
-    static void
-    generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate, int32_t channelCount);
+    static void generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate,
+                                      int32_t channelCount);
 
     void write_buffer(float *sourceData, size_t numSamples);
 
     void setRecordingFilePath(char *recordingFilePath) {
         mRecordingFilePath = std::move(recordingFilePath);
     }
+
+    void reserveRecordingBuffer(int reserve);
 
     void clearRecordingBuffer();
 
@@ -40,6 +44,15 @@ private:
     int32_t mChannelCount;
 
     int mRecordingFile;
+
+    std::vector<float> mRecordData;
+    float *mRecordBuff{};
+
+    static std::mutex flushMtx;
+    static std::condition_variable flushed;
+    static bool ongoing_flush_completed;
+
+    static bool check_if_flush_completed();
 };
 
 

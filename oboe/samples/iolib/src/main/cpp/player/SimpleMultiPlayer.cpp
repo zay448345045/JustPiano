@@ -53,7 +53,7 @@ namespace iolib {
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
 
         if (record) {
-            mRecordingIO->write_buffer(mMixBuffer, numFrames * mChannelCount * sizeof(float));
+            mRecordingIO->write_buffer(mMixBuffer, numFrames);
         }
         return DataCallbackResult::Continue;
     }
@@ -208,7 +208,9 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::setRecord(bool r) {
-        if (!r) {
+        if (r) {
+            mRecordingIO->reserveRecordingBuffer(mSampleRate);
+        } else {
             mRecordingIO->clearRecordingBuffer();
         }
         record = r;

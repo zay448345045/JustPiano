@@ -10,10 +10,22 @@
 #include <condition_variable>
 #include <sys/stat.h>
 
-RecordingIO::RecordingIO() : mThreadPool(5), mSampleRate(0),
-                             mChannelCount(1), mRecordingFile(-1) {}
+mutex RecordingIO::flushMtx;
+condition_variable RecordingIO::flushed;
+bool RecordingIO::ongoing_flush_completed = true;
+
+bool RecordingIO::check_if_flush_completed() {
+    return ongoing_flush_completed;
+}
+
+RecordingIO::RecordingIO() : mThreadPool(5), mSampleRate(0), mChannelCount(0), mRecordingFile(-1) {}
+
+void RecordingIO::reserveRecordingBuffer(int reserve) {
+    mRecordData.reserve(reserve);
+}
 
 void RecordingIO::clearRecordingBuffer() {
+    mRecordData.resize(0);
     if (mRecordingFile != -1) {
         int file_size = lseek(mRecordingFile, 0L, SEEK_END);
         lseek(mRecordingFile, 0L, SEEK_SET);
@@ -28,7 +40,7 @@ void RecordingIO::clearRecordingBuffer() {
             char buffer[buffer_size];
             int nRead;
             char header[44];
-            generateWavFileHeader(header, file_size, mSampleRate, mChannelCount);
+            generateWavFileHeader(header, file_size, mSampleRate, 1);
             write(wavFile, header, 44);
             while ((nRead = read(mRecordingFile, buffer, buffer_size)) > 0) {
                 write(wavFile, buffer, nRead);
@@ -46,17 +58,34 @@ void RecordingIO::clearRecordingBuffer() {
 }
 
 void RecordingIO::write_buffer(float *sourceData, size_t numSamples) {
-    mThreadPool.enqueue([&]() {
-        if (mRecordingFile == -1) {
-            mRecordingFile = open(mRecordingFilePath, O_CREAT | O_APPEND | O_RDWR, S_IRWXU);
-        }
-        if (mRecordingFile != -1) {
-            write(mRecordingFile, sourceData, numSamples);
-        }
-    });
+    // Wait if a flush action is already in progress
+    unique_lock<mutex> lock(flushMtx);
+    flushed.wait(lock, check_if_flush_completed);
+    lock.unlock();
+    size_t size = numSamples * mChannelCount;
+    if (mRecordData.size() + size >= mSampleRate) {
+        ongoing_flush_completed = false;
+        copy(mRecordData.begin(), mRecordData.end(), mRecordBuff);
+        size_t writeSize = mRecordData.size() * sizeof(float);
+        mThreadPool.enqueue([&]() {
+            if (mRecordingFile == -1) {
+                mRecordingFile = open(mRecordingFilePath, O_CREAT | O_APPEND | O_RDWR, S_IRWXU);
+            }
+            if (mRecordingFile != -1) {
+                write(mRecordingFile, mRecordBuff, writeSize);
+            }
+        });
+        mRecordData.clear();
+        ongoing_flush_completed = true;
+        flushed.notify_all();
+    }
+    for (int i = 0; i < size; i += mChannelCount) {
+        mRecordData.push_back(sourceData[i]);
+    }
 }
 
 void RecordingIO::init(int32_t channelCount, int32_t sampleRate) {
+    mRecordBuff = new float[sampleRate];
     mChannelCount = channelCount;
     mSampleRate = sampleRate;
 }

@@ -39,6 +39,10 @@ namespace iolib {
     public:
         SimpleMultiPlayer();
 
+        ~SimpleMultiPlayer() {
+            delete mMixBuffer;
+        }
+
         // Inherited from oboe::AudioStreamCallback
         oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
                                               int32_t numFrames) override;

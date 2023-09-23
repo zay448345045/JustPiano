@@ -324,7 +324,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
                     buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。" +
-                            "录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音，无需授予录音权限，但需确保授予文件存储权限", 0);
+                            "录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音", 0);
                 }
             });
         }
