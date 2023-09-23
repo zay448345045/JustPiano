@@ -16,7 +16,6 @@ import android.widget.TabHost.TabSpec;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import com.google.protobuf.ByteString;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.adapter.SimpleSkinListAdapter;
@@ -84,14 +83,11 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 break;
             case CONCERTO:
                 // 协奏模式
-                byte[] notes = new byte[4];
-                // 字节数组开头，存入是否开启midi键盘和楼号
-                notes[0] = (byte) (((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1);
-                notes[1] = (byte) 0;
-                notes[2] = (byte) pitch;
-                notes[3] = (byte) volume;
                 OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                builder.setData(ByteString.copyFrom(notes));
+                builder.addData((((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1));
+                builder.addData(0);
+                builder.addData(pitch);
+                builder.addData(volume);
                 sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
                 break;
         }
@@ -633,29 +629,23 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
         keyboardView.setNoteOnColor(keyboardNoteDownColor);
         if (noteScheduledExecutor == null) {
-            lastNoteScheduleTime = System.currentTimeMillis();
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
                 // 时间戳和size尽量严格放在一起
-                long scheduleTimeNow = System.currentTimeMillis();
                 int size = notesQueue.size();
                 // 房间里没有其他人，停止发任何消息，清空弹奏队列（因为可能刚刚变为房间没人的状态，队列可能有遗留
                 if (!hasAnotherUser()) {
                     notesQueue.clear();
-                    lastNoteScheduleTime = scheduleTimeNow;
                     return;
                 }
                 // 未检测到这段间隔有弹奏音符，或者房间里没有其他人，就不发消息给服务器，直接返回并记录此次定时任务执行时间点
                 if (size == 0) {
-                    lastNoteScheduleTime = scheduleTimeNow;
                     return;
                 }
                 try {
-                    long timeLast = lastNoteScheduleTime;
-                    byte[] notes = new byte[size * 3 + 1];
+                    List<Long> notes = new ArrayList<>();
                     // 字节数组开头，存入是否开启midi键盘和楼号
-                    notes[0] = (byte) (((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1);
-                    int i = 1;
+                    notes.add((long) (((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1));
                     int pollIndex = size;
                     // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
                     while (pollIndex > 0) {
@@ -665,20 +655,17 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                             break;
                         }
                         // 记录并发问题：到下面i++时触发越界，可见队列size已经在并发环境下变化，必须在里面再判断一次size
-                        notes[i++] = (byte) (olNote.getAbsoluteTime() - timeLast);
-                        notes[i++] = (byte) olNote.getPitch();
-                        notes[i++] = (byte) olNote.getVolume();
+                        notes.add(olNote.getAbsoluteTime());
+                        notes.add((long) olNote.getPitch());
+                        notes.add((long) olNote.getVolume());
                         // 切换时间点
-                        timeLast = olNote.getAbsoluteTime();
                     }
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                    builder.setData(ByteString.copyFrom(notes));
+                    builder.addAllData(notes);
                     sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
                     blinkView(roomPositionSub1);
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    lastNoteScheduleTime = scheduleTimeNow;
                 }
             }, NOTES_SEND_INTERVAL, NOTES_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }

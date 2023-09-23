@@ -360,7 +360,7 @@ message OnlineDailyDTO {
 // 键盘模式传输音符数据
 message OnlineKeyboardNoteDTO {
   // 传输数据
-  bytes data = 1;
+  repeated int64 data = 1;
 }
 
 // 等级考试

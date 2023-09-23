@@ -33,7 +33,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                     return;
                 case 5:
                     post(() -> {
-                        byte[] notes = message.getData().getByteArray("NOTES");
+                        long[] notes = message.getData().getLongArray("NOTES");
                         if (notes.length == 0) {
                             return;
                         }
@@ -52,7 +52,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             }
                         }
                         olPlayKeyboardRoom.blinkView(roomPositionSub1);
-                        int totalIntervalTime = 0;
+                        long totalIntervalTime = 0;
                         for (int i = 1; i < notes.length; i += 3) {
                             totalIntervalTime += notes[i];
                         }
@@ -60,22 +60,27 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         if (totalIntervalTime == 0) {
                             for (int i = 1; i < notes.length; i += 3) {
                                 if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                    SoundEngineUtil.playSound(notes[i + 1], notes[i + 2]);
+                                    SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
                                 }
                                 handleKeyboardView(olPlayKeyboardRoom, notes, user, i);
                             }
                         } else {
                             olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
+                                long lastTimeMillis = 0; // 初始化上一个时间戳为0
                                 for (int i = 1; i < notes.length; i += 3) {
-                                    if (notes[i] > 0) {
+                                    long currentTimeMillis = notes[i]; // 当前时间戳
+                                    if (lastTimeMillis > 0 && currentTimeMillis > lastTimeMillis) {
                                         try {
-                                            Thread.sleep(notes[i]);
+                                            long sleepDuration = currentTimeMillis - lastTimeMillis; // 计算两个连续时间戳之间的差值
+                                            Thread.sleep(sleepDuration);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     }
+                                    lastTimeMillis = currentTimeMillis;
+
                                     if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                        SoundEngineUtil.playSound(notes[i + 1], notes[i + 2]);
+                                        SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
                                     }
                                     int finalI = i;
                                     olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI));
@@ -138,12 +143,12 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
         }
     }
 
-    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, byte[] notes, User user, int i) {
+    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
         if (notes[i + 2] > 0) {
-            olPlayKeyboardRoom.keyboardView.fireKeyDown(notes[i + 1], notes[i + 2],
+            olPlayKeyboardRoom.keyboardView.fireKeyDown((byte) notes[i + 1], (byte) notes[i + 2],
                     user.getKuang() == 0 ? null : ColorUtil.getKuangColorByKuangIndex(olPlayKeyboardRoom, user.getKuang()));
         } else {
-            olPlayKeyboardRoom.keyboardView.fireKeyUp(notes[i + 1]);
+            olPlayKeyboardRoom.keyboardView.fireKeyUp((byte) notes[i + 1]);
         }
     }
 }
