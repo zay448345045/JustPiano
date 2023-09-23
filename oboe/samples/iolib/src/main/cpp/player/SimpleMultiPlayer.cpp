@@ -35,8 +35,8 @@ namespace iolib {
 
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
-    SimpleMultiPlayer::SimpleMultiPlayer()
-            : mChannelCount(0), mSampleRate(0), mOutputReset(false), mDecayFactor(1.0f) {}
+    SimpleMultiPlayer::SimpleMultiPlayer() : mMixBuffer(nullptr), mChannelCount(0), mSampleRate(0),
+                                             mOutputReset(false), mDecayFactor(1.0f) {}
 
     DataCallbackResult SimpleMultiPlayer::onAudioReady(AudioStream *oboeStream, void *audioData,
                                                        int32_t numFrames) {
@@ -48,18 +48,30 @@ namespace iolib {
         if (streamState == StreamState::Disconnected) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
-
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
+        mixAudioToBuffer(numFrames);
+        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
 
-        auto *data = (float *) audioData;
+        if (record) {
+            mRecordingIO->write_buffer(mMixBuffer, numFrames * mChannelCount * sizeof(float));
+        }
+        return DataCallbackResult::Continue;
+    }
+
+    void SimpleMultiPlayer::mixAudioToBuffer(int32_t numFrames) {
+        if (mMixBuffer == nullptr) {
+            mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
+        }
+        memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
+
         float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             SampleSource *sampleSource = mSampleSources[index];
             int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             for (int32_t i = 0; i < queueSize; i++) {
-                std::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
+                std::__ndk1::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
                 if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
                     // this sample is finished
                     sampleSource->popCurFrameIndexQueue();
@@ -78,15 +90,9 @@ namespace iolib {
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
         for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
-            data[i] /= mDecayFactor;
+            mMixBuffer[i] /= mDecayFactor;
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
         }
-
-        if (record) {
-            mRecordingIO->write_buffer(data, numFrames);
-        }
-
-        return DataCallbackResult::Continue;
     }
 
     void SimpleMultiPlayer::onErrorAfterClose(AudioStream *oboeStream, Result error) {
@@ -109,8 +115,6 @@ namespace iolib {
         builder.setChannelCount(mChannelCount);
         builder.setSampleRate(mSampleRate);
         builder.setCallback(this);
-        builder.setChannelConversionAllowed(true);
-        builder.setFormatConversionAllowed(true);
         builder.setPerformanceMode(PerformanceMode::LowLatency);
         builder.setSharingMode(SharingMode::Exclusive);
         builder.setSampleRateConversionQuality(SampleRateConversionQuality::Medium);
@@ -152,7 +156,7 @@ namespace iolib {
         __android_log_print(ANDROID_LOG_INFO, TAG, "setupAudioStream()");
         mChannelCount = channelCount;
         mSampleRate = sampleRate;
-        mRecordingIO->init(mSampleRate, mChannelCount);
+        mRecordingIO->init(channelCount, sampleRate);
         openStream();
     }
 
@@ -204,9 +208,7 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::setRecord(bool r) {
-        if (r) {
-            mRecordingIO->reserveRecordingBuffer(mSampleRate);
-        } else {
+        if (!r) {
             mRecordingIO->clearRecordingBuffer();
         }
         record = r;

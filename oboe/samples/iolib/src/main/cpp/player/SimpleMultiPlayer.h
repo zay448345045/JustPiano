@@ -79,7 +79,7 @@ namespace iolib {
 
         void setRecord(bool r);
 
-        void setRecordFilePath(char* s);
+        void setRecordFilePath(char *s);
 
     private:
         // Oboe Audio Stream
@@ -93,15 +93,15 @@ namespace iolib {
         int32_t mNumSampleBuffers{};
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
-
+        float *mMixBuffer;
         float mDecayFactor;
 
         bool record{};
 
         bool mOutputReset;
-        std::shared_ptr<RecordingIO> mRecordingIO {
-                new RecordingIO()
-        };
+        std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
+
+        void mixAudioToBuffer(int32_t numFrames);
     };
 
 }
