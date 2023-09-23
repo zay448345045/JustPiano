@@ -39,7 +39,8 @@ public class SettingsMode extends PreferenceActivity {
             addPreferencesFromResource(R.xml.settings);
             Preference versionPreference = findPreference("app_version");
             if (versionPreference != null) {
-                versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME);
+                versionPreference.setSummary(BuildConfig.VERSION_NAME
+                        + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
             }
         }
     }

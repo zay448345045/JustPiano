@@ -13,11 +13,13 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
@@ -29,6 +31,7 @@ import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -229,7 +232,8 @@ public final class JPApplication extends Application {
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
                     StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
-                    BuildConfig.VERSION_NAME + '\n' + byteArrayOutputStream).execute();
+                    BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
+                            + BuildConfig.BUILD_TYPE + '\n' + byteArrayOutputStream).execute();
 
             if (connectionService != null) {
                 connectionService.outLine();

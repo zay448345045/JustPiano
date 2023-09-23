@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import java.io.File;
 
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -128,7 +129,8 @@ public class MainMode extends Activity implements OnClickListener {
                         return;
                     }
                     dialog.dismiss();
-                    new FeedbackTask(this, userName, message).execute();
+                    new FeedbackTask(this, userName, BuildConfig.VERSION_NAME
+                            + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE + '\n' + message).execute();
                 });
                 jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
                 jpDialogBuilder.buildAndShowDialog();
