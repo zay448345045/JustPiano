@@ -402,7 +402,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
-        keyboardView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
+        keyboardView.setMusicKeyListener(new KeyboardModeView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 if (roomPositionSub1 >= 0) {
@@ -527,7 +527,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiReceiveMessage(byte pitch, byte volume) {
+    public void onMidiMessageReceive(byte pitch, byte volume) {
         pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
             onMidiReceiveKeyDownHandle(pitch, volume);
@@ -706,17 +706,15 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
      * @param index 索引，楼号 - 1
      */
     public void blinkView(int index) {
-        runOnUiThread(() -> {
-            View itemView = playerGrid.getChildAt(index);
-            if (itemView == null) {
-                return;
-            }
-            View playingView = itemView.findViewById(R.id.ol_player_playing);
-            if (playingView.getVisibility() == View.VISIBLE) {
-                return;
-            }
-            playingView.setVisibility(View.VISIBLE);
-            playingView.postDelayed(() -> playingView.setVisibility(View.INVISIBLE), 200);
-        });
+        View itemView = playerGrid.getChildAt(index);
+        if (itemView == null) {
+            return;
+        }
+        View playingView = itemView.findViewById(R.id.ol_player_playing);
+        if (playingView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        playingView.post(() -> playingView.setVisibility(View.VISIBLE));
+        playingView.postDelayed(() -> playingView.setVisibility(View.INVISIBLE), 200);
     }
 }

@@ -134,7 +134,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
                 // 设置键盘的点击监听，键盘按下时播放对应琴键的声音
-                keyboardView.setMusicKeyListener(object : KeyboardModeView.MusicKeyListener {
+                keyboardView.setMusicKeyListener(object : KeyboardModeView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
                     }
@@ -468,7 +468,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onMidiReceiveMessage(pitch: Byte, volume: Byte) {
+    override fun onMidiMessageReceive(pitch: Byte, volume: Byte) {
         val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte();
         if (volume > 0) {
             keyboardView.fireKeyDown(pitchWithSettingTune, volume, null)

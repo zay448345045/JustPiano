@@ -86,7 +86,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
      */
     private var isAnimRunning = false
     private val mFingerMap: MutableMap<Int, Byte> = HashMap()
-    private var musicKeyListener: MusicKeyListener? = null
+    private var keyboardListener: KeyboardListener? = null
     var whiteKeyNum = 0
         private set
     var whiteKeyOffset = 0
@@ -105,7 +105,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     private var keyboardTextPaint = Paint()
 
     // 按键标签显示的文字最大字号
-    private var maxOctaveTagFontSize = 24f
+    private var maxOctaveTagFontSize = 20f
 
     // 素材图片
     private var keyboardImage: Bitmap
@@ -127,7 +127,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     /**
      * Implement this to receive keyboard events.
      */
-    interface MusicKeyListener {
+    interface KeyboardListener {
         /**
          * This will be called when a key is pressed.
          */
@@ -467,8 +467,8 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun fireKeyDownAndHandleListener(pitch: Byte, volume: Byte, color: Int?) {
         if (!isAnimRunning) {
-            if (musicKeyListener != null) {
-                musicKeyListener!!.onKeyDown(
+            if (keyboardListener != null) {
+                keyboardListener!!.onKeyDown(
                     pitch, volume.toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte()
                 )
             }
@@ -515,7 +515,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun fireKeyUpAndHandleListener(pitch: Byte) {
         if (!isAnimRunning) {
-            musicKeyListener?.onKeyUp(pitch)
+            keyboardListener?.onKeyUp(pitch)
             fireKeyUp(pitch)
         }
     }
@@ -562,8 +562,8 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         return -1
     }
 
-    fun setMusicKeyListener(musicKeyListener: MusicKeyListener?) {
-        this.musicKeyListener = musicKeyListener
+    fun setMusicKeyListener(keyboardListener: KeyboardListener?) {
+        this.keyboardListener = keyboardListener
     }
 
     fun setWhiteKeyNum(whiteKeyNum: Int, animInterval: Int) {

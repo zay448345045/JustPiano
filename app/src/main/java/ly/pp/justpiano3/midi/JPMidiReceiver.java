@@ -21,12 +21,12 @@ public class JPMidiReceiver extends MidiReceiver {
 
     @Override
     public void onSend(byte[] msg, int offset, int count, long timestamp) {
-        // 保持和C++层调用一致的API：onMidiReceiveMessage
+        // 保持和C++层调用一致的API：onMidiMessageReceive
         for (int i = offset; i < offset + count; i += 3) {
             if ((msg[i] & 0xF0) == 0x90) {
-                midiConnectionListener.onMidiReceiveMessage(msg[i + 1], msg[i + 2]);
+                midiConnectionListener.onMidiMessageReceive(msg[i + 1], msg[i + 2]);
             } else if ((msg[i] & 0xF0) == 0x80) {
-                midiConnectionListener.onMidiReceiveMessage(msg[i + 1], (byte) 0);
+                midiConnectionListener.onMidiMessageReceive(msg[i + 1], (byte) 0);
             }
         }
     }

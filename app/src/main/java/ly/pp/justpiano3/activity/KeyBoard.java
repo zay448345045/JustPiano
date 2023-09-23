@@ -103,7 +103,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
     private void initKeyboardModeView(KeyboardModeView keyboardModeView) {
         keyboardModeView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
-        keyboardModeView.setMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
+        keyboardModeView.setMusicKeyListener(new KeyboardModeView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
@@ -294,7 +294,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiReceiveMessage(byte pitch, byte volume) {
+    public void onMidiMessageReceive(byte pitch, byte volume) {
         pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
             keyboardMode2View.fireKeyDown(pitch, volume, null);

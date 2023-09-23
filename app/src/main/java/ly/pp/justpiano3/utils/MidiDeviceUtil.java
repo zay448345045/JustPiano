@@ -122,7 +122,7 @@ public class MidiDeviceUtil {
     private static void onNativeMessageReceive(byte pitch, byte volume) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                midiConnectionListener.onMidiReceiveMessage(pitch, volume);
+                midiConnectionListener.onMidiMessageReceive(pitch, volume);
             }
         }
     }

@@ -21,5 +21,5 @@ public interface MidiConnectionListener {
      * @param pitch  原始midi音高
      * @param volume midi音符力度
      */
-    void onMidiReceiveMessage(byte pitch, byte volume);
+    void onMidiMessageReceive(byte pitch, byte volume);
 }
