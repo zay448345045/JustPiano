@@ -154,7 +154,8 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             prizePointerImageView.setVisibility(View.GONE);
             drawPrizeView.setVisibility(View.GONE);
             try {
-                new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示")
+                        .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }

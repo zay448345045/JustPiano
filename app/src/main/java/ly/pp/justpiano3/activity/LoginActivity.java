@@ -105,7 +105,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 finish();
                 return;
             case 4:
-                new JPDialogBuilder(this).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
+                new JPDialogBuilder(this).setWidth(400).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
                     if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                     } else {
