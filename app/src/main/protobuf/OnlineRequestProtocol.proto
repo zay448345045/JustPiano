@@ -157,6 +157,8 @@ message OnlineLoginDTO {
   OnlineDeviceDTO device_info = 5;
   // 公钥信息
   string public_key = 6;
+  // 客户端Session
+  string session = 7;
 }
 
 // 设备
