@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.utils;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.handler.OkHttpCookiesHandler;
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
@@ -14,7 +15,7 @@ import okhttp3.OkHttpClient;
  **/
 public class OkHttpUtil {
     private static final OkHttpClient client;
-    private static final String JESSIONID = "JESSIONID";
+    private static final String JSESSIONID = "JSESSIONID";
 
     static {
         client = new OkHttpClient.Builder()
@@ -26,12 +27,14 @@ public class OkHttpUtil {
         return client;
     }
 
-    public static String getJavaSessionId() {
-        for (Cookie cookie : OkHttpUtil.client().cookieJar().loadForRequest(HttpUrl.get("/"))) {
-            if (JESSIONID.equals(cookie.name())) {
-                return cookie.value();
+    public static String getJavaSessionId(String server) {
+        for (Cookie cookie : OkHttpUtil.client().cookieJar().loadForRequest(HttpUrl.parse("/"))) {
+            if (server.equals(cookie.domain())) {
+                if (JSESSIONID.equals(cookie.name())) {
+                    return cookie.value();
+                }
             }
         }
-        return null;
+        return StringUtil.EMPTY_STRING;
     }
 }

@@ -210,7 +210,7 @@ public class ConnectionService extends Service implements Runnable {
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
                 builder.setPackageName(getPackageName());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
-                builder.setSession(OkHttpUtil.getJavaSessionId());
+                builder.setSession(OkHttpUtil.getJavaSessionId(OnlineUtil.server));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
                 deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication.getApplicationContext()));
