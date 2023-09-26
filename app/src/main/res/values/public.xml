@@ -327,10 +327,6 @@
     <public name="info_name" id="2131230724" type="string" />
     <public name="settings_name" id="2131230725" type="string" />
     <public name="melodylist_name" id="2131230726" type="string" />
-    <public name="background_sound" id="2131230727" type="string" />
-    <public name="draw_speed" id="2131230728" type="string" />
-    <public name="back_sound" id="2131230729" type="string" />
-    <public name="song_speed" id="2131230730" type="string" />
     <public name="b_s_sum" id="2131230731" type="string" />
     <public name="b_s_open" id="2131230732" type="string" />
     <public name="b_s_open_1" id="2131230733" type="string" />

@@ -3,18 +3,9 @@ package ly.pp.justpiano3.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-
+import android.widget.*;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 
@@ -168,13 +159,15 @@ public final class JPDialogBuilder {
             JPDialog dialog = createJPDialog();
             if (!dialog.isShowing()) {
                 Window window = dialog.getWindow();
-                Context context=dialog.getContext();
+                Context context = dialog.getContext();
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 focusNotAle(window);
                 dialog.show();
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
                 layoutParams.width = UnitConvertUtil.dp2px(context, this.width);
+                layoutParams.gravity = Gravity.CENTER;
                 window.setAttributes(layoutParams);
+                window.requestFeature(Window.FEATURE_NO_TITLE);
                 hideNavigationBar(window);
                 clearFocusNotAle(window);
             }

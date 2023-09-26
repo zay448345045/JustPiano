@@ -147,9 +147,9 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
-                    + "\n用户等级:Lv." + lv
+                    + "\n用户等级:LV." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n考级进度:CL." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
@@ -241,8 +241,8 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 break;
             case R.id.ol_family_changepic:
                 jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("抱歉");
-                jpDialogBuilder.setMessage("当前客户端不支持家族族徽的上传，请至官网上传");
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，可至官网上传");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
 //                Intent intent = new Intent("android.intent.action.GET_CONTENT");

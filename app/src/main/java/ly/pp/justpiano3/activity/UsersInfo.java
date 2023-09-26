@@ -258,8 +258,8 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
         switch (view.getId()) {
             case R.id.user_face:
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("抱歉");
-                jpDialogBuilder.setMessage("暂不支持上传头像");
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("当前版本暂不支持上传头像");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
                 return;

@@ -30,10 +30,6 @@
         京ICP备2020039885号-3A
     </string>
     <string name="settings_name">设置</string>
-    <string name="background_sound">和弦</string>
-    <string name="draw_speed">滑落速度(影响歌曲节奏)</string>
-    <string name="back_sound">和弦音量(突出弹奏声音)</string>
-    <string name="song_speed">歌曲速度调节：</string>
     <string name="b_s_sum">减小和弦音量,突出主旋律</string>
     <string name="b_s_open">打开和弦</string>
     <string name="b_s_open_1">和弦已打开</string>
@@ -81,7 +77,7 @@
     <string name="create_room_g">组队</string>
     <string name="create_room_k">键盘</string>
     <string name="create_room_c">双人</string>
-    <string name="f_view">TextView</string>
+    <string name="f_view">分类</string>
     <string name="family_name">家族名称：</string>
     <string name="family_declaration">家族宣言</string>
     <string name="family_manage">族长入口</string>
@@ -188,7 +184,7 @@
     <string name="ol_family_ma_ex_target">目标分数：</string>
     <string name="ol_family_ma_ex_c">更改考核曲信息</string>
     <string name="ol_family_ma_logo">家族徽章</string>
-    <string name="ol_family_ma_logo_info">抱歉，当前版本不支持家族族徽上传，上传族徽请登录官网!</string>
+    <string name="ol_family_ma_logo_info">当前版本不支持家族族徽上传，可至官网上传</string>
     <string name="ol_family_ma_logo_c">修改家族徽章(从本地上传)</string>
     <string name="ol_msg_view_usr">用户</string>
     <string name="ol_msg_view_mao">:</string>
@@ -265,7 +261,7 @@
     <string name="olplayhallroom_olprize">在线奖励</string>
     <string name="olplayhallroom_cl">CL.5</string>
     <string name="olplayhallroom_cp">祝福点:9999</string>
-    <string name="olplayhallroom_bl">想钓到美好的未来。为此得先垂下钓线才行。</string>
+    <string name="olplayhallroom_bl">想钓到美好的未来。为此得先垂下钓线才行</string>
     <string name="olplayhallroom_br">解除搭档</string>
     <string name="olplayhallroom_set_bl">设置祝语</string>
     <string name="olplayhallroom_family">我的家族：</string>
@@ -314,7 +310,7 @@
     <string name="confirm_pwd">确认新密码</string>
     <string name="user_info_confirm">信息保存</string>
     <string name="user_msg_title">设置签名</string>
-    <string name="user_msg_set">确 定</string>
+    <string name="user_msg_set">确定</string>
     <string name="family_position">职位</string>
     <string name="family_player">名称</string>
     <string name="family_date">最后登录日期</string>
@@ -334,8 +330,4 @@
         \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
     </string>
     <string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
-    <string name="changeserver_ti">选择服务器</string>
-    <string name="changeserver_prod">正式服\n(普通的服务器普通的用)</string>
-    <string name="changeserver_dev">测试服\n(测试用途或故障时备用)</string>
-    <string name="changeserver_hint">其他服务器(填写域名或IP):</string>
 </resources>
