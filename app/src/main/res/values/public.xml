@@ -156,175 +156,6 @@
     <public name="spinne_l" id="2130837657" type="drawable" />
     <public name="spinne_r" id="2130837658" type="drawable" />
     <public name="title_bar" id="2130837659" type="drawable" />
-    <public name="umeng_common_gradient_green" id="2130837660" type="drawable" />
-    <public name="umeng_common_gradient_orange" id="2130837661" type="drawable" />
-    <public name="umeng_common_gradient_red" id="2130837662" type="drawable" />
-    <public name="umeng_fb_arrow_right" id="2130837663" type="drawable" />
-    <public name="umeng_fb_back_normal" id="2130837664" type="drawable" />
-    <public name="umeng_fb_back_selected" id="2130837665" type="drawable" />
-    <public name="umeng_fb_back_selector" id="2130837666" type="drawable" />
-    <public name="umeng_fb_bar_bg" id="2130837667" type="drawable" />
-    <public name="umeng_fb_blank_selector" id="2130837668" type="drawable" />
-    <public name="umeng_fb_bottom_banner" id="2130837669" type="drawable" />
-    <public name="umeng_fb_btn_bg_selector" id="2130837670" type="drawable" />
-    <public name="umeng_fb_conversation_bg" id="2130837671" type="drawable" />
-    <public name="umeng_fb_dev_bubble" id="2130837672" type="drawable" />
-    <public name="umeng_fb_gradient_green" id="2130837673" type="drawable" />
-    <public name="umeng_fb_gradient_orange" id="2130837674" type="drawable" />
-    <public name="umeng_fb_gray_frame" id="2130837675" type="drawable" />
-    <public name="umeng_fb_list_item" id="2130837676" type="drawable" />
-    <public name="umeng_fb_list_item_pressed" id="2130837677" type="drawable" />
-    <public name="umeng_fb_list_item_selector" id="2130837678" type="drawable" />
-    <public name="umeng_fb_logo" id="2130837679" type="drawable" />
-    <public name="umeng_fb_point_new" id="2130837680" type="drawable" />
-    <public name="umeng_fb_point_normal" id="2130837681" type="drawable" />
-    <public name="umeng_fb_reply_left_bg" id="2130837682" type="drawable" />
-    <public name="umeng_fb_reply_right_bg" id="2130837683" type="drawable" />
-    <public name="umeng_fb_see_list_normal" id="2130837684" type="drawable" />
-    <public name="umeng_fb_see_list_pressed" id="2130837685" type="drawable" />
-    <public name="umeng_fb_see_list_selector" id="2130837686" type="drawable" />
-    <public name="umeng_fb_statusbar_icon" id="2130837687" type="drawable" />
-    <public name="umeng_fb_submit_selector" id="2130837688" type="drawable" />
-    <public name="umeng_fb_tick_normal" id="2130837689" type="drawable" />
-    <public name="umeng_fb_tick_selected" id="2130837690" type="drawable" />
-    <public name="umeng_fb_tick_selector" id="2130837691" type="drawable" />
-    <public name="umeng_fb_top_banner" id="2130837692" type="drawable" />
-    <public name="umeng_fb_user_bubble" id="2130837693" type="drawable" />
-    <public name="umeng_fb_write_normal" id="2130837694" type="drawable" />
-    <public name="umeng_fb_write_pressed" id="2130837695" type="drawable" />
-    <public name="umeng_fb_write_selector" id="2130837696" type="drawable" />
-    <public name="umeng_socialize_action_back" id="2130837697" type="drawable" />
-    <public name="umeng_socialize_action_back_normal" id="2130837698" type="drawable" />
-    <public name="umeng_socialize_action_back_selected" id="2130837699" type="drawable" />
-    <public name="umeng_socialize_action_comment_normal" id="2130837700" type="drawable" />
-    <public name="umeng_socialize_action_comment_selected" id="2130837701" type="drawable" />
-    <public name="umeng_socialize_action_item_bg" id="2130837702" type="drawable" />
-    <public name="umeng_socialize_action_like" id="2130837703" type="drawable" />
-    <public name="umeng_socialize_action_personal_icon" id="2130837704" type="drawable" />
-    <public name="umeng_socialize_action_personal_normal" id="2130837705" type="drawable" />
-    <public name="umeng_socialize_action_personal_selected" id="2130837706" type="drawable" />
-    <public name="umeng_socialize_action_share_icon" id="2130837707" type="drawable" />
-    <public name="umeng_socialize_action_share_normal" id="2130837708" type="drawable" />
-    <public name="umeng_socialize_action_share_selected" id="2130837709" type="drawable" />
-    <public name="umeng_socialize_action_unlike" id="2130837710" type="drawable" />
-    <public name="umeng_socialize_actionbar_bg" id="2130837711" type="drawable" />
-    <public name="umeng_socialize_at_button" id="2130837712" type="drawable" />
-    <public name="umeng_socialize_at_label_bg" id="2130837713" type="drawable" />
-    <public name="umeng_socialize_at_normal" id="2130837714" type="drawable" />
-    <public name="umeng_socialize_at_search_bg" id="2130837715" type="drawable" />
-    <public name="umeng_socialize_at_selected" id="2130837716" type="drawable" />
-    <public name="umeng_socialize_bind_bg" id="2130837717" type="drawable" />
-    <public name="umeng_socialize_bind_bt" id="2130837718" type="drawable" />
-    <public name="umeng_socialize_bind_select_bg" id="2130837719" type="drawable" />
-    <public name="umeng_socialize_button_blue" id="2130837720" type="drawable" />
-    <public name="umeng_socialize_button_grey" id="2130837721" type="drawable" />
-    <public name="umeng_socialize_button_grey_blue" id="2130837722" type="drawable" />
-    <public name="umeng_socialize_button_login" id="2130837723" type="drawable" />
-    <public name="umeng_socialize_button_login_normal" id="2130837724" type="drawable" />
-    <public name="umeng_socialize_button_login_pressed" id="2130837725" type="drawable" />
-    <public name="umeng_socialize_button_red" id="2130837726" type="drawable" />
-    <public name="umeng_socialize_button_red_blue" id="2130837727" type="drawable" />
-    <public name="umeng_socialize_button_white" id="2130837728" type="drawable" />
-    <public name="umeng_socialize_button_white_blue" id="2130837729" type="drawable" />
-    <public name="umeng_socialize_checked" id="2130837730" type="drawable" />
-    <public name="umeng_socialize_comment_bg" id="2130837731" type="drawable" />
-    <public name="umeng_socialize_comment_icon" id="2130837732" type="drawable" />
-    <public name="umeng_socialize_comment_item_bg_shape" id="2130837733" type="drawable" />
-    <public name="umeng_socialize_comment_normal" id="2130837734" type="drawable" />
-    <public name="umeng_socialize_comment_selected" id="2130837735" type="drawable" />
-    <public name="umeng_socialize_commnet_header_bg" id="2130837736" type="drawable" />
-    <public name="umeng_socialize_default_avatar" id="2130837737" type="drawable" />
-    <public name="umeng_socialize_divider_line" id="2130837738" type="drawable" />
-    <public name="umeng_socialize_douban_off" id="2130837739" type="drawable" />
-    <public name="umeng_socialize_douban_on" id="2130837740" type="drawable" />
-    <public name="umeng_socialize_facebook" id="2130837741" type="drawable" />
-    <public name="umeng_socialize_fetch_image" id="2130837742" type="drawable" />
-    <public name="umeng_socialize_fetch_image_disabled" id="2130837743" type="drawable" />
-    <public name="umeng_socialize_fetch_location" id="2130837744" type="drawable" />
-    <public name="umeng_socialize_fetch_location_disabled" id="2130837745" type="drawable" />
-    <public name="umeng_socialize_follow_check" id="2130837746" type="drawable" />
-    <public name="umeng_socialize_follow_off" id="2130837747" type="drawable" />
-    <public name="umeng_socialize_follow_on" id="2130837748" type="drawable" />
-    <public name="umeng_socialize_gmail" id="2130837749" type="drawable" />
-    <public name="umeng_socialize_google" id="2130837750" type="drawable" />
-    <public name="umeng_socialize_input_bar" id="2130837751" type="drawable" />
-    <public name="umeng_socialize_light_bar_bg" id="2130837752" type="drawable" />
-    <public name="umeng_socialize_light_bar_bg_pad" id="2130837753" type="drawable" />
-    <public name="umeng_socialize_location_grey" id="2130837754" type="drawable" />
-    <public name="umeng_socialize_location_ic" id="2130837755" type="drawable" />
-    <public name="umeng_socialize_location_mark" id="2130837756" type="drawable" />
-    <public name="umeng_socialize_location_off" id="2130837757" type="drawable" />
-    <public name="umeng_socialize_location_on" id="2130837758" type="drawable" />
-    <public name="umeng_socialize_nav_bar_bg" id="2130837759" type="drawable" />
-    <public name="umeng_socialize_nav_bar_bg_pad" id="2130837760" type="drawable" />
-    <public name="umeng_socialize_oauth_check" id="2130837761" type="drawable" />
-    <public name="umeng_socialize_oauth_check_off" id="2130837762" type="drawable" />
-    <public name="umeng_socialize_oauth_check_on" id="2130837763" type="drawable" />
-    <public name="umeng_socialize_pulltorefresh_arrow" id="2130837764" type="drawable" />
-    <public name="umeng_socialize_pv" id="2130837765" type="drawable" />
-    <public name="umeng_socialize_qq_login" id="2130837766" type="drawable" />
-    <public name="umeng_socialize_qq_off" id="2130837767" type="drawable" />
-    <public name="umeng_socialize_qq_on" id="2130837768" type="drawable" />
-    <public name="umeng_socialize_qzone_off" id="2130837769" type="drawable" />
-    <public name="umeng_socialize_qzone_on" id="2130837770" type="drawable" />
-    <public name="umeng_socialize_refersh" id="2130837771" type="drawable" />
-    <public name="umeng_socialize_renren_off" id="2130837772" type="drawable" />
-    <public name="umeng_socialize_renren_on" id="2130837773" type="drawable" />
-    <public name="umeng_socialize_search_icon" id="2130837774" type="drawable" />
-    <public name="umeng_socialize_shape_bt" id="2130837775" type="drawable" />
-    <public name="umeng_socialize_shape_cyan" id="2130837776" type="drawable" />
-    <public name="umeng_socialize_shape_hollow_grey" id="2130837777" type="drawable" />
-    <public name="umeng_socialize_shape_red" id="2130837778" type="drawable" />
-    <public name="umeng_socialize_shape_solid_black" id="2130837779" type="drawable" />
-    <public name="umeng_socialize_shape_solid_grey" id="2130837780" type="drawable" />
-    <public name="umeng_socialize_shape_yellow" id="2130837781" type="drawable" />
-    <public name="umeng_socialize_share_music" id="2130837782" type="drawable" />
-    <public name="umeng_socialize_share_pic" id="2130837783" type="drawable" />
-    <public name="umeng_socialize_share_to_button" id="2130837784" type="drawable" />
-    <public name="umeng_socialize_share_transparent_corner" id="2130837785" type="drawable" />
-    <public name="umeng_socialize_share_video" id="2130837786" type="drawable" />
-    <public name="umeng_socialize_shareboard_item_background" id="2130837787" type="drawable" />
-    <public name="umeng_socialize_sidebar_normal" id="2130837788" type="drawable" />
-    <public name="umeng_socialize_sidebar_selected" id="2130837789" type="drawable" />
-    <public name="umeng_socialize_sidebar_selector" id="2130837790" type="drawable" />
-    <public name="umeng_socialize_sina_off" id="2130837791" type="drawable" />
-    <public name="umeng_socialize_sina_on" id="2130837792" type="drawable" />
-    <public name="umeng_socialize_slate_bg" id="2130837793" type="drawable" />
-    <public name="umeng_socialize_sms" id="2130837794" type="drawable" />
-    <public name="umeng_socialize_title_back_bt" id="2130837802" type="drawable" />
-    <public name="umeng_socialize_title_back_bt_normal" id="2130837803" type="drawable" />
-    <public name="umeng_socialize_title_back_bt_selected" id="2130837804" type="drawable" />
-    <public name="umeng_socialize_title_right_bt" id="2130837805" type="drawable" />
-    <public name="umeng_socialize_title_right_bt_normal" id="2130837806" type="drawable" />
-    <public name="umeng_socialize_title_right_bt_selected" id="2130837807" type="drawable" />
-    <public name="umeng_socialize_title_tab_button_left" id="2130837808" type="drawable" />
-    <public name="umeng_socialize_title_tab_button_right" id="2130837809" type="drawable" />
-    <public name="umeng_socialize_title_tab_left_normal" id="2130837810" type="drawable" />
-    <public name="umeng_socialize_title_tab_left_pressed" id="2130837811" type="drawable" />
-    <public name="umeng_socialize_title_tab_right_normal" id="2130837812" type="drawable" />
-    <public name="umeng_socialize_title_tab_right_pressed" id="2130837813" type="drawable" />
-    <public name="umeng_socialize_twitter" id="2130837814" type="drawable" />
-    <public name="umeng_socialize_tx_off" id="2130837815" type="drawable" />
-    <public name="umeng_socialize_tx_on" id="2130837816" type="drawable" />
-    <public name="umeng_socialize_ucenter_hbg" id="2130837817" type="drawable" />
-    <public name="umeng_socialize_wechat" id="2130837818" type="drawable" />
-    <public name="umeng_socialize_window_shadow_pad" id="2130837819" type="drawable" />
-    <public name="umeng_socialize_wxcircle" id="2130837820" type="drawable" />
-    <public name="umeng_socialize_x_button" id="2130837821" type="drawable" />
-    <public name="umeng_update_button_cancel_bg_focused" id="2130837822" type="drawable" />
-    <public name="umeng_update_button_cancel_bg_normal" id="2130837823" type="drawable" />
-    <public name="umeng_update_button_cancel_bg_selector" id="2130837824" type="drawable" />
-    <public name="umeng_update_button_cancel_bg_tap" id="2130837825" type="drawable" />
-    <public name="umeng_update_button_close_bg_selector" id="2130837826" type="drawable" />
-    <public name="umeng_update_button_ok_bg_focused" id="2130837827" type="drawable" />
-    <public name="umeng_update_button_ok_bg_normal" id="2130837828" type="drawable" />
-    <public name="umeng_update_button_ok_bg_selector" id="2130837829" type="drawable" />
-    <public name="umeng_update_button_ok_bg_tap" id="2130837830" type="drawable" />
-    <public name="umeng_update_close_bg_normal" id="2130837831" type="drawable" />
-    <public name="umeng_update_close_bg_tap" id="2130837832" type="drawable" />
-    <public name="umeng_update_dialog_bg" id="2130837833" type="drawable" />
-    <public name="umeng_update_title_bg" id="2130837834" type="drawable" />
-    <public name="umeng_update_wifi_disable" id="2130837835" type="drawable" />
     <public name="v10_name" id="2130837836" type="drawable" />
     <public name="v11_name" id="2130837837" type="drawable" />
     <public name="v12_name" id="2130837838" type="drawable" />
@@ -408,45 +239,6 @@
     <public name="skin_list" id="2130903106" type="layout" />
     <public name="skin_view" id="2130903107" type="layout" />
     <public name="song_view" id="2130903108" type="layout" />
-    <public name="umeng_common_download_notification" id="2130903109" type="layout" />
-    <public name="umeng_fb_activity_contact" id="2130903110" type="layout" />
-    <public name="umeng_fb_activity_conversation" id="2130903111" type="layout" />
-    <public name="umeng_fb_atom" id="2130903112" type="layout" />
-    <public name="umeng_fb_conversation_item" id="2130903113" type="layout" />
-    <public name="umeng_fb_conversations_item" id="2130903114" type="layout" />
-    <public name="umeng_fb_list_header" id="2130903115" type="layout" />
-    <public name="umeng_fb_list_item" id="2130903116" type="layout" />
-    <public name="umeng_fb_new_reply_alert_dialog" id="2130903117" type="layout" />
-    <public name="umeng_socialize_actionbar" id="2130903118" type="layout" />
-    <public name="umeng_socialize_at_item" id="2130903119" type="layout" />
-    <public name="umeng_socialize_at_overlay" id="2130903120" type="layout" />
-    <public name="umeng_socialize_at_view" id="2130903121" type="layout" />
-    <public name="umeng_socialize_base_alert_dialog" id="2130903122" type="layout" />
-    <public name="umeng_socialize_base_alert_dialog_button" id="2130903123" type="layout" />
-    <public name="umeng_socialize_bind_select_dialog" id="2130903124" type="layout" />
-    <public name="umeng_socialize_comment_content" id="2130903125" type="layout" />
-    <public name="umeng_socialize_comment_detail" id="2130903126" type="layout" />
-    <public name="umeng_socialize_comment_detail_nomap" id="2130903127" type="layout" />
-    <public name="umeng_socialize_comment_item" id="2130903128" type="layout" />
-    <public name="umeng_socialize_comment_more" id="2130903129" type="layout" />
-    <public name="umeng_socialize_comment_view" id="2130903130" type="layout" />
-    <public name="umeng_socialize_composer_header" id="2130903131" type="layout" />
-    <public name="umeng_socialize_failed_load_page" id="2130903132" type="layout" />
-    <public name="umeng_socialize_full_alert_dialog" id="2130903133" type="layout" />
-    <public name="umeng_socialize_full_alert_dialog_item" id="2130903134" type="layout" />
-    <public name="umeng_socialize_full_curtain" id="2130903135" type="layout" />
-    <public name="umeng_socialize_oauth_dialog" id="2130903136" type="layout" />
-    <public name="umeng_socialize_post_comment" id="2130903137" type="layout" />
-    <public name="umeng_socialize_post_comment_platform" id="2130903138" type="layout" />
-    <public name="umeng_socialize_post_share" id="2130903139" type="layout" />
-    <public name="umeng_socialize_pull_to_refresh_header" id="2130903140" type="layout" />
-    <public name="umeng_socialize_shareboard_item" id="2130903141" type="layout" />
-    <public name="umeng_socialize_simple_spinner_item" id="2130903142" type="layout" />
-    <public name="umeng_socialize_titile_bar" id="2130903143" type="layout" />
-    <public name="umeng_socialize_titile_bar_comment" id="2130903144" type="layout" />
-    <public name="umeng_socialize_ucenter" id="2130903145" type="layout" />
-    <public name="umeng_socialize_ucenter_platform_item" id="2130903146" type="layout" />
-    <public name="umeng_update_dialog" id="2130903147" type="layout" />
     <public name="user_info" id="2130903148" type="layout" />
     <public name="user_msg" id="2130903149" type="layout" />
     <public name="waiting" id="2130903150" type="layout" />
@@ -456,16 +248,6 @@
     <public name="push_left_out" id="2130968579" type="anim" />
     <public name="push_right_in" id="2130968580" type="anim" />
     <public name="push_right_out" id="2130968581" type="anim" />
-    <public name="umeng_fb_slide_in_from_left" id="2130968582" type="anim" />
-    <public name="umeng_fb_slide_in_from_right" id="2130968583" type="anim" />
-    <public name="umeng_fb_slide_out_from_left" id="2130968584" type="anim" />
-    <public name="umeng_fb_slide_out_from_right" id="2130968585" type="anim" />
-    <public name="umeng_socialize_fade_in" id="2130968586" type="anim" />
-    <public name="umeng_socialize_fade_out" id="2130968587" type="anim" />
-    <public name="umeng_socialize_shareboard_animation_in" id="2130968588" type="anim" />
-    <public name="umeng_socialize_shareboard_animation_out" id="2130968589" type="anim" />
-    <public name="umeng_socialize_slide_in_from_bottom" id="2130968590" type="anim" />
-    <public name="umeng_socialize_slide_out_from_bottom" id="2130968591" type="anim" />
     <public name="cordova" id="2131034112" type="xml" />
     <public name="play_widget" id="2131034113" type="xml" />
     <public name="plugins" id="2131034114" type="xml" />
@@ -579,7 +361,6 @@
     <public name="help_listen_mode" id="2131230758" type="string" />
     <public name="help_keyboard_mode" id="2131230759" type="string" />
     <public name="practice" id="2131230760" type="string" />
-    <public name="thanks" id="2131230761" type="string" />
     <public name="Transparent" id="2131296256" type="style" />
     <public name="Theme" id="2131296257" type="style" />
     <public name="Theme.PlainText" id="2131296258" type="style" />
@@ -591,22 +372,7 @@
     <public name="DialogText" id="2131296265" type="style" />
     <public name="DialogText.Title" id="2131296266" type="style" />
     <public name="progress_style" id="2131296267" type="style" />
-    <public name="umeng_socialize_action_bar_itemlayout" id="2131296268" type="style" />
-    <public name="umeng_socialize_action_bar_item_im" id="2131296269" type="style" />
-    <public name="umeng_socialize_action_bar_item_tv" id="2131296270" type="style" />
-    <public name="umeng_socialize_popup_dialog_anim" id="2131296271" type="style" />
-    <public name="umeng_socialize_popup_dialog" id="2131296272" type="style" />
-    <public name="umeng_socialize_dialog_animations" id="2131296273" type="style" />
-    <public name="umeng_socialize_dialog_anim_fade" id="2131296274" type="style" />
-    <public name="umeng_socialize_shareboard_animation" id="2131296275" type="style" />
-    <public name="Theme.UMDialog" id="2131296276" type="style" />
-    <public name="Theme.UMDefault" id="2131296277" type="style" />
-    <public name="umeng_socialize_divider" id="2131296278" type="style" />
-    <public name="umeng_socialize_list_item" id="2131296279" type="style" />
-    <public name="umeng_socialize_edit_padding" id="2131296280" type="style" />
     <public name="alphabet_size" id="2131361792" type="dimen" />
-    <public name="umeng_socialize_pad_window_height" id="2131361793" type="dimen" />
-    <public name="umeng_socialize_pad_window_width" id="2131361794" type="dimen" />
     <public name="scrollView1" id="2131427328" type="id" />
     <public name="linearLayout1" id="2131427329" type="id" />
     <public name="text" id="2131427330" type="id" />
@@ -1023,167 +789,17 @@
     <public name="song_name" id="2131427743" type="id" />
     <public name="song_degree" id="2131427744" type="id" />
     <public name="song_favor" id="2131427745" type="id" />
-    <public name="umeng_common_progress_text" id="2131427746" type="id" />
-    <public name="umeng_common_notification_controller" id="2131427747" type="id" />
-    <public name="umeng_common_rich_notification_continue" id="2131427748" type="id" />
-    <public name="umeng_common_rich_notification_cancel" id="2131427749" type="id" />
-    <public name="umeng_common_notification" id="2131427750" type="id" />
-    <public name="umeng_common_title" id="2131427751" type="id" />
-    <public name="umeng_common_progress_bar" id="2131427752" type="id" />
-    <public name="umeng_fb_contact_header" id="2131427753" type="id" />
-    <public name="umeng_fb_back" id="2131427754" type="id" />
-    <public name="umeng_fb_save" id="2131427755" type="id" />
-    <public name="umeng_fb_contact_info" id="2131427756" type="id" />
-    <public name="umeng_fb_contact_update_at" id="2131427757" type="id" />
-    <public name="umeng_fb_conversation_header" id="2131427758" type="id" />
-    <public name="umeng_fb_conversation_contact_entry" id="2131427759" type="id" />
-    <public name="umeng_fb_conversation_list_wrapper" id="2131427760" type="id" />
-    <public name="umeng_fb_reply_list" id="2131427761" type="id" />
-    <public name="umeng_fb_reply_content_wrapper" id="2131427762" type="id" />
-    <public name="umeng_fb_send" id="2131427763" type="id" />
-    <public name="umeng_fb_reply_content" id="2131427764" type="id" />
-    <public name="umeng_fb_atomLinearLayout" id="2131427765" type="id" />
-    <public name="umeng_fb_atom_left_margin" id="2131427766" type="id" />
-    <public name="umeng_fb_bubble" id="2131427767" type="id" />
-    <public name="umeng_fb_atomtxt" id="2131427768" type="id" />
-    <public name="umeng_fb_stateOrTime" id="2131427769" type="id" />
-    <public name="umeng_fb_atom_right_margin" id="2131427770" type="id" />
-    <public name="umeng_fb_new_reply_notifier" id="2131427771" type="id" />
-    <public name="umeng_fb_feedbackpreview" id="2131427772" type="id" />
-    <public name="umeng_fb_dev_reply" id="2131427773" type="id" />
-    <public name="umeng_fb_state_or_date" id="2131427774" type="id" />
-    <public name="umeng_fb_conversation_umeng_logo" id="2131427775" type="id" />
-    <public name="umeng_fb_list_reply_header" id="2131427776" type="id" />
-    <public name="umeng_fb_reply_date" id="2131427777" type="id" />
-    <public name="umeng_socialize_funcation_area" id="2131427778" type="id" />
-    <public name="umeng_socialize_comment_bt" id="2131427779" type="id" />
-    <public name="umeng_socialize_action_comment_im" id="2131427780" type="id" />
-    <public name="umeng_socialize_action_comment_tv" id="2131427781" type="id" />
-    <public name="umeng_socialize_like_bt" id="2131427782" type="id" />
-    <public name="umeng_socialize_like_bt_show" id="2131427783" type="id" />
-    <public name="umeng_socialize_like_icon" id="2131427784" type="id" />
-    <public name="umeng_socialize_action_like_tv" id="2131427785" type="id" />
-    <public name="umeng_socialize_like_bt_progress" id="2131427786" type="id" />
-    <public name="umeng_socialize_share_bt" id="2131427787" type="id" />
-    <public name="umeng_socialize_action_share_im" id="2131427788" type="id" />
-    <public name="umeng_socialize_action_share_tv" id="2131427789" type="id" />
-    <public name="umeng_socialize_user_center_bt" id="2131427790" type="id" />
-    <public name="umeng_socialize_action_user_center_im" id="2131427791" type="id" />
-    <public name="umeng_socialize_action_user_center_tv" id="2131427792" type="id" />
-    <public name="umeng_socialize_action_pv_im" id="2131427793" type="id" />
-    <public name="umeng_socialize_action_pv_tv" id="2131427794" type="id" />
     <public name="section" id="2131427795" type="id" />
-    <public name="umeng_socialize_avatar_imv" id="2131427796" type="id" />
-    <public name="umeng_socialize_text_view" id="2131427797" type="id" />
-    <public name="umeng_socialize_line_serach" id="2131427798" type="id" />
     <public name="search_text" id="2131427799" type="id" />
     <public name="listView" id="2131427800" type="id" />
     <public name="slideBar" id="2131427801" type="id" />
-    <public name="umeng_socialize_progress" id="2131427802" type="id" />
-    <public name="umeng_socialize_tipinfo" id="2131427803" type="id" />
-    <public name="umeng_socialize_alert_body" id="2131427804" type="id" />
-    <public name="umeng_socialize_alert_footer" id="2131427805" type="id" />
-    <public name="umeng_socialize_alert_button" id="2131427806" type="id" />
-    <public name="umeng_socialize_bind_qzone" id="2131427807" type="id" />
-    <public name="umeng_socialize_bind_tel" id="2131427808" type="id" />
-    <public name="umeng_socialize_bind_sina" id="2131427809" type="id" />
-    <public name="umeng_socialize_bind_renren" id="2131427810" type="id" />
-    <public name="umeng_socialize_bind_douban" id="2131427811" type="id" />
-    <public name="umeng_socialize_bind_no_tip" id="2131427812" type="id" />
-    <public name="umeng_socialize_bind_cancel" id="2131427813" type="id" />
-    <public name="umeng_socialize_comment_item" id="2131427814" type="id" />
-    <public name="umeng_socialize_comment_item_profile_gp" id="2131427815" type="id" />
-    <public name="umeng_socialize_comment_avatar" id="2131427816" type="id" />
-    <public name="umeng_socialize_comment_item_name" id="2131427817" type="id" />
-    <public name="umeng_socialize_comment_item_content" id="2131427818" type="id" />
-    <public name="umeng_socialize_comment_item_time" id="2131427819" type="id" />
-    <public name="umeng_socialize_comment_item_has_location" id="2131427820" type="id" />
-    <public name="umeng_socialize_map" id="2131427821" type="id" />
-    <public name="umeng_socialize_map_invisible" id="2131427822" type="id" />
-    <public name="umeng_socialize_info" id="2131427823" type="id" />
-    <public name="umeng_socialize_comment_more_root" id="2131427824" type="id" />
-    <public name="umeng_socialize_content" id="2131427825" type="id" />
-    <public name="umeng_socialize_text" id="2131427826" type="id" />
-    <public name="umeng_socialize_pb" id="2131427827" type="id" />
-    <public name="umeng_socialize_line_edit" id="2131427828" type="id" />
-    <public name="umeng_socialize_comment_write" id="2131427829" type="id" />
-    <public name="umeng_socialize_comment_list" id="2131427830" type="id" />
-    <public name="umeng_socialize_comment_list_progress" id="2131427831" type="id" />
     <public name="header" id="2131427832" type="id" />
-    <public name="umeng_socialize_title" id="2131427833" type="id" />
-    <public name="umeng_xp_ScrollView" id="2131427834" type="id" />
-    <public name="umeng_socialize_first_area_title" id="2131427835" type="id" />
-    <public name="umeng_socialize_first_area" id="2131427836" type="id" />
-    <public name="umeng_socialize_second_area_title" id="2131427837" type="id" />
-    <public name="umeng_socialize_second_area" id="2131427838" type="id" />
-    <public name="umeng_socialize_full_alert_dialog_item_icon" id="2131427839" type="id" />
-    <public name="umeng_socialize_full_alert_dialog_item_text" id="2131427840" type="id" />
-    <public name="umeng_socialize_full_alert_dialog_item_status" id="2131427841" type="id" />
-    <public name="umeng_socialize_full_alert_dialog_divider" id="2131427842" type="id" />
-    <public name="umeng_socialize_titlebar" id="2131427843" type="id" />
-    <public name="umeng_socialize_follow" id="2131427844" type="id" />
-    <public name="umeng_socialize_follow_check" id="2131427845" type="id" />
     <public name="webView" id="2131427846" type="id" />
     <public name="progress_bar_parent" id="2131427847" type="id" />
-    <public name="umeng_socialize_post_comment_titlebar" id="2131427848" type="id" />
-    <public name="umeng_socialize_post_comment_bottom_area" id="2131427849" type="id" />
-    <public name="umeng_socialize_post_comment_fetch_img" id="2131427850" type="id" />
-    <public name="umeng_socialize_post_comment_location" id="2131427851" type="id" />
-    <public name="umeng_socialize_post_comment_previewImg" id="2131427852" type="id" />
-    <public name="umeng_socialize_location_ic" id="2131427853" type="id" />
-    <public name="umeng_socialize_location_progressbar" id="2131427854" type="id" />
-    <public name="umeng_socialize_post_ws_area" id="2131427855" type="id" />
-    <public name="umeng_socialize_post_comment_edittext" id="2131427856" type="id" />
-    <public name="umeng_socialize_post_cws_ic" id="2131427857" type="id" />
-    <public name="umeng_socialize_post_cws_selected" id="2131427858" type="id" />
-    <public name="umeng_socialize_share_root" id="2131427859" type="id" />
-    <public name="umeng_socialize_share_titlebar" id="2131427860" type="id" />
-    <public name="umeng_socialize_share_bottom_area" id="2131427861" type="id" />
-    <public name="umeng_socialize_post_fetch_image" id="2131427862" type="id" />
-    <public name="umeng_socialize_follow_layout" id="2131427863" type="id" />
-    <public name="umeng_socialize_share_location" id="2131427864" type="id" />
-    <public name="umeng_socialize_share_at" id="2131427865" type="id" />
-    <public name="umeng_socialize_share_previewImg" id="2131427866" type="id" />
-    <public name="umeng_socialize_share_previewImg_remove" id="2131427867" type="id" />
-    <public name="umeng_socialize_share_previewImg_progressbar" id="2131427868" type="id" />
-    <public name="umeng_socialize_share_edittext" id="2131427869" type="id" />
-    <public name="umeng_socialize_share_word_num" id="2131427870" type="id" />
     <public name="pull_to_refresh_progress" id="2131427871" type="id" />
     <public name="pull_to_refresh_image" id="2131427872" type="id" />
     <public name="pull_to_refresh_text" id="2131427873" type="id" />
     <public name="pull_to_refresh_updated_at" id="2131427874" type="id" />
-    <public name="umeng_socialize_shareboard_image" id="2131427875" type="id" />
-    <public name="umeng_socialize_shareboard_pltform_name" id="2131427876" type="id" />
-    <public name="umeng_socialize_spinner_img" id="2131427877" type="id" />
-    <public name="umeng_socialize_spinner_txt" id="2131427878" type="id" />
-    <public name="umeng_socialize_title_bar_leftBt" id="2131427879" type="id" />
-    <public name="umeng_socialize_title_bar_middleTv" id="2131427880" type="id" />
-    <public name="umeng_socialize_title_bar_middle_tab" id="2131427881" type="id" />
-    <public name="umeng_socialize_title_middle_left" id="2131427882" type="id" />
-    <public name="umeng_socialize_title_middle_right" id="2131427883" type="id" />
-    <public name="umeng_socialize_title_bar_rightBt" id="2131427884" type="id" />
-    <public name="umeng_socialize_title_bar_rightBt_progress" id="2131427885" type="id" />
-    <public name="umeng_socialize_load_error" id="2131427886" type="id" />
-    <public name="umeng_socialize_ucenter_info" id="2131427887" type="id" />
-    <public name="umeng_socialize_ic" id="2131427888" type="id" />
-    <public name="umeng_socialize_title_tv" id="2131427889" type="id" />
-    <public name="umeng_socialize_loginNm" id="2131427890" type="id" />
-    <public name="umeng_socialize_login_switch" id="2131427891" type="id" />
-    <public name="umeng_socialize_loginButton" id="2131427892" type="id" />
-    <public name="umeng_socialize_loginAddr" id="2131427893" type="id" />
-    <public name="umeng_socialize_share_area" id="2131427894" type="id" />
-    <public name="umeng_socialize_share_tv" id="2131427895" type="id" />
-    <public name="umeng_socialize_share_config_area" id="2131427896" type="id" />
-    <public name="umeng_socialize_icon" id="2131427897" type="id" />
-    <public name="umeng_socialize_msg" id="2131427898" type="id" />
-    <public name="umeng_socialize_toggle" id="2131427899" type="id" />
-    <public name="umeng_socialize_divider" id="2131427900" type="id" />
-    <public name="umeng_update_wifi_indicator" id="2131427901" type="id" />
-    <public name="umeng_update_id_close" id="2131427902" type="id" />
-    <public name="umeng_update_content" id="2131427903" type="id" />
-    <public name="umeng_update_id_ok" id="2131427904" type="id" />
-    <public name="umeng_update_id_cancel" id="2131427905" type="id" />
-    <public name="umeng_update_id_ignore" id="2131427906" type="id" />
     <public name="name" id="2131427907" type="id" />
     <public name="age" id="2131427908" type="id" />
     <public name="sex" id="2131427909" type="id" />

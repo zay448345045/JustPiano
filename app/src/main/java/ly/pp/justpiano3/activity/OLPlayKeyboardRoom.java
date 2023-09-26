@@ -24,6 +24,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
+import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
 import ly.pp.justpiano3.midi.JPMidiReceiver;
@@ -31,7 +32,7 @@ import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import ly.pp.justpiano3.view.KeyboardModeView;
+import ly.pp.justpiano3.view.KeyboardView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
 
 import java.io.File;
@@ -47,11 +48,10 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public byte roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
     public Integer keyboardNoteDownColor;
-    public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[6];
+    public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
     public MidiReceiver midiReceiver;
     public boolean midiKeyboardOn;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
-    private long lastNoteScheduleTime;
     /**
      * 键盘房间同步模式(默认编排模式)
      */
@@ -59,7 +59,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
     public LinearLayout keyboardLayout;
-    public KeyboardModeView keyboardView;
+    public KeyboardView keyboardView;
     public SharedPreferences sharedPreferences;
     public ScheduledExecutorService keyboardScheduledExecutor;
     public ScheduledExecutorService noteScheduledExecutor;
@@ -137,8 +137,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 if (name.equals(jpapplication.getKitiName())) {
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
-                    int kuangIndex = bundle1.getInt("IV");
-                    keyboardNoteDownColor = kuangIndex == 0 ? null : ColorUtil.getKuangColorByKuangIndex(this, kuangIndex);
+                    int colorIndex = bundle1.getInt("IV");
+                    keyboardNoteDownColor = colorIndex == 0 ? null : ColorUtil.getUserColorByUserColorIndex(this, colorIndex);
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
                 }
                 playerList.add(bundle1);
@@ -342,11 +342,11 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 return;
             default:
         }
-        /* 使用gradle 8以上的推荐写法 有空把上面也优化了 TODO */
+
         int viewId = view.getId();
         if (viewId == R.id.keyboard_sync_mode_text) {
             try {
-                new JPDialogBuilder(this).setTitle(getString(R.string.msg_this_is_what))
+                new JPDialogBuilder(this).setWidth(480).setTitle(getString(R.string.msg_this_is_what))
                         .setMessage(getString(R.string.ol_keyboard_sync_mode_help))
                         .setFirstButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
             } catch (Exception e) {
@@ -379,16 +379,11 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         roomTabs.addTab(newTabSpec);
         playerLayout = findViewById(R.id.player_layout);
         keyboardLayout = findViewById(R.id.keyboard_layout);
-        Button keyboardCountDown = findViewById(R.id.keyboard_count_down);
-        keyboardCountDown.setOnTouchListener(this);
-        Button keyboardCountup = findViewById(R.id.keyboard_count_up);
-        keyboardCountup.setOnTouchListener(this);
-        Button keyboardMoveLeft = findViewById(R.id.keyboard_move_left);
-        keyboardMoveLeft.setOnTouchListener(this);
-        Button keyboardMoveRight = findViewById(R.id.keyboard_move_right);
-        keyboardMoveRight.setOnTouchListener(this);
-        Button keyboardResize = findViewById(R.id.keyboard_resize);
-        keyboardResize.setOnTouchListener(this);
+        findViewById(R.id.keyboard_count_down).setOnTouchListener(this);
+        findViewById(R.id.keyboard_count_up).setOnTouchListener(this);
+        findViewById(R.id.keyboard_move_left).setOnTouchListener(this);
+        findViewById(R.id.keyboard_move_right).setOnTouchListener(this);
+        findViewById(R.id.keyboard_resize).setOnTouchListener(this);
         keyboardSetting = findViewById(R.id.keyboard_setting);
         keyboardSetting.setOnClickListener(this);
         Button keyboardRecord = findViewById(R.id.keyboard_record);
@@ -397,8 +392,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             olKeyboardStates[i] = new OLKeyboardState(false, false, false);
         }
         keyboardView = findViewById(R.id.keyboard_view);
-        keyboardView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
-        keyboardView.setMusicKeyListener(new KeyboardModeView.KeyboardListener() {
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setMusicKeyListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 if (roomPositionSub1 >= 0) {
@@ -597,6 +592,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 view.setPressed(false);
                 stopAddOrSubtract();
                 busyAnim = false;
+                view.performClick();
             }
         }
         return true;
@@ -631,37 +627,29 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         if (noteScheduledExecutor == null) {
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
-                // 时间戳和size尽量严格放在一起
-                int size = notesQueue.size();
-                // 房间里没有其他人，停止发任何消息，清空弹奏队列（因为可能刚刚变为房间没人的状态，队列可能有遗留
+                // 房间里没有其他人，停止发任何消息，清空弹奏队列（因为可能刚刚变为房间没人的状态，队列可能有遗留）
                 if (!hasAnotherUser()) {
                     notesQueue.clear();
                     return;
                 }
-                // 未检测到这段间隔有弹奏音符，或者房间里没有其他人，就不发消息给服务器，直接返回并记录此次定时任务执行时间点
-                if (size == 0) {
+                // 未检测到这段间隔有弹奏音符，就不发消息
+                if (notesQueue.isEmpty()) {
                     return;
                 }
                 try {
-                    List<Long> notes = new ArrayList<>();
-                    // 字节数组开头，存入是否开启midi键盘和楼号
-                    notes.add((long) (((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1));
-                    int pollIndex = size;
-                    // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
-                    while (pollIndex > 0) {
-                        OLNote olNote = notesQueue.poll();
-                        pollIndex--;
-                        if (olNote == null) {
-                            break;
-                        }
-                        // 记录并发问题：到下面i++时触发越界，可见队列size已经在并发环境下变化，必须在里面再判断一次size
-                        notes.add(olNote.getAbsoluteTime());
-                        notes.add((long) olNote.getPitch());
-                        notes.add((long) olNote.getVolume());
-                        // 切换时间点
-                    }
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                    builder.addAllData(notes);
+                    // 字节数组开头，存入是否开启midi键盘和楼号
+                    builder.addData(((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1);
+                    // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
+                    while (!notesQueue.isEmpty()) {
+                        OLNote olNote = notesQueue.poll();
+                        if (olNote == null) {
+                            continue;
+                        }
+                        builder.addData(olNote.getAbsoluteTime());
+                        builder.addData(olNote.getPitch());
+                        builder.addData(olNote.getVolume());
+                    }
                     sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
                     blinkView(roomPositionSub1);
                 } catch (Exception e) {

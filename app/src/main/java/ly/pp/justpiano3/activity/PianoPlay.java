@@ -61,7 +61,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public TextView finishSongName;
     public List<Bundle> gradeList = new ArrayList<>();
     public LayoutInflater layoutinflater;
-    public KeyBoardView keyboardview;
+    public PlayKeyBoardView keyboardview;
     public boolean isShowingSongsInfo;
     public Bundle roomBundle;
     public boolean isPlayingStart;

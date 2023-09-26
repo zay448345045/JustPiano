@@ -263,8 +263,9 @@ public class ConnectionService extends Service implements Runnable {
 
     private void outLineAndDialog() {
         outLine();
-        if (JPStack.top() instanceof OLBaseActivity) {
-            OLBaseActivity olBaseActivity = (OLBaseActivity) JPStack.top();
+        Activity topActivity = JPStack.top();
+        if (topActivity instanceof OLBaseActivity) {
+            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
             Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
             message.what = 0;
             olBaseActivity.olBaseActivityHandler.handleMessage(message);

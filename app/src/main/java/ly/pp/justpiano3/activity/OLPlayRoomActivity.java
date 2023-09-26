@@ -156,12 +156,12 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             ImageView imageView11 = inflate.findViewById(R.id.couple_type);
             ((TextView) inflate.findViewById(R.id.ol_player_name)).setText(user.getPlayerName());
             textView.setText("LV." + user.getLevel());
-            textView2.setText("CL." + user.getClevel());
-            textView3.setText(Consts.nameCL[user.getClevel()]);
+            textView2.setText("CL." + user.getCl());
+            textView3.setText(Consts.nameCL[user.getCl()]);
             textView4.setText(user2.getPlayerName());
             textView5.setText("LV." + user2.getLevel());
-            textView6.setText("CL." + user2.getClevel());
-            textView7.setText(Consts.nameCL[user2.getClevel()]);
+            textView6.setText("CL." + user2.getCl());
+            textView7.setText(Consts.nameCL[user2.getCl()]);
             textView8.setText(jSONObject4.getString("B"));
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);

@@ -436,7 +436,7 @@ public final class ReceiveTasks {
                     innerBundle.putBoolean("IF", room.isPeopleFull());
                     innerBundle.putInt("IP", room.isPlaying());
                     innerBundle.putInt("PA", room.isPassword());
-                    innerBundle.putInt("V", room.getRoomKuang());
+                    innerBundle.putInt("V", room.getRoomColor());
                     innerBundle.putInt("D", room.getRoomMode());
                     bundle.putBundle(String.valueOf(i), innerBundle);
                 }
@@ -525,7 +525,7 @@ public final class ReceiveTasks {
                     innerBundle.putBoolean("IF", room.isPeopleFull());
                     innerBundle.putInt("IP", room.isPlaying());
                     innerBundle.putInt("PA", room.isPassword());
-                    innerBundle.putInt("V", room.getRoomKuang());
+                    innerBundle.putInt("V", room.getRoomColor());
                     innerBundle.putInt("D", room.getRoomMode());
                     bundle.putBundle(String.valueOf(i), innerBundle);
                 }
@@ -1187,14 +1187,14 @@ public final class ReceiveTasks {
         innerBundle.putString("S", user.getSex());
         innerBundle.putString("IR", user.getStatus());
         innerBundle.putString("IH", user.getIshost());
-        innerBundle.putInt("IV", user.getKuang());
+        innerBundle.putInt("IV", user.getColor());
         innerBundle.putInt("LV", user.getLevel());
         innerBundle.putInt("TR", user.getTrousers());
         innerBundle.putInt("JA", user.getJacket());
         innerBundle.putInt("EY", user.getEye());
         innerBundle.putInt("HA", user.getHair());
         innerBundle.putInt("SH", user.getShoes());
-        innerBundle.putInt("CL", user.getClevel());
+        innerBundle.putInt("CL", user.getCl());
         innerBundle.putInt("GR", user.getHand());
         innerBundle.putInt("CP", user.getCpKind());
         innerBundle.putString("I", user.getFamilyID());

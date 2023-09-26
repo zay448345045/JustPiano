@@ -136,11 +136,11 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             int prizeType = prizeNum / 100;
             drawPrizeView.luckyStart(prizeType);
             if (prizeType == 0) {
-                int kuang = prizeNum + 7;
+                int color = prizeNum + 7;
                 if (prizeNum > 17) {
-                    kuang = 2 + (prizeNum - 18) * 5 / 82;
+                    color = 2 + (prizeNum - 18) * 5 / 82;
                 }
-                prizeColorView.setBackgroundResource(ColorUtil.kuang[kuang]);
+                prizeColorView.setBackgroundResource(ColorUtil.userColor[color]);
                 prizeColorView.setVisibility(View.VISIBLE);
             }
             try {

@@ -23,7 +23,7 @@ import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.KeyboardModeView;
+import ly.pp.justpiano3.view.KeyboardView;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -31,8 +31,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
-    public KeyboardModeView keyboardMode1View;
-    public KeyboardModeView keyboardMode2View;
+    public KeyboardView firstKeyboardView;
+    public KeyboardView secondKeyboardView;
     public LinearLayout keyboard1Layout;
     public LinearLayout keyboard2Layout;
     public JPApplication jpapplication;
@@ -63,10 +63,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_keyboard_mode);
         jpapplication = (JPApplication) getApplication();
-        keyboardMode1View = findViewById(R.id.keyboard1_view);
-        initKeyboardModeView(keyboardMode1View);
-        keyboardMode2View = findViewById(R.id.keyboard2_view);
-        initKeyboardModeView(keyboardMode2View);
+        firstKeyboardView = findViewById(R.id.keyboard1_view);
+        initKeyboardView(firstKeyboardView);
+        secondKeyboardView = findViewById(R.id.keyboard2_view);
+        initKeyboardView(secondKeyboardView);
         keyboard1Layout = findViewById(R.id.keyboard1_layout);
         keyboard1Layout.setOnTouchListener(this);
         keyboard2Layout = findViewById(R.id.keyboard2_layout);
@@ -87,10 +87,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         int keyboard1WhiteKeyOffset = sharedPreferences.getInt("keyboard1_white_key_offset", 21);
         int keyboard2WhiteKeyOffset = sharedPreferences.getInt("keyboard2_white_key_offset", 14);
         float keyboardWeight = sharedPreferences.getFloat("keyboard_weight", 0.5f);
-        keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
-        keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, 0);
-        keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
-        keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, 0);
+        firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+        secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, 0);
+        firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+        secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, 0);
         keyboard1Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -101,9 +101,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         }
     }
 
-    private void initKeyboardModeView(KeyboardModeView keyboardModeView) {
-        keyboardModeView.setOctaveTagType(KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
-        keyboardModeView.setMusicKeyListener(new KeyboardModeView.KeyboardListener() {
+    private void initKeyboardView(KeyboardView keyboardView) {
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setMusicKeyListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
@@ -168,6 +168,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                     edit.putFloat("keyboard_weight", layoutParams.weight);
                     edit.apply();
                     reSize = false;
+                    view.performClick();
                     break;
                 default:
                     break;
@@ -215,51 +216,51 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             SharedPreferences.Editor edit = sharedPreferences.edit();
             switch (msg.what) {
                 case R.id.keyboard1_count_down:
-                    int keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() - 1;
-                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
+                    int keyboard1WhiteKeyNum = firstKeyboardView.getWhiteKeyNum() - 1;
+                    firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_down:
-                    int keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() - 1;
-                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
+                    int keyboard2WhiteKeyNum = secondKeyboardView.getWhiteKeyNum() - 1;
+                    secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_count_up:
-                    keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() + 1;
-                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
+                    keyboard1WhiteKeyNum = firstKeyboardView.getWhiteKeyNum() + 1;
+                    firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_up:
-                    keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() + 1;
-                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
+                    keyboard2WhiteKeyNum = secondKeyboardView.getWhiteKeyNum() + 1;
+                    secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_left:
-                    int keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() - 1;
-                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
+                    int keyboard1WhiteKeyOffset = firstKeyboardView.getWhiteKeyOffset() - 1;
+                    firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_left:
-                    int keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() - 1;
-                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
+                    int keyboard2WhiteKeyOffset = secondKeyboardView.getWhiteKeyOffset() - 1;
+                    secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_right:
-                    keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() + 1;
-                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
+                    keyboard1WhiteKeyOffset = firstKeyboardView.getWhiteKeyOffset() + 1;
+                    firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_right:
-                    keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() + 1;
-                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
+                    keyboard2WhiteKeyOffset = secondKeyboardView.getWhiteKeyOffset() + 1;
+                    secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 default:
@@ -297,10 +298,10 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public void onMidiMessageReceive(byte pitch, byte volume) {
         pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
-            keyboardMode2View.fireKeyDown(pitch, volume, null);
+            secondKeyboardView.fireKeyDown(pitch, volume, null);
             SoundEngineUtil.playSound(pitch, volume);
         } else {
-            keyboardMode2View.fireKeyUp(pitch);
+            secondKeyboardView.fireKeyUp(pitch);
         }
     }
 
@@ -309,11 +310,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-            keyboardMode1View.changeSkinKeyboardImage(this);
-            keyboardMode2View.changeSkinKeyboardImage(this);
-            KeyboardModeView.OctaveTagType octaveTagType = KeyboardModeView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];
-            keyboardMode1View.setOctaveTagType(octaveTagType);
-            keyboardMode2View.setOctaveTagType(octaveTagType);
+            firstKeyboardView.changeSkinKeyboardImage(this);
+            secondKeyboardView.changeSkinKeyboardImage(this);
+            KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];
+            firstKeyboardView.setOctaveTagType(octaveTagType);
+            secondKeyboardView.setOctaveTagType(octaveTagType);
         }
     }
 

@@ -6,8 +6,8 @@
     <string name="about">更新日志：\n
         1、新增瀑布流播放功能，支持本地midi文件导入\n
         2、弹奏功能改善，音块速率支持任意调整\n
-        3、房间对战弹奏分数自动加入本地模式计分\n
-        4、连接MIDI设备弹奏降低延迟，优化音频播放性能\n
+        3、支持在线房间对战弹奏成绩计入本地\n
+        4、音频播放、MIDI设备弹奏性能优化\n
         5、联网模式支持长按发送全服消息\n
         6、优化挑战、选曲等界面，添加服装，修复已知问题\n
         感谢各位新老用户的支持！\n\n
@@ -42,7 +42,6 @@
     <string name="b_s_vol">sound_vol</string>
     <string name="b_s_vol_title">和弦音量</string>
     <string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果</string>
-    <string name="thanks"></string>
     <string name="login_title">极品钢琴</string>
     <string name="login_subtitle">浴火重生版</string>
     <string name="login_acc_label">账号:</string>
@@ -88,7 +87,7 @@
     <string name="family_manage">族长入口</string>
     <string name="family_io">申请加入</string>
     <string name="file_name">Medium Text</string>
-    <string name="file_date">2000-01-01</string>
+    <string name="file_date">2000–01–01</string>
     <string name="finish">完 成</string>
     <string name="finish_cat">类别</string>
     <string name="finish_count">个数</string>
@@ -296,8 +295,8 @@
     <string name="showtopinfo_n">下一页</string>
     <string name="showtopinfo_p">-1-</string>
     <string name="showtopinfo_b">上一页</string>
-    <string name="skin_list_downloading">正在下载,请稍后...</string>
-    <string name="skin_list_connecting">连接服务器ing...</string>
+    <string name="skin_list_downloading">正在下载,请稍后…</string>
+    <string name="skin_list_connecting">连接服务器ing…</string>
     <string name="skin_view_name">名称</string>
     <string name="skin_view_size">大小</string>
     <string name="skin_view_dc">下载</string>
@@ -325,7 +324,7 @@
     <string name="ol_keyboard_sync_mode_concerto">协奏同步</string>
     <string name="ol_keyboard_sync_mode_text">编排</string>
     <string name="ol_keyboard_sync_mode_help">
-        编排同步(暂未完成)：\n
+        编排同步：\n
         \t\t在一个周期内弹奏的音符会被排列，固定延迟同步给大家\n
         \t\t适用于保证演奏效果或弱网络下，大部分音符不会被网络所耽误\n
         \t\t总结：延迟高，同步效率低，不会被延迟打乱演奏效果，适合单人演奏\n

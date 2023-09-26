@@ -45,12 +45,13 @@
 
             <LinearLayout
                 style="@style/InputBoxStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="8"
                 android:layout_marginLeft="@dimen/dimen_1dp"
                 android:layout_marginRight="@dimen/dimen_1dp"
                 android:gravity="center">
+
                 <ly.pp.justpiano3.view.ScrollText
                     style="@style/EditTextStyle"
                     android:id="@+id/waterfall_song_name"
@@ -97,17 +98,17 @@
             android:id="@+id/waterfall_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"></ly.pp.justpiano3.view.WaterfallView>
+            android:layout_weight="7">
+        </ly.pp.justpiano3.view.WaterfallView>
 
     </LinearLayout>
 
-    <ly.pp.justpiano3.view.KeyboardModeView
+    <ly.pp.justpiano3.view.KeyboardView
             android:id="@+id/waterfall_keyboard"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:whiteKeyNum="49"
             app:whiteKeyOffset="0"
             android:layout_weight="1">
-    </ly.pp.justpiano3.view.KeyboardModeView>
-
+    </ly.pp.justpiano3.view.KeyboardView>
 </LinearLayout>

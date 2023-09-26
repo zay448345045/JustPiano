@@ -375,7 +375,7 @@ public final class PlayView extends SurfaceView implements Callback {
                 } else {
                     pianoPlay.runOnUiThread(() -> {
                         pianoPlay.setContentView(this);
-                        pianoPlay.keyboardview = new KeyBoardView(pianoPlay, this);
+                        pianoPlay.keyboardview = new PlayKeyBoardView(pianoPlay, this);
                         pianoPlay.addContentView(pianoPlay.keyboardview, pianoPlay.layoutParams2);
                         pianoPlay.m3785a(pianoPlay.playKind, false);
                         pianoPlay.isPlayingStart = true;

@@ -146,7 +146,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
         if (notes[i + 2] > 0) {
             olPlayKeyboardRoom.keyboardView.fireKeyDown((byte) notes[i + 1], (byte) notes[i + 2],
-                    user.getKuang() == 0 ? null : ColorUtil.getKuangColorByKuangIndex(olPlayKeyboardRoom, user.getKuang()));
+                    user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor()));
         } else {
             olPlayKeyboardRoom.keyboardView.fireKeyUp((byte) notes[i + 1]);
         }

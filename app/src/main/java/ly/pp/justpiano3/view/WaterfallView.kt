@@ -63,7 +63,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
     private var totalProgress = 0f
 
     /**
-     * 瀑布流音块当前状态，不对外暴露
+     * 瀑布流音块当前状态
      */
     private lateinit var noteStatus: Array<NoteStatus?>
 
@@ -85,7 +85,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
     private var lastX = 0f
 
     /**
-     * 瀑布流循环绘制线程，不对外暴露
+     * 瀑布流循环绘制线程
      */
     private var waterfallDownNotesThread: WaterfallDownNotesThread? = null
 
@@ -126,7 +126,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         /**
          * 瀑布流音符之间的绘制空缺间隔时间，单位毫秒，防止同音高的音符连续绘制时看起来粘在一起
          */
-        const val NOTE_MIN_INTERVAL = 15
+        private const val NOTE_MIN_INTERVAL = 15
     }
 
     init {
@@ -247,8 +247,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                 // 单独触摸按下view时，触发暂停/继续播放操作
                 pauseOrResumePlay()
             }
-
-            MotionEvent.ACTION_MOVE ->
+            MotionEvent.ACTION_MOVE -> {
                 // 检测是否为滑动：手指的横坐标偏离原来位置10像素，因按压时仅仅是普通点击，滑动的偏移像素很少时也会执行ACTION_MOVE事件
                 if (isScrolling || abs(event.x.coerceAtLeast(0f) - lastX) > 10) {
                     // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
@@ -266,7 +265,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                     // 可参考调用音符监听的代码：WaterfallDownNotesThread.handleWaterfallNoteListener
                     isScrolling = true
                 }
-
+            }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (isScrolling) {
                     // 在滑动后，手指抬起，则触发继续播放
@@ -447,7 +446,6 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                         holder.lockCanvas()
                     }
                 } else null
-
                 canvas?.let {
                     // 绘制背景图
                     it.drawBitmap(backgroundImage!!, null, backgroundRect!!, null)
@@ -488,11 +486,11 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         }
 
         /**
-         * 绘制所有应该绘制的音块
+         * 在缓冲bitmap中绘制所有应该绘制的音块
          */
         private fun drawNotesOnBufferBitmap(canvas: Canvas, notePaint: Paint) {
             // 先清空缓冲bitmap中的内容
-            notesBufferBitmap.eraseColor(Color.TRANSPARENT);
+            notesBufferBitmap.eraseColor(Color.TRANSPARENT)
             for ((index, waterfallNote) in waterfallNotes.withIndex()) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
