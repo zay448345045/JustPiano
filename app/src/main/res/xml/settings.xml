@@ -9,7 +9,7 @@
             android:title="皮肤" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="6"
-            app:minValue="0.5"
+            app:minValue="1"
             app:maxValue="6"
             app:floatNumber="true"
             android:key="down_speed"
@@ -195,7 +195,6 @@
         <Preference
             android:key="app_version"
             android:title="软件版本" />
-            <!--版本号:Ver.Date.isBeta-->
         <Preference
             android:summary="京ICP备2020039885号-3A"
             android:title="备案信息" />

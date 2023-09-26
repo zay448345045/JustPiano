@@ -105,7 +105,7 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
     private var keyboardTextPaint = Paint()
 
     // 按键标签显示的文字最大字号
-    private var maxOctaveTagFontSize = 20f
+    private var maxOctaveTagFontSize = 15f
 
     // 素材图片
     private var keyboardImage: Bitmap
