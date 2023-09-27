@@ -15,6 +15,9 @@ public final class JPStack {
     }
 
     public static Activity top() {
+        if (stack == null) {
+            return null;
+        }
         return !stack.empty() ? stack.lastElement() : null;
     }
 
