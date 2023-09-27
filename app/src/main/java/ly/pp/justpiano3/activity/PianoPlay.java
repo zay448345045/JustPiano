@@ -28,7 +28,7 @@ import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
-import ly.pp.justpiano3.thread.StartPlayTimer;
+import ly.pp.justpiano3.thread.StartPlayTimerTask;
 import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.*;
 import protobuf.dto.OnlineChallengeDTO;
@@ -317,7 +317,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         if (hasTimer) {  // 联网模式发321倒计时器
             obtainMessage.what = 7;
             Timer timer = new Timer();
-            timer.schedule(new StartPlayTimer(this, obtainMessage, timer), 0, 1000);
+            timer.schedule(new StartPlayTimerTask(this, obtainMessage, timer), 0, 1000);
         } else {  // 本地模式直接开始
             obtainMessage.what = 7;
             obtainMessage.arg1 = 0;
@@ -408,7 +408,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     dialog.dismiss();
                     finish();
                 });
-                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
                 return;
@@ -423,7 +423,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     dialog.dismiss();
                     finish();
                 });
-                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
                 return;
@@ -438,7 +438,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     dialog.dismiss();
                     finish();
                 });
-                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
                 return;

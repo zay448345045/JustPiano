@@ -29,21 +29,13 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
 
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;
-    public JPApplication jpApplication;
-    private JPProgressBar jpprogressBar;
 
     @Override
     public void onBackPressed() {
-        jpprogressBar.dismiss();
         if (pressAgain) {
-            Intent intent = new Intent("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.HOME");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
             finish();
             System.exit(0);
         } else {
@@ -107,8 +99,8 @@ public class MainMode extends Activity implements OnClickListener {
             case R.id.feed_back:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.text_1);
-                if (jpApplication.getKitiName() != null) {
-                    textView.setText(jpApplication.getKitiName());
+                if (JPApplication.kitiName != null) {
+                    textView.setText(JPApplication.kitiName);
                 }
                 TextView textViewTitle = inflate.findViewById(R.id.title_1);
                 TextView messageView = inflate.findViewById(R.id.message_view);
@@ -132,7 +124,7 @@ public class MainMode extends Activity implements OnClickListener {
                     new FeedbackTask(this, userName, BuildConfig.VERSION_NAME
                             + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE + '\n' + message).execute();
                 });
-                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
@@ -150,7 +142,6 @@ public class MainMode extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
@@ -160,38 +151,16 @@ public class MainMode extends Activity implements OnClickListener {
         if (newHelp) {
             findViewById(R.id.new_help).setVisibility(View.VISIBLE);
         }
-        TextView f4202b = findViewById(R.id.local_game);
-        f4202b.setOnClickListener(this);
-        TextView f4203c = findViewById(R.id.online_game);
-        f4203c.setOnClickListener(this);
-        TextView f4204d = findViewById(R.id.settings);
-        f4204d.setOnClickListener(this);
-        TextView f4210j = findViewById(R.id.skins);
-        f4210j.setOnClickListener(this);
-        TextView f4212l = findViewById(R.id.sounds);
-        f4212l.setOnClickListener(this);
-        TextView f4205e = findViewById(R.id.about_game);
-        f4205e.setOnClickListener(this);
-        TextView f4206f = findViewById(R.id.chat_files);
-        f4206f.setOnClickListener(this);
-        TextView f4208h = findViewById(R.id.piano_help);
-        f4208h.setOnClickListener(this);
-        TextView f4211k = findViewById(R.id.listen);
-        f4211k.setOnClickListener(this);
-        f4211k = findViewById(R.id.feed_back);
-        f4211k.setOnClickListener(this);
-        jpprogressBar = new JPProgressBar(this);
-        if (jpApplication.title != null && jpApplication.f4072f != null && !jpApplication.title.isEmpty() && !jpApplication.f4072f.isEmpty()) {
-            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setTitle(jpApplication.title);
-            jpDialogBuilder.setMessage(jpApplication.f4072f);
-            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
-                jpApplication.f4072f = "";
-                jpApplication.title = "";
-                dialog.dismiss();
-            });
-            jpDialogBuilder.buildAndShowDialog();
-        }
+        findViewById(R.id.local_game).setOnClickListener(this);
+        findViewById(R.id.online_game).setOnClickListener(this);
+        findViewById(R.id.settings).setOnClickListener(this);
+        findViewById(R.id.skins).setOnClickListener(this);
+        findViewById(R.id.sounds).setOnClickListener(this);
+        findViewById(R.id.about_game).setOnClickListener(this);
+        findViewById(R.id.chat_files).setOnClickListener(this);
+        findViewById(R.id.piano_help).setOnClickListener(this);
+        findViewById(R.id.listen).setOnClickListener(this);
+        findViewById(R.id.feed_back).setOnClickListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -228,8 +197,8 @@ public class MainMode extends Activity implements OnClickListener {
             if (!file3.exists()) {
                 file3.mkdirs();
             }
-        } catch (Exception e4) {
-            e4.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

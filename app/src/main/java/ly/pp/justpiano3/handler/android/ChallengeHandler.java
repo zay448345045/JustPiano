@@ -89,7 +89,7 @@ public final class ChallengeHandler extends Handler {
                             }
                         });
                         if (i == 1) {
-                            jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                         }
                         jpDialogBuilder.buildAndShowDialog();
                     });

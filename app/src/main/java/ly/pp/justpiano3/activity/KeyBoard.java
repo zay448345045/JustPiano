@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.midi.JPMidiReceiver;
@@ -35,7 +34,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     public KeyboardView secondKeyboardView;
     public LinearLayout keyboard1Layout;
     public LinearLayout keyboard2Layout;
-    public JPApplication jpapplication;
     private MidiReceiver midiReceiver;
     public ScheduledExecutorService scheduledExecutor;
     public SharedPreferences sharedPreferences;
@@ -62,7 +60,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_keyboard_mode);
-        jpapplication = (JPApplication) getApplication();
         firstKeyboardView = findViewById(R.id.keyboard1_view);
         initKeyboardView(firstKeyboardView);
         secondKeyboardView = findViewById(R.id.keyboard2_view);
@@ -346,7 +343,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                             recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
                             recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
-                        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                         jpDialogBuilder.buildAndShowDialog();
                     } else {
                         recordButton.setText("●");

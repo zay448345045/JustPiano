@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import java.util.regex.Pattern;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.RegisterTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -27,7 +26,6 @@ public class Register extends Activity implements OnClickListener {
     public JPProgressBar jpprogressBar;
     public RadioButton sexF;
     public RadioButton sexM;
-    public JPApplication jpapplication;
     private TextView accountTextView;
     private TextView password1TextView;
     private TextView password2TextView;
@@ -84,7 +82,6 @@ public class Register extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        jpapplication = (JPApplication) getApplication();
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         sex = "";
         account = "";

@@ -16,7 +16,7 @@ import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.JPMidiReceiver
 import ly.pp.justpiano3.midi.MidiConnectionListener
-import ly.pp.justpiano3.thread.ThreadPoolUtil
+import ly.pp.justpiano3.utils.ThreadPoolUtil
 import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil

@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
@@ -80,24 +78,16 @@ public class OLSongsPage extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPApplication jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_songs_page);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(LocalPlayModeEnum.NORMAL);
-        Button f4544b = findViewById(R.id.ol_melodyList_b);
-        f4544b.setOnClickListener(this);
-        Button f4545c = findViewById(R.id.ol_hotSongs_b);
-        f4545c.setOnClickListener(this);
-        Button f4546d = findViewById(R.id.ol_search_b);
-        f4546d.setOnClickListener(this);
-        Button f4548f = findViewById(R.id.ol_newSongs_b);
-        f4548f.setOnClickListener(this);
-        Button f4547e = findViewById(R.id.ol_favor);
-        f4547e.setOnClickListener(this);
-        Button f4548e = findViewById(R.id.ol_test_b);
-        f4548e.setOnClickListener(this);
-        View f4549g = findViewById(R.id.ol_recent_b);
-        f4549g.setOnClickListener(this);
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
+        findViewById(R.id.ol_melodyList_b).setOnClickListener(this);
+        findViewById(R.id.ol_hotSongs_b).setOnClickListener(this);
+        findViewById(R.id.ol_search_b).setOnClickListener(this);
+        findViewById(R.id.ol_newSongs_b).setOnClickListener(this);
+        findViewById(R.id.ol_favor).setOnClickListener(this);
+        findViewById(R.id.ol_test_b).setOnClickListener(this);
+        findViewById(R.id.ol_recent_b).setOnClickListener(this);
     }
 }

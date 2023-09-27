@@ -28,7 +28,7 @@ public final class PictureHandle {
         picType = i;
     }
 
-    public Bitmap m3938b(JPApplication jpApplication, String str) {
+    public Bitmap m3938b(String str) {
         if (!str.endsWith(JPG_SUFFIX)) {
             return null;
         }
@@ -85,7 +85,7 @@ public final class PictureHandle {
         }
     }
 
-    public void mo3027a(JPApplication jpApplication, ImageView imageView, Bitmap bitmap) {
+    public void mo3027a(ImageView imageView, Bitmap bitmap) {
         String str = (String) imageView.getTag();
         if (map.containsKey(str)) {
             Bitmap bitmap2 = map.get(str).get();
@@ -100,7 +100,7 @@ public final class PictureHandle {
             imageView.setImageBitmap(bitmap);
         }
         if (pictureHandleThread == null) {
-            pictureHandleThread = new PictureHandleThread(jpApplication, this, imageView, str);
+            pictureHandleThread = new PictureHandleThread(this, imageView, str);
             pictureHandleThread.start();
             return;
         }

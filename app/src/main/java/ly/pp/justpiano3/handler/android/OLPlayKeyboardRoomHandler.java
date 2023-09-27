@@ -38,7 +38,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             return;
                         }
                         int roomPositionSub1 = (byte) (notes[0] & 0xF);
-                        User user = olPlayKeyboardRoom.jpapplication.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
+                        User user = olPlayKeyboardRoom.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
                         if (user == null) {
                             return;
                         }

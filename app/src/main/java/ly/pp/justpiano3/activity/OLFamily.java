@@ -8,22 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.core.content.res.ResourcesCompat;
-
 import com.google.protobuf.MessageLite;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
@@ -31,17 +18,20 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
-import ly.pp.justpiano3.listener.AddFriendsMailClick;
 import ly.pp.justpiano3.listener.ChangeDeclarationClick;
-import ly.pp.justpiano3.listener.InOutFamilyClick;
-import ly.pp.justpiano3.listener.KickFamilyClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -99,8 +89,15 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 jpDialogBuilder.setMessage("申请加入家族需要族长或副族长的批准!");
                 break;
         }
-        jpDialogBuilder.setFirstButton("确定", new InOutFamilyClick(this))
-                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                    OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                    builder.setType(5);
+                    builder.setFamilyId(Integer.parseInt(familyID));
+                    sendMsg(OnlineProtocolType.FAMILY, builder.build());
+                    dialog.dismiss();
+                    jpprogressBar.show();
+                })
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
@@ -155,8 +152,18 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
             new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
-                    .setFirstButton("加为好友", new AddFriendsMailClick(this, user.getPlayerName()))
-                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                    .setFirstButton("加为好友", (dialog, which) -> {
+                        if (jpapplication.getConnectionService() == null) {
+                            return;
+                        }
+                        OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
+                        builder.setMessage("");
+                        builder.setName(user.getPlayerName());
+                        sendMsg(OnlineProtocolType.SEND_MAIL, builder.build());
+                        dialog.dismiss();
+                        Toast.makeText(this, "已向对方发送私信，请等待对方同意!", Toast.LENGTH_SHORT).show();
+                    })
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -213,8 +220,16 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("提示");
                 jpDialogBuilder.setMessage("确定要将Ta移出家族吗?");
-                jpDialogBuilder.setFirstButton("确定", new KickFamilyClick(this))
-                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                            OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
+                            familyBuilder.setType(6);
+                            familyBuilder.setUserName(peopleNow);
+                            familyBuilder.setStatus(1);
+                            sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
+                            dialog.dismiss();
+                            jpprogressBar.show();
+                        })
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 break;
             case R.id.ol_showinfo_b:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -372,7 +387,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         }
         new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate)
                 .setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str))
-                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public final void mo2907b(ListView listView, List<Map<String, String>> list) {

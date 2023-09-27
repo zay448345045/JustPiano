@@ -1,4 +1,4 @@
-package ly.pp.justpiano3.thread;
+package ly.pp.justpiano3.utils;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

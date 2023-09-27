@@ -55,7 +55,7 @@ import ly.pp.justpiano3.entity.SongData;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
@@ -72,7 +72,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     public CheckBox isRecord;
     public CheckBox isLeftHand;
     public EditText songSearchEditText;
-    public JPApplication jpapplication;
     private Button sortButton;
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
@@ -92,7 +91,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("提示");
         jpDialogBuilder.setMessage(message);
-        jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.setSecondButton("不再提示", (dialog, which) -> {
             SharedPreferences.Editor edit = sharedPreferences.edit();
             switch (i) {
@@ -271,7 +270,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                     dialog.dismiss();
                     new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
                 });
-                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
                 return;
             case R.id.menu_list_fast:
@@ -287,7 +286,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        jpapplication = (JPApplication) getApplication();
         jpprogressBar = new JPProgressBar(this);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);

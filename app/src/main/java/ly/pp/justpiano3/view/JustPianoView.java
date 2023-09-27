@@ -42,18 +42,17 @@ public class JustPianoView extends View {
 
     public JustPianoView(Context context, JPApplication jPApplication) {
         super(context);
-        float widthPixels = (float) jPApplication.getWidthPixels();
-        float heightPixels = (float) jPApplication.getHeightPixels();
         jpapplication = jPApplication;
-        allScreenRect = new RectF(0, 0, widthPixels, heightPixels);
+        allScreenRect = new RectF(0, 0, jpapplication.getWidthPixels(), jpapplication.getHeightPixels());
         try {
             logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
-            progressBarBitmap = ImageLoadUtil.loadSkinImage(jPApplication, "progress_bar");
-            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(jPApplication, "progress_bar_base");
+            progressBarBitmap = ImageLoadUtil.loadSkinImage(context, "progress_bar");
+            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(context, "progress_bar_base");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        progressBarRect = new RectF(0, heightPixels - ((float) progressBarBitmap.getHeight()), (float) jPApplication.getWidthPixels(), heightPixels);
+        progressBarRect = new RectF(0, jpapplication.getHeightPixels() - ((float) progressBarBitmap.getHeight()),
+                jPApplication.getWidthPixels(), jpapplication.getHeightPixels());
     }
 
     public final void destroy() {

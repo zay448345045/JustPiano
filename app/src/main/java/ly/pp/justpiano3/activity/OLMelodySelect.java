@@ -34,7 +34,7 @@ import java.util.Map;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.OLMelodySelectAdapter2;
+import ly.pp.justpiano3.adapter.OLMelodySelectAdapter;
 import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
@@ -150,7 +150,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, new SongsComparator(this, i));
         }
-        listView.setAdapter(new OLMelodySelectAdapter2(this, i2, list));
+        listView.setAdapter(new OLMelodySelectAdapter(this, i2, list));
     }
 
     public final void mo2809a(String str) {
@@ -252,7 +252,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.setGameMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
         try {
             GlobalSetting.INSTANCE.loadSettings(this, true);
             GlobalSetting.INSTANCE.setTempSpeed(1f);

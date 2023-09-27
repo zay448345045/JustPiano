@@ -2,11 +2,18 @@ package ly.pp.justpiano3.entity
 
 import android.content.Context
 import android.preference.PreferenceManager
+import ly.pp.justpiano3.enums.LocalPlayModeEnum
 
 /**
  * 设置项
  */
 object GlobalSetting{
+
+    /**
+     * 游戏模式
+     */
+    var gameMode = LocalPlayModeEnum.NORMAL
+
     /**
      * 音块变色
      */

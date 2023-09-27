@@ -102,7 +102,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                             e.printStackTrace();
                         }
                     });
-                    jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                    jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                     jpDialogBuilder.buildAndShowDialog();
                     return;
                 }
@@ -121,7 +121,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                     textView2.setText("消息:");
                     new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate)
                             .setFirstButton("发送", new SendMessageClick(this, textView, str, P))
-                            .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                            .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                     return;
                 }
                 return;
@@ -141,8 +141,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
         userAge = findViewById(R.id.user_age);
         Button f4840n = findViewById(R.id.add_friend);
         f4840n.setOnClickListener(this);
-        Button f4841o = findViewById(R.id.send_mail);
-        f4841o.setOnClickListener(this);
+        findViewById(R.id.send_mail).setOnClickListener(this);
         Bundle extras = getIntent().getExtras();
         headType = extras.getInt("head");
         if (headType == 2) {

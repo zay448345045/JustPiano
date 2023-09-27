@@ -78,17 +78,11 @@ public class OLTopUser extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_top_user);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        Button f4561l = findViewById(R.id.ol_level_b);
-        f4561l.setOnClickListener(this);
-        Button f4557h = findViewById(R.id.ol_topUsers_b);
-        f4557h.setOnClickListener(this);
-        Button f4558i = findViewById(R.id.ol_topScore_b);
-        f4558i.setOnClickListener(this);
-        Button f4559j = findViewById(R.id.ol_bless);
-        f4559j.setOnClickListener(this);
-        Button f4562m = findViewById(R.id.ol_class_b);
-        f4562m.setOnClickListener(this);
-        Button f4560k = findViewById(R.id.ol_contribution);
-        f4560k.setOnClickListener(this);
+        findViewById(R.id.ol_level_b).setOnClickListener(this);
+        findViewById(R.id.ol_topUsers_b).setOnClickListener(this);
+        findViewById(R.id.ol_topScore_b).setOnClickListener(this);
+        findViewById(R.id.ol_bless).setOnClickListener(this);
+        findViewById(R.id.ol_class_b).setOnClickListener(this);
+        findViewById(R.id.ol_contribution).setOnClickListener(this);
     }
 }

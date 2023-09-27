@@ -113,8 +113,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         } else if (i == 5) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setCancelableFalse();
-            jpDialogBuilder.setTitle("提示").setMessage(str).setFirstButton("确定", ((dialog, which) -> dialog.dismiss()))
-                    .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+            jpDialogBuilder.setTitle("提示").setMessage(str).setFirstButton("确定", (dialog, which) -> dialog.dismiss())
+                    .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         }
     }
 
@@ -271,7 +271,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                     ListView listView = inflate.findViewById(R.id.account_list);
                     JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换皮肤").loadInflate(inflate)
-                            .setFirstButton("取消", ((dialog, which) -> dialog.dismiss())).createJPDialog();
+                            .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
                     listView.setAdapter(new SimpleSkinListAdapter(skinList, localSkinList, layoutInflater, this, b));
                     b.show();
                     if (keyboardSettingPopup != null) {
@@ -293,7 +293,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                     ListView listView = inflate.findViewById(R.id.account_list);
                     JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换皮肤").loadInflate(inflate)
-                            .setFirstButton("取消", ((dialog, which) -> dialog.dismiss())).createJPDialog();
+                            .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
                     listView.setAdapter(new SimpleSoundListAdapter(soundList, localSoundList, layoutInflater, this, b));
                     b.show();
                     if (keyboardSettingPopup != null) {
@@ -323,7 +323,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                             recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
                             recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
-                        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                         jpDialogBuilder.buildAndShowDialog();
                     } else {
                         recordButton.setText("●");
@@ -348,7 +348,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             try {
                 new JPDialogBuilder(this).setWidth(480).setTitle(getString(R.string.msg_this_is_what))
                         .setMessage(getString(R.string.ol_keyboard_sync_mode_help))
-                        .setFirstButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                        .setFirstButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }

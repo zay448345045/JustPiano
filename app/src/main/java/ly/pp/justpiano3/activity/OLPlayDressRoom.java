@@ -191,7 +191,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                     jpDialogBuilder.setTitle("提示");
                     jpDialogBuilder.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
-                    jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                     jpDialogBuilder.buildAndShowDialog();
                 }
                 break;
@@ -207,8 +207,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
-        JPApplication jpApplication = (JPApplication) getApplication();
-        connectionservice = jpApplication.getConnectionService();
+        connectionservice = ((JPApplication) getApplication()).getConnectionService();
         Bundle extras = getIntent().getExtras();
         hairNow = extras.getInt("H");
         eyeNow = extras.getInt("E");

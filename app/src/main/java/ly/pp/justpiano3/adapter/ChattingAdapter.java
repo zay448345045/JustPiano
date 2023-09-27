@@ -2,15 +2,13 @@ package ly.pp.justpiano3.adapter;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -18,8 +16,9 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLPlayRoomActivity;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.listener.ChangeRecommandSongClick;
 import ly.pp.justpiano3.utils.JPStack;
+
+import java.util.List;
 
 public final class ChattingAdapter extends BaseAdapter {
     public Activity activity;
@@ -115,7 +114,14 @@ public final class ChattingAdapter extends BaseAdapter {
                 textView2.setTextColor(0xffff0000);
                 if (((OLPlayRoom) activity).getPlayerKind().equals("H")) {
                     textView2.append(" (点击选取)");
-                    textView2.setOnClickListener(new ChangeRecommandSongClick(this, bundle.getString("I")));
+                    textView2.setOnClickListener(v -> {
+                        Message obtainMessage = ((OLPlayRoom) activity).getHandler().obtainMessage();
+                        Bundle songPathBundle = new Bundle();
+                        songPathBundle.putString("S", bundle.getString("I"));
+                        obtainMessage.setData(songPathBundle);
+                        obtainMessage.what = 1;
+                        ((OLPlayRoom) activity).getHandler().sendMessage(obtainMessage);
+                    });
                 }
             }
         }
@@ -128,7 +134,7 @@ public final class ChattingAdapter extends BaseAdapter {
         if (!string2.startsWith("//")) {
             textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
             TextView textView2 = view.findViewById(R.id.ol_user_mao);
-            if (JPStack.top() instanceof OLPlayRoomActivity) {
+            if (activity instanceof OLPlayRoomActivity) {
                 switch (id) {
                     case 1:
                         textView.setTextColor(0xffFFFACD);
@@ -187,7 +193,7 @@ public final class ChattingAdapter extends BaseAdapter {
                         }
                         break;
                 }
-            } else if (JPStack.top() instanceof OLPlayHall) {
+            } else if (activity instanceof OLPlayHall) {
                 textView.setTextColor(0xffFFFACD);
                 textView2.setTextColor(0xffFFFACD);
                 textView3.setTextColor(0xffFFFACD);

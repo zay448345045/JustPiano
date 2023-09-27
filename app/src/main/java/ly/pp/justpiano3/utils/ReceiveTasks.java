@@ -454,7 +454,7 @@ public final class ReceiveTasks {
                     buildAndPutUser(olPlayRoomActivity, roomPositionUser);
                 }
                 Bundle bundle = new Bundle();
-                Iterator<User> it = ((JPApplication) (olPlayRoomActivity.getApplication())).getRoomPlayerMap().values().iterator();
+                Iterator<User> it = olPlayRoomActivity.getRoomPlayerMap().values().iterator();
                 for (int i = 0; it.hasNext(); i++) {
                     User user = it.next();
                     fillUserBundle(bundle, i, user);
@@ -557,7 +557,7 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.MINI_GRADE, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof PianoPlay) {
                 PianoPlay pianoPlay = (PianoPlay) topActivity;
-                User user = ((JPApplication) (pianoPlay.getApplication())).getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
+                User user = pianoPlay.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
                 if (user == null) {
                     return;
                 }
@@ -573,7 +573,7 @@ public final class ReceiveTasks {
                 }
                 int i = 0;
                 for (byte b = 1; b <= 6; b++) {
-                    User currentUser = ((JPApplication) (pianoPlay.getApplication())).getRoomPlayerMap().get(b);
+                    User currentUser = pianoPlay.getRoomPlayerMap().get(b);
                     if (currentUser == null) {
                         continue;
                     }
@@ -1176,7 +1176,7 @@ public final class ReceiveTasks {
                 roomPositionUser.getHand(),
                 roomPositionUser.getCoupleType(),
                 String.valueOf(roomPositionUser.getFamily()));
-        olPlayRoomActivity.putRoomPlayerMap(user.getPosition(), user);
+        olPlayRoomActivity.getRoomPlayerMap().put(user.getPosition(), user);
         return user;
     }
 

@@ -26,7 +26,6 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
-import ly.pp.justpiano3.listener.GetPrizeClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -39,7 +38,7 @@ import protobuf.dto.OnlineChallengeDTO;
 
 public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
-    public ConnectionService cs;
+    public ConnectionService connectionService;
     public byte hallID;
     public String hallName;
     public int remainTimes;
@@ -100,12 +99,12 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        Bundle b = getIntent().getExtras();
-        hallID = b.getByte("hallID");
-        hallName = b.getString("hallName");
+        Bundle bundle = getIntent().getExtras();
+        hallID = bundle.getByte("hallID");
+        hallName = bundle.getString("hallName");
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_challenge);
-        cs = jpapplication.getConnectionService();
+        connectionService = jpapplication.getConnectionService();
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
         sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
@@ -145,8 +144,16 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             }
             try {
                 new JPDialogBuilder(this).setTitle("抽取奖励").loadInflate(inflate)
-                        .setFirstButton("确认领取", new GetPrizeClick(this))
-                        .setSecondButton("放弃领取", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                        .setFirstButton("确认领取", (dialog, which) -> {
+                            if (jpapplication.getConnectionService() != null) {
+                                OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+                                builder.setType(6);
+                                jpapplication.getConnectionService().writeData(OnlineProtocolType.CHALLENGE, builder.build());
+                                Toast.makeText(this, "领取奖励成功!", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setSecondButton("放弃领取", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,7 +162,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             drawPrizeView.setVisibility(View.GONE);
             try {
                 new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示")
-                        .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                        .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -163,13 +170,12 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     }
 
     public final void sendMsg(int type, MessageLite msg) {
-        if (cs != null) {
-            cs.writeData(type, msg);
+        if (connectionService != null) {
+            connectionService.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     public final void mo2907b(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new ChallengeListAdapter(list, layoutinflater));

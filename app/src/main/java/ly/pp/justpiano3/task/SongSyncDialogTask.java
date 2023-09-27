@@ -70,7 +70,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 dialog.dismiss();
                 new SongSyncTask(olMainMode.get(), maxSongId).execute();
             });
-            jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             if (i != 0) {
                 jpDialogBuilder.buildAndShowDialog();
             }

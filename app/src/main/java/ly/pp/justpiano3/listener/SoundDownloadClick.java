@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import ly.pp.justpiano3.activity.SoundDownload;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 
 public final class SoundDownloadClick implements OnClickListener {

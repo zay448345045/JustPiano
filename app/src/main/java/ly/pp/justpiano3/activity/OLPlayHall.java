@@ -32,7 +32,6 @@ import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallHandler;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.CreateRoomClick;
-import ly.pp.justpiano3.listener.RoomPasswordClick2;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
@@ -121,17 +120,17 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
             new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
-                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void enterRoomHandle(int i, byte b) {
-        switch (i) {
+    public void enterRoomHandle(int type, byte roomId) {
+        switch (type) {
             case 0:
                 OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
-                builder.setRoomId(b);
+                builder.setRoomId(roomId);
                 builder.setPassword("");
                 sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                 return;
@@ -144,8 +143,14 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 textView2.setVisibility(View.GONE);
                 textView.setSingleLine(true);
                 new JPDialogBuilder(this).setTitle("输入密码").loadInflate(inflate)
-                        .setFirstButton("确定", new RoomPasswordClick2(this, textView, b))
-                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                        .setFirstButton("确定", (dialog, which) -> {
+                            OnlineEnterRoomDTO.Builder enterRoomBuilder = OnlineEnterRoomDTO.newBuilder();
+                            enterRoomBuilder.setRoomId(roomId);
+                            enterRoomBuilder.setPassword(String.valueOf(textView.getText()));
+                            sendMsg(OnlineProtocolType.ENTER_ROOM, enterRoomBuilder.build());
+                            dialog.dismiss();
+                        })
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             default:
         }
@@ -169,7 +174,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         new JPDialogBuilder(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             enterRoomHandle(bundle.getInt("P"), (byte) i2);
-        }).setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+        }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void mo2828a(ListView listView, List<Bundle> list) {
@@ -199,7 +204,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         textView2.setText("内容:");
         new JPDialogBuilder(this).setTitle("发送私信给:" + str).loadInflate(inflate)
                 .setFirstButton("发送", new SendMailClick(this, textView, str))
-                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void mo2831b(ListView listView, List<Bundle> list) {
@@ -270,7 +275,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 textView2.setSingleLine(true);
                 new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate)
                         .setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup))
-                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             case R.id.ol_testroom_b:
                 OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
@@ -366,8 +371,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_room_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
         findViewById(R.id.ol_send_b).setOnLongClickListener(this);
         findViewById(R.id.ol_createroom_b).setOnClickListener(this);
@@ -468,7 +472,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                             sendHallChat(true);
                             dialog.dismiss();
                         })
-                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
                         .buildAndShowDialog();
             }
             return true;

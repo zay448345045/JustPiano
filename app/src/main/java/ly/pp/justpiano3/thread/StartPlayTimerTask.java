@@ -7,13 +7,13 @@ import java.util.TimerTask;
 
 import ly.pp.justpiano3.activity.PianoPlay;
 
-public final class StartPlayTimer extends TimerTask {
+public final class StartPlayTimerTask extends TimerTask {
     private final PianoPlay pianoPlay;
     private final Message msg;
     private final Timer timer0;
     private int seconds = 3;
 
-    public StartPlayTimer(PianoPlay pianoPlay, Message message, Timer timer) {
+    public StartPlayTimerTask(PianoPlay pianoPlay, Message message, Timer timer) {
         this.pianoPlay = pianoPlay;
         msg = message;
         timer0 = timer;

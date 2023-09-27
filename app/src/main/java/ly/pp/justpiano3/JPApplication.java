@@ -24,11 +24,9 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 
@@ -37,8 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class JPApplication extends Application {
 
@@ -53,19 +49,11 @@ public final class JPApplication extends Application {
     public static String kitiName = "";
     public static SharedPreferences accountListSharedPreferences;
 
-    public String title = "";
-    public String f4072f = "";
-    public String f4073g = "";
-    public String f4074h = "";
+    public String loginResultTitle = "";
+    public String loginResultMessage = "";
     private ConnectionService connectionService;
     private boolean bindService;
 
-    /**
-     * 游戏模式
-     */
-    private LocalPlayModeEnum gameMode;
-
-    private final Map<Byte, User> roomPlayerMap = new HashMap<>();
     private String accountName = "";
     private String password = "";
     private int widthPixels;
@@ -82,9 +70,6 @@ public final class JPApplication extends Application {
         }
     };
 
-    public Map<Byte, User> getRoomPlayerMap() {
-        return roomPlayerMap;
-    }
 
     public String getAccountName() {
         if (accountName.isEmpty()) {
@@ -306,14 +291,6 @@ public final class JPApplication extends Application {
 
     public void setBindService(boolean bindService) {
         this.bindService = bindService;
-    }
-
-    public LocalPlayModeEnum getGameMode() {
-        return gameMode;
-    }
-
-    public void setGameMode(LocalPlayModeEnum gameMode) {
-        this.gameMode = gameMode;
     }
 
     public void updateWidthAndHeightPixels(Activity activity) {

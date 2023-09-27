@@ -68,7 +68,7 @@ public final class ShopAdapter extends BaseAdapter {
                 builder.setProductId(shopProduct.getId());
                 olPlayDressRoom.sendMsg(OnlineProtocolType.SHOP, builder.build());
             });
-            jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             jpDialogBuilder.buildAndShowDialog();
         });
         return view;

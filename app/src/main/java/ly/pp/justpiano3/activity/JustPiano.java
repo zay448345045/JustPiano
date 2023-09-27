@@ -2,12 +2,10 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import java.io.File;
@@ -20,7 +18,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
@@ -146,10 +144,9 @@ public class JustPiano extends Activity implements Callback, Runnable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPApplication jpapplication = (JPApplication) getApplication();
         handler = new Handler(this);
-        jpapplication.updateWidthAndHeightPixels(this);
-        justpianoview = new JustPianoView(this, jpapplication);
+        ((JPApplication) getApplication()).updateWidthAndHeightPixels(this);
+        justpianoview = new JustPianoView(this, (JPApplication) getApplication());
         setContentView(justpianoview);
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;

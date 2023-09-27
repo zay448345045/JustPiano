@@ -66,7 +66,7 @@ public final class UserListPageAdapter extends BaseAdapter {
                     userListPage.listView.setAdapter(new UserListPageAdapter(userListPage, ChatBlackUserUtil.getChatBlackList(userListPage)));
                     dialogInterface.dismiss();
                 })
-                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog());
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog());
         return view;
     }
 }
