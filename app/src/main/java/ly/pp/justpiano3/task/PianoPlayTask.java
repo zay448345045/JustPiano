@@ -1,9 +1,10 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
-import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.PianoPlay;
 
 public final class PianoPlayTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<PianoPlay> pianoPlay;
@@ -21,7 +22,7 @@ public final class PianoPlayTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void v) {
         pianoPlay.get().jpprogressbar.cancel();
-        pianoPlay.get().m3794f();
+        pianoPlay.get().loadSong();
     }
 
     @Override

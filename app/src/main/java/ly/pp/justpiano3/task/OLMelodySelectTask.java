@@ -2,17 +2,21 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
@@ -27,13 +31,13 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
         if (!olMelodySelect.get().f4317e.isEmpty()) {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
-                    .add("version", olMelodySelect.get().jpapplication.getVersion())
+                    .add("version", BuildConfig.VERSION_NAME)
                     .add("page", String.valueOf(olMelodySelect.get().index))
                     .add("type", olMelodySelect.get().f4317e)
                     .build();
             // 创建请求对象
             Request request = new Request.Builder()
-                    .url("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetListByType")
+                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetListByType")
                     .post(formBody) // 设置请求方式为POST
                     .build();
             try {
@@ -80,7 +84,6 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        olMelodySelect.get().jpprogressBar.setMessage("正在载入曲库列表,请稍后...");
         olMelodySelect.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         olMelodySelect.get().jpprogressBar.show();
     }

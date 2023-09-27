@@ -11,26 +11,28 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
 import java.util.List;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class SimpleSkinListAdapter extends BaseAdapter {
     private final OLPlayKeyboardRoom olPlayKeyboardRoom;
     private final List<String> list;
     private final List<File> fileList;
-    private final LayoutInflater li;
-    private final JPDialog.JDialog dialog;
+    private final LayoutInflater layoutInflater;
+    private final JPDialogBuilder.JPDialog dialog;
 
-    public SimpleSkinListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
+    public SimpleSkinListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialogBuilder.JPDialog dialog) {
         this.list = list;
         this.fileList = file;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         this.olPlayKeyboardRoom = olPlayKeyboardRoom;
         this.dialog = dialog;
     }
@@ -53,7 +55,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.account_name, null);
+            view = layoutInflater.inflate(R.layout.account_name, null);
         }
         String name = list.get(index);
         TextView nameView = view.findViewById(R.id.account_name_text);
@@ -61,7 +63,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
         nameView.setOnClickListener(v -> {
             dialog.dismiss();
             olPlayKeyboardRoom.jpprogressBar.show();
-            ThreadPoolUtils.execute(() -> {
+            ThreadPoolUtil.execute(() -> {
                 File dir = olPlayKeyboardRoom.getDir("Skin", Context.MODE_PRIVATE);
                 if (dir.isDirectory()) {
                     File[] listFiles = dir.listFiles();
@@ -80,8 +82,8 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                 }
                 edit.apply();
                 olPlayKeyboardRoom.runOnUiThread(() -> {
-                    olPlayKeyboardRoom.keyboardView.changeImage(olPlayKeyboardRoom);
-                    olPlayKeyboardRoom.jpapplication.setBackGround(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));
+                    olPlayKeyboardRoom.keyboardView.changeSkinKeyboardImage(olPlayKeyboardRoom);
+                    ImageLoadUtil.setBackGround(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));
                     olPlayKeyboardRoom.jpprogressBar.dismiss();
                     Toast.makeText(olPlayKeyboardRoom, "皮肤设置成功", Toast.LENGTH_SHORT).show();
                 });

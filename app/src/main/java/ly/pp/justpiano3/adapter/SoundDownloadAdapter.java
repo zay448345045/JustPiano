@@ -5,14 +5,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.utils.ImageLoader;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.SoundDownload;
-import ly.pp.justpiano3.listener.SoundItemClick;
-import ly.pp.justpiano3.view.ScrollText;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.utils.ImageLoader;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.ScrollText;
 
 public final class SoundDownloadAdapter extends BaseAdapter {
     public final SoundDownload soundDownload;
@@ -68,7 +70,7 @@ public final class SoundDownloadAdapter extends BaseAdapter {
                 String string3 = jSONObject.getString("A");
                 int i2 = jSONObject.getInt("S");
                 imageView.setImageResource(R.drawable.icon);
-                imageLoader.bindBitmap("http://" + soundDownload.jpapplication.getServer() + ":8910/JustPianoServer/server/PicSound" + string, imageView);
+                imageLoader.bindBitmap("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + string, imageView);
                 scrollText.setText(string2);
                 textView.setText("by:" + string3);
                 textView3.setText(i2 + "KB");
@@ -78,7 +80,7 @@ public final class SoundDownloadAdapter extends BaseAdapter {
                 } else {
                     textView2.setText("下载:" + i3 + "次");
                 }
-                view.setOnClickListener(new SoundItemClick(this, string2, string, i2, string3));
+                view.setOnClickListener(v -> soundDownload.mo3005a(0, string2, string, i2, string3));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

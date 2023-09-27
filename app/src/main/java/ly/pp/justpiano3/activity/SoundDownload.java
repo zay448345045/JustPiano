@@ -11,24 +11,34 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.SoundDownloadClick;
-import ly.pp.justpiano3.task.SoundDownloadTask;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.JPProgressBar;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.listener.SoundDownloadClick;
+import ly.pp.justpiano3.task.SoundDownloadTask;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+
 public class SoundDownload extends Activity implements Callback {
-    public JPApplication jpapplication;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
@@ -46,12 +56,7 @@ public class SoundDownload extends Activity implements Callback {
         Message message = Message.obtain(soundDownload.handler);
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str2 + ".ss");
         if (file.exists()) {
-            Bundle bundle = new Bundle();
-            bundle.putString("name", str2);
-            message.setData(bundle);
-            message.what = 4;
-            soundDownload.handler.sendMessage(message);
-            return;
+            file.delete();
         }
         message.what = 0;
         if (soundDownload.handler != null) {
@@ -59,7 +64,7 @@ public class SoundDownload extends Activity implements Callback {
         }
         InputStream in = null;
         try {
-            URL url = new URL("http://" + soundDownload.jpapplication.getServer() + ":8910/JustPianoServer/server/Sound" + str);
+            URL url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/Sound" + str);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -122,25 +127,25 @@ public class SoundDownload extends Activity implements Callback {
     }
 
     public final void mo3005a(int i, String str, String str2, int i2, String str3) {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String str4 = "使用";
-        jpdialog.setTitle("提示");
+        jpDialogBuilder.setTitle("提示");
         if (i == 0) {
-            jpdialog.setMessage("名称:" + str + "\n作者:" + str3 + "\n大小:" + i2 + "KB\n您要下载并使用吗?");
+            jpDialogBuilder.setMessage("名称:" + str + "\n作者:" + str3 + "\n大小:" + i2 + "KB\n您要下载并使用吗?");
             str4 = "下载";
         } else if (i == 1) {
-            jpdialog.setMessage("[" + str + "]音源已下载，是否使用?");
+            jpDialogBuilder.setMessage("[" + str + "]音源已下载，是否使用?");
             str4 = "使用";
         } else if (i == 2) {
-            jpdialog.setMessage("您要还原极品钢琴的默认音源吗?");
+            jpDialogBuilder.setMessage("您要还原极品钢琴的默认音源吗?");
             str4 = "确定";
         }
-        jpdialog.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
-        jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.showDialog();
+        jpDialogBuilder.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
+        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+        jpDialogBuilder.buildAndShowDialog();
     }
 
-    public final void mo3006a(String str) {
+    public final void changeSound(String str) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);
@@ -159,12 +164,12 @@ public class SoundDownload extends Activity implements Callback {
             }
             GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str), file.toString());
             edit.apply();
-            JPApplication.teardownAudioStreamNative();
-            JPApplication.unloadWavAssetsNative();
+            SoundEngineUtil.teardownAudioStreamNative();
+            SoundEngineUtil.unloadWavAssetsNative();
             for (i = 108; i >= 24; i--) {
-                JPApplication.preloadSounds(getApplicationContext(), i);
+                SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             }
-            JPApplication.confirmLoadSounds(getApplicationContext());
+            SoundEngineUtil.afterLoadSounds(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -193,13 +198,6 @@ public class SoundDownload extends Activity implements Callback {
                 case 3:
                     linearLayout.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "很抱歉,连接出错!", Toast.LENGTH_LONG).show();
-                    break;
-                case 4:
-                    linearLayout.setVisibility(View.GONE);
-                    progressBar.setProgress(100);
-                    downloadText.setText("100%");
-                    Toast.makeText(getApplicationContext(), "已存在该音源!", Toast.LENGTH_LONG).show();
-                    mo3005a(1, message.getData().getString("name"), "", 0, "");
                     break;
                 case 5:
                     linearLayout.setVisibility(View.GONE);
@@ -231,11 +229,10 @@ public class SoundDownload extends Activity implements Callback {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        jpapplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.skin_list);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);

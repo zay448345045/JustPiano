@@ -34,13 +34,16 @@ namespace iolib {
     class SampleSource : public DataSource {
     public:
 
-        SampleSource(SampleBuffer *sampleBuffer)
-                : mSampleBuffer(sampleBuffer), mGain(1.0f) {}
+        SampleSource(SampleBuffer *sampleBuffer) : mSampleBuffer(sampleBuffer) {}
 
         virtual ~SampleSource() {}
 
         void setPlayMode(int32_t volume) {
-            mCurFrameIndexQueue.push(std::make_pair(0, volume));
+            std::pair<int32_t, int32_t> pair = std::make_pair(0, volume);
+            if (mCurFrameIndexQueue.size() > 10) {
+                mCurFrameIndexQueue.pop();
+            }
+            mCurFrameIndexQueue.push(pair);
         }
 
         void setStopMode() {
@@ -49,39 +52,30 @@ namespace iolib {
             }
         }
 
-        void setGain(float gain) {
-            mGain = gain;
-        }
-
-        float getGain() const {
-            return mGain;
-        }
-
         int32_t getCurFrameIndexQueueSize() {
             return mCurFrameIndexQueue.size();
         }
 
-        std::pair<int32_t, int32_t> &frontCurFrameIndexQueue() {
-            return mCurFrameIndexQueue.front();
+        std::pair<int32_t, int32_t> *frontCurFrameIndexQueue() {
+            return mCurFrameIndexQueue.empty() ? nullptr : &mCurFrameIndexQueue.front();
         }
 
-        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> &pair) {
+        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> pair) {
             mCurFrameIndexQueue.push(pair);
         }
 
         void popCurFrameIndexQueue() {
-            mCurFrameIndexQueue.pop();
+            if (!mCurFrameIndexQueue.empty()) {
+                mCurFrameIndexQueue.pop();
+            }
         }
 
     protected:
         SampleBuffer *mSampleBuffer;
 
         std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
-
-        // Overall gain
-        float mGain;
     };
 
-} // namespace wavlib
+} // namespace iolib
 
 #endif //_PLAYER_SAMPLESOURCE_

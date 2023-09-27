@@ -7,10 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayDressRoom;
 
 import java.util.List;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLPlayDressRoom;
 
 public final class DressAdapter extends BaseAdapter {
     private final List<Bitmap> list;
@@ -43,7 +44,7 @@ public final class DressAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.ol_dres_view, null);
+            view = layoutInflater.inflate(R.layout.ol_dressroom_cost_view, null);
         }
         ((ImageView) view.findViewById(R.id.ol_dress_img)).setImageBitmap(list.get(i));
         boolean isFemale = "f".equals(olPlayDressRoom.sex);

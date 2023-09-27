@@ -15,30 +15,29 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import androidx.core.content.FileProvider;
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.LoginSuccessClick;
-import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
-public class LoginActivity extends BaseActivity implements OnClickListener {
+public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";
@@ -47,8 +46,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     public TextView passwordTextView;
     public JPProgressBar jpprogressBar;
     public SharedPreferences sharedPreferences;
-    private JPDialog jpDialog = null;
     private LayoutInflater layoutInflater;
+    private CheckBox changeServerCheckBox;
     private CheckBox rememAccount;
     private CheckBox rememPassword;
     private CheckBox autoLogin;
@@ -86,15 +85,28 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         jpapplication.setPassword(password);
         switch (i) {
             case 0:
-                Toast.makeText(this, "登陆成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
+                if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
+                    Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
+                }
                 startActivity(intent);
                 finish();
                 return;
             case 4:
-                jpDialog.setTitle(title).setMessage(message).setFirstButton("知道了", new LoginSuccessClick(this)).showDialog();
+                new JPDialogBuilder(this).setWidth(400).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
+                    if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
+                        Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!" + "当前登录:测试服", Toast.LENGTH_SHORT).show();
+                    }
+                    startActivity(intent);
+                    finish();
+                }).buildAndShowDialog();
                 return;
             case 5:
-                jpDialog.setTitle(title).setMessage(message).setFirstButton("确定", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle(title).setMessage(message)
+                        .setFirstButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             default:
         }
@@ -128,6 +140,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                OnlineUtil.server = changeServerCheckBox.isChecked() ? OnlineUtil.TEST_ONLINE_SERVER_URL : OnlineUtil.ONLINE_SERVER_URL;
                 new LoginTask(this).execute();
                 return;
             case R.id.ol_register:
@@ -149,8 +162,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
-                        JPDialog.JDialog b = new JPDialog(this).setTitle("切换账号").loadInflate(inflate)
-                                .setFirstButton("取消", new DialogDismissClick()).createJDialog();
+                        JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
+                                .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
                         listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
                         b.show();
                     }
@@ -158,46 +171,32 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     e.printStackTrace();
                 }
                 return;
-            case R.id.ol_change_server:
-                Editor edit = sharedPreferences.edit();
-                edit.putBoolean("remem_account", true);
-                edit.putBoolean("remem_password", true);
-                edit.putBoolean("auto_login", autoLogin.isChecked());
-                edit.putString("current_account", accountTextView.getText().toString());
-                edit.putString("current_password", passwordTextView.getText().toString());
-                edit.apply();
-                intent = new Intent();
-                intent.setClass(this, ChangeServer.class);
-                startActivity(intent);
-                finish();
-                return;
             default:
         }
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
-        jpapplication.setServer(s.getString("ip", JPApplication.ONLINE_SERVER_URL));
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);
         Bundle extras = getIntent().getExtras();
         boolean noAuto = extras == null || extras.getBoolean("no_auto");
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
-        Button changeServerButton = findViewById(R.id.ol_change_server);
-        changeServerButton.setOnClickListener(this);
+        changeServerCheckBox = findViewById(R.id.ol_change_server);
+        changeServerCheckBox.setChecked(OnlineUtil.server.equals(OnlineUtil.TEST_ONLINE_SERVER_URL));
         Button registerButton = findViewById(R.id.ol_register);
         registerButton.setOnClickListener(this);
         Button changeAccountButton = findViewById(R.id.ol_change_account);
         changeAccountButton.setOnClickListener(this);
         TextView appVersionTextView = findViewById(R.id.app_version);
-        appVersionTextView.setText(jpapplication.getVersion());
+        appVersionTextView.setText(BuildConfig.VERSION_NAME);
         accountTextView = findViewById(R.id.username);
         passwordTextView = findViewById(R.id.password);
         rememAccount = findViewById(R.id.chec_name);
@@ -216,7 +215,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             passwordTextView.setText(sharedPreferences.getString("current_password", ""));
         }
         jpprogressBar = new JPProgressBar(this);
-        jpDialog = new JPDialog(this);
         account = extras == null ? null : extras.getString("name");
         password = extras == null ? null : extras.getString("password");
         if (account != null && !account.isEmpty() && password != null && !password.isEmpty()) {
@@ -237,17 +235,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     }
 
     public final void addVersionUpdateDialog(String str3, String newVersion) {
-        JPDialog jpdialog = new JPDialog(this);
-        jpdialog.setTitle("版本更新");
-        jpdialog.setMessage(str3);
-        jpdialog.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
-        jpdialog.setSecondButton("取消", new DialogDismissClick());
-        jpdialog.showDialog();
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle("版本更新");
+        jpDialogBuilder.setMessage(str3);
+        jpDialogBuilder.setFirstButton("下载更新", (dialog, which) -> {
+            dialog.dismiss();
+            ThreadPoolUtil.execute(() -> downloadApk(newVersion));
+        });
+        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+        jpDialogBuilder.buildAndShowDialog();
     }
 
-
     private String getApkUrlByVersion(String version) {
-        return "https://" + JPApplication.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
+        return "https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/" + getApkFileName(version);
     }
 
     private String getApkFileName(String version) {
@@ -266,49 +266,54 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             Toast.makeText(LoginActivity.this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
         });
 
-        OkHttpClient client = new OkHttpClient();
-        // 创建一个GET方式的请求结构
         Request request = new Request.Builder().url(getApkUrlByVersion(version)).build();
-        Call call = client.newCall(request); // 根据请求结构创建调用对象
-        // 加入HTTP请求队列。异步调用，并设置接口应答的回调方法
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) { // 请求失败
-                // 回到主线程操纵界面
-                runOnUiThread(() -> {
-                    jpprogressBar.setText(null);
-                    jpprogressBar.dismiss();
-                    Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
-                });
+        try (Response response = OkHttpUtil.client().newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                getApkResponseAndInstall(file, response);
+            } else {
+                apkDownloadFallHandle(version);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            apkDownloadFallHandle(version);
+        }
+    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) { // 请求成功
-                long length = response.body().contentLength();
-                // 下面从返回的输入流中读取字节数据并保存为本地文件
-                try (InputStream is = response.body().byteStream();
-                     FileOutputStream fos = new FileOutputStream(file)) {
-                    byte[] buf = new byte[100 * 1024];
-                    int sum = 0, len;
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                        sum += len;
-                        int progress = (int) (sum * 1.0f / length * 100);
-                        String detail = String.format(Locale.getDefault(), "下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
-                        // 回到主线程操纵界面
-                        runOnUiThread(() -> jpprogressBar.setText(detail));
-                    }
-                    installApk(LoginActivity.this, file);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    runOnUiThread(() -> {
-                        jpprogressBar.setText(null);
-                        jpprogressBar.dismiss();
-                    });
+    private void apkDownloadFallHandle(String version) {
+        // 回到主线程操纵界面
+        runOnUiThread(() -> {
+            jpprogressBar.dismiss();
+            Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void getApkResponseAndInstall(File file, Response response) {
+        long start = System.currentTimeMillis();
+        long length = response.body().contentLength();
+        // 下面从返回的输入流中读取字节数据并保存为本地文件
+        try (InputStream inputStream = response.body().byteStream();
+             FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            byte[] buf = new byte[100 * 1024];
+            int sum = 0, len;
+            while ((len = inputStream.read(buf)) != -1) {
+                fileOutputStream.write(buf, 0, len);
+                sum += len;
+                int progress = (int) (sum * 1.0f / length * 100);
+                String detail = String.format(Locale.getDefault(), "下载进度：%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, progress);
+                // 回到主线程操纵界面
+                if (System.currentTimeMillis() - start > 200) {
+                    start = System.currentTimeMillis();
+                    runOnUiThread(() -> jpprogressBar.setText(detail));
                 }
             }
-        });
+            installApk(LoginActivity.this, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            runOnUiThread(() -> {
+                jpprogressBar.dismiss();
+            });
+        }
     }
 
     /**

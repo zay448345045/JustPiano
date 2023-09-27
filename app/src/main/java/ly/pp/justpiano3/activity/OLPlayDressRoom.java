@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,24 +25,29 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.handler.android.OLPlayDressRoomHandler;
-import ly.pp.justpiano3.listener.*;
+import ly.pp.justpiano3.listener.EyeClick;
+import ly.pp.justpiano3.listener.HairClick;
+import ly.pp.justpiano3.listener.JacketClick;
+import ly.pp.justpiano3.listener.ShoesClick;
+import ly.pp.justpiano3.listener.TrousersClick;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
 import protobuf.dto.OnlineShopDTO;
 
-public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
+public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public String sex = "f";
     public Bitmap none;
-    public Context context;
     public TabHost tabhost;
     public OLPlayDressRoomHandler olPlayDressRoomHandler;
     public ImageView trousersImage;
@@ -81,21 +85,19 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     public int jacketNow = -1;
     public int trousersNow = -1;
     public int shoesNow = -1;
-    private Bitmap body;
     private ConnectionService connectionservice;
 
-    // <editor-fold desc="服装价格常量" defaultstate="collapsed">
+    // 装价格常量
     public static int[] fHair = new int[0];
     public static int[] mHair = new int[0];
     public static int[] fEye = new int[0];
     public static int[] mEye = new int[0];
-    public static  int[] fJacket = new int[0];
+    public static int[] fJacket = new int[0];
     public static int[] mJacket = new int[0];
     public static int[] fTrousers = new int[0];
-    public static int[] mTrousers =new int[0];
+    public static int[] mTrousers = new int[0];
     public static int[] fShoes = new int[0];
     public static int[] mShoes = new int[0];
-    // </editor-fold>
 
     private void setDressAdapter(GridView gridView, List<Bitmap> arrayList, int type) {
         gridView.setAdapter(new DressAdapter(arrayList, this, type));
@@ -186,11 +188,11 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
                     intent.putExtra("S", sex);
                     setResult(-1, intent);
                 } else {
-                    JPDialog jpDialog = new JPDialog(this);
-                    jpDialog.setTitle("提示");
-                    jpDialog.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
-                    jpDialog.setFirstButton("确定", new DialogDismissClick());
-                    jpDialog.showDialog();
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("提示");
+                    jpDialogBuilder.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                    jpDialogBuilder.buildAndShowDialog();
                 }
                 break;
             case R.id.ol_dress_cancel:
@@ -200,14 +202,12 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        context = this;
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
-        JPApplication jpApplication = (JPApplication) getApplication();
-        connectionservice = jpApplication.getConnectionService();
+        connectionservice = ((JPApplication) getApplication()).getConnectionService();
         Bundle extras = getIntent().getExtras();
         hairNow = extras.getInt("H");
         eyeNow = extras.getInt("E");
@@ -216,8 +216,8 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         level = extras.getInt("Lv");
         shoesNow = extras.getInt("O");
         sex = extras.getString("S");
-        setContentView(R.layout.olplaydressroom);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        setContentView(R.layout.ol_dressroom);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         Button dressOK = findViewById(R.id.ol_dress_ok);
         Button dressCancel = findViewById(R.id.ol_dress_cancel);
         dressOK.setOnClickListener(this);
@@ -262,11 +262,8 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
             int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
             int childCount = tabhost.getTabWidget().getChildCount();
             for (int i = 0; i < childCount; i++) {
-                if (intValue == i) {
-                    tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_orange);
-                } else {
-                    tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
-                }
+                tabhost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
+                        intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
             }
 
             // 商品标签
@@ -290,15 +287,9 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         eyeImage = findViewById(R.id.ol_dress_eye);
         shoesImage = findViewById(R.id.ol_dress_shoes);
         goldNum = findViewById(R.id.gold_num);
-        try {
-            body = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_m0.png"));
-            none = BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        dressMod.setImageBitmap(body);
+        none = ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png");
+        dressMod.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get(sex.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png"));
         dressMod.setColorFilter(-1, Mode.MULTIPLY);
-
         Bitmap bitmap;
         int count = 0;
         do {
@@ -441,7 +432,6 @@ public class OLPlayDressRoom extends BaseActivity implements OnClickListener {
         }
         shoesArray.clear();
 
-        body.recycle();
         JPStack.pop(this);
         super.onDestroy();
     }

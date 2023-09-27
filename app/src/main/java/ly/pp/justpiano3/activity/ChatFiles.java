@@ -8,18 +8,22 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.ChatFilesAdapter;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.utils.DateUtil;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.ChatFilesAdapter;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class ChatFiles extends Activity {
-    public List<HashMap> f4917b = null;
+    public List<Map<String, Object>> dataList = null;
     private ListView f4919d;
     private TextView f4921f;
     private ChatFilesAdapter chatFilesAdapter;
@@ -28,7 +32,7 @@ public class ChatFiles extends Activity {
         File[] f4924i = file.listFiles();
         f4921f.setText("聊天记录存储目录为:SD卡\\JustPiano\\Chats");
         f4921f.setTextSize(20);
-        f4917b = new ArrayList<>();
+        dataList = new ArrayList<>();
         int i = 0;
         int j;
         try {
@@ -38,23 +42,20 @@ public class ChatFiles extends Activity {
             j = 0;
         }
         while (i < j) {
-            HashMap hashMap = new HashMap();
+            Map<String, Object> hashMap = new HashMap<>();
             if (f4924i[i].isFile() && f4924i[i].getName().endsWith(".txt")) {
                 hashMap.put("image", R.drawable._none);
                 hashMap.put("path", f4924i[i].getPath());
                 hashMap.put("filenames", f4924i[i].getName());
                 hashMap.put("time", DateUtil.format(new Date(f4924i[i].lastModified())));
                 hashMap.put("timelong", f4924i[i].lastModified());
-                f4917b.add(hashMap);
+                dataList.add(hashMap);
             }
             i++;
         }
-        Collections.sort(f4917b, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
-        chatFilesAdapter = new ChatFilesAdapter(f4917b, this);
+        Collections.sort(dataList, (o1, o2) -> Long.compare((long) o2.get("timelong"), (long) o1.get("timelong")));
+        chatFilesAdapter = new ChatFilesAdapter(dataList, this);
         f4919d.setAdapter(chatFilesAdapter);
-        if (f4917b.size() == 0) {
-            Toast.makeText(this, "没有聊天记录!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public final void remove(int i, String str) {
@@ -62,8 +63,8 @@ public class ChatFiles extends Activity {
         if (file.exists()) {
             file.delete();
         }
-        f4917b.remove(i);
-        chatFilesAdapter.mo3422a(f4917b);
+        dataList.remove(i);
+        chatFilesAdapter.mo3422a(dataList);
         chatFilesAdapter.notifyDataSetChanged();
     }
 
@@ -75,7 +76,7 @@ public class ChatFiles extends Activity {
             dialog.dismiss();
             remove(i, str2);
         });
-        builder.setNegativeButton("取消", new DialogDismissClick());
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
 
@@ -95,11 +96,10 @@ public class ChatFiles extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);
         f4919d.setCacheColorHint(0);
         f4921f = findViewById(R.id.txt1);

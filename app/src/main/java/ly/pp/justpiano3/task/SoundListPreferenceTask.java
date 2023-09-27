@@ -2,11 +2,12 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.SoundListPreference;
-import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
+
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.view.SoundListPreference;
 
 public final class SoundListPreferenceTask extends AsyncTask<String, Void, String> {
     private final SoundListPreference soundListPreference;
@@ -35,12 +36,12 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         if (!objects[0].equals("original")) {
             GZIPUtil.ZIPFileTo(new File(objects[1]), dir.toString());
         }
-        JPApplication.teardownAudioStreamNative();
-        JPApplication.unloadWavAssetsNative();
+        SoundEngineUtil.teardownAudioStreamNative();
+        SoundEngineUtil.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(soundListPreference.context, i);
+            SoundEngineUtil.preloadSounds(soundListPreference.context, i);
         }
-        JPApplication.confirmLoadSounds(soundListPreference.context);
+        SoundEngineUtil.afterLoadSounds(soundListPreference.context);
         return null;
     }
 

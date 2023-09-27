@@ -10,11 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
-import ly.pp.justpiano3.task.ShowSongsInfoTask;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.view.JPProgressBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +18,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
+import ly.pp.justpiano3.task.ShowSongsInfoTask;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class ShowSongsInfo extends Activity implements OnClickListener {
     public JPApplication jpapplication;
@@ -37,11 +42,11 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
     public int page;
     private TextView pageText;
     private ShowSongsInfoAdapter showSongsInfoAdapter;
-    private List<HashMap> songsList;
+    private List<Map<String, Object>> songsList;
 
-    private List<HashMap> m3857a(String str) {
+    private List<Map<String, Object>> m3857a(String str) {
         JSONArray jSONArray;
-        List<HashMap> arrayList = new ArrayList<>();
+        List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
             jSONArray = new JSONArray(str);
         } catch (JSONException e) {
@@ -50,7 +55,7 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
         }
         for (int i = 0; i < jSONArray.length(); i++) {
             try {
-                HashMap hashMap = new HashMap();
+                Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("songID", jSONArray.getJSONObject(i).get("SI").toString());
                 hashMap.put("songName", jSONArray.getJSONObject(i).get("SN").toString());
                 hashMap.put("degree", Double.valueOf(jSONArray.getJSONObject(i).get("DG").toString()));
@@ -119,14 +124,14 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         Bundle extras = getIntent().getExtras();
         head = extras.getString("head");
         keywords = extras.getString("keywords");
-        setContentView(R.layout.showtopinfo);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        setContentView(R.layout.ol_top_info);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
         TextView f4974j = findViewById(R.id.ol_top_title);
         Button f4976l = findViewById(R.id.ol_top_before);

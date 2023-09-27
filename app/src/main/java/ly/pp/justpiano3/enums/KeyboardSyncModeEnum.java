@@ -13,7 +13,6 @@ public enum KeyboardSyncModeEnum {
 
     ORCHESTRATE(1, "编排"),
     CONCERTO(2, "协奏"),
-
     ;
 
     private final int id;

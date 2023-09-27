@@ -1,12 +1,11 @@
 package ly.pp.justpiano3.listener.touch;
 
 import android.content.pm.PackageManager;
-import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import ly.pp.justpiano3.midi.MidiFramer;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.view.PlayView;
 
 import java.util.HashMap;
@@ -18,19 +17,9 @@ public final class TouchNotes implements OnTouchListener {
 
     public TouchNotes(PlayView playView) {
         this.playView = playView;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (playView.pianoPlay.jpapplication.midiOutputPort != null && playView.pianoPlay.midiFramer == null) {
-                    playView.pianoPlay.midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            playView.pianoPlay.midiConnectHandle(data);
-                        }
-                    });
-                    playView.pianoPlay.jpapplication.midiOutputPort.connect(playView.pianoPlay.midiFramer);
-                    playView.pianoPlay.jpapplication.addMidiConnectionListener(playView.pianoPlay);
-                }
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            playView.pianoPlay.buildAndConnectMidiReceiver();
+            MidiDeviceUtil.addMidiConnectionListener(playView.pianoPlay);
         }
     }
 
@@ -79,7 +68,7 @@ public final class TouchNotes implements OnTouchListener {
 
     private void onFingerDown(int id, float x, float y) {
         if (playView.currentPlayNote != null) {
-            playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
         }
         int touchNoteNum = playView.eventPositionToTouchNoteNum(x, y);
         fireKeyDown(touchNoteNum);
@@ -88,7 +77,7 @@ public final class TouchNotes implements OnTouchListener {
 
     private void onFingerMove(int id, float x, float y) {
         if (playView.currentPlayNote != null) {
-            playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
         }
         Integer previousTouchNoteNum = mFingerMap.get(id);
         if (previousTouchNoteNum != null) {

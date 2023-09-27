@@ -2,16 +2,19 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMainMode> olMainMode;
@@ -26,12 +29,12 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", olMainMode.get().jpapplication.getVersion())
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("maxSongId", String.valueOf(maxSongId))
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + olMainMode.get().jpapplication.getServer() + ":8910/JustPianoServer/server/SongSyncDialog")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SongSyncDialog")
                 .post(formBody)
                 .build();
         try {
@@ -60,16 +63,16 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 olMainMode.get().loginOnline();
                 i = 0;
             }
-            JPDialog jpdialog = new JPDialog(olMainMode.get());
-            jpdialog.setTitle("在线曲库同步");
-            jpdialog.setMessage(message);
-            jpdialog.setFirstButton("开始同步", (dialog, which) -> {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olMainMode.get());
+            jpDialogBuilder.setTitle("在线曲库同步");
+            jpDialogBuilder.setMessage(message);
+            jpDialogBuilder.setFirstButton("开始同步", (dialog, which) -> {
                 dialog.dismiss();
                 new SongSyncTask(olMainMode.get(), maxSongId).execute();
             });
-            jpdialog.setSecondButton("取消", new DialogDismissClick());
+            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             if (i != 0) {
-                jpdialog.showDialog();
+                jpDialogBuilder.buildAndShowDialog();
             }
         } catch (Exception e) {
             Toast.makeText(olMainMode.get(), "无法检查曲库同步，请尝试重新登录", Toast.LENGTH_SHORT).show();

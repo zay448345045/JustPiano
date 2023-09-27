@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.view.play;
 
 import android.graphics.Bitmap;
+
 import ly.pp.justpiano3.view.PlayView;
 
 public final class ShowTouchNotesLevel {

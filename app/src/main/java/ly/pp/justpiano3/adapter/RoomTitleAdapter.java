@@ -8,12 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.adapter.RoomMiniPeopleAdapter;
-import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.utils.ColorUtil;
 
 public final class RoomTitleAdapter extends BaseAdapter {
     private List<Bundle> list;
@@ -62,7 +63,7 @@ public final class RoomTitleAdapter extends BaseAdapter {
         ((GridView) view.findViewById(R.id.ol_player_grid)).setAdapter(new RoomMiniPeopleAdapter(olPlayHall, list.get(i).getIntArray("UA")));
         TextView textView = view.findViewById(R.id.ol_room_name);
         textView.setText(string);
-        textView.setBackgroundResource(Consts.kuang[i2]);
+        textView.setBackgroundResource(ColorUtil.userColor[i2]);
         textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(b));
         Button button = view.findViewById(R.id.ol_getin_button);
         if (i3 == 1) {

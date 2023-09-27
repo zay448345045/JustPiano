@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.SkinListAdapter;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
-import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.File;
 import java.util.List;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.SkinListAdapter;
+import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 public class SkinListPreference extends DialogPreference {
     public File f5024d;

@@ -6,57 +6,62 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+
+import java.util.List;
+
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.activity.OLPlayRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.HallPasswordClick;
 import ly.pp.justpiano3.listener.OLSendMailClick;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineDialogDTO;
 import protobuf.dto.OnlineEnterHallDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
-
-import java.util.List;
 
 public final class MainGameAdapter extends BaseAdapter {
     public Activity activity;
     public ConnectionService connectionService;
     private List<Bundle> list;
-    private final JPApplication jpapplication;
     private final int type;
 
-    public MainGameAdapter(List<Bundle> list, JPApplication jPApplication, int i, Activity act) {
+    public MainGameAdapter(List<Bundle> list, JPApplication jpApplication, int i, Activity act) {
         this.list = list;
-        jpapplication = jPApplication;
-        connectionService = jPApplication.getConnectionService();
+        connectionService = jpApplication.getConnectionService();
         type = i;
-        if (act instanceof OLPlayHall) {
-            activity = JPStack.top();
-        } else if (act instanceof OLPlayRoom) {
-            activity = JPStack.top();
-        } else if (act instanceof OLPlayHallRoom) {
-            activity = JPStack.top();
-        } else if (act instanceof OLPlayKeyboardRoom) {
-            activity = JPStack.top();
-        }
+        activity = JPStack.top();
     }
 
-    private static void m3978a(MainGameAdapter mainGameAdapter, byte b) {
-        View inflate = mainGameAdapter.activity.getLayoutInflater().inflate(R.layout.message_send, mainGameAdapter.activity.findViewById(R.id.dialog));
+    private void m3978a(byte hallId) {
+        View inflate = activity.getLayoutInflater().inflate(R.layout.message_send, activity.findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_2);
         TextView textView2 = inflate.findViewById(R.id.title_1);
         inflate.findViewById(R.id.text_1).setVisibility(View.GONE);
         textView2.setVisibility(View.GONE);
         textView.setSingleLine(true);
-        new JPDialog(mainGameAdapter.activity).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new HallPasswordClick(mainGameAdapter, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialogBuilder(activity).setTitle("输入密码").loadInflate(inflate)
+                .setFirstButton("确定", (dialog, which) -> {
+                    OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
+                    builder.setHallId(hallId);
+                    builder.setPassword(String.valueOf(textView.getText()));
+                    connectionService.writeData(OnlineProtocolType.ENTER_HALL, builder.build());
+                    dialog.dismiss();
+                })
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void updateList(List<Bundle> list) {
@@ -118,7 +123,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 }
                 view.setOnClickListener(v -> {
                     if (list.get(i).getInt("W") > 0) {
-                        MainGameAdapter.m3978a(MainGameAdapter.this, b);
+                        m3978a(b);
                     } else {
                         OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
                         builder.setHallId(b);
@@ -176,13 +181,13 @@ public final class MainGameAdapter extends BaseAdapter {
                 ((TextView) view.findViewById(R.id.ol_friend_level)).setText("LV." + i5);
                 textView2.setText(string2);
                 if (i3 == 0) {
-                    textView2.setTextColor(jpapplication.getResources().getColor(R.color.white));
-                    button2.setTextColor(jpapplication.getResources().getColor(R.color.white));
-                    button.setTextColor(jpapplication.getResources().getColor(R.color.white));
+                    textView2.setTextColor(ContextCompat.getColor(activity, R.color.white));
+                    button2.setTextColor(ContextCompat.getColor(activity, R.color.white));
+                    button.setTextColor(ContextCompat.getColor(activity, R.color.white));
                 } else {
-                    textView2.setTextColor(jpapplication.getResources().getColor(R.color.white1));
-                    button2.setTextColor(jpapplication.getResources().getColor(R.color.white1));
-                    button.setTextColor(jpapplication.getResources().getColor(R.color.white1));
+                    textView2.setTextColor(ContextCompat.getColor(activity, R.color.white1));
+                    button2.setTextColor(ContextCompat.getColor(activity, R.color.white1));
+                    button.setTextColor(ContextCompat.getColor(activity, R.color.white1));
                     button2.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
                         OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
@@ -220,7 +225,7 @@ public final class MainGameAdapter extends BaseAdapter {
                                 return;
                             }
                         }
-                        Toast.makeText(jpapplication, "对方不在线,无法进行私聊!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "对方不在线,无法进行私聊!", Toast.LENGTH_SHORT).show();
                     });
                 }
                 view.findViewById(R.id.ol_friend_send).setOnClickListener(v -> {
@@ -229,10 +234,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHall) activity).sendMail(string2);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string2, 0);
-                    } else if (activity instanceof OLPlayRoom) {
-                        ((OLPlayRoom) activity).sendMail(string2);
-                    } else if (activity instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) activity).sendMail(string2);
+                    } else if (activity instanceof OLPlayRoomActivity) {
+                        ((OLPlayRoomActivity) activity).sendMail(string2);
                     }
                 });
                 view.findViewById(R.id.ol_friend_dele).setOnClickListener(v -> {
@@ -393,7 +396,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         builder.setName(string7);
                         connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                     });
-                } else if (activity instanceof OLPlayRoom || activity instanceof OLPlayKeyboardRoom) {
+                } else if (activity instanceof OLPlayRoomActivity) {
                     textView.setText("邀请");
                     textView.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
@@ -413,10 +416,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHall) activity).sendMail(string7);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string7, 0);
-                    } else if (activity instanceof OLPlayRoom) {
-                        ((OLPlayRoom) activity).sendMail(string7);
-                    } else if (activity instanceof OLPlayKeyboardRoom) {
-                        ((OLPlayKeyboardRoom) activity).sendMail(string7);
+                    } else if (activity instanceof OLPlayRoomActivity) {
+                        ((OLPlayRoomActivity) activity).sendMail(string7);
                     }
                 });
                 button = view.findViewById(R.id.ol_friend_dele);

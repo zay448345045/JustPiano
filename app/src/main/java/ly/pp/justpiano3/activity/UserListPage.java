@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.*;
+
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.UserListPageAdapter;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class UserListPage extends Activity {
     public ListView listView;
-    public JPApplication jpApplication;
     public JPProgressBar jpProgressBar;
 
     @Override
@@ -25,10 +26,9 @@ public class UserListPage extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        jpApplication = (JPApplication) getApplication();
-        setContentView(R.layout.userlistpage);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ol_user_list);
         listView = findViewById(R.id.list_view);
         listView.setCacheColorHint(0);
         TextView textView = findViewById(R.id.ol_top_title);
@@ -37,6 +37,6 @@ public class UserListPage extends Activity {
         descTextView.setVisibility(View.VISIBLE);
         descTextView.setText("此列表下的用户，在接收到Ta的聊天消息时会自动屏蔽，对方无感知。\n屏蔽聊天列表添加用户方法：在房间聊天界面点击人物形象，在小弹窗中选择屏蔽聊天。");
         jpProgressBar = new JPProgressBar(this);
-        listView.setAdapter(new UserListPageAdapter(this, jpApplication.getChatBlackList()));
+        listView.setAdapter(new UserListPageAdapter(this, ChatBlackUserUtil.getChatBlackList(this)));
     }
 }

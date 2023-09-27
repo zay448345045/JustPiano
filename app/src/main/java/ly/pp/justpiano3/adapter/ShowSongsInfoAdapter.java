@@ -6,27 +6,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.listener.ShowSongsInfoPlayClick;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
+import ly.pp.justpiano3.activity.WaterfallActivity;
+import ly.pp.justpiano3.listener.ShowSongsInfoPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
-
-import java.util.HashMap;
-import java.util.List;
 
 public final class ShowSongsInfoAdapter extends BaseAdapter {
     public final ShowSongsInfo showSongsInfo;
-    private List<HashMap> songsList;
+    private List<Map<String, Object>> songsList;
 
-    public ShowSongsInfoAdapter(ShowSongsInfo showSongsInfo, List<HashMap> list) {
+    public ShowSongsInfoAdapter(ShowSongsInfo showSongsInfo, List<Map<String, Object>> list) {
         this.showSongsInfo = showSongsInfo;
         songsList = list;
     }
 
-    public void mo3500a(List<HashMap> list) {
+    public void mo3500a(List<Map<String, Object>> list) {
         songsList = list;
     }
 
@@ -52,7 +55,7 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         }
         view.setKeepScreenOn(true);
         String trim = songsList.get(i).get("songName").toString().trim();
-        String valueOf = (String) songsList.get(i).get("songID");
+        String songId = (String) songsList.get(i).get("songID");
         ImageButton imageButton = view.findViewById(R.id.ol_favor_b);
         if (showSongsInfo.keywords.equals("F")) {
             imageButton.setImageResource(R.drawable.favor);
@@ -63,12 +66,12 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
             if (showSongsInfo.keywords.equals("F")) {
                 Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已移出网络收藏夹", Toast.LENGTH_SHORT).show();
                 showSongsInfo.mo2976a(i);
-                new AcceptFavorThread(showSongsInfo, valueOf, "U", showSongsInfo.jpapplication.getAccountName()).start();
+                new AcceptFavorThread(songId, "U", showSongsInfo.jpapplication.getAccountName()).start();
                 return;
             }
             Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(showSongsInfo, valueOf, "F", showSongsInfo.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", showSongsInfo.jpapplication.getAccountName()).start();
         });
         TextView songName = view.findViewById(R.id.ol_s_n);
         songName.setText(trim);
@@ -98,7 +101,9 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         String str2 = songsTime % 60 >= 10 ? "" + songsTime % 60 : "0" + songsTime % 60;
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
-        view.findViewById(R.id.ol_play_button).setOnClickListener(new ShowSongsInfoPlayClick(this, trim, valueOf, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
+        view.findViewById(R.id.ol_play_button).setOnClickListener(new ShowSongsInfoPlayClick(this, trim, songId, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
+        ImageView waterFallImageView = view.findViewById(R.id.ol_play_waterfall);
+        waterFallImageView.setOnClickListener(new ShowSongsInfoPlayClick(this, songId, new Intent().setClass(showSongsInfo, WaterfallActivity.class)));
         return view;
     }
 }

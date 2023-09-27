@@ -5,22 +5,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.SearchSongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
-import java.util.HashMap;
-import java.util.List;
-
 public final class SearchSongsAdapter extends BaseAdapter {
     public final SearchSongs searchSongs;
-    private final List<HashMap> songsList;
+    private final List<Map<String, Object>> songsList;
 
-    public SearchSongsAdapter(SearchSongs searchSongs, int i, List<HashMap> list) {
+    public SearchSongsAdapter(SearchSongs searchSongs, int i, List<Map<String, Object>> list) {
         this.searchSongs = searchSongs;
         songsList = list;
     }
@@ -47,13 +50,13 @@ public final class SearchSongsAdapter extends BaseAdapter {
         }
         view.setKeepScreenOn(true);
         String trim = songsList.get(i).get("songName").toString().trim();
-        String valueOf = (String) songsList.get(i).get("songID");
+        String songId = (String) songsList.get(i).get("songID");
         ImageButton imageButton = view.findViewById(R.id.ol_favor_b);
         imageButton.setImageResource(R.drawable.favor_1);
         imageButton.setOnClickListener(v -> {
             Toast.makeText(searchSongs.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(searchSongs, valueOf, "F", searchSongs.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", searchSongs.jpapplication.getAccountName()).start();
         });
         ((TextView) view.findViewById(R.id.ol_s_n)).setText(trim);
         ((TextView) view.findViewById(R.id.ol_nandu)).setText("难度:" + songsList.get(i).get("degree"));
@@ -80,7 +83,9 @@ public final class SearchSongsAdapter extends BaseAdapter {
         String str2 = songsTime % 60 >= 10 ? "" + songsTime % 60 : "0" + songsTime % 60;
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
-        view.findViewById(R.id.ol_play_button).setOnClickListener(new SearchSongsPlayClick(this, trim, valueOf, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
+        view.findViewById(R.id.ol_play_button).setOnClickListener(new SearchSongsPlayClick(this, trim, songId, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
+        ImageView waterFallImageView = view.findViewById(R.id.ol_play_waterfall);
+        waterFallImageView.setOnClickListener(new SearchSongsPlayClick(this, songId, new Intent().setClass(searchSongs, WaterfallActivity.class)));
         return view;
     }
 }

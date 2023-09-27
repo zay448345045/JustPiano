@@ -4,20 +4,35 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.*;
+import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.io.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Create by SunnyDay on 2019/04/18
@@ -114,7 +129,7 @@ public class ImageLoader {
     }
 
     /**
-     * @function 提供MyImageLoader对象
+     * @function 提供ImageLoader对象
      */
     public static ImageLoader build(Context context, String cacheName) {
         return new ImageLoader(context, cacheName);

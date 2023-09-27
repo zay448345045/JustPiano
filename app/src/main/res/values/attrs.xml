@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="KeyboardModeView">
+    <declare-styleable name="KeyboardView">
         <attr name="whiteKeyNum" format="integer" />
         <attr name="whiteKeyOffset" format="integer" />
+        <attr name="pianoKeyTouchable" format="boolean" />
+        <attr name="octaveTagType" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="DataSelectView">
@@ -22,5 +24,11 @@
         <attr name="topGoldConvertText" format="string" />
         <attr name="bottomGoldConvertText" format="string" />
         <attr name="defaultValue" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="SeekBarPreference">
+        <attr name="minValue" format="float" />
+        <attr name="maxValue" format="float" />
+        <attr name="floatNumber" format="boolean" />
     </declare-styleable>
 </resources>

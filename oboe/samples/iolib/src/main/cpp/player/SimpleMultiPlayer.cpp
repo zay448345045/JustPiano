@@ -19,7 +19,7 @@
 // parselib includes
 #include <stream/MemInputStream.h>
 #include <wav/WavStreamReader.h>
-
+#include <cmath>
 #include <utility>
 
 // local includes
@@ -35,8 +35,8 @@ namespace iolib {
 
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
-    SimpleMultiPlayer::SimpleMultiPlayer()
-            : mChannelCount(0), mSampleRate(0), mOutputReset(false), mDecayFactor(1.0f) {}
+    SimpleMultiPlayer::SimpleMultiPlayer() : mMixBuffer(nullptr), mChannelCount(0), mSampleRate(0),
+                                             mOutputReset(false), mDecayFactor(1.0f) {}
 
     DataCallbackResult SimpleMultiPlayer::onAudioReady(AudioStream *oboeStream, void *audioData,
                                                        int32_t numFrames) {
@@ -48,54 +48,51 @@ namespace iolib {
         if (streamState == StreamState::Disconnected) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
-
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
+        mixAudioToBuffer(numFrames);
+        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
 
-        float *data = (float *) audioData;
-        // OneShotSampleSource* sources = mSampleSources.get();
+        if (record) {
+            mRecordingIO->write_buffer(mMixBuffer, numFrames);
+        }
+        return DataCallbackResult::Continue;
+    }
+
+    void SimpleMultiPlayer::mixAudioToBuffer(int32_t numFrames) {
+        if (mMixBuffer == nullptr) {
+            mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
+        }
+        memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
+
+        float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             SampleSource *sampleSource = mSampleSources[index];
             int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
-            int count = 0;
             for (int32_t i = 0; i < queueSize; i++) {
-                std::pair<int32_t, int32_t> curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                sampleSource->mixAudio(data, mChannelCount, numFrames, curFrameIndex);
-                if (curFrameIndex.first >= numSampleFrames) {
-                    count++;
+                std::__ndk1::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
+                if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
+                    // this sample is finished
+                    sampleSource->popCurFrameIndexQueue();
+                } else {
+                    sampleCount += 1;
+                    // the size of queue equals one, can avoid moving queue
+                    if (curFrameIndex != nullptr && queueSize > 1) {
+                        sampleSource->popCurFrameIndexQueue();
+                        sampleSource->pushCurFrameIndexQueue(*curFrameIndex);
+                    }
                 }
-                sampleSource->pushCurFrameIndexQueue(curFrameIndex);
-                sampleSource->popCurFrameIndexQueue();
-            }
-            while (count--) {
-                sampleSource->popCurFrameIndexQueue();
             }
         }
 
-        // 混音算法来源：https://blog.csdn.net/wxtsmart/article/details/2693329
-        // 暂停
-//        for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
-//            float value = mDecayFactor * data[i];
-//            if (value > 2) {
-//                mDecayFactor = 2 / value;
-//                data[i] = 2;
-//            } else if (value < -2) {
-//                mDecayFactor = -2 / value;
-//                data[i] = -2;
-//            } else {
-//                data[i] = value;
-//            }
-//            if (mDecayFactor < 1) {
-//                float step = (1 - mDecayFactor) / 16;
-//                mDecayFactor += step;
-//            }
-//        }
-
-        if (record) {
-            mRecordingIO->write_buffer((float *) audioData, numFrames);
+        // Divide value by the logarithm of the "total number of samples"
+        // ensure that the volume is not too high when too many samples
+        float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
+        for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
+            mMixBuffer[i] /= mDecayFactor;
+            mDecayFactor += (logSampleCount - mDecayFactor) / 256;
         }
-
-        return DataCallbackResult::Continue;
     }
 
     void SimpleMultiPlayer::onErrorAfterClose(AudioStream *oboeStream, Result error) {
@@ -159,7 +156,7 @@ namespace iolib {
         __android_log_print(ANDROID_LOG_INFO, TAG, "setupAudioStream()");
         mChannelCount = channelCount;
         mSampleRate = sampleRate;
-        mRecordingIO->init(mSampleRate, mChannelCount);
+        mRecordingIO->init(channelCount, sampleRate);
         openStream();
     }
 
@@ -208,14 +205,6 @@ namespace iolib {
         for (int32_t bufferIndex = 0; bufferIndex < mNumSampleBuffers; bufferIndex++) {
             mSampleSources[bufferIndex]->setStopMode();
         }
-    }
-
-    void SimpleMultiPlayer::setGain(int index, float gain) {
-        mSampleSources[index]->setGain(gain);
-    }
-
-    float SimpleMultiPlayer::getGain(int index) {
-        return mSampleSources[index]->getGain();
     }
 
     void SimpleMultiPlayer::setRecord(bool r) {

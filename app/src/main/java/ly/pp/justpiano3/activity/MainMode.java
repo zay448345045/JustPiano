@@ -15,30 +15,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.task.FeedbackTask;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.JPProgressBar;
 
 import java.io.File;
 
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+
 public class MainMode extends Activity implements OnClickListener {
     private boolean pressAgain;
-    public JPApplication jpApplication;
-    private JPProgressBar jpprogressBar;
 
     @Override
     public void onBackPressed() {
-        jpprogressBar.dismiss();
         if (pressAgain) {
-            Intent intent = new Intent("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.HOME");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
             finish();
             System.exit(0);
         } else {
@@ -97,26 +94,26 @@ public class MainMode extends Activity implements OnClickListener {
                 return;
             case R.id.settings:
                 intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                 return;
             case R.id.feed_back:
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.text_1);
-                if (jpApplication.getKitiName() != null) {
-                    textView.setText(jpApplication.getKitiName());
+                if (JPApplication.kitiName != null) {
+                    textView.setText(JPApplication.kitiName);
                 }
                 TextView textViewTitle = inflate.findViewById(R.id.title_1);
                 TextView messageView = inflate.findViewById(R.id.message_view);
                 inflate.findViewById(R.id.message_view).setVisibility(View.VISIBLE);
-                messageView.setText("问题将直接反馈至开发者，请认真填写，感谢您的支持和宝贵意见（若昵称填写准确，您可能会收到私信回复问题处理结果）");
+                messageView.setText("问题将直接反馈至开发者，感谢您的支持和宝贵意见（若昵称填写准确，您可能会收到私信回复问题处理结果）");
                 textViewTitle.setText("昵称:");
                 TextView textView2 = inflate.findViewById(R.id.text_2);
                 TextView textView2Title = inflate.findViewById(R.id.title_2);
                 textView2Title.setText("内容:");
-                JPDialog jpdialog = new JPDialog(this);
-                jpdialog.setTitle("反馈");
-                jpdialog.loadInflate(inflate);
-                jpdialog.setFirstButton("提交", (dialog, which) -> {
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("反馈");
+                jpDialogBuilder.loadInflate(inflate);
+                jpDialogBuilder.setFirstButton("提交", (dialog, which) -> {
                     String userName = textView.getText().toString();
                     String message = textView2.getText().toString();
                     if (StringUtil.isNullOrEmpty(userName) || StringUtil.isNullOrEmpty(message)) {
@@ -124,10 +121,11 @@ public class MainMode extends Activity implements OnClickListener {
                         return;
                     }
                     dialog.dismiss();
-                    new FeedbackTask(this, userName, message).execute();
+                    new FeedbackTask(this, userName, BuildConfig.VERSION_NAME
+                            + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE + '\n' + message).execute();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.showDialog();
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
         }
@@ -136,56 +134,33 @@ public class MainMode extends Activity implements OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
+            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        jpApplication = (JPApplication) getApplication();
-        jpApplication.loadSettings(false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean newHelp = sharedPreferences.getBoolean("new_help", true);
         if (newHelp) {
             findViewById(R.id.new_help).setVisibility(View.VISIBLE);
         }
-        TextView f4202b = findViewById(R.id.local_game);
-        f4202b.setOnClickListener(this);
-        TextView f4203c = findViewById(R.id.online_game);
-        f4203c.setOnClickListener(this);
-        TextView f4204d = findViewById(R.id.settings);
-        f4204d.setOnClickListener(this);
-        TextView f4210j = findViewById(R.id.skins);
-        f4210j.setOnClickListener(this);
-        TextView f4212l = findViewById(R.id.sounds);
-        f4212l.setOnClickListener(this);
-        TextView f4205e = findViewById(R.id.about_game);
-        f4205e.setOnClickListener(this);
-        TextView f4206f = findViewById(R.id.chat_files);
-        f4206f.setOnClickListener(this);
-        TextView f4208h = findViewById(R.id.piano_help);
-        f4208h.setOnClickListener(this);
-        TextView f4211k = findViewById(R.id.listen);
-        f4211k.setOnClickListener(this);
-        f4211k = findViewById(R.id.feed_back);
-        f4211k.setOnClickListener(this);
-        jpprogressBar = new JPProgressBar(this);
-        if (jpApplication.title != null && jpApplication.f4072f != null && !jpApplication.title.isEmpty() && !jpApplication.f4072f.isEmpty()) {
-            JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle(jpApplication.title);
-            jpdialog.setMessage(jpApplication.f4072f);
-            jpdialog.setFirstButton("确定", (dialog, which) -> {
-                jpApplication.f4072f = "";
-                jpApplication.title = "";
-                dialog.dismiss();
-            });
-            jpdialog.showDialog();
-        }
+        findViewById(R.id.local_game).setOnClickListener(this);
+        findViewById(R.id.online_game).setOnClickListener(this);
+        findViewById(R.id.settings).setOnClickListener(this);
+        findViewById(R.id.skins).setOnClickListener(this);
+        findViewById(R.id.sounds).setOnClickListener(this);
+        findViewById(R.id.about_game).setOnClickListener(this);
+        findViewById(R.id.chat_files).setOnClickListener(this);
+        findViewById(R.id.piano_help).setOnClickListener(this);
+        findViewById(R.id.listen).setOnClickListener(this);
+        findViewById(R.id.feed_back).setOnClickListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -222,8 +197,8 @@ public class MainMode extends Activity implements OnClickListener {
             if (!file3.exists()) {
                 file3.mkdirs();
             }
-        } catch (Exception e4) {
-            e4.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

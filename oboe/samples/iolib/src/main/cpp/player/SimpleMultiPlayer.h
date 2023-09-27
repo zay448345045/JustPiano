@@ -39,6 +39,10 @@ namespace iolib {
     public:
         SimpleMultiPlayer();
 
+        ~SimpleMultiPlayer() {
+            delete mMixBuffer;
+        }
+
         // Inherited from oboe::AudioStreamCallback
         oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
                                               int32_t numFrames) override;
@@ -77,17 +81,9 @@ namespace iolib {
 
         void clearOutputReset() { mOutputReset = false; }
 
-        void setPan(int index, float pan);
-
-        float getPan(int index);
-
-        void setGain(int index, float gain);
-
-        float getGain(int index);
-
         void setRecord(bool r);
 
-        void setRecordFilePath(char* s);
+        void setRecordFilePath(char *s);
 
     private:
         // Oboe Audio Stream
@@ -101,15 +97,15 @@ namespace iolib {
         int32_t mNumSampleBuffers{};
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
-
+        float *mMixBuffer;
         float mDecayFactor;
 
         bool record{};
 
         bool mOutputReset;
-        shared_ptr<RecordingIO> mRecordingIO {
-                new RecordingIO()
-        };
+        std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
+
+        void mixAudioToBuffer(int32_t numFrames);
     };
 
 }

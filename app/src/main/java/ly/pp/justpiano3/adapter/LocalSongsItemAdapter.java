@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.constant.Consts;
@@ -33,7 +34,7 @@ public final class LocalSongsItemAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = melodySelect.layoutInflater1.inflate(R.layout.f_view, null);
+            view = melodySelect.layoutInflater1.inflate(R.layout.songs_sort_view, null);
         }
         view.setKeepScreenOn(true);
         ((TextView) view.findViewById(R.id.ol_s_p)).setText(Consts.items[i]);

@@ -12,15 +12,16 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchSongs extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;
@@ -53,14 +55,15 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
             if (nailface == null) {
                 nailface = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return nailface;
     }
 
-    private List<HashMap> m3834a(String str) {
+    private List<Map<String, Object>> m3834a(String str) {
         JSONArray jSONArray;
-        List<HashMap> arrayList = new ArrayList<>();
+        List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
             jSONArray = new JSONArray(str);
         } catch (JSONException e) {
@@ -70,7 +73,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         length = jSONArray.length();
         for (int i = 0; i < length; i++) {
             try {
-                HashMap hashMap = new HashMap();
+                Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("songID", jSONArray.getJSONObject(i).get("SI").toString());
                 hashMap.put("songName", jSONArray.getJSONObject(i).get("SN").toString());
                 hashMap.put("degree", Double.valueOf(jSONArray.getJSONObject(i).get("DG").toString()));
@@ -88,9 +91,9 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         return arrayList;
     }
 
-    public List<HashMap> m3841b(String str) {
+    public List<Map<String, Object>> m3841b(String str) {
         JSONArray jSONArray;
-        List<HashMap> arrayList = new ArrayList<>();
+        List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
             jSONArray = new JSONArray(str);
         } catch (JSONException e) {
@@ -100,7 +103,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         length = jSONArray.length();
         for (int i = 0; i < length; i++) {
             try {
-                HashMap hashMap = new HashMap();
+                Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("userID", Integer.valueOf(jSONArray.getJSONObject(i).get("I").toString()));
                 hashMap.put("userName", jSONArray.getJSONObject(i).get("K").toString());
                 hashMap.put("faceID", jSONArray.getJSONObject(i).get("F").toString());
@@ -117,7 +120,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
 
     public final void mo2963a(String str, ListView listView) {
         try {
-            List<HashMap> songsList = m3834a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+            List<Map<String, Object>> songsList = m3834a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
             if (listView != null) {
                 SearchSongsAdapter searchSongsAdapter = new SearchSongsAdapter(this, length, songsList);
                 listView.setAdapter(searchSongsAdapter);
@@ -164,21 +167,19 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         headType = getIntent().getExtras().getInt("head");
-        setContentView(R.layout.searchsongs);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        setContentView(R.layout.ol_search_songs);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutinflater = LayoutInflater.from(this);
         keywords = findViewById(R.id.ol_keywords);
-        Button f4957l = findViewById(R.id.ol_search_b);
-        f4957l.setOnClickListener(this);
+        findViewById(R.id.ol_search_b).setOnClickListener(this);
         jpprogressBar = new JPProgressBar(this);
         songsListView = findViewById(R.id.ol_search_list);
-        TextView f4956k = findViewById(R.id.title_bar);
         if (headType == 6) {
-            f4956k.setText("查找用户:");
+            ((TextView) findViewById(R.id.title_bar)).setText("查找用户:");
         }
     }
 

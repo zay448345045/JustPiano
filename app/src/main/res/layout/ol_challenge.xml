@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/ground"
+              android:gravity="center">
+
+    <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/challengetitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_24dp"
+                    android:layout_marginBottom="@dimen/dimen_24dp"
+                    android:layout_weight="23"
+                    android:fontFamily="@font/title"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/dimen_12dp"
+                    android:text="@string/challenge_title"
+                    android:textColor="@color/white1"
+                    android:textSize="24sp"/>
+
+            <Button
+                    android:id="@+id/viewChallenge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_22dp"
+                    android:layout_marginEnd="@dimen/dimen_50dp"
+                    android:layout_marginBottom="@dimen/dimen_26dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_orange_button"
+                    android:gravity="center"
+                    android:text="@string/challenge_today"
+                    android:textColor="@color/white1"
+                    android:textSize="14sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_0dp"
+                android:layout_marginStart="@dimen/dimen_40dp"
+                android:layout_marginEnd="@dimen/dimen_40dp"
+                android:layout_weight="6"
+                android:baselineAligned="false"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dimen_30dp">
+
+            <LinearLayout
+                    android:id="@+id/linearLayout6"
+                    android:layout_width="@dimen/dimen_0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dimen_18dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/infoview"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        android:layout_marginBottom="@dimen/dimen_6dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/ol_rectangle_mask"
+                        android:text="@string/challenge_inf"
+                        android:textColor="@color/white1"
+                        android:textSize="14sp"/>
+
+                <Button
+                        android:id="@+id/drawPrize"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        android:layout_marginStart="@dimen/dimen_4dp"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_4dp"
+                        android:layout_marginBottom="@dimen/dimen_8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/selector_ol_button"
+
+                        android:gravity="center"
+                        android:text="@string/challenge_prize"
+                        android:textColor="@color/white1"
+                        android:textSize="20sp"/>
+
+                <Button
+                        android:id="@+id/startchallenge"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        android:layout_marginStart="@dimen/dimen_4dp"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_4dp"
+                        android:layout_marginBottom="@dimen/dimen_8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/selector_ol_button_login"
+                        android:gravity="center"
+                        android:text="@string/challenge_start"
+                        android:textColor="@color/white1"
+                        android:textSize="20sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/linearLayout7"
+                    android:layout_width="@dimen/dimen_0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                            android:id="@+id/linearLayout71"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ol_rectangle_mask"
+                            android:orientation="horizontal">
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="名次"
+                                android:textColor="@color/songname"
+                                android:textSize="14sp" />
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="5"
+                                android:gravity="center"
+                                android:text="名称"
+                                android:textColor="@color/songname"
+                                android:textSize="14sp" />
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="2"
+                                android:gravity="center"
+                                android:text="最高分"
+                                android:textColor="@color/songname"
+                                android:textSize="14sp" />
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="3"
+                                android:gravity="center"
+                                android:text="挑战时间"
+                                android:textColor="@color/songname"
+                                android:textSize="14sp" />
+                    </LinearLayout>
+
+                <ListView
+                        android:id="@+id/challenge_score_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/ol_rectangle_mask"
+                        android:cacheColorHint="#00ffffff"
+                        android:choiceMode="singleChoice"
+                        android:divider="@null"
+                        android:listSelector="@color/translent"
+                        android:paddingTop="@dimen/dimen_8dp"
+                        android:textColor="@color/white1"
+                        android:textSize="14sp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

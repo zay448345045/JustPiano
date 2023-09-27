@@ -12,28 +12,23 @@
 #define MODULE_NAME  "RecordingIO"
 #endif
 
-using namespace std;
-
-
 class RecordingIO {
 public:
-
     RecordingIO();
 
-    ~RecordingIO() {}
+    ~RecordingIO() {
+        delete mRecordBuff;
+    }
 
-    void init(int32_t sampleRate, int32_t channelCount);
+    void init(int32_t channelCount, int32_t sampleRate);
 
-    static void
-    generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate, int channels,
-                          int audioFormat);
+    static void generateWavFileHeader(char *header, long totalAudioLen, long longSampleRate,
+                                      int32_t channelCount);
 
-    int32_t write_buffer(const float *sourceData, int32_t numSamples);
-
-    void flush_buffer();
+    void write_buffer(float *sourceData, size_t numSamples);
 
     void setRecordingFilePath(char *recordingFilePath) {
-        mRecordingFilePath = move(recordingFilePath);
+        mRecordingFilePath = std::move(recordingFilePath);
     }
 
     void reserveRecordingBuffer(int reserve);
@@ -41,7 +36,7 @@ public:
     void clearRecordingBuffer();
 
 private:
-    ThreadPool pool;
+    ThreadPool mThreadPool;
 
     char *mRecordingFilePath{};
 
@@ -50,15 +45,11 @@ private:
 
     int mRecordingFile;
 
-    vector<float> mData;
-    float *mBuff{};
+    std::vector<float> mRecordData;
+    float *mRecordBuff{};
 
-    static void
-    flush_to_file(float *data, int32_t length, int32_t sampleRate, char *recordingFilePath,
-                  int &recordingFile);
-
-    static mutex flushMtx;
-    static condition_variable flushed;
+    static std::mutex flushMtx;
+    static std::condition_variable flushed;
     static bool ongoing_flush_completed;
 
     static bool check_if_flush_completed();

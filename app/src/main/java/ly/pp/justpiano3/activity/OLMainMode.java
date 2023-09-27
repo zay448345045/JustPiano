@@ -2,25 +2,30 @@ package ly.pp.justpiano3.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import ly.pp.justpiano3.*;
+
+import java.util.List;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
-import ly.pp.justpiano3.helper.SQLiteHelper;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class OLMainMode extends BaseActivity implements OnClickListener {
+public class OLMainMode extends OLBaseActivity implements OnClickListener {
     final OLMainMode context = this;
     public JPApplication jpapplication;
     public OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
@@ -42,18 +47,17 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.ol_web_b:
-                JPDialog jpdialog = new JPDialog(this);
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("官网访问方式：在浏览器中输入网址" + JPApplication.INSIDE_WEBSITE_URL + "\n" +
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址" + OnlineUtil.INSIDE_WEBSITE_URL + "\n" +
                         "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
-                jpdialog.setFirstButton("访问官网", (dialog, which) -> {
+                jpDialogBuilder.setFirstButton("访问官网", (dialog, which) -> {
                     dialog.dismiss();
                     Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("https://" + JPApplication.INSIDE_WEBSITE_URL));
+                    intent1.setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL));
                     startActivity(intent1);
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.showDialog();
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             case R.id.ol_songs_b:
                 intent.setClass(this, OLSongsPage.class);
@@ -65,9 +69,7 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                SQLiteHelper SQLiteHelper = new SQLiteHelper(this, "data");
-                String maxSongIdFromDatabase = getMaxSongIdFromDatabase(SQLiteHelper);
-                SQLiteHelper.close();
+                String maxSongIdFromDatabase = getMaxSongIdFromDatabase();
                 new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
                 return;
             case R.id.ol_top_b:
@@ -97,15 +99,14 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        jpprogressBar = new JPProgressBar(this, jpapplication);
-        jpapplication.loadSettings(true);
-        setContentView(R.layout.olmainmode);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(0);
+        jpprogressBar = new JPProgressBar(this);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
+        setContentView(R.layout.ol_main_mode);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
         Button topButton = findViewById(R.id.ol_top_b);
         topButton.setOnClickListener(this);
         Button userButton = findViewById(R.id.ol_users_b);
@@ -125,24 +126,24 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
             if (jpapplication.getConnectionService() != null) {
                 jpapplication.getConnectionService().outLine();
             }
-            if (jpapplication.getIsBindService()) {
+            if (jpapplication.isBindService()) {
                 jpapplication.unbindService(jpapplication.getServiceConnection());
-                jpapplication.setIsBindService(false);
+                jpapplication.setBindService(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         JPStack.push(this);
-        if (jpapplication.f4073g != null && jpapplication.f4074h != null && !jpapplication.f4073g.isEmpty() && !jpapplication.f4074h.isEmpty()) {
-            JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle(jpapplication.f4073g);
-            jpdialog.setMessage(jpapplication.f4074h);
-            jpdialog.setFirstButton("确定", (dialog, which) -> {
-                jpapplication.f4074h = "";
-                jpapplication.f4073g = "";
+        if (jpapplication.loginResultTitle != null && jpapplication.loginResultMessage != null
+                && !jpapplication.loginResultTitle.isEmpty() && !jpapplication.loginResultMessage.isEmpty()) {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle(jpapplication.loginResultTitle);
+            jpDialogBuilder.setMessage(jpapplication.loginResultMessage);
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                jpapplication.loginResultMessage = "";
+                jpapplication.loginResultTitle = "";
                 dialog.dismiss();
-            });
-            jpdialog.showDialog();
+            }).buildAndShowDialog();
         }
     }
 
@@ -154,29 +155,25 @@ public class OLMainMode extends BaseActivity implements OnClickListener {
 
     public void loginOnline() {
         jpprogressBar.show();
-        if (jpapplication.getIsBindService()) {
+        if (jpapplication.isBindService()) {
             try {
                 jpapplication.unbindService(jpapplication.getServiceConnection());
-                jpapplication.setIsBindService(false);
+                jpapplication.setBindService(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        jpapplication.setIsBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
+        jpapplication.setBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
     }
 
-    public static String getMaxSongIdFromDatabase(SQLiteHelper SQLiteHelper) {
-        SQLiteDatabase writableDatabase = SQLiteHelper.getWritableDatabase();
-        Cursor query = writableDatabase.query("jp_data", new String[]{"online", "path"}, "online=1", null, null, null, null);
+    public static String getMaxSongIdFromDatabase() {
+        List<Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongs();
         int maxSongId = 0;
-        while (query.moveToNext()) {
-            String path = query.getString(query.getColumnIndex("path"));
-            if (path.length() > 8 && path.charAt(7) == '/') {
-                maxSongId = Math.max(maxSongId, Integer.parseInt(path.substring(9, 15)));
+        for (Song song : allSongs) {
+            if (song.getFilePath().length() > 8 && song.getFilePath().charAt(7) == '/') {
+                maxSongId = Math.max(maxSongId, Integer.parseInt(song.getFilePath().substring(9, 15)));
             }
         }
-        query.close();
-        writableDatabase.close();
         return String.valueOf(maxSongId);
     }
 }

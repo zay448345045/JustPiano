@@ -1,17 +1,21 @@
 package ly.pp.justpiano3.listener;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsPlayTask;
 
 public final class SearchSongsPlayClick implements OnClickListener {
 
     private final SearchSongsAdapter searchSongsAdapter;
-    private final String f5865b;
-    private final String songID;
-    private final int f5867d;
-    private final double f5868e;
+    private String f5865b;
+    private String songID;
+    private int f5867d;
+    private double f5868e;
+    private final Intent intent;
 
     public SearchSongsPlayClick(SearchSongsAdapter searchSongsAdapter, String str, String l, int i, double d) {
         this.searchSongsAdapter = searchSongsAdapter;
@@ -19,6 +23,14 @@ public final class SearchSongsPlayClick implements OnClickListener {
         songID = l;
         f5867d = i;
         f5868e = d;
+        this.intent = new Intent();
+        intent.setClass(searchSongsAdapter.searchSongs, PianoPlay.class);
+    }
+
+    public SearchSongsPlayClick(SearchSongsAdapter searchSongsAdapter, String songId, Intent intent) {
+        this.searchSongsAdapter = searchSongsAdapter;
+        this.songID = songId;
+        this.intent = intent;
     }
 
     @Override
@@ -27,6 +39,6 @@ public final class SearchSongsPlayClick implements OnClickListener {
         searchSongsAdapter.searchSongs.songID = songID;
         searchSongsAdapter.searchSongs.f4954i = f5867d;
         searchSongsAdapter.searchSongs.f4953h = f5868e;
-        new SearchSongsPlayTask(searchSongsAdapter.searchSongs).execute();
+        new SearchSongsPlayTask(searchSongsAdapter.searchSongs, intent).execute();
     }
 }

@@ -175,6 +175,8 @@ message OnlineHallChatDTO {
   string user_name = 1;
   // 消息内容
   string message = 2;
+  // 是全服广播类型
+  bool is_broadcast = 3;
 }
 
 // 房间聊天
@@ -185,6 +187,8 @@ message OnlineRoomChatDTO {
   string message = 2;
   // 消息文字颜色
   uint32 color = 3;
+  // 是全服广播类型
+  bool is_broadcast = 4;
 }
 
 // 改变房间信息
@@ -356,7 +360,7 @@ message OnlineDailyDTO {
 // 键盘模式传输音符数据
 message OnlineKeyboardNoteDTO {
   // 传输数据
-  bytes data = 1;
+  repeated int64 data = 1;
 }
 
 // 等级考试

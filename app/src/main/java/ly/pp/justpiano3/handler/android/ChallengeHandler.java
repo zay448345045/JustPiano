@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.activity.OLChallenge;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
+
+import ly.pp.justpiano3.activity.OLChallenge;
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class ChallengeHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -31,7 +32,7 @@ public final class ChallengeHandler extends Handler {
                         Bundle data = message.getData();
                         int size = data.size() - 4;
                         for (int i = 0; i < size; i++) {
-                            HashMap<String, String> hashMap = new HashMap<>();
+                            Map<String, String> hashMap = new HashMap<>();
                             hashMap.put("S", data.getBundle(String.valueOf(i)).getString("S"));
                             hashMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
                             hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
@@ -66,10 +67,10 @@ public final class ChallengeHandler extends Handler {
                                 str2 = "开始挑战";
                                 break;
                         }
-                        JPDialog jpdialog = new JPDialog(challenge);
-                        jpdialog.setTitle(str);
-                        jpdialog.setMessage(string);
-                        jpdialog.setFirstButton(str2, (dialog, which) -> {
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(challenge);
+                        jpDialogBuilder.setTitle(str);
+                        jpDialogBuilder.setMessage(string);
+                        jpDialogBuilder.setFirstButton(str2, (dialog, which) -> {
                             dialog.dismiss();
                             if (i == 1) {
                                 Intent intent = new Intent(challenge, PianoPlay.class);
@@ -88,19 +89,17 @@ public final class ChallengeHandler extends Handler {
                             }
                         });
                         if (i == 1) {
-                            jpdialog.setSecondButton("取消", new DialogDismissClick());
+                            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                         }
-                        try {
-                            jpdialog.showDialog();
-                        } catch (Exception ignored) {
-                        }
+                        jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
                 case 5:
                     post(() -> challenge.showDrawPrizeDialog(message.getData()));
                 default:
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -16,10 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.task.ShowTopInfoTask;
-import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.view.JPProgressBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -27,10 +24,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.task.ShowTopInfoTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;
-    public List<HashMap> f4985a = null;
+    public List<Map<String, Object>> dataList;
     public LayoutInflater layoutInflater;
     public int f4987c = 0;
     public String f4988d = "";
@@ -44,21 +49,22 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     public Handler handler;
     private TextView f4993i;
     private final int f4998n = 20;
-    private Bitmap f5003s = null;
+    private Bitmap nailFace = null;
 
     public Bitmap m3874a(Context context) {
         try {
-            if (f5003s == null) {
-                f5003s = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
+            if (nailFace == null) {
+                nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return f5003s;
+        return nailFace;
     }
 
-    public List<HashMap> m3877a(String str) {
+    public List<Map<String, Object>> m3877a(String str) {
         JSONArray jSONArray;
-        List<HashMap> arrayList = new ArrayList<>();
+        List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
             jSONArray = new JSONArray(str);
         } catch (JSONException e) {
@@ -68,7 +74,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         f4987c = jSONArray.length();
         for (int i = 0; i < f4987c; i++) {
             try {
-                HashMap hashMap = new HashMap();
+                Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("userID", Integer.valueOf(jSONArray.getJSONObject(i).get("I").toString()));
                 hashMap.put("userName", jSONArray.getJSONObject(i).get("K").toString());
                 hashMap.put("faceID", jSONArray.getJSONObject(i).get("F").toString());
@@ -121,11 +127,11 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        setContentView(R.layout.showtopinfo);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        setContentView(R.layout.ol_top_info);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         f4989e = findViewById(R.id.ol_top_list);

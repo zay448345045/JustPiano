@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.widget.ImageView;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.thread.PictureHandleThread;
 
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
@@ -13,6 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class PictureHandle {
     public boolean f5083a = true;
@@ -27,7 +28,7 @@ public final class PictureHandle {
         picType = i;
     }
 
-    public Bitmap m3938b(JPApplication jpApplication, String str) {
+    public Bitmap m3938b(String str) {
         if (!str.endsWith(JPG_SUFFIX)) {
             return null;
         }
@@ -35,16 +36,16 @@ public final class PictureHandle {
             URL url;
             switch (picType) {
                 case 0:
-                    url = new URL("http://" + jpApplication.getServer() + ":8910/file/NailImage/" + str);
+                    url = new URL("http://" + OnlineUtil.server + ":8910/file/NailImage/" + str);
                     break;
                 case 1:
-                    url = new URL("http://" + jpApplication.getServer() + ":8910/file/Image/" + str);
+                    url = new URL("http://" + OnlineUtil.server + ":8910/file/Image/" + str);
                     break;
                 case 2:
-                    url = new URL("http://" + jpApplication.getServer() + ":8910/JustPianoServer/server/PicSkin" + str);
+                    url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSkin" + str);
                     break;
                 case 3:
-                    url = new URL("http://" + jpApplication.getServer() + ":8910/JustPianoServer/server/PicSound" + str);
+                    url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + str);
                     break;
                 default:
                     url = null;
@@ -84,7 +85,7 @@ public final class PictureHandle {
         }
     }
 
-    public void mo3027a(JPApplication jpApplication, ImageView imageView, Bitmap bitmap) {
+    public void mo3027a(ImageView imageView, Bitmap bitmap) {
         String str = (String) imageView.getTag();
         if (map.containsKey(str)) {
             Bitmap bitmap2 = map.get(str).get();
@@ -99,7 +100,7 @@ public final class PictureHandle {
             imageView.setImageBitmap(bitmap);
         }
         if (pictureHandleThread == null) {
-            pictureHandleThread = new PictureHandleThread(jpApplication, this, imageView, str);
+            pictureHandleThread = new PictureHandleThread(this, imageView, str);
             pictureHandleThread.start();
             return;
         }

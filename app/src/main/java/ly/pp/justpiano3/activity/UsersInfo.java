@@ -12,24 +12,35 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.listener.ChangePasswordClick;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.task.UsersInfoGetTask;
-import ly.pp.justpiano3.task.UserInfoChangeTask;
-import ly.pp.justpiano3.task.UserFaceChangeTask;
-import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.JPProgressBar;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UsersInfo extends BaseActivity implements Callback, OnClickListener {
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.listener.ChangePasswordClick;
+import ly.pp.justpiano3.task.UserFaceChangeTask;
+import ly.pp.justpiano3.task.UserInfoChangeTask;
+import ly.pp.justpiano3.task.UsersInfoGetTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+
+public class UsersInfo extends OLBaseActivity implements Callback, OnClickListener {
     public JPApplication jpapplication;
     public boolean autoLogin = false;
     public boolean rememberNewPassword = false;
@@ -66,7 +77,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
             usersInfo.nameText.setText(usersInfo.name);
             usersInfo.face = jsonObject.getString("fi");
             usersInfo.faceImage.setTag(usersInfo.face);
-            usersInfo.pictureHandle.mo3027a(usersInfo.jpapplication, usersInfo.faceImage, null);
+            usersInfo.pictureHandle.mo3027a(usersInfo.faceImage, null);
             usersInfo.sex = jsonObject.getString("sx");
             if (usersInfo.sex.equals("m")) {
                 usersInfo.sexText.setText("男");
@@ -189,7 +200,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                                 fileOutputStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg);
                                 try {
                                     bitmap.compress(CompressFormat.JPEG, 80, fileOutputStream);
-                                    new UserFaceChangeTask(this).execute("http://" + jpapplication.getServer() + ":8910/JustPianoServer/server/UpLoadFace", Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg, accountJpg);
+                                    new UserFaceChangeTask(this).execute("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UpLoadFace", Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg, accountJpg);
                                     try {
                                         fileOutputStream.close();
                                     } catch (IOException e2) {
@@ -219,7 +230,8 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                                 e = e5;
                                 e.printStackTrace();
                                 super.onActivityResult(i, i2, intent);
-                            } catch (Throwable ignored) {
+                            } catch (Throwable e1) {
+                                e1.printStackTrace();
                             }
                         }
                     }
@@ -243,18 +255,13 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.user_face:
-//                JPDialog jpdialog = new JPDialog(this);
-//                jpdialog.setTitle("抱歉");
-//                jpdialog.setMessage("用户自制版服务器空间有限，暂不支持上传头像");
-//                jpdialog.setFirstButton("确定", new DialogDismissClick());
-//                jpdialog.setSecondButton("打开图库", new C1330na(this));
-//                try {f
-//                    jpdialog.showDialog();
-//                    return;
-//                } catch (Exception e) {
-//                    return;
-//                }
+            case R.id.user_face:
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("当前版本暂不支持上传头像");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+                return;
             case R.id.password_button:
                 View inflate = getLayoutInflater().inflate(R.layout.password_change, findViewById(R.id.dialog));
                 TextView originalPasswordTextView = inflate.findViewById(R.id.original_password);
@@ -264,13 +271,12 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                 autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
                 CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
                 remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
-                JPDialog jpdialog = new JPDialog(this);
-                jpdialog
-                        .setTitle("修改密码").loadInflate(inflate)
+                jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("修改密码").loadInflate(inflate)
                         .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
                                 newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
-                        .setSecondButton("取消", new DialogDismissClick())
-                        .showDialog();
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
+                        .buildAndShowDialog();
                 return;
             case R.id.modify_button:
                 String charSequence = ageText.getText().toString();
@@ -295,15 +301,13 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        setContentView(R.layout.user_info);
+        setContentView(R.layout.ol_user_info);
         accountText = findViewById(R.id.user_name);
-        Button modifyButton = findViewById(R.id.modify_button);
-        modifyButton.setOnClickListener(this);
-        Button passwordButton = findViewById(R.id.password_button);
-        passwordButton.setOnClickListener(this);
+        findViewById(R.id.modify_button).setOnClickListener(this);
+        findViewById(R.id.password_button).setOnClickListener(this);
         nameText = findViewById(R.id.user_kitiname);
         sexText = findViewById(R.id.user_sex);
         winnerNumText = findViewById(R.id.user_num);
@@ -313,8 +317,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
         faceImage.setOnClickListener(this);
         ageText = findViewById(R.id.user_age);
         jpprogressBar = new JPProgressBar(this);
-        Handler pictureHandler = new Handler(this);
-        pictureHandle = new PictureHandle(pictureHandler, 1);
+        pictureHandle = new PictureHandle(new Handler(this), 1);
         new UsersInfoGetTask(this).execute();
     }
 }

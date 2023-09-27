@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -16,30 +15,37 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
 import ly.pp.justpiano3.adapter.ExpressAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 import ly.pp.justpiano3.adapter.RoomTitleAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayHallHandler;
-import ly.pp.justpiano3.listener.*;
+import ly.pp.justpiano3.listener.AddFriendsClick;
+import ly.pp.justpiano3.listener.CreateRoomClick;
+import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public final class OLPlayHall extends BaseActivity implements Callback, OnClickListener {
+public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
     public ConnectionService connectionService;
     public String hallName = "";
     public byte hallID = (byte) 0;
@@ -89,9 +95,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     }
 
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
@@ -101,53 +107,30 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
-            if (User.getTrousers() <= 0) {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_t" + (User.getTrousers() - 1) + ".png")));
-            }
-            if (User.getJacket() <= 0) {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_j" + (User.getJacket() - 1) + ".png")));
-            }
-            if (User.getHair() <= 0) {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
-            }
-            if (User.getEye() <= 0) {
-                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
-            }
-            if (User.getShoes() <= 0) {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_s" + (User.getShoes() - 1) + ".png")));
-            }
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
-                    + "\n用户等级:Lv." + lv
+                    + "\n用户等级:LV." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n考级进度:CL." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, User.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void enterRoomHandle(int i, byte b) {
-        switch (i) {
+    public void enterRoomHandle(int type, byte roomId) {
+        switch (type) {
             case 0:
                 OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
-                builder.setRoomId(b);
+                builder.setRoomId(roomId);
                 builder.setPassword("");
                 sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                 return;
@@ -159,7 +142,15 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 textView1.setVisibility(View.GONE);
                 textView2.setVisibility(View.GONE);
                 textView.setSingleLine(true);
-                new JPDialog(this).setTitle("输入密码").loadInflate(inflate).setFirstButton("确定", new RoomPasswordClick2(this, textView, b)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle("输入密码").loadInflate(inflate)
+                        .setFirstButton("确定", (dialog, which) -> {
+                            OnlineEnterRoomDTO.Builder enterRoomBuilder = OnlineEnterRoomDTO.newBuilder();
+                            enterRoomBuilder.setRoomId(roomId);
+                            enterRoomBuilder.setPassword(String.valueOf(textView.getText()));
+                            sendMsg(OnlineProtocolType.ENTER_ROOM, enterRoomBuilder.build());
+                            dialog.dismiss();
+                        })
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             default:
         }
@@ -180,15 +171,15 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         listView.setCacheColorHint(0);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
-        new JPDialog(this).setTitle(i2 +"房"+" 玩家信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
+        new JPDialogBuilder(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
             dialog.dismiss();
             enterRoomHandle(bundle.getInt("P"), (byte) i2);
-        }).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void mo2828a(ListView listView, List<Bundle> list, boolean showChatTime) {
+    public void mo2828a(ListView listView, List<Bundle> list) {
         int posi = listView.getFirstVisiblePosition();
-        listView.setAdapter(new ChattingAdapter(list, layoutInflater1, showChatTime));
+        listView.setAdapter(new ChattingAdapter(jpapplication, list, layoutInflater1));
         if (posi > 0) {
             listView.setSelection(posi + 2);
         } else {
@@ -211,7 +202,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView3.setVisibility(View.GONE);
         textView2.setText("内容:");
-        new JPDialog(this).setTitle("发送私信给:" + str).loadInflate(inflate).setFirstButton("发送", new SendMessageClick2(this, textView, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialogBuilder(this).setTitle("发送私信给:" + str).loadInflate(inflate)
+                .setFirstButton("发送", new SendMailClick(this, textView, str))
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void mo2831b(ListView listView, List<Bundle> list) {
@@ -227,9 +220,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         roomTitleAdapter.notifyDataSetChanged();
     }
 
-    public void mo2832b(String str) {
-        sendTo = "@" + str + ":";
-        if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
+    public void setPrivateChatUserName(String userName) {
+        sendTo = "@" + userName + ":";
+        if (!userName.isEmpty() && !userName.equals(JPApplication.kitiName)) {
             sendTextView.setText(sendTo);
         }
         CharSequence text = sendTextView.getText();
@@ -263,7 +256,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ol_createroom_b:
-                View inflate = getLayoutInflater().inflate(R.layout.create_room, findViewById(R.id.dialog));
+                View inflate = getLayoutInflater().inflate(R.layout.ol_create_room, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.room_name);
                 TextView textView2 = inflate.findViewById(R.id.room_password);
                 RadioGroup radioGroup = inflate.findViewById(R.id.room_mode);
@@ -280,7 +273,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 textView.setText(stringBuilder);
                 textView.setSingleLine(true);
                 textView2.setSingleLine(true);
-                new JPDialog(this).setTitle("创建房间").loadInflate(inflate).setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate)
+                        .setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup))
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             case R.id.ol_testroom_b:
                 OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
@@ -327,23 +322,7 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
                 }
                 return;
             case R.id.ol_send_b:
-                String valueOf = String.valueOf(sendTextView.getText());
-                OnlineHallChatDTO.Builder builder1 = OnlineHallChatDTO.newBuilder();
-                if (!valueOf.startsWith(sendTo) || valueOf.length() <= sendTo.length()) {
-                    builder1.setUserName("");
-                    builder1.setMessage(valueOf);
-                } else {
-                    builder1.setUserName(sendTo);
-                    valueOf = valueOf.substring(sendTo.length());
-                    builder1.setMessage(valueOf);
-                }
-                sendTextView.setText("");
-                sendTo = "";
-                if (!valueOf.isEmpty()) {
-                    sendMsg(OnlineProtocolType.HALL_CHAT, builder1.build());
-                }
-                sendTextView.setText("");
-                sendTo = "";
+                sendHallChat(false);
                 return;
             case R.id.ol_express_b:
                 popupWindow.showAtLocation(imageView, Gravity.CENTER, 0, 0);
@@ -352,9 +331,34 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         }
     }
 
+    /**
+     * 发送大厅消息
+     *
+     * @param isBroadcast 是否为全服广播类型
+     */
+    private void sendHallChat(boolean isBroadcast) {
+        String str;
+        OnlineHallChatDTO.Builder builder1 = OnlineHallChatDTO.newBuilder();
+        builder1.setIsBroadcast(isBroadcast);
+        str = String.valueOf(sendTextView.getText());
+        if (!str.startsWith(sendTo) || str.length() <= sendTo.length()) {
+            builder1.setUserName("");
+            builder1.setMessage(str);
+        } else {
+            builder1.setUserName(sendTo);
+            str = str.substring(sendTo.length());
+            builder1.setMessage(str);
+        }
+        sendTextView.setText("");
+        sendTo = "";
+        if (!str.isEmpty()) {
+            sendMsg(OnlineProtocolType.HALL_CHAT, builder1.build());
+        }
+    }
+
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         roomTitleMap.clear();
@@ -364,32 +368,25 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
-        jpapplication.loadSettings(true);
-        setContentView(R.layout.olplayhall);
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(0);
-        Button f4405u = findViewById(R.id.ol_send_b);
-        f4405u.setOnClickListener(this);
-        Button f4406v = findViewById(R.id.ol_createroom_b);
-        f4406v.setOnClickListener(this);
-        Button f4407w = findViewById(R.id.ol_testroom_b);
-        f4407w.setOnClickListener(this);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
+        setContentView(R.layout.ol_room_list);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
+        findViewById(R.id.ol_send_b).setOnClickListener(this);
+        findViewById(R.id.ol_send_b).setOnLongClickListener(this);
+        findViewById(R.id.ol_createroom_b).setOnClickListener(this);
+        findViewById(R.id.ol_testroom_b).setOnClickListener(this);
         sendTextView = findViewById(R.id.ol_send_text);
-        TextView f4410z = findViewById(R.id.ol_playhall_title);
-        f4410z.setText(hallName);
+        TextView playHallTitleView = findViewById(R.id.ol_playhall_title);
+        playHallTitleView.setText(hallName);
         showTimeHandler = new Handler(this);
         timeTextView = findViewById(R.id.time_text);
         msgListView = findViewById(R.id.ol_msg_list);
         msgListView.setCacheColorHint(0);
-        Button f4389V = findViewById(R.id.pre_button);
-        Button f4390W = findViewById(R.id.next_button);
-        Button f4391X = findViewById(R.id.online_button);
-        Button challenge = findViewById(R.id.ol_challenge_b);
-        challenge.setOnClickListener(this);
-        f4389V.setOnClickListener(this);
-        f4390W.setOnClickListener(this);
-        f4391X.setOnClickListener(this);
+        findViewById(R.id.ol_challenge_b).setOnClickListener(this);
+        findViewById(R.id.pre_button).setOnClickListener(this);
+        findViewById(R.id.next_button).setOnClickListener(this);
+        findViewById(R.id.online_button).setOnClickListener(this);
         msgList.clear();
         roomListView = findViewById(R.id.ol_room_list);
         roomListView.setCacheColorHint(0);
@@ -404,8 +401,9 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
+                new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
@@ -450,7 +448,8 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         isTimeShowing = false;
         try {
             showTimeThread.interrupt();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         JPStack.pop(this);
         roomTitleMap.clear();
@@ -458,5 +457,26 @@ public final class OLPlayHall extends BaseActivity implements Callback, OnClickL
         roomList.clear();
         userInHallList.clear();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int vid = v.getId();
+        if (vid == R.id.ol_send_b) {
+            String text = sendTextView.getText().toString();
+            if (!text.isEmpty()) {
+                new JPDialogBuilder(this)
+                        .setTitle("全服消息")
+                        .setMessage("您是否需要使用\"全服广播\"进行消息发送？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
+                        .setFirstButton("确定", (dialog, i) -> {
+                            sendHallChat(true);
+                            dialog.dismiss();
+                        })
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
+                        .buildAndShowDialog();
+            }
+            return true;
+        }
+        return false;
     }
 }

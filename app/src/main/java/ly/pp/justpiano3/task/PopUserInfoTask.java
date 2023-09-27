@@ -2,14 +2,17 @@ package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.lang.ref.WeakReference;
 
 public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     private final WeakReference<PopUserInfo> popUserInfo;
@@ -23,10 +26,10 @@ public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
         String str = "";
         if (!popUserInfo.get().kitiName.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + popUserInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m).newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("head", String.valueOf(popUserInfo.get().headType));
-            formBuilder.add("version", popUserInfo.get().jpapplication.getVersion());
+            formBuilder.add("version", BuildConfig.VERSION_NAME);
             formBuilder.add("keywords", popUserInfo.get().f4830d);
             formBuilder.add("userName", popUserInfo.get().kitiName);
             // 创建Request对象，用于发送请求
@@ -67,7 +70,6 @@ public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        popUserInfo.get().jpprogressBar.setMessage("正在查询,请稍后...");
         popUserInfo.get().jpprogressBar.setCancelable(true);
         popUserInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         popUserInfo.get().jpprogressBar.show();

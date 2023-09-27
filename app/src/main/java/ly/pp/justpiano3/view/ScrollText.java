@@ -2,6 +2,7 @@ package ly.pp.justpiano3.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import androidx.appcompat.widget.AppCompatTextView;
 
 public class ScrollText extends AppCompatTextView {

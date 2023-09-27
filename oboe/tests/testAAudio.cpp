@@ -1,4 +1,4 @@
-#include <oboe/Oboe.h>/*
+/*
  * Copyright 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,45 +54,21 @@ public:
     AAudioLoader *mAAudioLoader = nullptr;
 };
 
-TEST_F(AAudioDirect, InstantiateAAudioLoader
-) {
-AAudioLoader *aaudioLoader = AAudioLoader::getInstance();
-ASSERT_NE(aaudioLoader,
-nullptr);
+TEST_F(AAudioDirect, InstantiateAAudioLoader) {
+    AAudioLoader *aaudioLoader = AAudioLoader::getInstance();
+    ASSERT_NE(aaudioLoader, nullptr);
 }
 
-TEST_F(AAudioDirect, OpenCloseHighLatencyStream
-) {
-if (
-
-openAAudio()
-
-) return;
-
-createBuilder();
-
-mAAudioLoader->
-builder_setPerformanceMode(mBuilder, AAUDIO_PERFORMANCE_MODE_NONE
-);
-
-openCloseStream();
-
+TEST_F(AAudioDirect, OpenCloseHighLatencyStream) {
+    if (openAAudio()) return;
+    createBuilder();
+    mAAudioLoader->builder_setPerformanceMode(mBuilder, AAUDIO_PERFORMANCE_MODE_NONE);
+    openCloseStream();
 }
 
-TEST_F(AAudioDirect, OpenCloseLowLatencyStream
-) {
-if (
-
-openAAudio()
-
-) return;
-
-createBuilder();
-
-mAAudioLoader->
-builder_setPerformanceMode(mBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY
-);
-
-openCloseStream();
-
+TEST_F(AAudioDirect, OpenCloseLowLatencyStream) {
+    if (openAAudio()) return;
+    createBuilder();
+    mAAudioLoader->builder_setPerformanceMode(mBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
+    openCloseStream();
 }

@@ -5,21 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
-import java.util.HashMap;
-import java.util.List;
-
 public final class DailyTimeAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;
-    private final List<HashMap> list;
-    private final LayoutInflater li;
+    private final List<Map<String, String>> list;
+    private final LayoutInflater layoutInflater;
 
-    public DailyTimeAdapter(List<HashMap> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
+    public DailyTimeAdapter(List<Map<String, String>> list, LayoutInflater layoutInflater, OLPlayHallRoom olPlayHallRoom) {
         this.list = list;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         this.olPlayHallRoom = olPlayHallRoom;
     }
 
@@ -41,18 +44,18 @@ public final class DailyTimeAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_c_dailytime_view, null);
+            view = layoutInflater.inflate(R.layout.ol_c_dailytime_view, null);
         }
         if (list.size() == 0) {
             return view;
         }
-        String name = (String) list.get(i).get("N");
+        String name = list.get(i).get("N");
         if (name == null) {
             return view;
         }
-        String bonus = (String) list.get(i).get("B");
-        String bonusGet = (String) list.get(i).get("G");
-        String onlineTime = (String) list.get(i).get("T");
+        String bonus = list.get(i).get("B");
+        String bonusGet = list.get(i).get("G");
+        String onlineTime = list.get(i).get("T");
         TextView onlineTimeText = view.findViewById(R.id.ol_online_time);
         onlineTimeText.setText(onlineTime + "分钟");
         TextView nameText = view.findViewById(R.id.ol_user_name);
@@ -62,10 +65,10 @@ public final class DailyTimeAdapter extends BaseAdapter {
         TextView bonusGetText = view.findViewById(R.id.ol_bonus_get);
         if (bonusGet.equals("0")) {
             bonusGetText.setText("未领");
-            bonusGetText.setBackgroundColor(olPlayHallRoom.getResources().getColor(R.color.exit));
+            bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.exit));
         } else {
             bonusGetText.setText("已领");
-            bonusGetText.setBackgroundColor(olPlayHallRoom.getResources().getColor(R.color.online));
+            bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.online));
         }
         if (JPApplication.kitiName.equals(name)) {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_a);

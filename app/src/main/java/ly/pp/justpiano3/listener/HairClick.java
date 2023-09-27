@@ -3,10 +3,11 @@ package ly.pp.justpiano3.listener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import ly.pp.justpiano3.adapter.DressAdapter;
-import ly.pp.justpiano3.view.JPDialog;
+
 import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineChangeClothesDTO;
 
 public final class HairClick implements OnItemClickListener {
@@ -28,14 +29,14 @@ public final class HairClick implements OnItemClickListener {
             olPlayDressRoom.hairNow = i;
         } else {
             int[] priceArr = "f".equals(olPlayDressRoom.sex) ? OLPlayDressRoom.fHair : OLPlayDressRoom.mHair;
-            JPDialog jpdialog = new JPDialog(olPlayDressRoom);
-            jpdialog.setTitle("解锁服装");
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
+            jpDialogBuilder.setTitle("解锁服装");
             // 如果为获取到价格，则只允许试穿
             if (priceArr.length - 1 < i) {
-                jpdialog.setMessage("当前服装无法购买，只能试穿");
+                jpDialogBuilder.setMessage("当前服装无法购买，只能试穿");
             } else {
-                jpdialog.setMessage("确定花费" + (priceArr[i]) + "音符购买此服装吗?");
-                jpdialog.setFirstButton("购买", (dialog, which) -> {
+                jpDialogBuilder.setMessage("确定花费" + (priceArr[i]) + "音符购买此服装吗?");
+                jpDialogBuilder.setFirstButton("购买", (dialog, which) -> {
                     OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
                     builder.setType(2);
                     builder.setBuyClothesType(0);
@@ -45,7 +46,7 @@ public final class HairClick implements OnItemClickListener {
                 });
             }
             if (olPlayDressRoom.hairTry.contains(i)) {
-                jpdialog.setSecondButton("取消试穿", (dialog, which) -> {
+                jpDialogBuilder.setSecondButton("取消试穿", (dialog, which) -> {
                     dialog.dismiss();
                     olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.none);
                     olPlayDressRoom.hairNow = -1;
@@ -53,7 +54,7 @@ public final class HairClick implements OnItemClickListener {
                     olPlayDressRoom.hairTry.remove((Integer) i);
                 });
             } else {
-                jpdialog.setSecondButton("试穿", (dialog, which) -> {
+                jpDialogBuilder.setSecondButton("试穿", (dialog, which) -> {
                     dialog.dismiss();
                     olPlayDressRoom.hairImage.setImageBitmap(olPlayDressRoom.hairArray.get(i));
                     olPlayDressRoom.hairNow = i;
@@ -61,11 +62,7 @@ public final class HairClick implements OnItemClickListener {
                     olPlayDressRoom.hairTry.add(i);
                 });
             }
-            try {
-                jpdialog.showDialog();
-            } catch (Exception e3) {
-                e3.printStackTrace();
-            }
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 }

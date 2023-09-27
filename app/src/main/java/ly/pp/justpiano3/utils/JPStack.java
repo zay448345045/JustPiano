@@ -28,8 +28,8 @@ public final class JPStack {
     }
 
     public static void clear() {
-        while (stack != null && !stack.empty()) {
-            JPStack.pop(JPStack.top());
+        if (stack != null) {
+            stack.clear();
         }
     }
 }

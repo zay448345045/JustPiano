@@ -6,10 +6,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.activity.PianoPlay;
 
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class PianoPlayHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -87,8 +88,8 @@ public final class PianoPlayHandler extends Handler {
                 return;
             case 6:
                 post(() -> {
-                    JPDialog jpdialog = new JPDialog(pianoPlay);
-                    jpdialog.setTitle("考级结果");
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(pianoPlay);
+                    jpDialogBuilder.setTitle("考级结果");
                     Bundle data = message.getData();
                     int i = data.getInt("R");
                     StringBuilder stringBuffer = new StringBuilder();
@@ -106,13 +107,13 @@ public final class PianoPlayHandler extends Handler {
                             stringBuffer.append("恭喜您,您已通过该阶段的全部曲目,晋升一级!\n");
                             break;
                     }
-                    jpdialog.setMessage(stringBuffer.toString());
-                    jpdialog.setCancelableFalse();
-                    jpdialog.setFirstButton("确定", (dialog, which) -> {
+                    jpDialogBuilder.setMessage(stringBuffer.toString());
+                    jpDialogBuilder.setCancelableFalse();
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         dialog.dismiss();
                         pianoPlay.finish();
                     });
-                    jpdialog.showDialog();
+                    jpDialogBuilder.buildAndShowDialog();
                 });
                 return;
             case 7:
@@ -121,8 +122,8 @@ public final class PianoPlayHandler extends Handler {
                         if (pianoPlay.f4591J != null) {
                             pianoPlay.f4591J.setVisibility(View.GONE);
                         }
-                        pianoPlay.f4596O.setVisibility(View.VISIBLE);
-                        pianoPlay.f4597P.setVisibility(View.VISIBLE);
+                        pianoPlay.rightHandDegreeTextView.setVisibility(View.VISIBLE);
+                        pianoPlay.highScoreTextView.setVisibility(View.VISIBLE);
                         pianoPlay.startPlayButton.setVisibility(View.VISIBLE);
                         pianoPlay.songName.setText(pianoPlay.songsName);
                         pianoPlay.isShowingSongsInfo = false;
@@ -142,15 +143,15 @@ public final class PianoPlayHandler extends Handler {
                 return;
             case 9:
                 post(() -> {
-                    JPDialog jpdialog = new JPDialog(pianoPlay);
-                    jpdialog.setTitle("挑战结束");
-                    jpdialog.setMessage(message.getData().getString("I"));
-                    jpdialog.setCancelableFalse();
-                    jpdialog.setFirstButton("确定", (dialog, which) -> {
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(pianoPlay);
+                    jpDialogBuilder.setTitle("挑战结束");
+                    jpDialogBuilder.setMessage(message.getData().getString("I"));
+                    jpDialogBuilder.setCancelableFalse();
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         dialog.dismiss();
                         pianoPlay.finish();
                     });
-                    jpdialog.showDialog();
+                    jpDialogBuilder.buildAndShowDialog();
                 });
                 return;
             case 21:

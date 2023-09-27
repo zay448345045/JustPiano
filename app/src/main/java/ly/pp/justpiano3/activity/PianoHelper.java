@@ -12,8 +12,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ViewFlipper;
+
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.MainMode;
 import ly.pp.justpiano3.constant.Consts;
 
 public class PianoHelper extends Activity implements OnGestureListener {
@@ -29,8 +29,8 @@ public class PianoHelper extends Activity implements OnGestureListener {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.piano_helper);
         viewFlipper = findViewById(R.id.viewflipper);
         gestureDetector = new GestureDetector(this, this);

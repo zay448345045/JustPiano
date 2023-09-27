@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/settings_name">
     <PreferenceCategory android:title="弹奏音块与界面">
         <ly.pp.justpiano3.view.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
-            android:persistent="true"
             android:title="皮肤" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="6"
-            android:dialogTitle="音块下落速率"
-            android:entries="@array/down_entries"
-            android:entryValues="@array/down_value"
+            app:minValue="1"
+            app:maxValue="6"
+            app:floatNumber="true"
             android:key="down_speed"
-            android:summary="设置音块的滑落速度，会影响弹奏难度，可根据个人习惯进行调整"
-            android:title="音块速率" />
-        <ListPreference
+            android:summary="设置音块的滑落速度，会影响弹奏难度，值越小，速度越快，可根据个人习惯进行调整"
+            android:title="音块速率"
+            android:dialogTitle="音块速率" />
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="音块大小"
-            android:entries="@array/note_s"
-            android:entryValues="@array/note_size"
+            app:minValue="0.5"
+            app:maxValue="2"
+            app:floatNumber="true"
             android:key="note_size"
             android:summary="设置音块大小，可根据个人习惯进行调整"
             android:title="音块大小" />
@@ -29,14 +31,6 @@
             android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
             android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
             android:title="击中音块消失" />
-        <ListPreference
-            android:defaultValue="4"
-            android:dialogTitle="音块下落帧率"
-            android:entries="@array/anim_entries"
-            android:entryValues="@array/anim_value"
-            android:key="anim_frame"
-            android:summary="音块下落动画流畅度(调低可提高性能，减少流畅度；调高可增加手机负担，增加流畅度)"
-            android:title="音块下落帧率" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="change_color"
@@ -45,7 +39,7 @@
             android:title="音块变色" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="keyboard_perfer"
+            android:key="keyboard_prefer"
             android:summaryOff="&lt;关闭&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
             android:summaryOn="&lt;打开&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
             android:title="按键效果" />
@@ -57,12 +51,12 @@
             android:title="提示弹奏等级显示(暴击、完美等)" />
         <ListPreference
             android:defaultValue="1"
-            android:dialogTitle="判断线加粗"
+            android:dialogTitle="判断线类型"
             android:entries="@array/rough_line"
             android:entryValues="@array/rough_linev"
             android:key="rough_line"
-            android:summary="设置判断线位置是否加粗及加粗样式"
-            android:title="判断线加粗" />
+            android:summary="设置判断线是否加粗及加粗样式"
+            android:title="判断线类型" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="show_line"
@@ -75,13 +69,14 @@
             android:summaryOff="键盘缩略图已关闭"
             android:summaryOn="键盘缩略图已打开"
             android:title="键盘缩略图" />
-        <ListPreference
-            android:defaultValue="1.0"
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="1"
+            app:minValue="0.5"
+            app:maxValue="1.5"
+            app:floatNumber="true"
             android:dialogTitle="节拍比率(仅本地模式有效)"
-            android:entries="@array/temp_e"
-            android:entryValues="@array/temp_e"
             android:key="temp_speed"
-            android:summary="值越小，音乐整体节拍越慢，持续时间越长"
+            android:summary="值越小，曲谱整体节拍越慢，持续时间越长"
             android:title="节拍比率(仅本地模式有效)" />
         <SwitchPreference
             android:defaultValue="true"
@@ -94,32 +89,25 @@
         <ly.pp.justpiano3.view.SoundListPreference
             android:dialogTitle="设置管理音源"
             android:key="sound_list"
-            android:persistent="true"
             android:title="音源" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="compatible_sound"
-            android:summaryOff="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
-            android:summaryOn="如果您的设备播放存在严重杂音问题，可打开兼容模式播放。兼容模式播放会降低音质(此设置项需重启APP或重新加载音源后生效)"
-            android:title="兼容模式播放" />
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="@string/b_s_key"
-            android:summary=""
             android:summaryOff="@string/b_s_open_2"
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0.8"
             android:dependency="@string/b_s_key"
             android:dialogTitle="@string/b_s_vol_title"
-            android:entries="@array/vol_entries"
-            android:entryValues="@array/vol_entries"
+            app:minValue="0.1"
+            app:maxValue="1.5"
+            app:floatNumber="true"
             android:key="b_s_vol"
             android:summary="@string/b_s_vol_sum"
             android:title="@string/b_s_vol_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="键盘模式">
+    <PreferenceCategory android:title="钢琴键盘">
         <SwitchPreference
             android:defaultValue="true"
             android:key="keyboard_anim"
@@ -128,20 +116,50 @@
             android:title="启用键盘移动缩放动画" />
         <ListPreference
             android:defaultValue="0"
+            android:dialogTitle="钢琴键盘展示标签类型"
+            android:entries="@array/octave_tag_type_name"
+            android:entryValues="@array/octave_tag_type_value"
+            android:key="octave_tag_type"
+            android:summary="设置钢琴键盘中按键下方展示的标签类型"
+            android:title="钢琴键盘展示标签类型" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="0"
             android:dialogTitle="触屏点击声音移调"
-            android:entries="@array/midi_keyboard_tune"
-            android:entryValues="@array/midi_keyboard_tune"
+            app:minValue="-6"
+            app:maxValue="6"
+            app:floatNumber="false"
             android:key="keyboard_sound_tune"
             android:summary="调整键盘模式触屏点击按键播放的声音移调"
             android:title="触屏点击声音移调" />
-        <ListPreference
+        <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
+            app:minValue="-6"
+            app:maxValue="6"
+            app:floatNumber="false"
             android:dialogTitle="MIDI键盘移调"
-            android:entries="@array/midi_keyboard_tune"
-            android:entryValues="@array/midi_keyboard_tune"
             android:key="midi_keyboard_tune"
             android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
             android:title="MIDI键盘移调" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="瀑布流">
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="1"
+            app:minValue="0.5"
+            app:maxValue="1.5"
+            app:floatNumber="true"
+            android:key="waterfall_song_speed"
+            android:summary="值越小，曲谱整体播放速度越慢，持续时间越长"
+            android:title="瀑布流曲谱播放速度"
+            android:dialogTitle="瀑布流曲谱播放速度" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="0.8"
+            app:minValue="0.1"
+            app:maxValue="1.5"
+            app:floatNumber="true"
+            android:key="waterfall_down_speed"
+            android:summary="设置音符的下落速率，值越小，音符越矮，下落速度越慢"
+            android:title="瀑布流音符下落速率"
+            android:dialogTitle="瀑布流音符下落速率" />
     </PreferenceCategory>
     <PreferenceCategory android:title="在线聊天">
         <SwitchPreference
@@ -162,5 +180,22 @@
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
             android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="15"
+            app:minValue="10"
+            app:maxValue="20"
+            app:floatNumber="false"
+            android:dialogTitle="聊天字体大小"
+            android:key="chats_text_size"
+            android:summary="设置聊天字体显示大小"
+            android:title="聊天字体大小" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="关于">
+        <Preference
+            android:key="app_version"
+            android:title="软件版本" />
+        <Preference
+            android:summary="京ICP备2020039885号-3A"
+            android:title="备案信息" />
     </PreferenceCategory>
 </PreferenceScreen>

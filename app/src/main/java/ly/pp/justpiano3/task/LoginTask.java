@@ -1,13 +1,7 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,9 +10,20 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public final class LoginTask extends AsyncTask<String, Void, String> {
     private final WeakReference<LoginActivity> activity;
-    private String f5139a = "";
+    private String loginResponse = "";
     private String message = "";
     private String title = "";
 
@@ -33,16 +38,15 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         loginActivity.accountX = loginActivity.accountTextView.getText().toString();
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
         if (!loginActivity.accountX.isEmpty() && !loginActivity.password.isEmpty()) {
-            String ip = loginActivity.jpapplication.getServer();
             // 创建HttpUrl.Builder对象，用于添加查询参数
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + ip + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/LoginServlet").newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("versionName", "4.3");
             formBuilder.add("packageNames", loginActivity.getPackageName());
             formBuilder.add("versionCode", String.valueOf(41));
             formBuilder.add("username", loginActivity.accountX);
             formBuilder.add("password", loginActivity.password);
-            formBuilder.add("local", loginActivity.jpapplication.getVersion());
+            formBuilder.add("local", BuildConfig.VERSION_NAME);
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder().url(urlBuilder.build())
                     .post(formBuilder.build())
@@ -54,7 +58,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream(), StandardCharsets.UTF_8));
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        f5139a = line;
+                        loginResponse = line;
                     }
                     response.body().close();
                     return f5140b;
@@ -73,25 +77,27 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
         int i = 3;
         String newVersion = null;
         try {
-            JSONObject jSONObject = new JSONObject(f5139a);
+            JSONObject jSONObject = new JSONObject(loginResponse);
             // 记录服务端返回的会话公钥
             String serverPublicKey = jSONObject.getString("publicKey");
-            loginActivity.jpapplication.setServerPublicKey(serverPublicKey);
+            EncryptUtil.setServerPublicKey(serverPublicKey);
             try {
                 newVersion = jSONObject.getString("version");
             } catch (JSONException ignored) {
+
             }
             i = jSONObject.getInt("is");
             try {
                 message = jSONObject.getString("msg");
                 loginActivity.kitiName = jSONObject.getString("ukn");
                 title = jSONObject.getString("title");
-                loginActivity.jpapplication.f4073g = jSONObject.getString("T1");
-                loginActivity.jpapplication.f4074h = jSONObject.getString("M1");
+                loginActivity.jpapplication.loginResultTitle = jSONObject.getString("T1");
+                loginActivity.jpapplication.loginResultMessage = jSONObject.getString("M1");
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
-        } catch (JSONException ignored) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         loginActivity.jpprogressBar.dismiss();
         switch (i) {

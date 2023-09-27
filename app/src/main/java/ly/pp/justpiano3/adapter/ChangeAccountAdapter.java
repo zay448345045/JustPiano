@@ -8,24 +8,25 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.LoginActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+
 public final class ChangeAccountAdapter extends BaseAdapter {
     private final LoginActivity loginActivity;
     private final List<String> list;
-    private final LayoutInflater li;
-    private final JPDialog.JDialog dialog;
+    private final LayoutInflater layoutInflater;
+    private final JPDialogBuilder.JPDialog dialog;
     private final JSONObject jsonObject;
 
-    public ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialog.JDialog dialog, JSONObject jsonObject) {
+    public ChangeAccountAdapter(List<String> list, LayoutInflater layoutInflater, LoginActivity loginActivity, JPDialogBuilder.JPDialog dialog, JSONObject jsonObject) {
         this.list = list;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         this.loginActivity = loginActivity;
         this.dialog = dialog;
         this.jsonObject = jsonObject;
@@ -49,7 +50,7 @@ public final class ChangeAccountAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.account_name, null);
+            view = layoutInflater.inflate(R.layout.account_name, null);
         }
         String account = list.get(i);
         TextView accountName = view.findViewById(R.id.account_name_text);

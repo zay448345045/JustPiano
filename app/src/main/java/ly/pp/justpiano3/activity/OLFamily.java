@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -10,36 +9,41 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.*;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
-import ly.pp.justpiano3.listener.*;
+import ly.pp.justpiano3.listener.ChangeDeclarationClick;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.JPDialog;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class OLFamily extends BaseActivity implements OnClickListener {
+public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public ConnectionService cs;
     public JPProgressBar jpprogressBar;
-    public int position;  //0为族长 1为副族长 2为族员，3为非本家族的人
+    public FamilyPositionEnum position;
     public TextView declaration;
     public TextView info;
     public FamilyHandler familyHandler;
     public String familyID;
     public String peopleNow;  //目前选择人的名字
-    public List<HashMap> familyList;
+    public List<Map<String, Object>> familyList;
     public int familyPageNum;
     public String myFamilyPosition;
     public String myFamilyContribution;
@@ -47,7 +51,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     public String myFamilyName;
     public int listPosition;
     public byte[] myFamilyPicArray;
-    public List<HashMap<String, String>> peopleList = new ArrayList<>();
+    public List<Map<String, String>> peopleList = new ArrayList<>();
     public ListView peopleListView;
     public PopupWindow infoWindow;
     private LayoutInflater layoutinflater;
@@ -56,46 +60,49 @@ public class OLFamily extends BaseActivity implements OnClickListener {
 
     public void positionHandle() {
         switch (position) {
-            case 0:
+            case LEADER:
                 manageFamily.setEnabled(true);
                 inOut.setText("解散家族");
                 break;
-            case 1:
-            case 2:
+            case VICE_LEADER:
+            case MEMBER:
                 inOut.setText("退出家族");
                 break;
-            case 3:
+            case NOT_IN_FAMILY:
                 inOut.setText("申请加入");
                 break;
         }
     }
 
     private void inOutFamily() {
-        JPDialog jpdialog = new JPDialog(this);
-        jpdialog.setTitle("提示");
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle("提示");
         switch (position) {
-            case 0:
-                jpdialog.setMessage("确定要解散你的家族吗?");
+            case LEADER:
+                jpDialogBuilder.setMessage("确定要解散你的家族吗?");
                 break;
-            case 1:
-            case 2:
-                jpdialog.setMessage("确定要退出家族吗?");
+            case VICE_LEADER:
+            case MEMBER:
+                jpDialogBuilder.setMessage("确定要退出家族吗?");
                 break;
-            case 3:
-                jpdialog.setMessage("申请加入家族需要族长或副族长的批准!");
+            case NOT_IN_FAMILY:
+                jpDialogBuilder.setMessage("申请加入家族需要族长或副族长的批准!");
                 break;
         }
-        jpdialog.setFirstButton("确定", new InOutFamilyClick(this)).setSecondButton("取消", new DialogDismissClick());
-        try {
-            jpdialog.showDialog();
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
+        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                    OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                    builder.setType(5);
+                    builder.setFamilyId(Integer.parseInt(familyID));
+                    sendMsg(OnlineProtocolType.FAMILY, builder.build());
+                    dialog.dismiss();
+                    jpprogressBar.show();
+                })
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
         PopupWindow popupWindow = new PopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_managefamily_view, null);
+        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
         Button button = inflate.findViewById(R.id.ol_family_levelup);
         Button button2 = inflate.findViewById(R.id.ol_family_changedecl);
         Button button3 = inflate.findViewById(R.id.ol_family_changepic);
@@ -106,7 +113,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         TextView info = inflate.findViewById(R.id.ol_family_levelup_info);
         info.setText(b.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.filled_box));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
@@ -121,9 +128,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
 
     //显示个人资料
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
@@ -133,43 +140,30 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
-            if (User.getTrousers() <= 0) {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_t" + (User.getTrousers() - 1) + ".png")));
-            }
-            if (User.getJacket() <= 0) {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_j" + (User.getJacket() - 1) + ".png")));
-            }
-            if (User.getHair() <= 0) {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
-            }
-            if (User.getEye() <= 0) {
-                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
-            }
-            if (User.getShoes() <= 0) {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_s" + (User.getShoes() - 1) + ".png")));
-            }
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
-                    + "\n用户等级:Lv." + lv
+                    + "\n用户等级:LV." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n考级进度:CL." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsMailClick(this, User.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", (dialog, which) -> {
+                        if (jpapplication.getConnectionService() == null) {
+                            return;
+                        }
+                        OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
+                        builder.setMessage("");
+                        builder.setName(user.getPlayerName());
+                        sendMsg(OnlineProtocolType.SEND_MAIL, builder.build());
+                        dialog.dismiss();
+                        Toast.makeText(this, "已向对方发送私信，请等待对方同意!", Toast.LENGTH_SHORT).show();
+                    })
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,15 +217,19 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 if (infoWindow != null && infoWindow.isShowing()) {
                     infoWindow.dismiss();
                 }
-                JPDialog jpDialog = new JPDialog(this);
-                jpDialog.setTitle("提示");
-                jpDialog.setMessage("确定要将Ta移出家族吗?");
-                jpDialog.setFirstButton("确定", new KickFamilyClick(this)).setSecondButton("取消", new DialogDismissClick());
-                try {
-                    jpDialog.showDialog();
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                }
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("确定要将Ta移出家族吗?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                            OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
+                            familyBuilder.setType(6);
+                            familyBuilder.setUserName(peopleNow);
+                            familyBuilder.setStatus(1);
+                            sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
+                            dialog.dismiss();
+                            jpprogressBar.show();
+                        })
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 break;
             case R.id.ol_showinfo_b:
                 if (infoWindow != null && infoWindow.isShowing()) {
@@ -257,14 +255,15 @@ public class OLFamily extends BaseActivity implements OnClickListener {
                 showSendDialog(" ", 1);
                 break;
             case R.id.ol_family_changepic:
-                /*jpDialog = new JPDialog(this);
-                jpDialog.setTitle("抱歉");
-                jpDialog.setMessage("当前客户端不支持家族族徽的上传，可联系开发者上传或等待日后的版本更新!");
-                jpDialog.setFirstButton("确定", new DialogDismissClick());
-                Intent intent = new Intent("android.intent.action.GET_CONTENT");
-                intent.addCategory("android.intent.category.OPENABLE");
-                intent.setType("image/*");
-                startActivityForResult(intent, 2);*/
+                jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，可至官网上传");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+//                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+//                intent.addCategory("android.intent.category.OPENABLE");
+//                intent.setType("image/*");
+//                startActivityForResult(intent, 2);
                 break;
             case R.id.ol_family_changetest:
                 break;
@@ -277,28 +276,28 @@ public class OLFamily extends BaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         familyHandler = new FamilyHandler(this);
         JPStack.push(this);
-        Bundle b = getIntent().getExtras();
-        familyID = b.getString("familyID");
-        familyPageNum = b.getInt("pageNum");
-        listPosition = b.getInt("position");
-        myFamilyContribution = b.getString("myFamilyContribution");
-        myFamilyCount = b.getString("myFamilyCount");
-        myFamilyName = b.getString("myFamilyName");
-        myFamilyPosition = b.getString("myFamilyPosition");
-        myFamilyPicArray = b.getByteArray("myFamilyPicArray");
-        familyList = (List<HashMap>) getIntent().getSerializableExtra("familyList");
+        Bundle bundle = getIntent().getExtras();
+        familyID = bundle.getString("familyID");
+        familyPageNum = bundle.getInt("pageNum");
+        listPosition = bundle.getInt("position");
+        myFamilyContribution = bundle.getString("myFamilyContribution");
+        myFamilyCount = bundle.getString("myFamilyCount");
+        myFamilyName = bundle.getString("myFamilyName");
+        myFamilyPosition = bundle.getString("myFamilyPosition");
+        myFamilyPicArray = bundle.getByteArray("myFamilyPicArray");
+        familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
-        setContentView(R.layout.family);
+        setContentView(R.layout.ol_family);
         cs = jpapplication.getConnectionService();
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));
@@ -312,9 +311,9 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         info = findViewById(R.id.info_text);
     }
 
-    public PopupWindow loadInfoPopupWindow(String name, String positionStr) {
+    public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
         PopupWindow popupWindow = new PopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_buttonlist_view, null);
+        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
         Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
         Button mailSendButton = inflate.findViewById(R.id.ol_chat_b);  //私信
         Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);  //移出家族
@@ -324,27 +323,28 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         kickOutButton.setText("移出家族");
         inflate.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable._none));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(true);
-        if (position > 1 || (position == 1 && !positionStr.equals("2"))) {
+        if (position == FamilyPositionEnum.MEMBER || position == FamilyPositionEnum.NOT_IN_FAMILY
+                || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
             kickOutButton.setVisibility(View.GONE);
         }
         if (name.equals(jpapplication.getKitiName())) {
             kickOutButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
-        if (position > 0) {
+        if (position != FamilyPositionEnum.LEADER) {
             positionChangeButton.setVisibility(View.GONE);
         } else {
-            switch (positionStr) {
-                case "1":
+            switch (userPosition) {
+                case VICE_LEADER:
                     positionChangeButton.setText("撤职副族长");
                     break;
-                case "2":
+                case MEMBER:
                     positionChangeButton.setText("晋升副族长");
                     break;
                 default:
@@ -353,7 +353,7 @@ public class OLFamily extends BaseActivity implements OnClickListener {
             }
             positionChangeButton.setOnClickListener(this);
         }
-        if (position > 2) {
+        if (position == FamilyPositionEnum.NOT_IN_FAMILY) {
             showInfoButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
@@ -385,10 +385,12 @@ public class OLFamily extends BaseActivity implements OnClickListener {
         } else {
             return;
         }
-        new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate)
+                .setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str))
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public final void mo2907b(ListView listView, List<HashMap<String, String>> list) {
+    public final void mo2907b(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
     }
 

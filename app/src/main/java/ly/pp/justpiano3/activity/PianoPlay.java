@@ -9,28 +9,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.*;
+import androidx.annotation.RequiresApi;
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FinishScoreAdapter;
 import ly.pp.justpiano3.adapter.MiniScoreAdapter;
-import ly.pp.justpiano3.constant.MidiConstants;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
-import ly.pp.justpiano3.listener.DialogDismissClick;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
+import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
-import ly.pp.justpiano3.midi.MidiFramer;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
-import ly.pp.justpiano3.thread.StartPlayTimer;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.ShareUtil;
+import ly.pp.justpiano3.thread.StartPlayTimerTask;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.*;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
@@ -40,28 +39,29 @@ import protobuf.dto.OnlineQuitRoomDTO;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
 
-public final class PianoPlay extends BaseActivity implements MidiConnectionListener {
-    public byte hallID;
-    public TextView l_nandu;
-    public TextView time_mid;
+public final class PianoPlay extends OLBaseActivity implements MidiConnectionListener {
+    public TextView leftHandDegreeTextView;
+    public TextView songLengthTextView;
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
-    public Map userMap = null;
     public boolean isOpenRecord;
     public PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     public View f4591J;
     public int times;
     public String songsName;
     public TextView songName;
-    public TextView f4596O;
-    public TextView f4597P;
+    public TextView rightHandDegreeTextView;
+    public TextView highScoreTextView;
     public ListView gradeListView;
     public TextView finishSongName;
     public List<Bundle> gradeList = new ArrayList<>();
     public LayoutInflater layoutinflater;
-    public KeyBoardView keyboardview;
+    public PlayKeyBoardView keyboardview;
     public boolean isShowingSongsInfo;
     public Bundle roomBundle;
     public boolean isPlayingStart;
@@ -70,13 +70,13 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public JPProgressBar jpprogressbar;
     public ImageButton startPlayButton;
     public PlayView playView;
-    public double nandu;
+    public double onlineRightHandDegree;
     public int score;
     public JPApplication jpapplication;
-    public MidiReceiver midiFramer;
+    public MidiReceiver midiReceiver;
     public View finishView;
-    private View f4592K;
-    private LayoutParams layoutparams2;
+    private View miniScoreView;
+    public LayoutParams layoutParams2;
     private ConnectionService connectionService;
     private ProgressBar progressbar;
     private Bundle hallBundle;
@@ -84,10 +84,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     private String recordWavPath;
     private int roomMode = 0;
     private LayoutParams layoutparams;
-    private double localRNandu;
-    private double localLNandu;
+    private double localRightHandDegree;
+    private double localLeftHandDegree;
     private int localSongsTime;
-    private int playKind;
+    public int playKind;
 
     private List<Bundle> m3783a(List<Bundle> list, String str) {
         if (list != null && !list.isEmpty()) {
@@ -96,67 +96,67 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         return list;
     }
 
-    private void m3785a(int i, boolean z) {
+    public void m3785a(int i, boolean z) {
         if (z) {  //仅显示对话框就行了，其他不做不分析，用于按下后退键时
             if (i == 0) {
-                f4596O.setVisibility(View.VISIBLE);
+                rightHandDegreeTextView.setVisibility(View.VISIBLE);
             } else {
-                f4596O = findViewById(R.id.m_nandu);
-                f4596O.setVisibility(View.GONE);
+                rightHandDegreeTextView = findViewById(R.id.m_nandu);
+                rightHandDegreeTextView.setVisibility(View.GONE);
             }
-            f4597P.setVisibility(View.VISIBLE);
+            highScoreTextView.setVisibility(View.VISIBLE);
             startPlayButton.setVisibility(View.VISIBLE);
             songName.setText(songsName);
             return;
         }
         isShowingSongsInfo = true;
-        addContentView(f4591J, layoutparams2);
+        addContentView(f4591J, layoutParams2);
         songName = findViewById(R.id.m_name);
         progressbar = findViewById(R.id.m_progress);
-        f4596O = findViewById(R.id.m_nandu);
-        l_nandu = findViewById(R.id.l_nandu);
-        time_mid = findViewById(R.id.time_mid);
-        f4597P = findViewById(R.id.m_score);
-        f4597P.setText("最高纪录:" + score);
+        rightHandDegreeTextView = findViewById(R.id.m_nandu);
+        leftHandDegreeTextView = findViewById(R.id.l_nandu);
+        songLengthTextView = findViewById(R.id.time_mid);
+        highScoreTextView = findViewById(R.id.m_score);
+        highScoreTextView.setText("最高纪录:" + score);
         startPlayButton = findViewById(R.id.p_start);
         songName.setText(songsName);
         switch (i) {
             case 0:    //本地
                 startPlayButton.setOnClickListener(v -> {
-                    f4596O.setVisibility(View.GONE);
-                    f4597P.setVisibility(View.GONE);
+                    rightHandDegreeTextView.setVisibility(View.GONE);
+                    highScoreTextView.setVisibility(View.GONE);
                     startPlayButton.setVisibility(View.GONE);
                     mo2906a(false);
                 });
-                f4596O.setText("右手难度:" + localRNandu);
-                l_nandu.setText("左手难度:" + localLNandu);
+                rightHandDegreeTextView.setText("右手难度:" + localRightHandDegree);
+                leftHandDegreeTextView.setText("左手难度:" + localLeftHandDegree);
                 String str1 = localSongsTime / 60 >= 10 ? "" + localSongsTime / 60 : "0" + localSongsTime / 60;
                 String str2 = localSongsTime % 60 >= 10 ? "" + localSongsTime % 60 : "0" + localSongsTime % 60;
-                time_mid.setText("曲目时长:" + str1 + ":" + str2);
+                songLengthTextView.setText("曲目时长:" + str1 + ":" + str2);
                 return;
             case 1:    //在线曲库
                 startPlayButton.setOnClickListener(v -> {
-                    f4596O.setVisibility(View.GONE);
-                    f4597P.setVisibility(View.GONE);
+                    rightHandDegreeTextView.setVisibility(View.GONE);
+                    highScoreTextView.setVisibility(View.GONE);
                     startPlayButton.setVisibility(View.GONE);
                     mo2906a(false);
                 });
-                time_mid.setText("难度:" + nandu);
-                f4596O.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
+                songLengthTextView.setText("难度:" + onlineRightHandDegree);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
                 return;
             case 2:    //联网对战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
-                f4596O.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
-                f4597P.setVisibility(View.GONE);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
+                highScoreTextView.setVisibility(View.GONE);
                 startPlayButton.setVisibility(View.GONE);
-                time_mid.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
-                addContentView(f4592K, layoutparams);
-                f4592K.setVisibility(View.VISIBLE);
-                addContentView(finishView, layoutparams2);
+                songLengthTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
+                addContentView(miniScoreView, layoutparams);
+                miniScoreView.setVisibility(View.VISIBLE);
+                addContentView(finishView, layoutParams2);
                 ImageButton finishOkButton = finishView.findViewById(R.id.ol_ok);
                 finishOkButton.setOnClickListener(v -> {
                     Intent intent = new Intent(PianoPlay.this, OLPlayRoom.class);
@@ -173,13 +173,13 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             case 3:    //考级
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
-                f4596O.setVisibility(View.GONE);
-                f4597P.setVisibility(View.GONE);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                highScoreTextView.setVisibility(View.GONE);
                 startPlayButton.setVisibility(View.GONE);
-                time_mid.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
-                addContentView(f4592K, layoutparams);
-                f4592K.setVisibility(View.VISIBLE);
+                songLengthTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
+                addContentView(miniScoreView, layoutparams);
+                miniScoreView.setVisibility(View.VISIBLE);
                 OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                 builder.setType(2);
                 sendMsg(OnlineProtocolType.CL_TEST, builder.build());
@@ -187,13 +187,13 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
             case 4:    //挑战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
-                f4596O.setVisibility(View.GONE);
-                f4597P.setVisibility(View.GONE);
+                rightHandDegreeTextView.setVisibility(View.GONE);
+                highScoreTextView.setVisibility(View.GONE);
                 startPlayButton.setVisibility(View.GONE);
-                time_mid.setVisibility(View.GONE);
-                l_nandu.setVisibility(View.GONE);
-                addContentView(f4592K, layoutparams);
-                f4592K.setVisibility(View.VISIBLE);
+                songLengthTextView.setVisibility(View.GONE);
+                leftHandDegreeTextView.setVisibility(View.GONE);
+                addContentView(miniScoreView, layoutparams);
+                miniScoreView.setVisibility(View.VISIBLE);
                 OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                 builder1.setType(3);
                 sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
@@ -202,51 +202,47 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
     }
 
-    public void m3794f() {
-        f4591J = LayoutInflater.from(this).inflate(R.layout.pusedplay, null);
-        layoutparams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutparams2.gravity = android.view.Gravity.CENTER;
+    public void loadSong() {
+        f4591J = LayoutInflater.from(this).inflate(R.layout.pused_play, null);
+        layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams2.gravity = android.view.Gravity.CENTER;
         layoutparams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutparams.topMargin = 0;
         layoutparams.leftMargin = 0;
         Bundle extras = getIntent().getExtras();
         playKind = extras.getInt("head");
-        String str;
         switch (playKind) {
             case 0:    //本地模式
                 String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                localRNandu = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
-                localLNandu = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localRightHandDegree = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localLeftHandDegree = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 localSongsTime = extras.getInt("songstime");
                 score = extras.getInt("score");
                 isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
-                str = songsPath;
-                playView = new PlayView(jpapplication, this, str, this, localRNandu, localLNandu, score, playKind, hand, 30, localSongsTime, 0);
+                playView = new PlayView(jpapplication, this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playKind, hand, 30, localSongsTime, 0);
                 break;
             case 1:    //在线曲库
                 songsName = extras.getString("songName");
-                nandu = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                onlineRightHandDegree = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
                 byte[] byteArray = extras.getByteArray("songBytes");
-                playView = new PlayView(jpapplication, this, byteArray, this, nandu, score, 1, 0, songId);
+                playView = new PlayView(jpapplication, this, byteArray, this, onlineRightHandDegree, score, 1, 0, songId);
                 break;
             case 2:    //房间对战
                 connectionService = jpapplication.getConnectionService();
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
-                hallID = hallBundle.getByte("hallID");
-                userMap = jpapplication.getHashmap();
                 songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                int diao = extras.getInt("diao");
+                int tune = extras.getInt("diao");
                 hand = extras.getInt("hand");
                 roomMode = extras.getInt("roomMode");
-                f4592K = layoutinflater.inflate(R.layout.ol_score_view, null);
-                horizontalListView = f4592K.findViewById(R.id.ol_score_list);
-                showHideGrade = f4592K.findViewById(R.id.ol_score_button);
+                miniScoreView = layoutinflater.inflate(R.layout.ol_play_score_ranking, null);
+                horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
+                showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
                 int visibility = horizontalListView.getVisibility();
                 if (visibility == View.VISIBLE) {
                     showHideGrade.setText("隐藏成绩");
@@ -255,55 +251,44 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 }
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
-                finishView = layoutinflater.inflate(R.layout.ol_finish_view, null);
+                finishView = layoutinflater.inflate(R.layout.ol_room_play_finish, null);
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(0);
-                str = songsPath;
-                playView = new PlayView(jpapplication, this, str, this, nandu, nandu, score, playKind, hand, 30, 0, diao);
+                playView = new PlayView(jpapplication, this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
                 connectionService = jpapplication.getConnectionService();
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
-                hallID = hallBundle.getByte("hallID");
-                userMap = jpapplication.getHashmap();
                 String songBytes = extras.getString("songBytes");
                 songsName = extras.getString("name");
                 times = extras.getInt("times");
                 hand = extras.getInt("hand");
-                f4592K = layoutinflater.inflate(R.layout.ol_score_view, null);
-                horizontalListView = f4592K.findViewById(R.id.ol_score_list);
-                showHideGrade = f4592K.findViewById(R.id.ol_score_button);
+                miniScoreView = layoutinflater.inflate(R.layout.ol_play_score_ranking, null);
+                horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
+                showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
                 showHideGrade.setText("");
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
-                playView = new PlayView(jpapplication, this, songBytes.getBytes(), this, nandu, score, playKind, hand, "");
+                playView = new PlayView(jpapplication, this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
                 break;
         }
         if (isOpenRecord) {
             recordWavPath = getFilesDir().getAbsolutePath() + "/Records/" + songsName + ".raw";
         }
-        setContentView(playView);
-        keyboardview = new KeyBoardView(this, playView);
-        addContentView(keyboardview, layoutparams2);
-        m3785a(playKind, false);
-        isPlayingStart = true;
     }
 
     public void m3802m() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        jpapplication.setHeightPixels(displayMetrics.heightPixels);
-        jpapplication.setWidthPixels(displayMetrics.widthPixels);
-        jpapplication.loadSettings(true);
-        JPApplication.teardownAudioStreamNative();
-        JPApplication.unloadWavAssetsNative();
+        jpapplication.updateWidthAndHeightPixels(this);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
+        SoundEngineUtil.teardownAudioStreamNative();
+        SoundEngineUtil.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
-            JPApplication.preloadSounds(getApplicationContext(), i);
+            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
         }
-        JPApplication.confirmLoadSounds(getApplicationContext());
+        SoundEngineUtil.afterLoadSounds(getApplicationContext());
     }
 
     public void sendMsg(int type, MessageLite msg) {
@@ -332,7 +317,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         if (hasTimer) {  // 联网模式发321倒计时器
             obtainMessage.what = 7;
             Timer timer = new Timer();
-            timer.schedule(new StartPlayTimer(this, obtainMessage, timer), 0, 1000);
+            timer.schedule(new StartPlayTimerTask(this, obtainMessage, timer), 0, 1000);
         } else {  // 本地模式直接开始
             obtainMessage.what = 7;
             obtainMessage.arg1 = 0;
@@ -340,8 +325,8 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
         if (isOpenRecord && !recordStart) {
             recordStart = true;
-            JPApplication.setRecordFilePath(recordWavPath);
-            JPApplication.setRecord(true);
+            SoundEngineUtil.setRecordFilePath(recordWavPath);
+            SoundEngineUtil.setRecord(true);
             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
         }
     }
@@ -357,10 +342,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
     public void recordFinish() {
         if (recordStart) {
             isOpenRecord = false;
-            JPApplication.setRecord(false);
+            SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
-            JPApplication.moveFile(srcFile, desFile);
+            FileUtil.INSTANCE.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
             recordStart = false;
         }
@@ -379,7 +364,7 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
 
     @Override
     public void onBackPressed() {
-        JPDialog jpdialog = new JPDialog(this);
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         switch (playKind) {
             case 0:
                 m3785a(playKind, true);
@@ -413,9 +398,9 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                 }
                 return;
             case 2:
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("退出弹奏并返回大厅?");
-                jpdialog.setFirstButton("确定", (dialog, which) -> {
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("退出弹奏并返回大厅?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
@@ -423,14 +408,14 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     dialog.dismiss();
                     finish();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.setCancelableFalse();
-                jpdialog.showDialog();
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             case 3:
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("退出考级并返回大厅?");
-                jpdialog.setFirstButton("确定", (dialog, which) -> {
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("退出考级并返回大厅?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
@@ -438,14 +423,14 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     dialog.dismiss();
                     finish();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.setCancelableFalse();
-                jpdialog.showDialog();
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             case 4:
-                jpdialog.setTitle("提示");
-                jpdialog.setMessage("您将损失一次挑战机会!退出挑战并返回大厅?");
-                jpdialog.setFirstButton("确定", (dialog, which) -> {
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("您将损失一次挑战机会!退出挑战并返回大厅?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     isShowingSongsInfo = false;
                     playView.startFirstNoteTouching = false;
                     isPlayingStart = false;
@@ -453,17 +438,17 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
                     dialog.dismiss();
                     finish();
                 });
-                jpdialog.setSecondButton("取消", new DialogDismissClick());
-                jpdialog.setCancelableFalse();
-                jpdialog.showDialog();
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
         }
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpapplication = (JPApplication) getApplication();
         checkAnJian();
@@ -473,9 +458,10 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         if (jpapplication.getHeightPixels() == 0) {
             jpprogressbar = new JPProgressBar(this);
+            jpprogressbar.setCancelable(false);
             new PianoPlayTask(this).execute();
         } else {
-            m3794f();
+            loadSong();
         }
     }
 
@@ -498,16 +484,11 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         if (isOpenRecord) {
             recordFinish();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
-                    if (midiFramer != null) {
-                        jpapplication.midiOutputPort.disconnect(midiFramer);
-                        midiFramer = null;
-                    }
-                    jpapplication.removeMidiConnectionStart(this);
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             }
+            MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         super.onDestroy();
     }
@@ -606,59 +587,59 @@ public final class PianoPlay extends BaseActivity implements MidiConnectionListe
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void buildAndConnectMidiReceiver() {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = new JPMidiReceiver(this);
+            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
+        }
+    }
+
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
-                    if (midiFramer == null) {
-                        midiFramer = new MidiFramer(new MidiReceiver() {
-                            @Override
-                            public void onSend(byte[] data, int offset, int count, long timestamp) {
-                                midiConnectHandle(data);
-                            }
-                        });
-                    }
-                    jpapplication.midiOutputPort.connect(midiFramer);
-                }
-            }
+        buildAndConnectMidiReceiver();
+    }
+
+    @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void onMidiDisconnect() {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
+            midiReceiver = null;
         }
     }
 
     @Override
-    public void onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (midiFramer != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
-                    midiFramer = null;
-                }
-            }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void onMidiMessageReceive(byte pitch, byte volume) {
+        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
+        if (volume > 0) {
+            onMidiReceiveKeyDownHandle(pitch % 12);
+        } else {
+            onMidiReceiveKeyUpHandle(pitch % 12);
         }
     }
 
-    public void midiConnectHandle(byte[] data) {
-        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int touchNoteNum = data[1] % 12;
-        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            if (playView.currentPlayNote != null) {
-                playView.posiAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
-            }
-            int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
-            keyboardview.touchNoteSet.put(trueNote, 0);
-            updateKeyboardPrefer();
-        } else if (command == MidiConstants.STATUS_NOTE_OFF
-                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            if (touchNoteNum == 0) {
-                keyboardview.touchNoteSet.remove(12);
-            }
-            keyboardview.touchNoteSet.remove(touchNoteNum);
-            updateKeyboardPrefer();
+    private void onMidiReceiveKeyUpHandle(int touchNoteNum) {
+        if (touchNoteNum == 0) {
+            keyboardview.touchNoteSet.remove(12);
         }
+        keyboardview.touchNoteSet.remove(touchNoteNum);
+        updateKeyboardPrefer();
+    }
+
+    private void onMidiReceiveKeyDownHandle(int touchNoteNum) {
+        if (playView.currentPlayNote != null) {
+            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+        }
+        int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
+        keyboardview.touchNoteSet.put(trueNote, 0);
+        updateKeyboardPrefer();
     }
 
     public void updateKeyboardPrefer() {
-        if (jpapplication.hasKeyboardPrefer()) {
+        if (GlobalSetting.INSTANCE.getKeyboardPrefer()) {
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);

@@ -5,11 +5,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.SkinDownload;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
 
 import java.io.File;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public final class SkinDownloadClick implements OnClickListener {
     private final SkinDownload skinDownload;
@@ -30,10 +32,10 @@ public final class SkinDownloadClick implements OnClickListener {
         dialogInterface.dismiss();
         switch (type) {
             case 0:
-                ThreadPoolUtils.execute(() -> SkinDownload.downloadPS(skinDownload, url, name));
+                ThreadPoolUtil.execute(() -> SkinDownload.downloadPS(skinDownload, url, name));
                 break;
             case 1:
-                ThreadPoolUtils.execute(() -> skinDownload.mo2993a(name + ".ps"));
+                ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
                 break;
             case 2:
                 Editor edit = PreferenceManager.getDefaultSharedPreferences(skinDownload).edit();
@@ -49,7 +51,7 @@ public final class SkinDownloadClick implements OnClickListener {
                         }
                     }
                 }
-                skinDownload.jpapplication.setBackGround(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
+                ImageLoadUtil.setBackGround(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
                 break;
         }
     }

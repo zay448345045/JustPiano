@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import ly.pp.justpiano3.JPApplication;
+
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class OLTopUser extends Activity implements OnClickListener {
 
@@ -73,22 +74,15 @@ public class OLTopUser extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        JPApplication jpApplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_top_user);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        Button f4561l = findViewById(R.id.ol_level_b);
-        f4561l.setOnClickListener(this);
-        Button f4557h = findViewById(R.id.ol_topUsers_b);
-        f4557h.setOnClickListener(this);
-        Button f4558i = findViewById(R.id.ol_topScore_b);
-        f4558i.setOnClickListener(this);
-        Button f4559j = findViewById(R.id.ol_bless);
-        f4559j.setOnClickListener(this);
-        Button f4562m = findViewById(R.id.ol_class_b);
-        f4562m.setOnClickListener(this);
-        Button f4560k = findViewById(R.id.ol_contribution);
-        f4560k.setOnClickListener(this);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        findViewById(R.id.ol_level_b).setOnClickListener(this);
+        findViewById(R.id.ol_topUsers_b).setOnClickListener(this);
+        findViewById(R.id.ol_topScore_b).setOnClickListener(this);
+        findViewById(R.id.ol_bless).setOnClickListener(this);
+        findViewById(R.id.ol_class_b).setOnClickListener(this);
+        findViewById(R.id.ol_contribution).setOnClickListener(this);
     }
 }

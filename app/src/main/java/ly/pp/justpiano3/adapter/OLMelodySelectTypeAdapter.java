@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLMelodySelect;
 import ly.pp.justpiano3.constant.Consts;
@@ -17,7 +18,7 @@ public final class OLMelodySelectTypeAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return Consts.items.length - 1;
+        return Consts.items.length - 2;
     }
 
     @Override
@@ -33,7 +34,7 @@ public final class OLMelodySelectTypeAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = olMelodySelect.layoutInflater1.inflate(R.layout.ol_f_view, null);
+            view = olMelodySelect.layoutInflater1.inflate(R.layout.songs_sort_view, null);
         }
         view.setKeepScreenOn(true);
         TextView textView = view.findViewById(R.id.ol_s_p);

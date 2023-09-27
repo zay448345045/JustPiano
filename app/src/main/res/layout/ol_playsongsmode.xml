@@ -3,7 +3,7 @@
     android:id="@id/RelativeLayout1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/list"
+    android:background="@drawable/ol_rectangle_mask"
     android:orientation="vertical">
 
     <Button
@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginStart="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
         android:textStyle="bold"
         android:text="@string/ol_playsongs_single"
@@ -22,8 +24,10 @@
         android:id="@+id/circulateplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/onetimeplay"
+        android:layout_below="@id/onetimeplay"
+        android:layout_marginTop="@dimen/dimen_5dp"
         android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
         android:textStyle="bold"
         android:text="@string/ol_playsongs_cycle"
@@ -34,8 +38,10 @@
         android:id="@+id/randomplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/onetimeplay"
+        android:layout_below="@id/circulateplay"
         android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
         android:textStyle="bold"
         android:text="@string/ol_playsongs_rand"
@@ -43,12 +49,26 @@
         android:textSize="14sp" />
 
     <Button
+        android:id="@+id/favorlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/randomplay"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:background="@drawable/selector_ol_button"
+        android:textStyle="bold"
+        android:text="@string/ol_playsongs_rand_fa_list"
+        android:textColor="@color/white1"
+        android:textSize="14sp" />
+
+    <Button
         android:id="@+id/favorplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/circulateplay"
-        android:layout_toEndOf="@id/randomplay"
+        android:layout_below="@id/favorlist"
         android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
         android:layout_marginTop="@dimen/dimen_5dp"
         android:background="@drawable/selector_ol_button"
         android:textStyle="bold"

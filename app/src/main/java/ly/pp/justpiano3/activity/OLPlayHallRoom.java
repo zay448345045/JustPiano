@@ -1,10 +1,8 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -12,39 +10,55 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.adapter.FamilyAdapter;
-import ly.pp.justpiano3.adapter.MainGameAdapter;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
-import ly.pp.justpiano3.listener.AddFriendsClick;
-import ly.pp.justpiano3.listener.ChangeBlessingClick;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.task.OLPlayHallRoomTask;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.FamilyListView;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.JPProgressBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import protobuf.dto.*;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public final class OLPlayHallRoom extends BaseActivity implements OnClickListener {
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.FamilyAdapter;
+import ly.pp.justpiano3.adapter.MainGameAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
+import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
+import ly.pp.justpiano3.listener.AddFriendsClick;
+import ly.pp.justpiano3.listener.ChangeBlessingClick;
+import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
+import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.task.OLPlayHallRoomTask;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.view.FamilyListView;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import protobuf.dto.OnlineDailyDTO;
+import protobuf.dto.OnlineFamilyDTO;
+import protobuf.dto.OnlineLoadUserDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
+
+public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
     public int cl = 0;
     public int lv = 1;
     public TabHost tabHost;
@@ -74,7 +88,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     public TextView coupleBlessView;
     public List<Bundle> friendList = new ArrayList<>();
     public ListView friendListView;
-    public List<HashMap> familyList = new ArrayList<>();
+    public List<Map<String, Object>> familyList = new ArrayList<>();
     public FamilyListView familyListView;
     public int familyPageNum;
     public int cp;
@@ -87,45 +101,29 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     public List<Bundle> mailList = new ArrayList<>();
     public ListView mailListView;
     public ConnectionService connectionService;
-    private ImageView userModView;
-    private ImageView userTrousersView;
-    private ImageView userJacketsView;
-    private ImageView userHairView;
-    private ImageView userEyeView;
-    private ImageView userShoesView;
-    private int userTrousersIndex;
-    private int userJacketIndex;
-    private int userHairIndex;
-    private int userEyeIndex;
-    private int userShoesIndex;
+    public ImageView userModView;
+    public ImageView userTrousersView;
+    public ImageView userJacketsView;
+    public ImageView userHairView;
+    public ImageView userEyeView;
+    public ImageView userShoesView;
+    public int userTrousersIndex;
+    public int userJacketIndex;
+    public int userHairIndex;
+    public int userEyeIndex;
+    public int userShoesIndex;
     public String userSex = "f";
     private MainGameAdapter mailListAdapter = null;
     private MainGameAdapter hallListAdapter = null;
     private MainGameAdapter userListAdapter = null;
-    private ImageView coupleModView;
-    private ImageView coupleTrousersView;
-    private ImageView coupleJacketView;
-    private ImageView coupleHairView;
-    private ImageView coupleEyeView;
-    private ImageView coupleShoesView;
+    public ImageView coupleModView;
+    public ImageView coupleTrousersView;
+    public ImageView coupleJacketView;
+    public ImageView coupleHairView;
+    public ImageView coupleEyeView;
+    public ImageView coupleShoesView;
     public String coupleSex;
     private LayoutInflater layoutinflater;
-
-    private static Bitmap setDress(Context context, String str, String str2, int i) {
-        int i2 = i - 1;
-        if (i2 >= 0) {
-            try {
-                return BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/" + str + "_" + str2 + i2 + ".png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            return BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png"));
-        } catch (IOException e) {
-            return null;
-        }
-    }
 
     public void sendMsg(int type, MessageLite message) {
         if (connectionService != null) {
@@ -136,9 +134,9 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     public void showInfoDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_info_dialog, findViewById(R.id.dialog));
+        View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User User = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
+            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
                     b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
@@ -148,55 +146,32 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
             ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
-            imageView.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_m0.png")));
-            if (User.getTrousers() <= 0) {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView2.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_t" + (User.getTrousers() - 1) + ".png")));
-            }
-            if (User.getJacket() <= 0) {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView3.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_j" + (User.getJacket() - 1) + ".png")));
-            }
-            if (User.getHair() <= 0) {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_h" + (User.getHair() - 1) + ".png")));
-            }
-            if (User.getEye() <= 0) {
-                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView4e.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_e" + (User.getEye() - 1) + ".png")));
-            }
-            if (User.getShoes() <= 0) {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/_none.png")));
-            } else {
-                imageView5.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + User.getSex() + "_s" + (User.getShoes() - 1) + ".png")));
-            }
+            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
-                    + "\n用户等级:Lv." + lv
+                    + "\n用户等级:LV." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n考级进度:CL." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialog(this).setTitle("个人资料").loadInflate(inflate).setFirstButton("加为好友", new AddFriendsClick(this, User.getPlayerName())).setSecondButton("确定", new DialogDismissClick()).showDialog();
+            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void mo2907b(ListView listView, List<HashMap> list) {
+    public void mo2907b(ListView listView, List<Map<String, Object>> list) {
         listView.setAdapter(new FamilyAdapter(list, layoutinflater, this));
     }
 
-    public void mo2905a(FamilyAdapter fa, FamilyListView listView, List<HashMap> list) {
-        fa.upDateList(list);
-        fa.notifyDataSetChanged();
+    public void mo2905a(FamilyAdapter familyAdapter, FamilyListView listView, List<Map<String, Object>> list) {
+        familyAdapter.upDateList(list);
+        familyAdapter.notifyDataSetChanged();
         listView.loadComplete();
     }
 
@@ -211,15 +186,11 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         if (i == 3) {
             tabHost.setCurrentTab(1);
         }
-        JPDialog jpdialog = new JPDialog(this);
-        jpdialog.setTitle(str);
-        jpdialog.setMessage(str2);
-        jpdialog.setFirstButton("确定", new DialogDismissClick());
-        try {
-            jpdialog.showDialog();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+        jpDialogBuilder.setTitle(str);
+        jpDialogBuilder.setMessage(str2);
+        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+        jpDialogBuilder.buildAndShowDialog();
     }
 
     public void mo2842a(Bundle bundle) {
@@ -244,20 +215,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         hallListAdapter.notifyDataSetChanged();
     }
 
-    public void loadDress(int hair, int eye, int jacket, int trousers, int shoes) {
-        userTrousersIndex = trousers;
-        userJacketIndex = jacket;
-        userHairIndex = hair;
-        userEyeIndex = eye;
-        userShoesIndex = shoes;
-        userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
-        userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
-        userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
-        userHairView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "h", userHairIndex));
-        userEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "e", userEyeIndex));
-        userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
-    }
-
     public void sendMail(String str, int i) {
         String str2;
         String str3;
@@ -277,7 +234,9 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         } else {
             return;
         }
-        new JPDialog(this).setTitle(str3).loadInflate(inflate).setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).
+                setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str))
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void mo2846b(ListView listView, List<Bundle> list) {
@@ -291,15 +250,6 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         }
         userListAdapter.updateList(list);
         userListAdapter.notifyDataSetChanged();
-    }
-
-    public void loadClothes(int hair, int eye, int jacket, int trousers, int shoes) {
-        coupleModView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "m", 1));
-        coupleTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "t", trousers));
-        coupleJacketView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "j", jacket));
-        coupleHairView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "h", hair));
-        coupleEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "e", eye));
-        coupleShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, coupleSex, "s", shoes));
     }
 
     public void mo2848c() {
@@ -335,26 +285,23 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
 
     public void addFriends(String str) {
         if (!str.isEmpty()) {
-            JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle("好友请求");
-            jpdialog.setMessage("[" + str + "]请求加您为好友,同意吗?");
-            jpdialog.setFirstButton("同意", (dialog, which) -> {
+            JPDialogBuilder buildAndShowDialog = new JPDialogBuilder(this);
+            buildAndShowDialog.setTitle("好友请求");
+            buildAndShowDialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
+            buildAndShowDialog.setFirstButton("同意", (dialog, which) -> {
                 dialog.dismiss();
                 JSONObject jSONObject = new JSONObject();
                 try {
                     jSONObject.put("H", 1);
                     jSONObject.put("T", str);
-                    jSONObject.put("F", OLPlayHallRoom.this.jpApplication.getAccountName());
-                    new OLPlayHallRoomTask(OLPlayHallRoom.this).execute(jSONObject.toString(), "");
+                    jSONObject.put("F", jpApplication.getAccountName());
+                    new OLPlayHallRoomTask(this).execute(jSONObject.toString(), "");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             });
-            jpdialog.setSecondButton("拒绝", new DialogDismissClick());
-            try {
-                jpdialog.showDialog();
-            } catch (Exception ignored) {
-            }
+            buildAndShowDialog.setSecondButton("拒绝", (dialog, which) -> dialog.dismiss());
+            buildAndShowDialog.buildAndShowDialog();
         }
     }
 
@@ -369,12 +316,8 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
             userHairIndex = extras.getInt("H");
             userEyeIndex = extras.getInt("E");
             userShoesIndex = extras.getInt("O");
-            userModView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "m", 1));
-            userTrousersView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "t", userTrousersIndex));
-            userJacketsView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "j", userJacketIndex));
-            userHairView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "h", userHairIndex));
-            userEyeView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "e", userEyeIndex));
-            userShoesView.setImageBitmap(OLPlayHallRoom.setDress(this, userSex, "s", userShoesIndex));
+            ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
+                    userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
         }
     }
 
@@ -396,7 +339,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
             case R.id.ol_player_mod:
             case R.id.ol_dress_button:
                 if (lv < 8) {
-                    Toast.makeText(this, "您的等级未达到8级,不能进入换衣间!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "您的等级未达到8级，不能进入换衣间", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent.setClass(this, OLPlayDressRoom.class);
@@ -481,21 +424,17 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
 
     public void deleteCp(boolean flag) {
         if (cp > 0) {
-            JPDialog jpdialog = new JPDialog(this);
-            jpdialog.setTitle("警告");
-            jpdialog.setMessage("确定要解除搭档关系吗?");
-            jpdialog.setFirstButton("同意", (dialog, which) -> {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("警告");
+            jpDialogBuilder.setMessage("确定要解除搭档关系吗?");
+            jpDialogBuilder.setFirstButton("同意", (dialog, which) -> {
                 OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                 builder.setName(String.valueOf(flag));
                 builder.setType(3);
                 sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", new DialogDismissClick());
-            try {
-                jpdialog.showDialog();
-            } catch (Exception e3) {
-                e3.printStackTrace();
-            }
+            }).setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 
@@ -508,17 +447,17 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
-        jpApplication.loadSettings(true);
-        setContentView(R.layout.olplayhallroom);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(0);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
+        setContentView(R.layout.ol_hall_list);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);
         hallList.clear();
@@ -526,7 +465,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
         friendListView.setCacheColorHint(0);
         familyListView = findViewById(R.id.ol_family_list);
         familyListView.setCacheColorHint(0);
-        familyListView.setLoadListener(() -> ThreadPoolUtils.execute(() -> {
+        familyListView.setLoadListener(() -> ThreadPoolUtil.execute(() -> {
             familyPageNum++;
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(2);
@@ -656,7 +595,7 @@ public final class OLPlayHallRoom extends BaseActivity implements OnClickListene
                 } else {
                     myFamilyPic.setImageBitmap(BitmapFactory.decodeByteArray(myFamilyPicArray, 0, myFamilyPicArray.length));
                 }
-                familyList = (List<HashMap>) getIntent().getSerializableExtra("familyList");
+                familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
                 tabHost.setCurrentTab(4);
                 mo2907b(familyListView, familyList);
                 try {

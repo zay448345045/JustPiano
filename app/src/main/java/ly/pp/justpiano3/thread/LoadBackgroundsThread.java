@@ -5,9 +5,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceHolder;
+
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.PlayView;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
+import ly.pp.justpiano3.view.PlayView;
 
 public final class LoadBackgroundsThread extends Thread {
     private final PlayView playView;
@@ -26,6 +29,16 @@ public final class LoadBackgroundsThread extends Thread {
     private final Rect backgroundRect;
     private final PianoPlay pianoPlay;
 
+    /**
+     * 歌曲暂停时，目前的播放进度，内部保存的变量，不对外暴露
+     */
+    private Integer pauseProgress;
+
+    /**
+     * 处于暂停状态的时间累加，作为时间偏移进行计算
+     */
+    private int progressPauseTime;
+
     public LoadBackgroundsThread(JPApplication jPApplication, PlayView playView, PianoPlay pianoPlay) {
         jpapplication = jPApplication;
         this.playView = playView;
@@ -40,31 +53,50 @@ public final class LoadBackgroundsThread extends Thread {
         f6024j.setColor(0xff00ff00);
         f6025k = new Paint();
         f6025k.setARGB(255, 255, 125, 25);
-        f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) jPApplication.getHalfHeightSub20());
-        f6029o = new Rect(0, (int) jPApplication.getHalfHeightSub20(), playView.screenWidth, jPApplication.getWhiteKeyHeight());
-        backgroundRect = new Rect(0, 0, playView.screenWidth, jPApplication.getWhiteKeyHeight());
+        f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) playView.halfHeightSub20);
+        f6029o = new Rect(0, (int) playView.halfHeightSub20, playView.screenWidth, playView.whiteKeyHeight);
+        backgroundRect = new Rect(0, 0, playView.screenWidth, playView.whiteKeyHeight);
         this.pianoPlay = pianoPlay;
     }
 
     @Override
     public void run() {
+        long startPlayTime = System.currentTimeMillis();
         while (pianoPlay.isPlayingStart) {
+            // 时间计算部分：和瀑布流原理相同，具体解释详见瀑布流
+            int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.INSTANCE.getNotesDownSpeed() - progressPauseTime);
+            boolean isPause = !pianoPlay.playView.startFirstNoteTouching ||
+                    (GlobalSetting.INSTANCE.getGameMode() == LocalPlayModeEnum.PRACTISE && !pianoPlay.playView.isTouchRightNote);
+            if (isPause && pauseProgress == null) {
+                pauseProgress = playIntervalTime;
+            } else if (!isPause && pauseProgress != null) {
+                int updatePauseOffset = playIntervalTime - pauseProgress;
+                progressPauseTime += updatePauseOffset;
+                playIntervalTime -= updatePauseOffset;
+                pauseProgress = null;
+            }
+            int progress = isPause ? pauseProgress : playIntervalTime;
+            playView.progress = progress;
+            // 绘制部分
             try {
                 canvas = surfaceholder.lockCanvas(backgroundRect);
                 if (canvas != null) {
+                    // 绘制背景图、判断线
                     canvas.drawBitmap(playView.backgroundImage, null, f6028n, null);
                     canvas.drawBitmap(playView.barImage, null, f6029o, null);
-                    if (jpapplication.getRoughLine() != 1) {
-                        canvas.drawBitmap(playView.roughLineImage, null, new RectF(0.0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
+                    if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
+                        canvas.drawBitmap(playView.roughLineImage, null, new RectF(0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
+                    }
+                    // 绘制吊线和音块
+                    if (GlobalSetting.INSTANCE.getGameMode() != LocalPlayModeEnum.HEAR) {
+                        playView.mo2930b(canvas);
+                    } else {
+                        playView.mo2931c(canvas);
                     }
                 }
-                if (jpapplication.getGameMode() != 3) {  // 不是欣赏模式
-                    playView.mo2930b(canvas);
-                } else {
-                    playView.mo2931c(canvas);
-                }
-                if (canvas != null && jpapplication.getIfLoadLongKeyboard()) {
-                    canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0.0f, 0.0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
+                // 绘制屏幕上方的小键盘
+                if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {
+                    canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0f, 0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
                     canvas.drawRoundRect(new RectF((float) (((jpapplication.getWidthPixels() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((jpapplication.getWidthPixels() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
                     switch (playView.currentPlayNote.noteValue % 12) {
                         case 0:
@@ -84,7 +116,7 @@ public final class LoadBackgroundsThread extends Thread {
                             f6021g = 10.0f;
                             break;
                     }
-                    switch (playView.f4813n % 12) {
+                    switch (playView.currentNotePitch % 12) {
                         case 0:
                         case 2:
                         case 4:
@@ -103,16 +135,14 @@ public final class LoadBackgroundsThread extends Thread {
                             break;
                     }
                     canvas.drawArc(new RectF(((float) playView.currentPlayNote.noteValue) * widthDiv120, f6021g, ((float) (playView.currentPlayNote.noteValue + 1)) * widthDiv120, f6021g + widthDiv120), 0.0f, 360.0f, false, f6024j);
-                    canvas.drawArc(new RectF(((float) playView.f4813n) * widthDiv120, f6022h, ((float) (playView.f4813n + 1)) * widthDiv120, f6022h + widthDiv120), 0.0f, 360.0f, false, f6025k);
+                    canvas.drawArc(new RectF(((float) playView.currentNotePitch) * widthDiv120, f6022h, ((float) (playView.currentNotePitch + 1)) * widthDiv120, f6022h + widthDiv120), 0.0f, 360.0f, false, f6025k);
                 }
-                playView.mo2929a(canvas);
-                if (canvas != null) {
-                    surfaceholder.unlockCanvasAndPost(canvas);
-                }
-                canvas = null;
             } catch (Exception e) {
-                playView.mo2929a(canvas);
-                if (canvas != null) {
+                e.printStackTrace();
+            } finally {
+                // 绘制进度条，（若进度已满则）处理播放完成
+                playView.drawProgressAndFinish(progress, canvas);
+                if (canvas != null && surfaceholder.getSurface().isValid()) {
                     surfaceholder.unlockCanvasAndPost(canvas);
                 }
                 canvas = null;

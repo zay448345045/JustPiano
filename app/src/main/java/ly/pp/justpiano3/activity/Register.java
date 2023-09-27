@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.JPProgressBar;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.task.RegisterTask;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.regex.Pattern;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.task.RegisterTask;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class Register extends Activity implements OnClickListener {
     public String sex;
@@ -21,7 +26,6 @@ public class Register extends Activity implements OnClickListener {
     public JPProgressBar jpprogressBar;
     public RadioButton sexF;
     public RadioButton sexM;
-    public JPApplication jpapplication;
     private TextView accountTextView;
     private TextView password1TextView;
     private TextView password2TextView;
@@ -75,11 +79,10 @@ public class Register extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        jpapplication = (JPApplication) getApplication();
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         sex = "";
         account = "";
         kitiName = "";

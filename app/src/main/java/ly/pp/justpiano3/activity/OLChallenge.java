@@ -7,30 +7,38 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.protobuf.MessageLite;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.adapter.ChallengeListAdapter;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.handler.android.ChallengeHandler;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.GetPrizeClick;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.view.DrawPrizeView;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.JPProgressBar;
-import protobuf.dto.OnlineChallengeDTO;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class OLChallenge extends BaseActivity implements OnClickListener {
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.ChallengeListAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.handler.android.ChallengeHandler;
+import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.ColorUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.DrawPrizeView;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import protobuf.dto.OnlineChallengeDTO;
+
+public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
-    public ConnectionService cs;
+    public ConnectionService connectionService;
     public byte hallID;
     public String hallName;
     public int remainTimes;
@@ -41,7 +49,7 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
     public Button drawPrize;
     public Button viewChallenge;
     public ListView scoreListView;
-    public List<HashMap> scoreList = new ArrayList<>();
+    public List<Map<String, String>> scoreList = new ArrayList<>();
     private LayoutInflater layoutinflater;
 
     @Override
@@ -75,31 +83,32 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
                 return;
             case R.id.viewChallenge:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://" + JPApplication.WEBSITE_URL + "/pages/challenge.html"));
+                intent.setData(Uri.parse("https://" + OnlineUtil.WEBSITE_URL + "/pages/challenge.html"));
                 startActivity(intent);
                 return;
+            default:
         }
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         challengeHandler = new ChallengeHandler(this);
         JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        Bundle b = getIntent().getExtras();
-        hallID = b.getByte("hallID");
-        hallName = b.getString("hallName");
+        Bundle bundle = getIntent().getExtras();
+        hallID = bundle.getByte("hallID");
+        hallName = bundle.getString("hallName");
         jpapplication = (JPApplication) getApplication();
-        setContentView(R.layout.challenge);
-        cs = jpapplication.getConnectionService();
+        setContentView(R.layout.ol_challenge);
+        connectionService = jpapplication.getConnectionService();
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
         sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
-        jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
         info = findViewById(R.id.infoview);
@@ -113,37 +122,47 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
         scoreListView.setCacheColorHint(0);
     }
 
-    public final void showDrawPrizeDialog(Bundle b) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_draw_prize, findViewById(R.id.dialog));
-        TextView t = inflate.findViewById(R.id.ol_prize_result);
-        ImageView iv = inflate.findViewById(R.id.ol_prize_pointer);
-        DrawPrizeView dp = inflate.findViewById(R.id.ol_draw_prize_pan);
-        TextView color = inflate.findViewById(R.id.ol_prize_color);
-        color.setVisibility(View.GONE);
-        String result = b.getString("N");
-        t.setText(result);
-        int prizeNum = b.getInt("P");
+    public final void showDrawPrizeDialog(Bundle bundle) {
+        View inflate = getLayoutInflater().inflate(R.layout.ol_challenge_draw_prize, findViewById(R.id.dialog));
+        TextView prizeResultTextView = inflate.findViewById(R.id.ol_prize_result);
+        ImageView prizePointerImageView = inflate.findViewById(R.id.ol_prize_pointer);
+        DrawPrizeView drawPrizeView = inflate.findViewById(R.id.ol_draw_prize_pan);
+        TextView prizeColorView = inflate.findViewById(R.id.ol_prize_color);
+        String result = bundle.getString("N");
+        prizeResultTextView.setText(result);
+        int prizeNum = bundle.getInt("P");
         if (prizeNum != -1) {
             int prizeType = prizeNum / 100;
-            dp.luckyStart(prizeType);
-//            if (prizeType == 0) {
-//                color.setVisibility(View.VISIBLE);
-//                int kuang = prizeNum + 7;
-//                if (prizeNum > 17) {
-//                    kuang = 2 + (prizeNum - 18) * 5 / 82;
-//                }
-//                color.setBackgroundResource(Consts.kuang[kuang]);
-//            }
+            drawPrizeView.luckyStart(prizeType);
+            if (prizeType == 0) {
+                int color = prizeNum + 7;
+                if (prizeNum > 17) {
+                    color = 2 + (prizeNum - 18) * 5 / 82;
+                }
+                prizeColorView.setBackgroundResource(ColorUtil.userColor[color]);
+                prizeColorView.setVisibility(View.VISIBLE);
+            }
             try {
-                new JPDialog(this).setTitle("抽取奖励").loadInflate(inflate).setFirstButton("确认领取", new GetPrizeClick(this)).setSecondButton("放弃领取", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).setTitle("抽取奖励").loadInflate(inflate)
+                        .setFirstButton("确认领取", (dialog, which) -> {
+                            if (jpapplication.getConnectionService() != null) {
+                                OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+                                builder.setType(6);
+                                jpapplication.getConnectionService().writeData(OnlineProtocolType.CHALLENGE, builder.build());
+                                Toast.makeText(this, "领取奖励成功!", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setSecondButton("放弃领取", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            iv.setVisibility(View.GONE);
-            dp.setVisibility(View.GONE);
+            prizePointerImageView.setVisibility(View.GONE);
+            drawPrizeView.setVisibility(View.GONE);
             try {
-                new JPDialog(this).loadInflate(inflate).setTitle("提示").setSecondButton("确定", new DialogDismissClick()).showDialog();
+                new JPDialogBuilder(this).loadInflate(inflate).setTitle("提示")
+                        .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -151,15 +170,14 @@ public class OLChallenge extends BaseActivity implements OnClickListener {
     }
 
     public final void sendMsg(int type, MessageLite msg) {
-        if (cs != null) {
-            cs.writeData(type, msg);
+        if (connectionService != null) {
+            connectionService.writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    public final void mo2907b(ListView listView, List<HashMap> list) {
+    public final void mo2907b(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new ChallengeListAdapter(list, layoutinflater));
     }
 

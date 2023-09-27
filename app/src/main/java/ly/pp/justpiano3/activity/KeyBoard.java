@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,33 +11,30 @@ import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.constant.MidiConstants;
-import ly.pp.justpiano3.listener.DialogDismissClick;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
-import ly.pp.justpiano3.midi.MidiFramer;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.KeyboardModeView;
+import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.KeyboardView;
 
 import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@RequiresApi(api = Build.VERSION_CODES.M)
 public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
-
-    public KeyboardModeView keyboardMode1View;
-    public KeyboardModeView keyboardMode2View;
+    public KeyboardView firstKeyboardView;
+    public KeyboardView secondKeyboardView;
     public LinearLayout keyboard1Layout;
     public LinearLayout keyboard2Layout;
-    public JPApplication jpapplication;
-    public MidiReceiver midiFramer;
+    private MidiReceiver midiReceiver;
     public ScheduledExecutorService scheduledExecutor;
     public SharedPreferences sharedPreferences;
     // 用于记录上次的移动
@@ -58,107 +56,77 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.keyboard_mode);
-        jpapplication = (JPApplication) getApplication();
-        keyboardMode1View = findViewById(R.id.keyboard1_view);
-        keyboardMode1View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
-            @Override
-            public void onKeyDown(int pitch, int volume) {
-                jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
-            }
-
-            @Override
-            public void onKeyUp(int pitch) {
-
-            }
-        });
-        keyboardMode2View = findViewById(R.id.keyboard2_view);
-        keyboardMode2View.addMusicKeyListener(new KeyboardModeView.MusicKeyListener() {
-            @Override
-            public void onKeyDown(int pitch, int volume) {
-                jpapplication.playSound(pitch + jpapplication.getKeyboardSoundTune(), volume);
-            }
-
-            @Override
-            public void onKeyUp(int pitch) {
-
-            }
-        });
+    @SuppressLint("ClickableViewAccessibility")
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.lo_keyboard_mode);
+        firstKeyboardView = findViewById(R.id.keyboard1_view);
+        initKeyboardView(firstKeyboardView);
+        secondKeyboardView = findViewById(R.id.keyboard2_view);
+        initKeyboardView(secondKeyboardView);
         keyboard1Layout = findViewById(R.id.keyboard1_layout);
         keyboard1Layout.setOnTouchListener(this);
         keyboard2Layout = findViewById(R.id.keyboard2_layout);
         keyboard2Layout.setOnTouchListener(this);
-        Button keyboard1CountDown = findViewById(R.id.keyboard1_count_down);
-        keyboard1CountDown.setOnTouchListener(this);
-        Button keyboard2CountDown = findViewById(R.id.keyboard2_count_down);
-        keyboard2CountDown.setOnTouchListener(this);
-        Button keyboard1Countup = findViewById(R.id.keyboard1_count_up);
-        keyboard1Countup.setOnTouchListener(this);
-        Button keyboard2Countup = findViewById(R.id.keyboard2_count_up);
-        keyboard2Countup.setOnTouchListener(this);
-        Button keyboard1MoveLeft = findViewById(R.id.keyboard1_move_left);
-        keyboard1MoveLeft.setOnTouchListener(this);
-        Button keyboard2MoveLeft = findViewById(R.id.keyboard2_move_left);
-        keyboard2MoveLeft.setOnTouchListener(this);
-        Button keyboard1MoveRight = findViewById(R.id.keyboard1_move_right);
-        keyboard1MoveRight.setOnTouchListener(this);
-        Button keyboard2MoveRight = findViewById(R.id.keyboard2_move_right);
-        keyboard2MoveRight.setOnTouchListener(this);
-        ImageView keyboardSetting = findViewById(R.id.keyboard_setting);
-        keyboardSetting.setOnClickListener(this);
-        Button keyboardRecord = findViewById(R.id.keyboard_record);
-        keyboardRecord.setOnClickListener(this);
+        findViewById(R.id.keyboard1_count_down).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_count_down).setOnTouchListener(this);
+        findViewById(R.id.keyboard1_count_up).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_count_up).setOnTouchListener(this);
+        findViewById(R.id.keyboard1_move_left).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_move_left).setOnTouchListener(this);
+        findViewById(R.id.keyboard1_move_right).setOnTouchListener(this);
+        findViewById(R.id.keyboard2_move_right).setOnTouchListener(this);
+        findViewById(R.id.keyboard_setting).setOnClickListener(this);
+        findViewById(R.id.keyboard_record).setOnClickListener(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int keyboard1WhiteKeyNum = sharedPreferences.getInt("keyboard1_white_key_num", 8);
         int keyboard2WhiteKeyNum = sharedPreferences.getInt("keyboard2_white_key_num", 8);
         int keyboard1WhiteKeyOffset = sharedPreferences.getInt("keyboard1_white_key_offset", 21);
         int keyboard2WhiteKeyOffset = sharedPreferences.getInt("keyboard2_white_key_offset", 14);
         float keyboardWeight = sharedPreferences.getFloat("keyboard_weight", 0.5f);
-        keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
-        keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, 0);
-        keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
-        keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, 0);
+        firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, 0);
+        secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, 0);
+        firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, 0);
+        secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, 0);
         keyboard1Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
-                    midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            midiConnectHandle(data);
-                        }
-                    });
-                    jpapplication.midiOutputPort.connect(midiFramer);
-                    jpapplication.addMidiConnectionListener(this);
-                }
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            buildAndConnectMidiReceiver();
+            MidiDeviceUtil.addMidiConnectionListener(this);
         }
+    }
+
+    private void initKeyboardView(KeyboardView keyboardView) {
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setMusicKeyListener(new KeyboardView.KeyboardListener() {
+            @Override
+            public void onKeyDown(byte pitch, byte volume) {
+                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
+            }
+
+            @Override
+            public void onKeyUp(byte pitch) {
+
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null) {
-                    if (midiFramer != null) {
-                        jpapplication.midiOutputPort.disconnect(midiFramer);
-                        midiFramer = null;
-                    }
-                    jpapplication.removeMidiConnectionStart(this);
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
             }
+            MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         if (recordStart) {
-            JPApplication.setRecord(false);
+            SoundEngineUtil.setRecord(false);
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-            JPApplication.moveFile(srcFile, desFile);
+            FileUtil.INSTANCE.moveFile(srcFile, desFile);
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         super.onDestroy();
@@ -197,6 +165,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
                     edit.putFloat("keyboard_weight", layoutParams.weight);
                     edit.apply();
                     reSize = false;
+                    view.performClick();
                     break;
                 default:
                     break;
@@ -244,51 +213,51 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             SharedPreferences.Editor edit = sharedPreferences.edit();
             switch (msg.what) {
                 case R.id.keyboard1_count_down:
-                    int keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() - 1;
-                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
+                    int keyboard1WhiteKeyNum = firstKeyboardView.getWhiteKeyNum() - 1;
+                    firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_down:
-                    int keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() - 1;
-                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
+                    int keyboard2WhiteKeyNum = secondKeyboardView.getWhiteKeyNum() - 1;
+                    secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_count_up:
-                    keyboard1WhiteKeyNum = keyboardMode1View.getWhiteKeyNum() + 1;
-                    keyboardMode1View.setWhiteKeyNum(keyboard1WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_num", keyboardMode1View.getWhiteKeyNum());
+                    keyboard1WhiteKeyNum = firstKeyboardView.getWhiteKeyNum() + 1;
+                    firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_up:
-                    keyboard2WhiteKeyNum = keyboardMode2View.getWhiteKeyNum() + 1;
-                    keyboardMode2View.setWhiteKeyNum(keyboard2WhiteKeyNum, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_num", keyboardMode2View.getWhiteKeyNum());
+                    keyboard2WhiteKeyNum = secondKeyboardView.getWhiteKeyNum() + 1;
+                    secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_left:
-                    int keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() - 1;
-                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
+                    int keyboard1WhiteKeyOffset = firstKeyboardView.getWhiteKeyOffset() - 1;
+                    firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_left:
-                    int keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() - 1;
-                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
+                    int keyboard2WhiteKeyOffset = secondKeyboardView.getWhiteKeyOffset() - 1;
+                    secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_right:
-                    keyboard1WhiteKeyOffset = keyboardMode1View.getWhiteKeyOffset() + 1;
-                    keyboardMode1View.setWhiteKeyOffset(keyboard1WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard1_white_key_offset", keyboardMode1View.getWhiteKeyOffset());
+                    keyboard1WhiteKeyOffset = firstKeyboardView.getWhiteKeyOffset() + 1;
+                    firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_right:
-                    keyboard2WhiteKeyOffset = keyboardMode2View.getWhiteKeyOffset() + 1;
-                    keyboardMode2View.setWhiteKeyOffset(keyboard2WhiteKeyOffset, jpapplication.isKeyboardAnim() ? interval : 0);
-                    edit.putInt("keyboard2_white_key_offset", keyboardMode2View.getWhiteKeyOffset());
+                    keyboard2WhiteKeyOffset = secondKeyboardView.getWhiteKeyOffset() + 1;
+                    secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 default:
@@ -298,54 +267,51 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         }
     });
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void buildAndConnectMidiReceiver() {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            midiReceiver = new JPMidiReceiver(this);
+            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
+        }
+    }
+
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (jpapplication.midiOutputPort != null && midiFramer == null) {
-                    midiFramer = new MidiFramer(new MidiReceiver() {
-                        @Override
-                        public void onSend(byte[] data, int offset, int count, long timestamp) {
-                            midiConnectHandle(data);
-                        }
-                    });
-                    jpapplication.midiOutputPort.connect(midiFramer);
-                }
-            }
+        buildAndConnectMidiReceiver();
+    }
+
+    @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void onMidiDisconnect() {
+        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
+            midiReceiver = null;
         }
     }
 
     @Override
-    public void onMidiDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (midiFramer != null) {
-                    jpapplication.midiOutputPort.disconnect(midiFramer);
-                    midiFramer = null;
-                }
-            }
-        }
-    }
-
-    public void midiConnectHandle(byte[] data) {
-        byte command = (byte) (data[0] & MidiConstants.STATUS_COMMAND_MASK);
-        int pitch = data[1] + jpapplication.getMidiKeyboardTune();
-        if (command == MidiConstants.STATUS_NOTE_ON && data[2] > 0) {
-            keyboardMode1View.fireKeyDown(pitch, data[2], -1, false);
-            jpapplication.playSound(pitch, data[2]);
-        } else if (command == MidiConstants.STATUS_NOTE_OFF
-                || (command == MidiConstants.STATUS_NOTE_ON && data[2] == 0)) {
-            keyboardMode1View.fireKeyUp(pitch, false);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void onMidiMessageReceive(byte pitch, byte volume) {
+        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
+        if (volume > 0) {
+            secondKeyboardView.fireKeyDown(pitch, volume, null);
+            SoundEngineUtil.playSound(pitch, volume);
+        } else {
+            secondKeyboardView.fireKeyUp(pitch);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == JPApplication.SETTING_MODE_CODE) {
-            jpapplication.setBackGround(this, "ground", findViewById(R.id.layout));
-            keyboardMode1View.changeImage(this);
-            keyboardMode2View.changeImage(this);
+        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
+            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            firstKeyboardView.changeSkinKeyboardImage(this);
+            secondKeyboardView.changeSkinKeyboardImage(this);
+            KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];
+            firstKeyboardView.setOctaveTagType(octaveTagType);
+            secondKeyboardView.setOctaveTagType(octaveTagType);
         }
     }
 
@@ -355,39 +321,39 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             case R.id.keyboard_setting:
                 Intent intent = new Intent();
                 intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, JPApplication.SETTING_MODE_CODE);
+                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                 break;
             case R.id.keyboard_record:
                 try {
                     Button recordButton = (Button) view;
                     if (!recordStart) {
-                        JPDialog jpdialog = new JPDialog(this);
-                        jpdialog.setTitle("提示");
-                        jpdialog.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
-                        jpdialog.setFirstButton("确定", (dialogInterface, i) -> {
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                        jpDialogBuilder.setTitle("提示");
+                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
+                        jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
                             recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
                             recordFileName = date + "录音.wav";
-                            JPApplication.setRecordFilePath(recordFilePath);
-                            JPApplication.setRecord(true);
+                            SoundEngineUtil.setRecordFilePath(recordFilePath);
+                            SoundEngineUtil.setRecord(true);
                             recordStart = true;
                             Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
                             recordButton.setText("■");
-                            recordButton.setTextColor(getResources().getColor(R.color.dack));
-                            recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_orange));
+                            recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
+                            recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
                         });
-                        jpdialog.setSecondButton("取消", new DialogDismissClick());
-                        jpdialog.showDialog();
+                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                        jpDialogBuilder.buildAndShowDialog();
                     } else {
                         recordButton.setText("●");
-                        recordButton.setTextColor(getResources().getColor(R.color.v3));
-                        recordButton.setBackground(getResources().getDrawable(R.drawable.selector_ol_button));
-                        JPApplication.setRecord(false);
+                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
+                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
+                        SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                         File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-                        JPApplication.moveFile(srcFile, desFile);
+                        FileUtil.INSTANCE.moveFile(srcFile, desFile);
                         Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {

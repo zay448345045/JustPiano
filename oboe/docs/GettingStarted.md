@@ -248,6 +248,7 @@ renders a sine wave.
 ```
 #include <oboe/Oboe.h>
 #include <math.h>
+using namespace oboe;
 
 class OboeSinePlayer: public oboe::AudioStreamDataCallback {
 public:
@@ -263,7 +264,7 @@ public:
                 ->setPerformanceMode(oboe::PerformanceMode::LowLatency)
                 ->setChannelCount(kChannelCount)
                 ->setSampleRate(kSampleRate)
-		->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium);
+		->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
                 ->setFormat(oboe::AudioFormat::Float)
                 ->setDataCallback(this)
                 ->openStream(mStream);
@@ -320,7 +321,7 @@ rather than pre-computing them.
 Additionally, best practice is to implement a separate data callback class, rather
 than managing the stream and defining its data callback in the same class.
 
-For more examples on how to use Oboe look in the [samples](https://github.com/google/oboe/tree/master/samples) folder.
+For more examples on how to use Oboe look in the [samples](https://github.com/google/oboe/tree/main/samples) folder.
 
 ## Obtaining optimal latency
 One of the goals of the Oboe library is to provide low latency audio streams on the widest range of hardware configurations.
@@ -356,5 +357,5 @@ Here's a code sample showing how to set these default values.
 Note that the values from Java are for built-in audio devices. Peripheral devices, such as Bluetooth may need larger framesPerBurst.
 
 # Further information
-- [Code samples](https://github.com/google/oboe/tree/master/samples)
+- [Code samples](https://github.com/google/oboe/tree/main/samples)
 - [Full guide to Oboe](FullGuide.md)

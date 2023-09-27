@@ -9,6 +9,31 @@ import io.netty.util.AttributeKey;
 public class OnlineUtil {
 
     /**
+     * 官网地址
+     */
+    public static final String WEBSITE_URL = "justpiano.fun";
+
+    /**
+     * 官网地址
+     */
+    public static final String INSIDE_WEBSITE_URL = "i.justpiano.fun";
+
+    /**
+     * 对战服务器地址
+     */
+    public static final String ONLINE_SERVER_URL = "server.justpiano.fun";
+
+    /**
+     * 测试对战服务器地址
+     */
+    public static final String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
+
+    /**
+     * 当前选择的服务器
+     */
+    public static String server = ONLINE_SERVER_URL;
+
+    /**
      * channel绑定的消息类型属性key
      */
     private static final AttributeKey<Integer> MSG_TYPE_ATTRIBUTE_KEY = AttributeKey.valueOf("MSG_TYPE");

@@ -1,11 +1,13 @@
 package ly.pp.justpiano3.service;
 
-import android.app.Service;
+import android.app.*;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import androidx.core.app.NotificationCompat;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
@@ -22,15 +24,14 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.Receive;
-import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
-import ly.pp.justpiano3.utils.DeviceUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.task.ReceiveTask;
+import ly.pp.justpiano3.utils.*;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
@@ -45,7 +46,14 @@ public class ConnectionService extends Service implements Runnable {
      * 对战服务端口
      */
     public static final Integer ONLINE_PORT = 8908;
-
+    /**
+     * 通知通道ID
+     */
+    public static final String CHANNEL_ID = "1";
+    public static final String CHANNEL_NAME = "service keep alive";
+    public static final String NOTIFY_CONTENT_TITLE = "JustPiano keep alive";
+    public static final String NOTIFY_CONTENT_TEXT = "在线模式已连接...";
+    public Intent thisIntent;
     private final JPBinder jpBinder = new JPBinder(this);
     private JPApplication jpapplication;
     private Netty mNetty;
@@ -63,6 +71,10 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     public final void outLine() {
+        // 清除通知
+        stopForeground(true);
+        stopSelf();
+        // 断开链接
         if (mNetty != null) {
             mNetty.disconnect();
         }
@@ -88,8 +100,42 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void onCreate() {
         super.onCreate();
-        jpapplication = (ly.pp.justpiano3.JPApplication) getApplication();
+        jpapplication = (JPApplication) getApplication();
+
+        // 创建通知通道，并绑定
+        thisIntent = new Intent(this, ConnectionService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+
+        // 启动前台服务
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(thisIntent);
+        } else {
+            startService(thisIntent);
+        }
+
         new Thread(this).start();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, thisIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(NOTIFY_CONTENT_TITLE)
+                .setContentText(NOTIFY_CONTENT_TEXT)
+                .setSmallIcon(R.drawable.couple_1) // 设置通知的小图标
+                .setContentIntent(pendingIntent)
+                .build();
+        startForeground(1, notification);
+        return START_STICKY;
     }
 
     @Override
@@ -117,7 +163,7 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new ProtobufVarint32LengthFieldPrepender())
                         // 2.下面解析器内部的channelRead方法进行数据包解密，使用客户端生成的私钥进行解密
                         // 7.下面解析器内部的write方法进行数据包加密，使用服务端生成的公钥进行加密
-                        .addLast(new ProtobufEncryptionHandler(jpapplication.getServerPublicKey(), jpapplication.getDeviceKeyPair().getPrivate()))
+                        .addLast(new ProtobufEncryptionHandler(EncryptUtil.getServerPublicKey(), EncryptUtil.getDeviceKeyPair().getPrivate()))
                         // 3.将数据包内容（字节数组）反序列化为protobuf VO对象
                         .addLast(new ProtobufDecoder(OnlineBaseVO.getDefaultInstance()))
                         // 6.将protobuf DTO对象序列化为数据包字节数组
@@ -128,7 +174,10 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                Receive.receive(msg.getResponseCase().getNumber(), msg);
+                                ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
+                                if (receiveTask != null) {
+                                    receiveTask.run(msg, JPStack.top(), Message.obtain());
+                                }
                             }
 
                             @Override
@@ -158,9 +207,9 @@ public class ConnectionService extends Service implements Runnable {
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
                 builder.setPassword(jpapplication.getPassword());
-                builder.setVersionCode(DeviceUtil.getVersionName(jpapplication));
+                builder.setVersionCode(BuildConfig.VERSION_NAME);
                 builder.setPackageName(getPackageName());
-                builder.setPublicKey(EncryptUtil.generatePublicKeyString(jpapplication.getDeviceKeyPair().getPublic()));
+                builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
                 deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication.getApplicationContext()));
@@ -207,18 +256,19 @@ public class ConnectionService extends Service implements Runnable {
     @Override
     public void run() {
         // 更新客户端公钥
-        jpapplication.updateDeviceKeyPair();
+        EncryptUtil.updateDeviceKeyPair();
         initNetty();
-        mNetty.connect(jpapplication.getServer(), ONLINE_PORT);
+        mNetty.connect(OnlineUtil.server, ONLINE_PORT);
     }
 
     private void outLineAndDialog() {
         outLine();
-        if (JPStack.top() instanceof BaseActivity) {
-            BaseActivity baseActivity = (BaseActivity) JPStack.top();
-            Message message = Message.obtain(baseActivity.baseActivityHandler);
+        Activity topActivity = JPStack.top();
+        if (topActivity instanceof OLBaseActivity) {
+            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+            Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
             message.what = 0;
-            baseActivity.baseActivityHandler.handleMessage(message);
+            olBaseActivity.olBaseActivityHandler.handleMessage(message);
         }
     }
 }

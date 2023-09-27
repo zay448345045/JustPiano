@@ -2,34 +2,19 @@ package ly.pp.justpiano3.handler.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.text.Selection;
-import android.text.Spannable;
-import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.activity.OLMainMode;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
+import ly.pp.justpiano3.enums.RoomModeEnum;
+import ly.pp.justpiano3.thread.SongPlay;
 import protobuf.dto.OnlineQuitRoomDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.lang.ref.WeakReference;
-import java.util.Date;
 
 public final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -46,31 +31,28 @@ public final class OLPlayRoomHandler extends Handler {
                 case 1:
                     post(() -> {
                         olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
-                        String str1 = message.getData().getString("SI");
-                        if (!str1.isEmpty()) {
-                            olPlayRoom.jpapplication.setNowSongsName(str1);
-                            int diao = message.getData().getInt("diao");
-                            olPlayRoom.setdiao(diao);
-                            str1 = "songs/" + str1 + ".pm";
-                            String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
-                            String string = a[0];
-                            String str2 = a[1];
+                        String songFilePath = message.getData().getString("SI");
+                        if (!songFilePath.isEmpty()) {
+                            int tune = message.getData().getInt("diao");
+                            olPlayRoom.setTune(tune);
+                            songFilePath = "songs/" + songFilePath + ".pm";
+                            olPlayRoom.currentPlaySongPath = songFilePath;
+                            String[] simpleSongInfo = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
+                            String string = simpleSongInfo[0];
+                            String str2 = simpleSongInfo[1];
                             if (string != null) {
-                                olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
-                                try {
-                                    if (olPlayRoom.getMode() == 0) {
-                                        if (diao > 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "+" + diao);
-                                        } else if (diao < 0) {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "" + diao);
-                                        } else {
-                                            olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().toString().charAt(0) + "0" + diao);
-                                        }
+                                olPlayRoom.songNameScrollText.setText(string + "[难度:" + str2 + "]");
+                                if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
+                                    if (tune > 0) {
+                                        olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "+" + tune);
+                                    } else if (tune < 0) {
+                                        olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "" + tune);
+                                    } else {
+                                        olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "0" + tune);
                                     }
-                                    olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, olPlayRoom.getdiao());
-                                    olPlayRoom.songPath = str1;
-                                } catch (Exception e) {
-                                    return;
+                                }
+                                if (!SongPlay.INSTANCE.isPlaying()) {
+                                    SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, olPlayRoom.getTune());
                                 }
                             }
                         }
@@ -85,120 +67,62 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 case 2:
                 case 4:
-                    post(() -> {
-                        if (olPlayRoom.msgList.size() > olPlayRoom.maxListValue) {
-                            olPlayRoom.msgList.remove(0);
-                        }
-                        SharedPreferences ds = PreferenceManager.getDefaultSharedPreferences(olPlayRoom);
-                        boolean showTime = ds.getBoolean("chats_time_show", false);
-                        String time = "";
-                        if (showTime) {
-                            time = DateUtil.format(new Date(olPlayRoom.jpapplication.getServerTime()), "HH:mm");
-                        }
-                        message.getData().putString("TIME", time);
-                        // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
-                        if (!ChatBlackUserUtil.isUserInChatBlackList(olPlayRoom.jpapplication.getChatBlackList(), message.getData().getString("U"))) {
-                            olPlayRoom.msgList.add(message.getData());
-                        }
-
-                        // 聊天音效播放
-                        if (olPlayRoom.jpapplication.isChatSound() && !message.getData().getString("U").equals(olPlayRoom.jpapplication.getKitiName())) {
-                            olPlayRoom.jpapplication.playChatSound();
-                        }
-
-                        // 聊天记录存储
-                        if (ds.getBoolean("save_chats", false)) {
-                            try {
-                                File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");
-                                if (!file.exists()) {
-                                    file.mkdirs();
-                                }
-                                String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
-                                file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats/" + date + ".txt");
-                                if (!file.exists()) {
-                                    file.createNewFile();
-                                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                                    fileOutputStream.write((date + ":\n").getBytes());
-                                    fileOutputStream.close();
-                                }
-                                FileWriter writer = new FileWriter(file, true);
-                                String str = message.getData().getString("M");
-                                if (str.startsWith("//")) {
-                                    writer.close();
-                                    olPlayRoom.mo2862a(showTime);
-                                    return;
-                                } else if (message.getData().getInt("T") == 2) {
-                                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
-                                    writer.close();
-                                } else if (message.getData().getInt("T") == 1) {
-                                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + "\n"));
-                                    writer.close();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        olPlayRoom.mo2862a(showTime);
-                    });
+                    post(() -> olPlayRoom.handleChat(message));
                     return;
                 case 3:
                     post(() -> {
-                        String str1 = message.getData().getString("song_path");
-                        int diao = message.getData().getInt("diao");
-                        if (!str1.isEmpty()) {
-                            olPlayRoom.jpapplication.setNowSongsName(str1);
-                            str1 = "songs/" + str1 + ".pm";
-                            String[] a = olPlayRoom.querySongNameAndDiffByPath(str1);
-                            String string = a[0];
-                            String str2 = a[1];
-                            if (string != null) {
-                                olPlayRoom.setdiao(diao);
-                                if (diao > 0) {
-                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "+" + diao);
-                                } else if (diao < 0) {
-                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "" + diao);
+                        String songFilePath = message.getData().getString("song_path");
+                        int tune = message.getData().getInt("diao");
+                        if (!songFilePath.isEmpty()) {
+                            songFilePath = "songs/" + songFilePath + ".pm";
+                            olPlayRoom.currentPlaySongPath = songFilePath;
+                            String[] simpleSongInfo = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
+                            String songName = simpleSongInfo[0];
+                            String songRightHandDegree = simpleSongInfo[1];
+                            if (songName != null) {
+                                olPlayRoom.setTune(tune);
+                                if (tune > 0) {
+                                    olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "+" + tune);
+                                } else if (tune < 0) {
+                                    olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "" + tune);
                                 } else {
-                                    olPlayRoom.groupButton.setText(olPlayRoom.groupButton.getText().subSequence(0, 1) + "0" + diao);
+                                    olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "0" + tune);
                                 }
-                                olPlayRoom.songNameText.setText(string + "[难度:" + str2 + "]");
-                                try {
-                                    olPlayRoom.jpapplication.startPlaySongOnline(str1, olPlayRoom, diao);
-                                    olPlayRoom.songPath = str1;
-                                } catch (Exception ignored) {
-                                }
+                                olPlayRoom.songNameScrollText.setText(songName + "[难度:" + songRightHandDegree + "]");
+                                SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, tune);
                             }
                         }
                     });
                     return;
                 case 5:
                     post(() -> {
-                        olPlayRoom.jpapplication.stopPlaySong();
-                        String str1 = message.getData().getString("S");
-                        if (!olPlayRoom.isOnStart) {
+                        SongPlay.INSTANCE.stopPlay();
+                        String songFilePath = message.getData().getString("S");
+                        if (!olPlayRoom.onStart) {
                             olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);
-                            bundle.putByte("hallID", olPlayRoom.hallID0);
+                            bundle.putByte("hallID", olPlayRoom.hallId);
                             intent.putExtras(bundle);
                             olPlayRoom.startActivity(intent);
                             olPlayRoom.finish();
-                        } else if (!str1.isEmpty()) {
-                            olPlayRoom.setdiao(message.getData().getInt("D"));
-                            str1 = "songs/" + str1 + ".pm";
-                            String str = olPlayRoom.querySongNameAndDiffByPath(str1)[0];
-                            if (str != null) {
-                                olPlayRoom.isOnStart = false;
-                                Intent intent2 = new Intent(olPlayRoom, PianoPlay.class);
-                                intent2.putExtra("head", 2);
-                                intent2.putExtra("path", str1);
-                                intent2.putExtra("name", str);
-                                intent2.putExtra("diao", olPlayRoom.getdiao());
-                                intent2.putExtra("roomMode", olPlayRoom.roomMode);
-                                intent2.putExtra("hand", olPlayRoom.currentHand);
-                                intent2.putExtra("bundle", olPlayRoom.bundle0);
-                                intent2.putExtra("bundleHall", olPlayRoom.bundle2);
-                                olPlayRoom.startActivity(intent2);
+                        } else if (!songFilePath.isEmpty()) {
+                            olPlayRoom.setTune(message.getData().getInt("D"));
+                            songFilePath = "songs/" + songFilePath + ".pm";
+                            String songName = olPlayRoom.querySongNameAndDiffByPath(songFilePath)[0];
+                            if (songName != null) {
+                                olPlayRoom.onStart = false;
+                                Intent intent = new Intent(olPlayRoom, PianoPlay.class);
+                                intent.putExtra("head", 2);
+                                intent.putExtra("path", songFilePath);
+                                intent.putExtra("name", songName);
+                                intent.putExtra("diao", olPlayRoom.getTune());
+                                intent.putExtra("roomMode", olPlayRoom.roomMode);
+                                intent.putExtra("hand", olPlayRoom.currentHand);
+                                intent.putExtra("bundle", olPlayRoom.roomInfoBundle);
+                                intent.putExtra("bundleHall", olPlayRoom.hallInfoBundle);
+                                olPlayRoom.startActivity(intent);
                                 olPlayRoom.finish();
                             }
                         }
@@ -216,172 +140,40 @@ public final class OLPlayRoomHandler extends Handler {
                     post(() -> olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData()));
                     return;
                 case 8:
-                    post(() -> {
-                        olPlayRoom.jpapplication.stopPlaySong();
-                        JPDialog jpdialog = new JPDialog(olPlayRoom);
-                        jpdialog.setCancelableFalse();
-                        jpdialog.setTitle("提示").setMessage("您已被房主移出房间!").setFirstButton("确定", (dialog, which) -> {
-                            olPlayRoom.isOnStart = false;
-                            Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("hallName", olPlayRoom.hallName);
-                            bundle.putByte("hallID", olPlayRoom.hallID0);
-                            intent.putExtras(bundle);
-                            olPlayRoom.startActivity(intent);
-                            olPlayRoom.finish();
-                        }).showDialog();
-                    });
+                    post(olPlayRoom::handleKicked);
                     return;
                 case 9:
-                    post(() -> {
-                        String string = message.getData().getString("F");
-                        switch (message.getData().getInt("T")) {
-                            case 0:
-                                if (!string.isEmpty()) {
-                                    JPDialog jpdialog = new JPDialog(olPlayRoom);
-                                    jpdialog.setTitle("好友请求");
-                                    jpdialog.setMessage("[" + string + "]请求加您为好友,同意吗?");
-                                    String finalString = string;
-                                    jpdialog.setFirstButton("同意", (dialog, which) -> {
-                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
-                                        builder.setType(1);
-                                        builder.setReject(false);
-                                        builder.setName(finalString);
-                                        olPlayRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
-                                        dialog.dismiss();
-                                    });
-                                    jpdialog.setSecondButton("拒绝", (dialog, which) -> {
-                                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
-                                        builder.setType(1);
-                                        builder.setReject(true);
-                                        builder.setName(finalString);
-                                        olPlayRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
-                                        dialog.dismiss();
-                                    });
-                                    jpdialog.showDialog();
-                                }
-                                return;
-                            case 1:
-                                olPlayRoom.jpapplication.setIsShowDialog(false);
-                                string = message.getData().getString("F");
-                                int i = message.getData().getInt("I");
-                                JPDialog jpdialog2 = new JPDialog(olPlayRoom);
-                                jpdialog2.setTitle("请求结果");
-                                if (i == 0) {
-                                    jpdialog2.setMessage("[" + string + "]同意添加您为好友!");
-                                } else if (i == 1) {
-                                    jpdialog2.setMessage("对方拒绝了你的好友请求!");
-                                } else if (i == 2) {
-                                    jpdialog2.setMessage("对方已经是你的好友!");
-                                } else if (i == 3) {
-                                    jpdialog2.setTitle(message.getData().getString("title"));
-                                    jpdialog2.setMessage(message.getData().getString("Message"));
-                                }
-                                jpdialog2.setFirstButton("确定", new DialogDismissClick());
-                                try {
-                                    jpdialog2.showDialog();
-                                    return;
-                                } catch (Exception e2) {
-                                    return;
-                                }
-                            default:
-                        }
-                    });
+                    post(() -> olPlayRoom.handleFriendRequest(message));
                     return;
                 case 10:
                     post(() -> {
                         String name = message.getData().getString("R");
                         olPlayRoom.getIntent().putExtra("R", name);
+                        olPlayRoom.roomInfoBundle.putString("R", name);
                         olPlayRoom.roomName = name;
-                        olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomID0 + "]" + olPlayRoom.roomName);
+                        olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomId + "]" + olPlayRoom.roomName);
                     });
                     return;
                 case 11:
-                    post(() -> {
-                        olPlayRoom.friendPlayerList.clear();
-                        Bundle data = message.getData();
-                        int size = data.size();
-                        if (size >= 0) {
-                            for (int i = 0; i < size; i++) {
-                                olPlayRoom.friendPlayerList.add(data.getBundle(String.valueOf(i)));
-                            }
-                            olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
-                        }
-                        olPlayRoom.canNotNextPage = size < 20;
-                    });
+                    post(() -> olPlayRoom.handleRefreshFriendList(message));
                     return;
                 case 12:
-                    post(() -> {
-                        olPlayRoom.roomTabs.setCurrentTab(1);
-                        String string = message.getData().getString("U");
-                        if (string != null && !string.equals(JPApplication.kitiName)) {
-                            olPlayRoom.userTo = "@" + string + ":";
-                            olPlayRoom.sendText.setText(olPlayRoom.userTo);
-                            CharSequence text = olPlayRoom.sendText.getText();
-                            if (text instanceof Spannable) {
-                                Selection.setSelection((Spannable) text, text.length());
-                            }
-                        }
-                    });
+                    post(() -> olPlayRoom.handlePrivateChat(message));
                     return;
                 case 13:
-                    post(() -> {
-                        olPlayRoom.friendPlayerList.clear();
-                        Bundle data = message.getData();
-                        int size = data.size();
-                        if (size >= 0) {
-                            for (int i = 0; i < size; i++) {
-                                olPlayRoom.friendPlayerList.add(data.getBundle(String.valueOf(i)));
-                            }
-                            olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 3);
-                        }
-                    });
+                    post(() -> olPlayRoom.handleRefreshFriendListWithoutPage(message));
                     return;
                 case 14:
-                    post(() -> {
-                        Bundle data = message.getData();
-                        String string = data.getString("Ti");
-                        String string2 = data.getString("I");
-                        JPDialog jpdialog = new JPDialog(olPlayRoom);
-                        jpdialog.setTitle(string);
-                        jpdialog.setMessage(string2);
-                        jpdialog.setFirstButton("确定", new DialogDismissClick());
-                        DialogUtil.handleGoldSend(olPlayRoom.jpapplication, jpdialog, data.getInt("T"), data.getString("N"), data.getString("F"));
-                        jpdialog.showDialog();
-                    });
+                    post(() -> olPlayRoom.handleDialog(message));
                     return;
                 case 15:
-                    post(() -> {
-                        olPlayRoom.invitePlayerList.clear();
-                        Bundle data = message.getData();
-                        int size = data.size();
-                        if (size >= 0) {
-                            for (int i = 0; i < size; i++) {
-                                olPlayRoom.invitePlayerList.add(data.getBundle(String.valueOf(i)));
-                            }
-                            olPlayRoom.mo2863a(olPlayRoom.playerListView, olPlayRoom.invitePlayerList, 3);
-                        }
-                    });
+                    post(() -> olPlayRoom.handleInvitePlayerList(message));
                     return;
                 case 16:
-                    post(() -> {
-                        Bundle data = message.getData();
-                        OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
-                        builder.setType(2);
-                        builder.setName(data.getString("F"));
-                        olPlayRoom.friendPlayerList.remove(message.arg1);
-                        olPlayRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
-                        olPlayRoom.mo2863a(olPlayRoom.friendsListView, olPlayRoom.friendPlayerList, 1);
-                    });
+                    post(() -> olPlayRoom.handleSetUserInfo(message));
                     return;
                 case 21:
-                    post(() -> {
-                        Toast.makeText(olPlayRoom, "您已掉线,请检查您的网络再重新登录!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.setClass(olPlayRoom, OLMainMode.class);
-                        olPlayRoom.startActivity(intent);
-                        olPlayRoom.finish();
-                    });
+                    post(olPlayRoom::handleOffline);
                     return;
                 case 22:
                     post(() -> {
@@ -399,7 +191,8 @@ public final class OLPlayRoomHandler extends Handler {
                     return;
                 default:
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

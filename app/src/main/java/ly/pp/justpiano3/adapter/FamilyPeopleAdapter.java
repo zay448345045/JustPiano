@@ -1,28 +1,36 @@
 package ly.pp.justpiano3.adapter;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
+import java.util.List;
+import java.util.Map;
 
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLFamily;
-
-import java.util.HashMap;
-import java.util.List;
+import ly.pp.justpiano3.enums.FamilyPositionEnum;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
-    private final List<HashMap<String, String>> list;
+    private final List<Map<String, String>> list;
     private final JPApplication jpApplication;
-    private final LayoutInflater li;
+    private final LayoutInflater layoutInflater;
     private final OLFamily family;
 
-    public FamilyPeopleAdapter(List<HashMap<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
+    public FamilyPeopleAdapter(List<Map<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.jpApplication = jpApplication;
         this.list = list;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         family = olFamily;
     }
 
@@ -44,7 +52,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_c_family_view, null);
+            view = layoutInflater.inflate(R.layout.ol_c_family_view, null);
         }
         final String name = list.get(i).get("N");
         if (name == null) {
@@ -74,15 +82,15 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         dateText.setText(loginDate);
         contributionText.setText(contribution);
 
-        final String position = list.get(i).get("P");
-        switch (position) {
-            case "0":
+        FamilyPositionEnum userPosition = FamilyPositionEnum.ofCode(list.get(i).get("P"), FamilyPositionEnum.NOT_IN_FAMILY);
+        switch (userPosition) {
+            case LEADER:
                 positionText.setText("族长");
                 break;
-            case "1":
+            case VICE_LEADER:
                 positionText.setText("副族长");
                 break;
-            case "2":
+            case MEMBER:
                 positionText.setText("族员");
                 break;
             default:
@@ -90,26 +98,26 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
                 break;
         }
         if (list.get(i).get("O").equals("0")) {
-            nameText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            positionText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            contributionText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            lvText.setTextColor(jpApplication.getResources().getColor(R.color.white));
-            dateText.setTextColor(jpApplication.getResources().getColor(R.color.white));
+            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
         } else {
-            nameText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            positionText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            contributionText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            lvText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
-            dateText.setTextColor(jpApplication.getResources().getColor(R.color.white1));
+            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
         }
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
-            PopupWindow a = family.loadInfoPopupWindow(name, position);
+            PopupWindow a = family.loadInfoPopupWindow(name, userPosition);
             if (a != null) {
                 int[] iArr = new int[2];
                 linearLayout.getLocationOnScreen(iArr);
-                a.showAtLocation(linearLayout, 51, iArr[0] + linearLayout.getWidth(), iArr[1]);
+                a.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
             }
         });
         return view;

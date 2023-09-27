@@ -3,15 +3,21 @@ package ly.pp.justpiano3.task;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.activity.Register;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.activity.Register;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public final class RegisterTask extends AsyncTask<Void, Integer, String> {
     private final WeakReference<Register> register;
@@ -25,7 +31,7 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
         String response = "";
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
-                .host(register.get().jpapplication.getServer())
+                .host(OnlineUtil.server)
                 .port(8910)
                 .addPathSegment("JustPianoServer")
                 .addPathSegment("server")
@@ -88,13 +94,6 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
 
     @Override
     protected void onPreExecute() {
-        register.get().jpprogressBar.setMessage("正在连接....");
         register.get().jpprogressBar.show();
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... numArr) {
-        register.get().jpprogressBar.setMessage("正在连接...." + numArr[0].toString());
-        register.get().jpprogressBar.setProgress(numArr[0]);
     }
 }

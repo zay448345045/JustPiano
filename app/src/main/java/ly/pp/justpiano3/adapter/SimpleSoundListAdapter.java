@@ -10,27 +10,28 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.thread.ThreadPoolUtils;
-import ly.pp.justpiano3.utils.GZIPUtil;
 
 import java.io.File;
 import java.util.List;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class SimpleSoundListAdapter extends BaseAdapter {
     private final OLPlayKeyboardRoom olPlayKeyboardRoom;
     private final List<String> list;
     private final List<File> fileList;
-    private final LayoutInflater li;
-    private final JPDialog.JDialog dialog;
+    private final LayoutInflater layoutInflater;
+    private final JPDialogBuilder.JPDialog dialog;
 
-    public SimpleSoundListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialog.JDialog dialog) {
+    public SimpleSoundListAdapter(List<String> list, List<File> file, LayoutInflater layoutInflater, OLPlayKeyboardRoom olPlayKeyboardRoom, JPDialogBuilder.JPDialog dialog) {
         this.list = list;
         this.fileList = file;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         this.olPlayKeyboardRoom = olPlayKeyboardRoom;
         this.dialog = dialog;
     }
@@ -53,7 +54,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.account_name, null);
+            view = layoutInflater.inflate(R.layout.account_name, null);
         }
         String name = list.get(index);
         TextView nameView = view.findViewById(R.id.account_name_text);
@@ -61,9 +62,9 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
         nameView.setOnClickListener(v -> {
             dialog.dismiss();
             olPlayKeyboardRoom.jpprogressBar.show();
-            ThreadPoolUtils.execute(() -> {
+            ThreadPoolUtil.execute(() -> {
                 if (name.equals("原生音源")) {
-                    JPApplication.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
+                    SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
                     edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName());
@@ -80,12 +81,12 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         }
                         GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());
                         edit.apply();
-                        JPApplication.teardownAudioStreamNative();
-                        JPApplication.unloadWavAssetsNative();
+                        SoundEngineUtil.teardownAudioStreamNative();
+                        SoundEngineUtil.unloadWavAssetsNative();
                         for (i = 108; i >= 24; i--) {
-                            JPApplication.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
+                            SoundEngineUtil.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
                         }
-                        JPApplication.confirmLoadSounds(olPlayKeyboardRoom.getApplicationContext());
+                        SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom.getApplicationContext());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

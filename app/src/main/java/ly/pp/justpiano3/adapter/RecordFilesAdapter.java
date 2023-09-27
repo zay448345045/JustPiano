@@ -6,22 +6,23 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.RecordFiles;
 
-import java.util.HashMap;
-import java.util.List;
-
 public final class RecordFilesAdapter extends BaseAdapter {
-    private List<HashMap> list;
+    private List<Map<String, Object>> list;
     private final RecordFiles recordfiles;
 
-    public RecordFilesAdapter(List<HashMap> list, RecordFiles rs) {
+    public RecordFilesAdapter(List<Map<String, Object>> list, RecordFiles rs) {
         this.list = list;
         recordfiles = rs;
     }
 
-    public void mo3422a(List<HashMap> list) {
+    public void mo3422a(List<Map<String, Object>> list) {
         this.list = list;
     }
 
@@ -43,7 +44,7 @@ public final class RecordFilesAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(recordfiles).inflate(R.layout.fileimageandtext, null);
+            view = LayoutInflater.from(recordfiles).inflate(R.layout.chat_record_file_list, null);
         }
         view.setKeepScreenOn(true);
         String str = (String) list.get(i).get("filenames");

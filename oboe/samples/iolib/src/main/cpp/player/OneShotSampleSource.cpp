@@ -22,14 +22,17 @@
 
 namespace iolib {
 
-    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, std::pair<int32_t, int32_t>& curFrameIndex) {
+    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, std::pair<int32_t, int32_t> *curFrameIndex) {
+        if (curFrameIndex == nullptr) {
+            return;
+        }
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
-        int32_t& trueIndex = curFrameIndex.first;
-        auto trueVolume = (float) curFrameIndex.second;
+        int32_t& trueIndex = (*curFrameIndex).first;
+        auto trueVolume = (float) (*curFrameIndex).second;
         int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
-        if (numWriteFrames != 0) {
+        if (numWriteFrames != 0 && trueIndex < numSampleFrames) {
             // Mix in the samples
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
@@ -43,27 +46,15 @@ namespace iolib {
                 // STEREO output
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    float value = data[trueIndex] * trueVolume / 128;
+                    float value = data[trueIndex++] * trueVolume / 128;
                     outBuff[dstSampleIndex++] += value;
                     outBuff[dstSampleIndex++] += value;
-                    trueIndex++;
-                }
-            } else if (numChannels == 4) {
-                int dstSampleIndex = 0;
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    float value = data[trueIndex] * trueVolume / 256;
-                    outBuff[dstSampleIndex++] += value;
-                    outBuff[dstSampleIndex++] += value;
-                    outBuff[dstSampleIndex++] += value;
-                    outBuff[dstSampleIndex++] += value;
-                    trueIndex++;
                 }
             }
         }
-
         // silence
         // no need as the output buffer would need to have been filled with silence
         // to be mixed into
     }
 
-} // namespace wavlib
+} // namespace iolib

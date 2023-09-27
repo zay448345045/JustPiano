@@ -27,20 +27,14 @@
 using namespace oboe;
 
 class UtilityFunctions : public ::testing::Test {
-
-
 };
 
-TEST_F(UtilityFunctions, Converts16BitIntegerToSizeOf2Bytes
-){
-int32_t sizeInBytes = oboe::convertFormatToSizeInBytes(AudioFormat::I16);
-ASSERT_EQ(sizeInBytes,
-2);
+TEST_F(UtilityFunctions, Converts16BitIntegerToSizeOf2Bytes){
+    int32_t sizeInBytes = oboe::convertFormatToSizeInBytes(AudioFormat::I16);
+    ASSERT_EQ(sizeInBytes, 2);
 }
 
-TEST_F(UtilityFunctions, ConvertsFloatToSizeOf4Bytes
-){
-int32_t sizeInBytes = oboe::convertFormatToSizeInBytes(AudioFormat::Float);
-ASSERT_EQ(sizeInBytes,
-4);
+TEST_F(UtilityFunctions, ConvertsFloatToSizeOf4Bytes){
+    int32_t sizeInBytes = oboe::convertFormatToSizeInBytes(AudioFormat::Float);
+    ASSERT_EQ(sizeInBytes, 4);
 }

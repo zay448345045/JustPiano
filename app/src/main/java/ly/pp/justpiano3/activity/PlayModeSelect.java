@@ -5,15 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import ly.pp.justpiano3.JPApplication;
+
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.KeyBoard;
-import ly.pp.justpiano3.activity.MainMode;
-import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class PlayModeSelect extends Activity implements OnClickListener {
-    private JPApplication jpApplication;
 
     @Override
     public void onBackPressed() {
@@ -25,31 +23,26 @@ public class PlayModeSelect extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        JPApplication jPApplication;
-        JPApplication jPApplication2;
         Intent intent;
         switch (view.getId()) {
             case R.id.game_mode:
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
-                jPApplication = jpApplication;
-                jPApplication.setGameMode(0);
+                GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
                 startActivity(intent);
                 finish();
                 return;
             case R.id.practice_mode:
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
-                jPApplication2 = jpApplication;
-                jPApplication2.setGameMode(2);
+                GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.PRACTISE);
                 startActivity(intent);
                 finish();
                 return;
             case R.id.listen_mode:
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
-                jPApplication2 = jpApplication;
-                jPApplication2.setGameMode(3);
+                GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.HEAR);
                 startActivity(intent);
                 finish();
                 return;
@@ -64,18 +57,13 @@ public class PlayModeSelect extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        jpApplication = (JPApplication) getApplication();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.play_select);
-        jpApplication.setBackGround(this, "ground", findViewById(R.id.layout));
-        Button f4685c = findViewById(R.id.game_mode);
-        f4685c.setOnClickListener(this);
-        Button f4687e = findViewById(R.id.keyboard);
-        f4687e.setOnClickListener(this);
-        Button f4688f = findViewById(R.id.practice_mode);
-        f4688f.setOnClickListener(this);
-        Button f4689g = findViewById(R.id.listen_mode);
-        f4689g.setOnClickListener(this);
+        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        findViewById(R.id.game_mode).setOnClickListener(this);
+        findViewById(R.id.keyboard).setOnClickListener(this);
+        findViewById(R.id.practice_mode).setOnClickListener(this);
+        findViewById(R.id.listen_mode).setOnClickListener(this);
     }
 }

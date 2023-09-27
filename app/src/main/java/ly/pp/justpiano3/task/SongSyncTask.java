@@ -1,38 +1,40 @@
 package ly.pp.justpiano3.task;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.play.ReadPm;
-import ly.pp.justpiano3.helper.SQLiteHelper;
-import ly.pp.justpiano3.activity.MainMode;
-import ly.pp.justpiano3.activity.MelodySelect;
-import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.constant.Consts;
-import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.database.dao.SongDao;
+import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.PmSongData;
+import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.PmSongUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public final class SongSyncTask extends AsyncTask<String, Void, String> {
-    private final WeakReference<Activity> activity;
+    private final WeakReference<Activity> weakReference;
     private final String maxSongId;
     private int count = 0;
 
-    public SongSyncTask(Activity activity, String maxSongId) {
-        this.activity = new WeakReference<>(activity);
+    public SongSyncTask(Activity weakReference, String maxSongId) {
+        this.weakReference = new WeakReference<>(weakReference);
         this.maxSongId = maxSongId;
     }
 
@@ -40,12 +42,12 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", ((JPApplication) activity.get().getApplication()).getVersion())
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("maxSongId", maxSongId)
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + ((JPApplication) activity.get().getApplication()).getServer() + ":8910/JustPianoServer/server/SongSync")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SongSync")
                 .post(formBody)
                 .build();
         try {
@@ -53,43 +55,29 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
             Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 byte[] bytes = response.body().bytes();
-                File zipFile = new File(activity.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
+                File zipFile = new File(weakReference.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
                 FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
                 fileOutputStream.write(bytes, 0, bytes.length);
                 fileOutputStream.close();
                 List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
-                SQLiteHelper SQLiteHelper = new SQLiteHelper(activity.get(), "data");
-                SQLiteDatabase sqliteDataBase = SQLiteHelper.getWritableDatabase();
-                sqliteDataBase.beginTransaction();
+                List<Song> insertSongList = new ArrayList<>();
                 for (File file : files) {
                     String item = file.getName().substring(0, 1);
                     FileInputStream fileInputStream = new FileInputStream(file);
-                    ReadPm readpm = new ReadPm(null);
-                    readpm.loadWithInputStream(fileInputStream);
-                    ContentValues contentvalues = new ContentValues();
-                    contentvalues.put("name", readpm.getSongName());
-                    contentvalues.put("item", Consts.items[item.charAt(0) - 'a' + 1]);
-                    contentvalues.put("path", "songs/" + item + '/' + file.getName());
-                    contentvalues.put("isnew", 1);
-                    contentvalues.put("ishot", 0);
-                    contentvalues.put("isfavo", 0);
-                    contentvalues.put("player", "");
-                    contentvalues.put("score", 0);
-                    contentvalues.put("date", 0);
-                    contentvalues.put("count", 0);
-                    contentvalues.put("diff", readpm.getNandu());
-                    contentvalues.put("online", 1);
-                    contentvalues.put("Ldiff", readpm.getLeftNandu());
-                    contentvalues.put("length", readpm.getSongTime());
-                    contentvalues.put("Lscore", 0);
-                    sqliteDataBase.insertOrThrow("jp_data", null, contentvalues);
+                    byte[] pmData = new byte[fileInputStream.available()];
+                    fileInputStream.read(pmData);
+                    PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(pmData);
+                    if (pmSongData == null) {
+                        continue;
+                    }
+                    insertSongList.add(new Song(null, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
+                            "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
+                            0, 0, 0, pmSongData.getRightHandDegree(), 1,
+                            pmSongData.getLeftHandDegree(), pmSongData.getSongTime(), 0));
                     count++;
                 }
-                sqliteDataBase.setTransactionSuccessful();
-                sqliteDataBase.endTransaction();
-                sqliteDataBase.close();
-                SQLiteHelper.close();
+                JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
             }
         } catch (Exception e3) {
             e3.printStackTrace();
@@ -99,34 +87,33 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String str) {
-        if (activity.get() instanceof OLMainMode) {
-            ((OLMainMode) activity.get()).loginOnline();
-        } else if (activity.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) activity.get();
+        if (weakReference.get() instanceof OLMainMode) {
+            ((OLMainMode) weakReference.get()).loginOnline();
+        } else if (weakReference.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) weakReference.get();
             melodySelect.jpprogressBar.dismiss();
-            JPDialog jpdialog = new JPDialog(melodySelect);
-            jpdialog.setTitle("在线曲库同步");
-            jpdialog.setCancelableFalse();
-            jpdialog.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首，请重新进入本地曲库查看");
-            jpdialog.setSecondButton("确定", ((dialogInterface, i) -> {
-                Intent intent = new Intent();
-                intent.setClass(melodySelect, MainMode.class);
-                melodySelect.startActivity(intent);
-                melodySelect.finish();
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(melodySelect);
+            jpDialogBuilder.setTitle("在线曲库同步");
+            jpDialogBuilder.setCancelableFalse();
+            jpDialogBuilder.setMessage("在线曲库同步成功，本地新增曲谱" + count + "首");
+            jpDialogBuilder.setSecondButton("确定", ((dialogInterface, i) -> {
+                List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
+                melodySelect.getTotalSongInfoMutableLiveData().setValue(allSongsCountAndScore.get(0));
+                dialogInterface.dismiss();
             }));
-            jpdialog.showDialog();
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 
     @Override
     protected void onPreExecute() {
-        if (activity.get() instanceof OLMainMode) {
-            OLMainMode olMainMode = (OLMainMode) activity.get();
+        if (weakReference.get() instanceof OLMainMode) {
+            OLMainMode olMainMode = (OLMainMode) weakReference.get();
             Toast.makeText(olMainMode, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
             olMainMode.jpprogressBar.setCancelable(false);
             olMainMode.jpprogressBar.show();
-        } else if (activity.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) activity.get();
+        } else if (weakReference.get() instanceof MelodySelect) {
+            MelodySelect melodySelect = (MelodySelect) weakReference.get();
             Toast.makeText(melodySelect, "曲库同步中，请不要离开...", Toast.LENGTH_SHORT).show();
             melodySelect.jpprogressBar.setCancelable(false);
             melodySelect.jpprogressBar.show();

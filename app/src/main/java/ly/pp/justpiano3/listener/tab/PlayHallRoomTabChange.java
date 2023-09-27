@@ -1,14 +1,15 @@
 package ly.pp.justpiano3.listener.tab;
 
 import android.widget.TabHost.OnTabChangeListener;
+
+import java.util.ArrayList;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineLoadUserInfoDTO;
-
-import java.util.ArrayList;
 
 public final class PlayHallRoomTabChange implements OnTabChangeListener {
     private final OLPlayHallRoom olPlayHallRoom;
@@ -22,11 +23,8 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
         int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
         int childCount = olPlayHallRoom.tabHost.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {
-            if (intValue == i) {
-                olPlayHallRoom.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_orange);
-            } else {
-                olPlayHallRoom.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(R.drawable.selector_ol_blue);
-            }
+            olPlayHallRoom.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
+                    intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
         switch (str) {
             case "tab1":
@@ -57,11 +55,11 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
                     olPlayHallRoom.jpprogressBar.show();
                     olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder1.build());
                 } else {
-                    FamilyAdapter fa = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
-                    if (fa == null) {
+                    FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
+                    if (familyAdapter == null) {
                         olPlayHallRoom.mo2907b(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     } else {
-                        olPlayHallRoom.mo2905a(fa, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                        olPlayHallRoom.mo2905a(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     }
                     olPlayHallRoom.familyListView.post(() -> olPlayHallRoom.familyListView.setSelection(olPlayHallRoom.familyListPosition));
                 }

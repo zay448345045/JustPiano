@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="@drawable/ground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_ol_blue"
+        android:gravity="start|center_vertical|center_horizontal|center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ol_date_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:gravity="fill"
+            android:background="@drawable/selector_orange_button"
+
+            android:text="@string/olmelodylist_update"
+            android:textColorHint="@color/yellow_r"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_degree_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text="@string/olmelodylist_d"
+            android:textColorHint="@color/yellow_r"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_name_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text="@string/olmelodylist_s"
+            android:textColorHint="@color/yellow_r"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_items_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+
+            android:background="@drawable/selector_orange_button"
+            android:gravity="fill"
+            android:text="@string/olmelodylist_a"
+            android:textColorHint="@color/yellow_r"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_hot_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:gravity="fill"
+            android:background="@drawable/selector_orange_button"
+
+            android:text="@string/olmelodylist_h"
+            android:textColorHint="@color/yellow_r"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/ol_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:gravity="fill"
+            android:background="@drawable/selector_orange_button"
+
+            android:text="@string/olmelodylist_search"
+            android:textColorHint="@color/yellow_r"
+            android:textColor="@color/white1"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical|center_horizontal|center">
+
+            <TextView
+                android:id="@+id/ol_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/online"
+                 />
+
+            <Button
+                android:id="@+id/ol_top_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_orange_button"
+
+                android:text="@string/olmelodylist_page"
+                android:textColor="@color/white1"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdgeLength="5dp"
+        android:fadingEdge="horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="@dimen/dimen_95dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar"
+            android:gravity="center_vertical">
+
+            <ListView
+                android:id="@+id/ol_f_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:fastScrollEnabled="false"
+                android:listSelector="#00000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/filled_bar"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/sup_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="top"
+                        android:background="@drawable/filled_list"
+                        android:textColor="@color/white1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout15"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom|end|center_vertical|center_horizontal|center">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom|end|center_vertical|center_horizontal|center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/sup"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingEnd="@dimen/dimen_1dp"
+                            android:background="@color/translent"
+                            tools:ignore="RtlSymmetry" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/ol_c_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00ffffff"
+                android:divider="@null" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

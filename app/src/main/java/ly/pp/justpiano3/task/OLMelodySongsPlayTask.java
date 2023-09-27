@@ -3,22 +3,26 @@ package ly.pp.justpiano3.task;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.lang.ref.WeakReference;
-
 public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
+    private Intent intent;
     private String str = "";
 
-    public OLMelodySongsPlayTask(OLMelodySelect oLMelodySelect) {
+    public OLMelodySongsPlayTask(OLMelodySelect oLMelodySelect, Intent intent) {
         olMelodySelect = new WeakReference<>(oLMelodySelect);
+        this.intent = intent;
     }
 
     @Override
@@ -28,14 +32,12 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
             Toast.makeText(olMelodySelect.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent();
         intent.putExtra("head", 1);
         intent.putExtra("songBytes", OLMelodySelect.songBytes);
         intent.putExtra("songName", olMelodySelect.get().songName);
         intent.putExtra("songID", OLMelodySelect.songID);
         intent.putExtra("topScore", olMelodySelect.get().topScore);
         intent.putExtra("degree", olMelodySelect.get().degree);
-        intent.setClass(olMelodySelect.get(), PianoPlay.class);
         olMelodySelect.get().startActivity(intent);
         olMelodySelect.get().jpprogressBar.cancel();
     }
@@ -44,12 +46,12 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     protected String doInBackground(String... objects) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
-                .add("version", olMelodySelect.get().jpapplication.getVersion())
+                .add("version", BuildConfig.VERSION_NAME)
                 .add("songID", OLMelodySelect.songID)
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + olMelodySelect.get().jpapplication.getServer() + ":8910/JustPianoServer/server/DownloadSong")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong")
                 .post(formBody)
                 .build();
         try {
@@ -67,7 +69,6 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
 
     @Override
     protected void onPreExecute() {
-        olMelodySelect.get().jpprogressBar.setMessage("正在载入曲谱,请稍后...");
         olMelodySelect.get().jpprogressBar.setCancelable(true);
         olMelodySelect.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         olMelodySelect.get().jpprogressBar.show();

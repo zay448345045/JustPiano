@@ -6,19 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.constant.Consts;
 
 import java.util.List;
 
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
+
 public final class FinishScoreAdapter extends BaseAdapter {
     private final List<Bundle> list;
-    private final LayoutInflater li;
+    private final LayoutInflater layoutInflater;
     private final int type;
 
     public FinishScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
         this.list = list;
-        li = layoutInflater;
+        this.layoutInflater = layoutInflater;
         type = i;
     }
 
@@ -40,7 +41,7 @@ public final class FinishScoreAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = li.inflate(R.layout.ol_c_finish_view, null);
+            view = layoutInflater.inflate(R.layout.ol_c_finish_view, null);
         }
         view.setKeepScreenOn(true);
         String str = (String) list.get(i).get("N");

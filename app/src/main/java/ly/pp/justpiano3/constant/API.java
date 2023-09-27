@@ -9,7 +9,7 @@ package ly.pp.justpiano3.constant;
  **/
 public class API {
 
-    // public static final String SONG_LIST = "http://" + soundDownload.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetSoundList";
+    // public static final String SONG_LIST = "http://" + soundDownload.get().OnlineUtil.server + ":8910/JustPianoServer/server/GetSoundList";
 
 
 }

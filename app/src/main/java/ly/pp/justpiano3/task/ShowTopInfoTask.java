@@ -3,18 +3,22 @@ package ly.pp.justpiano3.task;
 import android.os.AsyncTask;
 import android.widget.ListAdapter;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.ShowTopInfo;
 import ly.pp.justpiano3.adapter.TopUserAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     private final WeakReference<ShowTopInfo> showTopInfo;
@@ -30,7 +34,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", String.valueOf(showTopInfo.get().head))
-                    .add("version", showTopInfo.get().jpapplication.getVersion())
+                    .add("version", BuildConfig.VERSION_NAME)
                     .add("keywords", showTopInfo.get().f4988d)
                     .add("page", String.valueOf(showTopInfo.get().f4996l))
                     .add("P", showTopInfo.get().f4999o)
@@ -39,7 +43,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
                     .build();
             // 创建请求对象
             Request request = new Request.Builder()
-                    .url("http://" + showTopInfo.get().jpapplication.getServer() + ":8910/JustPianoServer/server/GetTopListByKeywords")
+                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetTopListByKeywords")
                     .post(formBody) // 设置请求方式为POST
                     .build();
             try {
@@ -63,8 +67,8 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             try {
-                showTopInfo.get().f4985a = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
-                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().f4985a);
+                showTopInfo.get().dataList = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().dataList);
                 if (showTopInfo.get().f4989e != null) {
                     showTopInfo.get().f4989e.setAdapter(topUserAdapter);
                 }
@@ -84,7 +88,6 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        showTopInfo.get().jpprogressBar.setMessage("正在查询,请稍后...");
         showTopInfo.get().jpprogressBar.setCancelable(true);
         showTopInfo.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
         showTopInfo.get().jpprogressBar.show();

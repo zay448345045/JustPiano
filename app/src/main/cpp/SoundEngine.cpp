@@ -29,7 +29,7 @@ static SimpleMultiPlayer sDTPlayer;
 /**
  * Native (JNI) implementation of DrumPlayer.setupAudioStreamNative()
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setupAudioStreamNative(
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setupAudioStreamNative(
         JNIEnv *env, jclass, jint numChannels, jint sampleRate) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", "init()");
 
@@ -41,7 +41,7 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setupAudioStreamNativ
  * Native (JNI) implementation of DrumPlayer.teardownAudioStreamNative()
  */
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_JPApplication_teardownAudioStreamNative(JNIEnv *, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_teardownAudioStreamNative(JNIEnv *, jclass) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", "deinit()");
 
     // we know in this case that the sample buffers are all 1-channel, 44.1K
@@ -55,7 +55,7 @@ Java_ly_pp_justpiano3_JPApplication_teardownAudioStreamNative(JNIEnv *, jclass) 
  * Native (JNI) implementation of DrumPlayer.loadWavAssetNative()
  */
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_JPApplication_loadWavAssetNative(JNIEnv *env, jclass, jbyteArray bytearray,
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadWavAssetNative(JNIEnv *env, jclass, jbyteArray bytearray,
                                                        jint index, jfloat pan) {
     int len = env->GetArrayLength(bytearray);
 
@@ -80,7 +80,7 @@ Java_ly_pp_justpiano3_JPApplication_loadWavAssetNative(JNIEnv *env, jclass, jbyt
  * Native (JNI) implementation of DrumPlayer.unloadWavAssetsNative()
  */
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_JPApplication_unloadWavAssetsNative(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *env, jclass) {
     sDTPlayer.unloadSampleData();
 }
 
@@ -88,21 +88,21 @@ Java_ly_pp_justpiano3_JPApplication_unloadWavAssetsNative(JNIEnv *env, jclass) {
  * Native (JNI) implementation of DrumPlayer.trigger()
  */
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_JPApplication_trigger(JNIEnv *env, jclass, jint index, jint volume) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_trigger(JNIEnv *env, jclass, jint index, jint volume) {
     sDTPlayer.triggerDown(index, volume);
 }
 
 /**
  * Native (JNI) implementation of DrumPlayer.clearOutputReset()
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_clearOutputReset(JNIEnv *, jclass) {
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_clearOutputReset(JNIEnv *, jclass) {
     sDTPlayer.clearOutputReset();
 }
 
 /**
  * Native (JNI) implementation of DrumPlayer.restartStream()
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_restartStream(JNIEnv *, jclass) {
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_restartStream(JNIEnv *, jclass) {
     sDTPlayer.resetAll();
     if (sDTPlayer.openStream()) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "openStream successful");
@@ -111,22 +111,12 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_restartStream(JNIEnv 
     }
 }
 
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setGain(
-        JNIEnv *env, jclass thiz, jint index, jfloat gain) {
-    sDTPlayer.setGain(index, gain);
-}
-
-JNIEXPORT jfloat JNICALL Java_ly_pp_justpiano3_JPApplication_getGain(
-        JNIEnv *env, jclass thiz, jint index) {
-    return sDTPlayer.getGain(index);
-}
-
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setRecord(
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecord(
         JNIEnv *env, jclass thiz, jboolean record) {
     sDTPlayer.setRecord(record);
 }
 
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_JPApplication_setRecordFilePath(
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFilePath(
         JNIEnv *env, jclass thiz, jstring recordFilePath) {
     char *path = java_str_to_c_str(env, recordFilePath);
     sDTPlayer.setRecordFilePath(path);

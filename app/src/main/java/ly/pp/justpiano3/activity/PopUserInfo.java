@@ -10,17 +10,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ly.pp.justpiano3.*;
-import ly.pp.justpiano3.listener.DialogDismissClick;
-import ly.pp.justpiano3.listener.SendMessageClick;
-import ly.pp.justpiano3.task.PopUserInfoTask;
-import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.view.JPDialog;
-import ly.pp.justpiano3.view.JPProgressBar;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.listener.SendMessageClick;
+import ly.pp.justpiano3.task.PopUserInfoTask;
+import ly.pp.justpiano3.thread.PictureHandle;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class PopUserInfo extends Activity implements Callback, OnClickListener {
     public JPProgressBar jpprogressBar;
@@ -81,10 +83,10 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
             case R.id.add_friend:
                 if (!kitiName.equals(JPApplication.kitiName)) {
                     headType = 2;
-                    JPDialog jpdialog = new JPDialog(this);
-                    jpdialog.setTitle("好友请求");
-                    jpdialog.setMessage("添加[" + kitiName + "]为好友,确定吗?");
-                    jpdialog.setFirstButton("确定", (dialog, which) -> {
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("好友请求");
+                    jpDialogBuilder.setMessage("添加[" + kitiName + "]为好友,确定吗?");
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         JSONObject jSONObject = new JSONObject();
                         try {
                             jSONObject.put("H", 0);
@@ -100,8 +102,8 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                             e.printStackTrace();
                         }
                     });
-                    jpdialog.setSecondButton("取消", new DialogDismissClick());
-                    jpdialog.showDialog();
+                    jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                    jpDialogBuilder.buildAndShowDialog();
                     return;
                 }
                 return;
@@ -117,7 +119,9 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
                     inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
                     textView3.setVisibility(View.GONE);
                     textView2.setText("消息:");
-                    new JPDialog(this).setTitle("发私信给" + str).loadInflate(inflate).setFirstButton("发送", new SendMessageClick(this, textView, str, P)).setSecondButton("取消", new DialogDismissClick()).showDialog();
+                    new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate)
+                            .setFirstButton("发送", new SendMessageClick(this, textView, str, P))
+                            .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                     return;
                 }
                 return;
@@ -126,9 +130,9 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
     }
 
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.popuserinfo);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ol_pop_user_info);
         jpapplication = (JPApplication) getApplication();
         userKitiName = findViewById(R.id.user_kitiname);
         userSex = findViewById(R.id.user_sex);
@@ -137,8 +141,7 @@ public class PopUserInfo extends Activity implements Callback, OnClickListener {
         userAge = findViewById(R.id.user_age);
         Button f4840n = findViewById(R.id.add_friend);
         f4840n.setOnClickListener(this);
-        Button f4841o = findViewById(R.id.send_mail);
-        f4841o.setOnClickListener(this);
+        findViewById(R.id.send_mail).setOnClickListener(this);
         Bundle extras = getIntent().getExtras();
         headType = extras.getInt("head");
         if (headType == 2) {
