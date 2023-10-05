@@ -30,7 +30,7 @@ object GlobalSetting{
     /**
      * 音块速率
      */
-    var notesDownSpeed: Float = 6f
+    var notesDownSpeed: Float = 1f
 
     /**
      * MIDI键盘移调
@@ -150,7 +150,7 @@ object GlobalSetting{
         keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()
         keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true)
         chatSound = sharedPreferences.getBoolean("chats_sound", false)
-        notesDownSpeed = sharedPreferences.getString("down_speed", "6")!!.toFloat()
+        notesDownSpeed = 3/(sharedPreferences.getString("down_speed", "1")!!.toFloat())
         noteSize = sharedPreferences.getString("note_size", "1")!!.toFloat()
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false)
         changeNotesColor = sharedPreferences.getBoolean("change_color", true)

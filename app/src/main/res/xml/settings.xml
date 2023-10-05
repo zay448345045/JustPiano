@@ -8,12 +8,12 @@
             android:key="skin_list"
             android:title="皮肤" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="6"
+            android:defaultValue="1"
             app:minValue="0.5"
-            app:maxValue="6"
+            app:maxValue="5.5"
             app:floatNumber="true"
             android:key="down_speed"
-            android:summary="设置音块的滑落速度，会影响弹奏难度，值越小，速度越快，可根据个人习惯进行调整"
+            android:summary="设置音块的滑落速度，会影响弹奏难度，值越大，速度越快，可根据个人习惯进行调整"
             android:title="音块速率"
             android:dialogTitle="音块速率" />
         <ly.pp.justpiano3.view.SeekBarPreference
