@@ -12,7 +12,7 @@
     <GridView
         android:id="@+id/ol_express_grid"
         android:layout_width="@dimen/dimen_480dp"
-        android:layout_height="@dimen/dimen_228dp"
+        android:layout_height="@dimen/dimen_216dp"
         android:horizontalSpacing="8dp"
         android:listSelector="@color/translent"
         android:numColumns="8"
