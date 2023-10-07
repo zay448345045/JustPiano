@@ -44,7 +44,8 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 startActivity(intent);
                 finish();
                 return;
-            case R.id.listen_mode:
+            /*
+             case R.id.listen_mode:
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
                 jPApplication2 = jpApplication;
@@ -52,6 +53,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
                 startActivity(intent);
                 finish();
                 return;
+            */
             case R.id.keyboard:
                 intent = new Intent();
                 intent.setClass(this, KeyBoard.class);
@@ -66,11 +68,11 @@ public class PlayModeSelect extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpApplication = (JPApplication) getApplication();
-        setContentView(R.layout.play_select);
+        setContentView(R.layout.lo_play_select);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         findViewById(R.id.game_mode).setOnClickListener(this);
         findViewById(R.id.keyboard).setOnClickListener(this);
         findViewById(R.id.practice_mode).setOnClickListener(this);
-        findViewById(R.id.listen_mode).setOnClickListener(this);
+        //     findViewById(R.id.listen_mode).setOnClickListener(this);
     }
 }
