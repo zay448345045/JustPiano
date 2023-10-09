@@ -53,7 +53,6 @@ public final class ChattingAdapter extends BaseAdapter {
         Bundle bundle = msgList.get(i);
         int i2 = bundle.getInt("T");
         view = layoutInflater.inflate(R.layout.ol_msg_view, null);
-
         TextView userText = view.findViewById(R.id.ol_user_text);
         TextView msgMaoHao = view.findViewById(R.id.ol_user_mao);
         TextView msgText = view.findViewById(R.id.ol_msg_text);
@@ -274,6 +273,21 @@ public final class ChattingAdapter extends BaseAdapter {
                         break;
                     case "//buyaozheyang":
                         ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.buyaozheyang);
+                        break;
+                    case "//chigua":
+                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.chigua);
+                        break;
+                    case "//waku":
+                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.waku);
+                        break;
+                    case "//sleep":
+                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.sleep);
+                        break;
+                    case "//bailan":
+                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bailan);
+                        break;
+                    case "//duili":
+                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.duili);
                         break;
                     default:
                         textView.setTextColor(0xffffffff);
