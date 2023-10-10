@@ -21,16 +21,12 @@ public final class JPProgressBar extends Dialog {
     private String text;
 
     public JPProgressBar(Context context) {
-        this(context, (JPApplication) context.getApplicationContext());
-    }
-
-    public JPProgressBar(Context context, JPApplication jPApplication) {
         super(context, R.style.Dialog);
         setContentView(R.layout.loading_view);
         imageView = findViewById(R.id.loading_img);
         textView = findViewById(R.id.loading_text);
-        jpApplication = jPApplication;
-        connectionService = jPApplication.getConnectionService();
+        jpApplication = (JPApplication) context.getApplicationContext();
+        connectionService = jpApplication.getConnectionService();
     }
 
     public String getText() {
@@ -46,22 +42,6 @@ public final class JPProgressBar extends Dialog {
             textView.setVisibility(View.GONE);
         }
         textView.postInvalidate();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        try {
-            if (connectionService != null) {
-                connectionService.outLine();
-            }
-            if (jpApplication != null && jpApplication.isBindService()) {
-                jpApplication.unbindService(jpApplication.getServiceConnection());
-                jpApplication.setBindService(false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

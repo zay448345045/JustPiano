@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
@@ -18,6 +19,7 @@ public class DeviceUtil {
      * @param context 上下文
      * @return AndroidId
      */
+    @SuppressLint("HardwareIds")
     public static String getAndroidId(Context context) {
         String androidId;
         try {

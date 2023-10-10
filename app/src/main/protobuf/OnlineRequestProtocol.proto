@@ -157,6 +157,8 @@ message OnlineLoginDTO {
   OnlineDeviceDTO device_info = 5;
   // 公钥信息
   string public_key = 6;
+  // 对战sessionId，同一次登录对战时（包括掉线自动重连）保持一致
+  string online_session_id = 7;
 }
 
 // 设备

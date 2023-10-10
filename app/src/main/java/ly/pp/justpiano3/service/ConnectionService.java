@@ -38,7 +38,9 @@ import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConnectionService extends Service implements Runnable {
 
@@ -55,6 +57,8 @@ public class ConnectionService extends Service implements Runnable {
     public static final String NOTIFY_CONTENT_TEXT = "在线模式已连接...";
     public Intent thisIntent;
     private final JPBinder jpBinder = new JPBinder(this);
+    private String onlineSessionId;
+    private final AtomicInteger autoReconnectCount = new AtomicInteger();
     private JPApplication jpapplication;
     private Netty mNetty;
 
@@ -78,6 +82,8 @@ public class ConnectionService extends Service implements Runnable {
         if (mNetty != null) {
             mNetty.disconnect();
         }
+        // 自动重连次数清零
+        autoReconnectCount.set(0);
     }
 
     public final void writeData(int type, MessageLite message) {
@@ -178,6 +184,7 @@ public class ConnectionService extends Service implements Runnable {
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
                                 }
+                                autoReconnectCount.set(0);
                             }
 
                             @Override
@@ -204,15 +211,19 @@ public class ConnectionService extends Service implements Runnable {
         mNetty.setOnConnectListener(new Netty.OnConnectListener() {
             @Override
             public void onSuccess() {
+                if (autoReconnectCount.intValue() == 0) {
+                    onlineSessionId = UUID.randomUUID().toString();
+                }
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
                 builder.setPassword(jpapplication.getPassword());
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
                 builder.setPackageName(getPackageName());
+                builder.setOnlineSessionId(onlineSessionId);
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
-                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication.getApplicationContext()));
+                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication));
                 deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
                 deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
@@ -234,7 +245,6 @@ public class ConnectionService extends Service implements Runnable {
         });
 
         mNetty.setOnSendMessageListener(new Netty.OnSendMessageListener() {
-
             @Override
             public void onSendMessage(Object msg, boolean success) {
                 // 发送消息的回调
@@ -262,12 +272,20 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     private void outLineAndDialog() {
-        outLine();
-        if (JPStack.top() instanceof OLBaseActivity) {
-            OLBaseActivity olBaseActivity = (OLBaseActivity) JPStack.top();
-            Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
-            message.what = 0;
-            olBaseActivity.olBaseActivityHandler.handleMessage(message);
+        if (autoReconnectCount.intValue() < 3) {
+            // 在指定掉线次数之内，先进行自动掉线重连
+            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnectCount:" + autoReconnectCount.intValue());
+            autoReconnectCount.incrementAndGet();
+            mNetty.disconnect();
+            mNetty.connect(OnlineUtil.server, ONLINE_PORT);
+        } else {
+            outLine();
+            if (JPStack.top() instanceof OLBaseActivity) {
+                OLBaseActivity olBaseActivity = (OLBaseActivity) JPStack.top();
+                Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
+                message.what = 0;
+                olBaseActivity.olBaseActivityHandler.handleMessage(message);
+            }
         }
     }
 }

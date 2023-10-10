@@ -163,7 +163,8 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                 e.printStackTrace();
             }
         }
-        jpapplication.setBindService(jpapplication.bindService(new Intent(this, ConnectionService.class), jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE));
+        jpapplication.setBindService(jpapplication.bindService(new Intent(this, ConnectionService.class),
+                jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT));
     }
 
     public static String getMaxSongIdFromDatabase() {
