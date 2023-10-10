@@ -92,6 +92,7 @@ public final class MainGameAdapter extends BaseAdapter {
         int i4;
         switch (type) {
             case 0:
+                // 大厅列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_hall_view, null);
                 }
@@ -129,6 +130,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 });
                 break;
             case 1:
+                // 好友列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
                 }
@@ -266,6 +268,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 });
                 break;
             case 2:
+                // 私信列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_mail_view, null);
                 }
@@ -317,6 +320,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 }
                 break;
             case 3:
+                // 大厅用户列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
                 }

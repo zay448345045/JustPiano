@@ -51,7 +51,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public MidiReceiver midiReceiver;
     public boolean midiKeyboardOn;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
-    private long lastNoteScheduleTime;
     /**
      * 键盘房间同步模式(默认编排模式)
      */
