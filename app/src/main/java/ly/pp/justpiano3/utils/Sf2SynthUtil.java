@@ -1,9 +1,14 @@
 package ly.pp.justpiano3.utils;
 
+import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.util.SparseArray;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 使用sf2音色库播放工具
@@ -14,39 +19,50 @@ public class Sf2SynthUtil {
         System.loadLibrary("fluidsynth");
     }
 
-    private Thread m_streamThread[];
-    private final int THREAD_MAX = 5;
+    private final int THREAD_MAX = 10;
+    private Thread[] sf2SynthStreamPlayThreads;
 
     private int index;
-    private long[] synthNums;
-    public boolean m_bIsStreaming = true;
-    private SparseArray<Integer> noteManager;
-    private String filePath;
+    private long[] sf2SynthPtrArray;
+    public boolean isStreamPlaying = false;
+    private final String filePath;
 
-    public Sf2SynthUtil(String filePath) {
-        this.filePath = filePath;
+    public Sf2SynthUtil(Context context, String filePath) {
+        this.filePath = getCopyFile(context, filePath);
+    }
+
+    private String getCopyFile(Context context, String fileName) {
+        File cacheFile = new File(context.getFilesDir(), fileName);
+        try {
+            try (InputStream inputStream = context.getAssets().open(fileName)) {
+                try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = inputStream.read(buf)) > 0) {
+                        outputStream.write(buf, 0, len);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cacheFile.getAbsolutePath();
     }
 
     public void startSynth() {
         index = 0;
-        synthNums = new long[THREAD_MAX];
-        noteManager = new SparseArray<Integer>();
-
-        m_streamThread = new Thread[THREAD_MAX];
-
+        sf2SynthPtrArray = new long[THREAD_MAX];
+        sf2SynthStreamPlayThreads = new Thread[THREAD_MAX];
         // not running yet
-        if (m_bIsStreaming) {
-            m_bIsStreaming = false;
-
+        if (!isStreamPlaying) {
+            isStreamPlaying = true;
             for (int i = 0; i < THREAD_MAX; i++) {
-                m_streamThread[i] = new MidiSynthThread(i, this);
-                m_streamThread[i].start();
+                sf2SynthStreamPlayThreads[i] = new Sf2SynthStreamPlayThread(i);
+                sf2SynthStreamPlayThreads[i].start();
             }
-
             // need a small timeout to enable synth to start
             try {
                 Thread.sleep(1000);
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -54,12 +70,11 @@ public class Sf2SynthUtil {
     }
 
     public void destroy() {
-        if (!m_bIsStreaming) {
-            m_bIsStreaming = true;
-
+        if (isStreamPlaying) {
+            isStreamPlaying = false;
             try {
                 for (int i = 0; i < THREAD_MAX; i++) {
-                    m_streamThread[i].join();
+                    sf2SynthStreamPlayThreads[i].join();
                 }
             } catch (final Exception ex) {
                 ex.printStackTrace();
@@ -68,7 +83,7 @@ public class Sf2SynthUtil {
     }
 
     public boolean isInit() {
-        for (long synthNum : synthNums) {
+        for (long synthNum : sf2SynthPtrArray) {
             if (synthNum != 0) {
                 return true;
             }
@@ -76,103 +91,60 @@ public class Sf2SynthUtil {
         return false;
     }
 
-    public class MidiSynthThread extends Thread {
+    private class Sf2SynthStreamPlayThread extends Thread {
 
         private final int synthNum;
-        private final Sf2SynthUtil sf2SynthUtil;
 
-        public MidiSynthThread(int synthNum, Sf2SynthUtil sf2SynthUtil) {
+        private Sf2SynthStreamPlayThread(int synthNum) {
             this.synthNum = synthNum;
-            this.sf2SynthUtil = sf2SynthUtil;
         }
 
         @Override
         public void run() {
-            // TODO Auto-generated method stub
             super.run();
-            int minBufferSize = AudioTrack.getMinBufferSize(44100 / 2, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT);
-            AudioTrack m_Track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100 / 2, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
-            m_Track.play();
+            int minBufferSize = AudioTrack.getMinBufferSize(44100 / 2,
+                    AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+            AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100 / 2,
+                    AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
+            audioTrack.play();
 
             int bufferSize = 2;
             short[] streamBuffer = new short[bufferSize];
-            synthNums[synthNum] = sf2SynthUtil.malloc();
+            sf2SynthPtrArray[synthNum] = malloc();
 
-//			String filePath = "/storage/sdcard0" + "/FluidR3_GM.sf2";
-//			String filePath = "/storage/sdcard0" + "/GeneralUser_GS.sf2";
-//			String filePath = "/storage/sdcard0" + "/Florestan_Basic_GM_GS.sf2";
+            open(sf2SynthPtrArray[synthNum]);
+            loadFont(sf2SynthPtrArray[synthNum], filePath);
 
-            sf2SynthUtil.open(synthNums[synthNum]);
-            sf2SynthUtil.loadFont(synthNums[synthNum], filePath);
-
-            while (!m_bIsStreaming) {
-
+            while (isStreamPlaying) {
                 // Have fluidSynth fill our buffer...
-                sf2SynthUtil.FillBuffer(synthNums[synthNum], streamBuffer, bufferSize);
-
+                fillBuffer(sf2SynthPtrArray[synthNum], streamBuffer, bufferSize);
                 // ... then feed that data to the AudioTrack
-                m_Track.write(streamBuffer, 0, bufferSize);
-
+                audioTrack.write(streamBuffer, 0, bufferSize);
             }
-            m_Track.flush();
-            m_Track.stop();
-            m_Track.release();
+            audioTrack.flush();
+            audioTrack.stop();
+            audioTrack.release();
 
-            sf2SynthUtil.unloadFont(synthNums[synthNum]);
-            sf2SynthUtil.close(synthNums[synthNum]);
+            unloadFont(sf2SynthPtrArray[synthNum]);
+            close(sf2SynthPtrArray[synthNum]);
         }
-
     }
 
     private int getSynthNumNoteOn() {
-        int synthNum;
-        index++;
-        if (index >= THREAD_MAX) {
-            index = 0;
-        }
-        synthNum = index;
-        return synthNum;
+        index = (index + 1) % THREAD_MAX;
+        return index;
     }
 
     public void sendNoteOn(int channel, int key, int velocity) {
-
         if (isInit()) {
-            int synthNum = getSynthNumNoteOn();
-            noteManager.append(key, synthNum);
-            this.noteOn(synthNums[synthNum], channel, key, velocity);
-
+            this.noteOn(sf2SynthPtrArray[getSynthNumNoteOn()], channel, key, velocity);
         }
-
-    }
-
-    public void sendNoteOff(int channel, int key, int velocity) {
-        if (isInit()) {
-            if (noteManager.get(key) != null) {
-                int synthNum = (Integer) noteManager.get(key);
-                this.noteOff(synthNums[synthNum], channel, key, velocity);
-            }
-        }
-
-    }
-
-    public void sendDrumOn(int channel, int key, int velocity) {
-        if (isInit()) {
-            int synthNum = getSynthNumNoteOn();
-            try {
-                this.noteOn(synthNums[synthNum], channel, key, velocity);
-                Thread.sleep(50);
-                this.noteOff(synthNums[synthNum], channel, key, velocity);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     public void sendControlChange(int channel, int controller, int value) {
         if (isInit()) {
             for (int i = 0; i < THREAD_MAX; i++) {
-                controlChange(synthNums[i], channel, controller, value);
+                controlChange(sf2SynthPtrArray[i], channel, controller, value);
             }
         }
     }
@@ -180,16 +152,7 @@ public class Sf2SynthUtil {
     public void sendProgramChange(int channel, int value) {
         if (isInit()) {
             for (int i = 0; i < THREAD_MAX; i++) {
-                programChange(synthNums[i], channel, value);
-            }
-        }
-
-    }
-
-    public void sendPitchBend(int channel, int value) {
-        if (isInit()) {
-            for (int i = 0; i < THREAD_MAX; i++) {
-                pitchBend(synthNums[i], channel, value);
+                programChange(sf2SynthPtrArray[i], channel, value);
             }
         }
     }
@@ -218,5 +181,5 @@ public class Sf2SynthUtil {
 
     private native void pitchBend(long instance, int channel, int value);
 
-    public native void FillBuffer(long instance, short[] buffer, int buffLen);
+    public native void fillBuffer(long instance, short[] buffer, int buffLen);
 }
