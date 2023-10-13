@@ -19,7 +19,7 @@ public class Sf2SynthSoundEngineUtil {
         System.loadLibrary("fluidsynth");
     }
 
-    private static final int THREAD_MAX = 2;
+    private static final int THREAD_MAX = 5;
     private static Thread[] sf2SynthStreamPlayThreads;
 
     private static int index;
@@ -168,9 +168,9 @@ public class Sf2SynthSoundEngineUtil {
 
     private static native void systemReset(long instance);
 
-    private static synchronized native void noteOn(long instance, int channel, int note, int velocity);
+    private static native void noteOn(long instance, int channel, int note, int velocity);
 
-    private static synchronized native void noteOff(long instance, int channel, int note, int velocity);
+    private static native void noteOff(long instance, int channel, int note, int velocity);
 
     private static native void controlChange(long instance, int channel, int control, int value);
 

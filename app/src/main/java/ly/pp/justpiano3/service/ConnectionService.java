@@ -7,11 +7,14 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
+
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
 import com.king.anetty.Netty;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -87,6 +90,8 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     public final void writeData(int type, MessageLite message) {
+        Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnectCount:"
+                + autoReconnectCount.intValue() + " " + type + " " + message + JPStack.top());
         OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
@@ -180,16 +185,20 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
+                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnectCount:"
+                                        + autoReconnectCount.intValue() + msg + JPStack.top());
+                                autoReconnectCount.set(0);
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
                                 }
-                                autoReconnectCount.set(0);
                             }
 
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                 super.exceptionCaught(ctx, cause);
+                                Log.i(getClass().getSimpleName(), "autoReconnect! exceptionCaught autoReconnectCount:"
+                                        + autoReconnectCount.intValue() + cause.toString() + JPStack.top());
                                 cause.printStackTrace();
                                 ctx.close();
                                 outLineAndDialog();
@@ -197,6 +206,8 @@ public class ConnectionService extends Service implements Runnable {
 
                             @Override
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
+                                Log.i(getClass().getSimpleName(), "autoReconnect! userEventTriggered autoReconnectCount:"
+                                        + autoReconnectCount.intValue() + JPStack.top());
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
                                     if (IdleState.WRITER_IDLE.equals(event.state())) {
@@ -212,7 +223,7 @@ public class ConnectionService extends Service implements Runnable {
             @Override
             public void onSuccess() {
                 if (autoReconnectCount.intValue() == 0) {
-                    onlineSessionId = UUID.randomUUID().toString();
+                    onlineSessionId = UUID.randomUUID().toString().replace("-", "");
                 }
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
                 builder.setAccount(jpapplication.getAccountName());
@@ -249,7 +260,7 @@ public class ConnectionService extends Service implements Runnable {
             public void onSendMessage(Object msg, boolean success) {
                 // 发送消息的回调
                 if (!success) {
-                    Log.e("anetty", msg.toString());
+                    Log.e("autoReconnect! anetty", msg.toString() + JPStack.top());
                     outLineAndDialog();
                 }
             }
@@ -272,13 +283,21 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     private void outLineAndDialog() {
-        if (autoReconnectCount.intValue() < 3) {
+        if (autoReconnectCount.intValue() <= 3) {
             // 在指定掉线次数之内，先进行自动掉线重连
-            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnectCount:" + autoReconnectCount.intValue());
+            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnectCount:"
+                    + autoReconnectCount.intValue() + JPStack.top());
             autoReconnectCount.incrementAndGet();
             mNetty.disconnect();
+            try {
+                Thread.sleep(autoReconnectCount.intValue() * 500L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             mNetty.connect(OnlineUtil.server, ONLINE_PORT);
         } else {
+            Log.i(getClass().getSimpleName(), "autoReconnect! fail autoReconnectCount:"
+                    + autoReconnectCount.intValue() + JPStack.top());
             outLine();
             if (JPStack.top() instanceof OLBaseActivity) {
                 OLBaseActivity olBaseActivity = (OLBaseActivity) JPStack.top();
