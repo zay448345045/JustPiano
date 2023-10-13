@@ -53,9 +53,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                         "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
                 jpDialogBuilder.setFirstButton("访问官网", (dialog, which) -> {
                     dialog.dismiss();
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL));
-                    startActivity(intent1);
+                    startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL)));
                 });
                 jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
                 return;

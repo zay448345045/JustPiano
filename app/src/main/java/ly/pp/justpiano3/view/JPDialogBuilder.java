@@ -3,6 +3,15 @@ package ly.pp.justpiano3.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -95,7 +104,30 @@ public final class JPDialogBuilder {
             inflate.findViewById(R.id.negativeButton).setVisibility(View.GONE);
         }
         if (message != null) {
-            ((TextView) inflate.findViewById(R.id.message)).setText(message);
+            TextView messageTextView = inflate.findViewById(R.id.message);
+            messageTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            messageTextView.setLinksClickable(true);
+            messageTextView.setLinkTextColor(Color.YELLOW);
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    // 获取点击的URL链接
+                    TextView tv = (TextView) textView;
+                    Spanned spanned = (Spanned) tv.getText();
+                    int start = spanned.getSpanStart(this);
+                    int end = spanned.getSpanEnd(this);
+                    CharSequence url = spanned.subSequence(start, end);
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())));
+                }
+            };
+            SpannableString spannableString = new SpannableString(message);
+            URLSpan[] urlSpans = spannableString.getSpans(0, spannableString.length(), URLSpan.class);
+            for (URLSpan urlSpan : urlSpans) {
+                int start = spannableString.getSpanStart(urlSpan);
+                int end = spannableString.getSpanEnd(urlSpan);
+                spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            messageTextView.setText(spannableString);
         }
         if (view != null) {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
