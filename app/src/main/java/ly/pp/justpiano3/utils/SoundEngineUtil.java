@@ -42,7 +42,7 @@ public class SoundEngineUtil {
 //            return pitch;
 //        }
         // 测试sf2
-        Sf2SynthSoundEngineUtil.sendNoteOn(0, pitch + 12, (int) Math.min(127, Math.ceil(volume / 100f * 128)));
+        Sf2SynthSoundEngineUtil.sendNoteOn(0, pitch, (int) Math.min(127, Math.ceil(volume / 100f * 128)));
         return 0;
     }
 

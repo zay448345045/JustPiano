@@ -99,9 +99,9 @@ public class Sf2SynthSoundEngineUtil {
         @Override
         public void run() {
             super.run();
-            int minBufferSize = AudioTrack.getMinBufferSize(44100 / 2,
+            int minBufferSize = AudioTrack.getMinBufferSize(44100,
                     AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT);
-            AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100 / 2,
+            AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
                     AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
             audioTrack.play();
 
