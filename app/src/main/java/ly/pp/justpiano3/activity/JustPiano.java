@@ -2,12 +2,10 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import java.io.File;
@@ -22,6 +20,7 @@ import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.thread.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
+import ly.pp.justpiano3.utils.Sf2SynthSoundEngineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
@@ -224,8 +223,12 @@ public class JustPiano extends Activity implements Callback, Runnable {
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);
         }
-
         SoundEngineUtil.afterLoadSounds(getApplicationContext());
+        loading = "【测试】正在载入sf2音源...";
+        Message obtainMessage2 = handler.obtainMessage();
+        obtainMessage2.what = 0;
+        handler.sendMessage(obtainMessage2);
+        Sf2SynthSoundEngineUtil.startSynth(this, "test.sf2");
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);

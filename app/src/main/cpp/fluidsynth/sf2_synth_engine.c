@@ -30,7 +30,7 @@ void fluid_settings_foreach_option_callback(void *data, char *name, char *option
     }
 }
 
-JNIEXPORT jlong JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_malloc(JNIEnv *env, jobject obj) {
+JNIEXPORT jlong JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     jlong ptr = 0;
 
     fluid_handle_t *handle = (fluid_handle_t *) malloc(sizeof(fluid_handle_t));
@@ -52,7 +52,7 @@ JNIEXPORT jlong JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_malloc(JNIEnv *
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_free(JNIEnv *env, jobject obj, jlong ptr) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_free(JNIEnv *env, jclass obj, jlong ptr) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL) {
@@ -67,7 +67,7 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_free(JNIEnv *env, jobject obj, jlong pt
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_open(JNIEnv *env, jobject obj, jlong ptr) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_open(JNIEnv *env, jclass obj, jlong ptr) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->settings != NULL) {
@@ -81,7 +81,7 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_open(JNIEnv *env, jobject obj, jlong pt
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_close(JNIEnv *env, jobject obj, jlong ptr) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_close(JNIEnv *env, jclass obj, jlong ptr) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL) {
@@ -94,8 +94,8 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_close(JNIEnv *env, jobject obj, jlong p
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_loadFont(JNIEnv *env, jobject obj, jlong ptr,
-                                                  jstring path) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_loadFont(JNIEnv *env, jclass obj, jlong ptr,
+                                                             jstring path) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL && handle->soundfont_id <= 0) {
@@ -106,7 +106,7 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_loadFont(JNIEnv *env, jobject obj, jlon
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_unloadFont(JNIEnv *env, jobject obj, jlong ptr) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_unloadFont(JNIEnv *env, jclass obj, jlong ptr) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL && handle->soundfont_id > 0) {
@@ -116,7 +116,7 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_unloadFont(JNIEnv *env, jobject obj, jl
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_systemReset(JNIEnv *env, jobject obj, jlong ptr) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_systemReset(JNIEnv *env, jclass obj, jlong ptr) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {
@@ -125,19 +125,18 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_systemReset(JNIEnv *env, jobject obj, j
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_noteOn(JNIEnv *env, jobject obj, jlong ptr, jint channel,
-                                                jint note, jint velocity) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_noteOn(JNIEnv *env, jclass obj, jlong ptr, jint channel,
+                                                           jint note, jint velocity) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {
-        LOGE("%d%d%d", channel, note, velocity);
         fluid_synth_noteon(handle->synth, channel, note, velocity);
     }
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_noteOff(JNIEnv *env, jobject obj, jlong ptr, jint channel,
-                                                 jint note, jint velocity) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_noteOff(JNIEnv *env, jclass obj, jlong ptr, jint channel,
+                                                            jint note, jint velocity) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {
@@ -146,8 +145,8 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_noteOff(JNIEnv *env, jobject obj, jlong
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_programChange(JNIEnv *env, jobject obj, jlong ptr,
-                                                       jint channel, jint program) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_programChange(JNIEnv *env, jclass obj, jlong ptr,
+                                                                  jint channel, jint program) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {
@@ -156,8 +155,8 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_programChange(JNIEnv *env, jobject obj,
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_controlChange(JNIEnv *env, jobject obj, jlong ptr,
-                                                       jint channel, jint control, jint value) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_controlChange(JNIEnv *env, jclass obj, jlong ptr,
+                                                                  jint channel, jint control, jint value) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {
@@ -166,8 +165,8 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_controlChange(JNIEnv *env, jobject obj,
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_pitchBend(JNIEnv *env, jobject obj, jlong ptr,
-                                                   jint channel, jint value) {
+Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_pitchBend(JNIEnv *env, jclass obj, jlong ptr,
+                                                              jint channel, jint value) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {
@@ -175,66 +174,8 @@ Java_ly_pp_justpiano3_utils_Sf2SynthUtil_pitchBend(JNIEnv *env, jobject obj, jlo
     }
 }
 
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_setDoubleProperty(JNIEnv *env, jobject obj, jlong ptr,
-                                                           jstring key, jdouble value) {
-    fluid_handle_t *handle = NULL;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != NULL && handle->settings != NULL && key != NULL) {
-        const jbyte *jkey = (*env)->GetStringUTFChars(env, key, NULL);
-        fluid_settings_setnum(handle->settings, (char *) jkey, (float) value);
-        (*env)->ReleaseStringUTFChars(env, key, jkey);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_setIntegerProperty(JNIEnv *env, jobject obj, jlong ptr,
-                                                            jstring key, jint value) {
-    fluid_handle_t *handle = NULL;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != NULL && handle->settings != NULL && key != NULL) {
-        const jbyte *jkey = (*env)->GetStringUTFChars(env, key, NULL);
-        fluid_settings_setint(handle->settings, (char *) jkey, (int) value);
-        (*env)->ReleaseStringUTFChars(env, key, jkey);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_setStringProperty(JNIEnv *env, jobject obj, jlong ptr,
-                                                           jstring key, jstring value) {
-    fluid_handle_t *handle = NULL;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != NULL && handle->settings != NULL && key != NULL) {
-        const jbyte *jkey = (*env)->GetStringUTFChars(env, key, NULL);
-        const jbyte *jvalue = (*env)->GetStringUTFChars(env, value, NULL);
-        fluid_settings_setstr(handle->settings, (char *) jkey, (char *) jvalue);
-        (*env)->ReleaseStringUTFChars(env, key, jkey);
-        (*env)->ReleaseStringUTFChars(env, value, jvalue);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_Sf2SynthUtil_getPropertyOptions(JNIEnv *env, jobject obj, jlong ptr,
-                                                            jstring key, jobject options) {
-    fluid_handle_t *handle = NULL;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != NULL && handle->settings != NULL) {
-        const jbyte *jkey = (*env)->GetStringUTFChars(env, key, NULL);
-        fluid_settings_foreach_option_data *data = (fluid_settings_foreach_option_data *) malloc(
-                sizeof(fluid_settings_foreach_option_data));
-        data->env = env;
-        data->options = options;
-
-        fluid_settings_foreach_option(handle->settings, (char *) jkey, data,
-                                      fluid_settings_foreach_option_callback);
-        (*env)->ReleaseStringUTFChars(env, key, jkey);
-
-        free(data);
-    }
-}
-
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_fillBuffer
-        (JNIEnv *env, jobject obj, jlong ptr, jshortArray shortarray, jint len) {
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_fillBuffer
+        (JNIEnv *env, jclass obj, jlong ptr, jshortArray shortarray, jint len) {
     fluid_handle_t *handle = NULL;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != NULL && handle->synth != NULL) {

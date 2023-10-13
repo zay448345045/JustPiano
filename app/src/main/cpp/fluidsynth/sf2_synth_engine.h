@@ -12,131 +12,99 @@ extern "C" {
  * Method:    malloc
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_malloc
-        (JNIEnv *, jobject);
+JNIEXPORT jlong JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_malloc
+        (JNIEnv *, jclass clazz);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    free
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_free
-        (JNIEnv *, jobject, jlong);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_free
+        (JNIEnv *, jclass clazz, jlong);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    open
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_open
-        (JNIEnv *, jobject, jlong);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_open
+        (JNIEnv *, jclass clazz, jlong);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    close
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_close
-        (JNIEnv *, jobject, jlong);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_close
+        (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    loadFont
  * Signature: (JLjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_loadFont
-        (JNIEnv *, jobject, jlong, jstring);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_loadFont
+        (JNIEnv *, jclass, jlong, jstring);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    unloadFont
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_unloadFont
-        (JNIEnv *, jobject, jlong);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_unloadFont
+        (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    systemReset
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_systemReset
-        (JNIEnv *, jobject, jlong);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_systemReset
+        (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    noteOn
  * Signature: (JIII)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_noteOn
-        (JNIEnv *, jobject, jlong, jint, jint, jint);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_noteOn
+        (JNIEnv *, jclass clazz, jlong, jint, jint, jint);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    noteOff
  * Signature: (JIII)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_noteOff
-        (JNIEnv *, jobject, jlong, jint, jint, jint);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_noteOff
+        (JNIEnv *, jclass clazz, jlong, jint, jint, jint);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    controlChange
  * Signature: (JIII)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_controlChange
-        (JNIEnv *, jobject, jlong, jint, jint, jint);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_controlChange
+        (JNIEnv *, jclass clazz, jlong, jint, jint, jint);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    programChange
  * Signature: (JII)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_programChange
-        (JNIEnv *, jobject, jlong, jint, jint);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_programChange
+        (JNIEnv *, jclass clazz, jlong, jint, jint);
 
 /*
  * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
  * Method:    pitchBend
  * Signature: (JII)V
  */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_pitchBend
-        (JNIEnv *, jobject, jlong, jint, jint);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_pitchBend
+        (JNIEnv *, jclass clazz, jlong, jint, jint);
 
-/*
- * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
- * Method:    setDoubleProperty
- * Signature: (JLjava/lang/String;D)V
- */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_setDoubleProperty
-        (JNIEnv *, jobject, jlong, jstring, jdouble);
-
-/*
- * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
- * Method:    setIntegerProperty
- * Signature: (JLjava/lang/String;I)V
- */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_setIntegerProperty
-        (JNIEnv *, jobject, jlong, jstring, jint);
-
-/*
- * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
- * Method:    setStringProperty
- * Signature: (JLjava/lang/String;Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_setStringProperty
-        (JNIEnv *, jobject, jlong, jstring, jstring);
-
-/*
- * Class:     ly_pp_justpiano3_utils_Sf2SynthUtil
- * Method:    getPropertyOptions
- * Signature: (JLjava/lang/String;Ljava/util/List;)V
- */
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_getPropertyOptions
-        (JNIEnv *, jobject, jlong, jstring, jobject);
-
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthUtil_fillBuffer
-        (JNIEnv *, jobject, jlong, jshortArray, jint);
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_Sf2SynthSoundEngineUtil_fillBuffer
+        (JNIEnv *, jclass clazz, jlong, jshortArray, jint);
 
 #ifdef __cplusplus
 }

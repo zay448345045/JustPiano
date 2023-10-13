@@ -37,10 +37,12 @@ public class SoundEngineUtil {
     public static native void setRecordFilePath(String recordFilePath);
 
     public static int playSound(byte pitch, byte volume) {
-        if (pitch >= 24 && pitch <= 108 && volume > 3) {
-            trigger(108 - pitch, volume);
-            return pitch;
-        }
+//        if (pitch >= 24 && pitch <= 108 && volume > 3) {
+//            trigger(108 - pitch, volume);
+//            return pitch;
+//        }
+        // 测试sf2
+        Sf2SynthSoundEngineUtil.sendNoteOn(0, pitch + 12, (int) Math.min(127, Math.ceil(volume / 100f * 128)));
         return 0;
     }
 
