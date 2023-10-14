@@ -61,6 +61,7 @@ public class ConnectionService extends Service implements Runnable {
     private final JPBinder jpBinder = new JPBinder(this);
     private String onlineSessionId;
     private Long autoReconnectTime;
+    private int autoReconnectCount;
     private JPApplication jpapplication;
     private Netty mNetty;
 
@@ -182,6 +183,7 @@ public class ConnectionService extends Service implements Runnable {
                                 Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
                                         + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
                                 autoReconnectTime = null;
+                                autoReconnectCount = 0;
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
@@ -200,7 +202,7 @@ public class ConnectionService extends Service implements Runnable {
 
                             @Override
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
-                                Log.i(getClass().getSimpleName(), "autoReconnect! userEventTriggered autoReconnect:"
+                                Log.i(getClass().getSimpleName(), "autoReconnect! userEventTriggered " + obj + " autoReconnect:"
                                         + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
@@ -284,14 +286,18 @@ public class ConnectionService extends Service implements Runnable {
                     + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
             if (autoReconnectTime == null) {
                 autoReconnectTime = System.currentTimeMillis();
+                autoReconnectCount = 0;
             }
-            mNetty.disconnect();
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * 1000L) {
+                mNetty.disconnect();
+                Activity topActivity = JPStack.top();
+                if (topActivity instanceof OLBaseActivity) {
+                    OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+                    olBaseActivity.olBaseActivityHandler.postDelayed(() ->
+                            mNetty.connect(OnlineUtil.server, ONLINE_PORT), 1000L);
+                }
+                autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / 1000L) + 1;
             }
-            mNetty.connect(OnlineUtil.server, ONLINE_PORT);
         } else {
             Log.i(getClass().getSimpleName(), "autoReconnect! fail autoReconnect:"
                     + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
