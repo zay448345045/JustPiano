@@ -20,7 +20,7 @@ public final class OLBaseActivityHandler extends Handler {
         final OLBaseActivity olBaseActivity = (OLBaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {
-                olBaseActivity.setOutline(true);
+                olBaseActivity.setOnline(false);
                 olBaseActivity.outLine();
             });
         }

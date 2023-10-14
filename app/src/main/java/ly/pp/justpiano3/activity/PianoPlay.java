@@ -520,7 +520,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                     isPlayingStart = false;
                     isBack = true;
                     sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
-                    if (!isOutLine()) {
+                    if (isOnline()) {
                         intent = new Intent(this, OLPlayHall.class);
                         bundle.putString("hallName", hallBundle.getString("hallName"));
                         bundle.putByte("hallID", hallBundle.getByte("hallID"));
@@ -538,7 +538,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 }
                 isPlayingStart = false;
                 isBack = true;
-                if (!isOutLine()) {
+                if (isOnline()) {
                     intent = new Intent(this, OLPlayHall.class);
                     bundle.putString("hallName", hallBundle.getString("hallName"));
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));
@@ -554,7 +554,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
                 }
                 isPlayingStart = false;
                 isBack = true;
-                if (!isOutLine()) {
+                if (isOnline()) {
                     intent = new Intent(this, OLChallenge.class);
                     bundle.putString("hallName", hallBundle.getString("hallName"));
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));

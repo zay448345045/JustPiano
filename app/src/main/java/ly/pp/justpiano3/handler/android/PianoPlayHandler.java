@@ -157,7 +157,7 @@ public final class PianoPlayHandler extends Handler {
             case 21:
                 post(() -> {
                     Toast.makeText(pianoPlay, "您已掉线,请检查您的网络再重新登录!", Toast.LENGTH_SHORT).show();
-                    pianoPlay.setOutline(true);
+                    pianoPlay.setOnline(false);
                     pianoPlay.finish();
                 });
                 return;

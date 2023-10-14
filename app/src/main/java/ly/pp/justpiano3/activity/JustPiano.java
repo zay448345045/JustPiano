@@ -215,15 +215,15 @@ public class JustPiano extends Activity implements Callback, Runnable {
             System.exit(-1);
         }
         // 载入音源
-        for (int i = 108; i >= 24; i--) {
-            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
-            progress++;
-            loading = "正在载入声音资源..." + progress + "/85";
-            Message obtainMessage2 = handler.obtainMessage();
-            obtainMessage2.what = 0;
-            handler.sendMessage(obtainMessage2);
-        }
-        SoundEngineUtil.afterLoadSounds(getApplicationContext());
+//        for (int i = 108; i >= 24; i--) {
+//            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
+//            progress++;
+//            loading = "正在载入声音资源..." + progress + "/85";
+//            Message obtainMessage2 = handler.obtainMessage();
+//            obtainMessage2.what = 0;
+//            handler.sendMessage(obtainMessage2);
+//        }
+//        SoundEngineUtil.afterLoadSounds(getApplicationContext());
         loading = "【测试】正在载入sf2音源...";
         Message obtainMessage2 = handler.obtainMessage();
         obtainMessage2.what = 0;

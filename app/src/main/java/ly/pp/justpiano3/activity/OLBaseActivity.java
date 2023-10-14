@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import androidx.activity.ComponentActivity;
@@ -10,7 +9,7 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class OLBaseActivity extends ComponentActivity {
-    private boolean isOutLine = false;
+    private boolean online = true;
     public JPProgressBar jpprogressBar;
     public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);
 
@@ -57,11 +56,11 @@ public class OLBaseActivity extends ComponentActivity {
         return resources;
     }
 
-    public void setOutline(boolean value) {
-        isOutLine = value;
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
-    public boolean isOutLine() {
-        return isOutLine;
+    public boolean isOnline() {
+        return online;
     }
 }
