@@ -88,14 +88,16 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     public final void writeData(int type, MessageLite message) {
-        Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
-                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
         OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
         if (mNetty != null && mNetty.isConnected()) {
+            Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
+                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
             OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
             mNetty.sendMessage(builder);
+        } else {
+            outLineAndDialogWithAutoReconnect();
         }
     }
 
@@ -197,7 +199,7 @@ public class ConnectionService extends Service implements Runnable {
                                         + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + cause.toString() + JPStack.top());
                                 cause.printStackTrace();
                                 ctx.close();
-                                outLineAndDialog();
+                                outLineAndDialogWithAutoReconnect();
                             }
 
                             @Override
@@ -241,14 +243,14 @@ public class ConnectionService extends Service implements Runnable {
             @Override
             public void onFailed() {
                 // 连接失败
-                outLineAndDialog();
+                outLineAndDialogWithAutoReconnect();
             }
 
             @Override
             public void onError(Exception e) {
                 // 连接异常
                 e.printStackTrace();
-                outLineAndDialog();
+                outLineAndDialogWithAutoReconnect();
             }
         });
 
@@ -258,7 +260,7 @@ public class ConnectionService extends Service implements Runnable {
                 // 发送消息的回调
                 if (!success) {
                     Log.e("autoReconnect! anetty", msg.toString() + JPStack.top());
-                    outLineAndDialog();
+                    outLineAndDialogWithAutoReconnect();
                 }
             }
 
@@ -266,7 +268,7 @@ public class ConnectionService extends Service implements Runnable {
             public void onException(Throwable e) {
                 // 异常
                 e.printStackTrace();
-                outLineAndDialog();
+                outLineAndDialogWithAutoReconnect();
             }
         });
     }
@@ -279,7 +281,7 @@ public class ConnectionService extends Service implements Runnable {
         mNetty.connect(OnlineUtil.server, ONLINE_PORT);
     }
 
-    private void outLineAndDialog() {
+    private void outLineAndDialogWithAutoReconnect() {
         if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < 5000L) {
             // 如果不是断线自动重连状态，先进行断线自动重连
             Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnect:"
@@ -289,12 +291,13 @@ public class ConnectionService extends Service implements Runnable {
                 autoReconnectCount = 0;
             }
             if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * 1000L) {
-                mNetty.disconnect();
                 Activity topActivity = JPStack.top();
                 if (topActivity instanceof OLBaseActivity) {
                     OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
-                    olBaseActivity.olBaseActivityHandler.postDelayed(() ->
-                            mNetty.connect(OnlineUtil.server, ONLINE_PORT), 1000L);
+                    olBaseActivity.olBaseActivityHandler.postDelayed(() -> {
+                        mNetty.disconnect();
+                        mNetty.connect(OnlineUtil.server, ONLINE_PORT);
+                    }, 1000L);
                 }
                 autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / 1000L) + 1;
             }
