@@ -26,7 +26,7 @@ public class OnlineUtil {
     /**
      * 测试对战服务器地址
      */
-    public static final String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
+    public static final String TEST_ONLINE_SERVER_URL = "192.168.0.106";
 
     /**
      * 当前选择的服务器
@@ -41,7 +41,7 @@ public class OnlineUtil {
     /**
      * 通过客户端channel设置消息类型
      *
-     * @param channel    客户端channel
+     * @param channel 客户端channel
      * @param msgType 消息类型
      */
     public static void setMsgTypeByChannel(Channel channel, Integer msgType) {
