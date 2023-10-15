@@ -138,8 +138,8 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
-                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
+//                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
+//                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
                                 autoReconnectTime = null;
                                 autoReconnectCount = 0;
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
@@ -236,8 +236,8 @@ public class ConnectionService extends Service implements Runnable {
     private void outLineAndDialogWithAutoReconnect() {
         if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < 5000L) {
             // 如果不是断线自动重连状态，先进行断线自动重连
-//            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnect:"
-//                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
+            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnect:"
+                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
             if (autoReconnectTime == null) {
                 autoReconnectTime = System.currentTimeMillis();
                 autoReconnectCount = 0;
