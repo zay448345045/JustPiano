@@ -47,6 +47,9 @@ public class ConnectionService extends Service implements Runnable {
     public static final Integer ONLINE_PORT = 8908;
     private final JPBinder jpBinder = new JPBinder(this);
     private String onlineSessionId;
+    /**
+     * 断线时的时间戳，用于断线重连判断，如果非空，表示目前没有掉线，断线自动重连成功后会置空
+     */
     private Long autoReconnectTime;
     private int autoReconnectCount;
     private JPApplication jpapplication;
@@ -76,10 +79,12 @@ public class ConnectionService extends Service implements Runnable {
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
         if (mNetty != null && mNetty.isConnected()) {
-//            Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
-//                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
-            OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
-            mNetty.sendMessage(builder);
+            if (autoReconnectTime == null || type == OnlineProtocolType.LOGIN) {
+//                Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
+//                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
+                OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
+                mNetty.sendMessage(builder);
+            }
         } else {
             outLineAndDialogWithAutoReconnect();
         }
@@ -133,8 +138,8 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-//                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
-//                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
+                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
+                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
                                 autoReconnectTime = null;
                                 autoReconnectCount = 0;
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
@@ -231,8 +236,8 @@ public class ConnectionService extends Service implements Runnable {
     private void outLineAndDialogWithAutoReconnect() {
         if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < 5000L) {
             // 如果不是断线自动重连状态，先进行断线自动重连
-            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnect:"
-                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
+//            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnect:"
+//                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
             if (autoReconnectTime == null) {
                 autoReconnectTime = System.currentTimeMillis();
                 autoReconnectCount = 0;
