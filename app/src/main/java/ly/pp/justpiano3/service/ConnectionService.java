@@ -76,8 +76,8 @@ public class ConnectionService extends Service implements Runnable {
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
         if (mNetty != null && mNetty.isConnected()) {
-            Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
-                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
+//            Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
+//                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
             OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
             mNetty.sendMessage(builder);
         } else {
@@ -133,8 +133,8 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
-                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
+//                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
+//                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
                                 autoReconnectTime = null;
                                 autoReconnectCount = 0;
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
@@ -146,8 +146,6 @@ public class ConnectionService extends Service implements Runnable {
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                 super.exceptionCaught(ctx, cause);
-                                Log.i(getClass().getSimpleName(), "autoReconnect! exceptionCaught autoReconnect:"
-                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + cause.toString() + JPStack.top());
                                 cause.printStackTrace();
                                 ctx.close();
                                 outLineAndDialogWithAutoReconnect();
@@ -155,8 +153,6 @@ public class ConnectionService extends Service implements Runnable {
 
                             @Override
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
-                                Log.i(getClass().getSimpleName(), "autoReconnect! userEventTriggered " + obj + " autoReconnect:"
-                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
                                     if (autoReconnectTime == null && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
