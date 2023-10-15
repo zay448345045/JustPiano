@@ -26,7 +26,7 @@ public class OnlineUtil {
     /**
      * 测试对战服务器地址
      */
-    public static final String TEST_ONLINE_SERVER_URL = "192.168.0.106";
+    public static final String TEST_ONLINE_SERVER_URL = "test.justpiano.fun";
 
     /**
      * 当前选择的服务器
