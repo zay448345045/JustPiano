@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
+import static ly.pp.justpiano3.utils.UnitConvertUtil.dp2px;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,9 @@ public final class ExpressAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imageView = new ImageView(context);
         imageView.setPadding(0, 0, 0, 0);
+        imageView.setAdjustViewBounds(true);
+        imageView.setMaxHeight(dp2px(context,48));
+        imageView.setMaxWidth(dp2px(context,48));
         imageView.setImageResource(f6033b[i]);
         imageView.setOnClickListener(new ExpressClick(this, i));
         return imageView;
