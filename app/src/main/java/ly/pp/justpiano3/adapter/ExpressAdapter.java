@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
+import static ly.pp.justpiano3.utils.UnitConvertUtil.dp2px;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,11 @@ public final class ExpressAdapter extends BaseAdapter {
     public ConnectionService connectionService;
     public int messageType;
     private final Context context;
-    private final Integer[] f6033b;
+    private final Integer[] expressSeq;
 
     public ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, int b) {
         this.context = context;
-        f6033b = numArr;
+        expressSeq = numArr;
         this.popupWindow = popupWindow;
         this.connectionService = connectionService;
         messageType = b;
@@ -27,7 +29,7 @@ public final class ExpressAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return f6033b.length;
+        return expressSeq.length;
     }
 
     @Override
@@ -44,7 +46,10 @@ public final class ExpressAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imageView = new ImageView(context);
         imageView.setPadding(0, 0, 0, 0);
-        imageView.setImageResource(f6033b[i]);
+        imageView.setAdjustViewBounds(true);
+        imageView.setMaxHeight(dp2px(context,48));
+        imageView.setMaxWidth(dp2px(context,48));
+        imageView.setImageResource(expressSeq[i]);
         imageView.setOnClickListener(new ExpressClick(this, i));
         return imageView;
     }
