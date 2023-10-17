@@ -49,8 +49,7 @@ namespace iolib {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        mixAudioToBuffer(numFrames);
-        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+        mixAudioToBuffer((float *) audioData, numFrames);
 
         if (record) {
             mRecordingIO->write_buffer(mMixBuffer, numFrames);
@@ -58,12 +57,11 @@ namespace iolib {
         return DataCallbackResult::Continue;
     }
 
-    void SimpleMultiPlayer::mixAudioToBuffer(int32_t numFrames) {
+    void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
         if (mMixBuffer == nullptr) {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
         memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
-
         float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             SampleSource *sampleSource = mSampleSources[index];
@@ -72,6 +70,7 @@ namespace iolib {
             for (int32_t i = 0; i < queueSize; i++) {
                 std::__ndk1::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
                 sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
+                memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
                 if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
                     // this sample is finished
                     sampleSource->popCurFrameIndexQueue();
@@ -91,6 +90,7 @@ namespace iolib {
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
         for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
             mMixBuffer[i] /= mDecayFactor;
+            audioData[i] /= mDecayFactor;
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
         }
     }

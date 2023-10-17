@@ -105,7 +105,7 @@ namespace iolib {
         bool mOutputReset;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
 
-        void mixAudioToBuffer(int32_t numFrames);
+        void mixAudioToBuffer(float *audioData, int32_t numFrames);
     };
 
 }
