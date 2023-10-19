@@ -218,7 +218,7 @@ public final class OLPlayHallHandler extends Handler {
                                     jpDialogBuilder.setMessage(message.getData().getString("Message"));
                                     break;
                             }
-                            jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+                            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                             jpDialogBuilder.buildAndShowDialog();
                             return;
                         default:
@@ -325,7 +325,7 @@ public final class OLPlayHallHandler extends Handler {
                         }
                     });
                     if (i == 1) {
-                        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                     }
                     jpDialogBuilder.buildAndShowDialog();
                 });

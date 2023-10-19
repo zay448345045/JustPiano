@@ -3,15 +3,24 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import androidx.activity.ComponentActivity;
+import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLBaseActivityHandler;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class OLBaseActivity extends ComponentActivity {
     private boolean online = true;
     public JPProgressBar jpprogressBar;
     public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);
+    private final Map<Byte, User> roomPlayerMap = new HashMap<>();
+
+    public Map<Byte, User> getRoomPlayerMap() {
+        return roomPlayerMap;
+    }
 
     public static void returnMainMode(OLBaseActivity olBaseActivity) {
         Intent intent = new Intent();
@@ -24,7 +33,7 @@ public class OLBaseActivity extends ComponentActivity {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle(str);
         jpDialogBuilder.setMessage(str3);
-        jpDialogBuilder.setFirstButton(str2, ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.setFirstButton(str2, (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
 

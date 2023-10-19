@@ -59,7 +59,7 @@ public class DialogUtil {
                 dialog.dismiss();
                 DialogUtil.setShowDialog(false);
             });
-            jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> {
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                 dialog.dismiss();
                 DialogUtil.setShowDialog(false);
                 OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
@@ -67,7 +67,7 @@ public class DialogUtil {
                 builder.setName(userName);
                 builder.setGold(jpDialogBuilder.getGoldConvertView().getActualValue().intValue());
                 jpApplication.getConnectionService().writeData(OnlineProtocolType.DIALOG, builder.build());
-            }));
+            });
         }
     }
 }

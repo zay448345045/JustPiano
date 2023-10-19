@@ -15,6 +15,9 @@ public final class JPStack {
     }
 
     public static Activity top() {
+        if (stack == null) {
+            return null;
+        }
         return !stack.empty() ? stack.lastElement() : null;
     }
 
@@ -28,8 +31,8 @@ public final class JPStack {
     }
 
     public static void clear() {
-        while (stack != null && !stack.empty()) {
-            JPStack.pop(JPStack.top());
+        if (stack != null) {
+            stack.clear();
         }
     }
 }

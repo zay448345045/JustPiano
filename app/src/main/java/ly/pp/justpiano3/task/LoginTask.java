@@ -91,8 +91,8 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                 message = jSONObject.getString("msg");
                 loginActivity.kitiName = jSONObject.getString("ukn");
                 title = jSONObject.getString("title");
-                loginActivity.jpapplication.f4073g = jSONObject.getString("T1");
-                loginActivity.jpapplication.f4074h = jSONObject.getString("M1");
+                loginActivity.jpapplication.loginResultTitle = jSONObject.getString("T1");
+                loginActivity.jpapplication.loginResultMessage = jSONObject.getString("M1");
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }

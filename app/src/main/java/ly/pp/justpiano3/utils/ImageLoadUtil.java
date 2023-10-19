@@ -172,8 +172,8 @@ public class ImageLoadUtil {
         }
         try {
             return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".png"));
-        } catch (IOException e2) {
-            e2.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

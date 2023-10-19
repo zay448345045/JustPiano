@@ -5,6 +5,9 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import ly.pp.justpiano3.BuildConfig;
@@ -39,9 +42,15 @@ public class SettingsMode extends PreferenceActivity {
             addPreferencesFromResource(R.xml.settings);
             Preference versionPreference = findPreference("app_version");
             if (versionPreference != null) {
-                versionPreference.setSummary(BuildConfig.VERSION_NAME
-                        + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
+                versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
             }
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = super.onCreateView(inflater, container, savedInstanceState);
+            view.setBackgroundResource(R.color.black);
+            return view;
         }
     }
 }

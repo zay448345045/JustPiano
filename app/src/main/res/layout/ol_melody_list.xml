@@ -176,7 +176,6 @@
                         android:layout_height="match_parent"
                         android:gravity="top"
                         android:background="@drawable/filled_list"
-                        android:text="@string/thanks"
                         android:textColor="@color/white1" />
                 </LinearLayout>
 

@@ -19,7 +19,6 @@ import java.util.Map;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
-import ly.pp.justpiano3.listener.DeleteRecordFilesClick;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
@@ -73,8 +72,11 @@ public class RecordFiles extends Activity {
         Builder builder = new Builder(this);
         builder.setMessage("确认删除[" + str + "]吗?");
         builder.setTitle("提示");
-        builder.setPositiveButton("确认", new DeleteRecordFilesClick(this, i, str2));
-        builder.setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()));
+        builder.setPositiveButton("确认", (dialog, which) -> {
+            dialog.dismiss();
+            remove(i, str2);
+        });
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
 

@@ -16,7 +16,6 @@ import java.util.List;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
@@ -207,8 +206,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
                 textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR") - 1) / 2]);
                 break;
         }
-        textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.kuang[i2]);
-        imageView.setBackgroundResource(ColorUtil.filledKuang[i2]);
+        textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.userColor[i2]);
+        imageView.setBackgroundResource(ColorUtil.filledUserColor[i2]);
         return view;
     }
 }

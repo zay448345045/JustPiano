@@ -43,7 +43,7 @@ public final class OLPlayDressRoomHandler extends Handler {
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
                         jpDialogBuilder.setTitle("提示");
                         jpDialogBuilder.setMessage(info);
-                        jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+                        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                         jpDialogBuilder.buildAndShowDialog();
                         if (info.startsWith("购买成功")) {
                             int buyClothesType = message.getData().getInt("U_T");
@@ -86,7 +86,7 @@ public final class OLPlayDressRoomHandler extends Handler {
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
                         jpDialogBuilder.setTitle("提示");
                         jpDialogBuilder.setMessage(data.getString("I"));
-                        jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+                        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                         jpDialogBuilder.buildAndShowDialog();
                     });
                     break;

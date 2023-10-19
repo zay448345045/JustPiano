@@ -20,7 +20,7 @@ import ly.pp.justpiano3.constant.Consts;
  */
 public class ColorUtil {
 
-    public static final int[] filledKuang = new int[]{R.drawable.filled_msg, R.drawable.filled_v1, R.drawable.filled_v2, R.drawable.filled_v3,
+    public static final int[] filledUserColor = new int[]{R.drawable.filled_msg, R.drawable.filled_v1, R.drawable.filled_v2, R.drawable.filled_v3,
             R.drawable.filled_v4, R.drawable.filled_v5, R.drawable.filled_v6, R.drawable.filled_v7,
             R.drawable.filled_v8, R.drawable.filled_v9, R.drawable.filled_v10, R.drawable.filled_v11,
             R.drawable.filled_v12, R.drawable.filled_v13, R.drawable.filled_v14, R.drawable.filled_v15,
@@ -29,7 +29,7 @@ public class ColorUtil {
             R.drawable.filled_v24, R.drawable.filled_v25, R.drawable.filled_v26, R.drawable.filled_v27,
     };
 
-    public static final int[] kuang = new int[]{R.drawable.title_bar, R.drawable.v1_name, R.drawable.v2_name, R.drawable.v3_name,
+    public static final int[] userColor = new int[]{R.drawable.title_bar, R.drawable.v1_name, R.drawable.v2_name, R.drawable.v3_name,
             R.drawable.v4_name, R.drawable.v5_name, R.drawable.v6_name, R.drawable.v7_name,
             R.drawable.v8_name, R.drawable.v9_name, R.drawable.v10_name, R.drawable.v11_name,
             R.drawable.v12_name, R.drawable.v13_name, R.drawable.v14_name, R.drawable.v15_name,
@@ -43,20 +43,20 @@ public class ColorUtil {
     /**
      * 通过框框数组索引取得框框颜色
      */
-    public static Integer getKuangColorByKuangIndex(Context context, Integer index) {
-        if (index == null || index < 0 || index >= ColorUtil.kuang.length) {
+    public static Integer getUserColorByUserColorIndex(Context context, Integer index) {
+        if (index == null || index < 0 || index >= ColorUtil.userColor.length) {
             return null;
         }
         if (indexToColorMap.containsKey(index)) {
             return indexToColorMap.get(index);
         } else {
-            Integer color = getKuangColorByDrawable(context, ColorUtil.filledKuang[index]);
+            Integer color = getUserColorByDrawable(context, ColorUtil.filledUserColor[index]);
             indexToColorMap.put(index, color);
             return color;
         }
     }
 
-    public static Integer getKuangColorByDrawable(Context context, int drawable) {
+    public static Integer getUserColorByDrawable(Context context, int drawable) {
         // 使用 XmlPullParser 解析 Drawable 的 XML 内容
         XmlResourceParser parser = context.getResources().getXml(drawable);
         AttributeSet attrs = Xml.asAttributeSet(parser);

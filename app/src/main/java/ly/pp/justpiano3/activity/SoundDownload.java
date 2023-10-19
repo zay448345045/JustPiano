@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
 import ly.pp.justpiano3.task.SoundDownloadTask;
@@ -40,7 +39,6 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class SoundDownload extends Activity implements Callback {
-    public JPApplication jpapplication;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
@@ -143,7 +141,7 @@ public class SoundDownload extends Activity implements Callback {
             str4 = "确定";
         }
         jpDialogBuilder.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
-        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
 
@@ -233,7 +231,6 @@ public class SoundDownload extends Activity implements Callback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.skin_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         intentFlag = getIntent().getFlags();

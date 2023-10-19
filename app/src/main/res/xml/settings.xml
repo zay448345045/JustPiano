@@ -93,7 +93,6 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/b_s_key"
-            android:summary=""
             android:summaryOff="@string/b_s_open_2"
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />

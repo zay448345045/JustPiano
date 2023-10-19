@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -12,13 +13,14 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.listener.GoToFamilyCenterClick;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public final class FamilyAdapter extends BaseAdapter {
@@ -79,7 +81,21 @@ public final class FamilyAdapter extends BaseAdapter {
         if (position == null || position.equals("0")) {
             img.setImageResource(R.drawable.null_pic);
         }
-        view.setOnClickListener(new GoToFamilyCenterClick(this, id, i));
+        view.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(olPlayHallRoom, OLFamily.class);
+            intent.putExtra("familyID", id);
+            intent.putExtra("position", i);
+            intent.putExtra("pageNum", olPlayHallRoom.familyPageNum);
+            intent.putExtra("myFamilyPosition", olPlayHallRoom.myFamilyPosition.getText().toString());
+            intent.putExtra("myFamilyContribution", olPlayHallRoom.myFamilyContribution.getText().toString());
+            intent.putExtra("myFamilyCount", olPlayHallRoom.myFamilyCount.getText().toString());
+            intent.putExtra("myFamilyName", olPlayHallRoom.myFamilyName.getText().toString());
+            intent.putExtra("myFamilyPicArray", olPlayHallRoom.myFamilyPicArray);
+            intent.putExtra("familyList", (Serializable) olPlayHallRoom.familyList);
+            olPlayHallRoom.startActivity(intent);
+            olPlayHallRoom.finish();
+        });
         byte[] pic = ((byte[]) list.get(i).get("J"));
         if (pic == null || pic.length <= 1) {
             ImageLoadUtil.familyBitmapCacheMap.put(id, null);

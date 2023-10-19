@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class KeyBoardView extends View {
+public class PlayKeyBoardView extends View {
     public Map<Integer, Integer> touchNoteSet = new ConcurrentHashMap<>(16);
     public PlayView playView;
     private Bitmap keyBoardImage;
@@ -18,11 +18,11 @@ public class KeyBoardView extends View {
     private List<Rect> fireRectArray;
     private List<Rect> keyRectArray;
 
-    public KeyBoardView(Context context) {
+    public PlayKeyBoardView(Context context) {
         super(context);
     }
 
-    public KeyBoardView(Context context, PlayView playView) {
+    public PlayKeyBoardView(Context context, PlayView playView) {
         super(context);
         this.playView = playView;
         keyBoardImage = playView.keyboardImage;

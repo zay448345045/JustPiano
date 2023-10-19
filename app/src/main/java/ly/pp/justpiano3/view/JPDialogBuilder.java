@@ -2,7 +2,9 @@ package ly.pp.justpiano3.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.view.*;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,19 +13,10 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-
+import android.widget.*;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 
@@ -83,14 +76,14 @@ public final class JPDialogBuilder {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         }
-        JPDialog JPDialog = new JPDialog(context);
-        JPDialog.addContentView(inflate, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        JPDialog jpDialog = new JPDialog(context);
+        jpDialog.addContentView(inflate, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         ((TextView) inflate.findViewById(R.id.title)).setText(title);
         if (positiveText != null) {
             ((Button) inflate.findViewById(R.id.positiveButton)).setText(positiveText);
             inflate.findViewById(R.id.positiveButton).setEnabled(!positiveButtonDisabled);
             if (listener2 != null) {
-                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(JPDialog, -1));
+                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(jpDialog, DialogInterface.BUTTON_POSITIVE));
             }
         } else {
             inflate.findViewById(R.id.positiveButton).setVisibility(View.GONE);
@@ -98,7 +91,7 @@ public final class JPDialogBuilder {
         if (negativeText != null) {
             ((Button) inflate.findViewById(R.id.negativeButton)).setText(negativeText);
             if (listener != null) {
-                inflate.findViewById(R.id.negativeButton).setOnClickListener(v -> listener.onClick(JPDialog, -2));
+                inflate.findViewById(R.id.negativeButton).setOnClickListener(v -> listener.onClick(jpDialog, DialogInterface.BUTTON_NEGATIVE));
             }
         } else {
             inflate.findViewById(R.id.negativeButton).setVisibility(View.GONE);
@@ -133,11 +126,11 @@ public final class JPDialogBuilder {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
             ((LinearLayout) inflate.findViewById(R.id.content)).addView(view, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
-        JPDialog.setContentView(inflate);
-        JPDialog.setCanceledOnTouchOutside(false);
-        JPDialog.setCancelable(cancelable);
+        jpDialog.setContentView(inflate);
+        jpDialog.setCanceledOnTouchOutside(false);
+        jpDialog.setCancelable(cancelable);
         cancelable = true;
-        return JPDialog;
+        return jpDialog;
     }
 
     public JPDialogBuilder setTitle(String str) {
@@ -200,7 +193,7 @@ public final class JPDialogBuilder {
             JPDialog dialog = createJPDialog();
             if (!dialog.isShowing()) {
                 Window window = dialog.getWindow();
-                Context context=dialog.getContext();
+                Context context = dialog.getContext();
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 focusNotAle(window);
                 dialog.show();
@@ -228,11 +221,6 @@ public final class JPDialogBuilder {
 
         JPDialog(Context context) {
             super(context, R.style.Dialog);
-        }
-
-        @Override
-        public final void setCancelable(boolean z) {
-            super.setCancelable(z);
         }
     }
 

@@ -9,7 +9,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
+
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 import java.io.IOException;
@@ -120,10 +122,8 @@ public class MidiDeviceUtil {
      */
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private static void onNativeMessageReceive(byte pitch, byte volume) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
-                midiConnectionListener.onMidiMessageReceive(pitch, volume);
-            }
+        for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
+            midiConnectionListener.onMidiMessageReceive(pitch, volume);
         }
     }
 }

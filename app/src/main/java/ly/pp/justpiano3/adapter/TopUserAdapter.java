@@ -54,7 +54,7 @@ public final class TopUserAdapter extends BaseAdapter {
         TextView textView4 = view.findViewById(R.id.ol_nuns_top);
         ImageView imageView = view.findViewById(R.id.user_face);
         imageView.setTag(peopleList.get(i).get("faceID").toString());
-        showTopInfo.pictureHandle.mo3027a(showTopInfo.jpapplication, imageView, showTopInfo.m3874a(showTopInfo));
+        showTopInfo.pictureHandle.mo3027a(imageView, showTopInfo.m3874a(showTopInfo));
         textView.setText(String.valueOf(showTopInfo.f4997m + i));
         String obj2 = peopleList.get(i).get("userName").toString();
         textView2.setText(obj2);

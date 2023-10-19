@@ -18,7 +18,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.Sf2SynthSoundEngineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
@@ -145,10 +145,9 @@ public class JustPiano extends Activity implements Callback, Runnable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPApplication jpapplication = (JPApplication) getApplication();
         handler = new Handler(this);
-        jpapplication.updateWidthAndHeightPixels(this);
-        justpianoview = new JustPianoView(this, jpapplication);
+        ((JPApplication) getApplication()).updateWidthAndHeightPixels(this);
+        justpianoview = new JustPianoView(this, (JPApplication) getApplication());
         setContentView(justpianoview);
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;

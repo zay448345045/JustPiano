@@ -22,7 +22,6 @@ public class DateUtil {
      */
     public static final String TEMPLATE_DEFAULT_CHINESE = "yyyy年MM月dd日HH点mm分ss秒";
 
-
     /**
      * 现在
      */

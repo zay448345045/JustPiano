@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="KeyboardModeView">
+    <declare-styleable name="KeyboardView">
         <attr name="whiteKeyNum" format="integer" />
         <attr name="whiteKeyOffset" format="integer" />
         <attr name="pianoKeyTouchable" format="boolean" />

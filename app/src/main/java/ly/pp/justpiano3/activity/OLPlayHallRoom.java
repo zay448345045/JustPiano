@@ -46,7 +46,7 @@ import ly.pp.justpiano3.listener.ChangeBlessingClick;
 import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.FamilyListView;
@@ -150,16 +150,16 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             int lv = b.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
-                    + "\n用户等级:Lv." + lv
+                    + "\n用户等级:LV." + lv
                     + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:Cl." + b.getInt("CL")
+                    + "\n考级进度:CL." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
             new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
-                    .setSecondButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,7 +189,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle(str);
         jpDialogBuilder.setMessage(str2);
-        jpDialogBuilder.setFirstButton("确定", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
 
@@ -236,7 +236,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         }
         new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).
                 setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str))
-                .setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void mo2846b(ListView listView, List<Bundle> list) {
@@ -294,13 +294,13 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 try {
                     jSONObject.put("H", 1);
                     jSONObject.put("T", str);
-                    jSONObject.put("F", OLPlayHallRoom.this.jpApplication.getAccountName());
-                    new OLPlayHallRoomTask(OLPlayHallRoom.this).execute(jSONObject.toString(), "");
+                    jSONObject.put("F", jpApplication.getAccountName());
+                    new OLPlayHallRoomTask(this).execute(jSONObject.toString(), "");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             });
-            buildAndShowDialog.setSecondButton("拒绝", ((dialog, which) -> dialog.dismiss()));
+            buildAndShowDialog.setSecondButton("拒绝", (dialog, which) -> dialog.dismiss());
             buildAndShowDialog.buildAndShowDialog();
         }
     }
@@ -433,7 +433,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 builder.setType(3);
                 sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                 dialog.dismiss();
-            }).setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+            }).setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             jpDialogBuilder.buildAndShowDialog();
         }
     }
@@ -457,7 +457,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_hall_list);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        jpApplication.setGameMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);
         hallList.clear();

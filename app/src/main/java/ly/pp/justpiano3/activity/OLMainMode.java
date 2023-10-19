@@ -55,7 +55,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                     dialog.dismiss();
                     startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL)));
                 });
-                jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             case R.id.ol_songs_b:
                 intent.setClass(this, OLSongsPage.class);
@@ -104,8 +104,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        JPApplication jPApplication = jpapplication;
-        jPApplication.setGameMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
         Button topButton = findViewById(R.id.ol_top_b);
         topButton.setOnClickListener(this);
         Button userButton = findViewById(R.id.ol_users_b);
@@ -133,13 +132,14 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
             e.printStackTrace();
         }
         JPStack.push(this);
-        if (jpapplication.f4073g != null && jpapplication.f4074h != null && !jpapplication.f4073g.isEmpty() && !jpapplication.f4074h.isEmpty()) {
+        if (jpapplication.loginResultTitle != null && jpapplication.loginResultMessage != null
+                && !jpapplication.loginResultTitle.isEmpty() && !jpapplication.loginResultMessage.isEmpty()) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setTitle(jpapplication.f4073g);
-            jpDialogBuilder.setMessage(jpapplication.f4074h);
+            jpDialogBuilder.setTitle(jpapplication.loginResultTitle);
+            jpDialogBuilder.setMessage(jpapplication.loginResultMessage);
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
-                jpapplication.f4074h = "";
-                jpapplication.f4073g = "";
+                jpapplication.loginResultMessage = "";
+                jpapplication.loginResultTitle = "";
                 dialog.dismiss();
             }).buildAndShowDialog();
         }

@@ -13,7 +13,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.UnitConvertUtil
 import kotlin.math.roundToInt
 
-class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     View(context, attrs, defStyleAttr) {
 
     companion object {
@@ -21,12 +21,12 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         const val BLACK_KEY_WIDTH_FACTOR = 0.607f
 
         // 黑键高度占白键高度的比例
-        private const val BLACK_KEY_HEIGHT_FACTOR = 0.57f
+        const val BLACK_KEY_HEIGHT_FACTOR = 0.57f
 
         // 每个八度的音符数量、白键数量、黑键数量
-        private const val NOTES_PER_OCTAVE = 12
-        private const val WHITE_NOTES_PER_OCTAVE = 7
-        private const val BLACK_NOTES_PER_OCTAVE = 5
+        const val NOTES_PER_OCTAVE = 12
+        const val WHITE_NOTES_PER_OCTAVE = 7
+        const val BLACK_NOTES_PER_OCTAVE = 5
 
         // 自定义属性默认值
         private const val DEFAULT_WHITE_KEY_NUM = 8
@@ -36,13 +36,13 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         private const val WHITE_KEY_OFFSET_0_MIDI_PITCH = 24
 
         // 每个八度内白键的索引
-        private val WHITE_KEY_OFFSETS = intArrayOf(0, 2, 4, 5, 7, 9, 11)
+        val WHITE_KEY_OFFSETS = intArrayOf(0, 2, 4, 5, 7, 9, 11)
 
         // 每个八度内黑键的索引
         val BLACK_KEY_OFFSETS = intArrayOf(1, 3, 6, 8, 10)
 
         // 最大音量值
-        private const val MAX_VOLUME: Byte = 127
+        const val MAX_VOLUME: Byte = 127
 
         /**
          * 一个八度内要绘制的图像种类，包括黑键、白键右侧(右上角抠掉黑键的，比如do键)、白键MIDDLE(左右都被抠掉黑键的，比如do re mi的re键)、白键左侧
@@ -105,7 +105,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     private var keyboardTextPaint = Paint()
 
     // 按键标签显示的文字最大字号
-    private var maxOctaveTagFontSize = 20f
+    private var maxOctaveTagFontSize = 15f
 
     // 素材图片
     private var keyboardImage: Bitmap
@@ -122,7 +122,7 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
     /**
      * 是否可点击琴键
      */
-    private var pianoKeyTouchable = false
+    private var pianoKeyTouchable = true
 
     /**
      * Implement this to receive keyboard events.
@@ -157,11 +157,11 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
         if (attrs == null) {
             return
         }
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardModeView)
-        whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM)
-        whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardModeView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET)
-        pianoKeyTouchable = typedArray.getBoolean(R.styleable.KeyboardModeView_pianoKeyTouchable, true)
-        val octaveTagTypeInt = typedArray.getInteger(R.styleable.KeyboardModeView_octaveTagType, 0)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardView)
+        whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM)
+        whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET)
+        pianoKeyTouchable = typedArray.getBoolean(R.styleable.KeyboardView_pianoKeyTouchable, true)
+        val octaveTagTypeInt = typedArray.getInteger(R.styleable.KeyboardView_octaveTagType, 0)
         octaveTagType = OctaveTagType.values().getOrElse(octaveTagTypeInt) { OctaveTagType.NONE }
         maxOctaveTagFontSize = UnitConvertUtil.sp2px(context, maxOctaveTagFontSize).toFloat()
         typedArray.recycle()
@@ -396,8 +396,6 @@ class KeyboardModeView @JvmOverloads constructor(context: Context, attrs: Attrib
                 performClick()
             }
             MotionEvent.ACTION_CANCEL -> onAllFingersUp()
-            else -> {
-            }
         }
         return true
     }

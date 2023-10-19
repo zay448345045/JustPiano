@@ -35,7 +35,7 @@ import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.listener.touch.TouchNotes;
 import ly.pp.justpiano3.thread.LoadBackgroundsThread;
 import ly.pp.justpiano3.thread.ShowScoreAndLevelsThread;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -108,7 +108,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private boolean newNote = true;
     private PlayNote judgingNote;
     private int pm_2;
-    private int songTimeLength;
     private int position;
     private float lastPosition;
     private boolean hasTouched;
@@ -214,18 +213,18 @@ public final class PlayView extends SurfaceView implements Callback {
 
     private void loadImages() {
         Matrix matrix = new Matrix();
-        barImage = ImageLoadUtil.loadSkinImage(jpapplication, "bar");
-        keyboardImage = ImageLoadUtil.loadSkinImage(jpapplication, "key_board_hd");
-        backgroundImage = ImageLoadUtil.loadSkinImage(jpapplication, "background_hd");
-        perfectImage = ImageLoadUtil.loadSkinImage(jpapplication, "perfect_img");
-        coolImage = ImageLoadUtil.loadSkinImage(jpapplication, "cool_img");
-        greatImage = ImageLoadUtil.loadSkinImage(jpapplication, "great_img");
-        badImage = ImageLoadUtil.loadSkinImage(jpapplication, "bad_img");
-        missImage = ImageLoadUtil.loadSkinImage(jpapplication, "miss_img");
-        maxImage = ImageLoadUtil.loadSkinImage(jpapplication, "max_img");
-        xImage = ImageLoadUtil.loadSkinImage(jpapplication, "x_img");
-        scoreImage = ImageLoadUtil.loadSkinImage(jpapplication, "score");
-        scoreNumImage = ImageLoadUtil.loadSkinImage(jpapplication, "number");
+        barImage = ImageLoadUtil.loadSkinImage(pianoPlay, "bar");
+        keyboardImage = ImageLoadUtil.loadSkinImage(pianoPlay, "key_board_hd");
+        backgroundImage = ImageLoadUtil.loadSkinImage(pianoPlay, "background_hd");
+        perfectImage = ImageLoadUtil.loadSkinImage(pianoPlay, "perfect_img");
+        coolImage = ImageLoadUtil.loadSkinImage(pianoPlay, "cool_img");
+        greatImage = ImageLoadUtil.loadSkinImage(pianoPlay, "great_img");
+        badImage = ImageLoadUtil.loadSkinImage(pianoPlay, "bad_img");
+        missImage = ImageLoadUtil.loadSkinImage(pianoPlay, "miss_img");
+        maxImage = ImageLoadUtil.loadSkinImage(pianoPlay, "max_img");
+        xImage = ImageLoadUtil.loadSkinImage(pianoPlay, "x_img");
+        scoreImage = ImageLoadUtil.loadSkinImage(pianoPlay, "score");
+        scoreNumImage = ImageLoadUtil.loadSkinImage(pianoPlay, "number");
         if (jpapplication.getHeightPixels() < 1080) {
             matrix.postScale(0.7f, 0.7f);
             perfectImage = Bitmap.createBitmap(perfectImage, 0, 0, perfectImage.getWidth(), perfectImage.getHeight(), matrix, true);
@@ -237,30 +236,30 @@ public final class PlayView extends SurfaceView implements Callback {
             scoreImage = Bitmap.createBitmap(scoreImage, 0, 0, scoreImage.getWidth(), scoreImage.getHeight(), matrix, true);
             scoreNumImage = Bitmap.createBitmap(scoreNumImage, 0, 0, scoreNumImage.getWidth(), scoreNumImage.getHeight(), matrix, true);
         }
-        noteImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_note_hd");
-        blackNoteImage = ImageLoadUtil.loadSkinImage(jpapplication, "black_note_hd");
-        playNoteImage = ImageLoadUtil.loadSkinImage(jpapplication, "play_note_hd");
-        practiceNoteImage = ImageLoadUtil.loadSkinImage(jpapplication, "play_note_hd");
-        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_r");
-        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_m");
-        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(jpapplication, "white_l");
-        blackKeyImage = ImageLoadUtil.loadSkinImage(jpapplication, "black");
-        fireImage = ImageLoadUtil.loadSkinImage(jpapplication, "fire");
-        longKeyboardImage = ImageLoadUtil.loadSkinImage(jpapplication, "keyboard_long");
-        nullImage = ImageLoadUtil.loadSkinImage(jpapplication, "null");
+        noteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_note_hd");
+        blackNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "black_note_hd");
+        playNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "play_note_hd");
+        practiceNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "play_note_hd");
+        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_r");
+        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_m");
+        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_l");
+        blackKeyImage = ImageLoadUtil.loadSkinImage(pianoPlay, "black");
+        fireImage = ImageLoadUtil.loadSkinImage(pianoPlay, "fire");
+        longKeyboardImage = ImageLoadUtil.loadSkinImage(pianoPlay, "keyboard_long");
+        nullImage = ImageLoadUtil.loadSkinImage(pianoPlay, "null");
         switch (GlobalSetting.INSTANCE.getRoughLine()) {
             case 1:
                 roughLineImage = nullImage;
                 break;
             case 2:
-                roughLineImage = ImageLoadUtil.loadSkinImage(jpapplication, "rough_line1");
+                roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line1");
                 break;
             case 3:
-                roughLineImage = ImageLoadUtil.loadSkinImage(jpapplication, "rough_line");
+                roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line");
                 break;
         }
-        progressBarImage = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar");
-        progressBarBaseImage = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar_base");
+        progressBarImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar");
+        progressBarBaseImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar_base");
         Bitmap bitmap = noteImage;
         float noteSize = GlobalSetting.INSTANCE.getNoteSize();
         matrix.postScale(noteSize, noteSize);
@@ -293,7 +292,6 @@ public final class PlayView extends SurfaceView implements Callback {
         rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
-        songTimeLength = pmSongData.getSongTime();
         arrayLength = tickArray.length;
         lastPosition = 0;
         if (tune != 0) {
@@ -316,7 +314,6 @@ public final class PlayView extends SurfaceView implements Callback {
         rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
-        songTimeLength = pmSongData.getSongTime();
         arrayLength = tickArray.length;
         lastPosition = 0;
         computePlayNotes(0);
@@ -375,7 +372,7 @@ public final class PlayView extends SurfaceView implements Callback {
                 } else {
                     pianoPlay.runOnUiThread(() -> {
                         pianoPlay.setContentView(this);
-                        pianoPlay.keyboardview = new KeyBoardView(pianoPlay, this);
+                        pianoPlay.keyboardview = new PlayKeyBoardView(pianoPlay, this);
                         pianoPlay.addContentView(pianoPlay.keyboardview, pianoPlay.layoutParams2);
                         pianoPlay.m3785a(pianoPlay.playKind, false);
                         pianoPlay.isPlayingStart = true;
@@ -796,7 +793,7 @@ public final class PlayView extends SurfaceView implements Callback {
                             }
                         }
                     }
-                    if (jpapplication.getGameMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
+                    if (GlobalSetting.INSTANCE.getGameMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
                             && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
@@ -953,7 +950,7 @@ public final class PlayView extends SurfaceView implements Callback {
         loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
-        if (jpapplication.getGameMode() != LocalPlayModeEnum.HEAR) {
+        if (GlobalSetting.INSTANCE.getGameMode() != LocalPlayModeEnum.HEAR) {
             setOnTouchListener(new TouchNotes(this));
             setAccessibilityDelegate(new View.AccessibilityDelegate() {
                 @Override

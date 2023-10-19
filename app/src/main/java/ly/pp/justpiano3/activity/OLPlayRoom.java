@@ -11,28 +11,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -45,16 +31,17 @@ import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
-import ly.pp.justpiano3.listener.CpRequestClick;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.ScrollText;
-import protobuf.dto.OnlineChangeRoomHandDTO;
-import protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import protobuf.dto.OnlinePlaySongDTO;
-import protobuf.dto.OnlinePlayStartDTO;
+import protobuf.dto.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public final class OLPlayRoom extends OLPlayRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
@@ -159,8 +146,16 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         }
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setCancelableFalse();
-        jpDialogBuilder.setTitle(str3).setMessage(str).setFirstButton(str4, new CpRequestClick(this, i, b, i2)).
-                setSecondButton("取消", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+        jpDialogBuilder.setTitle(str3).setMessage(str).setFirstButton(str4, (dialog, which) -> {
+            if (i == 1 || i == 2) {
+                OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                builder.setType(i + 1);
+                builder.setCoupleType(i2);
+                builder.setCoupleRoomPosition(b);
+                sendMsg(OnlineProtocolType.COUPLE, builder.build());
+            }
+            dialog.dismiss();
+        }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
     public void mo2861a(GridView gridView, Bundle bundle) {

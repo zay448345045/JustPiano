@@ -12,33 +12,15 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.core.content.FileProvider;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
-import ly.pp.justpiano3.listener.VersionUpdateClick;
 import ly.pp.justpiano3.task.LoginTask;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -47,6 +29,13 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.*;
 
 public class LoginActivity extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -117,7 +106,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                 return;
             case 5:
                 new JPDialogBuilder(this).setTitle(title).setMessage(message)
-                        .setFirstButton("确定", ((dialog, which) -> dialog.dismiss())).buildAndShowDialog();
+                        .setFirstButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
             default:
         }
@@ -174,7 +163,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
                         View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
                         JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
-                                .setFirstButton("取消", ((dialog, which) -> dialog.dismiss())).createJPDialog();
+                                .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
                         listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
                         b.show();
                     }
@@ -249,8 +238,11 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("版本更新");
         jpDialogBuilder.setMessage(str3);
-        jpDialogBuilder.setFirstButton("下载更新", new VersionUpdateClick(newVersion, this));
-        jpDialogBuilder.setSecondButton("取消", ((dialog, which) -> dialog.dismiss()));
+        jpDialogBuilder.setFirstButton("下载更新", (dialog, which) -> {
+            dialog.dismiss();
+            ThreadPoolUtil.execute(() -> downloadApk(newVersion));
+        });
+        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
 

@@ -56,7 +56,7 @@ public final class SearchSongsAdapter extends BaseAdapter {
         imageButton.setOnClickListener(v -> {
             Toast.makeText(searchSongs.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(searchSongs, songId, "F", searchSongs.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", searchSongs.jpapplication.getAccountName()).start();
         });
         ((TextView) view.findViewById(R.id.ol_s_n)).setText(trim);
         ((TextView) view.findViewById(R.id.ol_nandu)).setText("难度:" + songsList.get(i).get("degree"));

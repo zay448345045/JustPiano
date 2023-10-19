@@ -76,7 +76,7 @@ public class ChatFiles extends Activity {
             dialog.dismiss();
             remove(i, str2);
         });
-        builder.setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()));
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
 

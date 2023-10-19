@@ -54,10 +54,6 @@ public class PlayFinish extends Activity implements OnClickListener {
     private int missScore;
 
     @Override
-    public void onBackPressed() {
-    }
-
-    @Override
     public void onClick(View view) {
         Intent intent = new Intent(this, PianoPlay.class);
         int i = Math.max(topScore, totalScore);

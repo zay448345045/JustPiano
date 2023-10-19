@@ -39,7 +39,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        User user = olPlayRoomActivity.jpapplication.getRoomPlayerMap().get((byte) (i + 1));
+        User user = olPlayRoomActivity.getRoomPlayerMap().get((byte) (i + 1));
         if (user != null) {
             PopupWindow popupWindow = buildPopupWindow(user);
             int[] iArr = new int[2];

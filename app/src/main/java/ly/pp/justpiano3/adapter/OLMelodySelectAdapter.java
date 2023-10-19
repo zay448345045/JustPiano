@@ -20,12 +20,12 @@ import ly.pp.justpiano3.activity.WaterfallActivity;
 import ly.pp.justpiano3.listener.OLMelodySongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 
-public final class OLMelodySelectAdapter2 extends BaseAdapter {
+public final class OLMelodySelectAdapter extends BaseAdapter {
     public final OLMelodySelect olMelodySelect;
     private final int length;
     private final List<Map<String, Object>> songsList;
 
-    public OLMelodySelectAdapter2(OLMelodySelect oLMelodySelect, int i, List<Map<String, Object>> list) {
+    public OLMelodySelectAdapter(OLMelodySelect oLMelodySelect, int i, List<Map<String, Object>> list) {
         olMelodySelect = oLMelodySelect;
         length = i;
         songsList = list;
@@ -59,7 +59,7 @@ public final class OLMelodySelectAdapter2 extends BaseAdapter {
         imageButton.setOnClickListener(v -> {
             Toast.makeText(olMelodySelect.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(olMelodySelect, songId, "F", olMelodySelect.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", olMelodySelect.jpapplication.getAccountName()).start();
         });
         TextView songName = view.findViewById(R.id.ol_s_n);
         songName.setText(trim);

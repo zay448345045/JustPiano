@@ -10,13 +10,13 @@ class User : Serializable {
     var position = 0.toByte()
     var score = 0
     var combo = 0
-    var kuang = 0
+    var color = 0
     val level: Int
     var trousers = 0
     var jacket = 0
     var hair = 0
     var eye = 0
-    val clevel: Int
+    val cl: Int
     var hand = 0
     var cpKind = 0
     var shoes = 0
@@ -46,9 +46,9 @@ class User : Serializable {
         status = str3
         ishost = str4
         setClothes(hair, eye, jacket, trousers, shoes)
-        kuang = i2
+        color = i2
         level = i
-        clevel = i3
+        cl = i3
         hand = i4
         cpKind = i5
         this.familyID = familyID
@@ -69,7 +69,7 @@ class User : Serializable {
         sex = str2
         setClothes(hair, eye, jacket, trousers, shoes)
         level = i
-        clevel = i2
+        cl = i2
     }
 
     private fun setClothes(hair: Int, eye: Int, jacket: Int, trousers: Int, shoes: Int) {

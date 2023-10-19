@@ -14,7 +14,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 
 public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 

@@ -12,7 +12,6 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -78,7 +77,7 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
             usersInfo.nameText.setText(usersInfo.name);
             usersInfo.face = jsonObject.getString("fi");
             usersInfo.faceImage.setTag(usersInfo.face);
-            usersInfo.pictureHandle.mo3027a(usersInfo.jpapplication, usersInfo.faceImage, null);
+            usersInfo.pictureHandle.mo3027a(usersInfo.faceImage, null);
             usersInfo.sex = jsonObject.getString("sx");
             if (usersInfo.sex.equals("m")) {
                 usersInfo.sexText.setText("男");
@@ -258,8 +257,8 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
         switch (view.getId()) {
             case R.id.user_face:
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("抱歉");
-                jpDialogBuilder.setMessage("暂不支持上传头像");
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("当前版本暂不支持上传头像");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
                 return;
@@ -276,7 +275,7 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
                 jpDialogBuilder.setTitle("修改密码").loadInflate(inflate)
                         .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
                                 newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
-                        .setSecondButton("取消", ((dialog, which) -> dialog.dismiss()))
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
                         .buildAndShowDialog();
                 return;
             case R.id.modify_button:

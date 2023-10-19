@@ -64,7 +64,7 @@ public final class RoomTitleAdapter extends BaseAdapter {
         ((GridView) view.findViewById(R.id.ol_player_grid)).setAdapter(new RoomMiniPeopleAdapter(olPlayHall, list.get(i).getIntArray("UA")));
         TextView textView = view.findViewById(R.id.ol_room_name);
         textView.setText(name);
-        textView.setBackgroundResource(ColorUtil.kuang[i2]);
+        textView.setBackgroundResource(ColorUtil.userColor[i2]);
         textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(b));
         Button button = view.findViewById(R.id.ol_getin_button);
         if (i3 == 1) {

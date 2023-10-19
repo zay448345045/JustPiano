@@ -16,12 +16,12 @@ import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.JPMidiReceiver
 import ly.pp.justpiano3.midi.MidiConnectionListener
-import ly.pp.justpiano3.thread.ThreadPoolUtil
+import ly.pp.justpiano3.utils.ThreadPoolUtil
 import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import ly.pp.justpiano3.view.JPProgressBar
-import ly.pp.justpiano3.view.KeyboardModeView
+import ly.pp.justpiano3.view.KeyboardView
 import ly.pp.justpiano3.view.ScrollText
 import ly.pp.justpiano3.view.WaterfallView
 import ly.pp.justpiano3.view.WaterfallView.NoteFallListener
@@ -38,7 +38,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * 钢琴键盘view
      */
-    private lateinit var keyboardView: KeyboardModeView
+    private lateinit var keyboardView: KeyboardView
 
     /**
      * 定时任务执行器，用于播放动画
@@ -117,7 +117,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
             }
         })
         keyboardView = findViewById(R.id.waterfall_keyboard)
-        keyboardView.octaveTagType = KeyboardModeView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
+        keyboardView.octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
         keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -134,7 +134,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
                 // 设置键盘的点击监听，键盘按下时播放对应琴键的声音
-                keyboardView.setMusicKeyListener(object : KeyboardModeView.KeyboardListener {
+                keyboardView.setMusicKeyListener(object : KeyboardView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
                     }
@@ -166,12 +166,12 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
      */
     private fun updateWaterfallNoteLeftRightLocation(
         waterfallNotes: Array<WaterfallNote>,
-        keyboardModeView: KeyboardModeView
+        keyboardView: KeyboardView
     ) {
         for (waterfallNote in waterfallNotes) {
             val (left, right) = convertWidthToWaterfallWidth(
                 isBlackKey(waterfallNote.pitch),
-                keyboardModeView.convertPitchToReact(waterfallNote.pitch)
+                keyboardView.convertPitchToReact(waterfallNote.pitch)
             )
             waterfallNote.left = left
             waterfallNote.right = right
@@ -226,7 +226,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
      */
     private fun convertToWaterfallNote(
         pmSongData: PmSongData?,
-        keyboardModeView: KeyboardModeView?
+        keyboardView: KeyboardView?
     ): Array<WaterfallNote> {
         var startTime = System.currentTimeMillis()
         // 分别处理左右手的音符list，以便寻找每条音轨的上一个音符，插入上边界坐标
@@ -244,7 +244,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
                 val (left, right) = convertWidthToWaterfallWidth(
                     isBlackKey(pitch),
-                    keyboardModeView!!.convertPitchToReact(pitch)
+                    keyboardView!!.convertPitchToReact(pitch)
                 )
                 // 初始化瀑布流音符对象，上边界暂时置0
                 val waterfallNote =
@@ -340,7 +340,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         }
         // 根据比例计算瀑布流的宽度
         val waterfallWidth = if (isBlack) rectF.width() * BLACK_KEY_WATERFALL_WIDTH_FACTOR
-        else rectF.width() * KeyboardModeView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR
+        else rectF.width() * KeyboardView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR
         // 根据中轴线和新的宽度计算坐标，返回
         return Pair(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2)
     }
@@ -350,7 +350,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
      */
     private fun isBlackKey(pitch: Byte): Boolean {
         val pitchInOctave = pitch % NOTES_PER_OCTAVE
-        for (blackKeyOffsetInOctave in KeyboardModeView.BLACK_KEY_OFFSETS) {
+        for (blackKeyOffsetInOctave in KeyboardView.BLACK_KEY_OFFSETS) {
             if (pitchInOctave == blackKeyOffsetInOctave) {
                 return true
             }
@@ -367,14 +367,14 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 if (!buttonPressing) {
                     view.isPressed = true
                     updateAddOrSubtract(view.id)
-                    buttonPressing = true;
+                    buttonPressing = true
                 }
             }
-
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 view.isPressed = false
                 stopAddOrSubtract()
                 buttonPressing = false
+                view.performClick()
             }
         }
         return true
@@ -469,7 +469,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiMessageReceive(pitch: Byte, volume: Byte) {
-        val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte();
+        val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte()
         if (volume > 0) {
             keyboardView.fireKeyDown(pitchWithSettingTune, volume, null)
             SoundEngineUtil.playSound(pitchWithSettingTune, volume)

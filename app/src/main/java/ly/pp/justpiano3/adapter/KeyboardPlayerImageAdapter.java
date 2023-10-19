@@ -123,8 +123,8 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         textView2.setText(userName);
         ImageView imageView1 = view.findViewById(R.id.ol_player_midi);
         imageView1.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
-        textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.kuang[i2]);
-        imageView.setBackgroundResource(ColorUtil.filledKuang[i2]);
+        textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.userColor[i2]);
+        imageView.setBackgroundResource(ColorUtil.filledUserColor[i2]);
         return view;
     }
 }

@@ -29,8 +29,8 @@
                 android:gravity="center"
                 android:text="@string/keyboard_mode_minus"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard1_move_left"
@@ -39,10 +39,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_button"
                 android:text="@string/keyboard_mode_arrow_left"
-
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard1_move_right"
@@ -52,8 +51,8 @@
                 android:background="@drawable/selector_ol_button"
                 android:text="@string/keyboard_mode_arrow_right"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard1_count_up"
@@ -63,8 +62,8 @@
                 android:background="@drawable/selector_ol_button"
                 android:text="@string/keyboard_mode_plus"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard_record"
@@ -74,9 +73,8 @@
                 android:background="@drawable/selector_ol_button"
                 android:text="@string/keyboard_mode_rec"
                 android:textColor="@color/v3"
-                android:textSize="20sp"
-                ></Button>
-
+                android:textSize="20sp">
+            </Button>
         </LinearLayout>
 
         <LinearLayout
@@ -93,8 +91,8 @@
                 android:gravity="center"
                 android:text="@string/keyboard_mode_title"
                 android:textColor="@color/white1"
-                android:textSize="22sp"></TextView>
-
+                android:textSize="22sp">
+            </TextView>
         </LinearLayout>
 
         <LinearLayout
@@ -110,7 +108,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/selector_orange_button"
-                android:src="@drawable/setting"></ImageView>
+                android:src="@drawable/setting">
+            </ImageView>
 
             <Button
                 android:id="@+id/keyboard2_count_down"
@@ -121,8 +120,8 @@
                 android:gravity="center"
                 android:text="@string/keyboard_mode_minus"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard2_move_left"
@@ -132,8 +131,8 @@
                 android:background="@drawable/selector_orange_button"
                 android:text="@string/keyboard_mode_arrow_left"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard2_move_right"
@@ -143,8 +142,8 @@
                 android:background="@drawable/selector_orange_button"
                 android:text="@string/keyboard_mode_arrow_right"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
 
             <Button
                 android:id="@+id/keyboard2_count_up"
@@ -154,8 +153,8 @@
                 android:background="@drawable/selector_orange_button"
                 android:text="@string/keyboard_mode_plus"
                 android:textColor="@color/white1"
-                android:textSize="20sp"
-                ></Button>
+                android:textSize="20sp">
+            </Button>
         </LinearLayout>
     </LinearLayout>
 
@@ -172,13 +171,14 @@
             android:layout_weight="0.5"
             android:background="@drawable/selector_ol_button">
 
-            <ly.pp.justpiano3.view.KeyboardModeView
+            <ly.pp.justpiano3.view.KeyboardView
                 android:id="@+id/keyboard1_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="21"></ly.pp.justpiano3.view.KeyboardModeView>
+                app:whiteKeyOffset="21">
+            </ly.pp.justpiano3.view.KeyboardView>
         </LinearLayout>
 
         <LinearLayout
@@ -188,14 +188,14 @@
             android:layout_weight="0.5"
             android:background="@drawable/selector_orange_button">
 
-            <ly.pp.justpiano3.view.KeyboardModeView
+            <ly.pp.justpiano3.view.KeyboardView
                 android:id="@+id/keyboard2_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="14"></ly.pp.justpiano3.view.KeyboardModeView>
+                app:whiteKeyOffset="14">
+            </ly.pp.justpiano3.view.KeyboardView>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -10,7 +10,7 @@ import java.io.File;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.SkinDownload;
-import ly.pp.justpiano3.thread.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public final class SkinDownloadClick implements OnClickListener {

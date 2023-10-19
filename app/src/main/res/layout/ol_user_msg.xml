@@ -18,14 +18,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dimen_12dp"
-
             android:background="@color/translent"
             android:keepScreenOn="true"
             android:gravity="center"
             android:text="@string/user_msg_title"
             android:textColor="@color/white1"
             android:textSize="20sp" />
-
 
         <LinearLayout
             style="@style/InputBoxStyle"
@@ -38,14 +36,12 @@
                 style="@style/EditTextStyle"
                 android:layout_width="@dimen/dimen_300dp"
                 android:layout_height="@dimen/dimen_100dp"
-
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingTop="@dimen/dimen_3dp"
                 android:paddingBottom="@dimen/dimen_3dp"
                 android:textColor="@color/white1"
                 android:textSize="16sp" />
-
             <requestFocus />
         </LinearLayout>
 
@@ -55,7 +51,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_12dp"
             android:background="@drawable/selector_ol_button"
-
             android:text="@string/user_msg_set"
             android:textColor="@color/white1"
             android:textSize="20sp" />
