@@ -49,11 +49,15 @@ namespace iolib {
         if (streamState == StreamState::Disconnected) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
+        if (mMixBuffer == nullptr) {
+            mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
+        }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        mixAudioToBuffer((float *) audioData, numFrames);
-
-        if (pSynth != nullptr && mChannelCount == 2) {
-            fluid_synth_write_float(pSynth, numFrames, audioData, 0, 2, audioData, 1, 2);
+        if (pSynth != nullptr) {
+            fluid_synth_write_float(pSynth, numFrames, &mMixBuffer[0], 0, 2, &mMixBuffer[1], 0, 2);
+            memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+        } else {
+            mixAudioToBuffer((float *) audioData, numFrames);
         }
 
         if (record) {
@@ -64,9 +68,6 @@ namespace iolib {
 
     void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
 //        auto mid1 = std::chrono::high_resolution_clock::now();
-        if (mMixBuffer == nullptr) {
-            mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
-        }
         memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
         float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {

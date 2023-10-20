@@ -285,7 +285,11 @@ public class UsersInfo extends OLBaseActivity implements Callback, OnClickListen
                     Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
                     return;
                 }
-                age = Integer.parseInt(charSequence);
+                try {
+                    age = Integer.parseInt(charSequence);
+                } catch (Exception e) {
+                    age = 0;
+                }
                 if (age < 1900 || age > 2020) {
                     Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
                     return;

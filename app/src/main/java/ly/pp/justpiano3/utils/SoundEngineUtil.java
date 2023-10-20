@@ -110,7 +110,7 @@ public class SoundEngineUtil {
         File dir = new File(context.getFilesDir(), "Sounds");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
-            if (listFiles != null && listFiles.length > 0) {
+            if (listFiles != null) {
                 for (File delete : listFiles) {
                     delete.delete();
                 }
@@ -189,15 +189,9 @@ public class SoundEngineUtil {
 
     private static native void unloadFont(long instance);
 
-    private static native void systemReset(long instance);
-
     private static native void noteOn(long instance, int channel, int note, int velocity);
 
     private static native void noteOff(long instance, int channel, int note);
 
     private static native void controlChange(long instance, int channel, int control, int value);
-
-    private static native void programChange(long instance, int channel, int program);
-
-    private static native void pitchBend(long instance, int channel, int value);
 }

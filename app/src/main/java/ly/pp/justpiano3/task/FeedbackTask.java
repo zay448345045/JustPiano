@@ -40,18 +40,16 @@ public final class FeedbackTask {
                 .post(requestBody)
                 .build();
 
-        ThreadPoolUtil.execute(() -> {
-            try (Response response = OkHttpUtil.client().newCall(request).execute()) {
-                if (response.isSuccessful()) {
-                    String responseStr = response.body().string();
-                    if (context instanceof Activity) {
-                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context,
-                                StringUtil.isNullOrEmpty(responseStr) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
-                    }
+        try (Response response = OkHttpUtil.client().newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseStr = response.body().string();
+                if (context instanceof Activity) {
+                    ((Activity) context).runOnUiThread(() -> Toast.makeText(context,
+                            StringUtil.isNullOrEmpty(responseStr) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

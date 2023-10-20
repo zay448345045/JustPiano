@@ -128,13 +128,9 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     handle->synth = nullptr;
     handle->soundfont_id = 0;
 
-    fluid_settings_setint(handle->settings, const_cast<char *>("synth.audio-channels"), 2);
-    fluid_settings_setint(handle->settings, const_cast<char *>("synth.cpu-cores"), 4);
-    fluid_settings_setint(handle->settings, const_cast<char *>("audio.periods"), 64);
-    fluid_settings_setint(handle->settings, const_cast<char *>("audio.period-size"), 8192);
-    fluid_settings_setint(handle->settings, const_cast<char *>("audio.realtime-prio"), 99);
-    fluid_settings_setstr(handle->settings, const_cast<char *>("player.timing-source"),
-                          const_cast<char *>("system"));
+    fluid_settings_setint(handle->settings, const_cast<char *>("synth.polyphony"), 256);
+    fluid_settings_setstr(handle->settings, const_cast<char *>("audio.sample-format"), const_cast<char *>("float"));
+    fluid_settings_setnum(handle->settings, const_cast<char *>("synth.gain"), 0.5f);
 
     memcpy(&ptr, &handle, sizeof(handle));
     return ptr;
@@ -203,15 +199,6 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadFont(JNIEnv *env, jclass obj, 
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_systemReset(JNIEnv *env, jclass obj, jlong ptr) {
-    fluid_handle_t *handle = nullptr;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != nullptr && handle->synth != nullptr) {
-        fluid_synth_system_reset(handle->synth);
-    }
-}
-
-JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_noteOn(JNIEnv *env, jclass obj, jlong ptr, jint channel,
                                                    jint note, jint velocity) {
     fluid_handle_t *handle = nullptr;
@@ -233,32 +220,12 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_noteOff(JNIEnv *env, jclass obj, jlo
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_programChange(JNIEnv *env, jclass obj, jlong ptr,
-                                                          jint channel, jint program) {
-    fluid_handle_t *handle = nullptr;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != nullptr && handle->synth != nullptr) {
-        fluid_synth_program_change(handle->synth, channel, program);
-    }
-}
-
-JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_controlChange(JNIEnv *env, jclass obj, jlong ptr,
                                                           jint channel, jint control, jint value) {
     fluid_handle_t *handle = nullptr;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != nullptr && handle->synth != nullptr) {
         fluid_synth_cc(handle->synth, channel, control, value);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_pitchBend(JNIEnv *env, jclass obj, jlong ptr,
-                                                      jint channel, jint value) {
-    fluid_handle_t *handle = nullptr;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != nullptr && handle->synth != nullptr) {
-        fluid_synth_pitch_bend(handle->synth, channel, ((value * 128)));
     }
 }
 
