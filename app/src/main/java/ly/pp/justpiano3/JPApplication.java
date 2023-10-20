@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.*;
+import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import io.netty.util.internal.StringUtil;
+import kotlin.Unit;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -29,6 +31,8 @@ import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
+
+import com.babyte.breakpad.BaByteBreakpad;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -204,6 +208,11 @@ public final class JPApplication extends Application {
 
         void init() {
             Thread.setDefaultUncaughtExceptionHandler(this);
+            // 监听native异常
+            BaByteBreakpad.INSTANCE.initBreakpad(crashInfo -> {
+                uncaughtException(Thread.currentThread(), new Throwable(crashInfo.toString()));
+                return Unit.INSTANCE;
+            });
         }
 
         @Override
@@ -213,6 +222,7 @@ public final class JPApplication extends Application {
                 Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
                 Looper.loop();
             });
+            // 上传崩溃日志
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
@@ -228,10 +238,11 @@ public final class JPApplication extends Application {
                 bindService = false;
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            Process.killProcess(Process.myPid());
             System.exit(1);
         }
     }

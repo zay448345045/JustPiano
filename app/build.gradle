@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     ndkVersion "25.2.9519653"
     defaultConfig {
         applicationId "ly.pp.justpiano3"
-        minSdkVersion 19
-        targetSdkVersion 30
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode 52
         versionName "4.8"
         externalNativeBuild {
@@ -112,6 +112,7 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.3.0'
     implementation 'androidx.room:room-ktx:2.3.0'
     kapt "androidx.room:room-compiler:2.3.0"
+    implementation 'io.github.BAByte:native-crash:1.0.6@aar'
 }
 
 protobuf {

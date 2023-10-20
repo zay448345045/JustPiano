@@ -21,6 +21,7 @@
 #include <wav/WavStreamReader.h>
 #include <cmath>
 #include <utility>
+//#include <chrono>
 
 // local includes
 #include "OneShotSampleSource.h"
@@ -58,6 +59,7 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
+//        auto mid1 = std::chrono::high_resolution_clock::now();
         if (mMixBuffer == nullptr) {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
@@ -84,15 +86,18 @@ namespace iolib {
                 }
             }
         }
+//        auto mid2 = std::chrono::high_resolution_clock::now();
+//        __android_log_print(ANDROID_LOG_WARN, TAG, "mixAudioToBuffer oboeDuration %lld",
+//                            std::chrono::duration_cast<std::chrono::microseconds>(mid2 - mid1).count());
 
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
         for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
             mMixBuffer[i] /= mDecayFactor;
-            audioData[i] /= mDecayFactor;
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
         }
+        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
     }
 
     void SimpleMultiPlayer::onErrorAfterClose(AudioStream *oboeStream, Result error) {
