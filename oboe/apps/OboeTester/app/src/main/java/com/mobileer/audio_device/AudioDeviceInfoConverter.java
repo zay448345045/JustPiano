@@ -15,7 +15,13 @@ package com.mobileer.audio_device;
  * limitations under the License.
  */
 
+import android.media.AudioDescriptor;
 import android.media.AudioDeviceInfo;
+import android.media.AudioProfile;
+import android.os.Build;
+
+import java.util.List;
+import java.util.Locale;
 
 public class AudioDeviceInfoConverter {
 
@@ -49,11 +55,11 @@ public class AudioDeviceInfoConverter {
 
         sb.append("\nChannel masks: ");
         int[] channelMasks = adi.getChannelMasks();
-        sb.append(intArrayToString(channelMasks));
+        sb.append(intArrayToStringHex(channelMasks));
 
         sb.append("\nChannel index masks: ");
         int[] channelIndexMasks = adi.getChannelIndexMasks();
-        sb.append(intArrayToString(channelIndexMasks));
+        sb.append(intArrayToStringHex(channelIndexMasks));
 
         sb.append("\nEncodings: ");
         int[] encodings = adi.getEncodings();
@@ -62,6 +68,36 @@ public class AudioDeviceInfoConverter {
         sb.append("\nSample Rates: ");
         int[] sampleRates = adi.getSampleRates();
         sb.append(intArrayToString(sampleRates));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            sb.append("\nAddress: ");
+            sb.append(adi.getAddress());
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            sb.append("\nEncapsulation Metadata Types: ");
+            int[] encapsulationMetadataTypes = adi.getEncapsulationMetadataTypes();
+            sb.append(intArrayToString(encapsulationMetadataTypes));
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            sb.append("\nEncapsulation Modes: ");
+            int[] encapsulationModes = adi.getEncapsulationModes();
+            sb.append(intArrayToString(encapsulationModes));
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            sb.append("\nAudio Descriptors: ");
+            List<AudioDescriptor> audioDescriptors = adi.getAudioDescriptors();
+            sb.append(audioDescriptors);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            sb.append("\nAudio Profiles: ");
+            List<AudioProfile> audioProfiles = adi.getAudioProfiles();
+            sb.append(audioProfiles);
+        }
+
         sb.append("\n");
         return sb.toString();
     }
@@ -76,7 +112,22 @@ public class AudioDeviceInfoConverter {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < integerArray.length; i++){
             sb.append(integerArray[i]);
-            if (i != integerArray.length -1) sb.append(" ");
+            if (i != integerArray.length - 1) sb.append(" ");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Converts an integer array into a hexadecimal string where each int is separated by a space
+     *
+     * @param integerArray the integer array to convert to a string
+     * @return string containing all the integer values separated by spaces
+     */
+    private static String intArrayToStringHex(int[] integerArray){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < integerArray.length; i++){
+            sb.append(String.format(Locale.getDefault(), "0x%02X", integerArray[i]));
+            if (i != integerArray.length - 1) sb.append(" ");
         }
         return sb.toString();
     }
@@ -92,6 +143,12 @@ public class AudioDeviceInfoConverter {
         switch (type) {
             case AudioDeviceInfo.TYPE_AUX_LINE:
                 return "auxiliary line-level connectors";
+            case AudioDeviceInfo.TYPE_BLE_BROADCAST:
+                return "BLE broadcast";
+            case AudioDeviceInfo.TYPE_BLE_HEADSET:
+                return "BLE headset";
+            case AudioDeviceInfo.TYPE_BLE_SPEAKER:
+                return "BLE speaker";
             case AudioDeviceInfo.TYPE_BLUETOOTH_A2DP:
                 return "Bluetooth A2DP";
             case AudioDeviceInfo.TYPE_BLUETOOTH_SCO:
@@ -102,26 +159,36 @@ public class AudioDeviceInfoConverter {
                 return "built-in microphone";
             case AudioDeviceInfo.TYPE_BUILTIN_SPEAKER:
                 return "built-in speaker";
-            case 0x18: // AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE:
+            case AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE:
                 return "built-in speaker safe";
             case AudioDeviceInfo.TYPE_BUS:
-                return "BUS";
+                return "bus";
             case AudioDeviceInfo.TYPE_DOCK:
-                return "DOCK";
+                return "dock";
+            case 31: // AudioDeviceInfo.TYPE_DOCK_ANALOG:
+                return "dock analog";
+            case 28: // AudioDeviceInfo.TYPE_ECHO_REFERENCE:
+                return "echo reference";
             case AudioDeviceInfo.TYPE_FM:
                 return "FM";
             case AudioDeviceInfo.TYPE_FM_TUNER:
                 return "FM tuner";
             case AudioDeviceInfo.TYPE_HDMI:
                 return "HDMI";
+            case AudioDeviceInfo.TYPE_HEARING_AID:
+                return "hearing aid";
             case AudioDeviceInfo.TYPE_HDMI_ARC:
                 return "HDMI audio return channel";
+            case AudioDeviceInfo.TYPE_HDMI_EARC:
+                return "HDMI enhanced ARC";
             case AudioDeviceInfo.TYPE_IP:
                 return "IP";
             case AudioDeviceInfo.TYPE_LINE_ANALOG:
                 return "line analog";
             case AudioDeviceInfo.TYPE_LINE_DIGITAL:
                 return "line digital";
+            case AudioDeviceInfo.TYPE_REMOTE_SUBMIX:
+                return "remote submix";
             case AudioDeviceInfo.TYPE_TELEPHONY:
                 return "telephony";
             case AudioDeviceInfo.TYPE_TV_TUNER:
@@ -130,6 +197,8 @@ public class AudioDeviceInfoConverter {
                 return "USB accessory";
             case AudioDeviceInfo.TYPE_USB_DEVICE:
                 return "USB device";
+            case AudioDeviceInfo.TYPE_USB_HEADSET:
+                return "USB headset";
             case AudioDeviceInfo.TYPE_WIRED_HEADPHONES:
                 return "wired headphones";
             case AudioDeviceInfo.TYPE_WIRED_HEADSET:

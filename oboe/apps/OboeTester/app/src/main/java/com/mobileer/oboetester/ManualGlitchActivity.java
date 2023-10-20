@@ -23,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class ManualGlitchActivity extends GlitchActivity {
 
@@ -62,7 +63,7 @@ public class ManualGlitchActivity extends GlitchActivity {
         float tolerance = (float) mTaperTolerance.linearToExponential(
                 ((double)progress) / FADER_PROGRESS_MAX);
         setTolerance(tolerance);
-        mTextTolerance.setText("Tolerance = " + String.format("%5.3f", tolerance));
+        mTextTolerance.setText("Tolerance = " + String.format(Locale.getDefault(), "%5.3f", tolerance));
     }
 
     @Override
@@ -147,17 +148,11 @@ public class ManualGlitchActivity extends GlitchActivity {
 
     void stopAutomaticTest() {
         String report = getCommonTestReport()
-                + String.format("tolerance = %5.3f\n", mTolerance)
+                + String.format(Locale.getDefault(), "tolerance = %5.3f\n", mTolerance)
                 + mLastGlitchReport;
         onStopAudioTest(null);
         maybeWriteTestResult(report);
         mTestRunningByIntent = false;
-    }
-
-    // Only call from UI thread.
-    @Override
-    public void onTestFinished() {
-        super.onTestFinished();
     }
 
     // Only call from UI thread.

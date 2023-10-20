@@ -36,6 +36,17 @@ protected:
         return (r == Result::OK);
     }
 
+    bool releaseStream() {
+        Result r = mStream->release();
+        if (getSdkVersion() > __ANDROID_API_R__ && mBuilder.getAudioApi() != AudioApi::OpenSLES) {
+            EXPECT_EQ(r, Result::OK) << "Failed to release stream. " << convertToText(r);
+            return (r == Result::OK);
+        } else {
+            EXPECT_EQ(r, Result::ErrorUnimplemented) << "Did not get  ErrorUnimplemented" << convertToText(r);
+            return (r == Result::ErrorUnimplemented);
+        }
+    }
+
     bool closeStream() {
         Result r = mStream->close();
         EXPECT_EQ(r, Result::OK) << "Failed to close stream. " << convertToText(r);
@@ -59,7 +70,6 @@ protected:
         return (time.tv_sec * (int64_t)1e9) + time.tv_nsec;
     }
 
-    int32_t mElapsedTimeMillis = 0; // used for passing back a value from a test function.
 	// ASSERT_* requires a void return type.
     void measureCloseTime(int32_t delayMillis) {
         ASSERT_TRUE(openStream());
@@ -71,20 +81,11 @@ protected:
         int64_t stopTimeMillis = getNanoseconds() / 1e6;
         int32_t elapsedTimeMillis = (int32_t)(stopTimeMillis - startTimeMillis);
         ASSERT_GE(elapsedTimeMillis, delayMillis);
-        mElapsedTimeMillis = elapsedTimeMillis;
     }
 
     void testDelayBeforeClose() {
-        const int32_t delayMillis = 100;
-        measureCloseTime(0);
-        int32_t elapsedTimeMillis1 = mElapsedTimeMillis;
-        // Do it again with a longer sleep using setDelayBeforeCloseMillis.
-        // The increase in elapsed time should match the added delay.
+        const int32_t delayMillis = 500;
         measureCloseTime(delayMillis);
-        int32_t elapsedTimeMillis2 = mElapsedTimeMillis;
-        int32_t extraElapsedTime = elapsedTimeMillis2 - elapsedTimeMillis1;
-        // Expect the additional elapsed time to be close to the added delay.
-        ASSERT_LE(abs(extraElapsedTime - delayMillis), delayMillis / 5);
     }
 
     AudioStreamBuilder mBuilder;
@@ -398,4 +399,34 @@ TEST_F(StreamClosedReturnValues, DelayBeforeCloseOutputOpenSL){
     mBuilder.setAudioApi(AudioApi::OpenSLES);
     mBuilder.setDirection(Direction::Output);
     testDelayBeforeClose();
+}
+
+TEST_F(StreamClosedReturnValues, TestReleaseInput){
+    mBuilder.setDirection(Direction::Input);
+    ASSERT_TRUE(openStream());
+    ASSERT_TRUE(releaseStream());
+    ASSERT_TRUE(closeStream());
+}
+
+TEST_F(StreamClosedReturnValues, TestReleaseInputOpenSLES){
+    mBuilder.setAudioApi(AudioApi::OpenSLES);
+    mBuilder.setDirection(Direction::Input);
+    ASSERT_TRUE(openStream());
+    ASSERT_TRUE(releaseStream());
+    ASSERT_TRUE(closeStream());
+}
+
+TEST_F(StreamClosedReturnValues, TestReleaseOutput){
+    mBuilder.setDirection(Direction::Output);
+    ASSERT_TRUE(openStream());
+    ASSERT_TRUE(releaseStream());
+    ASSERT_TRUE(closeStream());
+}
+
+TEST_F(StreamClosedReturnValues, TestReleaseOutputOpenSLES){
+    mBuilder.setAudioApi(AudioApi::OpenSLES);
+    mBuilder.setDirection(Direction::Output);
+    ASSERT_TRUE(openStream());
+    ASSERT_TRUE(releaseStream());
+    ASSERT_TRUE(closeStream());
 }

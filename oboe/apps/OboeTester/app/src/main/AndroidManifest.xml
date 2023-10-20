@@ -20,10 +20,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- This is needed for sharing test results. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="false"
@@ -108,6 +105,20 @@
             android:name=".TestErrorCallbackActivity"
             android:label="@string/title_error_callback"
             android:exported="true" />
+        <activity
+            android:name=".TestRouteDuringCallbackActivity"
+            android:label="@string/title_route_during_callback"
+            android:exported="true" />
+
+        <activity
+            android:name=".DynamicWorkloadActivity"
+            android:label="@string/title_dynamic_load"
+            android:exported="true" />
+
+        <activity
+            android:name=".TestColdStartLatencyActivity"
+            android:label="@string/title_cold_start_latency"
+            android:exported="true" />
 
         <service
             android:name=".MidiTapTester"
@@ -123,7 +134,7 @@
         </service>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
