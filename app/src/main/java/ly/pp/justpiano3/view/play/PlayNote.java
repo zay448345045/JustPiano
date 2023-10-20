@@ -19,7 +19,7 @@ public final class PlayNote {
     public int posiAdd15AddAnim;
     public int noteDiv12;
     public int handValue;
-    private int playNote;
+    private byte playNote;
     private final PlayView playView;
     private final float halfWidth;
     private boolean newNote = true;

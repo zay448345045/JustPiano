@@ -52,6 +52,10 @@ namespace iolib {
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
         mixAudioToBuffer((float *) audioData, numFrames);
 
+        if (pSynth != nullptr && mChannelCount == 2) {
+            fluid_synth_write_float(pSynth, numFrames, audioData, 0, 2, audioData, 1, 2);
+        }
+
         if (record) {
             mRecordingIO->write_buffer(mMixBuffer, numFrames);
         }
@@ -223,5 +227,9 @@ namespace iolib {
 
     void SimpleMultiPlayer::setRecordFilePath(char *s) {
         mRecordingIO->setRecordingFilePath(s);
+    }
+
+    void SimpleMultiPlayer::setSf2SynthPtr(_fluid_synth_t *synth) {
+        this->pSynth = synth;
     }
 }

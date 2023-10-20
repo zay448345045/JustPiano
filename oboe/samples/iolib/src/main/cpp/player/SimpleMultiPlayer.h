@@ -27,6 +27,7 @@
 #include "OneShotSampleSource.h"
 #include "SampleBuffer.h"
 #include "RecordingIO.h"
+#include "fluidsynth/fluid_synth.h"
 
 namespace iolib {
 
@@ -85,6 +86,8 @@ namespace iolib {
 
         void setRecordFilePath(char *s);
 
+        void setSf2SynthPtr(_fluid_synth_t *synth);
+
     private:
         // Oboe Audio Stream
         oboe::ManagedStream mAudioStream;
@@ -104,6 +107,7 @@ namespace iolib {
 
         bool mOutputReset;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
+        _fluid_synth_t *pSynth{};
 
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
     };
