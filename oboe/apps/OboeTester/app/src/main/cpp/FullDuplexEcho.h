@@ -21,21 +21,20 @@
 #include <sys/types.h>
 
 #include "oboe/Oboe.h"
-#include "analyzer/LatencyAnalyzer.h"
-#include "FullDuplexStreamWithConversion.h"
+#include "FullDuplexStream.h"
 #include "InterpolatingDelayLine.h"
 
-class FullDuplexEcho : public FullDuplexStreamWithConversion {
+class FullDuplexEcho : public FullDuplexStream {
 public:
     FullDuplexEcho() {
-        setNumInputBurstsCushion(0);
+        setMNumInputBurstsCushion(0);
     }
 
     /**
      * Called when data is available on both streams.
      * Caller should override this method.
      */
-    oboe::DataCallbackResult onBothStreamsReadyFloat(
+    oboe::DataCallbackResult onBothStreamsReady(
             const float *inputData,
             int   numInputFrames,
             float *outputData,
@@ -43,8 +42,6 @@ public:
     ) override;
 
     oboe::Result start() override;
-
-    double getPeakLevel(int index);
 
     void setDelayTime(double delayTimeSeconds) {
         mDelayTimeSeconds = delayTimeSeconds;
@@ -54,9 +51,6 @@ private:
     std::unique_ptr<InterpolatingDelayLine> mDelayLine;
     static constexpr double kMaxDelayTimeSeconds = 4.0;
     double mDelayTimeSeconds = kMaxDelayTimeSeconds;
-    std::atomic<int32_t> mNumChannels{0};
-    std::unique_ptr<PeakDetector[]> mPeakDetectors;
-
 };
 
 

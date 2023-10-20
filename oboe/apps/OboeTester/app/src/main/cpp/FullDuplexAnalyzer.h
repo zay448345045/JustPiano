@@ -21,22 +21,22 @@
 #include <sys/types.h>
 
 #include "oboe/Oboe.h"
+#include "FullDuplexStream.h"
 #include "analyzer/LatencyAnalyzer.h"
-#include "FullDuplexStreamWithConversion.h"
 #include "MultiChannelRecording.h"
 
-class FullDuplexAnalyzer : public FullDuplexStreamWithConversion {
+class FullDuplexAnalyzer : public FullDuplexStream {
 public:
     FullDuplexAnalyzer(LoopbackProcessor *processor)
             : mLoopbackProcessor(processor) {
-        setNumInputBurstsCushion(1);
+        setMNumInputBurstsCushion(1);
     }
 
     /**
      * Called when data is available on both streams.
      * Caller should override this method.
      */
-    oboe::DataCallbackResult onBothStreamsReadyFloat(
+    oboe::DataCallbackResult onBothStreamsReady(
             const float *inputData,
             int   numInputFrames,
             float *outputData,

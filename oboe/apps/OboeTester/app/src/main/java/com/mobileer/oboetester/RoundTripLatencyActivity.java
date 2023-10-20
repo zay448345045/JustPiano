@@ -21,15 +21,13 @@ import static com.mobileer.oboetester.IntentBasedTestSupport.configureStreamsFro
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * Activity to measure latency on a full duplex stream.
@@ -135,18 +133,18 @@ public class RoundTripLatencyActivity extends AnalyzerActivity {
                             mTimestampLatencies.calculateMeanAbsoluteDeviation(timestampLatencyMean);
                 }
                 message = "average.latency.msec = "
-                        + String.format(Locale.getDefault(), LATENCY_FORMAT, meanLatency) + "\n"
+                        + String.format(LATENCY_FORMAT, meanLatency) + "\n"
                         + "mean.absolute.deviation = "
-                        + String.format(Locale.getDefault(), LATENCY_FORMAT, meanAbsoluteDeviation) + "\n"
+                        + String.format(LATENCY_FORMAT, meanAbsoluteDeviation) + "\n"
                         + "average.confidence = "
-                        + String.format(Locale.getDefault(), CONFIDENCE_FORMAT, mAverageConfidence) + "\n"
-                        + "min.latency.msec = " + String.format(Locale.getDefault(), LATENCY_FORMAT, mLatencies.getMin()) + "\n"
-                        + "max.latency.msec = " + String.format(Locale.getDefault(), LATENCY_FORMAT, mLatencies.getMax()) + "\n"
+                        + String.format(CONFIDENCE_FORMAT, mAverageConfidence) + "\n"
+                        + "min.latency.msec = " + String.format(LATENCY_FORMAT, mLatencies.getMin()) + "\n"
+                        + "max.latency.msec = " + String.format(LATENCY_FORMAT, mLatencies.getMax()) + "\n"
                         + "num.iterations = " + mLatencies.count() + "\n"
                         + "timestamp.latency.msec = "
-                        + String.format(Locale.getDefault(), LATENCY_FORMAT, timestampLatencyMean) + "\n"
+                        + String.format(LATENCY_FORMAT, timestampLatencyMean) + "\n"
                         + "timestamp.latency.mad = "
-                        + String.format(Locale.getDefault(), LATENCY_FORMAT, timestampLatencyMAD) + "\n";
+                        + String.format(LATENCY_FORMAT, timestampLatencyMAD) + "\n";
             }
             message += "num.failed = " + mBadCount + "\n";
             message += "\n"; // mark end of average report
@@ -211,10 +209,7 @@ public class RoundTripLatencyActivity extends AnalyzerActivity {
                     } else {
                         message = getResultString();
                     }
-                    File resultFile = onAnalyzerDone();
-                    if (resultFile != null) {
-                        message = "result.file = " + resultFile.getAbsolutePath() + "\n" + message;
-                    }
+                    onAnalyzerDone();
                 } else {
                     message = getProgressText();
                     message += "please wait... " + counter + "\n";
@@ -254,23 +249,21 @@ public class RoundTripLatencyActivity extends AnalyzerActivity {
         int progress = getAnalyzerProgress();
         int state = getAnalyzerState();
         int resetCount = getResetCount();
-        String message = String.format(Locale.getDefault(), "progress = %d\nstate = %d\n#resets = %d\n",
+        String message = String.format("progress = %d\nstate = %d\n#resets = %d\n",
                 progress, state, resetCount);
         message += mAverageLatencyTestRunner.getLastReport();
         return message;
     }
 
-    private File onAnalyzerDone() {
-        File resultFile = null;
+    private void onAnalyzerDone() {
         if (mTestRunningByIntent) {
             String report = getCommonTestReport();
             report += getResultString();
-            resultFile = maybeWriteTestResult(report);
+            maybeWriteTestResult(report);
         }
         mTestRunningByIntent = false;
         mHasRecording = true;
         stopAudioTest();
-        return resultFile;
     }
 
     @NonNull
@@ -280,8 +273,8 @@ public class RoundTripLatencyActivity extends AnalyzerActivity {
         double confidence = getMeasuredConfidence();
         String message = "";
 
-        message += String.format(Locale.getDefault(), "confidence = " + CONFIDENCE_FORMAT + "\n", confidence);
-        message += String.format(Locale.getDefault(), "result.text = %s\n", resultCodeToString(result));
+        message += String.format("confidence = " + CONFIDENCE_FORMAT + "\n", confidence);
+        message += String.format("result.text = %s\n", resultCodeToString(result));
 
         // Only report valid latencies.
         if (result == 0) {
@@ -290,26 +283,26 @@ public class RoundTripLatencyActivity extends AnalyzerActivity {
             int bufferSize = mAudioOutTester.getCurrentAudioStream().getBufferSizeInFrames();
             int latencyEmptyFrames = latencyFrames - bufferSize;
             double latencyEmptyMillis = latencyEmptyFrames * 1000.0 / getSampleRate();
-            message += String.format(Locale.getDefault(), "latency.msec = " + LATENCY_FORMAT + "\n", latencyMillis);
-            message += String.format(Locale.getDefault(), "latency.frames = %d\n", latencyFrames);
-            message += String.format(Locale.getDefault(), "latency.empty.msec = " + LATENCY_FORMAT + "\n", latencyEmptyMillis);
-            message += String.format(Locale.getDefault(), "latency.empty.frames = %d\n", latencyEmptyFrames);
+            message += String.format("latency.msec = " + LATENCY_FORMAT + "\n", latencyMillis);
+            message += String.format("latency.frames = %d\n", latencyFrames);
+            message += String.format("latency.empty.msec = " + LATENCY_FORMAT + "\n", latencyEmptyMillis);
+            message += String.format("latency.empty.frames = %d\n", latencyEmptyFrames);
         }
 
-        message += String.format(Locale.getDefault(), "rms.signal = %7.5f\n", getSignalRMS());
-        message += String.format(Locale.getDefault(), "rms.noise = %7.5f\n", getBackgroundRMS());
-        message += String.format(Locale.getDefault(), "correlation = " + CONFIDENCE_FORMAT + "\n",
+        message += String.format("rms.signal = %7.5f\n", getSignalRMS());
+        message += String.format("rms.noise = %7.5f\n", getBackgroundRMS());
+        message += String.format("correlation = " + CONFIDENCE_FORMAT + "\n",
                 getMeasuredCorrelation());
         double timestampLatency = getTimestampLatencyMillis();
-        message += String.format(Locale.getDefault(), "timestamp.latency.msec = " + LATENCY_FORMAT + "\n",
+        message += String.format("timestamp.latency.msec = " + LATENCY_FORMAT + "\n",
                 timestampLatency);
         if (mTimestampLatencyStats.count() > 0) {
-            message += String.format(Locale.getDefault(), "timestamp.latency.mad = " + LATENCY_FORMAT + "\n",
+            message += String.format("timestamp.latency.mad = " + LATENCY_FORMAT + "\n",
                     mTimestampLatencyStats.calculateMeanAbsoluteDeviation(timestampLatency));
         }
         message +=  "timestamp.latency.count = " + mTimestampLatencyStats.count() + "\n";
-        message += String.format(Locale.getDefault(), "reset.count = %d\n", resetCount);
-        message += String.format(Locale.getDefault(), "result = %d\n", result);
+        message += String.format("reset.count = %d\n", resetCount);
+        message += String.format("result = %d\n", result);
 
         return message;
     }
@@ -351,14 +344,12 @@ public class RoundTripLatencyActivity extends AnalyzerActivity {
         mShareButton = (Button) findViewById(R.id.button_share);
         mShareButton.setEnabled(false);
         mAnalyzerView = (TextView) findViewById(R.id.text_status);
+        mAnalyzerView.setMovementMethod(new ScrollingMovementMethod());
         updateEnabledWidgets();
 
         hideSettingsViews();
 
         mBufferSizeView.setFaderNormalizedProgress(0.0); // for lowest latency
-
-        mCommunicationDeviceView = (CommunicationDeviceView) findViewById(R.id.comm_device_view);
-
     }
 
     @Override

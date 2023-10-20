@@ -17,7 +17,6 @@
 package com.mobileer.oboetester;
 
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * Base class for any audio input or output.
@@ -26,42 +25,9 @@ public abstract class AudioStreamBase {
 
     private StreamConfiguration mRequestedStreamConfiguration;
     private StreamConfiguration mActualStreamConfiguration;
-    private AudioStreamBase.DoubleStatistics mLatencyStatistics;
-    private SampleRateMonitor mSampleRateMonitor = new SampleRateMonitor();
+    AudioStreamBase.DoubleStatistics mLatencyStatistics;
+
     private int mBufferSizeInFrames;
-
-    private class SampleRateMonitor {
-        private static final int SIZE = 16; // power of 2
-        private static final long MASK = SIZE - 1L;
-        private long[] times = new long[SIZE];
-        private long[] frames = new long[SIZE];
-        private long cursor;
-
-        void add(long numFrames) {
-            int index = (int) (cursor & MASK);
-            frames[index] = numFrames;
-            times[index] = System.currentTimeMillis();
-            cursor++;
-        }
-
-        int getRate() {
-            if (cursor < 2) return 0;
-            long numValid = Math.min((long)SIZE, cursor);
-            int oldestIndex = (int)((cursor - numValid) & MASK);
-            int newestIndex = (int)((cursor - 1) & MASK);
-            long deltaTime = times[newestIndex] - times[oldestIndex];
-            long deltaFrames = frames[newestIndex] - frames[oldestIndex];
-            if (deltaTime <= 0) {
-                return -1;
-            }
-            long sampleRate = (deltaFrames * 1000) / deltaTime;
-            return (int) sampleRate;
-        }
-
-        void reset() {
-            cursor = 0;
-        }
-    }
 
     public StreamStatus getStreamStatus() {
         StreamStatus status = new StreamStatus();
@@ -75,18 +41,11 @@ public abstract class AudioStreamBase {
         status.callbackTimeStr = getCallbackTimeStr();
         status.cpuLoad = getCpuLoad();
         status.state = getState();
-        mSampleRateMonitor.add(status.framesRead);
-        status.measuredRate = mSampleRateMonitor.getRate();
         return status;
     }
 
     public DoubleStatistics getLatencyStatistics() {
         return mLatencyStatistics;
-    }
-
-    public void setPerformanceHintEnabled(boolean checked) {
-    }
-    public void setHearWorkload(boolean checked) {
     }
 
     public static class DoubleStatistics {
@@ -109,7 +68,7 @@ public abstract class AudioStreamBase {
 
         public String dump() {
             if (count == 0) return "?";
-            return String.format(Locale.getDefault(), "%3.1f/%3.1f/%3.1f ms", minimum, getAverage(), maximum);
+            return String.format("%3.1f/%3.1f/%3.1f ms", minimum, getAverage(), maximum);
         }
     }
 
@@ -125,9 +84,8 @@ public abstract class AudioStreamBase {
         public int state;
         public long callbackCount;
         public int framesPerCallback;
-        public float cpuLoad;
+        public double cpuLoad;
         public String callbackTimeStr;
-        public int measuredRate;
 
         // These are constantly changing.
         String dump(int framesPerBurst) {
@@ -138,22 +96,21 @@ public abstract class AudioStreamBase {
 
             buffer.append("time between callbacks = " + callbackTimeStr + "\n");
 
-            buffer.append("wr "
-                    + String.format(Locale.getDefault(), "%Xh", framesWritten)
-                    + " - rd " + String.format(Locale.getDefault(), "%Xh", framesRead)
-                    + " = " + (framesWritten - framesRead) + " fr"
-                    + ", SR = " + ((measuredRate <= 0) ? "?" : measuredRate) + "\n");
+            buffer.append("written "
+                    + String.format("0x%08X", framesWritten)
+                    + " - read " + String.format("0x%08X", framesRead)
+                    + " = " + (framesWritten - framesRead) + " frames\n");
 
-            String cpuLoadText = String.format(Locale.getDefault(), "%2d%c", (int)(cpuLoad * 100), '%');
+            String cpuLoadText = String.format("%2d%c", (int)(cpuLoad * 100), '%');
             buffer.append(
                     convertStateToString(state)
                     + ", #cb=" + callbackCount
-                    + ", f/cb=" + String.format(Locale.getDefault(), "%3d", framesPerCallback)
-                    + ", " + cpuLoadText + " CPU"
+                    + ", f/cb=" + String.format("%3d", framesPerCallback)
+                    + ", " + cpuLoadText + " cpu"
                     + "\n");
 
             buffer.append("buffer size = ");
-            if (bufferSize <= 0 || framesPerBurst <= 0) {
+            if (bufferSize < 0) {
                 buffer.append("?");
             } else {
                 int numBuffers = bufferSize / framesPerBurst;
@@ -194,18 +151,13 @@ public abstract class AudioStreamBase {
         mLatencyStatistics = new AudioStreamBase.DoubleStatistics();
     }
 
-    public void onStart() {
-        mSampleRateMonitor.reset();
-    }
-    public void onStop() {
-        mSampleRateMonitor.reset();
-    }
-
     public abstract boolean isInput();
 
     public void startPlayback() throws IOException {}
 
     public void stopPlayback() throws IOException {}
+
+    public abstract int write(float[] buffer, int offset, int length);
 
     public abstract void close();
 
@@ -243,15 +195,17 @@ public abstract class AudioStreamBase {
 
     public double getLatency() { return -1.0; }
 
-    public float getCpuLoad() { return 0.0f; }
-    public float getAndResetMaxCpuLoad() { return 0.0f; }
-    public int getAndResetCpuMask() { return 0; }
+    public double getCpuLoad() { return 0.0; }
 
     public String getCallbackTimeStr() { return "?"; };
 
     public int getState() { return -1; }
 
-    public void setWorkload(int workload) {}
+    public boolean isThresholdSupported() {
+        return false;
+    }
+
+    public void setWorkload(double workload) {}
 
     public abstract int getXRunCount();
 

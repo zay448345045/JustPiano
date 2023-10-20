@@ -16,20 +16,18 @@
 
 #include "FormatConverterBox.h"
 
-FormatConverterBox::FormatConverterBox(int32_t maxSamples,
+FormatConverterBox::FormatConverterBox(int32_t numSamples,
                                        oboe::AudioFormat inputFormat,
                                        oboe::AudioFormat outputFormat) {
     mInputFormat = inputFormat;
     mOutputFormat = outputFormat;
 
-    mMaxSamples = maxSamples;
-    mInputBuffer = std::make_unique<uint8_t[]>(maxSamples * sizeof(int32_t));
-    mOutputBuffer = std::make_unique<uint8_t[]>(maxSamples * sizeof(int32_t));
+    mInputBuffer = std::make_unique<uint8_t[]>(numSamples * sizeof(int32_t));
+    mOutputBuffer = std::make_unique<uint8_t[]>(numSamples * sizeof(int32_t));
 
     mSource.reset();
     switch (mInputFormat) {
         case oboe::AudioFormat::I16:
-        case oboe::AudioFormat::IEC61937:
             mSource = std::make_unique<oboe::flowgraph::SourceI16>(1);
             break;
         case oboe::AudioFormat::I24:
@@ -48,7 +46,6 @@ FormatConverterBox::FormatConverterBox(int32_t maxSamples,
     mSink.reset();
     switch (mOutputFormat) {
         case oboe::AudioFormat::I16:
-        case oboe::AudioFormat::IEC61937:
             mSink = std::make_unique<oboe::flowgraph::SinkI16>(1);
             break;
         case oboe::AudioFormat::I24:
@@ -71,17 +68,14 @@ FormatConverterBox::FormatConverterBox(int32_t maxSamples,
 }
 
 int32_t FormatConverterBox::convertInternalBuffers(int32_t numSamples) {
-    assert(numSamples <= mMaxSamples);
     return convert(getOutputBuffer(), numSamples, getInputBuffer());
 }
 
 int32_t FormatConverterBox::convertToInternalOutput(int32_t numSamples, const void *inputBuffer) {
-    assert(numSamples <= mMaxSamples);
     return convert(getOutputBuffer(), numSamples, inputBuffer);
 }
 
 int32_t FormatConverterBox::convertFromInternalInput(void *outputBuffer, int32_t numSamples) {
-    assert(numSamples <= mMaxSamples);
     return convert(outputBuffer, numSamples, getInputBuffer());
 }
 

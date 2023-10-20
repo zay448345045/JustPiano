@@ -9,7 +9,6 @@ project(oboe)
 set (oboe_sources
     src/aaudio/AAudioLoader.cpp
     src/aaudio/AudioStreamAAudio.cpp
-    src/common/AdpfWrapper.cpp
     src/common/AudioSourceCaller.cpp
     src/common/AudioStream.cpp
     src/common/AudioStreamBuilder.cpp
@@ -33,7 +32,6 @@ set (oboe_sources
     src/flowgraph/FlowGraphNode.cpp
     src/flowgraph/ChannelCountConverter.cpp
     src/flowgraph/ClipToRange.cpp
-    src/flowgraph/Limiter.cpp
     src/flowgraph/ManyToMultiConverter.cpp
     src/flowgraph/MonoBlend.cpp
     src/flowgraph/MonoToMultiConverter.cpp
@@ -86,8 +84,7 @@ target_compile_options(oboe
         -Wextra-semi
         -Wshadow
         -Wshadow-field
-        "$<$<CONFIG:RELEASE>:-Ofast>"
-        "$<$<CONFIG:DEBUG>:-O3>"
+        -Ofast
         "$<$<CONFIG:DEBUG>:-Werror>")
 
 # Enable logging of D,V for debug builds

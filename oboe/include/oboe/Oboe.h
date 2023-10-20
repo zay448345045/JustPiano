@@ -35,6 +35,5 @@
 #include "oboe/StabilizedCallback.h"
 #include "oboe/FifoBuffer.h"
 #include "oboe/OboeExtensions.h"
-#include "oboe/FullDuplexStream.h"
 
 #endif //OBOE_OBOE_H

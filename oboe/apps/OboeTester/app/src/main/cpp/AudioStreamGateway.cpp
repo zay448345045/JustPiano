@@ -28,7 +28,6 @@ oboe::DataCallbackResult AudioStreamGateway::onAudioReady(
         void *audioData,
         int numFrames) {
 
-    maybeHang(getNanoseconds());
     printScheduler();
 
     if (mAudioSink != nullptr) {

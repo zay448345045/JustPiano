@@ -32,16 +32,9 @@ public class AudioDeviceListEntry {
     private int mId;
     private String mName;
 
-    private AudioDeviceInfo mDeviceInfo;
-
-    public AudioDeviceListEntry(int deviceId, String deviceName) {
-        this(deviceId, deviceName, null);
-    }
-
-    public AudioDeviceListEntry(int deviceId, String deviceName, AudioDeviceInfo deviceInfo) {
+    public AudioDeviceListEntry(int deviceId, String deviceName){
         mId = deviceId;
         mName = deviceName;
-        mDeviceInfo = deviceInfo;
     }
 
     public int getId() {
@@ -51,8 +44,6 @@ public class AudioDeviceListEntry {
     public String getName(){
         return mName;
     }
-
-    public AudioDeviceInfo getDeviceInfo() { return mDeviceInfo; }
 
     public String toString(){
         return getName();
@@ -96,8 +87,7 @@ public class AudioDeviceListEntry {
                 listEntries.add(new AudioDeviceListEntry(info.getId(),
                         info.getId() + ": " +
                                 info.getProductName() + " " +
-                                AudioDeviceInfoConverter.typeToString(info.getType()),
-                        info));
+                                AudioDeviceInfoConverter.typeToString(info.getType())));
             }
         }
         return listEntries;

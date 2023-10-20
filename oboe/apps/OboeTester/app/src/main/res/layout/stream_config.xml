@@ -235,27 +235,6 @@
 
             </TableRow>
 
-            <TableRow>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/capacity_prompt" />
-
-                <Spinner
-                    android:id="@+id/spinnerCapacity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/capacity_values" />
-
-                <TextView
-                    android:id="@+id/actualCapacity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\?" />
-
-            </TableRow>
-
         </TableLayout>
 
         <LinearLayout
@@ -410,7 +389,6 @@
             android:id="@+id/streamInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lines="2"
             android:text="info:" />
 
         <TextView

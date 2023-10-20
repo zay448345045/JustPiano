@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -59,7 +58,6 @@ public class ExternalTapToToneActivity extends Activity {
             mTapToToneTester.resetLatency();
             mTapToToneTester.start();
             updateButtons(true);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } catch (IOException e) {
             e.printStackTrace();
             showErrorToast("Start audio failed! " + e.getMessage());
@@ -70,13 +68,11 @@ public class ExternalTapToToneActivity extends Activity {
     public void stopTest(View view) {
         mTapToToneTester.stop();
         updateButtons(false);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     public void onStop() {
         mTapToToneTester.stop();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onStop();
     }
 

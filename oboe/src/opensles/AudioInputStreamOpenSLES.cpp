@@ -265,8 +265,6 @@ Result AudioInputStreamOpenSLES::requestStart() {
 
     setState(StreamState::Starting);
 
-    closePerformanceHint();
-
     if (getBufferDepth(mSimpleBufferQueueInterface) == 0) {
         // Enqueue the first buffer to start the streaming.
         // This does not call the callback function.

@@ -16,18 +16,19 @@
 
 package com.mobileer.oboetester;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * Test basic output.
@@ -37,9 +38,7 @@ public final class TestOutputActivity extends TestOutputActivityBase {
     public static final int MAX_CHANNEL_BOXES = 16;
     private CheckBox[] mChannelBoxes;
     private Spinner mOutputSignalSpinner;
-    private TextView mVolumeTextView;
-    private SeekBar mVolumeSeekBar;
-    private CheckBox mShouldSetStreamControlByAttributes;
+    protected CommunicationDeviceView mCommunicationDeviceView;
 
     private class OutputSignalSpinnerListener implements android.widget.AdapterView.OnItemSelectedListener {
         @Override
@@ -52,21 +51,6 @@ public final class TestOutputActivity extends TestOutputActivityBase {
             mAudioOutTester.setSignalType(0);
         }
     }
-
-    private SeekBar.OnSeekBarChangeListener mVolumeChangeListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            setVolume(progress);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-        }
-    };
 
     @Override
     protected void inflateActivity() {
@@ -106,12 +90,6 @@ public final class TestOutputActivity extends TestOutputActivityBase {
         mOutputSignalSpinner.setSelection(StreamConfiguration.NATIVE_API_UNSPECIFIED);
 
         mCommunicationDeviceView = (CommunicationDeviceView) findViewById(R.id.comm_device_view);
-
-        mVolumeTextView = (TextView) findViewById(R.id.textVolumeSlider);
-        mVolumeSeekBar = (SeekBar) findViewById(R.id.faderVolumeSlider);
-        mVolumeSeekBar.setOnSeekBarChangeListener(mVolumeChangeListener);
-
-        mShouldSetStreamControlByAttributes = (CheckBox) findViewById(R.id.enableSetStreamControlByAttributes);
     }
 
     @Override
@@ -119,9 +97,16 @@ public final class TestOutputActivity extends TestOutputActivityBase {
         return ACTIVITY_TEST_OUTPUT;
     }
 
+    @Override
+    protected void onStop() {
+        if (mCommunicationDeviceView != null) {
+            mCommunicationDeviceView.cleanup();
+        }
+        super.onStop();
+    }
+
     public void openAudio() throws IOException {
         super.openAudio();
-        mShouldSetStreamControlByAttributes.setEnabled(false);
     }
 
     private void configureChannelBoxes(int channelCount) {
@@ -130,20 +115,6 @@ public final class TestOutputActivity extends TestOutputActivityBase {
             mChannelBoxes[i].setEnabled(i < channelCount);
         }
     }
-
-    private void setVolume(int progress) {
-        // Convert from (0, 500) range to (-50, 0).
-        double decibels = (progress - 500) / 10.0f;
-        double amplitude = Math.pow(10.0, decibels / 20.0);
-        // When the slider is all way to the left, set a zero amplitude.
-        if (progress == 0) {
-            amplitude = 0;
-        }
-        mVolumeTextView.setText("Volume(dB): " + String.format(Locale.getDefault(), "%.1f",
-                decibels));
-        mAudioOutTester.setAmplitude((float) amplitude);
-    }
-
 
     public void stopAudio() {
         configureChannelBoxes(0);
@@ -157,16 +128,9 @@ public final class TestOutputActivity extends TestOutputActivityBase {
         super.pauseAudio();
     }
 
-    public void releaseAudio() {
-        configureChannelBoxes(0);
-        mOutputSignalSpinner.setEnabled(true);
-        super.releaseAudio();
-    }
-
     public void closeAudio() {
         configureChannelBoxes(0);
         mOutputSignalSpinner.setEnabled(true);
-        mShouldSetStreamControlByAttributes.setEnabled(true);
         super.closeAudio();
     }
 
@@ -182,11 +146,6 @@ public final class TestOutputActivity extends TestOutputActivityBase {
         String text = (String) checkBox.getText();
         int channelIndex = Integer.parseInt(text);
         mAudioOutTester.setChannelEnabled(channelIndex, checkBox.isChecked());
-    }
-
-    @Override
-    protected boolean shouldSetStreamControlByAttributes() {
-        return mShouldSetStreamControlByAttributes.isChecked();
     }
 
     @Override

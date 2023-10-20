@@ -1,19 +1,3 @@
-/*
- * Copyright 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.mobileer.oboetester;
 
 import android.os.Bundle;
@@ -21,12 +5,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-/**
- * Look for glitches with various configurations.
- * A sine wave is played and continuously recorded using loopback.
- * An analyzer locks to the phase and magnitude of the detected sine wave.
- * It then compares the incoming signal with a predicted sine wave.
- */
 public class AutomatedGlitchActivity  extends BaseAutoGlitchActivity {
 
     private Spinner mDurationSpinner;
@@ -65,8 +43,6 @@ public class AutomatedGlitchActivity  extends BaseAutoGlitchActivity {
 
         mDurationSpinner = (Spinner) findViewById(R.id.spinner_glitch_duration);
         mDurationSpinner.setOnItemSelectedListener(new DurationSpinnerListener());
-
-        setAnalyzerText(getString(R.string.auto_glitch_instructions));
     }
 
     @Override
@@ -99,7 +75,9 @@ public class AutomatedGlitchActivity  extends BaseAutoGlitchActivity {
         requestedInConfig.setChannelCount(inChannels);
         requestedOutConfig.setChannelCount(outChannels);
 
-        testInOutConfigurations();
+        setTolerance(0.3f); // FIXME remove
+
+        testConfigurations();
     }
 
     private void testConfiguration(int performanceMode,
@@ -120,17 +98,10 @@ public class AutomatedGlitchActivity  extends BaseAutoGlitchActivity {
 
             mTestResults.clear();
 
-            // Test with STEREO on both input and output.
-            testConfiguration(StreamConfiguration.PERFORMANCE_MODE_LOW_LATENCY,
-                    StreamConfiguration.SHARING_MODE_EXCLUSIVE,
-                    UNSPECIFIED, STEREO, STEREO);
-
-            // Test EXCLUSIVE mode with a configuration most likely to work.
             testConfiguration(StreamConfiguration.PERFORMANCE_MODE_LOW_LATENCY,
                     StreamConfiguration.SHARING_MODE_EXCLUSIVE,
                     UNSPECIFIED);
 
-            // Test various combinations.
             for (int perfMode : PERFORMANCE_MODES) {
                 for (int sampleRate : SAMPLE_RATES) {
                     testConfiguration(perfMode,
@@ -139,10 +110,10 @@ public class AutomatedGlitchActivity  extends BaseAutoGlitchActivity {
                 }
             }
 
-            compareFailedTestsWithNearestPassingTest();
+            analyzeTestResults();
 
         } catch (InterruptedException e) {
-            compareFailedTestsWithNearestPassingTest();
+            analyzeTestResults();
 
         } catch (Exception e) {
             log(e.getMessage());

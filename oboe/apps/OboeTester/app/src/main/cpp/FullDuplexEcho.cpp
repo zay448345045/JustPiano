@@ -20,31 +20,17 @@
 oboe::Result  FullDuplexEcho::start() {
     int32_t delayFrames = (int32_t) (kMaxDelayTimeSeconds * getOutputStream()->getSampleRate());
     mDelayLine = std::make_unique<InterpolatingDelayLine>(delayFrames);
-    // Use peak detector for input streams
-    mNumChannels = getInputStream()->getChannelCount();
-    mPeakDetectors = std::make_unique<PeakDetector[]>(mNumChannels);
-    return FullDuplexStreamWithConversion::start();
+    return FullDuplexStream::start();
 }
 
-double FullDuplexEcho::getPeakLevel(int index) {
-    if (mPeakDetectors == nullptr) {
-        LOGE("%s() called before setup()", __func__);
-        return -1.0;
-    } else if (index < 0 || index >= mNumChannels) {
-        LOGE("%s(), index out of range, 0 <= %d < %d", __func__, index, mNumChannels.load());
-        return -2.0;
-    }
-    return mPeakDetectors[index].getLevel();
-}
-
-oboe::DataCallbackResult FullDuplexEcho::onBothStreamsReadyFloat(
+oboe::DataCallbackResult FullDuplexEcho::onBothStreamsReady(
         const float *inputData,
         int   numInputFrames,
         float *outputData,
         int   numOutputFrames) {
     int32_t framesToEcho = std::min(numInputFrames, numOutputFrames);
-    auto *inputFloat = const_cast<float *>(inputData);
-    float *outputFloat = outputData;
+    float *inputFloat = (float *)inputData;
+    float *outputFloat = (float *)outputData;
     // zero out entire output array
     memset(outputFloat, 0, static_cast<size_t>(numOutputFrames)
             * static_cast<size_t>(getOutputStream()->getBytesPerFrame()));
@@ -54,12 +40,6 @@ oboe::DataCallbackResult FullDuplexEcho::onBothStreamsReadyFloat(
     float delayFrames = mDelayTimeSeconds * getOutputStream()->getSampleRate();
     while (framesToEcho-- > 0) {
         *outputFloat = mDelayLine->process(delayFrames, *inputFloat); // mono delay
-
-        for (int iChannel = 0; iChannel < inputStride; iChannel++) {
-            float sample = * (inputFloat + iChannel);
-            mPeakDetectors[iChannel].process(sample);
-        }
-
         inputFloat += inputStride;
         outputFloat += outputStride;
     }
