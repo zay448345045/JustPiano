@@ -110,6 +110,8 @@ namespace iolib {
         _fluid_synth_t *pSynth{};
 
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
+
+        static void safeMemoryCopy(float *destination, float *source, size_t numBytes);
     };
 
 }

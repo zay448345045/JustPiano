@@ -54,8 +54,10 @@ namespace iolib {
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
         if (pSynth != nullptr) {
-            fluid_synth_write_float(pSynth, numFrames, &mMixBuffer[0], 0, 2, &mMixBuffer[1], 0, 2);
-            memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+            fluid_synth_write_float(pSynth, numFrames, &((float *) audioData)[0], 0, 2,
+                                    &((float *) audioData)[1], 0, 2);
+            safeMemoryCopy(mMixBuffer, ((float *) audioData),
+                           numFrames * mChannelCount * sizeof(float));
         } else {
             mixAudioToBuffer((float *) audioData, numFrames);
         }
@@ -77,7 +79,7 @@ namespace iolib {
             for (int32_t i = 0; i < queueSize; i++) {
                 std::__ndk1::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
                 sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
-                memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+                safeMemoryCopy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
                 if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
                     // this sample is finished
                     sampleSource->popCurFrameIndexQueue();
@@ -102,7 +104,7 @@ namespace iolib {
             mMixBuffer[i] /= mDecayFactor;
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
         }
-        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+        safeMemoryCopy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
     }
 
     void SimpleMultiPlayer::onErrorAfterClose(AudioStream *oboeStream, Result error) {
@@ -232,5 +234,20 @@ namespace iolib {
 
     void SimpleMultiPlayer::setSf2SynthPtr(_fluid_synth_t *synth) {
         this->pSynth = synth;
+    }
+
+    void SimpleMultiPlayer::safeMemoryCopy(float *destination, float *source, size_t numBytes) {
+        if (destination == nullptr || source == nullptr) {
+            return;
+        }
+        if (destination <= source &&
+            static_cast<float *>(destination) + numBytes > static_cast<const float *>(source)) {
+            return;
+        }
+        if (source <= destination &&
+            static_cast<float *>(source) + numBytes > static_cast<const float *>(destination)) {
+            return;
+        }
+        memcpy(destination, source, numBytes);
     }
 }
