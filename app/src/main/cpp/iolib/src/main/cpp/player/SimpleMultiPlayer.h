@@ -90,7 +90,7 @@ namespace iolib {
 
     private:
         // Oboe Audio Stream
-        oboe::ManagedStream mAudioStream;
+        std::shared_ptr<oboe::AudioStream> mAudioStream;
 
         // Audio attributes
         int32_t mChannelCount;

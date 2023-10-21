@@ -131,7 +131,7 @@ namespace iolib {
         builder.setSharingMode(SharingMode::Exclusive);
         builder.setSampleRateConversionQuality(SampleRateConversionQuality::Medium);
 
-        Result result = builder.openManagedStream(mAudioStream);
+        Result result = builder.openStream(mAudioStream);
         if (result != Result::OK) {
             __android_log_print(
                     ANDROID_LOG_ERROR,
@@ -139,6 +139,9 @@ namespace iolib {
                     "openStream failed. Error: %s", convertToText(result));
             return false;
         }
+
+        // Enable a device specific CPU performance hint.
+        mAudioStream->setPerformanceHintEnabled(true);
 
         // Reduce stream latency by setting the buffer size to a multiple of the burst size
         // Note: this will fail with ErrorUnimplemented if we are using a callback with OpenSL ES
