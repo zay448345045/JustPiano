@@ -40,6 +40,7 @@ import java.util.HashMap;
 public class TestPlugLatencyActivity extends TestAudioActivity {
 
     public static final int POLL_DURATION_MILLIS = 1;
+    public static final int TIMEOUT_MILLIS = 1000;
 
     private TextView     mInstructionsTextView;
     private TextView     mPlugTextView;
@@ -48,6 +49,7 @@ public class TestPlugLatencyActivity extends TestAudioActivity {
     private AudioManager mAudioManager;
 
     private volatile int mPlugCount = 0;
+    private long         mTimeoutAtMillis;
 
     private AudioOutputTester   mAudioOutTester;
 
@@ -58,12 +60,17 @@ public class TestPlugLatencyActivity extends TestAudioActivity {
         @Override
         public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
             boolean isBootingUp = mDevices.isEmpty();
+            AudioDeviceInfo outputDeviceInfo = null;
             for (AudioDeviceInfo info : addedDevices) {
                 mDevices.put(info.getId(), info);
                 if (!isBootingUp)
                 {
-                    log("Device Added");
+                    log("====== Device Added =======");
                     log(adiToString(info));
+                    // Only process OUTPUT devices because that is what we are testing.
+                    if (info.isSink()) {
+                        outputDeviceInfo = info;
+                    }
                 }
 
             }
@@ -71,17 +78,26 @@ public class TestPlugLatencyActivity extends TestAudioActivity {
             if (isBootingUp) {
                 log("Starting stream with existing audio devices");
             }
-            updateLatency(false /* wasDeviceRemoved */);
+            if (outputDeviceInfo != null) {
+                updateLatency(false /* wasDeviceRemoved */);
+            }
         }
 
         public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
+            AudioDeviceInfo outputDeviceInfo = null;
             for (AudioDeviceInfo info : removedDevices) {
                 mDevices.remove(info.getId());
-                log("Device Removed");
+                log("====== Device Removed =======");
                 log(adiToString(info));
+                // Only process OUTPUT devices because that is what we are testing.
+                if (info.isSink()) {
+                    outputDeviceInfo = info;
+                }
             }
 
-            updateLatency(true /* wasDeviceRemoved */);
+            if (outputDeviceInfo != null) {
+                updateLatency(true /* wasDeviceRemoved */);
+            }
         }
     }
 
@@ -153,41 +169,79 @@ public class TestPlugLatencyActivity extends TestAudioActivity {
         startAudio();
     }
 
+    private void setupTimeout() {
+        mTimeoutAtMillis = System.currentTimeMillis() + TIMEOUT_MILLIS;
+    }
+
+    private void sleepOrTimeout(String message) throws InterruptedException {
+        Thread.sleep(POLL_DURATION_MILLIS);
+        if (System.currentTimeMillis() >= mTimeoutAtMillis) {
+            throw new InterruptedException(message);
+        }
+    }
+
     private long calculateLatencyMs(boolean wasDeviceRemoved) {
-
-        long startMillis = System.currentTimeMillis();
-
+        long testStartMillis = System.currentTimeMillis();
+        long frameReadMillis = -1;
+        final int TIMEOUT_MAX = 100;
+        int timeout;
         try {
+            long callbackMillis = -1;
             if (wasDeviceRemoved && (mAudioOutTester != null)) {
+                log("Wait for error callback != 0");
                 // Keep querying as long as error is ok
+                setupTimeout();
                 while (mAudioOutTester.getLastErrorCallbackResult() == 0) {
-                    Thread.sleep(POLL_DURATION_MILLIS);
+                    sleepOrTimeout("timed out waiting while error==0");
                 }
-                log("Error callback at " + (System.currentTimeMillis() - startMillis) + " ms");
+                callbackMillis = System.currentTimeMillis();
+                log("Error callback at " + (callbackMillis - testStartMillis) + " ms. " +
+                        "WAIT -> CALLBACK = took " + (callbackMillis - testStartMillis) + " ms");
             }
             closeAudio();
-            log("Audio closed at " + (System.currentTimeMillis() - startMillis) + " ms");
+            long closedMillis = System.currentTimeMillis();
+            if (callbackMillis == -1) {
+                log("Audio closed at " + (closedMillis - testStartMillis) + " ms");
+            } else {
+                log("Audio closed at " + (closedMillis - testStartMillis) + " ms. " +
+                        "CALLBACK -> CLOSED took " + (closedMillis - callbackMillis) + " ms");
+            }
+
             clearStreamContexts();
             mAudioOutTester = addAudioOutputTester();
             openAudio();
-            log("Audio opened at " + (System.currentTimeMillis() - startMillis) + " ms");
+            long openedMillis = System.currentTimeMillis();
+            log("Audio opened at " + (openedMillis - testStartMillis) + " ms. " +
+                    "CLOSED -> OPENED took " + (openedMillis - closedMillis) + " ms");
             AudioStreamBase stream = mAudioOutTester.getCurrentAudioStream();
             startAudioTest();
-            log("Audio starting at " + (System.currentTimeMillis() - startMillis) + " ms");
+            long startingMillis = System.currentTimeMillis();
+            log("Audio starting at " + (startingMillis - testStartMillis) + " ms. " +
+                    "OPENED -> STARTING took " + (startingMillis - openedMillis) + " ms");
+
+            setupTimeout();
             while (stream.getState() == StreamConfiguration.STREAM_STATE_STARTING) {
-                Thread.sleep(POLL_DURATION_MILLIS);
+                sleepOrTimeout("timed out waiting while STATE_STARTING");
             }
-            log("Audio started at " + (System.currentTimeMillis() - startMillis) + " ms");
+            long startedMillis = System.currentTimeMillis();
+            log("Audio started at " + (startedMillis - testStartMillis) + " ms. " +
+                    "STARTING -> STARTED took " + (startedMillis - startingMillis) + " ms");
+
+            setupTimeout();
             while (mAudioOutTester.getFramesRead() == 0) {
-                Thread.sleep(POLL_DURATION_MILLIS);
+                sleepOrTimeout("timed out waiting while framesRead()==0");
             }
-            log("First frame read at " + (System.currentTimeMillis() - startMillis) + " ms");
+            frameReadMillis = System.currentTimeMillis();
+            log("First frame read at " + (frameReadMillis - testStartMillis) + " ms. " +
+                    "STARTED -> READ took " + (frameReadMillis - startedMillis) + " ms");
         } catch (IOException | InterruptedException e) {
+            log("EXCEPTION: " + e);
             e.printStackTrace();
+            closeAudio();
             return -1;
         }
 
-        return System.currentTimeMillis() - startMillis;
+        return frameReadMillis - testStartMillis;
     }
 
     public static String adiToString(AudioDeviceInfo adi) {

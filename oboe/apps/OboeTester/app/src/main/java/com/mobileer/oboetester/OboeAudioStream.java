@@ -29,7 +29,7 @@ abstract class OboeAudioStream extends AudioStreamBase {
     @Override
     public void stopPlayback() throws IOException {
         int result = stopPlaybackNative();
-        if (result < 0) {
+        if (result != 0) {
             throw new IOException("Stop Playback failed! result = " + result);
         }
     }
@@ -39,18 +39,12 @@ abstract class OboeAudioStream extends AudioStreamBase {
     @Override
     public void startPlayback() throws IOException {
         int result = startPlaybackNative();
-        if (result < 0) {
+        if (result != 0) {
             throw new IOException("Start Playback failed! result = " + result);
         }
     }
 
     public native int startPlaybackNative();
-
-    // Write disabled because the synth is in native code.
-    @Override
-    public int write(float[] buffer, int offset, int length) {
-        return 0;
-    }
 
     @Override
     public void open(StreamConfiguration requestedConfiguration,
@@ -66,6 +60,7 @@ abstract class OboeAudioStream extends AudioStreamBase {
                 requestedConfiguration.getInputPreset(),
                 requestedConfiguration.getUsage(),
                 requestedConfiguration.getContentType(),
+                requestedConfiguration.getBufferCapacityInFrames(),
                 requestedConfiguration.getDeviceId(),
                 requestedConfiguration.getSessionId(),
                 requestedConfiguration.getChannelConversionAllowed(),
@@ -76,7 +71,11 @@ abstract class OboeAudioStream extends AudioStreamBase {
         );
         if (result < 0) {
             streamIndex = INVALID_STREAM_INDEX;
-            throw new IOException("Open failed! result = " + result);
+            String message = "Open "
+                    + (isInput() ? "Input" : "Output")
+                    + " failed! result = " + result + ", "
+                    + StreamConfiguration.convertErrorToText(result);
+            throw new IOException(message);
         } else {
             streamIndex = result;
         }
@@ -98,6 +97,9 @@ abstract class OboeAudioStream extends AudioStreamBase {
         actualConfiguration.setDirection(isInput()
                 ? StreamConfiguration.DIRECTION_INPUT
                 : StreamConfiguration.DIRECTION_OUTPUT);
+        actualConfiguration.setHardwareChannelCount(getHardwareChannelCount());
+        actualConfiguration.setHardwareSampleRate(getHardwareSampleRate());
+        actualConfiguration.setHardwareFormat(getHardwareFormat());
     }
 
     private native int openNative(
@@ -111,6 +113,7 @@ abstract class OboeAudioStream extends AudioStreamBase {
             int inputPreset,
             int usage,
             int contentType,
+            int bufferCapacityInFrames,
             int deviceId,
             int sessionId,
             boolean channelConversionAllowed,
@@ -141,15 +144,22 @@ abstract class OboeAudioStream extends AudioStreamBase {
     private native int getBufferSizeInFrames(int streamIndex);
 
     @Override
-    public boolean isThresholdSupported() {
-        return true;
-    }
-
-    @Override
     public int setBufferSizeInFrames(int thresholdFrames) {
         return setBufferSizeInFrames(streamIndex, thresholdFrames);
     }
     private native int setBufferSizeInFrames(int streamIndex, int thresholdFrames);
+
+    @Override
+    public void setPerformanceHintEnabled(boolean checked) {
+        setPerformanceHintEnabled(streamIndex, checked);
+    }
+    private native void setPerformanceHintEnabled(int streamIndex, boolean checked);
+
+    @Override
+    public void setHearWorkload(boolean checked) {
+        setHearWorkload(streamIndex, checked);
+    }
+    private native void setHearWorkload(int streamIndex, boolean checked);
 
     public int getNativeApi() {
         return getNativeApi(streamIndex);
@@ -207,6 +217,21 @@ abstract class OboeAudioStream extends AudioStreamBase {
     }
     private native int getChannelMask(int streamIndex);
 
+    public int getHardwareChannelCount() {
+        return getHardwareChannelCount(streamIndex);
+    }
+    private native int getHardwareChannelCount(int streamIndex);
+
+    public int getHardwareSampleRate() {
+        return getHardwareSampleRate(streamIndex);
+    }
+    private native int getHardwareSampleRate(int streamIndex);
+
+    public int getHardwareFormat() {
+        return getHardwareFormat(streamIndex);
+    }
+    private native int getHardwareFormat(int streamIndex);
+
     public int getDeviceId() {
         return getDeviceId(streamIndex);
     }
@@ -216,6 +241,7 @@ abstract class OboeAudioStream extends AudioStreamBase {
         return getSessionId(streamIndex);
     }
     private native int getSessionId(int streamIndex);
+
 
     public boolean isMMap() {
         return isMMap(streamIndex);
@@ -256,10 +282,22 @@ abstract class OboeAudioStream extends AudioStreamBase {
     private native double getTimestampLatency(int streamIndex);
 
     @Override
-    public double getCpuLoad() {
+    public float getCpuLoad() {
         return getCpuLoad(streamIndex);
     }
-    private native double getCpuLoad(int streamIndex);
+    private native float getCpuLoad(int streamIndex);
+
+    @Override
+    public float getAndResetMaxCpuLoad() {
+        return getAndResetMaxCpuLoad(streamIndex);
+    }
+    private native float getAndResetMaxCpuLoad(int streamIndex);
+
+    @Override
+    public int getAndResetCpuMask() {
+        return getAndResetCpuMask(streamIndex);
+    }
+    private native int getAndResetCpuMask(int streamIndex);
 
     @Override
     public String getCallbackTimeStr() {
@@ -268,7 +306,7 @@ abstract class OboeAudioStream extends AudioStreamBase {
     public native String getCallbackTimeString();
 
     @Override
-    public native void setWorkload(double workload);
+    public native void setWorkload(int workload);
 
     @Override
     public int getState() {
@@ -277,6 +315,8 @@ abstract class OboeAudioStream extends AudioStreamBase {
     private native int getState(int streamIndex);
 
     public static native void setCallbackReturnStop(boolean b);
+
+    public static native void setHangTimeMillis(int hangTimeMillis);
 
     public static native void setUseCallback(boolean checked);
 

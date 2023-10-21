@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Container for the properties of a Stream.
@@ -44,6 +45,7 @@ public class StreamConfiguration {
     public static final int AUDIO_FORMAT_PCM_FLOAT = 2; // must match AAUDIO
     public static final int AUDIO_FORMAT_PCM_24 = 3; // must match AAUDIO
     public static final int AUDIO_FORMAT_PCM_32 = 4; // must match AAUDIO
+    public static final int AUDIO_FORMAT_IEC61937 = 5; // must match AAUDIO
 
     public static final int DIRECTION_OUTPUT = 0; // must match AAUDIO
     public static final int DIRECTION_INPUT = 1; // must match AAUDIO
@@ -72,7 +74,25 @@ public class StreamConfiguration {
     public static final int INPUT_PRESET_UNPROCESSED = 9; // must match Oboe
     public static final int INPUT_PRESET_VOICE_PERFORMANCE = 10; // must match Oboe
 
+    public static final int ERROR_BASE = -900; // must match Oboe
     public static final int ERROR_DISCONNECTED = -899; // must match Oboe
+    public static final int ERROR_ILLEGAL_ARGUMENT = -898; // must match Oboe
+    public static final int ERROR_INTERNAL = -896; // must match Oboe
+    public static final int ERROR_INVALID_STATE = -895; // must match Oboe
+    public static final int ERROR_INVALID_HANDLE = -892; // must match Oboe
+    public static final int ERROR_UNIMPLEMENTED = -890; // must match Oboe
+    public static final int ERROR_UNAVAILABLE = -889; // must match Oboe
+    public static final int ERROR_NO_FREE_HANDLES = -888; // must match Oboe
+    public static final int ERROR_NO_MEMORY = -887; // must match Oboe
+    public static final int ERROR_NULL = -886; // must match Oboe
+    public static final int ERROR_TIMEOUT = -885; // must match Oboe
+    public static final int ERROR_WOULD_BLOCK = -884; // must match Oboe
+    public static final int ERROR_INVALID_FORMAT = -883; // must match Oboe
+    public static final int ERROR_OUT_OF_RANGE = -882; // must match Oboe
+    public static final int ERROR_NO_SERVICE = -881; // must match Oboe
+    public static final int ERROR_INVALID_RATE = -880; // must match Oboe
+    public static final int ERROR_CLOSED = -869; // must match Oboe
+    public static final int ERROR_OK = 0; // must match Oboe
 
     public static final int USAGE_MEDIA = 1;
     public static final int USAGE_VOICE_COMMUNICATION = 2;
@@ -277,6 +297,9 @@ public class StreamConfiguration {
     private int mFramesPerBurst;
     private boolean mMMap;
     private int mChannelMask;
+    private int mHardwareChannelCount;
+    private int mHardwareSampleRate;
+    private int mHardwareFormat;
 
     public StreamConfiguration() {
         reset();
@@ -327,6 +350,9 @@ public class StreamConfiguration {
         mChannelConversionAllowed = false;
         mRateConversionQuality = RATE_CONVERSION_QUALITY_NONE;
         mMMap = NativeEngine.isMMapSupported();
+        mHardwareChannelCount = UNSPECIFIED;
+        mHardwareSampleRate = UNSPECIFIED;
+        mHardwareFormat = UNSPECIFIED;
     }
 
     public int getFramesPerBurst() {
@@ -486,6 +512,8 @@ public class StreamConfiguration {
                 return "I32";
             case AUDIO_FORMAT_PCM_FLOAT:
                 return "Float";
+            case AUDIO_FORMAT_IEC61937:
+                return "IEC61937";
             default:
                 return "Invalid";
         }
@@ -571,26 +599,30 @@ public class StreamConfiguration {
     public String dump() {
         String prefix = (getDirection() == DIRECTION_INPUT) ? "in" : "out";
         StringBuffer message = new StringBuffer();
-        message.append(String.format("%s.channels = %d\n", prefix, mChannelCount));
-        message.append(String.format("%s.perf = %s\n", prefix,
-                convertPerformanceModeToText(mPerformanceMode).toLowerCase()));
+        message.append(String.format(Locale.getDefault(), "%s.channels = %d\n", prefix, mChannelCount));
+        message.append(String.format(Locale.getDefault(), "%s.perf = %s\n", prefix,
+                convertPerformanceModeToText(mPerformanceMode).toLowerCase(Locale.getDefault())));
         if (getDirection() == DIRECTION_INPUT) {
-            message.append(String.format("%s.preset = %s\n", prefix,
-                    convertInputPresetToText(mInputPreset).toLowerCase()));
+            message.append(String.format(Locale.getDefault(), "%s.preset = %s\n", prefix,
+                    convertInputPresetToText(mInputPreset).toLowerCase(Locale.getDefault())));
         } else {
-            message.append(String.format("%s.preset = %s\n", prefix,
-                    convertUsageToText(mUsage).toLowerCase()));
-            message.append(String.format("%s.contentType = %s\n", prefix,
-                    convertContentTypeToText(mContentType).toLowerCase()));
+            message.append(String.format(Locale.getDefault(), "%s.usage = %s\n", prefix,
+                    convertUsageToText(mUsage).toLowerCase(Locale.getDefault())));
+            message.append(String.format(Locale.getDefault(), "%s.contentType = %s\n", prefix,
+                    convertContentTypeToText(mContentType).toLowerCase(Locale.getDefault())));
         }
-        message.append(String.format("%s.sharing = %s\n", prefix,
-                convertSharingModeToText(mSharingMode).toLowerCase()));
-        message.append(String.format("%s.api = %s\n", prefix,
-                convertNativeApiToText(getNativeApi()).toLowerCase()));
-        message.append(String.format("%s.rate = %d\n", prefix, mSampleRate));
-        message.append(String.format("%s.device = %d\n", prefix, mDeviceId));
-        message.append(String.format("%s.mmap = %s\n", prefix, isMMap() ? "yes" : "no"));
-        message.append(String.format("%s.rate.conversion.quality = %d\n", prefix, mRateConversionQuality));
+        message.append(String.format(Locale.getDefault(), "%s.sharing = %s\n", prefix,
+                convertSharingModeToText(mSharingMode).toLowerCase(Locale.getDefault())));
+        message.append(String.format(Locale.getDefault(), "%s.api = %s\n", prefix,
+                convertNativeApiToText(getNativeApi()).toLowerCase(Locale.getDefault())));
+        message.append(String.format(Locale.getDefault(), "%s.rate = %d\n", prefix, mSampleRate));
+        message.append(String.format(Locale.getDefault(), "%s.device = %d\n", prefix, mDeviceId));
+        message.append(String.format(Locale.getDefault(), "%s.mmap = %s\n", prefix, isMMap() ? "yes" : "no"));
+        message.append(String.format(Locale.getDefault(), "%s.rate.conversion.quality = %d\n", prefix, mRateConversionQuality));
+        message.append(String.format(Locale.getDefault(), "%s.hardware.channels = %d\n", prefix, mHardwareChannelCount));
+        message.append(String.format(Locale.getDefault(), "%s.hardware.sampleRate = %d\n", prefix, mHardwareSampleRate));
+        message.append(String.format(Locale.getDefault(), "%s.hardware.format = %s\n", prefix,
+                convertFormatToText(mHardwareFormat).toLowerCase(Locale.getDefault())));
         return message.toString();
     }
 
@@ -622,7 +654,7 @@ public class StreamConfiguration {
     }
 
     private static boolean matchInputPreset(String text, int preset) {
-        return convertInputPresetToText(preset).toLowerCase().equals(text);
+        return convertInputPresetToText(preset).toLowerCase(Locale.getDefault()).equals(text);
     }
 
     /**
@@ -631,7 +663,7 @@ public class StreamConfiguration {
      * @return inputPreset, eg. INPUT_PRESET_CAMCORDER
      */
     public static int convertTextToInputPreset(String text) {
-        text = text.toLowerCase();
+        text = text.toLowerCase(Locale.getDefault());
         if (matchInputPreset(text, INPUT_PRESET_GENERIC)) {
             return INPUT_PRESET_GENERIC;
         } else if (matchInputPreset(text, INPUT_PRESET_CAMCORDER)) {
@@ -726,4 +758,72 @@ public class StreamConfiguration {
         return mChannelMaskStrings;
     }
 
+    public int getHardwareChannelCount() {
+        return mHardwareChannelCount;
+    }
+
+    public void setHardwareChannelCount(int hardwareChannelCount) {
+        this.mHardwareChannelCount = hardwareChannelCount;
+    }
+
+    public int getHardwareSampleRate() {
+        return mHardwareSampleRate;
+    }
+
+    public void setHardwareSampleRate(int hardwareSampleRate) {
+        this.mHardwareSampleRate = hardwareSampleRate;
+    }
+
+    public int getHardwareFormat() {
+        return mHardwareFormat;
+    }
+
+    public void setHardwareFormat(int hardwareFormat) {
+        this.mHardwareFormat = hardwareFormat;
+    }
+
+    static String convertErrorToText(int error) {
+        switch (error) {
+            case ERROR_BASE:
+                return "ErrorBase";
+            case ERROR_DISCONNECTED:
+                return "ErrorDisconnected";
+            case ERROR_ILLEGAL_ARGUMENT:
+                return "ErrorIllegalArgument";
+            case ERROR_INTERNAL:
+                return "ErrorInternal";
+            case ERROR_INVALID_STATE:
+                return "ErrorInvalidState";
+            case ERROR_INVALID_HANDLE:
+                return "ErrorInvalidHandle";
+            case ERROR_UNIMPLEMENTED:
+                return "ErrorUnimplemented";
+            case ERROR_UNAVAILABLE:
+                return "ErrorUnavailable";
+            case ERROR_NO_FREE_HANDLES:
+                return "ErrorNoFreeHandles";
+            case ERROR_NO_MEMORY:
+                return "ErrorNoMemory";
+            case ERROR_NULL:
+                return "ErrorNull";
+            case ERROR_TIMEOUT:
+                return "ErrorTimeout";
+            case ERROR_WOULD_BLOCK:
+                return "ErrorWouldBlock";
+            case ERROR_INVALID_FORMAT:
+                return "ErrorInvalidFormat";
+            case ERROR_OUT_OF_RANGE:
+                return "ErrorOutOfRange";
+            case ERROR_NO_SERVICE:
+                return "ErrorNoService";
+            case ERROR_INVALID_RATE:
+                return "ErrorInvalidRate";
+            case ERROR_CLOSED:
+                return "ErrorClosed";
+            case ERROR_OK:
+                return "ErrorOk";
+            default:
+                return "?=" + error;
+        }
+    }
 }

@@ -17,17 +17,15 @@
 package com.mobileer.oboetester;
 
 import android.content.Intent;
-import android.media.audiofx.AcousticEchoCanceler;
-import android.media.audiofx.AutomaticGainControl;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.RadioButton;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +42,6 @@ public class TestInputActivity  extends TestAudioActivity {
     private InputMarginView mInputMarginView;
     private int mInputMarginBursts = 0;
     private WorkloadView mWorkloadView;
-    private CommunicationDeviceView mCommunicationDeviceView;
 
     public native void setMinimumFramesBeforeRead(int frames);
     public native int saveWaveFile(String absolutePath);
@@ -80,14 +77,6 @@ public class TestInputActivity  extends TestAudioActivity {
         }
 
         mCommunicationDeviceView = (CommunicationDeviceView) findViewById(R.id.comm_device_view);
-    }
-
-    @Override
-    protected void onStop() {
-        if (mCommunicationDeviceView != null) {
-            mCommunicationDeviceView.cleanup();
-        }
-        super.onStop();
     }
 
     @Override
@@ -148,11 +137,6 @@ public class TestInputActivity  extends TestAudioActivity {
     public void stopAudio() {
         super.stopAudio();
         resetVolumeBars();
-    }
-
-    @Override
-    protected void toastPauseError(int result) {
-        showToast("Pause not implemented. Returned " + result);
     }
 
     protected int saveWaveFile(File file) {

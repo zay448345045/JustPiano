@@ -39,6 +39,8 @@ import android.util.Log;
 import com.mobileer.audio_device.AudioDeviceListEntry;
 import com.mobileer.audio_device.AudioDeviceSpinner;
 
+import java.util.Locale;
+
 /**
  * View for Editing a requested StreamConfiguration
  * and displaying the actual StreamConfiguration.
@@ -63,7 +65,8 @@ public class StreamConfigurationView extends LinearLayout {
     private Spinner mChannelMaskSpinner;
     private TextView mActualChannelMaskView;
     private TextView mActualFormatView;
-
+    private Spinner  mCapacitySpinner;
+    private TextView mActualCapacityView;
     private TableRow mInputPresetTableRow;
     private Spinner  mInputPresetSpinner;
     private TextView mActualInputPresetView;
@@ -288,6 +291,10 @@ public class StreamConfigurationView extends LinearLayout {
         });
         mActualFormatView = (TextView) findViewById(R.id.actualAudioFormat);
         mFormatSpinner = (Spinner) findViewById(R.id.spinnerFormat);
+
+        mActualCapacityView = (TextView) findViewById(R.id.actualCapacity);
+        mCapacitySpinner = (Spinner) findViewById(R.id.spinnerCapacity);
+
         mRateConversionQualitySpinner = (Spinner) findViewById(R.id.spinnerSRCQuality);
 
         mActualPerformanceView = (TextView) findViewById(R.id.actualPerformanceMode);
@@ -388,12 +395,16 @@ public class StreamConfigurationView extends LinearLayout {
             int channelMask = StreamConfiguration.convertTextToChannelMask(text);
             config.setChannelMask(channelMask);
             config.setChannelCount(0);
-            Log.d(TAG, String.format("Set channel mask as %s(%#x)", text, channelMask));
+            Log.d(TAG, String.format(Locale.getDefault(), "Set channel mask as %s(%#x)", text, channelMask));
         } else {
             config.setChannelCount(mChannelCountSpinner.getSelectedItemPosition());
             config.setChannelMask(StreamConfiguration.UNSPECIFIED);
             Log.d(TAG, "Set channel count as " + mChannelCountSpinner.getSelectedItemPosition());
         }
+
+        text = mCapacitySpinner.getSelectedItem().toString();
+        int bufferCapacity = Integer.parseInt(text);
+        config.setBufferCapacityInFrames(bufferCapacity);
 
         config.setMMap(mRequestedMMapView.isChecked());
         config.setChannelConversionAllowed(mChannelConversionBox.isChecked());
@@ -418,6 +429,7 @@ public class StreamConfigurationView extends LinearLayout {
         mFormatConversionBox.setEnabled(enabled);
         mChannelCountSpinner.setEnabled(enabled);
         mChannelMaskSpinner.setEnabled(enabled);
+        mCapacitySpinner.setEnabled(enabled);
         mInputPresetSpinner.setEnabled(enabled);
         mUsageSpinner.setEnabled(enabled);
         mContentTypeSpinner.setEnabled(enabled);
@@ -465,14 +477,27 @@ public class StreamConfigurationView extends LinearLayout {
         mActualSessionIdView.setText("S#: " + actualConfiguration.getSessionId());
         value = actualConfiguration.getChannelMask();
         mActualChannelMaskView.setText(StreamConfiguration.convertChannelMaskToText(value));
+        mActualCapacityView.setText(actualConfiguration.getBufferCapacityInFrames() + "");
 
         boolean isMMap = actualConfiguration.isMMap();
-        mStreamInfoView.setText("burst = " + actualConfiguration.getFramesPerBurst()
-                + ", capacity = " + actualConfiguration.getBufferCapacityInFrames()
-                + ", devID = " + actualConfiguration.getDeviceId()
-                + ", " + (actualConfiguration.isMMap() ? "MMAP" : "Legacy")
-                + (isMMap ? ", " + StreamConfiguration.convertSharingModeToText(sharingMode) : "")
-        );
+
+        String msg = "";
+        msg += "burst = " + actualConfiguration.getFramesPerBurst();
+        msg += ", devID = " + actualConfiguration.getDeviceId();
+        msg += ", " + (actualConfiguration.isMMap() ? "MMAP" : "Legacy");
+        msg += (isMMap ? ", " + StreamConfiguration.convertSharingModeToText(sharingMode) : "");
+
+        int hardwareChannelCount = actualConfiguration.getHardwareChannelCount();
+        int hardwareSampleRate = actualConfiguration.getHardwareSampleRate();
+        int hardwareFormat = actualConfiguration.getHardwareFormat();
+        msg += "\nHW: #ch=" + (hardwareChannelCount ==
+                StreamConfiguration.UNSPECIFIED ? "?" : hardwareChannelCount);
+        msg += ", SR=" + (hardwareSampleRate ==
+                StreamConfiguration.UNSPECIFIED ? "?" : hardwareSampleRate);
+        msg += ", format=" + (hardwareFormat == StreamConfiguration.UNSPECIFIED ?
+               "?" : StreamConfiguration.convertFormatToText(hardwareFormat));
+
+        mStreamInfoView.setText(msg);
 
         mHideableView.requestLayout();
     }
@@ -531,7 +556,7 @@ public class StreamConfigurationView extends LinearLayout {
                 if (mAcousticEchoCanceler != null) {
                     mAcousticEchoCanceler.setEnabled(mAcousticEchoCancelerCheckBox.isChecked());
                 } else {
-                    Log.e(TAG, String.format("Could not create AcousticEchoCanceler"));
+                    Log.e(TAG, String.format(Locale.getDefault(), "Could not create AcousticEchoCanceler"));
                 }
             }
             // If AGC is not available, the checkbox will be disabled in initializeViews().
@@ -540,7 +565,7 @@ public class StreamConfigurationView extends LinearLayout {
                 if (mAutomaticGainControl != null) {
                     mAutomaticGainControl.setEnabled(mAutomaticGainControlCheckBox.isChecked());
                 } else {
-                    Log.e(TAG, String.format("Could not create AutomaticGainControl"));
+                    Log.e(TAG, String.format(Locale.getDefault(), "Could not create AutomaticGainControl"));
                 }
             }
         }

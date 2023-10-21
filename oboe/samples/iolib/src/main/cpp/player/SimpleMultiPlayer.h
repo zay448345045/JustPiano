@@ -107,11 +107,9 @@ namespace iolib {
 
         bool mOutputReset;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
-        _fluid_synth_t *pSynth{};
+        _fluid_synth_t *pSynth{nullptr};
 
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
-
-        static void safeMemoryCopy(float *destination, float *source, size_t numBytes);
     };
 
 }

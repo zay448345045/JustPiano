@@ -1,9 +1,11 @@
 package com.mobileer.oboetester;
 
 import android.app.Activity;
+import android.media.AudioDeviceInfo;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Measure tap-to-tone latency by and update the waveform display.
@@ -176,7 +178,7 @@ public class TapToToneTester {
                     mLatencyMax = latencyMillis;
                 }
 
-                text = String.format("tap-to-tone latency = %3d msec\n", latencyMillis);
+                text = String.format(Locale.getDefault(), "tap-to-tone latency = %3d msec\n", latencyMillis);
             }
             mWaveformView.setSampleData(result.filtered);
         }
@@ -185,7 +187,7 @@ public class TapToToneTester {
             int averageLatencySamples = mLatencySumSamples / mMeasurementCount;
             int averageLatencyMillis = 1000 * averageLatencySamples / result.frameRate;
             final String plural = (mMeasurementCount == 1) ? "test" : "tests";
-            text = text + String.format("min = %3d, avg = %3d, max = %3d, %d %s",
+            text = text + String.format(Locale.getDefault(), "min = %3d, avg = %3d, max = %3d, %d %s",
                     mLatencyMin, averageLatencyMillis, mLatencyMax, mMeasurementCount, plural);
         }
         final String postText = text;
@@ -197,5 +199,9 @@ public class TapToToneTester {
         });
 
         mArmed = true;
+    }
+
+    void setInputDevice(AudioDeviceInfo deviceInfo) {
+        mRecorder.setInputDevice(deviceInfo);
     }
 }
