@@ -84,7 +84,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private int categoryPosition = -1;
     private PopupWindow sortPopupWindow;
     private PopupWindow menuPopupWindow;
-    private PopupWindow normalModePopupWindow;
     private TextView timeText;
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
@@ -255,7 +254,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
                 popupWindow2.setContentView(inflate2);
-                normalModePopupWindow = popupWindow2;
+                menuPopupWindow = popupWindow2;
                 popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
                 return;
             case R.id.lo_extra_func_settings:  // 参数设置
@@ -266,13 +265,15 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                 return;
             case R.id.lo_extra_func_sync:  // 曲库同步
-
+                menuPopupWindow.dismiss();
                 new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
                 return;
             case R.id.lo_extra_func_midi_import:  // midi导入
+                menuPopupWindow.dismiss();
                 FilePickerUtil.openFileManager(this, false);
                 return;
             case R.id.lo_extra_func_record:  // 录音文件
+                menuPopupWindow.dismiss();
                 menuPopupWindow.dismiss();
                 SongPlay.INSTANCE.stopPlay();
                 Intent intent2 = new Intent();
@@ -280,6 +281,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 startActivity(intent2);
                 return;
             case R.id.lo_extra_func_data_export: // 数据导出
+                menuPopupWindow.dismiss();
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setWidth(500);
                 jpDialogBuilder.setTitle("数据导入导出");
@@ -306,6 +308,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 jpDialogBuilder.buildAndShowDialog();
                 return;
             case R.id.lo_extra_func_total_score: // 分数统计
+                menuPopupWindow.dismiss();
                 totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
                     Toast.makeText(this, "曲谱:" + totalSongInfo.getTotalCount() + " " + "总分"+ totalSongInfo.getTotalScore(),Toast.LENGTH_LONG).show();
                 });
