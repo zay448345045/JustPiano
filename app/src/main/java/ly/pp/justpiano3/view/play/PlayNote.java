@@ -149,23 +149,4 @@ public final class PlayNote {
         }
         return posiAdd15AddAnim;
     }
-
-    public void noCompatibleMode(Canvas canvas) {  // 欣赏模式
-        posiAdd15AddAnim = posiAdd15 + playView.progress;
-        if (posiAdd15AddAnim >= playView.halfHeightSub20) {
-            if (newNote && GlobalSetting.INSTANCE.isOpenChord()) {
-                if (trackValue == handValue) {
-                    playView.drawFire(canvas, noteValue % 12);
-                }
-                playNote = SoundEngineUtil.playSound(noteValue, volumeValue);
-                newNote = false;
-            }
-            if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
-                SoundEngineUtil.stopPlaySound(playNote);
-            }
-        }
-        if (canvas != null && trackValue == handValue) {
-            canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
-        }
-    }
 }

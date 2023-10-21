@@ -57,9 +57,9 @@ public final class SoundDownloadAdapter extends BaseAdapter {
         if (i == 0) {
             imageView.setImageResource(R.drawable.icon);
             scrollText.setText("还原默认音源");
-            textView.setText("");
+            textView.setText("还原极品钢琴默认音源");
             textView3.setText("");
-            textView2.setText("还原极品钢琴默认音源");
+            textView2.setText("");
             view.setOnClickListener(v -> soundDownload.handleSound(2, "还原默认音源", "", 0, "", ".ss"));
         } else {
             try {

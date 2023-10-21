@@ -161,6 +161,14 @@
             android:title="瀑布流音符下落速率"
             android:dialogTitle="瀑布流音符下落速率" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="在线键盘">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyboard_realtime"
+            android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有琴键按下或抬起操作统一进行传输，有少许延迟，整体流畅性更好"
+            android:summaryOn="&lt;打开&gt;每个琴键按下或抬起时，立即传输数据，延迟较低，实时性好，能耗更高"
+            android:title="协奏模式(琴键数据实时传输)" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="在线聊天">
         <SwitchPreference
             android:defaultValue="false"

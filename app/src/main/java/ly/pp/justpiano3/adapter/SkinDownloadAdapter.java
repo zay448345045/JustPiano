@@ -56,9 +56,9 @@ public final class SkinDownloadAdapter extends BaseAdapter {
         if (i == 0) {
             imageView.setImageResource(R.drawable.icon);
             scrollText.setText("还原默认皮肤");
-            textView.setText("");
+            textView.setText("还原极品钢琴默认皮肤");
             textView3.setText("");
-            textView2.setText("还原极品钢琴默认皮肤");
+            textView2.setText("");
             view.setOnClickListener(v -> skinDownload.mo2992a(2, "还原默认皮肤", "", 0, ""));
         } else {
             try {

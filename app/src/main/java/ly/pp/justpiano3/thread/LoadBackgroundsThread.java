@@ -88,11 +88,7 @@ public final class LoadBackgroundsThread extends Thread {
                         canvas.drawBitmap(playView.roughLineImage, null, new RectF(0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
                     }
                     // 绘制吊线和音块
-                    if (GlobalSetting.INSTANCE.getGameMode() != LocalPlayModeEnum.HEAR) {
-                        playView.mo2930b(canvas);
-                    } else {
-                        playView.mo2931c(canvas);
-                    }
+                    playView.mo2930b(canvas);
                 }
                 // 绘制屏幕上方的小键盘
                 if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {

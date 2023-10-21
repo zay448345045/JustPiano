@@ -916,30 +916,6 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    public void mo2931c(Canvas canvas) {
-        newNote = true;
-        tempNotesArray.clear();
-        for (PlayNote currentPlayNote : notesList) {
-            if (currentPlayNote.posiAdd15AddAnim <= halfHeightSub10) {
-                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && newNote) {
-                    if (!currentPlayNote.hideNote) {
-                        noteMod12 = currentPlayNote.noteDiv12;
-                    }
-                    volume0 = currentPlayNote.volumeValue;
-                    newNote = false;
-                }
-                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && f4713V) {
-                    currentNotePitch = currentPlayNote.noteValue;
-                    f4713V = false;
-                }
-                currentPlayNote.noCompatibleMode(canvas);
-            } else {
-                tempNotesArray.add(currentPlayNote);
-            }
-        }
-        notesList.removeAll(tempNotesArray);
-    }
-
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
     }
@@ -950,20 +926,18 @@ public final class PlayView extends SurfaceView implements Callback {
         loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
-        if (GlobalSetting.INSTANCE.getGameMode() != LocalPlayModeEnum.HEAR) {
-            setOnTouchListener(new TouchNotes(this));
-            setAccessibilityDelegate(new View.AccessibilityDelegate() {
-                @Override
-                public boolean performAccessibilityAction(View host, int action, Bundle args) {
-                    if (action == AccessibilityNodeInfo.ACTION_CLICK
-                            || action == AccessibilityNodeInfo.ACTION_LONG_CLICK) {
-                        pianoPlay.finish();
-                        return true;
-                    }
-                    return super.performAccessibilityAction(host, action, args);
+        setOnTouchListener(new TouchNotes(this));
+        setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                if (action == AccessibilityNodeInfo.ACTION_CLICK
+                        || action == AccessibilityNodeInfo.ACTION_LONG_CLICK) {
+                    pianoPlay.finish();
+                    return true;
                 }
-            });
-        }
+                return super.performAccessibilityAction(host, action, args);
+            }
+        });
     }
 
     @Override

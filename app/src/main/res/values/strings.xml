@@ -272,7 +272,6 @@
     <string name="olplayroom_mode">模式</string>
     <string name="play_select_normal">普通模式</string>
     <string name="play_select_prac">练习模式</string>
-    <string name="play_select_lis">欣赏模式</string>
     <string name="popuserinfo_add">加为好友</string>
     <string name="popuserinfo_pm">私信Ta</string>
     <string name="popuserinfo_si">该用户暂未设置个性签名</string>
@@ -311,18 +310,5 @@
     <string name="family_date">最后登录日期</string>
     <string name="family_lv">等级</string>
     <string name="family_co">贡献</string>
-    <string name="ol_keyboard_sync_mode_orchestrate">编排同步</string>
-    <string name="ol_keyboard_sync_mode_concerto">协奏同步</string>
-    <string name="ol_keyboard_sync_mode_text">编排</string>
-    <string name="ol_keyboard_sync_mode_help">
-        编排同步：\n
-        \t\t在一个周期内弹奏的音符会被排列，固定延迟同步给大家\n
-        \t\t适用于保证演奏效果或弱网络下，大部分音符不会被网络所耽误\n
-        \t\t总结：延迟高，同步效率低，不会被延迟打乱演奏效果，适合单人演奏\n
-        协奏同步：\n
-        \t\t当键盘被按下或放开时，立即同步给大家，不做任何处理\n
-        \t\t适用于网络效率好的情况下，保证超高的同步率\n
-        \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
-    </string>
     <string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
 </resources>

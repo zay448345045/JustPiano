@@ -77,7 +77,6 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                                 }
                             }
                         }
-
                         if (name.endsWith(".ss")) {
                             GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory()
                                     + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());

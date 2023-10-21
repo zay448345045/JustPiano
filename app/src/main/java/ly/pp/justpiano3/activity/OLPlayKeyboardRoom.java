@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -16,16 +18,20 @@ import android.widget.TabHost.TabSpec;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.adapter.SimpleSkinListAdapter;
 import ly.pp.justpiano3.adapter.SimpleSoundListAdapter;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
 import ly.pp.justpiano3.entity.Room;
-import ly.pp.justpiano3.enums.KeyboardSyncModeEnum;
+import ly.pp.justpiano3.entity.SongData;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
 import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
@@ -52,10 +58,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public MidiReceiver midiReceiver;
     public boolean midiKeyboardOn;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
-    /**
-     * 键盘房间同步模式(默认编排模式)
-     */
-    private KeyboardSyncModeEnum keyboardSyncMode = KeyboardSyncModeEnum.CONCERTO;
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
     public LinearLayout keyboardLayout;
@@ -70,26 +72,21 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     private boolean busyAnim;
     // 琴键动画间隔
     private int interval = 320;
-    public PopupWindow keyboardSettingPopup;
     private boolean recordStart;
     private String recordFilePath;
     private String recordFileName;
 
     private void broadNote(int pitch, int volume) {
-        switch (keyboardSyncMode) {
-            case ORCHESTRATE:
-                // 编排模式
-                notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
-                break;
-            case CONCERTO:
-                // 协奏模式
-                OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-                builder.addData((((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1));
-                builder.addData(0);
-                builder.addData(pitch);
-                builder.addData(volume);
-                sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
-                break;
+        if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+            // 协奏模式
+            OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+            builder.addData((((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1));
+            builder.addData(0);
+            builder.addData(pitch);
+            builder.addData(volume);
+            sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
+        } else {
+            notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
         }
     }
 
@@ -193,115 +190,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         super.onClick(view);
         switch (view.getId()) {
             case R.id.keyboard_setting:
-                PopupWindow popupWindow2 = new PopupWindow(this);
-                View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_keyboard_setting_list, null);
-                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                inflate2.findViewById(R.id.midi_down_tune).setOnClickListener(this);
-                inflate2.findViewById(R.id.midi_up_tune).setOnClickListener(this);
-                inflate2.findViewById(R.id.sound_down_tune).setOnClickListener(this);
-                inflate2.findViewById(R.id.sound_up_tune).setOnClickListener(this);
-                inflate2.findViewById(R.id.skin_setting).setOnClickListener(this);
-                inflate2.findViewById(R.id.sound_setting).setOnClickListener(this);
-                inflate2.findViewById(R.id.keyboard_sync_mode_concerto).setOnClickListener(this);
-                inflate2.findViewById(R.id.keyboard_sync_mode_text).setOnClickListener(this);
-                inflate2.findViewById(R.id.keyboard_sync_mode_orchestrate).setOnClickListener(this);
-                popupWindow2.setFocusable(true);
-                popupWindow2.setTouchable(true);
-                popupWindow2.setOutsideTouchable(true);
-                popupWindow2.setContentView(inflate2);
-                // 键盘声调回显
-                TextView midiTune = inflate2.findViewById(R.id.midi_tune);
-                midiTune.setText(String.valueOf(GlobalSetting.INSTANCE.getMidiKeyboardTune()));
-                // 声调回显
-                TextView soundTune = inflate2.findViewById(R.id.sound_tune);
-                soundTune.setText(String.valueOf(GlobalSetting.INSTANCE.getKeyboardSoundTune()));
-                // 同步模式回显
-                TextView syncModeText = inflate2.findViewById(R.id.keyboard_sync_mode_text);
-                syncModeText.setText(keyboardSyncMode.getDesc());
-                keyboardSettingPopup = popupWindow2;
-                popupWindow2.showAtLocation(keyboardSetting, Gravity.CENTER, 0, 0);
-                return;
-            case R.id.midi_down_tune:
-                if (GlobalSetting.INSTANCE.getMidiKeyboardTune() > -6) {
-                    GlobalSetting.INSTANCE.setMidiKeyboardTune(GlobalSetting.INSTANCE.getMidiKeyboardTune() - 1);
-                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
-                }
-                if (keyboardSettingPopup != null) {
-                    keyboardSettingPopup.dismiss();
-                }
-                return;
-            case R.id.midi_up_tune:
-                if (GlobalSetting.INSTANCE.getMidiKeyboardTune() < 6) {
-                    GlobalSetting.INSTANCE.setMidiKeyboardTune(GlobalSetting.INSTANCE.getMidiKeyboardTune() + 1);
-                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
-                }
-                if (keyboardSettingPopup != null) {
-                    keyboardSettingPopup.dismiss();
-                }
-                return;
-            case R.id.sound_down_tune:
-                if (GlobalSetting.INSTANCE.getKeyboardSoundTune() > -6) {
-                    GlobalSetting.INSTANCE.setKeyboardSoundTune(GlobalSetting.INSTANCE.getKeyboardSoundTune() - 1);
-                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
-                }
-                if (keyboardSettingPopup != null) {
-                    keyboardSettingPopup.dismiss();
-                }
-                return;
-            case R.id.sound_up_tune:
-                if (GlobalSetting.INSTANCE.getKeyboardSoundTune() < 6) {
-                    GlobalSetting.INSTANCE.setKeyboardSoundTune(GlobalSetting.INSTANCE.getKeyboardSoundTune() + 1);
-                    GlobalSetting.INSTANCE.saveSettings(jpapplication);
-                }
-                if (keyboardSettingPopup != null) {
-                    keyboardSettingPopup.dismiss();
-                }
-                return;
-            case R.id.skin_setting:
-                try {
-                    String path = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-                    List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(path);
-                    List<String> skinList = new ArrayList<>();
-                    skinList.add("原生主题");
-                    for (File file : localSkinList) {
-                        skinList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
-                    }
-                    View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
-                    ListView listView = inflate.findViewById(R.id.account_list);
-                    JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换皮肤").loadInflate(inflate)
-                            .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
-                    listView.setAdapter(new SimpleSkinListAdapter(skinList, localSkinList, layoutInflater, this, b));
-                    b.show();
-                    if (keyboardSettingPopup != null) {
-                        keyboardSettingPopup.dismiss();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return;
-            case R.id.sound_setting:
-                try {
-                    String path = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
-                    List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(path);
-                    List<String> soundList = new ArrayList<>();
-                    soundList.add("原生音源");
-                    for (File file : localSoundList) {
-                        soundList.add(file.getName().substring(0, file.getName().lastIndexOf('.')));
-                    }
-                    View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
-                    ListView listView = inflate.findViewById(R.id.account_list);
-                    JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换皮肤").loadInflate(inflate)
-                            .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
-                    listView.setAdapter(new SimpleSoundListAdapter(soundList, localSoundList, layoutInflater, this, b));
-                    b.show();
-                    if (keyboardSettingPopup != null) {
-                        keyboardSettingPopup.dismiss();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Intent intent = new Intent();
+                intent.setClass(this, SettingsMode.class);
+                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                 return;
             case R.id.keyboard_record:
                 try {
@@ -342,26 +233,13 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 return;
             default:
         }
+    }
 
-        int viewId = view.getId();
-        if (viewId == R.id.keyboard_sync_mode_text) {
-            try {
-                new JPDialogBuilder(this).setWidth(480).setTitle(getString(R.string.msg_this_is_what))
-                        .setMessage(getString(R.string.ol_keyboard_sync_mode_help))
-                        .setFirstButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (viewId == R.id.keyboard_sync_mode_orchestrate) {
-            keyboardSyncMode = KeyboardSyncModeEnum.ORCHESTRATE;
-            if (keyboardSettingPopup != null) {
-                keyboardSettingPopup.dismiss();
-            }
-        } else if (viewId == R.id.keyboard_sync_mode_concerto) {
-            keyboardSyncMode = KeyboardSyncModeEnum.CONCERTO;
-            if (keyboardSettingPopup != null) {
-                keyboardSettingPopup.dismiss();
-            }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
+            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         }
     }
 

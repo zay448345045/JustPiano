@@ -135,6 +135,11 @@ object GlobalSetting{
     var keyboardOctaveTagType: Int = 0
 
     /**
+     * 钢琴键盘显示按键标签种类
+     */
+    var keyboardRealtime: Boolean = true
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -168,6 +173,7 @@ object GlobalSetting{
         showChatTime = sharedPreferences.getBoolean("chats_time_show",false)
         showNotification = sharedPreferences.getBoolean("show_notification",false)
         keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type","0")!!.toInt()
+        keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime",true)
     }
 
     /**
@@ -199,6 +205,7 @@ object GlobalSetting{
         edit.putBoolean("chats_time_show", showChatTime)
         edit.putBoolean("show_notification", showNotification)
         edit.putString("octave_tag_type", keyboardOctaveTagType.toString())
+        edit.putBoolean("keyboard_realtime", keyboardRealtime)
         edit.apply()
     }
 }
