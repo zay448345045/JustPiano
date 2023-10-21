@@ -27,7 +27,7 @@
 #include "OneShotSampleSource.h"
 #include "SampleBuffer.h"
 #include "RecordingIO.h"
-#include "fluidsynth/fluid_synth.h"
+#include "fluidsynth.h"
 
 namespace iolib {
 

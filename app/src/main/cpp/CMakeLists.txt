@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.4.1)
-set(CMAKE_VERBOSE_MAKEFILE on)
 
 # Pull in parselib
 set(PARSELIB_DIR ../../../../oboe/samples/parselib)
@@ -11,6 +10,27 @@ set(IOLIB_DIR ../../../../oboe/samples/iolib)
 
 # Set the path to the Oboe library directory
 set(OBOE_DIR ../../../../oboe)
+
+set(FLUID_SYNTH_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/lib/${ANDROID_ABI})
+set(FLUID_SYNTH_LIB_FILES
+        libfluidsynth.so
+        libglib-2.0.so
+        libgthread-2.0.so
+        libsndfile.so
+        libinstpatch-1.0.so
+        libgobject-2.0.so
+        libpcre.so
+        libvorbisenc.so
+        libFLAC.so
+        libopus.so
+        libvorbis.so
+        libogg.so
+        )
+
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/${ANDROID_ABI})
+set(LIB_FILES
+        libomp.so
+        )
 
 add_subdirectory(${OBOE_DIR} ./oboe-bin)
 
@@ -26,7 +46,6 @@ include_directories(
 include(${PARSELIB_DIR}/src/main/cpp/CMakeLists.txt)
 include(${IOLIB_DIR}/src/main/cpp/CMakeLists.txt)
 
-# Include the WavLib headers and shared sample code
 include_directories(
         ${PARSELIB_DIR}/src/main/cpp
         ${IOLIB_DIR}/src/main/cpp)
@@ -36,35 +55,6 @@ set(APP_SOURCES
         SoundEngine.cpp
         RecordingIO.cpp
         utils/Utils.h
-        fluidsynth/fluid_adriver.c
-        fluidsynth/fluid_dll.c
-        fluidsynth/fluid_list.c
-        fluidsynth/fluid_seq.c
-        fluidsynth/fluid_mdriver.c
-        fluidsynth/fluid_seqbind.c
-        fluidsynth/fluid_aufile.c
-        fluidsynth/fluid_cmd.c
-        fluidsynth/fluid_dsp_float.c
-        fluidsynth/fluid_midi.c
-        fluidsynth/fluid_settings.c
-        fluidsynth/fluid_chan.c
-        fluidsynth/fluid_midi_router.c
-        fluidsynth/fluid_sndmgr.c
-        fluidsynth/fluid_chorus.c
-        fluidsynth/fluid_event.c
-        fluidsynth/fluid_synth.c
-        fluidsynth/fluid_gen.c
-        fluidsynth/fluid_mod.c
-        fluidsynth/fluid_sys.c
-        fluidsynth/fluid_conv.c
-        fluidsynth/fluid_hash.c
-        fluidsynth/fluid_tuning.c
-        fluidsynth/fluid_voice.c
-        fluidsynth/fluid_io.c
-        fluidsynth/fluid_dart.c
-        fluidsynth/fluid_ramsfont.c
-        fluidsynth/fluid_defsfont.c
-        fluidsynth/fluid_rev.c
         )
 
 # Build the (native) library
@@ -72,25 +62,25 @@ add_library(soundengine SHARED
         ${APP_SOURCES}
         )
 
+foreach (FLUID_SYNTH_LIB_FILE ${FLUID_SYNTH_LIB_FILES})
+    add_library(${FLUID_SYNTH_LIB_FILE} SHARED IMPORTED)
+    set_target_properties(${FLUID_SYNTH_LIB_FILE} PROPERTIES
+            IMPORTED_LOCATION "${FLUID_SYNTH_LIB_DIR}/${FLUID_SYNTH_LIB_FILE}"
+            )
+    target_link_libraries(soundengine ${FLUID_SYNTH_LIB_FILE})
+endforeach ()
+
+foreach (LIB_FILE ${LIB_FILES})
+    add_library(${LIB_FILE} SHARED IMPORTED)
+    set_target_properties(${LIB_FILE} PROPERTIES
+            IMPORTED_LOCATION "${LIB_DIR}/${LIB_FILE}"
+            )
+    target_link_libraries(soundengine ${LIB_FILE})
+endforeach ()
+
 # Enable optimization flags: if having problems with source level debugging,
 # disable -Ofast ( and debug ), re-enable after done debugging.
 # target_compile_options(soundengine PRIVATE -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")
-
-target_compile_definitions(soundengine PRIVATE
-        HAVE_PTHREAD_H
-        HAVE_STDLIB_H
-        HAVE_STDIO_H
-        HAVE_MATH_H
-        HAVE_STRING_H
-        HAVE_STDARG_H
-        HAVE_SYS_SOCKET_H
-        HAVE_NETINET_IN_H
-        HAVE_ARPA_INET_H
-        HAVE_NETINET_TCP_H
-        HAVE_UNISTD_H
-        HAVE_ERRNO_H
-        HAVE_FCNTL_H
-        VERSION=1.0.9)
 
 target_link_libraries( # Specifies the target library.
         soundengine
