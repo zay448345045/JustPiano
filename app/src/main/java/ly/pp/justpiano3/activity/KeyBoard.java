@@ -306,7 +306,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
             firstKeyboardView.changeSkinKeyboardImage(this);
             secondKeyboardView.changeSkinKeyboardImage(this);
             KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];

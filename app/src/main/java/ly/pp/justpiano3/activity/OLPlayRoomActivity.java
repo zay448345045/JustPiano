@@ -574,7 +574,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         jpapplication = (JPApplication) getApplication();
         getRoomPlayerMap().clear();
         connectionService = jpapplication.getConnectionService();
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         roomInfoBundle = getIntent().getExtras();
         hallInfoBundle = roomInfoBundle.getBundle("bundle");

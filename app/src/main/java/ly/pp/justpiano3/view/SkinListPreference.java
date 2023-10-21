@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.DialogPreference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -18,10 +19,11 @@ import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 public class SkinListPreference extends DialogPreference {
-    public File f5024d;
+    public File skinFile;
     public String skinKey = "";
     public Context context;
     public JPProgressBar jpProgressBar;
@@ -79,6 +81,9 @@ public class SkinListPreference extends DialogPreference {
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
         persistString(skinKey);
+        if (context instanceof PreferenceActivity) {
+            ImageLoadUtil.setBackground(context, "ground", ((PreferenceActivity) context).getWindow());
+        }
     }
 
     @Override

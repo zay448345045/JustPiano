@@ -51,7 +51,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_play_select);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         findViewById(R.id.game_mode).setOnClickListener(this);
         findViewById(R.id.keyboard).setOnClickListener(this);
         findViewById(R.id.freestyle_mode).setOnClickListener(this);

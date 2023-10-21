@@ -151,7 +151,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);
             if (fileList.size() != 1) {
@@ -324,7 +324,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         layoutInflater2 = LayoutInflater.from(this);
         LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.lo_melody_list, null);
         setContentView(linearLayout);
-        ImageLoadUtil.setBackGround(this, "ground", linearLayout);
+        ImageLoadUtil.setBackground(this, "ground", linearLayout);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);

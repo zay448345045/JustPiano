@@ -131,7 +131,7 @@ public class ShowTopInfo extends Activity implements Callback, OnClickListener {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_top_info);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         f4989e = findViewById(R.id.ol_top_list);

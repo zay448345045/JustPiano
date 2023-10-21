@@ -97,7 +97,7 @@ public class RecordFiles extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);
         f4919d.setCacheColorHint(0);
         f4921f = findViewById(R.id.txt1);

@@ -51,7 +51,7 @@ public final class SkinDownloadClick implements OnClickListener {
                         }
                     }
                 }
-                ImageLoadUtil.setBackGround(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
+                ImageLoadUtil.setBackground(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
                 break;
         }
     }

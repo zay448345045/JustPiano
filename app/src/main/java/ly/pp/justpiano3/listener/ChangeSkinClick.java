@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -13,28 +14,19 @@ import ly.pp.justpiano3.task.SkinListPreferenceTask;
 
 public final class ChangeSkinClick implements OnClickListener {
     private final SkinListAdapter skinListAdapter;
-    private final String f5945b;
+    private final String skinKey;
 
-    public ChangeSkinClick(SkinListAdapter c1305mc, String str) {
-        skinListAdapter = c1305mc;
-        f5945b = str;
+    public ChangeSkinClick(SkinListAdapter skinListAdapter, String skinKey) {
+        this.skinListAdapter = skinListAdapter;
+        this.skinKey = skinKey;
     }
 
     @Override
     public void onClick(View view) {
-        int i = 0;
-        switch (f5945b) {
+        skinListAdapter.skinListPreference.skinKey = skinKey;
+        switch (skinKey) {
             case "original":
-                File dir = skinListAdapter.context.getDir("Skin", Context.MODE_PRIVATE);
-                if (dir.isDirectory()) {
-                    File[] listFiles = dir.listFiles();
-                    if (listFiles != null && listFiles.length > 0) {
-                        while (i < listFiles.length) {
-                            listFiles[i].delete();
-                            i++;
-                        }
-                    }
-                }
+                new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
                 break;
             case "more":
                 Intent intent = new Intent();
@@ -43,8 +35,8 @@ public final class ChangeSkinClick implements OnClickListener {
                 skinListAdapter.context.startActivity(intent);
                 break;
             default:
-                skinListAdapter.skinListPreference.f5024d = new File(f5945b);
-                new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute();
+                skinListAdapter.skinListPreference.skinFile = new File(skinKey);
+                new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
                 break;
         }
     }

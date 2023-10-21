@@ -297,7 +297,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_family);
         cs = jpapplication.getConnectionService();
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));

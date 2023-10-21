@@ -260,7 +260,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             layoutInflater2 = LayoutInflater.from(this);
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Consts.sortNames).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             setContentView(LayoutInflater.from(this).inflate(R.layout.ol_melody_list, null));
-            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
             LinearLayout linearLayout = findViewById(R.id.sup_view);
             findViewById(R.id.ol_search_button).setOnClickListener(this);
             ListView f4326o = findViewById(R.id.ol_f_list);

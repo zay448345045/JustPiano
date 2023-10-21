@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,19 +18,13 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
-import ly.pp.justpiano3.adapter.SimpleSkinListAdapter;
-import ly.pp.justpiano3.adapter.SimpleSoundListAdapter;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
 import ly.pp.justpiano3.entity.Room;
-import ly.pp.justpiano3.entity.SongData;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
 import ly.pp.justpiano3.midi.JPMidiReceiver;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
@@ -42,7 +35,6 @@ import ly.pp.justpiano3.view.KeyboardView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
@@ -239,7 +231,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         }
     }
 

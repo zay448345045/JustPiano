@@ -370,7 +370,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         jpapplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_room_list);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
         findViewById(R.id.ol_send_b).setOnLongClickListener(this);

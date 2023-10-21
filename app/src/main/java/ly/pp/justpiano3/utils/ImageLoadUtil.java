@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -178,7 +179,7 @@ public class ImageLoadUtil {
         }
     }
 
-    public static void setBackGround(Context context, String str, ViewGroup viewGroup) {
+    public static void setBackground(Context context, String str, ViewGroup viewGroup) {
         if (viewGroup == null) {
             return;
         }
@@ -199,6 +200,27 @@ public class ImageLoadUtil {
             }
         } else {
             viewGroup.setBackgroundResource(R.drawable.ground);
+        }
+    }
+
+    public static void setBackground(Context context, String str, Window window) {
+        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
+            } catch (Exception ignored) {
+            }
+            if (bitmap == null) {
+                try {
+                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+                } catch (Exception ignored) {
+                }
+            }
+            if (bitmap != null) {
+                window.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
+            }
+        } else {
+            window.setBackgroundDrawableResource(R.drawable.ground);
         }
     }
 }
