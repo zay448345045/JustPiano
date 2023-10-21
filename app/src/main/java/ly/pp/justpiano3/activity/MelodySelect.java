@@ -242,7 +242,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             case R.id.menu_list_fast:
                 PopupWindow popupWindow2 = new PopupWindow(this);
                 View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
-                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                 inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
