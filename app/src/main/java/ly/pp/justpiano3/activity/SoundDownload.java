@@ -151,8 +151,6 @@ public class SoundDownload extends Activity implements Callback {
                     }
                 }
             }
-            SoundEngineUtil.teardownAudioStreamNative();
-            SoundEngineUtil.unloadWavAssetsNative();
 
             if (soundFileName.endsWith(".ss")) {
                 GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName), file.toString());
@@ -163,6 +161,8 @@ public class SoundDownload extends Activity implements Callback {
             edit.apply();
 
             if (soundFileName.endsWith(".ss")) {
+                SoundEngineUtil.teardownAudioStreamNative();
+                SoundEngineUtil.unloadWavAssetsNative();
                 SoundEngineUtil.unloadSf2Sound();
                 for (int i = 108; i >= 24; i--) {
                     SoundEngineUtil.preloadSounds(this, i);

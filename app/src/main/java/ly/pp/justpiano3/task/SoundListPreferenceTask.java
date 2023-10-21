@@ -33,8 +33,6 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 }
             }
         }
-        SoundEngineUtil.teardownAudioStreamNative();
-        SoundEngineUtil.unloadWavAssetsNative();
 
         File soundFile = new File(objects[1]);
         if (!soundFile.exists()) {
@@ -45,6 +43,8 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         }
 
         if (soundFile.getName().endsWith(".ss")) {
+            SoundEngineUtil.teardownAudioStreamNative();
+            SoundEngineUtil.unloadWavAssetsNative();
             SoundEngineUtil.unloadSf2Sound();
             for (int i = 108; i >= 24; i--) {
                 SoundEngineUtil.preloadSounds(soundListPreference.context, i);

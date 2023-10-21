@@ -41,7 +41,6 @@ public class SoundEngineUtil {
     public static native void setSf2SynthPtr(long sf2SynthPtr);
 
     public static byte playSound(byte pitch, byte volume) {
-        // 测试sf2
         if (enableSf2Synth && sf2SynthPtr != null) {
             noteOn(sf2SynthPtr, 0, pitch, (int) Math.min(127, Math.ceil(volume / 100f * 128)));
             return pitch;

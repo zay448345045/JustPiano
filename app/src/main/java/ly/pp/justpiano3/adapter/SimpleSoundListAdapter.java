@@ -76,8 +76,6 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                                 }
                             }
                         }
-                        SoundEngineUtil.teardownAudioStreamNative();
-                        SoundEngineUtil.unloadWavAssetsNative();
 
                         if (name.endsWith(".ss")) {
                             GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory()
@@ -89,6 +87,8 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         edit.apply();
 
                         if (name.endsWith(".ss")) {
+                            SoundEngineUtil.teardownAudioStreamNative();
+                            SoundEngineUtil.unloadWavAssetsNative();
                             SoundEngineUtil.unloadSf2Sound();
                             for (int i = 108; i >= 24; i--) {
                                 SoundEngineUtil.preloadSounds(olPlayKeyboardRoom, i);
