@@ -71,6 +71,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     public String songsPath = "";
     public CheckBox isRecord;
     public CheckBox isLeftHand;
+    public CheckBox isAutoPlayNext;
+    public CheckBox isPractise;
     public EditText songSearchEditText;
     private Button sortButton;
     private ImageView menuListButton;
@@ -100,6 +102,12 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                     break;
                 case 1:
                     edit.putBoolean("hand_dialog", false);
+                    break;
+                case 2:
+                    edit.putBoolean("auto_play_next_dialog", false);
+                    break;
+                case 3:
+                    edit.putBoolean("practise_dialog", false);
                     break;
             }
             edit.apply();
@@ -324,8 +332,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         } else {
             isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                    buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动录音，弹奏完成时结束录音并存储至文件。" +
-                            "录音功能仅录制极品钢琴内弹奏的音频，不含其他后台音频及环境杂音", 0);
+                    buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件", 0);
                 }
             });
         }
@@ -336,6 +343,26 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
                     buildDoNotShowDialogAndShow("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 1);
+                }
+            });
+        }
+        isAutoPlayNext = findViewById(R.id.check_play_next);
+        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
+            isAutoPlayNext.setVisibility(View.GONE);
+        } else {
+            isAutoPlayNext.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked && sharedPreferences.getBoolean("auto_play_next_dialog", true)) {
+                    buildDoNotShowDialogAndShow("选择后曲谱将按界面列表中展示的顺序自动播放下一首", 2);
+                }
+            });
+        }
+        isPractise = findViewById(R.id.check_practise);
+        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
+            isPractise.setVisibility(View.GONE);
+        } else {
+            isPractise.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked && sharedPreferences.getBoolean("practise_dialog", true)) {
+                    buildDoNotShowDialogAndShow("选择后您在弹奏时，音块下落到判断线会自动暂停，帮助您练习弹奏曲谱", 3);
                 }
             });
         }

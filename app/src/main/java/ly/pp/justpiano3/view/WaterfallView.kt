@@ -14,7 +14,11 @@ import kotlin.math.abs
 /**
  * 瀑布流绘制view
  */
-class WaterfallView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class WaterfallView @JvmOverloads constructor(
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
     SurfaceView(context, attrs, defStyleAttr) {
 
     /**
@@ -156,11 +160,12 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
         noteStatus = arrayOfNulls(this.waterfallNotes.size)
         Arrays.fill(noteStatus, NoteStatus.INIT)
         // 计算曲谱总进度 = 所有音块（其实是最后一个音块）上边界的最大值 + view的高度（预留最后一个音块落下时的时间）
-        totalProgress = this.waterfallNotes.maxOf { it.top } + height
+        totalProgress = (this.waterfallNotes.maxOfOrNull { it.top } ?: 0f) + height
         // 初始化背景图的绘制范围
         backgroundRect = RectF(0f, 0f, width.toFloat(), height.toFloat())
         // 初始化进度条背景图（基底）的绘制坐标
-        progressBarBaseRect = RectF(0f, 0f, width.toFloat(), progressBarBaseImage!!.height.toFloat())
+        progressBarBaseRect =
+            RectF(0f, 0f, width.toFloat(), progressBarBaseImage!!.height.toFloat())
         // 初始化进度条的绘制坐标，初始情况下，进度条宽度为0
         progressBarRect = RectF(0f, 0f, 0f, progressBarImage!!.height.toFloat())
         // 开启绘制线程
@@ -247,13 +252,15 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                 // 单独触摸按下view时，触发暂停/继续播放操作
                 pauseOrResumePlay()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 // 检测是否为滑动：手指的横坐标偏离原来位置10像素，因按压时仅仅是普通点击，滑动的偏移像素很少时也会执行ACTION_MOVE事件
                 if (isScrolling || abs(event.x.coerceAtLeast(0f) - lastX) > 10) {
                     // 刚刚检测到有滑动时，不管原来是在播放还是暂停，统一触发暂停下落瀑布
                     pausePlay()
                     // 根据目前手指滑动的X坐标的偏移量占总宽度的比例，来计算本次手指滑动的偏移量时间（进度）
-                    val moveProgressOffset = (event.x.coerceAtLeast(0f) - lastX) / width * totalProgress
+                    val moveProgressOffset =
+                        (event.x.coerceAtLeast(0f) - lastX) / width * totalProgress
                     // 如果经过计算后的进度落在总进度之内，则继续执行设置进度操作
                     if (moveProgressOffset + playProgress in 0f..totalProgress) {
                         waterfallDownNotesThread!!.progressScrollOffset += moveProgressOffset
@@ -266,6 +273,7 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                     isScrolling = true
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (isScrolling) {
                     // 在滑动后，手指抬起，则触发继续播放
@@ -385,7 +393,8 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                     // updatePauseOffset可以理解为本次暂停过程一共暂停了多少毫秒，所以需要加偏移量补偿掉这些毫秒
                     // 由于暂停的时候会人工拖动进度条操纵进度的修改，所以需要把人工操纵进度的结果progressScrollOffset也算上
                     // 都处理结束之后再清零progressScrollOffset
-                    val updatePauseOffset = playIntervalTime - pauseProgress!! - progressScrollOffset
+                    val updatePauseOffset =
+                        playIntervalTime - pauseProgress!! - progressScrollOffset
                     progressPauseTime += updatePauseOffset
                     // 接下来当前的绘制帧，调整playIntervalTime，也减掉偏移量的改变值，使当前帧的绘制顺滑起来
                     playIntervalTime -= updatePauseOffset
@@ -402,7 +411,8 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                     updateNoteStatusByProgress(playIntervalTime)
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
-                progress = (if (isPause) pauseProgress!! else playIntervalTime) + progressScrollOffset
+                progress =
+                    (if (isPause) pauseProgress!! else playIntervalTime) + progressScrollOffset
                 // 如果发现进度大于总进度，说明播放完成，此时标记暂停
                 // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
                 if (progress > totalProgress) {
@@ -495,9 +505,11 @@ class WaterfallView @JvmOverloads constructor(context: Context?, attrs: Attribut
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
                     // 根据音符的左右手确定音块的颜色
-                    val color = if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
+                    val color =
+                        if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
                     // 根据音符是否为弹奏中状态，确定颜色是否要高亮显示
-                    notePaint.color = if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(color) else color
+                    notePaint.color =
+                        if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(color) else color
                     // 根据音符的力度，确定音块绘制的透明度
                     notePaint.alpha = minOf(waterfallNote.volume / 100f * 128 * 2, 255f).toInt()
                     // 绘制音块

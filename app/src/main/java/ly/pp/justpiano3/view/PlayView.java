@@ -97,7 +97,7 @@ public final class PlayView extends SurfaceView implements Callback {
     public Bitmap roughLineImage;
     public String songsName;
     private Bitmap playNoteImage;
-    private Bitmap practiceNoteImage;
+    private Bitmap practiseNoteImage;
     private int gameType;
     private Bitmap progressBarImage;
     private Bitmap progressBarBaseImage;
@@ -239,7 +239,7 @@ public final class PlayView extends SurfaceView implements Callback {
         noteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_note_hd");
         blackNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "black_note_hd");
         playNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "play_note_hd");
-        practiceNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "play_note_hd");
+        practiseNoteImage = ImageLoadUtil.loadSkinImage(pianoPlay, "play_note_hd");
         whiteKeyRightImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_r");
         whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_m");
         whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(pianoPlay, "white_l");
@@ -793,7 +793,7 @@ public final class PlayView extends SurfaceView implements Callback {
                             }
                         }
                     }
-                    if (GlobalSetting.INSTANCE.getGameMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
+                    if (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
                             && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
@@ -989,8 +989,8 @@ public final class PlayView extends SurfaceView implements Callback {
             blackNoteImage = null;
             playNoteImage.recycle();
             playNoteImage = null;
-            practiceNoteImage.recycle();
-            practiceNoteImage = null;
+            practiseNoteImage.recycle();
+            practiseNoteImage = null;
             whiteKeyRightImage.recycle();
             whiteKeyRightImage = null;
             whiteKeyMiddleImage.recycle();

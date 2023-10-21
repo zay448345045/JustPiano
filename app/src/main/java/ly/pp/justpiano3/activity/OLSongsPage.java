@@ -81,7 +81,7 @@ public class OLSongsPage extends Activity implements OnClickListener {
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_songs_page);
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
-        GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_melodyList_b).setOnClickListener(this);
         findViewById(R.id.ol_hotSongs_b).setOnClickListener(this);
         findViewById(R.id.ol_search_b).setOnClickListener(this);

@@ -10,9 +10,9 @@ import ly.pp.justpiano3.enums.LocalPlayModeEnum
 object GlobalSetting{
 
     /**
-     * 游戏模式
+     * 本地模式
      */
-    var gameMode = LocalPlayModeEnum.NORMAL
+    var localPlayMode = LocalPlayModeEnum.NORMAL
 
     /**
      * 音块变色

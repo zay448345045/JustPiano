@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/ground"
-              android:keepScreenOn="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ground"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout9"
@@ -26,8 +26,7 @@
         android:background="@color/blue_d"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:gravity="center_horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -58,9 +57,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.1"
             android:background="@drawable/selector_orange_button"
-            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/melodylist1_sort_b"
@@ -101,8 +100,8 @@
                 android:ems="10"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:singleLine="true"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="#ffffffff"
                 android:textColorHint="#90ffffff"
                 android:textSize="14sp" />
@@ -112,32 +111,77 @@
             android:id="@+id/search_fast"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.25"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_weight="0.25"
             android:background="@drawable/selector_ol_button"
             android:src="@drawable/search" />
 
-        <CheckBox
-            android:id="@+id/check_record"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/dimen_8dp"
-            android:gravity="center"
-            android:text="@string/melodylist1_rec"
-            android:textSize="16sp" />
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <CheckBox
-            android:id="@+id/check_hand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/melodylist1_hand"
-            android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/check_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/dimen_8dp"
+                    android:gravity="center"
+                    android:text="@string/melodylist1_rec"
+                    android:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/check_hand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/melodylist1_hand"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/check_play_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/dimen_8dp"
+                    android:gravity="center"
+                    android:text="@string/melodylist1_auto_next"
+                    android:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/check_practise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/melodylist1_practise"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="@dimen/dimen_0dp"

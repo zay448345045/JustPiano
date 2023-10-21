@@ -28,26 +28,15 @@ public class PlayModeSelect extends Activity implements OnClickListener {
             case R.id.game_mode:
                 intent = new Intent();
                 intent.setClass(this, MelodySelect.class);
-                GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.NORMAL);
+                GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
                 startActivity(intent);
                 finish();
                 return;
-            case R.id.practice_mode:
+            case R.id.freestyle_mode:
                 intent = new Intent();
-                intent.setClass(this, MelodySelect.class);
-                GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.PRACTISE);
+                intent.setClass(this, WaterfallActivity.class);
                 startActivity(intent);
-                finish();
                 return;
-            /*
-             case R.id.listen_mode:
-                intent = new Intent();
-                intent.setClass(this, MelodySelect.class);
-                GlobalSetting.INSTANCE.setGameMode(LocalPlayModeEnum.HEAR);
-                startActivity(intent);
-                finish();
-                return;
-            */
             case R.id.keyboard:
                 intent = new Intent();
                 intent.setClass(this, KeyBoard.class);
@@ -65,7 +54,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
         ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
         findViewById(R.id.game_mode).setOnClickListener(this);
         findViewById(R.id.keyboard).setOnClickListener(this);
-        findViewById(R.id.practice_mode).setOnClickListener(this);
+        findViewById(R.id.freestyle_mode).setOnClickListener(this);
         //     findViewById(R.id.listen_mode).setOnClickListener(this);
     }
 }
