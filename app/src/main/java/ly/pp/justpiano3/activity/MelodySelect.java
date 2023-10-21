@@ -10,10 +10,12 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
+import androidx.constraintlayout.motion.widget.MotionScene;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -81,6 +84,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private int categoryPosition = -1;
     private PopupWindow sortPopupWindow;
     private PopupWindow menuPopupWindow;
+    private PopupWindow normalModePopupWindow;
     private TextView timeText;
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
@@ -132,51 +136,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 this.orderPosition = orderPosition;
                 break;
             case 2:
-                menuPopupWindow.dismiss();
-                SongPlay.INSTANCE.stopPlay();
-                Intent intent = new Intent();
-                switch (data.getInt("selIndex")) {
-                    case 0:  // 参数设置
-                        intent.setClass(this, SettingsMode.class);
-                        startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
-                        break;
-                    case 1:  // 曲库同步
-                        new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
-                        break;
-                    case 2:  // midi导入
-                        FilePickerUtil.openFileManager(this, false);
-                        break;
-                    case 3:  // 录音文件
-                        intent.setClass(this, RecordFiles.class);
-                        startActivity(intent);
-                        break;
-                    case 4: // 数据导出
-                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                        jpDialogBuilder.setWidth(500);
-                        jpDialogBuilder.setTitle("数据导入导出");
-                        jpDialogBuilder.setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
-                                "导出路径为SD卡\\JustPiano\\local_data.db，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
-                        jpDialogBuilder.setVisibleRadioGroup(true);
-                        RadioButton radioButton = new RadioButton(this);
-                        radioButton.setText("APP本地数据导出至SD卡\\JustPiano\\local_data.db");
-                        radioButton.setTextSize(13);
-                        radioButton.setTag(1);
-                        radioButton.setHeight(150);
-                        jpDialogBuilder.addRadioButton(radioButton);
-                        radioButton = new RadioButton(this);
-                        radioButton.setText("清空当前数据，导入SD卡\\JustPiano\\local_data.db数据至APP");
-                        radioButton.setTextSize(13);
-                        radioButton.setTag(2);
-                        radioButton.setHeight(150);
-                        jpDialogBuilder.addRadioButton(radioButton);
-                        jpDialogBuilder.setFirstButton("执行", (dialog, which) -> {
-                            dialog.dismiss();
-                            new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
-                        });
-                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
-                        jpDialogBuilder.buildAndShowDialog();
-                        break;
-                }
                 break;
             case 3:
                 CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
@@ -188,7 +147,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         }
         return false;
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -282,9 +240,75 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 }
                 return;
             case R.id.menu_list_fast:
-                if (firstLoadFocusFinish) {
-                    menuPopupWindow.showAsDropDown(menuListButton);
-                }
+                PopupWindow popupWindow2 = new PopupWindow(this);
+                View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
+                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+                popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+                popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
+                inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
+                inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
+                inflate2.findViewById(R.id.lo_extra_func_record).setOnClickListener(this);
+                inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
+                inflate2.findViewById(R.id.lo_extra_func_total_score).setOnClickListener(this);
+                popupWindow2.setFocusable(true);
+                popupWindow2.setTouchable(true);
+                popupWindow2.setOutsideTouchable(true);
+                popupWindow2.setContentView(inflate2);
+                normalModePopupWindow = popupWindow2;
+                popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
+                return;
+            case R.id.lo_extra_func_settings:  // 参数设置
+                menuPopupWindow.dismiss();
+                SongPlay.INSTANCE.stopPlay();
+                Intent intent = new Intent();
+                intent.setClass(this, SettingsMode.class);
+                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+                return;
+            case R.id.lo_extra_func_sync:  // 曲库同步
+
+                new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
+                return;
+            case R.id.lo_extra_func_midi_import:  // midi导入
+                FilePickerUtil.openFileManager(this, false);
+                return;
+            case R.id.lo_extra_func_record:  // 录音文件
+                menuPopupWindow.dismiss();
+                SongPlay.INSTANCE.stopPlay();
+                Intent intent2 = new Intent();
+                intent2.setClass(this, RecordFiles.class);
+                startActivity(intent2);
+                return;
+            case R.id.lo_extra_func_data_export: // 数据导出
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setWidth(500);
+                jpDialogBuilder.setTitle("数据导入导出");
+                jpDialogBuilder.setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
+                        "导出路径为SD卡\\JustPiano\\local_data.db，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
+                jpDialogBuilder.setVisibleRadioGroup(true);
+                RadioButton radioButton = new RadioButton(this);
+                radioButton.setText("APP本地数据导出至SD卡\\JustPiano\\local_data.db");
+                radioButton.setTextSize(13);
+                radioButton.setTag(1);
+                radioButton.setHeight(150);
+                jpDialogBuilder.addRadioButton(radioButton);
+                radioButton = new RadioButton(this);
+                radioButton.setText("清空当前数据，导入SD卡\\JustPiano\\local_data.db数据至APP");
+                radioButton.setTextSize(13);
+                radioButton.setTag(2);
+                radioButton.setHeight(150);
+                jpDialogBuilder.addRadioButton(radioButton);
+                jpDialogBuilder.setFirstButton("执行", (dialog, which) -> {
+                    dialog.dismiss();
+                    new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
+                });
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+                return;
+            case R.id.lo_extra_func_total_score: // 分数统计
+                totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
+                    Toast.makeText(this, "曲谱:" + totalSongInfo.getTotalCount() + " " + "总分"+ totalSongInfo.getTotalScore(),Toast.LENGTH_LONG).show();
+                });
                 return;
             default:
         }
