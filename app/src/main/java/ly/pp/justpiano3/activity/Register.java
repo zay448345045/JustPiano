@@ -82,7 +82,7 @@ public class Register extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         sex = "";
         account = "";
         kitiName = "";

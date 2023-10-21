@@ -282,7 +282,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
 
     public void m3802m() {
         jpapplication.updateWidthAndHeightPixels(this);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
         SoundEngineUtil.teardownAudioStreamNative();
         SoundEngineUtil.unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
@@ -456,6 +455,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
         isShowingSongsInfo = false;
         isBack = false;
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        GlobalSetting.INSTANCE.loadSettings(this, true);
         if (jpapplication.getHeightPixels() == 0) {
             jpprogressbar = new JPProgressBar(this);
             jpprogressbar.setCancelable(false);

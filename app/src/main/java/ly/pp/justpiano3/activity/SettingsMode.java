@@ -8,11 +8,13 @@ import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class SettingsMode extends PreferenceActivity {
 
@@ -27,6 +29,7 @@ public class SettingsMode extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImageLoadUtil.setBackground(this, "ground", getWindow());
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 

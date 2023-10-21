@@ -2,11 +2,14 @@ package ly.pp.justpiano3.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceActivity;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Objects;
 
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.SkinListPreference;
 
 public final class SkinListPreferenceTask extends AsyncTask<String, Void, String> {
@@ -21,13 +24,15 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, String
         File dir = skinListPreference.context.getDir("Skin", Context.MODE_PRIVATE);
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
-            if (listFiles != null && listFiles.length > 0) {
+            if (listFiles != null) {
                 for (File delete : listFiles) {
                     delete.delete();
                 }
             }
         }
-        GZIPUtil.ZIPFileTo(skinListPreference.f5024d, dir.toString());
+        if (!Objects.equals(objects[0], "original")) {
+            GZIPUtil.ZIPFileTo(skinListPreference.skinFile, dir.toString());
+        }
         return null;
     }
 

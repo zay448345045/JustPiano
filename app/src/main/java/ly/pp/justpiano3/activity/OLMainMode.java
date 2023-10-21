@@ -103,7 +103,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         jpprogressBar = new JPProgressBar(this);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         Button topButton = findViewById(R.id.ol_top_b);
         topButton.setOnClickListener(this);

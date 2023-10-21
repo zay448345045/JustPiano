@@ -172,7 +172,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         jpapplication = (JPApplication) getApplication();
         headType = getIntent().getExtras().getInt("head");
         setContentView(R.layout.ol_search_songs);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         layoutinflater = LayoutInflater.from(this);
         keywords = findViewById(R.id.ol_keywords);
         findViewById(R.id.ol_search_b).setOnClickListener(this);

@@ -456,7 +456,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_hall_list);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(0);

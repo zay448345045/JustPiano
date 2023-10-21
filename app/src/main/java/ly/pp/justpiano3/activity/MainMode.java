@@ -135,7 +135,7 @@ public class MainMode extends Activity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         }
     }
 
@@ -145,7 +145,7 @@ public class MainMode extends Activity implements OnClickListener {
         GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean newHelp = sharedPreferences.getBoolean("new_help", true);
         if (newHelp) {

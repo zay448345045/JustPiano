@@ -236,7 +236,7 @@ public class SoundDownload extends Activity implements Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skin_list);
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);

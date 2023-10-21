@@ -186,7 +186,7 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
         setContentView(R.layout.login);
         Bundle extras = getIntent().getExtras();
         boolean noAuto = extras == null || extras.getBoolean("no_auto");
-        ImageLoadUtil.setBackGround(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
         changeServerCheckBox = findViewById(R.id.ol_change_server);

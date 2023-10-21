@@ -66,7 +66,6 @@ public final class SkinListAdapter extends BaseAdapter {
             button.setText("设置皮肤");
         }
         button.setOnClickListener(new ChangeSkinClick(this, skinKey));
-        skinListPreference.skinKey = skinKey;
         return view;
     }
 }
