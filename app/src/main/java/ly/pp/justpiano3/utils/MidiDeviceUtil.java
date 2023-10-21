@@ -22,7 +22,7 @@ public class MidiDeviceUtil {
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            System.loadLibrary("native_midi");
+            System.loadLibrary("midi");
         }
     }
 

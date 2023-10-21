@@ -1,17 +1,12 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 # Pull in parselib
-set(PARSELIB_DIR ../../../../oboe/samples/parselib)
-#message("PARSELIB_DIR = " + ${PARSELIB_DIR})
+set(PARSELIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/parselib)
 
 # Pull in iolib
-set(IOLIB_DIR ../../../../oboe/samples/iolib)
-#message("IOLIB_DIR = " + ${IOLIB_DIR})
+set(IOLIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/iolib)
 
-# Set the path to the Oboe library directory
-set(OBOE_DIR ../../../../oboe)
-
-set(FLUID_SYNTH_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/lib/${ANDROID_ABI})
+set(FLUID_SYNTH_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/libs/${ANDROID_ABI})
 set(FLUID_SYNTH_LIB_FILES
         libfluidsynth.so
         libglib-2.0.so
@@ -27,19 +22,17 @@ set(FLUID_SYNTH_LIB_FILES
         libogg.so
         )
 
-set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/${ANDROID_ABI})
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/${ANDROID_ABI})
 set(LIB_FILES
         libomp.so
         )
-
-add_subdirectory(${OBOE_DIR} ./oboe-bin)
 
 include_directories(taskqueue)
 
 # include folders
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/include
-        ${OBOE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/oboe/include
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
@@ -78,9 +71,10 @@ foreach (LIB_FILE ${LIB_FILES})
     target_link_libraries(soundengine ${LIB_FILE})
 endforeach ()
 
-# Enable optimization flags: if having problems with source level debugging,
-# disable -Ofast ( and debug ), re-enable after done debugging.
-# target_compile_options(soundengine PRIVATE -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")
+add_library(oboe SHARED IMPORTED)
+set_target_properties(oboe PROPERTIES
+        IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/oboe/libs/android.${ANDROID_ABI}/liboboe.so"
+        )
 
 target_link_libraries( # Specifies the target library.
         soundengine
@@ -97,9 +91,9 @@ target_link_libraries( # Specifies the target library.
         log)
 
 # add native midi
-add_library(native_midi
+add_library(midi
         SHARED
         midi/MidiManager.cpp
         )
 
-target_link_libraries(native_midi PRIVATE amidi OpenSLES android log)
+target_link_libraries(midi PRIVATE amidi OpenSLES android log)
