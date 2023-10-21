@@ -120,7 +120,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     fluid_settings_setint(handle->settings, const_cast<char *>("synth.polyphony"), 4096);
     fluid_settings_setstr(handle->settings, const_cast<char *>("audio.sample-format"),
                           const_cast<char *>("float"));
-    fluid_settings_setnum(handle->settings, const_cast<char *>("synth.gain"), 0.6f);
+    fluid_settings_setnum(handle->settings, const_cast<char *>("synth.gain"), 0.5f);
 
     memcpy(&ptr, &handle, sizeof(handle));
     return ptr;

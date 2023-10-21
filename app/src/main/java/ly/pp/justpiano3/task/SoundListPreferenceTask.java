@@ -24,6 +24,10 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
 
     @Override
     protected String doInBackground(String... objects) {
+        if (objects[0].equals("original")) {
+            SoundEngineUtil.reLoadOriginalSounds(soundListPreference.context);
+            return null;
+        }
         File dir = new File(soundListPreference.context.getFilesDir(), "Sounds");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
@@ -38,7 +42,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         if (!soundFile.exists()) {
             return null;
         }
-        if (!objects[0].equals("original") && soundFile.getName().endsWith(".ss")) {
+        if (soundFile.getName().endsWith(".ss")) {
             GZIPUtil.ZIPFileTo(soundFile, dir.toString());
         }
 
