@@ -95,6 +95,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                             }
                             SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom);
                         } else if (name.endsWith(".sf2")) {
+                            SoundEngineUtil.unloadSf2Sound();
                             SoundEngineUtil.loadSf2Sound(olPlayKeyboardRoom, new File(
                                     Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + name));
                         }

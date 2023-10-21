@@ -51,6 +51,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
             }
             SoundEngineUtil.afterLoadSounds(soundListPreference.context);
         } else if (soundFile.getName().endsWith(".sf2")) {
+            SoundEngineUtil.unloadSf2Sound();
             SoundEngineUtil.loadSf2Sound(soundListPreference.context, soundFile);
         }
         return null;

@@ -53,7 +53,7 @@ namespace iolib {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        if (pSynth != nullptr) {
+        if (enableSf2 && pSynth != nullptr) {
             fluid_synth_write_float(pSynth, numFrames, &((float *) audioData)[0], 0, 2,
                                     &((float *) audioData)[1], 0, 2);
             memcpy(mMixBuffer, ((float *) audioData),
@@ -235,7 +235,8 @@ namespace iolib {
         mRecordingIO->setRecordingFilePath(s);
     }
 
-    void SimpleMultiPlayer::setSf2SynthPtr(_fluid_synth_t *synth) {
+    void SimpleMultiPlayer::setSf2Synth(_fluid_synth_t *synth, bool enable) {
         this->pSynth = synth;
+        this->enableSf2 = enable;
     }
 }

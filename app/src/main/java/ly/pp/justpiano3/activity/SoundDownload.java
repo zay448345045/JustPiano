@@ -169,6 +169,7 @@ public class SoundDownload extends Activity implements Callback {
                 }
                 SoundEngineUtil.afterLoadSounds(this);
             } else if (soundFileName.endsWith(".sf2")) {
+                SoundEngineUtil.unloadSf2Sound();
                 SoundEngineUtil.loadSf2Sound(this, new File(
                         Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
             }

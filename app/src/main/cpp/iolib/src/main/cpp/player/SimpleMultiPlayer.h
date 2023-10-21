@@ -86,7 +86,7 @@ namespace iolib {
 
         void setRecordFilePath(char *s);
 
-        void setSf2SynthPtr(_fluid_synth_t *synth);
+        void setSf2Synth(_fluid_synth_t *synth, bool enable);
 
     private:
         // Oboe Audio Stream
@@ -110,6 +110,8 @@ namespace iolib {
         _fluid_synth_t *pSynth{nullptr};
 
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
+
+        bool enableSf2{false};
     };
 
 }
