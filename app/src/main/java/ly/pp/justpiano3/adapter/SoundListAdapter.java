@@ -66,7 +66,6 @@ public final class SoundListAdapter extends BaseAdapter {
             button.setText("设置音源");
         }
         button.setOnClickListener(new ChangeSoundClick(this, soundKey, i));
-        soundListPreference.soundKey = soundKey;
         return view;
     }
 }

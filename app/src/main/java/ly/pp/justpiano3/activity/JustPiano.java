@@ -214,7 +214,15 @@ public class JustPiano extends Activity implements Callback, Runnable {
             Toast.makeText(getApplicationContext(), "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show();
             System.exit(-1);
         }
-        // 载入音源
+        for (int i = 108; i >= 24; i--) {
+            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
+            progress++;
+            loading = "正在载入声音资源..." + progress + "/85";
+            Message obtainMessage2 = handler.obtainMessage();
+            obtainMessage2.what = 0;
+            handler.sendMessage(obtainMessage2);
+        }
+        SoundEngineUtil.afterLoadSounds(getApplicationContext());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String soundName = sharedPreferences.getString("sound_list", "original");
         if (soundName.endsWith(".sf2")) {
@@ -223,16 +231,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);
             SoundEngineUtil.loadSf2Sound(this, new File(soundName));
-        } else {
-            for (int i = 108; i >= 24; i--) {
-                SoundEngineUtil.preloadSounds(getApplicationContext(), i);
-                progress++;
-                loading = "正在载入声音资源..." + progress + "/85";
-                Message obtainMessage2 = handler.obtainMessage();
-                obtainMessage2.what = 0;
-                handler.sendMessage(obtainMessage2);
-            }
-            SoundEngineUtil.afterLoadSounds(getApplicationContext());
         }
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
