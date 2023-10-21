@@ -121,6 +121,7 @@ public class SoundEngineUtil {
             preloadSounds(context, i);
         }
         afterLoadSounds(context);
+        unloadSf2Sound();
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();

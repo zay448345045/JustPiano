@@ -64,6 +64,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
             olPlayKeyboardRoom.jpprogressBar.show();
             ThreadPoolUtil.execute(() -> {
                 if (name.equals("原生音源")) {
+                    SoundEngineUtil.unloadSf2Sound();
                     SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {
                     try {
