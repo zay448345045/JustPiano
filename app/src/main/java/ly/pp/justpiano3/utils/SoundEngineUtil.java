@@ -130,7 +130,6 @@ public class SoundEngineUtil {
     public static void afterLoadSounds(Context context) {
         loadChatWav(context);
         setupAudioStreamNative(2, 44100);
-        startSynth(context, "test.sf2");
     }
 
     /* ================ sf2音源部分 ================ */
