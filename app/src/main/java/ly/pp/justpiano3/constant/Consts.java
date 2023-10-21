@@ -18,7 +18,7 @@ public interface Consts {
     // 哦呀 ~ 像苹果这样的废柴 ~ 就算怎样努力也是考不到CL.13的吧？杂鱼 ~ 杂鱼 ~ ❤️
     // 哈 ~ 和挂比们玩耍很恶心的啦 ~ 才不要，嘻嘻 ❤️
     String[] sortNames = new String[]{"名称升序", "名称降序", "最新曲目", "近期弹奏", "难度升序", "难度降序", "得分升序", "得分降序", "时长升序", "时长降序"};
-    String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "midi导入", "录音文件"};
+    String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "midi导入", "录音文件", "数据导出"};
     String[] hand = new String[]{"右手", "左手"};
     String[] groups = new String[]{"蓝队", "黄队", "红队"};
     String[] coupleType = new String[]{"情侣证书", "基友证书", "百合证书"};

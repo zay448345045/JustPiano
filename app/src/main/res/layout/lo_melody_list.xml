@@ -58,24 +58,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="10dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.07"
             android:background="@drawable/selector_orange_button"
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/melodylist1_sort_b"
-            android:textColor="@color/white1"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/data_export"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.1"
-            android:background="@drawable/selector_orange_button"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/melodylist1_export"
             android:textColor="@color/white1"
             android:textSize="14sp" />
 
@@ -115,7 +102,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="0.25"
+            android:layout_weight="0.16"
             android:background="@drawable/selector_ol_button"
             android:src="@drawable/search" />
 
@@ -128,7 +115,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_20dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
                 android:gravity="center">
@@ -145,21 +132,14 @@
 
                 <CheckBox
                     android:id="@+id/check_hand"
+
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/melodylist1_hand"
                     android:textSize="12sp" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_20dp"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:gravity="center">
 
                 <CheckBox
                     android:id="@+id/check_play_next"
@@ -187,7 +167,7 @@
             android:layout_width="@dimen/dimen_0dp"
             android:layout_height="@dimen/dimen_55dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.45"
+            android:layout_weight="0.20"
             android:orientation="vertical">
 
             <ImageView

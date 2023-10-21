@@ -150,6 +150,32 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                         intent.setClass(this, RecordFiles.class);
                         startActivity(intent);
                         break;
+                    case 4: // 数据导出
+                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                        jpDialogBuilder.setWidth(500);
+                        jpDialogBuilder.setTitle("数据导入导出");
+                        jpDialogBuilder.setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
+                                "导出路径为SD卡\\JustPiano\\local_data.db，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
+                        jpDialogBuilder.setVisibleRadioGroup(true);
+                        RadioButton radioButton = new RadioButton(this);
+                        radioButton.setText("APP本地数据导出至SD卡\\JustPiano\\local_data.db");
+                        radioButton.setTextSize(13);
+                        radioButton.setTag(1);
+                        radioButton.setHeight(150);
+                        jpDialogBuilder.addRadioButton(radioButton);
+                        radioButton = new RadioButton(this);
+                        radioButton.setText("清空当前数据，导入SD卡\\JustPiano\\local_data.db数据至APP");
+                        radioButton.setTextSize(13);
+                        radioButton.setTag(2);
+                        radioButton.setHeight(150);
+                        jpDialogBuilder.addRadioButton(radioButton);
+                        jpDialogBuilder.setFirstButton("执行", (dialog, which) -> {
+                            dialog.dismiss();
+                            new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
+                        });
+                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                        jpDialogBuilder.buildAndShowDialog();
+                        break;
                 }
                 break;
             case 3:
@@ -255,32 +281,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                     sortPopupWindow.showAsDropDown(sortButton);
                 }
                 return;
-            case R.id.data_export:
-                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setWidth(500);
-                jpDialogBuilder.setTitle("数据导入导出");
-                jpDialogBuilder.setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
-                        "导出路径为SD卡\\JustPiano\\local_data.db，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
-                jpDialogBuilder.setVisibleRadioGroup(true);
-                RadioButton radioButton = new RadioButton(this);
-                radioButton.setText("APP本地数据导出至SD卡\\JustPiano\\local_data.db");
-                radioButton.setTextSize(13);
-                radioButton.setTag(1);
-                radioButton.setHeight(150);
-                jpDialogBuilder.addRadioButton(radioButton);
-                radioButton = new RadioButton(this);
-                radioButton.setText("清空当前数据，导入SD卡\\JustPiano\\local_data.db数据至APP");
-                radioButton.setTextSize(13);
-                radioButton.setTag(2);
-                radioButton.setHeight(150);
-                jpDialogBuilder.addRadioButton(radioButton);
-                jpDialogBuilder.setFirstButton("执行", (dialog, which) -> {
-                    dialog.dismiss();
-                    new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
-                });
-                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
-                jpDialogBuilder.buildAndShowDialog();
-                return;
             case R.id.menu_list_fast:
                 if (firstLoadFocusFinish) {
                     menuPopupWindow.showAsDropDown(menuListButton);
@@ -303,7 +303,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         ImageLoadUtil.setBackGround(this, "ground", linearLayout);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
-        findViewById(R.id.data_export).setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);
         totalSongScoreTextView = findViewById(R.id.total_score_all);
         ImageView searchFastButton = findViewById(R.id.search_fast);
