@@ -40,7 +40,7 @@ public class SoundEngineUtil {
 
     public static byte playSound(byte pitch, byte volume) {
         if (enableSf2Synth && sf2SynthPtr != null) {
-            noteOn(sf2SynthPtr, 0, pitch, (int) Math.min(127, Math.ceil(volume / 100f * 128)));
+            noteOn(sf2SynthPtr, 0, pitch, volume);
             return pitch;
         } else {
             if (pitch >= 24 && pitch <= 108 && volume > 3) {
