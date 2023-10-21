@@ -2,10 +2,12 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import java.io.File;
@@ -213,15 +215,25 @@ public class JustPiano extends Activity implements Callback, Runnable {
             System.exit(-1);
         }
         // 载入音源
-        for (int i = 108; i >= 24; i--) {
-            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
-            progress++;
-            loading = "正在载入声音资源..." + progress + "/85";
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String soundName = sharedPreferences.getString("sound_list", "original");
+        if (soundName.endsWith(".sf2")) {
+            loading = "正在载入sf2声音资源...";
             Message obtainMessage2 = handler.obtainMessage();
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);
+            SoundEngineUtil.loadSf2Sound(this, new File(soundName));
+        } else {
+            for (int i = 108; i >= 24; i--) {
+                SoundEngineUtil.preloadSounds(getApplicationContext(), i);
+                progress++;
+                loading = "正在载入声音资源..." + progress + "/85";
+                Message obtainMessage2 = handler.obtainMessage();
+                obtainMessage2.what = 0;
+                handler.sendMessage(obtainMessage2);
+            }
+            SoundEngineUtil.afterLoadSounds(getApplicationContext());
         }
-        SoundEngineUtil.afterLoadSounds(getApplicationContext());
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;
         handler.sendMessage(obtainMessage);

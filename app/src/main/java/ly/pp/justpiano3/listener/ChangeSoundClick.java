@@ -10,18 +10,18 @@ import ly.pp.justpiano3.task.SoundListPreferenceTask;
 
 public final class ChangeSoundClick implements OnClickListener {
     private final SoundListAdapter soundListAdapter;
-    private final String f5990b;
-    private final int f5991c;
+    private final String soundKey;
+    private final int position;
 
-    public ChangeSoundClick(SoundListAdapter c1324mv, String str, int i) {
-        soundListAdapter = c1324mv;
-        f5990b = str;
-        f5991c = i;
+    public ChangeSoundClick(SoundListAdapter soundListAdapter, String soundKey, int position) {
+        this.soundListAdapter = soundListAdapter;
+        this.soundKey = soundKey;
+        this.position = position;
     }
 
     @Override
     public void onClick(View view) {
-        switch (f5990b) {
+        switch (soundKey) {
             case "original":
                 new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute("original");
                 break;
@@ -32,7 +32,7 @@ public final class ChangeSoundClick implements OnClickListener {
                 soundListAdapter.context.startActivity(intent);
                 break;
             default:
-                new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(f5990b, String.valueOf(soundListAdapter.soundKeyList[f5991c]));
+                new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(soundKey, String.valueOf(soundListAdapter.soundKeyList[position]));
                 break;
         }
     }

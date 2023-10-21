@@ -66,32 +66,42 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                 if (name.equals("原生音源")) {
                     SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {
-                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
-                    edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName());
                     try {
-                        int i;
                         File file = new File(olPlayKeyboardRoom.getFilesDir(), "Sounds");
                         if (file.isDirectory()) {
                             File[] listFiles = file.listFiles();
-                            if (listFiles != null && listFiles.length > 0) {
+                            if (listFiles != null) {
                                 for (File delete : listFiles) {
                                     delete.delete();
                                 }
                             }
                         }
-                        GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());
-                        edit.apply();
                         SoundEngineUtil.teardownAudioStreamNative();
                         SoundEngineUtil.unloadWavAssetsNative();
-                        for (i = 108; i >= 24; i--) {
-                            SoundEngineUtil.preloadSounds(olPlayKeyboardRoom.getApplicationContext(), i);
+
+                        if (name.endsWith(".ss")) {
+                            GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory()
+                                    + "/JustPiano/Sounds/" + fileList.get(index - 1).getName()), file.toString());
                         }
-                        SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom.getApplicationContext());
+
+                        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
+                        edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName());
+                        edit.apply();
+
+                        if (name.endsWith(".ss")) {
+                            SoundEngineUtil.unloadSf2Sound();
+                            for (int i = 108; i >= 24; i--) {
+                                SoundEngineUtil.preloadSounds(olPlayKeyboardRoom, i);
+                            }
+                            SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom);
+                        } else if (name.endsWith(".sf2")) {
+                            SoundEngineUtil.loadSf2Sound(olPlayKeyboardRoom, new File(
+                                    Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + name));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-
                 olPlayKeyboardRoom.runOnUiThread(() -> {
                     olPlayKeyboardRoom.jpprogressBar.dismiss();
                     Toast.makeText(olPlayKeyboardRoom, "音源设置成功", Toast.LENGTH_SHORT).show();

@@ -136,10 +136,10 @@ public class SoundEngineUtil {
     private static Long sf2SynthPtr;
     public static boolean enableSf2Synth;
 
-    private static String getCopyFile(Context context, String fileName) {
-        File cacheFile = new File(context.getFilesDir(), fileName);
+    private static String getCopyFile(Context context, File sf2File) {
+        File cacheFile = new File(context.getFilesDir(), sf2File.getName());
         try {
-            try (InputStream inputStream = context.getAssets().open(fileName)) {
+            try (InputStream inputStream = new FileInputStream(sf2File)) {
                 try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
                     byte[] buf = new byte[1024];
                     int len;
@@ -154,8 +154,8 @@ public class SoundEngineUtil {
         return cacheFile.getAbsolutePath();
     }
 
-    public static void startSynth(Context context, String fileName) {
-        String filePath = getCopyFile(context, fileName);
+    public static void loadSf2Sound(Context context, File sf2File) {
+        String filePath = getCopyFile(context, sf2File);
         if (!enableSf2Synth) {
             enableSf2Synth = true;
             sf2SynthPtr = malloc();
@@ -165,7 +165,7 @@ public class SoundEngineUtil {
         }
     }
 
-    public void destroy() {
+    public static void unloadSf2Sound() {
         if (enableSf2Synth) {
             enableSf2Synth = false;
             unloadFont(sf2SynthPtr);

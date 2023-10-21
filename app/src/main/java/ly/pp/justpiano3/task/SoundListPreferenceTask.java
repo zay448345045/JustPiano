@@ -27,21 +27,32 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         File dir = new File(soundListPreference.context.getFilesDir(), "Sounds");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
-            if (listFiles != null && listFiles.length > 0) {
+            if (listFiles != null) {
                 for (File delete : listFiles) {
                     delete.delete();
                 }
             }
         }
-        if (!objects[0].equals("original")) {
-            GZIPUtil.ZIPFileTo(new File(objects[1]), dir.toString());
-        }
         SoundEngineUtil.teardownAudioStreamNative();
         SoundEngineUtil.unloadWavAssetsNative();
-        for (int i = 108; i >= 24; i--) {
-            SoundEngineUtil.preloadSounds(soundListPreference.context, i);
+
+        File soundFile = new File(objects[1]);
+        if (!soundFile.exists()) {
+            return null;
         }
-        SoundEngineUtil.afterLoadSounds(soundListPreference.context);
+        if (!objects[0].equals("original") && soundFile.getName().endsWith(".ss")) {
+            GZIPUtil.ZIPFileTo(soundFile, dir.toString());
+        }
+
+        if (soundFile.getName().endsWith(".ss")) {
+            SoundEngineUtil.unloadSf2Sound();
+            for (int i = 108; i >= 24; i--) {
+                SoundEngineUtil.preloadSounds(soundListPreference.context, i);
+            }
+            SoundEngineUtil.afterLoadSounds(soundListPreference.context);
+        } else if (soundFile.getName().endsWith(".sf2")) {
+            SoundEngineUtil.loadSf2Sound(soundListPreference.context, soundFile);
+        }
         return null;
     }
 

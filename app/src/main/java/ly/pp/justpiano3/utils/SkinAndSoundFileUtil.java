@@ -27,7 +27,9 @@ public final class SkinAndSoundFileUtil {
         if (listFiles != null) {
             int i = 0;
             while (i < listFiles.length) {
-                if (listFiles[i].isFile() && listFiles[i].getName().endsWith(".ss")) {
+                if (listFiles[i].isFile()
+                        && (listFiles[i].getName().endsWith(".ss")
+                        || listFiles[i].getName().endsWith(".sf2"))) {
                     linkedList.add(listFiles[i]);
                 }
                 i++;

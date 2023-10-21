@@ -42,19 +42,18 @@ public class SoundDownloadTask {
 
     private String doInBackground(String... strArr) {
         try {
-            soundDownload.get().getLocalSoundList();
             Request request = new Request.Builder()
                     .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSoundList")
                     .post(RequestBody.create("", null))
                     .build();
             Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.code() != 200) {
-                return "err001";
+                return "";
             }
             return response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
-            return "err001";
+            return "";
         }
     }
 

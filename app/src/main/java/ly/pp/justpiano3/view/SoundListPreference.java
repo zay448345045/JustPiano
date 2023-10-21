@@ -38,16 +38,16 @@ public class SoundListPreference extends DialogPreference {
         this.context = context;
     }
 
-    private void m3922a() {
-        String str = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds";
-        List<File> f5048c = SkinAndSoundFileUtil.getLocalSoundList(str);
-        int size = f5048c.size();
+    private void loadSoundList() {
+        List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(
+                Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
+        int size = localSoundList.size();
         soundNameList = new CharSequence[(size + 2)];
         soundKeyList = new CharSequence[(size + 2)];
         for (int i = 0; i < size; i++) {
-            str = f5048c.get(i).getName();
-            soundNameList[i] = str.subSequence(0, str.lastIndexOf('.'));
-            soundKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + f5048c.get(i).getName();
+            String soundName = localSoundList.get(i).getName();
+            soundNameList[i] = soundName.subSequence(0, soundName.lastIndexOf('.'));
+            soundKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + localSoundList.get(i).getName();
         }
         soundNameList[size] = "原生音源";
         soundKeyList[size] = "original";
@@ -61,19 +61,20 @@ public class SoundListPreference extends DialogPreference {
             file.delete();
         }
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        // 如果正在使用这个音源，则删除这个音源解压后的文件
         if (sharedPreferences.getString("sound_list", "original").equals(str)) {
             file = new File(context.getFilesDir().getAbsolutePath() + "/Sounds");
             if (file.isDirectory()) {
                 File[] listFiles = file.listFiles();
-                if (listFiles != null && listFiles.length > 0) {
+                if (listFiles != null) {
                     for (File delete : listFiles) {
                         delete.delete();
                     }
                 }
             }
         }
-        m3922a();
-        soundListAdapter.mo3583a(soundNameList, soundKeyList);
+        loadSoundList();
+        soundListAdapter.updateSoundList(soundNameList, soundKeyList);
         soundListAdapter.notifyDataSetChanged();
     }
 
@@ -85,19 +86,19 @@ public class SoundListPreference extends DialogPreference {
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
-        m3922a();
+        loadSoundList();
         jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-        LinearLayout f5052g = new LinearLayout(context);
-        f5052g.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        f5052g.setOrientation(LinearLayout.VERTICAL);
-        f5052g.setMinimumWidth(400);
-        f5052g.setPadding(20, 20, 20, 20);
-        f5052g.setBackgroundColor(-1);
-        ListView f5051f = new ListView(context);
-        f5051f.setDivider(null);
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setMinimumWidth(400);
+        linearLayout.setPadding(20, 20, 20, 20);
+        linearLayout.setBackgroundColor(-1);
+        ListView listView = new ListView(context);
+        listView.setDivider(null);
         soundListAdapter = new SoundListAdapter(this, context, soundNameList, soundKeyList);
-        f5051f.setAdapter(soundListAdapter);
-        f5052g.addView(f5051f);
-        builder.setView(f5052g);
+        listView.setAdapter(soundListAdapter);
+        linearLayout.addView(listView);
+        builder.setView(linearLayout);
     }
 }

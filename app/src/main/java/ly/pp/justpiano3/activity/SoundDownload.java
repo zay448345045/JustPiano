@@ -24,8 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
@@ -33,7 +31,6 @@ import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -42,7 +39,6 @@ public class SoundDownload extends Activity implements Callback {
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
-    public List<String> list = new ArrayList<>();
     private Handler handler;
     private ProgressBar progressBar;
     private TextView downloadText;
@@ -52,9 +48,9 @@ public class SoundDownload extends Activity implements Callback {
     private int length = 0;
     private int intentFlag = 0;
 
-    public static void downloadSS(SoundDownload soundDownload, String str, String str2) {
+    public static void downloadSound(SoundDownload soundDownload, String soundId, String soundName, String soundType) {
         Message message = Message.obtain(soundDownload.handler);
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str2 + ".ss");
+        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundName + soundType);
         if (file.exists()) {
             file.delete();
         }
@@ -64,7 +60,7 @@ public class SoundDownload extends Activity implements Callback {
         }
         InputStream in = null;
         try {
-            URL url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/Sound" + str);
+            URL url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/Sound" + soundId);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -97,11 +93,11 @@ public class SoundDownload extends Activity implements Callback {
                 message2.what = 2;
                 if (soundDownload.handler != null) {
                     Bundle bundle2 = new Bundle();
-                    bundle2.putString("name", str2);
+                    bundle2.putString("name", soundName);
+                    bundle2.putString("type", soundType);
                     message2.setData(bundle2);
                     soundDownload.handler.sendMessage(message2);
                 }
-                soundDownload.list.add(str2);
             } catch (Exception e3) {
                 e3.printStackTrace();
                 message2 = Message.obtain(soundDownload.handler);
@@ -118,58 +114,64 @@ public class SoundDownload extends Activity implements Callback {
         }
     }
 
-    public final void getLocalSoundList() {
-        List<File> b = SkinAndSoundFileUtil.getLocalSoundList(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-        for (File aB : b) {
-            String name = aB.getName();
-            list.add(name.substring(0, name.lastIndexOf('.')));
-        }
-    }
-
-    public final void mo3005a(int i, String str, String str2, int i2, String str3) {
+    public final void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        String str4 = "使用";
+        String buttonText = "使用";
         jpDialogBuilder.setTitle("提示");
-        if (i == 0) {
-            jpDialogBuilder.setMessage("名称:" + str + "\n作者:" + str3 + "\n大小:" + i2 + "KB\n您要下载并使用吗?");
-            str4 = "下载";
-        } else if (i == 1) {
-            jpDialogBuilder.setMessage("[" + str + "]音源已下载，是否使用?");
-            str4 = "使用";
-        } else if (i == 2) {
-            jpDialogBuilder.setMessage("您要还原极品钢琴的默认音源吗?");
-            str4 = "确定";
+        switch (eventType) {
+            case 0:
+                jpDialogBuilder.setMessage("名称:" + soundFileName + "\n作者:" + soundAuthor + "\n大小:" + soundSize + "KB\n您要下载并使用吗?");
+                buttonText = "下载";
+                break;
+            case 1:
+                jpDialogBuilder.setMessage("[" + soundFileName + "]音源已下载，是否使用?");
+                buttonText = "使用";
+                break;
+            case 2:
+                jpDialogBuilder.setMessage("您要还原极品钢琴的默认音源吗?");
+                buttonText = "确定";
+                break;
         }
-        jpDialogBuilder.setFirstButton(str4, new SoundDownloadClick(this, i, str2, str));
+        jpDialogBuilder.setFirstButton(buttonText, new SoundDownloadClick(this, eventType, soundId, soundFileName, soundType));
         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
 
-    public final void changeSound(String str) {
+    public final void changeSound(String soundFileName) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str);
         try {
-            int i;
             File file = new File(getFilesDir(), "Sounds");
             if (file.isDirectory()) {
                 File[] listFiles = file.listFiles();
-                if (listFiles != null && listFiles.length > 0) {
+                if (listFiles != null) {
                     for (File delete : listFiles) {
                         delete.delete();
                     }
                 }
             }
-            GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + str), file.toString());
-            edit.apply();
             SoundEngineUtil.teardownAudioStreamNative();
             SoundEngineUtil.unloadWavAssetsNative();
-            for (i = 108; i >= 24; i--) {
-                SoundEngineUtil.preloadSounds(getApplicationContext(), i);
+
+            if (soundFileName.endsWith(".ss")) {
+                GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName), file.toString());
             }
-            SoundEngineUtil.afterLoadSounds(getApplicationContext());
+
+            Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
+            edit.apply();
+
+            if (soundFileName.endsWith(".ss")) {
+                SoundEngineUtil.unloadSf2Sound();
+                for (int i = 108; i >= 24; i--) {
+                    SoundEngineUtil.preloadSounds(this, i);
+                }
+                SoundEngineUtil.afterLoadSounds(this);
+            } else if (soundFileName.endsWith(".sf2")) {
+                SoundEngineUtil.loadSf2Sound(this, new File(
+                        Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -193,7 +195,8 @@ public class SoundDownload extends Activity implements Callback {
                 case 2:
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
-                    mo3005a(1, message.getData().getString("name"), "", 0, "");
+                    handleSound(1, message.getData().getString("name"), "",
+                            0, "", message.getData().getString("type"));
                     break;
                 case 3:
                     linearLayout.setVisibility(View.GONE);

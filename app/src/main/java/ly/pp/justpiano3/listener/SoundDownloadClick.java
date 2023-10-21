@@ -10,14 +10,16 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 public final class SoundDownloadClick implements OnClickListener {
     private final SoundDownload soundDownload;
     private final int type;
-    private final String url;
+    private final String soundId;
     private final String name;
+    private final String soundType;
 
-    public SoundDownloadClick(SoundDownload soundDownload, int i, String str, String str2) {
+    public SoundDownloadClick(SoundDownload soundDownload, int eventType, String soundId, String soundFileName, String soundType) {
         this.soundDownload = soundDownload;
-        type = i;
-        url = str;
-        name = str2;
+        type = eventType;
+        this.soundId = soundId;
+        name = soundFileName;
+        this.soundType = soundType;
     }
 
     @Override
@@ -25,10 +27,10 @@ public final class SoundDownloadClick implements OnClickListener {
         dialogInterface.dismiss();
         switch (type) {
             case 0:
-                ThreadPoolUtil.execute(() -> SoundDownload.downloadSS(soundDownload, url, name));
+                ThreadPoolUtil.execute(() -> SoundDownload.downloadSound(soundDownload, soundId, name, soundType));
                 break;
             case 1:
-                ThreadPoolUtil.execute(() -> soundDownload.changeSound(name + ".ss"));
+                ThreadPoolUtil.execute(() -> soundDownload.changeSound(name + soundType));
                 break;
             case 2:
                 ThreadPoolUtil.execute(() -> SoundEngineUtil.reLoadOriginalSounds(soundDownload.getApplicationContext()));
