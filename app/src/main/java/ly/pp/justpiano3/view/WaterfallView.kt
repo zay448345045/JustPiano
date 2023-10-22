@@ -37,13 +37,6 @@ class WaterfallView @JvmOverloads constructor(
     private var progressBarBaseRect: RectF? = null
 
     /**
-     * 瀑布流音符左右手颜色、自由演奏音符颜色
-     */
-    var leftHandNoteColor = 0
-    var rightHandNoteColor = 0
-    var freeStyleNoteColor = 0
-
-    /**
      * 瀑布流音块下落速率
      */
     private var noteFallDownSpeed = 0.8f
@@ -516,12 +509,9 @@ class WaterfallView @JvmOverloads constructor(
             for ((index, waterfallNote) in waterfallNotes.withIndex()) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
-                    // 根据音符的左右手确定音块的颜色
-                    val color =
-                        if (waterfallNote.leftHand) leftHandNoteColor else rightHandNoteColor
                     // 根据音符是否为弹奏中状态，确定颜色是否要高亮显示
                     notePaint.color =
-                        if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(color) else color
+                        if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(waterfallNote.color) else waterfallNote.color
                     // 根据音符的力度，确定音块绘制的透明度
                     notePaint.alpha = minOf(waterfallNote.volume / 100f * 128 * 2, 255f).toInt()
                     // 绘制音块
@@ -537,7 +527,7 @@ class WaterfallView @JvmOverloads constructor(
             // 执行计算绘制自由演奏音块
             for (i in freeStyleNotes.indices.reversed()) {
                 val freeStyleNote = freeStyleNotes[i]
-                notePaint.color = freeStyleNoteColor
+                notePaint.color = freeStyleNote.color
                 // 根据音符的力度，确定音块绘制的透明度
                 notePaint.alpha = minOf(freeStyleNote.volume * 2, 255)
                 // 绘制自由演奏音块，它自下而上移动

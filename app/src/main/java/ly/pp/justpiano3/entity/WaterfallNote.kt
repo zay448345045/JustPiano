@@ -25,9 +25,9 @@ data class WaterfallNote(
     var bottom: Float,
 
     /**
-     * 是否为左手
+     * 瀑布流音块颜色
      */
-    var leftHand: Boolean,
+    var color: Int,
 
     /**
      * 音高

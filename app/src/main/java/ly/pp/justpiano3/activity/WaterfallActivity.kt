@@ -63,7 +63,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     /**
      * 钢琴键盘按键时，是否产生自下而上的音块
      */
-    private var keyboardKeyDownNoteShow = false
+    private var freeStyleMode = false
 
     companion object {
 
@@ -99,7 +99,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         // 从extras中的数据确定曲目，解析pm文件
         val pmSongData = parseParamsFromIntentExtras()
         val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
-        songNameView.text = pmSongData?.songName
+        songNameView.text = if (freeStyleMode) "自由演奏" else pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
         waterfallView.setNoteFallListener(object : NoteFallListener {
@@ -113,7 +113,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 keyboardView.fireKeyDown(
                     waterfallNote.pitch,
                     waterfallNote.volume,
-                    if (waterfallNote.leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR
+                    waterfallNote.color
                 )
             }
 
@@ -130,10 +130,6 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
             override fun onGlobalLayout() {
                 // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                // 设置瀑布流音符的左右手颜色
-                waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR
-                waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
-                waterfallView.freeStyleNoteColor = FREE_STYLE_NOTE_COLOR
                 // 设置音块下落速率，播放速度
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
                 // 开启增减白键数量、移动键盘按钮的监听
@@ -145,7 +141,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
-                        if (keyboardKeyDownNoteShow) {
+                        if (freeStyleMode) {
                             val (left, right) = convertWidthToWaterfallWidth(
                                 isBlackKey(pitch),
                                 keyboardView.convertPitchToReact(pitch)
@@ -156,7 +152,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                                     right,
                                     waterfallView.height + waterfallView.playProgress,
                                     Float.MAX_VALUE,
-                                    false,
+                                    FREE_STYLE_NOTE_COLOR,
                                     pitch,
                                     volume
                                 )
@@ -165,7 +161,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                     }
 
                     override fun onKeyUp(pitch: Byte) {
-                        if (keyboardKeyDownNoteShow) {
+                        if (freeStyleMode) {
                             for (i in waterfallView.freeStyleNotes.indices.reversed()) {
                                 val freeStyleNote = waterfallView.freeStyleNotes[i]
                                 if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > waterfallView.height + waterfallView.playProgress) {
@@ -217,7 +213,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     private fun parseParamsFromIntentExtras(): PmSongData? {
         if (intent.extras?.getBoolean("freeStyle") == true) {
-            keyboardKeyDownNoteShow = true
+            freeStyleMode = true
         }
         val songPath = intent.extras?.getString("songPath")
         return if (songPath.isNullOrEmpty()) {
@@ -291,7 +287,15 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 )
                 // 初始化瀑布流音符对象，上边界暂时置0
                 val waterfallNote =
-                    WaterfallNote(left, right, 0f, totalTime, leftHand, pitch, volume)
+                    WaterfallNote(
+                        left,
+                        right,
+                        0f,
+                        totalTime,
+                        if (leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR,
+                        pitch,
+                        volume
+                    )
                 // 根据左右手拿到对应的list
                 val waterfallNoteListByHand: MutableList<WaterfallNote> =
                     if (leftHand) leftHandWaterfallNoteList else rightHandWaterfallNoteList
