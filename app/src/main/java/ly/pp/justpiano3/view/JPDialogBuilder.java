@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.text.util.Linkify;
 import android.view.*;
 import android.content.Intent;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ public final class JPDialogBuilder {
     private boolean positiveButtonDisabled;
     private View view;
     private boolean cancelable = true;
+    private boolean checkMessageUrl = true;
     private OnClickListener listener;
 
     public JPDialogBuilder(Context context) {
@@ -65,6 +67,10 @@ public final class JPDialogBuilder {
     public JPDialogBuilder setFirstButtonDisabled(boolean disabled) {
         positiveButtonDisabled = disabled;
         return this;
+    }
+
+    public void setCheckMessageUrl(boolean checkMessageUrl) {
+        this.checkMessageUrl = checkMessageUrl;
     }
 
     public void setCancelableFalse() {
@@ -98,29 +104,34 @@ public final class JPDialogBuilder {
         }
         if (message != null) {
             TextView messageTextView = inflate.findViewById(R.id.message);
-            messageTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            messageTextView.setLinksClickable(true);
-            messageTextView.setLinkTextColor(Color.YELLOW);
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(View textView) {
-                    // 获取点击的URL链接
-                    TextView tv = (TextView) textView;
-                    Spanned spanned = (Spanned) tv.getText();
-                    int start = spanned.getSpanStart(this);
-                    int end = spanned.getSpanEnd(this);
-                    CharSequence url = spanned.subSequence(start, end);
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())));
+            if (checkMessageUrl) {
+                messageTextView.setAutoLinkMask(Linkify.WEB_URLS);
+                messageTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                messageTextView.setLinksClickable(true);
+                messageTextView.setLinkTextColor(Color.YELLOW);
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View textView) {
+                        // 获取点击的URL链接
+                        TextView tv = (TextView) textView;
+                        Spanned spanned = (Spanned) tv.getText();
+                        int start = spanned.getSpanStart(this);
+                        int end = spanned.getSpanEnd(this);
+                        CharSequence url = spanned.subSequence(start, end);
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())));
+                    }
+                };
+                SpannableString spannableString = new SpannableString(message);
+                URLSpan[] urlSpans = spannableString.getSpans(0, spannableString.length(), URLSpan.class);
+                for (URLSpan urlSpan : urlSpans) {
+                    int start = spannableString.getSpanStart(urlSpan);
+                    int end = spannableString.getSpanEnd(urlSpan);
+                    spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-            };
-            SpannableString spannableString = new SpannableString(message);
-            URLSpan[] urlSpans = spannableString.getSpans(0, spannableString.length(), URLSpan.class);
-            for (URLSpan urlSpan : urlSpans) {
-                int start = spannableString.getSpanStart(urlSpan);
-                int end = spannableString.getSpanEnd(urlSpan);
-                spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                messageTextView.setText(spannableString);
+            } else {
+                messageTextView.setText(message);
             }
-            messageTextView.setText(spannableString);
         }
         if (view != null) {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();

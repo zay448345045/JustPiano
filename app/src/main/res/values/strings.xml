@@ -121,9 +121,7 @@
     <string name="lo_extra_func_settings">参数设置</string>
     <string name="lo_extra_func_sync">曲库同步</string>
     <string name="lo_extra_func_midi_import">MID导入</string>
-    <string name="lo_extra_func_record">录音文件</string>
     <string name="lo_extra_func_data_export">数据导出</string>
-    <string name="lo_extra_func_score">分数统计</string>
     <string name="message_send_name">房名:</string>
     <string name="ol_btn_lv_info">查看资料</string>
     <string name="ol_btn_lv_pm">私聊</string>

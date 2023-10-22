@@ -247,9 +247,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
                 inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
                 inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
-                inflate2.findViewById(R.id.lo_extra_func_record).setOnClickListener(this);
                 inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
-                inflate2.findViewById(R.id.lo_extra_func_total_score).setOnClickListener(this);
                 popupWindow2.setFocusable(true);
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
@@ -272,17 +270,10 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 menuPopupWindow.dismiss();
                 FilePickerUtil.openFileManager(this, false);
                 return;
-            case R.id.lo_extra_func_record:  // 录音文件
-                menuPopupWindow.dismiss();
-                menuPopupWindow.dismiss();
-                SongPlay.INSTANCE.stopPlay();
-                Intent intent2 = new Intent();
-                intent2.setClass(this, RecordFiles.class);
-                startActivity(intent2);
-                return;
             case R.id.lo_extra_func_data_export: // 数据导出
                 menuPopupWindow.dismiss();
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setCheckMessageUrl(false);
                 jpDialogBuilder.setWidth(500);
                 jpDialogBuilder.setTitle("数据导入导出");
                 jpDialogBuilder.setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
@@ -306,12 +297,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 });
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
-                return;
-            case R.id.lo_extra_func_total_score: // 分数统计
-                menuPopupWindow.dismiss();
-                totalSongInfoMutableLiveData.observe(this, totalSongInfo -> {
-                    Toast.makeText(this, "曲谱:" + totalSongInfo.getTotalCount() + " " + "总分"+ totalSongInfo.getTotalScore(),Toast.LENGTH_LONG).show();
-                });
                 return;
             default:
         }
@@ -440,7 +425,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             ListView listView = inflate.findViewById(R.id.list);
             PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             sortPopupWindow.setOutsideTouchable(true);
             sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();

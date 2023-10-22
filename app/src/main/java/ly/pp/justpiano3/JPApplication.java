@@ -57,7 +57,6 @@ public final class JPApplication extends Application {
     public String loginResultMessage = "";
     private ConnectionService connectionService;
     private boolean bindService;
-
     private String accountName = "";
     private String password = "";
     private int widthPixels;
