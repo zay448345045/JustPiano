@@ -35,6 +35,7 @@ public class PlayModeSelect extends Activity implements OnClickListener {
             case R.id.freestyle_mode:
                 intent = new Intent();
                 intent.setClass(this, WaterfallActivity.class);
+                intent.putExtra("freeStyle", true);
                 startActivity(intent);
                 return;
             case R.id.keyboard:
@@ -55,6 +56,5 @@ public class PlayModeSelect extends Activity implements OnClickListener {
         findViewById(R.id.game_mode).setOnClickListener(this);
         findViewById(R.id.keyboard).setOnClickListener(this);
         findViewById(R.id.freestyle_mode).setOnClickListener(this);
-        //     findViewById(R.id.listen_mode).setOnClickListener(this);
     }
 }

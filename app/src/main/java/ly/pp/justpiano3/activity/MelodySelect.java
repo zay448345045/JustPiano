@@ -146,6 +146,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         }
         return false;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -338,45 +339,30 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         menuListButton = findViewById(R.id.menu_list_fast);
         menuListButton.setOnClickListener(this);
         isRecord = findViewById(R.id.check_record);
-        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-            isRecord.setVisibility(View.GONE);
-        } else {
-            isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                    buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件", 0);
-                }
-            });
-        }
+        isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
+                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件", 0);
+            }
+        });
+
         isLeftHand = findViewById(R.id.check_hand);
-        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-            isLeftHand.setVisibility(View.GONE);
-        } else {
-            isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
-                    buildDoNotShowDialogAndShow("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 1);
-                }
-            });
-        }
+        isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {
+                buildDoNotShowDialogAndShow("选择后您将弹奏曲谱的左手和弦部分，软件将自动播放右手主旋律", 1);
+            }
+        });
         isAutoPlayNext = findViewById(R.id.check_play_next);
-        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-            isAutoPlayNext.setVisibility(View.GONE);
-        } else {
-            isAutoPlayNext.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked && sharedPreferences.getBoolean("auto_play_next_dialog", true)) {
-                    buildDoNotShowDialogAndShow("选择后曲谱将按界面列表中展示的顺序自动播放下一首", 2);
-                }
-            });
-        }
+        isAutoPlayNext.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && sharedPreferences.getBoolean("auto_play_next_dialog", true)) {
+                buildDoNotShowDialogAndShow("选择后曲谱将按界面列表中展示的顺序自动播放下一首", 2);
+            }
+        });
         isPractise = findViewById(R.id.check_practise);
-        if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-            isPractise.setVisibility(View.GONE);
-        } else {
-            isPractise.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked && sharedPreferences.getBoolean("practise_dialog", true)) {
-                    buildDoNotShowDialogAndShow("选择后您在弹奏时，音块下落到判断线会自动暂停，帮助您练习弹奏曲谱", 3);
-                }
-            });
-        }
+        isPractise.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && sharedPreferences.getBoolean("practise_dialog", true)) {
+                buildDoNotShowDialogAndShow("选择后您在弹奏时，音块下落到判断线会自动暂停，帮助您练习弹奏曲谱", 3);
+            }
+        });
         categoryListView.setAdapter(new LocalSongsItemAdapter(this));
         categoryListView.setCacheColorHint(0);
         categoryListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -411,7 +397,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     @Override
     protected void onStop() {
         super.onStop();
-        isRecord.setChecked(false);
     }
 
     @Override

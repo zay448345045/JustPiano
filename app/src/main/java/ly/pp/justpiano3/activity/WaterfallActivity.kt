@@ -60,6 +60,11 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
      */
     private lateinit var progressBar: JPProgressBar
 
+    /**
+     * 钢琴键盘按键时，是否产生自下而上的音块
+     */
+    private var keyboardKeyDownNoteShow = false
+
     companion object {
 
         /**
@@ -82,6 +87,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
          */
         const val LEFT_HAND_NOTE_COLOR = 0x2BBBFB
         const val RIGHT_HAND_NOTE_COLOR = 0xFF802D
+        const val FREE_STYLE_NOTE_COLOR = 0xFFFF00
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +97,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         progressBar = JPProgressBar(this)
         progressBar.setCancelable(false)
         // 从extras中的数据确定曲目，解析pm文件
-        val pmSongData = parsePmFileFromIntentExtras()
+        val pmSongData = parseParamsFromIntentExtras()
         val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
         songNameView.text = pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
@@ -117,7 +123,8 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
             }
         })
         keyboardView = findViewById(R.id.waterfall_keyboard)
-        keyboardView.octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
+        keyboardView.octaveTagType =
+            KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
         keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -126,6 +133,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 // 设置瀑布流音符的左右手颜色
                 waterfallView.leftHandNoteColor = LEFT_HAND_NOTE_COLOR
                 waterfallView.rightHandNoteColor = RIGHT_HAND_NOTE_COLOR
+                waterfallView.freeStyleNoteColor = FREE_STYLE_NOTE_COLOR
                 // 设置音块下落速率，播放速度
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
                 // 开启增减白键数量、移动键盘按钮的监听
@@ -133,14 +141,40 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
                 findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
-                // 设置键盘的点击监听，键盘按下时播放对应琴键的声音
-                keyboardView.setMusicKeyListener(object : KeyboardView.KeyboardListener {
+                // 设置键盘的点击监听
+                keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
+                        if (keyboardKeyDownNoteShow) {
+                            val (left, right) = convertWidthToWaterfallWidth(
+                                isBlackKey(pitch),
+                                keyboardView.convertPitchToReact(pitch)
+                            )
+                            waterfallView.freeStyleNotes.add(
+                                WaterfallNote(
+                                    left,
+                                    right,
+                                    waterfallView.height + waterfallView.playProgress,
+                                    Float.MAX_VALUE,
+                                    false,
+                                    pitch,
+                                    volume
+                                )
+                            )
+                        }
                     }
 
                     override fun onKeyUp(pitch: Byte) {
-                        // nothing
+                        if (keyboardKeyDownNoteShow) {
+                            for (i in waterfallView.freeStyleNotes.indices.reversed()) {
+                                val freeStyleNote = waterfallView.freeStyleNotes[i]
+                                if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > waterfallView.height + waterfallView.playProgress) {
+                                    freeStyleNote.bottom =
+                                        waterfallView.height + waterfallView.playProgress
+                                    break
+                                }
+                            }
+                        }
                     }
                 })
                 // 移除布局监听，避免重复调用
@@ -155,7 +189,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 }
             }
         })
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
+                PackageManager.FEATURE_MIDI
+            )
+        ) {
             buildAndConnectMidiReceiver()
             MidiDeviceUtil.addMidiConnectionListener(this)
         }
@@ -178,7 +215,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         }
     }
 
-    private fun parsePmFileFromIntentExtras(): PmSongData? {
+    private fun parseParamsFromIntentExtras(): PmSongData? {
+        if (intent.extras?.getBoolean("freeStyle") == true) {
+            keyboardKeyDownNoteShow = true
+        }
         val songPath = intent.extras?.getString("songPath")
         return if (songPath.isNullOrEmpty()) {
             intent.extras?.getByteArray("songBytes")?.let { PmSongUtil.parsePmDataByBytes(it) }
@@ -209,7 +249,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
+                PackageManager.FEATURE_MIDI
+            )
+        ) {
             if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver)
             }
@@ -370,6 +413,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                     buttonPressing = true
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 view.isPressed = false
                 stopAddOrSubtract()
@@ -472,9 +516,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte()
         if (volume > 0) {
             keyboardView.fireKeyDown(pitchWithSettingTune, volume, null)
-            SoundEngineUtil.playSound(pitchWithSettingTune, volume)
+            keyboardView.keyboardListener?.onKeyDown(pitch, volume)
         } else {
             keyboardView.fireKeyUp(pitchWithSettingTune)
+            keyboardView.keyboardListener?.onKeyUp(pitch)
         }
     }
 }

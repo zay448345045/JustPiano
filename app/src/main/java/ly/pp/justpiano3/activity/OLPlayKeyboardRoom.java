@@ -263,7 +263,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
-        keyboardView.setMusicKeyListener(new KeyboardView.KeyboardListener() {
+        keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 if (roomPositionSub1 >= 0) {

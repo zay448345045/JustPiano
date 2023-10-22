@@ -10,6 +10,7 @@ import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.min
 
 /**
  * 瀑布流绘制view
@@ -36,10 +37,11 @@ class WaterfallView @JvmOverloads constructor(
     private var progressBarBaseRect: RectF? = null
 
     /**
-     * 瀑布流音符左右手颜色
+     * 瀑布流音符左右手颜色、自由演奏音符颜色
      */
     var leftHandNoteColor = 0
     var rightHandNoteColor = 0
+    var freeStyleNoteColor = 0
 
     /**
      * 瀑布流音块下落速率
@@ -55,6 +57,11 @@ class WaterfallView @JvmOverloads constructor(
      * 绘制音块瀑布流内容
      */
     lateinit var waterfallNotes: Array<WaterfallNote>
+
+    /**
+     * 自由演奏瀑布流音块内容，key：音高，value：音块
+     */
+    var freeStyleNotes: MutableList<WaterfallNote> = mutableListOf()
 
     /**
      * 所有八度虚线的横坐标列表
@@ -222,7 +229,7 @@ class WaterfallView @JvmOverloads constructor(
             false
         }
 
-    private val playProgress: Float
+    val playProgress: Float
         /**
          * 获取目前的播放进度，单位毫秒，如果未在播放，返回0
          */
@@ -245,6 +252,10 @@ class WaterfallView @JvmOverloads constructor(
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
+        // 不存在音符时，屏蔽所有事件
+        if (waterfallNotes.isEmpty()) {
+            return true
+        }
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 // 有触摸按下view时，记录此时按下的坐标，后续计算手指滑动了多少坐标
@@ -415,12 +426,12 @@ class WaterfallView @JvmOverloads constructor(
                     (if (isPause) pauseProgress!! else playIntervalTime) + progressScrollOffset
                 // 如果发现进度大于总进度，说明播放完成，此时标记暂停
                 // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
-                if (progress > totalProgress) {
+                if (waterfallNotes.isNotEmpty() && progress > totalProgress) {
                     isPause = true
                 }
-                // 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
+                // 检测并调用瀑布流音块监听
                 handleWaterfallNoteListener()
-                // 先在缓冲区执行计算所有音块
+                // 先在缓冲区执行绘制所有音块
                 drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
                 // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
                 doDrawWaterfall(octaveLinePaint, octaveLinePath)
@@ -501,6 +512,7 @@ class WaterfallView @JvmOverloads constructor(
         private fun drawNotesOnBufferBitmap(canvas: Canvas, notePaint: Paint) {
             // 先清空缓冲bitmap中的内容
             notesBufferBitmap.eraseColor(Color.TRANSPARENT)
+            // 执行计算绘制瀑布流音符
             for ((index, waterfallNote) in waterfallNotes.withIndex()) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
@@ -522,6 +534,25 @@ class WaterfallView @JvmOverloads constructor(
                     )
                 }
             }
+            // 执行计算绘制自由演奏音块
+            for (i in freeStyleNotes.indices.reversed()) {
+                val freeStyleNote = freeStyleNotes[i]
+                notePaint.color = freeStyleNoteColor
+                // 根据音符的力度，确定音块绘制的透明度
+                notePaint.alpha = minOf(freeStyleNote.volume * 2, 255)
+                // 绘制自由演奏音块，它自下而上移动
+                canvas.drawRect(
+                    freeStyleNote.left,
+                    freeStyleNote.top - progress,
+                    freeStyleNote.right,
+                    min(height.toFloat(), freeStyleNote.bottom - progress),
+                    notePaint
+                )
+                // 如果音块已经移动到了屏幕外，则从list中删除
+                if (freeStyleNote.bottom - progress < 0f) {
+                    freeStyleNotes.removeAt(i)
+                }
+            }
         }
 
         /**
@@ -540,12 +571,14 @@ class WaterfallView @JvmOverloads constructor(
          * 绘制进度条
          */
         private fun drawProgressBar(canvas: Canvas) {
-            // 绘制进度条背景（基底）图，它包含完整的一个进度条轮廓
-            canvas.drawBitmap(progressBarBaseImage!!, null, progressBarBaseRect!!, null)
-            // 修改当前进度条的最右端绘制坐标，进度条最右侧坐标 = 曲谱播放进度百分比 * view的宽度
-            progressBarRect!!.right = progress / totalProgress * width
-            // 绘制进度条图片
-            canvas.drawBitmap(progressBarImage!!, null, progressBarRect!!, null)
+            if (waterfallNotes.isNotEmpty()) {
+                // 绘制进度条背景（基底）图，它包含完整的一个进度条轮廓
+                canvas.drawBitmap(progressBarBaseImage!!, null, progressBarBaseRect!!, null)
+                // 修改当前进度条的最右端绘制坐标，进度条最右侧坐标 = 曲谱播放进度百分比 * view的宽度
+                progressBarRect!!.right = progress / totalProgress * width
+                // 绘制进度条图片
+                canvas.drawBitmap(progressBarImage!!, null, progressBarRect!!, null)
+            }
         }
 
         /**
@@ -561,11 +594,11 @@ class WaterfallView @JvmOverloads constructor(
         }
 
         /**
-         * 确定是否有音块到达了view底部或完全移出了view，如果有，调用监听
+         * 检测并调用瀑布流音块监听
          */
         private fun handleWaterfallNoteListener() {
             // 如果没有监听器，或者目前view处于拖动来改变进度的情形，则不做任何监听操作
-            if (noteFallListener == null || isScrolling) {
+            if (waterfallNotes.isEmpty() || noteFallListener == null || isScrolling) {
                 return
             }
             for (i in waterfallNotes.indices) {

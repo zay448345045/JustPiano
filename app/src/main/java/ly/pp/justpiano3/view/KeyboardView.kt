@@ -86,7 +86,7 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
      */
     private var isAnimRunning = false
     private val mFingerMap: MutableMap<Int, Byte> = HashMap()
-    private var keyboardListener: KeyboardListener? = null
+    var keyboardListener: KeyboardListener? = null
     var whiteKeyNum = 0
         private set
     var whiteKeyOffset = 0
@@ -558,10 +558,6 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
             }
         }
         return -1
-    }
-
-    fun setMusicKeyListener(keyboardListener: KeyboardListener?) {
-        this.keyboardListener = keyboardListener
     }
 
     fun setWhiteKeyNum(whiteKeyNum: Int, animInterval: Int) {
