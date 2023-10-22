@@ -235,9 +235,57 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 sortButton.setEnabled(false);
                 return;
             case R.id.list_sort_b:
-                if (firstLoadFocusFinish) {
-                    sortPopupWindow.showAsDropDown(sortButton);
-                }
+                PopupWindow popupWindow1 = new PopupWindow(this);
+                View inflate1 = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
+                popupWindow1.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+                popupWindow1.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+                popupWindow1.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                inflate1.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
+                inflate1.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
+                popupWindow1.setFocusable(true);
+                popupWindow1.setTouchable(true);
+                popupWindow1.setOutsideTouchable(true);
+                popupWindow1.setContentView(inflate1);
+                sortPopupWindow = popupWindow1;
+                popupWindow1.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
+                return;
+            case R.id.lo_songs_order_name_asc:
+                songsSort(0);
+                return;
+            case R.id.lo_songs_order_name_des:
+                songsSort(1);
+                return;
+            case R.id.lo_songs_order_new:
+                songsSort(2);
+                return;
+            case R.id.lo_songs_order_recent:
+                songsSort(3);
+                return;
+            case R.id.lo_songs_order_diff_asc:
+                songsSort(4);
+                return;
+            case R.id.lo_songs_order_diff_des:
+                songsSort(5);
+                return;
+            case R.id.lo_songs_order_score_asc:
+                songsSort(6);
+                return;
+            case R.id.lo_songs_order_score_des:
+                songsSort(7);
+                return;
+            case R.id.lo_songs_order_length_asc:
+                songsSort(8);
+                return;
+            case R.id.lo_songs_order_length_des:
+                songsSort(9);
                 return;
             case R.id.menu_list_fast:
                 PopupWindow popupWindow2 = new PopupWindow(this);
@@ -429,6 +477,18 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
 
     public MutableLiveData<SongDao.TotalSongInfo> getTotalSongInfoMutableLiveData() {
         return totalSongInfoMutableLiveData;
+    }
+
+    private void songsSort(int order){
+        int orderPosition = order;
+        sortButton.setText(Consts.sortNames[orderPosition]);
+        SongDao songDao = JPApplication.getSongDatabase().songDao();
+        DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
+        pagedListLiveData.removeObservers(this);
+        pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
+        pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+        sortPopupWindow.dismiss();
+        this.orderPosition = orderPosition;
     }
 }
 
