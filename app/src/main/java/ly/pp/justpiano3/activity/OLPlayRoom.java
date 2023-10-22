@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
+
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -319,7 +321,12 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
                 pagedListLiveData.removeObservers(this);
                 pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
-                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
+                pagedListLiveData.observe(this, (pagedList) -> {
+                    Toast.makeText(this, "搜索到" +
+                            (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
+                            + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+                    ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter()))).submitList(pagedList);
+                });
                 return;
             case R.id.ol_soundstop:
                 SongPlay.INSTANCE.stopPlay();

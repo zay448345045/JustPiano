@@ -11,6 +11,10 @@ import ly.pp.justpiano3.entity.LocalSongData
 @Dao
 interface SongDao {
 
+    companion object {
+        const val PAGE_SIZE = 100;
+    }
+
     @Query("SELECT * FROM song WHERE online = 1")
     fun getAllSongs(): List<Song>
 
@@ -147,7 +151,7 @@ interface SongDao {
     fun updateFavoriteSong(filePath: String, isFavorite: Int): Int
 
     private val _config: PagedList.Config
-        get() = PagedList.Config.Builder().setPageSize(100).setEnablePlaceholders(false).build()
+        get() = PagedList.Config.Builder().setPageSize(PAGE_SIZE).setEnablePlaceholders(false).build()
 
     fun getPageListByDatasourceFactory(dataSourceFactory: DataSource.Factory<Int, Song>): LiveData<PagedList<Song>> {
         return LivePagedListBuilder(dataSourceFactory, _config).build()
