@@ -7,6 +7,11 @@
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
             android:title="皮肤" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="color1"
+            android:title="选择颜色测试"
+            android:summary="测试"
+        />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1"
             app:minValue="0.5"
