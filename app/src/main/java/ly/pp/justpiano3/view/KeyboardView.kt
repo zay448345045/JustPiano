@@ -13,7 +13,11 @@ import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.UnitConvertUtil
 import kotlin.math.roundToInt
 
-class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class KeyboardView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
     View(context, attrs, defStyleAttr) {
 
     companion object {
@@ -48,10 +52,18 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
          * 一个八度内要绘制的图像种类，包括黑键、白键右侧(右上角抠掉黑键的，比如do键)、白键MIDDLE(左右都被抠掉黑键的，比如do re mi的re键)、白键左侧
          */
         private val KEY_IMAGE_TYPE = arrayOf(
-            KeyImageTypeEnum.WHITE_KEY_RIGHT, KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_MIDDLE,
-            KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_LEFT, KeyImageTypeEnum.WHITE_KEY_RIGHT,
-            KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_MIDDLE, KeyImageTypeEnum.BLACK_KEY,
-            KeyImageTypeEnum.WHITE_KEY_MIDDLE, KeyImageTypeEnum.BLACK_KEY, KeyImageTypeEnum.WHITE_KEY_LEFT
+            KeyImageTypeEnum.WHITE_KEY_RIGHT,
+            KeyImageTypeEnum.BLACK_KEY,
+            KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.BLACK_KEY,
+            KeyImageTypeEnum.WHITE_KEY_LEFT,
+            KeyImageTypeEnum.WHITE_KEY_RIGHT,
+            KeyImageTypeEnum.BLACK_KEY,
+            KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.BLACK_KEY,
+            KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.BLACK_KEY,
+            KeyImageTypeEnum.WHITE_KEY_LEFT
         )
 
         // midi音高转白键或黑键索引
@@ -158,8 +170,10 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
             return
         }
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.KeyboardView)
-        whiteKeyNum = typedArray.getInteger(R.styleable.KeyboardView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM)
-        whiteKeyOffset = typedArray.getInteger(R.styleable.KeyboardView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET)
+        whiteKeyNum =
+            typedArray.getInteger(R.styleable.KeyboardView_whiteKeyNum, DEFAULT_WHITE_KEY_NUM)
+        whiteKeyOffset =
+            typedArray.getInteger(R.styleable.KeyboardView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET)
         pianoKeyTouchable = typedArray.getBoolean(R.styleable.KeyboardView_pianoKeyTouchable, true)
         val octaveTagTypeInt = typedArray.getInteger(R.styleable.KeyboardView_octaveTagType, 0)
         octaveTagType = OctaveTagType.values().getOrElse(octaveTagTypeInt) { OctaveTagType.NONE }
@@ -225,15 +239,50 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
             // 先添加绘制键盘图的位置坐标，再叠上5个黑键
             keyboardRectList.add(RectF(left, 0f, right, viewHeight))
             val blackKeyLeft1 = left + blackKeyWidth * 1.15f
-            blackKeyRectList.add(RectF(blackKeyLeft1, 0f, blackKeyLeft1 + blackKeyWidth, blackKeyHeight))
+            blackKeyRectList.add(
+                RectF(
+                    blackKeyLeft1,
+                    0f,
+                    blackKeyLeft1 + blackKeyWidth,
+                    blackKeyHeight
+                )
+            )
             val blackKeyLeft2 = left + blackKeyWidth * 2.8f
-            blackKeyRectList.add(RectF(blackKeyLeft2, 0f, blackKeyLeft2 + blackKeyWidth, blackKeyHeight))
+            blackKeyRectList.add(
+                RectF(
+                    blackKeyLeft2,
+                    0f,
+                    blackKeyLeft2 + blackKeyWidth,
+                    blackKeyHeight
+                )
+            )
             val blackKeyLeft3 = left + blackKeyWidth * 6.09f
-            blackKeyRectList.add(RectF(blackKeyLeft3, 0f, blackKeyLeft3 + blackKeyWidth, blackKeyHeight))
+            blackKeyRectList.add(
+                RectF(
+                    blackKeyLeft3,
+                    0f,
+                    blackKeyLeft3 + blackKeyWidth,
+                    blackKeyHeight
+                )
+            )
             val blackKeyLeft4 = left + blackKeyWidth * 7.74f
-            blackKeyRectList.add(RectF(blackKeyLeft4, 0f, blackKeyLeft4 + blackKeyWidth, blackKeyHeight))
+            blackKeyRectList.add(
+                RectF(
+                    blackKeyLeft4,
+                    0f,
+                    blackKeyLeft4 + blackKeyWidth,
+                    blackKeyHeight
+                )
+            )
             val blackKeyLeft5 = left + blackKeyWidth * 9.39f
-            blackKeyRectList.add(RectF(blackKeyLeft5, 0f, blackKeyLeft5 + blackKeyWidth, blackKeyHeight))
+            blackKeyRectList.add(
+                RectF(
+                    blackKeyLeft5,
+                    0f,
+                    blackKeyLeft5 + blackKeyWidth,
+                    blackKeyHeight
+                )
+            )
             left += width
             right += width
         }
@@ -280,20 +329,35 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
                 val currentPitchInOctave = i % NOTES_PER_OCTAVE
                 when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
                     KeyImageTypeEnum.BLACK_KEY -> canvas.drawBitmap(
-                        blackKeyImage, null, blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * BLACK_NOTES_PER_OCTAVE], notesOnPaintArray[i]
+                        blackKeyImage,
+                        null,
+                        blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                + currentOctave * BLACK_NOTES_PER_OCTAVE],
+                        notesOnPaintArray[i]
                     )
+
                     KeyImageTypeEnum.WHITE_KEY_LEFT -> canvas.drawBitmap(
-                        whiteKeyLeftImage, null, whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]
+                        whiteKeyLeftImage,
+                        null,
+                        whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                        notesOnPaintArray[i]
                     )
+
                     KeyImageTypeEnum.WHITE_KEY_MIDDLE -> canvas.drawBitmap(
-                        whiteKeyMiddleImage, null, whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]
+                        whiteKeyMiddleImage,
+                        null,
+                        whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                        notesOnPaintArray[i]
                     )
+
                     KeyImageTypeEnum.WHITE_KEY_RIGHT -> canvas.drawBitmap(
-                        whiteKeyRightImage, null, whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * WHITE_NOTES_PER_OCTAVE], notesOnPaintArray[i]
+                        whiteKeyRightImage,
+                        null,
+                        whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                        notesOnPaintArray[i]
                     )
                 }
             }
@@ -305,30 +369,39 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
             OctaveTagType.NONE -> {
                 return
             }
+
             OctaveTagType.OCTAVE_C -> {
                 for ((index, rectF) in keyboardImageRectArray.withIndex()) {
                     canvas.drawText(
                         OCTAVE_C + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index),
-                        rectF.left + (rectF.width() / 7 - keyboardTextPaint.measureText(OCTAVE_TAG_WORD_SAMPLE)) / 2,
+                        rectF.left + (rectF.width() / 7 - keyboardTextPaint.measureText(
+                            OCTAVE_TAG_WORD_SAMPLE
+                        )) / 2,
                         rectF.bottom - keyboardTextPaint.descent(), keyboardTextPaint
                     )
                 }
             }
+
             OctaveTagType.PITCH_NAME -> {
                 for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
                     canvas.drawText(
                         PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index / WHITE_NOTES_PER_OCTAVE + 1),
-                        whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(OCTAVE_TAG_WORD_SAMPLE)) / 2,
+                        whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(
+                            OCTAVE_TAG_WORD_SAMPLE
+                        )) / 2,
                         whiteKeyRect.bottom - keyboardTextPaint.descent(), keyboardTextPaint
                     )
                 }
             }
+
             OctaveTagType.SYLLABLE_NAME -> {
                 for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
                     val text = SYLLABLE_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE]
                     canvas.drawText(
                         text,
-                        whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(text)) / 2,
+                        whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(
+                            text
+                        )) / 2,
                         whiteKeyRect.bottom - keyboardTextPaint.descent(), keyboardTextPaint
                     )
                 }
@@ -391,10 +464,12 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
                     i++
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
                 onFingerUp(id, x, y)
                 performClick()
             }
+
             MotionEvent.ACTION_CANCEL -> onAllFingersUp()
         }
         return true
@@ -465,12 +540,8 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private fun fireKeyDownAndHandleListener(pitch: Byte, volume: Byte, color: Int?) {
         if (!isAnimRunning) {
-            if (keyboardListener != null) {
-                keyboardListener!!.onKeyDown(
-                    pitch, volume.toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte()
-                )
-            }
-            fireKeyDown(pitch, volume.toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte(), color)
+            keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME))
+            fireKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME), color)
         }
     }
 
@@ -499,7 +570,8 @@ class KeyboardView @JvmOverloads constructor(context: Context, attrs: AttributeS
                 var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
                 if (porterDuffColorFilter == null) {
                     porterDuffColorFilter = PorterDuffColorFilter(
-                        handledColor, if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
+                        handledColor,
+                        if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
                     )
                     colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
                 }

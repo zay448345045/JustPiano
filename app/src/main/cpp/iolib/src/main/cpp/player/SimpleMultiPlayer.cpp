@@ -21,7 +21,6 @@
 #include <wav/WavStreamReader.h>
 #include <cmath>
 #include <utility>
-//#include <chrono>
 
 // local includes
 #include "OneShotSampleSource.h"
@@ -69,7 +68,6 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
-//        auto mid1 = std::chrono::high_resolution_clock::now();
         memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
         float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
@@ -77,25 +75,24 @@ namespace iolib {
             int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             for (int32_t i = 0; i < queueSize; i++) {
-                std::__ndk1::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
-                memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
-                if (curFrameIndex != nullptr && (*curFrameIndex).first >= numSampleFrames) {
-                    // this sample is finished
-                    sampleSource->popCurFrameIndexQueue();
-                } else {
-                    sampleCount += 1;
-                    // the size of queue equals one, can avoid moving queue
-                    if (curFrameIndex != nullptr && queueSize > 1) {
+                std::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
+                if (curFrameIndex != nullptr) {
+                    sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
+                    memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+                    if ((*curFrameIndex).first >= numSampleFrames) {
+                        // this sample is finished
                         sampleSource->popCurFrameIndexQueue();
-                        sampleSource->pushCurFrameIndexQueue(*curFrameIndex);
+                    } else {
+                        sampleCount += 1;
+                        // the size of queue equals one, can avoid moving queue
+                        if (queueSize > 1) {
+                            sampleSource->popCurFrameIndexQueue();
+                            sampleSource->pushCurFrameIndexQueue(*curFrameIndex);
+                        }
                     }
                 }
             }
         }
-//        auto mid2 = std::chrono::high_resolution_clock::now();
-//        __android_log_print(ANDROID_LOG_WARN, TAG, "mixAudioToBuffer oboeDuration %lld",
-//                            std::chrono::duration_cast<std::chrono::microseconds>(mid2 - mid1).count());
 
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
@@ -218,7 +215,7 @@ namespace iolib {
 
     void SimpleMultiPlayer::resetAll() {
         for (int32_t bufferIndex = 0; bufferIndex < mNumSampleBuffers; bufferIndex++) {
-            mSampleSources[bufferIndex]->setStopMode();
+            mSampleSources[bufferIndex]->stopAll();
         }
     }
 

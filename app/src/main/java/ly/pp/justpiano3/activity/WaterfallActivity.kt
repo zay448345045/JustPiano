@@ -4,7 +4,11 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.RectF
 import android.media.midi.MidiReceiver
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -16,10 +20,10 @@ import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.JPMidiReceiver
 import ly.pp.justpiano3.midi.MidiConnectionListener
-import ly.pp.justpiano3.utils.ThreadPoolUtil
 import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
+import ly.pp.justpiano3.utils.ThreadPoolUtil
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
 import ly.pp.justpiano3.view.ScrollText
@@ -61,9 +65,9 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
     private lateinit var progressBar: JPProgressBar
 
     /**
-     * 钢琴键盘按键时，是否产生自下而上的音块
+     * 是否为自由演奏（钢琴键盘按键时，是否产生自下而上的音块）
      */
-    private var freeStyleMode = false
+    private var freeStyle = false
 
     companion object {
 
@@ -81,13 +85,6 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
          * 瀑布流音符最大高度
          */
         const val NOTE_MAX_HEIGHT = 1000
-
-        /**
-         * 瀑布流音符左右手颜色（透明度无效，透明度目前根据音符力度确定）
-         */
-        const val LEFT_HAND_NOTE_COLOR = 0x2BBBFB
-        const val RIGHT_HAND_NOTE_COLOR = 0xFF802D
-        const val FREE_STYLE_NOTE_COLOR = 0xFFFF00
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +96,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         // 从extras中的数据确定曲目，解析pm文件
         val pmSongData = parseParamsFromIntentExtras()
         val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
-        songNameView.text = if (freeStyleMode) "自由演奏" else pmSongData?.songName
+        songNameView.text = if (freeStyle) "自由演奏" else pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
         waterfallView.setNoteFallListener(object : NoteFallListener {
@@ -141,36 +138,12 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
                         SoundEngineUtil.playSound(pitch, volume)
-                        if (freeStyleMode) {
-                            val (left, right) = convertWidthToWaterfallWidth(
-                                isBlackKey(pitch),
-                                keyboardView.convertPitchToReact(pitch)
-                            )
-                            waterfallView.freeStyleNotes.add(
-                                WaterfallNote(
-                                    left,
-                                    right,
-                                    waterfallView.height + waterfallView.playProgress,
-                                    Float.MAX_VALUE,
-                                    FREE_STYLE_NOTE_COLOR,
-                                    pitch,
-                                    volume
-                                )
-                            )
-                        }
+                        freeStyleKeyDownHandle(pitch, volume)
                     }
 
                     override fun onKeyUp(pitch: Byte) {
-                        if (freeStyleMode) {
-                            for (i in waterfallView.freeStyleNotes.indices.reversed()) {
-                                val freeStyleNote = waterfallView.freeStyleNotes[i]
-                                if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > waterfallView.height + waterfallView.playProgress) {
-                                    freeStyleNote.bottom =
-                                        waterfallView.height + waterfallView.playProgress
-                                    break
-                                }
-                            }
-                        }
+                        SoundEngineUtil.stopPlaySound(pitch)
+                        freeStyleKeyUpHandle(pitch)
                     }
                 })
                 // 移除布局监听，避免重复调用
@@ -213,7 +186,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     private fun parseParamsFromIntentExtras(): PmSongData? {
         if (intent.extras?.getBoolean("freeStyle") == true) {
-            freeStyleMode = true
+            freeStyle = true
         }
         val songPath = intent.extras?.getString("songPath")
         return if (songPath.isNullOrEmpty()) {
@@ -292,7 +265,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                         right,
                         0f,
                         totalTime,
-                        if (leftHand) LEFT_HAND_NOTE_COLOR else RIGHT_HAND_NOTE_COLOR,
+                        if (leftHand) GlobalSetting.waterfallLeftHandColor else GlobalSetting.waterfallRightHandColor,
                         pitch,
                         volume
                     )
@@ -517,13 +490,47 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onMidiMessageReceive(pitch: Byte, volume: Byte) {
-        val pitchWithSettingTune = (pitch + GlobalSetting.midiKeyboardTune).toByte()
         if (volume > 0) {
-            keyboardView.fireKeyDown(pitchWithSettingTune, volume, null)
-            keyboardView.keyboardListener?.onKeyDown(pitch, volume)
+            SoundEngineUtil.playSound(pitch, volume)
+            keyboardView.fireKeyDown(pitch, volume, null)
+            freeStyleKeyDownHandle(pitch, volume)
         } else {
-            keyboardView.fireKeyUp(pitchWithSettingTune)
-            keyboardView.keyboardListener?.onKeyUp(pitch)
+            SoundEngineUtil.stopPlaySound(pitch)
+            keyboardView.fireKeyUp(pitch)
+            freeStyleKeyUpHandle(pitch)
+        }
+    }
+
+    fun freeStyleKeyDownHandle(pitch: Byte, volume: Byte) {
+        if (freeStyle) {
+            val (left, right) = convertWidthToWaterfallWidth(
+                isBlackKey(pitch),
+                keyboardView.convertPitchToReact(pitch)
+            )
+            waterfallView.freeStyleNotes.add(
+                WaterfallNote(
+                    left,
+                    right,
+                    waterfallView.height + waterfallView.playProgress,
+                    Float.MAX_VALUE,
+                    GlobalSetting.waterfallFreeStyleColor,
+                    pitch,
+                    volume
+                )
+            )
+        }
+    }
+
+    fun freeStyleKeyUpHandle(pitch: Byte) {
+        if (freeStyle) {
+            for (i in waterfallView.freeStyleNotes.indices.reversed()) {
+                val freeStyleNote = waterfallView.freeStyleNotes[i]
+                if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > waterfallView.height + waterfallView.playProgress) {
+                    freeStyleNote.bottom =
+                        waterfallView.height + waterfallView.playProgress
+                    break
+                }
+            }
         }
     }
 }

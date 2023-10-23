@@ -78,22 +78,18 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *env, j
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_trigger(JNIEnv *env, jclass, jint index, jint volume) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *env, jclass, jint index, jint volume) {
     sDTPlayer.triggerDown(index, volume);
+}
+
+JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUp(JNIEnv *env, jclass, jint index) {
+    sDTPlayer.triggerUp(index);
 }
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_clearOutputReset(JNIEnv *, jclass) {
     sDTPlayer.clearOutputReset();
-}
-
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_restartStream(JNIEnv *, jclass) {
-    sDTPlayer.resetAll();
-    if (sDTPlayer.openStream()) {
-        __android_log_print(ANDROID_LOG_INFO, TAG, "openStream successful");
-    } else {
-        __android_log_print(ANDROID_LOG_ERROR, TAG, "openStream failed");
-    }
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecord(

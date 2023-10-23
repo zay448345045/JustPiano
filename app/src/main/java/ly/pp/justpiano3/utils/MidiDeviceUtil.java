@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 import java.io.IOException;
@@ -122,6 +123,7 @@ public class MidiDeviceUtil {
      */
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private static void onNativeMessageReceive(byte pitch, byte volume) {
+        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         for (MidiConnectionListener midiConnectionListener : midiConnectionListeners) {
             midiConnectionListener.onMidiMessageReceive(pitch, volume);
         }

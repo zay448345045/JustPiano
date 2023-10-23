@@ -279,6 +279,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
 
             @Override
             public void onKeyUp(byte pitch) {
+                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()));
                 if (roomPositionSub1 >= 0) {
                     blinkView(roomPositionSub1);
                 }
@@ -389,34 +390,28 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiMessageReceive(byte pitch, byte volume) {
-        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
-            onMidiReceiveKeyDownHandle(pitch, volume);
-        } else {
-            onMidiReceiveKeyUpHandle(pitch);
-        }
-    }
-
-    private void onMidiReceiveKeyDownHandle(byte pitch, byte volume) {
-        if (roomPositionSub1 >= 0) {
-            if (!olKeyboardStates[roomPositionSub1].isMuted()) {
-                SoundEngineUtil.playSound(pitch, volume);
+            if (roomPositionSub1 >= 0) {
+                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                    SoundEngineUtil.playSound(pitch, volume);
+                }
+                blinkView(roomPositionSub1);
             }
-            blinkView(roomPositionSub1);
-        }
-        keyboardView.fireKeyDown(pitch, volume, keyboardNoteDownColor);
-        if (hasAnotherUser()) {
-            broadNote(pitch, volume);
-        }
-    }
-
-    private void onMidiReceiveKeyUpHandle(byte pitch) {
-        if (roomPositionSub1 >= 0) {
-            blinkView(roomPositionSub1);
-        }
-        keyboardView.fireKeyUp(pitch);
-        if (hasAnotherUser()) {
-            broadNote(pitch, 0);
+            keyboardView.fireKeyDown(pitch, volume, keyboardNoteDownColor);
+            if (hasAnotherUser()) {
+                broadNote(pitch, volume);
+            }
+        } else {
+            if (roomPositionSub1 >= 0) {
+                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                    SoundEngineUtil.stopPlaySound(pitch);
+                }
+                blinkView(roomPositionSub1);
+            }
+            keyboardView.fireKeyUp(pitch);
+            if (hasAnotherUser()) {
+                broadNote(pitch, 0);
+            }
         }
     }
 

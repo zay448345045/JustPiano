@@ -112,7 +112,7 @@ public final class PlayNote {
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
-                SoundEngineUtil.stopPlaySound(playNote);
+//                SoundEngineUtil.stopPlaySound(playNote);
                 return posiAdd15AddAnim;
             }
         }
@@ -137,7 +137,7 @@ public final class PlayNote {
                 return posiAdd15AddAnim;
             }
             if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
-                SoundEngineUtil.stopPlaySound(playNote);
+//                SoundEngineUtil.stopPlaySound(playNote);
             }
         }
         if (GlobalSetting.INSTANCE.getAutoPlay()) {

@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.midi.JPMidiReceiver;
@@ -108,7 +110,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
 
             @Override
             public void onKeyUp(byte pitch) {
-
+                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()));
             }
         });
     }
@@ -293,11 +295,11 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiMessageReceive(byte pitch, byte volume) {
-        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
-            secondKeyboardView.fireKeyDown(pitch, volume, null);
             SoundEngineUtil.playSound(pitch, volume);
+            secondKeyboardView.fireKeyDown(pitch, volume, null);
         } else {
+            SoundEngineUtil.stopPlaySound(pitch);
             secondKeyboardView.fireKeyUp(pitch);
         }
     }

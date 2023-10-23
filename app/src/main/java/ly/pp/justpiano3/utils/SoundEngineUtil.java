@@ -3,6 +3,7 @@ package ly.pp.justpiano3.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javazoom.jl.converter.Converter;
+import ly.pp.justpiano3.entity.GlobalSetting;
 
 public class SoundEngineUtil {
 
@@ -24,6 +26,8 @@ public class SoundEngineUtil {
         System.loadLibrary("soundengine");
     }
 
+    private static Handler handler = new Handler();
+
     public static native void setupAudioStreamNative(int numChannels, int sampleRate);
 
     public static native void teardownAudioStreamNative();
@@ -32,7 +36,9 @@ public class SoundEngineUtil {
 
     public static native void unloadWavAssetsNative();
 
-    private static native void trigger(int index, int volume);
+    private static native void triggerDown(int index, int volume);
+
+    private static native void triggerUp(int index);
 
     public static native void setRecord(boolean record);
 
@@ -44,7 +50,7 @@ public class SoundEngineUtil {
             return pitch;
         } else {
             if (pitch >= 24 && pitch <= 108 && volume > 3) {
-                trigger(108 - pitch, volume);
+                triggerDown(108 - pitch, volume);
                 return pitch;
             }
         }
@@ -52,13 +58,19 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlaySound(byte pitch) {
-        if (enableSf2Synth && sf2SynthPtr != null) {
-            noteOff(sf2SynthPtr, 0, pitch);
-        }
+        handler.postDelayed(() -> {
+            if (enableSf2Synth && sf2SynthPtr != null) {
+                noteOff(sf2SynthPtr, 0, pitch);
+            } else {
+                if (pitch >= 24 && pitch <= 108) {
+                    triggerUp(108 - pitch);
+                }
+            }
+        }, GlobalSetting.INSTANCE.getSoundDelay() * 50L);
     }
 
     public static void playChatSound() {
-        trigger(85, 127);
+        triggerDown(85, 127);
     }
 
     public static void preloadSounds(Context context, int i) {
@@ -187,6 +199,4 @@ public class SoundEngineUtil {
     private static native void noteOn(long instance, int channel, int note, int velocity);
 
     private static native void noteOff(long instance, int channel, int note);
-
-    private static native void controlChange(long instance, int channel, int control, int value);
 }

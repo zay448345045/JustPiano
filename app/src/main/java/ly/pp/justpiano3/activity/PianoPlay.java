@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.*;
+
 import androidx.annotation.RequiresApi;
+
 import com.google.protobuf.MessageLite;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FinishScoreAdapter;
@@ -613,29 +616,20 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiMessageReceive(byte pitch, byte volume) {
-        pitch += GlobalSetting.INSTANCE.getMidiKeyboardTune();
         if (volume > 0) {
-            onMidiReceiveKeyDownHandle(pitch % 12);
+            if (playView.currentPlayNote != null) {
+                playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
+            }
+            int trueNote = playView.midiJudgeAndPlaySound(pitch % 12);
+            keyboardview.touchNoteSet.put(trueNote, 0);
+            updateKeyboardPrefer();
         } else {
-            onMidiReceiveKeyUpHandle(pitch % 12);
+            if (pitch % 12 == 0) {
+                keyboardview.touchNoteSet.remove(12);
+            }
+            keyboardview.touchNoteSet.remove(pitch % 12);
+            updateKeyboardPrefer();
         }
-    }
-
-    private void onMidiReceiveKeyUpHandle(int touchNoteNum) {
-        if (touchNoteNum == 0) {
-            keyboardview.touchNoteSet.remove(12);
-        }
-        keyboardview.touchNoteSet.remove(touchNoteNum);
-        updateKeyboardPrefer();
-    }
-
-    private void onMidiReceiveKeyDownHandle(int touchNoteNum) {
-        if (playView.currentPlayNote != null) {
-            playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
-        }
-        int trueNote = playView.midiJudgeAndPlaySound(touchNoteNum);
-        keyboardview.touchNoteSet.put(trueNote, 0);
-        updateKeyboardPrefer();
     }
 
     public void updateKeyboardPrefer() {

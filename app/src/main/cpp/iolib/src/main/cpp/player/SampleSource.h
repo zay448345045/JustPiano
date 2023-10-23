@@ -39,14 +39,19 @@ namespace iolib {
         virtual ~SampleSource() {}
 
         void setPlayMode(int32_t volume) {
-            std::pair<int32_t, int32_t> pair = std::make_pair(0, volume);
-            if (mCurFrameIndexQueue.size() > 10) {
-                mCurFrameIndexQueue.pop();
+            std::pair<int32_t, int32_t> pair(0, volume);
+            if (mCurFrameIndexQueue.size() < 10) {
+                mCurFrameIndexQueue.push(pair);
             }
-            mCurFrameIndexQueue.push(pair);
         }
 
         void setStopMode() {
+            if (!mCurFrameIndexQueue.empty()) {
+                mCurFrameIndexQueue.pop();
+            }
+        }
+
+        void stopAll() {
             while (!mCurFrameIndexQueue.empty()) {
                 mCurFrameIndexQueue.pop();
             }

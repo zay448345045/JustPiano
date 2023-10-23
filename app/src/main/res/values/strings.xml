@@ -4,7 +4,10 @@
     </string>
 	<string name="app_name">极品钢琴</string>
 	<string name="about">更新日志：\n
-        1、支持加载sf2格式音源\n</string>
+        1、支持加载sf2格式音源，支持调整延音、混响及按键震动\n
+        2、本地及联网键盘模式新增自由演奏瀑布流功能\n
+        3、联网对战支持断线自动重连\n
+	</string>
 	<string name="settings_name">设置</string>
 	<string name="b_s_sum">减小和弦音量,突出主旋律</string>
 	<string name="b_s_open">打开和弦</string>

@@ -7,7 +7,7 @@ import ly.pp.justpiano3.enums.LocalPlayModeEnum
 /**
  * 设置项
  */
-object GlobalSetting{
+object GlobalSetting {
 
     /**
      * 本地模式
@@ -65,6 +65,21 @@ object GlobalSetting{
     var chordVolume: Float = 0.8f
 
     /**
+     * 延音
+     */
+    var soundDelay: Int = 100
+
+    /**
+     * 混响
+     */
+    var soundReverb: Int = 0
+
+    /**
+     * 按键震动
+     */
+    var soundVibration: Boolean = false
+
+    /**
      * 弹奏时展示等级
      */
     var showTouchNotesLevel: Boolean = true
@@ -115,6 +130,21 @@ object GlobalSetting{
     var waterfallDownSpeed: Float = 0.8f
 
     /**
+     * 瀑布流左手音块颜色
+     */
+    var waterfallLeftHandColor: Int = 0x2BBBFB
+
+    /**
+     * 瀑布流右手音块颜色
+     */
+    var waterfallRightHandColor: Int = 0xFF802D
+
+    /**
+     * 瀑布流自由演奏音块颜色
+     */
+    var waterfallFreeStyleColor: Int = 0xFFFF00
+
+    /**
      * 是否存储聊天记录
      */
     var saveChatRecord: Boolean = false
@@ -135,7 +165,7 @@ object GlobalSetting{
     var keyboardOctaveTagType: Int = 0
 
     /**
-     * 钢琴键盘显示按键标签种类
+     * 联网键盘模式是否实时传输
      */
     var keyboardRealtime: Boolean = true
 
@@ -153,6 +183,9 @@ object GlobalSetting{
         }
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true)
         chordVolume = sharedPreferences.getString("b_s_vol", "0.8")!!.toFloat()
+        soundDelay = sharedPreferences.getString("sound_delay", "100")!!.toInt()
+        soundReverb = sharedPreferences.getString("sound_reverb", "0")!!.toInt()
+        soundVibration = sharedPreferences.getBoolean("sound_vibration", false)
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true)
         showLine = sharedPreferences.getBoolean("show_line", true)
@@ -162,50 +195,20 @@ object GlobalSetting{
         keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()
         keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true)
         chatSound = sharedPreferences.getBoolean("chats_sound", false)
-        notesDownSpeed = 3/(sharedPreferences.getString("down_speed", "1")!!.toFloat())
+        notesDownSpeed = 3 / (sharedPreferences.getString("down_speed", "1")!!.toFloat())
         noteSize = sharedPreferences.getString("note_size", "1")!!.toFloat()
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false)
         changeNotesColor = sharedPreferences.getBoolean("change_color", true)
         chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "0.8")!!.toFloat()
-        saveChatRecord = sharedPreferences.getBoolean("save_chats",false)
-        showChatTime = sharedPreferences.getBoolean("chats_time_show",false)
-        showNotification = sharedPreferences.getBoolean("show_notification",false)
-        keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type","0")!!.toInt()
-        keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime",true)
-    }
-
-    /**
-     * 写入设置到sharedPreferences
-     * 部分值存了，不是全部都存了
-     */
-    fun saveSettings(context: Context) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val edit = sharedPreferences.edit()
-        edit.putBoolean("sound_check_box", isOpenChord)
-        edit.putString("b_s_vol", chordVolume.toString())
-        edit.putBoolean("keyboard_prefer", keyboardPrefer)
-        edit.putBoolean("tishi_cj", showTouchNotesLevel)
-        edit.putBoolean("show_line", showLine)
-        edit.putBoolean("open_long_key", loadLongKeyboard)
-        edit.putString("rough_line", roughLine.toString())
-        edit.putString("midi_keyboard_tune", midiKeyboardTune.toString())
-        edit.putString("keyboard_sound_tune", keyboardSoundTune.toString())
-        edit.putBoolean("keyboard_anim", keyboardAnim)
-        edit.putBoolean("chats_sound", chatSound)
-        edit.putString("down_speed", notesDownSpeed.toString())
-        edit.putString("note_size", noteSize.toString())
-        edit.putBoolean("note_dismiss", noteDismiss)
-        edit.putBoolean("change_color", changeNotesColor)
-        edit.putString("chats_text_size", chatTextSize.toString())
-        edit.putString("waterfall_song_speed", waterfallSongSpeed.toString())
-        edit.putString("waterfall_down_speed", waterfallDownSpeed.toString())
-        edit.putBoolean("save_chats", saveChatRecord)
-        edit.putBoolean("chats_time_show", showChatTime)
-        edit.putBoolean("show_notification", showNotification)
-        edit.putString("octave_tag_type", keyboardOctaveTagType.toString())
-        edit.putBoolean("keyboard_realtime", keyboardRealtime)
-        edit.apply()
+        waterfallLeftHandColor = sharedPreferences.getInt("waterfall_left_hand_color", 0x2BBBFB)
+        waterfallRightHandColor = sharedPreferences.getInt("waterfall_right_hand_color", 0xFF802D)
+        waterfallFreeStyleColor = sharedPreferences.getInt("waterfall_free_style_color", 0xFFFF00)
+        saveChatRecord = sharedPreferences.getBoolean("save_chats", false)
+        showChatTime = sharedPreferences.getBoolean("chats_time_show", false)
+        showNotification = sharedPreferences.getBoolean("show_notification", false)
+        keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type", "0")!!.toInt()
+        keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)
     }
 }
