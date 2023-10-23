@@ -105,6 +105,7 @@ namespace iolib {
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
         float *mMixBuffer;
+        float *mReverbBuffer{new float[4096]};
         float mDecayFactor;
 
         bool record{};

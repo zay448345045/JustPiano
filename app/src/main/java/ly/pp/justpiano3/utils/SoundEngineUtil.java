@@ -204,5 +204,5 @@ public class SoundEngineUtil {
 
     private static native void noteOff(long instance, int channel, int note);
 
-    public static native void setReverbValue(long instance, float reverbValue);
+    private static native void setReverbValue(long instance, float reverbValue);
 }

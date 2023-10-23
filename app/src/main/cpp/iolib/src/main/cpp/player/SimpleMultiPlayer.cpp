@@ -56,7 +56,7 @@ namespace iolib {
             fluid_synth_write_float(pSynth, numFrames, &((float *) audioData)[0], 0, 2,
                                     &((float *) audioData)[1], 0, 2);
             memcpy(mMixBuffer, ((float *) audioData),
-                           numFrames * mChannelCount * sizeof(float));
+                   numFrames * mChannelCount * sizeof(float));
         } else {
             mixAudioToBuffer((float *) audioData, numFrames);
         }
@@ -97,9 +97,29 @@ namespace iolib {
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
-        for (int32_t i = 0; i < numFrames * mChannelCount; i++) {
+        for (int32_t i = 0; i < numFrames; i += mChannelCount) {
             mMixBuffer[i] /= mDecayFactor;
+            mMixBuffer[i + 1] = mMixBuffer[i];
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
+
+            // reverb compute
+            if ((int) reverbValue != 0) {
+                float y = 0;
+                for (int j = 0; j < 4096; j++) {
+                    y += (1 - reverbValue) * mReverbBuffer[j];
+                }
+                y = (1 - reverbValue) * mMixBuffer[i] + reverbValue * y;
+
+                // fill in pcm data
+                mMixBuffer[i] = y * reverbValue;
+                mMixBuffer[i + 1] = mMixBuffer[i];
+
+                // update reverb buffer
+                for (int j = 4096 - 1; j > 0; j--) {
+                    mReverbBuffer[j] = mReverbBuffer[j - 1];
+                }
+                mReverbBuffer[0] = y;
+            }
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
     }
