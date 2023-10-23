@@ -66,7 +66,7 @@ public class SoundEngineUtil {
                     triggerUp(108 - pitch);
                 }
             }
-        }, ((long) Math.pow(GlobalSetting.INSTANCE.getSoundDelay(), 1.8)));
+        }, ((long) Math.pow(GlobalSetting.INSTANCE.getSoundDelay(), 1.7)));
     }
 
     public static void setReverb(int soundReverb) {

@@ -127,13 +127,17 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     handle->synth = nullptr;
     handle->soundfont_id = 0;
 
-    fluid_settings_setint(handle->settings, "synth.polyphony", 4096);
+    fluid_settings_setint(handle->settings, "synth.polyphony", 2048);
     fluid_settings_setstr(handle->settings, "audio.sample-format", "float");
-    fluid_settings_setnum(handle->settings, "synth.gain", 0.6f);
+    fluid_settings_setnum(handle->settings, "synth.gain", 1);
+    fluid_settings_setint(handle->settings, "synth.midi-channels", 1);
+    fluid_settings_setint(handle->settings, "synth.threadsafe-api", 0);
+    fluid_settings_setint(handle->settings, "synth.chorus.active", 0);
+    fluid_settings_setint(handle->settings, "synth.cpu-cores", 4);
     fluid_settings_setnum(handle->settings, "synth.reverb.active",
                           sDTPlayer.getReverbValue() == 0 ? 0 : 1);
-    fluid_settings_setstr(handle->settings, "synth.reverb.room-size", "large");
-    fluid_settings_setnum(handle->settings, "synth.reverb.damping", (float) sDTPlayer.getReverbValue() / 100);
+    fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
+    fluid_settings_setnum(handle->settings, "synth.reverb.damp", 0.5f);
     fluid_settings_setnum(handle->settings, "synth.reverb.level", (float) sDTPlayer.getReverbValue() / 100);
 
     memcpy(&ptr, &handle, sizeof(handle));
