@@ -16,6 +16,9 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.annotation.RequiresApi
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
+import ly.pp.justpiano3.entity.GlobalSetting.keyboardSoundTune
+import ly.pp.justpiano3.entity.GlobalSetting.soundVibration
+import ly.pp.justpiano3.entity.GlobalSetting.soundVibrationTime
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.JPMidiReceiver
@@ -24,6 +27,7 @@ import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import ly.pp.justpiano3.utils.ThreadPoolUtil
+import ly.pp.justpiano3.utils.VibrationUtil
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
 import ly.pp.justpiano3.view.ScrollText
@@ -137,7 +141,10 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 // 设置键盘的点击监听
                 keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
-                        SoundEngineUtil.playSound(pitch, volume)
+                        SoundEngineUtil.playSound((pitch + keyboardSoundTune).toByte(), volume)
+                        if (soundVibration) {
+                            VibrationUtil.vibrateOnce(this@WaterfallActivity, soundVibrationTime.toLong())
+                        }
                         freeStyleKeyDownHandle(pitch, volume)
                     }
 
@@ -526,8 +533,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
             for (i in waterfallView.freeStyleNotes.indices.reversed()) {
                 val freeStyleNote = waterfallView.freeStyleNotes[i]
                 if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > waterfallView.height + waterfallView.playProgress) {
-                    freeStyleNote.bottom =
-                        waterfallView.height + waterfallView.playProgress
+                    freeStyleNote.bottom = waterfallView.height + waterfallView.playProgress
                     break
                 }
             }

@@ -80,6 +80,11 @@ object GlobalSetting {
     var soundVibration: Boolean = false
 
     /**
+     * 按键震动时长
+     */
+    var soundVibrationTime: Int = 10
+
+    /**
      * 弹奏时展示等级
      */
     var showTouchNotesLevel: Boolean = true
@@ -186,6 +191,7 @@ object GlobalSetting {
         soundDelay = sharedPreferences.getString("sound_delay", "100")!!.toInt()
         soundReverb = sharedPreferences.getString("sound_reverb", "0")!!.toInt()
         soundVibration = sharedPreferences.getBoolean("sound_vibration", false)
+        soundVibrationTime = sharedPreferences.getString("sound_vibration_time", "10")!!.toInt()
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true)
         showLine = sharedPreferences.getBoolean("show_line", true)

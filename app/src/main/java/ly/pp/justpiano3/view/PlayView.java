@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.KeyBoard;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -41,6 +42,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
 import protobuf.dto.OnlineChallengeDTO;
@@ -644,6 +646,9 @@ public final class PlayView extends SurfaceView implements Callback {
         judgeTouchNote(i + noteOctaveOffset, false);
         if (i > -2) {
             SoundEngineUtil.playSound((byte) (i + noteOctaveOffset), volume0);
+            if (GlobalSetting.INSTANCE.getSoundVibration()) {
+                VibrationUtil.vibrateOnce(pianoPlay, GlobalSetting.INSTANCE.getSoundVibrationTime());
+            }
         }
     }
 

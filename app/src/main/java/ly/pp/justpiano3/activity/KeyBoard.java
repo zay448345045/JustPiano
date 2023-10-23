@@ -106,6 +106,9 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
+                if (GlobalSetting.INSTANCE.getSoundVibration()) {
+                    VibrationUtil.vibrateOnce(KeyBoard.this, GlobalSetting.INSTANCE.getSoundVibrationTime());
+                }
             }
 
             @Override

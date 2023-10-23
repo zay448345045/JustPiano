@@ -270,6 +270,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     if (!olKeyboardStates[roomPositionSub1].isMuted()) {
                         SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
                     }
+                    if (GlobalSetting.INSTANCE.getSoundVibration()) {
+                        VibrationUtil.vibrateOnce(OLPlayKeyboardRoom.this, GlobalSetting.INSTANCE.getSoundVibrationTime());
+                    }
                     blinkView(roomPositionSub1);
                 }
                 if (hasAnotherUser()) {

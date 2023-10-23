@@ -130,6 +130,16 @@
             android:summaryOff="&lt;关闭&gt;禁用按键震动效果"
             android:summaryOn="&lt;打开&gt;启用按键震动效果"
             android:title="按键震动" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="10"
+            android:dependency="sound_vibration"
+            android:dialogTitle="按键震动时长（毫秒）"
+            android:key="sound_vibration_time"
+            android:summary="按键震动时长（毫秒）"
+            android:title="按键震动时长"
+            app:floatNumber="false"
+            app:maxValue="100"
+            app:minValue="0" />
     </PreferenceCategory>
     <PreferenceCategory android:title="钢琴键盘">
         <SwitchPreference
@@ -185,14 +195,20 @@
             app:maxValue="1.5"
             app:minValue="0.1" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            android:defaultValue="0x2BBBFB"
             android:key="waterfall_left_hand_color"
             android:summary="瀑布流左手音块颜色"
             android:title="瀑布流左手音块颜色" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            android:defaultValue="0xFF802D"
             android:key="waterfall_right_hand_color"
             android:summary="瀑布流右手音块颜色"
             android:title="瀑布流右手音块颜色" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            android:defaultValue="0xFFFF00"
             android:key="waterfall_free_style_color"
             android:summary="瀑布流自由演奏音块颜色"
             android:title="瀑布流自由演奏音块颜色" />
