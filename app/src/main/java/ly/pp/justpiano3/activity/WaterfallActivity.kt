@@ -11,14 +11,10 @@ import android.os.Looper
 import android.os.Message
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.ViewTreeObserver
 import androidx.annotation.RequiresApi
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
-import ly.pp.justpiano3.entity.GlobalSetting.keyboardSoundTune
-import ly.pp.justpiano3.entity.GlobalSetting.soundVibration
-import ly.pp.justpiano3.entity.GlobalSetting.soundVibrationTime
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.JPMidiReceiver
@@ -32,12 +28,11 @@ import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
 import ly.pp.justpiano3.view.ScrollText
 import ly.pp.justpiano3.view.WaterfallView
-import ly.pp.justpiano3.view.WaterfallView.NoteFallListener
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
+class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListener {
     /**
      * 瀑布流view
      */
@@ -103,7 +98,7 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         songNameView.text = if (freeStyle) "自由演奏" else pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
         // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
-        waterfallView.setNoteFallListener(object : NoteFallListener {
+        waterfallView.setNoteFallListener(object : WaterfallView.NoteFallListener {
             override fun onNoteAppear(waterfallNote: WaterfallNote?) {
                 // 瀑布流音符在瀑布流view的顶端出现，目前无操作
             }
@@ -127,7 +122,8 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
         keyboardView.octaveTagType =
             KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
-        keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
@@ -141,9 +137,15 @@ class WaterfallActivity : Activity(), OnTouchListener, MidiConnectionListener {
                 // 设置键盘的点击监听
                 keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
                     override fun onKeyDown(pitch: Byte, volume: Byte) {
-                        SoundEngineUtil.playSound((pitch + keyboardSoundTune).toByte(), volume)
-                        if (soundVibration) {
-                            VibrationUtil.vibrateOnce(this@WaterfallActivity, soundVibrationTime.toLong())
+                        SoundEngineUtil.playSound(
+                            (pitch + GlobalSetting.keyboardSoundTune).toByte(),
+                            volume
+                        )
+                        if (GlobalSetting.soundVibration) {
+                            VibrationUtil.vibrateOnce(
+                                this@WaterfallActivity,
+                                GlobalSetting.soundVibrationTime.toLong()
+                            )
                         }
                         freeStyleKeyDownHandle(pitch, volume)
                     }

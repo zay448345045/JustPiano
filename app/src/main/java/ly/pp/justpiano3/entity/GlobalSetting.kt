@@ -3,6 +3,7 @@ package ly.pp.justpiano3.entity
 import android.content.Context
 import android.preference.PreferenceManager
 import ly.pp.justpiano3.enums.LocalPlayModeEnum
+import ly.pp.justpiano3.utils.SoundEngineUtil
 
 /**
  * 设置项
@@ -190,6 +191,8 @@ object GlobalSetting {
         chordVolume = sharedPreferences.getString("b_s_vol", "0.8")!!.toFloat()
         soundDelay = sharedPreferences.getString("sound_delay", "100")!!.toInt()
         soundReverb = sharedPreferences.getString("sound_reverb", "0")!!.toInt()
+        // 混响：数值直接更新到C++层
+        SoundEngineUtil.setReverb(soundReverb)
         soundVibration = sharedPreferences.getBoolean("sound_vibration", false)
         soundVibrationTime = sharedPreferences.getString("sound_vibration_time", "10")!!.toInt()
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)

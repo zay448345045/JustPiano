@@ -236,4 +236,12 @@ namespace iolib {
         this->pSynth = synth;
         this->enableSf2 = enable;
     }
+
+    void SimpleMultiPlayer::setReverbValue(float reverb) {
+        this->reverbValue = reverb;
+    }
+
+    float SimpleMultiPlayer::getReverbValue() {
+        return this->reverbValue;
+    }
 }

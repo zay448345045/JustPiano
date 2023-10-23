@@ -26,7 +26,7 @@ public class SoundEngineUtil {
         System.loadLibrary("soundengine");
     }
 
-    private static Handler handler = new Handler();
+    private static final Handler handler = new Handler();
 
     public static native void setupAudioStreamNative(int numChannels, int sampleRate);
 
@@ -67,6 +67,10 @@ public class SoundEngineUtil {
                 }
             }
         }, GlobalSetting.INSTANCE.getSoundDelay() * 50L);
+    }
+
+    public static void setReverb(int soundReverb) {
+        setReverbValue(sf2SynthPtr, soundReverb / 100f);
     }
 
     public static void playChatSound() {
@@ -144,7 +148,7 @@ public class SoundEngineUtil {
 
     /* ================ sf2音源部分 ================ */
     private static Long sf2SynthPtr;
-    public static boolean enableSf2Synth;
+    private static boolean enableSf2Synth;
 
     private static String getCopyFile(Context context, File sf2File) {
         File cacheFile = new File(context.getFilesDir(), sf2File.getName());
@@ -199,4 +203,6 @@ public class SoundEngineUtil {
     private static native void noteOn(long instance, int channel, int note, int velocity);
 
     private static native void noteOff(long instance, int channel, int note);
+
+    public static native void setReverbValue(long instance, float reverbValue);
 }

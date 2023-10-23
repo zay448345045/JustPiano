@@ -78,7 +78,8 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *env, j
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *env, jclass, jint index, jint volume) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *env, jclass, jint index,
+                                                        jint volume) {
     sDTPlayer.triggerDown(index, volume);
 }
 
@@ -103,6 +104,20 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFile
     sDTPlayer.setRecordFilePath(path);
 }
 
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValue(
+        JNIEnv *env, jclass thiz, jlong ptr, jfloat reverbValue) {
+    sDTPlayer.setReverbValue(reverbValue);
+    fluid_handle_t *handle = nullptr;
+    memcpy(&handle, &ptr, sizeof(handle));
+    if (handle != nullptr && handle->settings != nullptr) {
+        fluid_settings_setnum(handle->settings, "synth.reverb.active",
+                              (int) reverbValue == 0 ? 0 : 1);
+        fluid_settings_setstr(handle->settings, "synth.reverb.room-size", "large");
+        fluid_settings_setnum(handle->settings, "synth.reverb.damping", reverbValue);
+        fluid_settings_setnum(handle->settings, "synth.reverb.level", reverbValue);
+    }
+}
+
 JNIEXPORT jlong JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     jlong ptr = 0;
@@ -113,10 +128,14 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     handle->synth = nullptr;
     handle->soundfont_id = 0;
 
-    fluid_settings_setint(handle->settings, const_cast<char *>("synth.polyphony"), 4096);
-    fluid_settings_setstr(handle->settings, const_cast<char *>("audio.sample-format"),
-                          const_cast<char *>("float"));
-    fluid_settings_setnum(handle->settings, const_cast<char *>("synth.gain"), 0.6f);
+    fluid_settings_setint(handle->settings, "synth.polyphony", 4096);
+    fluid_settings_setstr(handle->settings, "audio.sample-format", "float");
+    fluid_settings_setnum(handle->settings, "synth.gain", 0.6f);
+    fluid_settings_setnum(handle->settings, "synth.reverb.active",
+                          (int) sDTPlayer.getReverbValue() == 0 ? 0 : 1);
+    fluid_settings_setstr(handle->settings, "synth.reverb.room-size", "large");
+    fluid_settings_setnum(handle->settings, "synth.reverb.damping", sDTPlayer.getReverbValue());
+    fluid_settings_setnum(handle->settings, "synth.reverb.level", sDTPlayer.getReverbValue());
 
     memcpy(&ptr, &handle, sizeof(handle));
     return ptr;
@@ -218,17 +237,6 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_noteOff(JNIEnv *env, jclass obj, jlo
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != nullptr && handle->synth != nullptr) {
         fluid_synth_noteoff(handle->synth, channel, note);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_controlChange(JNIEnv *env, jclass obj, jlong ptr,
-                                                          jint channel, jint control,
-                                                          jint value) {
-    fluid_handle_t *handle = nullptr;
-    memcpy(&handle, &ptr, sizeof(handle));
-    if (handle != nullptr && handle->synth != nullptr) {
-        fluid_synth_cc(handle->synth, channel, control, value);
     }
 }
 
