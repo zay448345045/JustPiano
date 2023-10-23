@@ -66,11 +66,11 @@ public class SoundEngineUtil {
                     triggerUp(108 - pitch);
                 }
             }
-        }, GlobalSetting.INSTANCE.getSoundDelay() * 50L);
+        }, ((long) Math.pow(GlobalSetting.INSTANCE.getSoundDelay(), 1.8)));
     }
 
     public static void setReverb(int soundReverb) {
-        setReverbValue(enableSf2Synth ? sf2SynthPtr : 0, soundReverb / 100f);
+        setReverbValue(enableSf2Synth ? sf2SynthPtr : 0, soundReverb);
     }
 
     public static void playChatSound() {
@@ -204,5 +204,5 @@ public class SoundEngineUtil {
 
     private static native void noteOff(long instance, int channel, int note);
 
-    private static native void setReverbValue(long instance, float reverbValue);
+    private static native void setReverbValue(long instance, int reverbValue);
 }

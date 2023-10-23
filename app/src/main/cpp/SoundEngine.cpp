@@ -105,16 +105,15 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFile
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValue(
-        JNIEnv *env, jclass thiz, jlong ptr, jfloat reverbValue) {
+        JNIEnv *env, jclass thiz, jlong ptr, jint reverbValue) {
     sDTPlayer.setReverbValue(reverbValue);
     fluid_handle_t *handle = nullptr;
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != nullptr && handle->settings != nullptr) {
-        fluid_settings_setnum(handle->settings, "synth.reverb.active",
-                              (int) reverbValue == 0 ? 0 : 1);
+        fluid_settings_setnum(handle->settings, "synth.reverb.active", reverbValue == 0 ? 0 : 1);
         fluid_settings_setstr(handle->settings, "synth.reverb.room-size", "large");
-        fluid_settings_setnum(handle->settings, "synth.reverb.damping", reverbValue);
-        fluid_settings_setnum(handle->settings, "synth.reverb.level", reverbValue);
+        fluid_settings_setnum(handle->settings, "synth.reverb.damping", (float) reverbValue / 100);
+        fluid_settings_setnum(handle->settings, "synth.reverb.level", (float) reverbValue / 100);
     }
 }
 
@@ -132,10 +131,10 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     fluid_settings_setstr(handle->settings, "audio.sample-format", "float");
     fluid_settings_setnum(handle->settings, "synth.gain", 0.6f);
     fluid_settings_setnum(handle->settings, "synth.reverb.active",
-                          (int) sDTPlayer.getReverbValue() == 0 ? 0 : 1);
+                          sDTPlayer.getReverbValue() == 0 ? 0 : 1);
     fluid_settings_setstr(handle->settings, "synth.reverb.room-size", "large");
-    fluid_settings_setnum(handle->settings, "synth.reverb.damping", sDTPlayer.getReverbValue());
-    fluid_settings_setnum(handle->settings, "synth.reverb.level", sDTPlayer.getReverbValue());
+    fluid_settings_setnum(handle->settings, "synth.reverb.damping", (float) sDTPlayer.getReverbValue() / 100);
+    fluid_settings_setnum(handle->settings, "synth.reverb.level", (float) sDTPlayer.getReverbValue() / 100);
 
     memcpy(&ptr, &handle, sizeof(handle));
     return ptr;

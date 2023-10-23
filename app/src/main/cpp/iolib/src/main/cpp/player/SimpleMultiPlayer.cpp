@@ -97,28 +97,30 @@ namespace iolib {
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
-        for (int32_t i = 0; i < numFrames; i += mChannelCount) {
+        for (int32_t i = 0; i < numFrames * mChannelCount; i += mChannelCount) {
             mMixBuffer[i] /= mDecayFactor;
             mMixBuffer[i + 1] = mMixBuffer[i];
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
 
             // reverb compute
-            if ((int) reverbValue != 0) {
-                float y = 0;
-                for (int j = 0; j < 4096; j++) {
-                    y += (1 - reverbValue) * mReverbBuffer[j];
-                }
-                y = (1 - reverbValue) * mMixBuffer[i] + reverbValue * y;
-
-                // fill in pcm data
-                mMixBuffer[i] = y * reverbValue;
-                mMixBuffer[i + 1] = mMixBuffer[i];
-
-                // update reverb buffer
-                for (int j = 4096 - 1; j > 0; j--) {
-                    mReverbBuffer[j] = mReverbBuffer[j - 1];
-                }
-                mReverbBuffer[0] = y;
+            if (reverbValue != 0) {
+                // TODO reverb algorithm
+//                float reverbFloatValue = (float) reverbValue / 100;
+//                float y = 0;
+//                for (int j = 0; j < 4096; j++) {
+//                    y += (1 - reverbFloatValue) * mReverbBuffer[j];
+//                }
+//                y = (1 - reverbFloatValue) * mMixBuffer[i] + reverbFloatValue * y;
+//
+//                // fill in pcm data
+//                mMixBuffer[i] = y * reverbFloatValue;
+//                mMixBuffer[i + 1] = mMixBuffer[i];
+//
+//                // update reverb buffer
+//                for (int j = 4096 - 1; j > 0; j--) {
+//                    mReverbBuffer[j] = mReverbBuffer[j - 1];
+//                }
+//                mReverbBuffer[0] = y;
             }
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
@@ -257,11 +259,11 @@ namespace iolib {
         this->enableSf2 = enable;
     }
 
-    void SimpleMultiPlayer::setReverbValue(float reverb) {
+    void SimpleMultiPlayer::setReverbValue(int reverb) {
         this->reverbValue = reverb;
     }
 
-    float SimpleMultiPlayer::getReverbValue() {
+    int SimpleMultiPlayer::getReverbValue() const {
         return this->reverbValue;
     }
 }

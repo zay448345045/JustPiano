@@ -138,17 +138,17 @@ object GlobalSetting {
     /**
      * 瀑布流左手音块颜色
      */
-    var waterfallLeftHandColor: Int = 0x2BBBFB
+    var waterfallLeftHandColor: Int = 0xFF2BBBFB.toInt()
 
     /**
      * 瀑布流右手音块颜色
      */
-    var waterfallRightHandColor: Int = 0xFF802D
+    var waterfallRightHandColor: Int = 0xFFFF802D.toInt()
 
     /**
      * 瀑布流自由演奏音块颜色
      */
-    var waterfallFreeStyleColor: Int = 0xFFFF00
+    var waterfallFreeStyleColor: Int = 0xFFFFFF00.toInt()
 
     /**
      * 是否存储聊天记录
@@ -211,9 +211,18 @@ object GlobalSetting {
         chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "0.8")!!.toFloat()
-        waterfallLeftHandColor = sharedPreferences.getInt("waterfall_left_hand_color", 0x2BBBFB)
-        waterfallRightHandColor = sharedPreferences.getInt("waterfall_right_hand_color", 0xFF802D)
-        waterfallFreeStyleColor = sharedPreferences.getInt("waterfall_free_style_color", 0xFFFF00)
+        waterfallLeftHandColor = sharedPreferences.getInt(
+            "waterfall_left_hand_color",
+            0xFF2BBBFB.toInt()
+        )
+        waterfallRightHandColor = sharedPreferences.getInt(
+            "waterfall_right_hand_color",
+            0xFFFF802D.toInt()
+        )
+        waterfallFreeStyleColor = sharedPreferences.getInt(
+            "waterfall_free_style_color",
+            0xFFFFFF00.toInt()
+        )
         saveChatRecord = sharedPreferences.getBoolean("save_chats", false)
         showChatTime = sharedPreferences.getBoolean("chats_time_show", false)
         showNotification = sharedPreferences.getBoolean("show_notification", false)

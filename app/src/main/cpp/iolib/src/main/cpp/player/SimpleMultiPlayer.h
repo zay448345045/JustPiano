@@ -88,9 +88,9 @@ namespace iolib {
 
         void setSf2Synth(_fluid_synth_t *synth, bool enable);
 
-        void setReverbValue(float i);
+        void setReverbValue(int i);
 
-        float getReverbValue();
+        int getReverbValue() const;
 
     private:
         // Oboe Audio Stream
@@ -117,7 +117,7 @@ namespace iolib {
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
 
         bool enableSf2{false};
-        float reverbValue{0};
+        int reverbValue{0};
     };
 
 }
