@@ -70,7 +70,7 @@ public class SoundEngineUtil {
     }
 
     public static void setReverb(int soundReverb) {
-        setReverbValue(sf2SynthPtr, soundReverb / 100f);
+        setReverbValue(enableSf2Synth ? sf2SynthPtr : 0, soundReverb / 100f);
     }
 
     public static void playChatSound() {
@@ -171,20 +171,20 @@ public class SoundEngineUtil {
     public static void loadSf2Sound(Context context, File sf2File) {
         String filePath = getCopyFile(context, sf2File);
         if (!enableSf2Synth) {
-            enableSf2Synth = true;
             sf2SynthPtr = malloc();
             open(sf2SynthPtr);
             loadFont(sf2SynthPtr, filePath);
+            enableSf2Synth = true;
         }
     }
 
     public static void unloadSf2Sound() {
         if (enableSf2Synth) {
-            enableSf2Synth = false;
             unloadFont(sf2SynthPtr);
             close(sf2SynthPtr);
             free(sf2SynthPtr);
             sf2SynthPtr = null;
+            enableSf2Synth = false;
         }
     }
 
