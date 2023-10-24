@@ -42,12 +42,20 @@ object SongPlay {
         PmSongUtil.parsePmDataByFilePath(context, songFilePath)?.let {
             job?.cancel()
             job = threadPoolScope.launch {
+                val playingPitchList: MutableList<Byte> = mutableListOf()
                 for (i in it.pitchArray.indices) {
                     if (!isActive) {
                         return@launch
                     }
-                    delay(it.tickArray[i].toLong() * it.globalSpeed)
-                    SoundEngineUtil.playSound((it.pitchArray[i] + tune).toByte(), it.volumeArray[i])
+                    val delayTime = it.tickArray[i].toLong() * it.globalSpeed
+                    if (delayTime > 0 && i > 0) {
+                        playingPitchList.forEach { SoundEngineUtil.stopPlaySound((it)) }
+                        playingPitchList.clear()
+                        delay(delayTime)
+                    }
+                    val pitch = (it.pitchArray[i] + tune).toByte()
+                    SoundEngineUtil.playSound(pitch, it.volumeArray[i])
+                    playingPitchList.add(pitch)
                 }
                 delay(1000)
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
@@ -62,13 +70,17 @@ object SongPlay {
         when (playSongsMode) {
             PlaySongsModeEnum.RECYCLE -> return currentSongFilePath
             PlaySongsModeEnum.RANDOM -> {
-                val songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(0, 10)
+                val songs = JPApplication.getSongDatabase().songDao()
+                    .getSongByRightHandDegreeWithRandom(0, 10)
                 return if (songs.isEmpty()) null else songs[0].filePath
             }
+
             PlaySongsModeEnum.FAVOR_RANDOM -> {
-                val songInFavoriteWithRandom = JPApplication.getSongDatabase().songDao().getSongInFavoriteWithRandom()
+                val songInFavoriteWithRandom =
+                    JPApplication.getSongDatabase().songDao().getSongInFavoriteWithRandom()
                 return if (songInFavoriteWithRandom.isEmpty()) null else songInFavoriteWithRandom[0].filePath
             }
+
             PlaySongsModeEnum.FAVOR -> {
                 val favoriteSongList = JPApplication.getSongDatabase().songDao().getFavoriteSongs()
                 for ((index, song) in favoriteSongList.withIndex()) {
@@ -78,6 +90,7 @@ object SongPlay {
                 }
                 return null
             }
+
             else -> return null
         }
     }

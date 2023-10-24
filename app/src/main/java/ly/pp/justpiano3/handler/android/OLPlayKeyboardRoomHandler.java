@@ -59,9 +59,6 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         // 无间隔时间，不用启动子线程，提升一键一发的执行效率
                         if (totalIntervalTime == 0) {
                             for (int i = 1; i < notes.length; i += 3) {
-                                if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                    SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
-                                }
                                 handleKeyboardView(olPlayKeyboardRoom, notes, user, i);
                             }
                         } else {
@@ -71,17 +68,12 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     long currentTimeMillis = notes[i]; // 当前时间戳
                                     if (lastTimeMillis > 0 && currentTimeMillis > lastTimeMillis) {
                                         try {
-                                            long sleepDuration = currentTimeMillis - lastTimeMillis; // 计算两个连续时间戳之间的差值
-                                            Thread.sleep(sleepDuration);
+                                            Thread.sleep(currentTimeMillis - lastTimeMillis);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     }
                                     lastTimeMillis = currentTimeMillis;
-
-                                    if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                        SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
-                                    }
                                     int finalI = i;
                                     olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI));
                                 }
@@ -145,9 +137,15 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
 
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
         if (notes[i + 2] > 0) {
+            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].isMuted()) {
+                SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
+            }
             olPlayKeyboardRoom.keyboardView.fireKeyDown((byte) notes[i + 1], (byte) notes[i + 2],
                     user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor()));
         } else {
+            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].isMuted()) {
+                SoundEngineUtil.stopPlaySound((byte) notes[i + 1]);
+            }
             olPlayKeyboardRoom.keyboardView.fireKeyUp((byte) notes[i + 1]);
         }
     }

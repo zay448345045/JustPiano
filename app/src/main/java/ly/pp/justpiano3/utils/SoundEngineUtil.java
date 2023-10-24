@@ -49,7 +49,7 @@ public class SoundEngineUtil {
             noteOn(sf2SynthPtr, 0, pitch, volume);
             return pitch;
         } else {
-            if (pitch >= 24 && pitch <= 108 && volume > 3) {
+            if (pitch >= 24 && pitch <= 108 && volume > 0) {
                 triggerDown(108 - pitch, volume);
                 return pitch;
             }

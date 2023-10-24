@@ -616,14 +616,17 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiMessageReceive(byte pitch, byte volume) {
+        int trueNote = pitch % 12 + 12 == playView.noteRightValue ? 12 : pitch % 12;
         if (volume > 0) {
+            SoundEngineUtil.playSound((byte) (trueNote + playView.noteMod12 * 12), playView.volume0);
+            playView.judgeTouchNote(pitch % 12 + playView.noteMod12 * 12, true);
             if (playView.currentPlayNote != null) {
                 playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
             }
-            int trueNote = playView.midiJudgeAndPlaySound(pitch % 12);
             keyboardview.touchNoteSet.put(trueNote, 0);
             updateKeyboardPrefer();
         } else {
+            SoundEngineUtil.stopPlaySound((byte) (trueNote + playView.noteMod12 * 12));
             if (pitch % 12 == 0) {
                 keyboardview.touchNoteSet.remove(12);
             }

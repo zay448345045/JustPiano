@@ -114,8 +114,9 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
             }
 
             override fun onNoteLeave(waterfallNote: WaterfallNote?) {
-                // 瀑布流音符完全离开瀑布流view，触发键盘view的琴键抬起效果
-                keyboardView.fireKeyUp(waterfallNote!!.pitch)
+                // 瀑布流音符完全离开瀑布流view，停止播放声音并触发键盘view的琴键抬起效果
+                SoundEngineUtil.stopPlaySound(waterfallNote!!.pitch)
+                keyboardView.fireKeyUp(waterfallNote.pitch)
             }
         })
         keyboardView = findViewById(R.id.waterfall_keyboard)
@@ -165,15 +166,14 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
                         progressBar.dismiss()
                     }
                 }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
+                ) {
+                    buildAndConnectMidiReceiver()
+                    MidiDeviceUtil.addMidiConnectionListener(this@WaterfallActivity)
+                }
             }
         })
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
-                PackageManager.FEATURE_MIDI
-            )
-        ) {
-            buildAndConnectMidiReceiver()
-            MidiDeviceUtil.addMidiConnectionListener(this)
-        }
     }
 
     /**

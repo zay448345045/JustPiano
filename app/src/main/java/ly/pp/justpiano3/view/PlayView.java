@@ -103,11 +103,10 @@ public final class PlayView extends SurfaceView implements Callback {
     private int gameType;
     private Bitmap progressBarImage;
     private Bitmap progressBarBaseImage;
-    private byte volume0;
+    public byte volume0;
     private int score;
     private LoadBackgroundsThread loadBackgroundsThread;
     private boolean hideNote;
-    private boolean newNote = true;
     private PlayNote judgingNote;
     private int pm_2;
     private int position;
@@ -160,7 +159,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private float width5Div8;
     private float width6Div8;
     private float width8Div8;
-    private int noteRightValue;
+    public int noteRightValue;
     private Bitmap scoreImage;
     private Bitmap scoreNumImage;
     private Bitmap xImage;
@@ -459,12 +458,10 @@ public final class PlayView extends SurfaceView implements Callback {
         return arrayList;
     }
 
-    private int judgeTouchNote(int i, boolean isMidi) {
+    public void judgeTouchNote(int i, boolean isMidi) {
         int i2;
         int i3;
-        boolean midiFlag = isMidi && i + 12 == noteRightValue;
-        int returnNoteValue = midiFlag ? 12 : i % 12;
-        if (i == noteRightValue || midiFlag) {
+        if (i == noteRightValue || (isMidi && i + 12 == noteRightValue)) {
             int i4;
             isTouchRightNote = true;
             double abs;
@@ -533,14 +530,13 @@ public final class PlayView extends SurfaceView implements Callback {
             uploadTimeArray[uploadNoteIndex] = b;
             if (uploadNoteIndex < uploadTime - 1) {
                 uploadNoteIndex++;
-                return returnNoteValue;
+                return;
             }
             OnlineMiniGradeDTO.Builder builder = OnlineMiniGradeDTO.newBuilder();
             builder.setStatusArray(GZIPUtil.arrayToZIP(uploadTimeArray));
             pianoPlay.sendMsg(OnlineProtocolType.MINI_GRADE, builder.build());
             uploadNoteIndex = 0;
         }
-        return returnNoteValue;
     }
 
     public void drawFire(Canvas canvas, int i) {
@@ -639,24 +635,6 @@ public final class PlayView extends SurfaceView implements Callback {
             }
         }
         return -1;
-    }
-
-    public void judgeAndPlaySound(int i) {
-        int noteOctaveOffset = noteMod12 * 12;
-        judgeTouchNote(i + noteOctaveOffset, false);
-        if (i > -2) {
-            SoundEngineUtil.playSound((byte) (i + noteOctaveOffset), volume0);
-            if (GlobalSetting.INSTANCE.getSoundVibration()) {
-                VibrationUtil.vibrateOnce(pianoPlay, GlobalSetting.INSTANCE.getSoundVibrationTime());
-            }
-        }
-    }
-
-    public int midiJudgeAndPlaySound(int i) {
-        int noteOctaveOffset = noteMod12 * 12;
-        int trueNote = judgeTouchNote(i + noteOctaveOffset, true);
-        SoundEngineUtil.playSound((byte) (trueNote + noteOctaveOffset), volume0);
-        return trueNote;
     }
 
     public void drawProgressAndFinish(int progress, Canvas canvas) {
@@ -775,7 +753,7 @@ public final class PlayView extends SurfaceView implements Callback {
 
     public void mo2930b(Canvas canvas) {
         tempNotesArray.clear();
-        newNote = true;
+        boolean newNote = true;
         f4713V = true;
         for (PlayNote note : notesList) {
             currentPlayNote = note;

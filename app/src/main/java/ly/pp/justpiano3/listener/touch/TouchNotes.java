@@ -5,7 +5,11 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.PlayView;
 
 import java.util.HashMap;
@@ -112,13 +116,18 @@ public final class TouchNotes implements OnTouchListener {
 
     public void fireKeyDown(int touchNoteNum) {
         if (touchNoteNum != -1 && !playView.pianoPlay.keyboardview.touchNoteSet.containsKey(touchNoteNum)) {
+            SoundEngineUtil.playSound((byte) (touchNoteNum + playView.noteMod12 * 12), playView.volume0);
+            if (GlobalSetting.INSTANCE.getSoundVibration()) {
+                VibrationUtil.vibrateOnce(playView.pianoPlay, GlobalSetting.INSTANCE.getSoundVibrationTime());
+            }
+            playView.judgeTouchNote(touchNoteNum + playView.noteMod12 * 12, false);
             playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
-            playView.judgeAndPlaySound(touchNoteNum);
             playView.pianoPlay.updateKeyboardPrefer();
         }
     }
 
     public void fireKeyUp(int touchNoteNum) {
+        SoundEngineUtil.stopPlaySound((byte) (touchNoteNum + playView.noteMod12 * 12));
         playView.pianoPlay.keyboardview.touchNoteSet.remove(touchNoteNum);
         playView.pianoPlay.updateKeyboardPrefer();
     }
