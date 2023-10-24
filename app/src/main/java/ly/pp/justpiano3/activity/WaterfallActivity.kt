@@ -239,6 +239,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
         // 停止播放，释放资源
         waterfallView.stopPlay()
         waterfallView.destroy()
+        SoundEngineUtil.stopPlayAllSounds()
         super.onDestroy()
     }
 

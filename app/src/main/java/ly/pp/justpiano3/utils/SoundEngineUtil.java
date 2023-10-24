@@ -40,6 +40,8 @@ public class SoundEngineUtil {
 
     private static native void triggerUp(int index);
 
+    private static native void triggerUpAll();
+
     public static native void setRecord(boolean record);
 
     public static native void setRecordFilePath(String recordFilePath);
@@ -66,11 +68,25 @@ public class SoundEngineUtil {
                     triggerUp(108 - pitch);
                 }
             }
-        }, ((long) Math.pow(GlobalSetting.INSTANCE.getSoundDelay(), 1.7)));
+        }, getSoundDelayMilliSeconds());
+    }
+
+    public static void stopPlayAllSounds() {
+        handler.postDelayed(() -> {
+            if (enableSf2Synth && sf2SynthPtr != null) {
+                allNotesOff(sf2SynthPtr, 0);
+            } else {
+                triggerUpAll();
+            }
+        }, getSoundDelayMilliSeconds());
+    }
+
+    public static long getSoundDelayMilliSeconds() {
+        return (long) Math.pow(GlobalSetting.INSTANCE.getSoundDelay(), 1.7);
     }
 
     public static void setReverb(int soundReverb) {
-        setReverbValue(enableSf2Synth ? sf2SynthPtr : 0, soundReverb);
+        setReverbValue(sf2SynthPtr != null ? sf2SynthPtr : 0, soundReverb);
     }
 
     public static void playChatSound() {
@@ -203,6 +219,8 @@ public class SoundEngineUtil {
     private static native void noteOn(long instance, int channel, int note, int velocity);
 
     private static native void noteOff(long instance, int channel, int note);
+
+    private static native void allNotesOff(long instance, int channel);
 
     private static native void setReverbValue(long instance, int reverbValue);
 }

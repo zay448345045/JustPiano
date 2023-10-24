@@ -493,6 +493,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             }
             MidiDeviceUtil.removeMidiConnectionListener(this);
         }
+        SoundEngineUtil.stopPlayAllSounds();
         super.onDestroy();
     }
 

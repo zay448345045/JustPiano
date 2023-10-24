@@ -125,7 +125,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         switch (message.what) {
             case 1:
                 int orderPosition = data.getInt("selIndex");
-                sortButton.setText(Consts.sortNames[orderPosition]);
                 SongDao songDao = JPApplication.getSongDatabase().songDao();
                 DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
                 pagedListLiveData.removeObservers(this);
@@ -480,15 +479,13 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     }
 
     private void songsSort(int order){
-        int orderPosition = order;
-        sortButton.setText(Consts.sortNames[orderPosition]);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
-        DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
+        DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, order);
         pagedListLiveData.removeObservers(this);
         pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
         pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
         sortPopupWindow.dismiss();
-        this.orderPosition = orderPosition;
+        this.orderPosition = order;
     }
 }
 

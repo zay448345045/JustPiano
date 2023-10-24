@@ -105,22 +105,52 @@ namespace iolib {
             // reverb compute
             if (reverbValue != 0) {
                 // TODO reverb algorithm
-//                float reverbFloatValue = (float) reverbValue / 100;
-//                float y = 0;
-//                for (int j = 0; j < 4096; j++) {
-//                    y += (1 - reverbFloatValue) * mReverbBuffer[j];
-//                }
-//                y = (1 - reverbFloatValue) * mMixBuffer[i] + reverbFloatValue * y;
+//                float delayinMilliSeconds = 20.0f;
+//                float decayFactor = 0.5f;
+//                int delaySamples1 = (int) (delayinMilliSeconds * ((float) mSampleRate / 1000));
+//                int delaySamples2 = (int) ((delayinMilliSeconds - 11.73f) *
+//                                           ((float) mSampleRate / 1000));
+//                int delaySamples3 = (int) ((delayinMilliSeconds + 19.31f) *
+//                                           ((float) mSampleRate / 1000));
+//                int delaySamples4 = (int) ((delayinMilliSeconds - 7.97f) *
+//                                           ((float) mSampleRate / 1000));
+//                int delaySamples = (int) (89.27f * ((float) mSampleRate / 1000));
+//                float maxValue = abs(mMixBuffer[0]);
+//                for (int32_t j = numFrames - 1; j >= 0; j--) {
+//                    float originalSample = mMixBuffer[j];
+//                    if (j < numFrames - delaySamples1) {
+//                        mMixBuffer[j + delaySamples1] += originalSample * decayFactor;
+//                    }
+//                    if (j < numFrames - delaySamples2) {
+//                        mMixBuffer[j + delaySamples2] += originalSample * (decayFactor - 0.1313f);
+//                    }
+//                    if (j < numFrames - delaySamples3) {
+//                        mMixBuffer[j + delaySamples3] += originalSample * (decayFactor - 0.2743f);
+//                    }
+//                    if (j < numFrames - delaySamples4) {
+//                        mMixBuffer[j + delaySamples4] += originalSample * (decayFactor - 0.31f);
+//                    }
+//                    mMixBuffer[j] =
+//                            (100 - (float) reverbValue) * originalSample +
+//                            (float) reverbValue * mMixBuffer[j];
 //
-//                // fill in pcm data
-//                mMixBuffer[i] = y * reverbFloatValue;
-//                mMixBuffer[i + 1] = mMixBuffer[i];
-//
-//                // update reverb buffer
-//                for (int j = 4096 - 1; j > 0; j--) {
-//                    mReverbBuffer[j] = mReverbBuffer[j - 1];
+//                    if (j >= numFrames - delaySamples) {
+//                        mMixBuffer[j + delaySamples] -= 0.131f * mMixBuffer[j];
+//                    }
+//                    if (j >= numFrames - delaySamples + 1 && j < numFrames + delaySamples - 20) {
+//                        mMixBuffer[j + delaySamples - 20] += 0.131f * mMixBuffer[j];
+//                    }
+//                    if (j >= numFrames - delaySamples) {
+//                        mMixBuffer[j + delaySamples] -= 0.131f * mMixBuffer[j];
+//                    }
+//                    if (j >= numFrames - delaySamples + 1 && j < numFrames + delaySamples - 20) {
+//                        mMixBuffer[j + delaySamples - 20] += 0.131f * mMixBuffer[j];
+//                    }
+//                    maxValue = fmax(maxValue, abs(mMixBuffer[j]));
 //                }
-//                mReverbBuffer[0] = y;
+//                for (int32_t j = 0; j < numFrames; j++) {
+//                    mMixBuffer[j] /= maxValue;
+//                }
             }
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));

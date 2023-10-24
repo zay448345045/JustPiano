@@ -89,6 +89,11 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUp(JNIEnv *env, jclass, jint 
 }
 
 JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUpAll(JNIEnv *env, jclass) {
+    sDTPlayer.resetAll();
+}
+
+JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_clearOutputReset(JNIEnv *, jclass) {
     sDTPlayer.clearOutputReset();
 }
@@ -131,14 +136,14 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     fluid_settings_setstr(handle->settings, "audio.sample-format", "float");
     fluid_settings_setnum(handle->settings, "synth.gain", 1);
     fluid_settings_setint(handle->settings, "synth.midi-channels", 1);
-    fluid_settings_setint(handle->settings, "synth.threadsafe-api", 0);
     fluid_settings_setint(handle->settings, "synth.chorus.active", 0);
     fluid_settings_setint(handle->settings, "synth.cpu-cores", 4);
     fluid_settings_setnum(handle->settings, "synth.reverb.active",
                           sDTPlayer.getReverbValue() == 0 ? 0 : 1);
     fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
     fluid_settings_setnum(handle->settings, "synth.reverb.damp", 0.5f);
-    fluid_settings_setnum(handle->settings, "synth.reverb.level", (float) sDTPlayer.getReverbValue() / 100);
+    fluid_settings_setnum(handle->settings, "synth.reverb.level",
+                          (float) sDTPlayer.getReverbValue() / 100);
 
     memcpy(&ptr, &handle, sizeof(handle));
     return ptr;
@@ -240,6 +245,16 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_noteOff(JNIEnv *env, jclass obj, jlo
     memcpy(&handle, &ptr, sizeof(handle));
     if (handle != nullptr && handle->synth != nullptr) {
         fluid_synth_noteoff(handle->synth, channel, note);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_allNotesOff(JNIEnv *env, jclass obj, jlong ptr,
+                                                        jint channel) {
+    fluid_handle_t *handle = nullptr;
+    memcpy(&handle, &ptr, sizeof(handle));
+    if (handle != nullptr && handle->synth != nullptr) {
+        fluid_synth_all_notes_off(handle->synth, channel);
     }
 }
 

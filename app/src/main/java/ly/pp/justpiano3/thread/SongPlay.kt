@@ -49,15 +49,17 @@ object SongPlay {
                     }
                     val delayTime = it.tickArray[i].toLong() * it.globalSpeed
                     if (delayTime > 0 && i > 0) {
+                        delay(delayTime)
                         playingPitchList.forEach { SoundEngineUtil.stopPlaySound((it)) }
                         playingPitchList.clear()
-                        delay(delayTime)
                     }
                     val pitch = (it.pitchArray[i] + tune).toByte()
                     SoundEngineUtil.playSound(pitch, it.volumeArray[i])
                     playingPitchList.add(pitch)
                 }
-                delay(1000)
+                delay(SoundEngineUtil.getSoundDelayMilliSeconds())
+                playingPitchList.forEach { SoundEngineUtil.stopPlaySound((it)) }
+                playingPitchList.clear()
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
                 if (!nextSongFilePath.isNullOrEmpty()) {
                     callBack?.onSongChangeNext(nextSongFilePath)
