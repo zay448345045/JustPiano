@@ -526,21 +526,23 @@ class WaterfallView @JvmOverloads constructor(
             }
             // 执行计算绘制自由演奏音块
             for (i in freeStyleNotes.indices.reversed()) {
-                val freeStyleNote = freeStyleNotes[i]
-                notePaint.color = freeStyleNote.color
-                // 根据音符的力度，确定音块绘制的透明度
-                notePaint.alpha = minOf(freeStyleNote.volume * 2, 255)
-                // 绘制自由演奏音块，它自下而上移动
-                canvas.drawRect(
-                    freeStyleNote.left,
-                    freeStyleNote.top - progress,
-                    freeStyleNote.right,
-                    min(height.toFloat(), freeStyleNote.bottom - progress),
-                    notePaint
-                )
-                // 如果音块已经移动到了屏幕外，则从list中删除
-                if (freeStyleNote.bottom - progress < 0f) {
-                    freeStyleNotes.removeAt(i)
+                val freeStyleNote = freeStyleNotes.getOrNull(i)
+                freeStyleNote?.let {
+                    notePaint.color = it.color
+                    // 根据音符的力度，确定音块绘制的透明度
+                    notePaint.alpha = minOf(it.volume * 2, 255)
+                    // 绘制自由演奏音块，它自下而上移动
+                    canvas.drawRect(
+                        it.left,
+                        it.top - progress,
+                        it.right,
+                        min(height.toFloat(), it.bottom - progress),
+                        notePaint
+                    )
+                    // 如果音块已经移动到了屏幕外，则从list中删除
+                    if (it.bottom - progress < 0f) {
+                        freeStyleNotes.removeAt(i)
+                    }
                 }
             }
         }
