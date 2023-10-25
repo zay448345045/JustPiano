@@ -72,24 +72,16 @@ namespace iolib {
         float sampleCount = 0;
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             SampleSource *sampleSource = mSampleSources[index];
-            int32_t queueSize = sampleSource->getCurFrameIndexQueueSize();
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
-            for (int32_t i = 0; i < queueSize; i++) {
-                std::pair<int32_t, int32_t> *curFrameIndex = sampleSource->frontCurFrameIndexQueue();
-                if (curFrameIndex != nullptr) {
-                    sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, curFrameIndex);
-                    memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
-                    if ((*curFrameIndex).first >= numSampleFrames) {
-                        // this sample is finished
-                        sampleSource->popCurFrameIndexQueue();
-                    } else {
-                        sampleCount += 1;
-                        // the size of queue equals one, can avoid moving queue
-                        if (queueSize > 1) {
-                            sampleSource->popCurFrameIndexQueue();
-                            sampleSource->pushCurFrameIndexQueue(*curFrameIndex);
-                        }
-                    }
+            std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> noteVector = sampleSource->getCurFrameIndexVector();
+            for (auto i = static_cast<int32_t>(noteVector->size() - 1); i >= 0; i--) {
+                std::pair<int32_t, int32_t> noteInfoPair = (*noteVector)[i];
+                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, &noteInfoPair);
+                memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+                if ((*noteVector)[i].first >= numSampleFrames) {
+                    noteVector->erase(noteVector->begin() + i);
+                } else {
+                    sampleCount++;
                 }
             }
         }
@@ -102,55 +94,11 @@ namespace iolib {
             mMixBuffer[i + 1] = mMixBuffer[i];
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
 
-            // reverb compute
+            // reverb compute algorithm
             if (reverbValue != 0) {
-                // TODO reverb algorithm
-//                float delayinMilliSeconds = 20.0f;
-//                float decayFactor = 0.5f;
-//                int delaySamples1 = (int) (delayinMilliSeconds * ((float) mSampleRate / 1000));
-//                int delaySamples2 = (int) ((delayinMilliSeconds - 11.73f) *
-//                                           ((float) mSampleRate / 1000));
-//                int delaySamples3 = (int) ((delayinMilliSeconds + 19.31f) *
-//                                           ((float) mSampleRate / 1000));
-//                int delaySamples4 = (int) ((delayinMilliSeconds - 7.97f) *
-//                                           ((float) mSampleRate / 1000));
-//                int delaySamples = (int) (89.27f * ((float) mSampleRate / 1000));
-//                float maxValue = abs(mMixBuffer[0]);
-//                for (int32_t j = numFrames - 1; j >= 0; j--) {
-//                    float originalSample = mMixBuffer[j];
-//                    if (j < numFrames - delaySamples1) {
-//                        mMixBuffer[j + delaySamples1] += originalSample * decayFactor;
-//                    }
-//                    if (j < numFrames - delaySamples2) {
-//                        mMixBuffer[j + delaySamples2] += originalSample * (decayFactor - 0.1313f);
-//                    }
-//                    if (j < numFrames - delaySamples3) {
-//                        mMixBuffer[j + delaySamples3] += originalSample * (decayFactor - 0.2743f);
-//                    }
-//                    if (j < numFrames - delaySamples4) {
-//                        mMixBuffer[j + delaySamples4] += originalSample * (decayFactor - 0.31f);
-//                    }
-//                    mMixBuffer[j] =
-//                            (100 - (float) reverbValue) * originalSample +
-//                            (float) reverbValue * mMixBuffer[j];
-//
-//                    if (j >= numFrames - delaySamples) {
-//                        mMixBuffer[j + delaySamples] -= 0.131f * mMixBuffer[j];
-//                    }
-//                    if (j >= numFrames - delaySamples + 1 && j < numFrames + delaySamples - 20) {
-//                        mMixBuffer[j + delaySamples - 20] += 0.131f * mMixBuffer[j];
-//                    }
-//                    if (j >= numFrames - delaySamples) {
-//                        mMixBuffer[j + delaySamples] -= 0.131f * mMixBuffer[j];
-//                    }
-//                    if (j >= numFrames - delaySamples + 1 && j < numFrames + delaySamples - 20) {
-//                        mMixBuffer[j + delaySamples - 20] += 0.131f * mMixBuffer[j];
-//                    }
-//                    maxValue = fmax(maxValue, abs(mMixBuffer[j]));
-//                }
-//                for (int32_t j = 0; j < numFrames; j++) {
-//                    mMixBuffer[j] /= maxValue;
-//                }
+                audioData[i] =
+                        mCombFilter->process(audioData[i]) + mAllPassFilter->process(audioData[i]);
+                audioData[i + 1] = audioData[i];
             }
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
@@ -291,6 +239,10 @@ namespace iolib {
 
     void SimpleMultiPlayer::setReverbValue(int reverb) {
         this->reverbValue = reverb;
+        this->mCombFilter->setGain((float) reverb / 100);
+        this->mCombFilter->setDelay(reverb);
+        this->mAllPassFilter->setGain((float) reverb / 100);
+        this->mAllPassFilter->setDelay(reverb);
     }
 
     int SimpleMultiPlayer::getReverbValue() const {

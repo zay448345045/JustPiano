@@ -28,6 +28,8 @@
 #include "SampleBuffer.h"
 #include "RecordingIO.h"
 #include "fluidsynth.h"
+#include "CombFilter.h"
+#include "AllPassFilter.h"
 
 namespace iolib {
 
@@ -105,7 +107,6 @@ namespace iolib {
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
         float *mMixBuffer;
-        float *mReverbBuffer{new float[4096]};
         float mDecayFactor;
 
         bool record{};
@@ -118,7 +119,9 @@ namespace iolib {
 
         bool enableSf2{false};
         int reverbValue{0};
-    };
 
+        std::shared_ptr<CombFilter> mCombFilter{std::make_shared<CombFilter>(0.0f, 0)};
+        std::shared_ptr<AllPassFilter> mAllPassFilter{std::make_shared<AllPassFilter>(0.0f, 0)};
+    };
 }
 #endif //_PLAYER_SIMIPLEMULTIPLAYER_H_

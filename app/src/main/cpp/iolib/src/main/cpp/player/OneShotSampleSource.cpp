@@ -26,7 +26,7 @@ namespace iolib {
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
         int32_t& trueIndex = (*curFrameIndex).first;
         auto trueVolume = (float) (*curFrameIndex).second;
-        int32_t numWriteFrames = !mCurFrameIndexQueue.empty()
+        int32_t numWriteFrames = !mCurFrameIndexVector->empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
         if (numWriteFrames != 0 && trueIndex < numSampleFrames) {

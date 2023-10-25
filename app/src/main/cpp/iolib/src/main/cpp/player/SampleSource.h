@@ -17,11 +17,9 @@
 #ifndef _PLAYER_SAMPLESOURCE_
 #define _PLAYER_SAMPLESOURCE_
 
-#include <cstdint>
-#include <queue>
+#include <vector>
 
 #include "DataSource.h"
-
 #include "SampleBuffer.h"
 
 namespace iolib {
@@ -40,45 +38,30 @@ namespace iolib {
 
         void setPlayMode(int32_t volume) {
             std::pair<int32_t, int32_t> pair(0, volume);
-            if (mCurFrameIndexQueue.size() < 10) {
-                mCurFrameIndexQueue.push(pair);
+            if (mCurFrameIndexVector->size() < 10) {
+                mCurFrameIndexVector->push_back(pair);
             }
         }
 
         void setStopMode() {
-            if (!mCurFrameIndexQueue.empty()) {
-                mCurFrameIndexQueue.pop();
+            if (!mCurFrameIndexVector->empty()) {
+                mCurFrameIndexVector->pop_back();
             }
         }
 
         void stopAll() {
-            while (!mCurFrameIndexQueue.empty()) {
-                mCurFrameIndexQueue.pop();
-            }
+            mCurFrameIndexVector->clear();
         }
 
-        int32_t getCurFrameIndexQueueSize() {
-            return mCurFrameIndexQueue.size();
-        }
-
-        std::pair<int32_t, int32_t> *frontCurFrameIndexQueue() {
-            return mCurFrameIndexQueue.empty() ? nullptr : &mCurFrameIndexQueue.front();
-        }
-
-        void pushCurFrameIndexQueue(std::pair<int32_t, int32_t> pair) {
-            mCurFrameIndexQueue.push(pair);
-        }
-
-        void popCurFrameIndexQueue() {
-            if (!mCurFrameIndexQueue.empty()) {
-                mCurFrameIndexQueue.pop();
-            }
+        std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> getCurFrameIndexVector() {
+            return mCurFrameIndexVector;
         }
 
     protected:
         SampleBuffer *mSampleBuffer;
 
-        std::queue<std::pair<int32_t, int32_t>> mCurFrameIndexQueue;
+        std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> mCurFrameIndexVector
+                {std::make_shared<std::vector<std::pair<int32_t, int32_t>>>()};
     };
 
 } // namespace iolib
