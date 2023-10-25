@@ -60,7 +60,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         if (shouldPersist()) {
             value = getPersistedString(defaultValue)
         }
-        valueText!!.text = value
+        valueText!!.text = if (value == defaultValue) "$value (默认)" else value
         seekBar!!.progress = ((value!!.toFloat() - minValue) / (maxValue - minValue) * 100).roundToInt()
         return layout
     }

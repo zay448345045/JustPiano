@@ -32,7 +32,7 @@ namespace iolib {
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
         if (get<2>(tuple)) {
-            trueVolume -= (float) numWriteFrames / 500.0f / ((float) delay * 3.0f + 30);
+            trueVolume -= (float) numWriteFrames / 500.0f / ((float) delay * 3.0f + 50);
             get<1>(tuple) = trueVolume;
         }
         if (numWriteFrames != 0 && trueIndex < numSampleFrames && trueVolume > 0) {
