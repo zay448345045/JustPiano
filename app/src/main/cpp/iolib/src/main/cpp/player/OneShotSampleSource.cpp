@@ -28,24 +28,25 @@ namespace iolib {
         std::tuple<int32_t, float, bool>& tuple = *curFrameIndex;
         int32_t trueIndex = get<0>(tuple);
         float trueVolume = get<1>(tuple);
+        bool isStop = get<2>(tuple);
         int32_t numWriteFrames = !mCurFrameIndexVector->empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
-        if (get<2>(tuple)) {
-            trueVolume -= (float) numWriteFrames / 500.0f / ((float) delay * 3.0f + 50);
-            get<1>(tuple) = trueVolume;
-        }
         if (numWriteFrames != 0 && trueIndex < numSampleFrames && trueVolume > 0) {
             // Mix in the samples
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
             int32_t sampleCount = numWriteFrames * numChannels;
             for (int32_t i = 0; i < sampleCount; i += numChannels) {
+                if (isStop) {
+                    trueVolume -= 0.002f / ((float) delay * 3.0f + 50);
+                }
                 outBuff[i] += data[trueIndex++] * trueVolume;
                 outBuff[i + 1] = outBuff[i];
             }
         }
         get<0>(tuple) = trueIndex;
+        get<1>(tuple) = trueVolume;
         // silence
         // no need as the output buffer would need to have been filled with silence
         // to be mixed into
