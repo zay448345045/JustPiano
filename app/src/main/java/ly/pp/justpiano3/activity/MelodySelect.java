@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
-import androidx.constraintlayout.motion.widget.MotionScene;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
