@@ -45,12 +45,7 @@ namespace iolib {
 
         void setStopMode() {
             for (auto &curTuple: *mCurFrameIndexVector) {
-                int32_t curFrameIndex = get<0>(curTuple);
-                if (curFrameIndex > 0) {
-                    get<2>(curTuple) = true;
-                } else {
-                    get<1>(curTuple) = 0;
-                }
+                get<2>(curTuple) = true;
             }
         }
 
