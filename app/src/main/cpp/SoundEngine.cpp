@@ -122,6 +122,19 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValu
     }
 }
 
+JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setDelayValue(
+        JNIEnv *env, jclass thiz, jlong ptr, jint delayValue) {
+    sDTPlayer.setDelayValue(delayValue);
+    fluid_handle_t *handle = nullptr;
+    memcpy(&handle, &ptr, sizeof(handle));
+    if (handle != nullptr && handle->settings != nullptr) {
+//        fluid_settings_setint(handle->settings, "synth.chorus.active", delayValue == 0 ? 0 : 1);
+//        fluid_settings_setnum(handle->settings, "synth.chorus.depth", delayValue * 2);
+//        fluid_settings_setnum(handle->settings, "synth.chorus.level", (float) delayValue / 10);
+//        fluid_settings_setint(handle->settings, "synth.chorus.nr", delayValue);
+    }
+}
+
 JNIEXPORT jlong JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass obj) {
     jlong ptr = 0;

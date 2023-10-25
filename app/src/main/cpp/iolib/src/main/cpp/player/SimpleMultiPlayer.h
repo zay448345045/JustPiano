@@ -35,9 +35,9 @@ namespace iolib {
 
     typedef unsigned char byte;     // an 8-bit unsigned value
 
-/**
- * A simple streaming player for multiple SampleBuffers.
- */
+    /**
+     * A simple streaming player for multiple SampleBuffers.
+     */
     class SimpleMultiPlayer : public oboe::AudioStreamCallback {
     public:
         SimpleMultiPlayer();
@@ -90,9 +90,13 @@ namespace iolib {
 
         void setSf2Synth(_fluid_synth_t *synth, bool enable);
 
-        void setReverbValue(int i);
+        void setReverbValue(int32_t reverb);
 
-        int getReverbValue() const;
+        int32_t getReverbValue() const;
+
+        void setDelayValue(int32_t delay);
+
+        int32_t getDelayValue() const;
 
     private:
         // Oboe Audio Stream
@@ -109,7 +113,7 @@ namespace iolib {
         float *mMixBuffer;
         float mDecayFactor;
 
-        bool record{};
+        bool mRecord{};
 
         bool mOutputReset;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
@@ -117,8 +121,9 @@ namespace iolib {
 
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
 
-        bool enableSf2{false};
-        int reverbValue{0};
+        bool mEnableSf2{false};
+        int32_t mReverbValue{0};
+        int32_t mDelayValue{100};
 
         std::shared_ptr<CombFilter> mCombFilter{std::make_shared<CombFilter>(0.0f, 0)};
         std::shared_ptr<AllPassFilter> mAllPassFilter{std::make_shared<AllPassFilter>(0.0f, 0)};

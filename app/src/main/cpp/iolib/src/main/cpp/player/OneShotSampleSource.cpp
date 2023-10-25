@@ -21,33 +21,31 @@
 
 namespace iolib {
 
-    void OneShotSampleSource::mixAudio(float *outBuff, int numChannels, int32_t numFrames, std::pair<int32_t, int32_t> *curFrameIndex) {
+    void OneShotSampleSource::mixAudio(float *outBuff, int32_t numChannels, int32_t delay,
+                                       int32_t numFrames,
+                                       std::tuple<int32_t, float, bool> *curFrameIndex) {
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
-        int32_t& trueIndex = (*curFrameIndex).first;
-        auto trueVolume = (float) (*curFrameIndex).second;
+        std::tuple<int32_t, float, bool>& tuple = *curFrameIndex;
+        int32_t trueIndex = get<0>(tuple);
+        float trueVolume = get<1>(tuple);
         int32_t numWriteFrames = !mCurFrameIndexVector->empty()
                                  ? std::min(numFrames, numSampleFrames - trueIndex)
                                  : 0;
-        if (numWriteFrames != 0 && trueIndex < numSampleFrames) {
+        if (get<2>(tuple)) {
+            trueVolume -= (float) numWriteFrames / 500.0f / ((float) delay * 3.0f + 30);
+            get<1>(tuple) = trueVolume;
+        }
+        if (numWriteFrames != 0 && trueIndex < numSampleFrames && trueVolume > 0) {
             // Mix in the samples
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
-            if (numChannels == 1) {
-                // MONO output
-                // do not use, because of clipping wave.
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[frameIndex] += data[trueIndex++] * trueVolume / 64;
-                }
-            } else if (numChannels == 2) {
-                // STEREO output
-                int dstSampleIndex = 0;
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    float value = data[trueIndex++] * trueVolume / 128;
-                    outBuff[dstSampleIndex++] += value;
-                    outBuff[dstSampleIndex++] += value;
-                }
+            int32_t sampleCount = numWriteFrames * numChannels;
+            for (int32_t i = 0; i < sampleCount; i += numChannels) {
+                outBuff[i] += data[trueIndex++] * trueVolume;
+                outBuff[i + 1] = outBuff[i];
             }
         }
+        get<0>(tuple) = trueIndex;
         // silence
         // no need as the output buffer would need to have been filled with silence
         // to be mixed into

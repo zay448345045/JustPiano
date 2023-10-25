@@ -39,28 +39,32 @@ namespace iolib {
         virtual ~SampleSource() {}
 
         void setPlayMode(int32_t volume) {
-            mCurFrameIndexVector->push_back(pair<int32_t, int32_t>(0, volume));
+            mCurFrameIndexVector->push_back(
+                    tuple<int32_t, float, bool>(0, (float) volume / 128.0f, false));
         }
 
         void setStopMode() {
-            if (!mCurFrameIndexVector->empty()) {
-                mCurFrameIndexVector->front().second /= 4;
+            for (auto &curTuple: *mCurFrameIndexVector) {
+                int32_t curFrameIndex = get<0>(curTuple);
+                if (curFrameIndex > 0) {
+                    get<2>(curTuple) = true;
+                } else {
+                    get<1>(curTuple) = 0;
+                }
             }
         }
 
-        void stopAll() {
-            mCurFrameIndexVector->clear();
-        }
+        shared_ptr <vector<tuple < int32_t, float, bool>>>
 
-        shared_ptr<vector<pair<int32_t, int32_t>>> getCurFrameIndexVector() {
+        getCurFrameIndexVector() {
             return mCurFrameIndexVector;
         }
 
     protected:
         SampleBuffer *mSampleBuffer;
 
-        shared_ptr<vector<pair<int32_t, int32_t>>> mCurFrameIndexVector
-                {make_shared<vector<pair<int32_t, int32_t>>>()};
+        shared_ptr <vector<tuple < int32_t, float, bool>>> mCurFrameIndexVector
+        { make_shared < vector < tuple < int32_t, float, bool>>>() };
     };
 
 } // namespace iolib

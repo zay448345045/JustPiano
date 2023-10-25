@@ -28,6 +28,7 @@
 
 static const char *TAG = "SimpleMultiPlayer";
 
+using namespace std;
 using namespace oboe;
 using namespace parselib;
 
@@ -52,7 +53,7 @@ namespace iolib {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        if (enableSf2 && pSynth != nullptr) {
+        if (mEnableSf2 && pSynth != nullptr) {
             fluid_synth_write_float(pSynth, numFrames, &((float *) audioData)[0], 0, 2,
                                     &((float *) audioData)[1], 0, 2);
             memcpy(mMixBuffer, ((float *) audioData),
@@ -61,7 +62,7 @@ namespace iolib {
             mixAudioToBuffer((float *) audioData, numFrames);
         }
 
-        if (record) {
+        if (mRecord) {
             mRecordingIO->write_buffer(mMixBuffer, numFrames);
         }
         return DataCallbackResult::Continue;
@@ -73,14 +74,15 @@ namespace iolib {
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             SampleSource *sampleSource = mSampleSources[index];
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
-            std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> noteVector = sampleSource->getCurFrameIndexVector();
+            shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = sampleSource->getCurFrameIndexVector();
             auto lastIndex = static_cast<int32_t>(noteVector->size() - 1);
-            int32_t handledIndex = std::max(0, lastIndex - 10);
+            int32_t handledIndex = max(0, lastIndex - 16);
             for (auto i = lastIndex; i >= handledIndex; i--) {
-                std::pair<int32_t, int32_t> *noteInfoPair = &(*noteVector)[i];
-                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, noteInfoPair);
+                tuple<int32_t, float, bool> *noteInfoTuple = &(*noteVector)[i];
+                sampleSource->mixAudio(mMixBuffer, mChannelCount, mDelayValue,
+                                       numFrames, noteInfoTuple);
                 memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
-                if (noteInfoPair->first >= numSampleFrames || noteInfoPair->second <= 0) {
+                if (get<0>(*noteInfoTuple) >= numSampleFrames || get<1>(*noteInfoTuple) <= 0) {
                     noteVector->erase(noteVector->begin() + i);
                 } else {
                     sampleCount++;
@@ -93,13 +95,14 @@ namespace iolib {
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
-        for (int32_t i = 0; i < numFrames * mChannelCount; i += mChannelCount) {
+        int32_t frameSampleCount = numFrames * mChannelCount;
+        for (int32_t i = 0; i < frameSampleCount; i += mChannelCount) {
             mMixBuffer[i] /= mDecayFactor;
             mMixBuffer[i + 1] = mMixBuffer[i];
             mDecayFactor += (logSampleCount - mDecayFactor) / 256;
 
             // reverb compute algorithm
-            if (reverbValue != 0) {
+            if (mReverbValue != 0) {
                 audioData[i] =
                         mCombFilter->process(audioData[i]) + mAllPassFilter->process(audioData[i]);
                 audioData[i + 1] = audioData[i];
@@ -219,7 +222,7 @@ namespace iolib {
 
     void SimpleMultiPlayer::resetAll() {
         for (int32_t bufferIndex = 0; bufferIndex < mNumSampleBuffers; bufferIndex++) {
-            mSampleSources[bufferIndex]->stopAll();
+            mSampleSources[bufferIndex]->setStopMode();
         }
     }
 
@@ -229,7 +232,7 @@ namespace iolib {
         } else {
             mRecordingIO->clearRecordingBuffer();
         }
-        record = r;
+        mRecord = r;
     }
 
     void SimpleMultiPlayer::setRecordFilePath(char *s) {
@@ -238,18 +241,26 @@ namespace iolib {
 
     void SimpleMultiPlayer::setSf2Synth(_fluid_synth_t *synth, bool enable) {
         this->pSynth = synth;
-        this->enableSf2 = enable;
+        this->mEnableSf2 = enable;
     }
 
-    void SimpleMultiPlayer::setReverbValue(int reverb) {
-        this->reverbValue = reverb;
+    void SimpleMultiPlayer::setReverbValue(int32_t reverb) {
+        this->mReverbValue = reverb;
         this->mCombFilter->setGain((float) reverb / 100);
         this->mCombFilter->setDelay(reverb);
         this->mAllPassFilter->setGain((float) reverb / 100);
         this->mAllPassFilter->setDelay(reverb);
     }
 
-    int SimpleMultiPlayer::getReverbValue() const {
-        return this->reverbValue;
+    int32_t SimpleMultiPlayer::getReverbValue() const {
+        return this->mReverbValue;
+    }
+
+    void SimpleMultiPlayer::setDelayValue(int32_t delay) {
+        this->mDelayValue = delay;
+    }
+
+    int32_t SimpleMultiPlayer::getDelayValue() const {
+        return this->mDelayValue;
     }
 }

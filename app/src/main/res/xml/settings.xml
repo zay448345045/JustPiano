@@ -107,7 +107,7 @@
             app:maxValue="1.5"
             app:minValue="0.1" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="100"
+            android:defaultValue="0"
             android:dialogTitle="延音强度"
             android:key="sound_delay"
             android:summary="触发停止播放琴键声音时，音符的延音长度"

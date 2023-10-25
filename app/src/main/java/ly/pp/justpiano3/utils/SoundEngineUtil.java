@@ -57,15 +57,6 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlaySound(byte pitch) {
-        long soundDelayMilliSeconds = getSoundDelayMilliSeconds();
-        if (soundDelayMilliSeconds == 0L) {
-            immediatelyStopPlaySound(pitch);
-        } else {
-            ThreadPoolUtil.executeWithDelay(() -> immediatelyStopPlaySound(pitch), soundDelayMilliSeconds);
-        }
-    }
-
-    private static void immediatelyStopPlaySound(byte pitch) {
         if (enableSf2Synth && sf2SynthPtr != null) {
             noteOff(sf2SynthPtr, 0, pitch);
         } else {
@@ -76,15 +67,6 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlayAllSounds() {
-        long soundDelayMilliSeconds = getSoundDelayMilliSeconds();
-        if (soundDelayMilliSeconds == 0L) {
-            immediatelyStopPlayAllSounds();
-        } else {
-            ThreadPoolUtil.executeWithDelay(SoundEngineUtil::immediatelyStopPlayAllSounds, soundDelayMilliSeconds);
-        }
-    }
-
-    private static void immediatelyStopPlayAllSounds() {
         if (enableSf2Synth && sf2SynthPtr != null) {
             allNotesOff(sf2SynthPtr, 0);
         } else {
@@ -98,6 +80,10 @@ public class SoundEngineUtil {
 
     public static void setReverb(int soundReverb) {
         setReverbValue(sf2SynthPtr != null ? sf2SynthPtr : 0, soundReverb);
+    }
+
+    public static void setDelay(int soundDelay) {
+        setDelayValue(sf2SynthPtr != null ? sf2SynthPtr : 0, soundDelay);
     }
 
     public static void playChatSound() {
@@ -234,4 +220,6 @@ public class SoundEngineUtil {
     private static native void allNotesOff(long instance, int channel);
 
     private static native void setReverbValue(long instance, int reverbValue);
+
+    private static native void setDelayValue(long instance, int delayValue);
 }

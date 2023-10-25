@@ -68,7 +68,7 @@ object GlobalSetting {
     /**
      * 延音
      */
-    var soundDelay: Int = 100
+    var soundDelay: Int = 0
 
     /**
      * 混响
@@ -189,9 +189,10 @@ object GlobalSetting {
         }
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true)
         chordVolume = sharedPreferences.getString("b_s_vol", "0.8")!!.toFloat()
-        soundDelay = sharedPreferences.getString("sound_delay", "100")!!.toInt()
+        soundDelay = sharedPreferences.getString("sound_delay", "0")!!.toInt()
         soundReverb = sharedPreferences.getString("sound_reverb", "0")!!.toInt()
-        // 混响：数值直接更新到C++层
+        // 延音和混响：数值直接更新到C++层
+        SoundEngineUtil.setDelay(soundDelay)
         SoundEngineUtil.setReverb(soundReverb)
         soundVibration = sharedPreferences.getBoolean("sound_vibration", false)
         soundVibrationTime = sharedPreferences.getString("sound_vibration_time", "10")!!.toInt()
