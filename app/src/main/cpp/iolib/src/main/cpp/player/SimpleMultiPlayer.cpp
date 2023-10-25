@@ -74,9 +74,10 @@ namespace iolib {
             SampleSource *sampleSource = mSampleSources[index];
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> noteVector = sampleSource->getCurFrameIndexVector();
-            for (auto i = static_cast<int32_t>(noteVector->size() - 1); i >= 0; i--) {
+            auto lastIndex = static_cast<int32_t>(noteVector->size() - 1);
+            int32_t handledIndex = std::max(0, lastIndex - 10);
+            for (auto i = lastIndex; i >= handledIndex; i--) {
                 std::pair<int32_t, int32_t> *noteInfoPair = &(*noteVector)[i];
-                __android_log_print(ANDROID_LOG_ERROR, TAG, "mixAudioToBuffer:%d, %d", noteInfoPair->first, noteInfoPair->second);
                 sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, noteInfoPair);
                 memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
                 if (noteInfoPair->first >= numSampleFrames || noteInfoPair->second <= 0) {
@@ -85,8 +86,10 @@ namespace iolib {
                     sampleCount++;
                 }
             }
+            if (handledIndex > 0) {
+                noteVector->erase(noteVector->begin(), noteVector->begin() + handledIndex);
+            }
         }
-
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;

@@ -17,7 +17,6 @@
 #include <cstring>
 
 #include "wav/WavStreamReader.h"
-
 #include "OneShotSampleSource.h"
 
 namespace iolib {

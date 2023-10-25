@@ -22,6 +22,8 @@
 #include "DataSource.h"
 #include "SampleBuffer.h"
 
+using namespace std;
+
 namespace iolib {
 
 /**
@@ -37,15 +39,12 @@ namespace iolib {
         virtual ~SampleSource() {}
 
         void setPlayMode(int32_t volume) {
-            std::pair<int32_t, int32_t> pair(0, volume);
-            if (mCurFrameIndexVector->size() < 10) {
-                mCurFrameIndexVector->push_back(pair);
-            }
+            mCurFrameIndexVector->push_back(pair<int32_t, int32_t>(0, volume));
         }
 
         void setStopMode() {
             if (!mCurFrameIndexVector->empty()) {
-                mCurFrameIndexVector->pop_back();
+                mCurFrameIndexVector->front().second /= 4;
             }
         }
 
@@ -53,15 +52,15 @@ namespace iolib {
             mCurFrameIndexVector->clear();
         }
 
-        std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> getCurFrameIndexVector() {
+        shared_ptr<vector<pair<int32_t, int32_t>>> getCurFrameIndexVector() {
             return mCurFrameIndexVector;
         }
 
     protected:
         SampleBuffer *mSampleBuffer;
 
-        std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> mCurFrameIndexVector
-                {std::make_shared<std::vector<std::pair<int32_t, int32_t>>>()};
+        shared_ptr<vector<pair<int32_t, int32_t>>> mCurFrameIndexVector
+                {make_shared<vector<pair<int32_t, int32_t>>>()};
     };
 
 } // namespace iolib

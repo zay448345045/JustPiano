@@ -126,7 +126,6 @@ object FileUtil {
                         }
                     }
                 } else {
-                    //testPath(uri)
                     return getDataColumn(context, uri)
                 }
             }
@@ -245,7 +244,6 @@ object FileUtil {
         selection: String? = null,
         selectionArgs: Array<String>? = null
     ): String? {
-        @Suppress("DEPRECATION")
         val column = MediaStore.Files.FileColumns.DATA
         val projection = arrayOf(column)
         try {

@@ -23,7 +23,8 @@ object SongPlay {
     /**
      * 自定义线程池产生的协程作用域
      */
-    private val threadPoolScope = CoroutineScope(ThreadPoolUtil.threadPool.asCoroutineDispatcher())
+    private val threadPoolScope =
+        CoroutineScope(ThreadPoolUtil.THREAD_POOL_EXECUTOR.asCoroutineDispatcher())
 
     /**
      * 协程job

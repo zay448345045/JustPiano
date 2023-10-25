@@ -3,7 +3,6 @@ package ly.pp.justpiano3.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import java.io.File;
@@ -25,8 +24,6 @@ public class SoundEngineUtil {
     static {
         System.loadLibrary("soundengine");
     }
-
-    private static final Handler handler = new Handler();
 
     public static native void setupAudioStreamNative(int numChannels, int sampleRate);
 
@@ -60,25 +57,39 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlaySound(byte pitch) {
-        handler.postDelayed(() -> {
-            if (enableSf2Synth && sf2SynthPtr != null) {
-                noteOff(sf2SynthPtr, 0, pitch);
-            } else {
-                if (pitch >= 24 && pitch <= 108) {
-                    triggerUp(108 - pitch);
-                }
+        long soundDelayMilliSeconds = getSoundDelayMilliSeconds();
+        if (soundDelayMilliSeconds == 0L) {
+            immediatelyStopPlaySound(pitch);
+        } else {
+            ThreadPoolUtil.executeWithDelay(() -> immediatelyStopPlaySound(pitch), soundDelayMilliSeconds);
+        }
+    }
+
+    private static void immediatelyStopPlaySound(byte pitch) {
+        if (enableSf2Synth && sf2SynthPtr != null) {
+            noteOff(sf2SynthPtr, 0, pitch);
+        } else {
+            if (pitch >= 24 && pitch <= 108) {
+                triggerUp(108 - pitch);
             }
-        }, getSoundDelayMilliSeconds());
+        }
     }
 
     public static void stopPlayAllSounds() {
-        handler.postDelayed(() -> {
-            if (enableSf2Synth && sf2SynthPtr != null) {
-                allNotesOff(sf2SynthPtr, 0);
-            } else {
-                triggerUpAll();
-            }
-        }, getSoundDelayMilliSeconds());
+        long soundDelayMilliSeconds = getSoundDelayMilliSeconds();
+        if (soundDelayMilliSeconds == 0L) {
+            immediatelyStopPlayAllSounds();
+        } else {
+            ThreadPoolUtil.executeWithDelay(SoundEngineUtil::immediatelyStopPlayAllSounds, soundDelayMilliSeconds);
+        }
+    }
+
+    private static void immediatelyStopPlayAllSounds() {
+        if (enableSf2Synth && sf2SynthPtr != null) {
+            allNotesOff(sf2SynthPtr, 0);
+        } else {
+            triggerUpAll();
+        }
     }
 
     public static long getSoundDelayMilliSeconds() {
