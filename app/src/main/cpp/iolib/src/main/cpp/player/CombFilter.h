@@ -26,7 +26,7 @@ namespace iolib {
                 return input;
             }
             float output = mBuffer[mPointer];
-            mBuffer[mPointer] = input + (mBuffer[mPointer] * mGain);
+            mBuffer[mPointer] = input + mBuffer[mPointer] * mGain;
             mPointer = (mPointer + 1) % mDelay;
             return output;
         }

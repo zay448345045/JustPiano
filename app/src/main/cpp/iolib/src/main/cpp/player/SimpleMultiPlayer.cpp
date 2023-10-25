@@ -75,10 +75,11 @@ namespace iolib {
             int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             std::shared_ptr<std::vector<std::pair<int32_t, int32_t>>> noteVector = sampleSource->getCurFrameIndexVector();
             for (auto i = static_cast<int32_t>(noteVector->size() - 1); i >= 0; i--) {
-                std::pair<int32_t, int32_t> noteInfoPair = (*noteVector)[i];
-                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, &noteInfoPair);
+                std::pair<int32_t, int32_t> *noteInfoPair = &(*noteVector)[i];
+                __android_log_print(ANDROID_LOG_ERROR, TAG, "mixAudioToBuffer:%d, %d", noteInfoPair->first, noteInfoPair->second);
+                sampleSource->mixAudio(mMixBuffer, mChannelCount, numFrames, noteInfoPair);
                 memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
-                if ((*noteVector)[i].first >= numSampleFrames) {
+                if (noteInfoPair->first >= numSampleFrames || noteInfoPair->second <= 0) {
                     noteVector->erase(noteVector->begin() + i);
                 } else {
                     sampleCount++;
