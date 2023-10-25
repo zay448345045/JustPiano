@@ -208,7 +208,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
 
     @Override
     public void onBackPressed() {
-        SongPlay.INSTANCE.stopPlay();
         Intent intent;
         if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
             intent = new Intent();

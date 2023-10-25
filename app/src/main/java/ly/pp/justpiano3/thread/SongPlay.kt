@@ -104,6 +104,7 @@ object SongPlay {
     fun stopPlay() {
         job?.cancel()
         job = null
+        SoundEngineUtil.stopPlayAllSounds();
     }
 
     /**

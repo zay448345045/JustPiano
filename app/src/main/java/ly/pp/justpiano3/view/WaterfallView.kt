@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
+import ly.pp.justpiano3.utils.SoundEngineUtil
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.min
@@ -180,6 +181,8 @@ class WaterfallView @JvmOverloads constructor(
         if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
             waterfallDownNotesThread!!.isPause = true
         }
+        // 暂停播放时，停止播放所有音符
+        SoundEngineUtil.stopPlayAllSounds()
     }
 
     /**
