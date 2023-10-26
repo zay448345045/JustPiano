@@ -21,7 +21,7 @@
 
 namespace iolib {
 
-    void OneShotSampleSource::mixAudio(float *outBuff, int32_t numChannels, int32_t delay,
+    void OneShotSampleSource::mixAudio(float *outBuff, int32_t numChannels, float delayVolumeFactor,
                                        int32_t numFrames,
                                        std::tuple<int32_t, float, bool> *curFrameIndex) {
         int32_t numSampleFrames = mSampleBuffer->getNumSampleFrames();
@@ -37,16 +37,21 @@ namespace iolib {
             // investigate unrolling these loops...
             const float *data = mSampleBuffer->getSampleData();
             int32_t sampleCount = numWriteFrames * numChannels;
-            for (int32_t i = 0; i < sampleCount; i += numChannels) {
-                if (isStop) {
-                    trueVolume -= 0.002f / ((float) delay * 3.0f + 50);
+            if (isStop) {
+                for (int32_t i = 0; i < sampleCount; i += numChannels) {
+                    trueVolume -= delayVolumeFactor;
+                    outBuff[i] += data[trueIndex++] * trueVolume;
+                    outBuff[i + 1] = outBuff[i];
                 }
-                outBuff[i] += data[trueIndex++] * trueVolume;
-                outBuff[i + 1] = outBuff[i];
+            } else {
+                for (int32_t i = 0; i < sampleCount; i += numChannels) {
+                    outBuff[i] += data[trueIndex++] * trueVolume;
+                    outBuff[i + 1] = outBuff[i];
+                }
             }
+            get<0>(tuple) = trueIndex;
+            get<1>(tuple) = trueVolume;
         }
-        get<0>(tuple) = trueIndex;
-        get<1>(tuple) = trueVolume;
         // silence
         // no need as the output buffer would need to have been filled with silence
         // to be mixed into

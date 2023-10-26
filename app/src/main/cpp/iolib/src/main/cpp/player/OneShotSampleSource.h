@@ -31,7 +31,7 @@ namespace iolib {
 
         virtual ~OneShotSampleSource() {};
 
-        virtual void mixAudio(float *outBuff, int32_t numChannels, int32_t delay, int32_t numFrames,
+        virtual void mixAudio(float *outBuff, int32_t numChannels, float delayVolumeFactor, int32_t numFrames,
                               std::tuple<int32_t, float, bool> *curFrameIndex);
     };
 

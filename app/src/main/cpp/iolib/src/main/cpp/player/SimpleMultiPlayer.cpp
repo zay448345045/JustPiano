@@ -58,6 +58,7 @@ namespace iolib {
                                     &((float *) audioData)[1], 0, 2);
             memcpy(mMixBuffer, ((float *) audioData),
                    numFrames * mChannelCount * sizeof(float));
+            handleSf2DelayNoteOff(numFrames);
         } else {
             mixAudioToBuffer((float *) audioData, numFrames);
         }
@@ -66,6 +67,22 @@ namespace iolib {
             mRecordingIO->write_buffer(mMixBuffer, numFrames);
         }
         return DataCallbackResult::Continue;
+    }
+
+    void SimpleMultiPlayer::handleSf2DelayNoteOff(int32_t numFrames) {
+        for (int32_t index = 0; index < mNumSampleBuffers; index++) {
+            shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mSampleSources[index]->getCurFrameIndexVector();
+            for (auto i = static_cast<int32_t>(noteVector->size() - 1); i >= 0; i--) {
+                tuple<int32_t, float, bool> &noteInfoTuple = (*noteVector)[i];
+                if (get<2>(noteInfoTuple)) {
+                    if (get<0>(noteInfoTuple) >= mDelayValue * 1000) {
+                        fluid_synth_noteoff(pSynth, 0, 108 - index);
+                        noteVector->erase(noteVector->begin() + i);
+                    }
+                    get<0>(noteInfoTuple) += numFrames;
+                }
+            }
+        }
     }
 
     void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
@@ -79,7 +96,7 @@ namespace iolib {
             int32_t handledIndex = max(0, lastIndex - 16);
             for (auto i = lastIndex; i >= handledIndex; i--) {
                 tuple<int32_t, float, bool> *noteInfoTuple = &(*noteVector)[i];
-                sampleSource->mixAudio(mMixBuffer, mChannelCount, mDelayValue,
+                sampleSource->mixAudio(mMixBuffer, mChannelCount, mDelayVolumeFactor,
                                        numFrames, noteInfoTuple);
                 memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
                 if (get<0>(*noteInfoTuple) >= numSampleFrames || get<1>(*noteInfoTuple) <= 0) {
@@ -258,9 +275,6 @@ namespace iolib {
 
     void SimpleMultiPlayer::setDelayValue(int32_t delay) {
         this->mDelayValue = delay;
-    }
-
-    int32_t SimpleMultiPlayer::getDelayValue() const {
-        return this->mDelayValue;
+        this->mDelayVolumeFactor = 2e-3f / ((float) delay * 3 + 50);
     }
 }

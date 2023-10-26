@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javazoom.jl.converter.Converter;
-import ly.pp.justpiano3.entity.GlobalSetting;
 
 public class SoundEngineUtil {
 
@@ -57,25 +56,13 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlaySound(byte pitch) {
-        if (enableSf2Synth && sf2SynthPtr != null) {
-            noteOff(sf2SynthPtr, 0, pitch);
-        } else {
-            if (pitch >= 24 && pitch <= 108) {
-                triggerUp(108 - pitch);
-            }
+        if (pitch >= 24 && pitch <= 108) {
+            triggerUp(108 - pitch);
         }
     }
 
     public static void stopPlayAllSounds() {
-        if (enableSf2Synth && sf2SynthPtr != null) {
-            allNotesOff(sf2SynthPtr, 0);
-        } else {
-            triggerUpAll();
-        }
-    }
-
-    public static long getSoundDelayMilliSeconds() {
-        return (long) Math.pow(GlobalSetting.INSTANCE.getSoundDelay(), 1.7);
+        triggerUpAll();
     }
 
     public static void setReverb(int soundReverb) {
@@ -83,7 +70,7 @@ public class SoundEngineUtil {
     }
 
     public static void setDelay(int soundDelay) {
-        setDelayValue(sf2SynthPtr != null ? sf2SynthPtr : 0, soundDelay);
+        setDelayValue(soundDelay);
     }
 
     public static void playChatSound() {
@@ -215,11 +202,7 @@ public class SoundEngineUtil {
 
     private static native void noteOn(long instance, int channel, int note, int velocity);
 
-    private static native void noteOff(long instance, int channel, int note);
-
-    private static native void allNotesOff(long instance, int channel);
-
     private static native void setReverbValue(long instance, int reverbValue);
 
-    private static native void setDelayValue(long instance, int delayValue);
+    private static native void setDelayValue(int delayValue);
 }

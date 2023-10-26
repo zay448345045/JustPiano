@@ -517,7 +517,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
                 isBlackKey(pitch),
                 keyboardView.convertPitchToReact(pitch)
             )
-            waterfallView.freeStyleNotes.add(
+            waterfallView.addFreeStyleWaterfallNote(
                 WaterfallNote(
                     left,
                     right,
@@ -533,13 +533,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
 
     fun freeStyleKeyUpHandle(pitch: Byte) {
         if (freeStyle) {
-            for (i in waterfallView.freeStyleNotes.indices.reversed()) {
-                val freeStyleNote = waterfallView.freeStyleNotes[i]
-                if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > waterfallView.height + waterfallView.playProgress) {
-                    freeStyleNote.bottom = waterfallView.height + waterfallView.playProgress
-                    break
-                }
-            }
+            waterfallView.stopFreeStyleWaterfallNote(pitch)
         }
     }
 }

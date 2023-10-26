@@ -96,8 +96,6 @@ namespace iolib {
 
         void setDelayValue(int32_t delay);
 
-        int32_t getDelayValue() const;
-
     private:
         // Oboe Audio Stream
         std::shared_ptr<oboe::AudioStream> mAudioStream;
@@ -123,10 +121,13 @@ namespace iolib {
 
         bool mEnableSf2{false};
         int32_t mReverbValue{0};
-        int32_t mDelayValue{100};
+        int32_t mDelayValue{0};
+        float mDelayVolumeFactor{4e-5f};
 
         std::shared_ptr<CombFilter> mCombFilter{std::make_shared<CombFilter>(0.0f, 0)};
         std::shared_ptr<AllPassFilter> mAllPassFilter{std::make_shared<AllPassFilter>(0.0f, 0)};
+
+        void handleSf2DelayNoteOff(int32_t numFrames);
     };
 }
 #endif //_PLAYER_SIMIPLEMULTIPLAYER_H_

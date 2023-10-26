@@ -6,6 +6,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
+import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
@@ -241,6 +242,26 @@ class WaterfallView @JvmOverloads constructor(
         backgroundImage?.recycle()
         progressBarImage?.recycle()
         progressBarBaseImage?.recycle()
+    }
+
+    /**
+     * 增加自由演奏模式的瀑布流音块（音块会从下到上移动），只是增加，音块会无限长，直到调用停止
+     */
+    fun addFreeStyleWaterfallNote(waterfallNote: WaterfallNote) {
+        freeStyleNotes.add(waterfallNote)
+    }
+
+    /**
+     * 停止继续延长自由演奏模式的瀑布流音块
+     */
+    fun stopFreeStyleWaterfallNote(pitch: Byte) {
+        for (i in freeStyleNotes.indices.reversed()) {
+            val freeStyleNote = freeStyleNotes[i]
+            if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > height + playProgress) {
+                freeStyleNote.bottom = height + playProgress
+                break
+            }
+        }
     }
 
     /**

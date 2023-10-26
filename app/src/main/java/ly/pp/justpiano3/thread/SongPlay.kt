@@ -58,7 +58,6 @@ object SongPlay {
                     SoundEngineUtil.playSound(pitch, it.volumeArray[i])
                     playingPitchList.add(pitch)
                 }
-                delay(SoundEngineUtil.getSoundDelayMilliSeconds())
                 playingPitchList.forEach { SoundEngineUtil.stopPlaySound((it)) }
                 playingPitchList.clear()
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
