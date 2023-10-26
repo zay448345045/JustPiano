@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.SkinListPreference;
+import ly.pp.justpiano3.view.SoundListPreference;
 
 public class SettingsMode extends PreferenceActivity {
 
@@ -29,8 +32,9 @@ public class SettingsMode extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImageLoadUtil.setBackground(this, "ground", getWindow());
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+        ImageLoadUtil.setBackground(this, "ground", getWindow());
+        getWindow().getDecorView().findViewById(android.R.id.content).setBackgroundResource(R.color.black);
     }
 
     @Override
@@ -47,13 +51,14 @@ public class SettingsMode extends PreferenceActivity {
             if (versionPreference != null) {
                 versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
             }
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = super.onCreateView(inflater, container, savedInstanceState);
-            view.setBackgroundResource(R.color.black);
-            return view;
+            Preference skinPreference = findPreference("skin_list");
+            if (skinPreference != null) {
+                skinPreference.setSummary("当前皮肤：" + GlobalSetting.INSTANCE.getSkinName());
+            }
+            Preference soundPreference = findPreference("sound_list");
+            if (soundPreference != null) {
+                soundPreference.setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
+            }
         }
     }
 }

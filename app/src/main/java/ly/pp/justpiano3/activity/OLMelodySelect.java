@@ -255,7 +255,6 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         try {
             GlobalSetting.INSTANCE.loadSettings(this, true);
-            GlobalSetting.INSTANCE.setTempSpeed(1f);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Consts.sortNames).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

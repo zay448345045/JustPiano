@@ -19,6 +19,7 @@ import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
@@ -36,6 +37,11 @@ public class SkinListPreference extends DialogPreference {
         this.context = context;
     }
 
+    public SkinListPreference(Context context) {
+        super(context, null);
+        this.context = context;
+    }
+
     private void m3906a() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
         List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(str);
@@ -47,9 +53,9 @@ public class SkinListPreference extends DialogPreference {
             skinNameList[i] = str.subSequence(0, str.lastIndexOf('.'));
             skinKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + localSkinList.get(i).getName();
         }
-        skinNameList[size] = "原生主题";
+        skinNameList[size] = "默认皮肤";
         skinKeyList[size] = "original";
-        skinNameList[size + 1] = "更多主题...";
+        skinNameList[size + 1] = "更多皮肤...";
         skinKeyList[size + 1] = "more";
     }
 
@@ -84,6 +90,8 @@ public class SkinListPreference extends DialogPreference {
         if (context instanceof PreferenceActivity) {
             ImageLoadUtil.setBackground(context, "ground", ((PreferenceActivity) context).getWindow());
         }
+        GlobalSetting.INSTANCE.loadSettings(context, false);
+        setSummary("当前皮肤：" + GlobalSetting.INSTANCE.getSkinName());
     }
 
     @Override

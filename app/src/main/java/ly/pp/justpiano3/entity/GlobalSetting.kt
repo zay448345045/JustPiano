@@ -16,170 +16,224 @@ object GlobalSetting {
     var localPlayMode = LocalPlayModeEnum.NORMAL
 
     /**
+     * 当前皮肤名称
+     */
+    var skinName: String = "默认皮肤"
+        private set
+
+    /**
+     * 当前音源名称
+     */
+    var soundName: String = "默认皮肤"
+        private set
+
+    /**
      * 音块变色
      */
     var changeNotesColor: Boolean = true
+        private set
 
     /**
      * 节拍比率
      */
     var tempSpeed: Float = 1f
+        private set
 
     /**
      * 音块消失
      */
     var noteDismiss: Boolean = false
+        private set
 
     /**
      * 音块大小
      */
     var noteSize: Float = 1f
+        private set
 
     /**
      * 音块速率
      */
     var notesDownSpeed: Float = 1f
+        private set
 
     /**
      * MIDI键盘移调
      */
     var midiKeyboardTune: Int = 0
+        private set
 
     /**
      * 触摸键盘移调
      */
     var keyboardSoundTune: Int = 0
+        private set
 
     /**
      * 是否开启键盘模式动画
      */
     var keyboardAnim: Boolean = true
+        private set
 
     /**
      * 是否开启和弦
      */
     var isOpenChord: Boolean = true
+        private set
 
     /**
      * 和弦音量
      */
     var chordVolume: Float = 0.8f
+        private set
 
     /**
      * 延音
      */
     var soundDelay: Int = 0
+        private set
 
     /**
      * 混响
      */
     var soundReverb: Int = 0
+        private set
 
     /**
      * 按键震动
      */
     var soundVibration: Boolean = false
+        private set
 
     /**
      * 按键震动时长
      */
     var soundVibrationTime: Int = 10
+        private set
 
     /**
      * 弹奏时展示等级
      */
     var showTouchNotesLevel: Boolean = true
+        private set
 
     /**
      * 自动弹奏
      */
     var autoPlay: Boolean = true
+        private set
 
     /**
      * 展示判断线
      */
     var showLine: Boolean = true
+        private set
 
     /**
      * 显示键盘缩略图
      */
     var loadLongKeyboard: Boolean = false
+        private set
 
     /**
      * 按键效果
      */
     var keyboardPrefer: Boolean = true
+        private set
 
     /**
      * 判断线加粗类型
      */
     var roughLine: Int = 1
+        private set
 
     /**
      * 聊天音效
      */
     var chatSound: Boolean = false
+        private set
 
     /**
      * 聊天字体大小
      */
     var chatTextSize: Int = 15
+        private set
 
     /**
      * 瀑布流曲谱播放速度
      */
     var waterfallSongSpeed: Float = 1f
+        private set
 
     /**
      * 瀑布流音块下落速率
      */
     var waterfallDownSpeed: Float = 0.8f
+        private set
+
+    /**
+     * 瀑布流允许后台播放
+     */
+    var waterfallBackgroundPlay: Boolean = false
+        private set
 
     /**
      * 瀑布流左手音块颜色
      */
     var waterfallLeftHandColor: Int = 0xFF2BBBFB.toInt()
+        private set
 
     /**
      * 瀑布流右手音块颜色
      */
     var waterfallRightHandColor: Int = 0xFFFF802D.toInt()
+        private set
 
     /**
      * 瀑布流自由演奏音块颜色
      */
     var waterfallFreeStyleColor: Int = 0xFFFFFF00.toInt()
+        private set
 
     /**
      * 是否存储聊天记录
      */
     var saveChatRecord: Boolean = false
+        private set
 
     /**
      * 聊天是否展示时间
      */
     var showChatTime: Boolean = false
+        private set
 
     /**
      * 曲谱播放时是否显示通知栏
      */
     var showNotification: Boolean = false
+        private set
 
     /**
      * 钢琴键盘显示按键标签种类
      */
     var keyboardOctaveTagType: Int = 0
+        private set
 
     /**
      * 联网键盘模式是否实时传输
      */
     var keyboardRealtime: Boolean = true
+        private set
 
     /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        skinName = sharedPreferences.getString("skin_list", "original").toString()
+        skinName = if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)
+        soundName = sharedPreferences.getString("sound_list", "original").toString()
+        soundName = if (soundName == "original") "默认音源" else soundName.substring(soundName.lastIndexOf('/') + 1)
         if (online) {
             tempSpeed = 1f
             autoPlay = true
@@ -212,6 +266,7 @@ object GlobalSetting {
         chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "0.8")!!.toFloat()
+        waterfallBackgroundPlay = sharedPreferences.getBoolean("waterfall_background_play", false)
         waterfallLeftHandColor = sharedPreferences.getInt(
             "waterfall_left_hand_color",
             0xFF2BBBFB.toInt()

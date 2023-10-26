@@ -18,6 +18,7 @@ import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SoundListAdapter;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 
 public class SoundListPreference extends DialogPreference {
@@ -49,7 +50,7 @@ public class SoundListPreference extends DialogPreference {
             soundNameList[i] = soundName.subSequence(0, soundName.lastIndexOf('.'));
             soundKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + localSoundList.get(i).getName();
         }
-        soundNameList[size] = "原生音源";
+        soundNameList[size] = "默认音源";
         soundKeyList[size] = "original";
         soundNameList[size + 1] = "更多音源...";
         soundKeyList[size + 1] = "more";
@@ -82,6 +83,8 @@ public class SoundListPreference extends DialogPreference {
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
         persistString(soundKey);
+        GlobalSetting.INSTANCE.loadSettings(context, false);
+        setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
     }
 
     @Override

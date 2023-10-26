@@ -72,15 +72,21 @@ namespace iolib {
     void SimpleMultiPlayer::handleSf2DelayNoteOff(int32_t numFrames) {
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mSampleSources[index]->getCurFrameIndexVector();
+            bool noteOff = !noteVector->empty();
             for (auto i = static_cast<int32_t>(noteVector->size() - 1); i >= 0; i--) {
                 tuple<int32_t, float, bool> &noteInfoTuple = (*noteVector)[i];
                 if (get<2>(noteInfoTuple)) {
-                    if (get<0>(noteInfoTuple) >= mDelayValue * 1000) {
-                        fluid_synth_noteoff(pSynth, 0, 108 - index);
-                        noteVector->erase(noteVector->begin() + i);
+                    if (get<0>(noteInfoTuple) < mDelayValue * 1000) {
+                        get<0>(noteInfoTuple) += numFrames;
+                        noteOff = false;
                     }
-                    get<0>(noteInfoTuple) += numFrames;
+                } else {
+                    noteOff = false;
                 }
+            }
+            if (noteOff) {
+                fluid_synth_noteoff(pSynth, 0, 108 - index);
+                noteVector->clear();
             }
         }
     }

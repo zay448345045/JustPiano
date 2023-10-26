@@ -2,254 +2,306 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/settings_name">
-    <PreferenceCategory android:title="弹奏音块与界面">
+    <PreferenceCategory android:title="弹奏、音块及界面">
         <ly.pp.justpiano3.view.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
+            android:summary="当前皮肤：默认皮肤"
             android:title="皮肤" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1"
-            android:dialogTitle="音块速率"
-            android:key="down_speed"
-            android:summary="设置音块的滑落速度，会影响弹奏难度，值越大，速度越快，可根据个人习惯进行调整"
-            android:title="音块速率"
-            app:floatNumber="true"
-            app:maxValue="5.5"
-            app:minValue="0.5" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1"
-            android:dialogTitle="音块大小"
-            android:key="note_size"
-            android:summary="设置音块大小，可根据个人习惯进行调整"
-            android:title="音块大小"
-            app:floatNumber="true"
-            app:maxValue="2"
-            app:minValue="0.5" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="note_dismiss"
-            android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
-            android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
-            android:title="击中音块消失" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="change_color"
-            android:summaryOff="&lt;关闭&gt;首音块不变色"
-            android:summaryOn="&lt;打开&gt;首音块变色"
-            android:title="音块变色" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="keyboard_prefer"
-            android:summaryOff="&lt;关闭&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
-            android:summaryOn="&lt;打开&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
-            android:title="按键效果" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="tishi_cj"
-            android:summaryOff="关闭弹奏等级显示"
-            android:summaryOn="打开弹奏等级显示"
-            android:title="提示弹奏等级显示(暴击、完美等)" />
-        <ListPreference
-            android:defaultValue="1"
-            android:dialogTitle="判断线类型"
-            android:entries="@array/rough_line"
-            android:entryValues="@array/rough_linev"
-            android:key="rough_line"
-            android:summary="设置判断线是否加粗及加粗样式"
-            android:title="判断线类型" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="show_line"
-            android:summaryOff="关闭吊线提示"
-            android:summaryOn="打开吊线提示"
-            android:title="弹奏提示" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="open_long_key"
-            android:summaryOff="键盘缩略图已关闭"
-            android:summaryOn="键盘缩略图已打开"
-            android:title="键盘缩略图" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1"
-            android:dialogTitle="节拍比率(仅本地模式有效)"
-            android:key="temp_speed"
-            android:summary="值越小，曲谱整体节拍越慢，持续时间越长"
-            android:title="节拍比率(仅本地模式有效)"
-            app:floatNumber="true"
-            app:maxValue="1.5"
-            app:minValue="0.5" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="auto_play"
-            android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"
-            android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符"
-            android:title="自动弹奏(仅本地模式有效)" />
+
+        <PreferenceScreen
+            android:summary="和弦音量、按键效果、吊线判断线等"
+            android:title="弹奏设置">
+            <PreferenceCategory android:title="弹奏外观及效果">
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="@string/b_s_key"
+                    android:summaryOff="@string/b_s_open_2"
+                    android:summaryOn="@string/b_s_open_1"
+                    android:title="@string/b_s_open" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="0.8"
+                    android:dependency="@string/b_s_key"
+                    android:dialogTitle="@string/b_s_vol_title"
+                    android:key="b_s_vol"
+                    android:summary="@string/b_s_vol_sum"
+                    android:title="@string/b_s_vol_title"
+                    app:floatNumber="true"
+                    app:maxValue="1.5"
+                    app:minValue="0.1" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="keyboard_prefer"
+                    android:summaryOff="&lt;关闭&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
+                    android:summaryOn="&lt;打开&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
+                    android:title="按键效果" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="tishi_cj"
+                    android:summaryOff="关闭弹奏等级显示"
+                    android:summaryOn="打开弹奏等级显示"
+                    android:title="提示弹奏等级显示(暴击、完美等)" />
+                <ListPreference
+                    android:defaultValue="1"
+                    android:dialogTitle="判断线类型"
+                    android:entries="@array/rough_line"
+                    android:entryValues="@array/rough_linev"
+                    android:key="rough_line"
+                    android:summary="设置判断线是否加粗及加粗样式"
+                    android:title="判断线类型" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="show_line"
+                    android:summaryOff="关闭吊线提示"
+                    android:summaryOn="打开吊线提示"
+                    android:title="弹奏提示" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="open_long_key"
+                    android:summaryOff="键盘缩略图已关闭"
+                    android:summaryOn="键盘缩略图已打开"
+                    android:title="键盘缩略图" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="1"
+                    android:dialogTitle="节拍比率(仅本地模式有效)"
+                    android:key="temp_speed"
+                    android:summary="值越小，曲谱整体节拍越慢，持续时间越长"
+                    android:title="节拍比率(仅本地模式有效)"
+                    app:floatNumber="true"
+                    app:maxValue="1.5"
+                    app:minValue="0.5" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="auto_play"
+                    android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"
+                    android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符"
+                    android:title="自动弹奏(仅本地模式有效)" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="音块速率、大小、音块变色等"
+            android:title="音块设置">
+            <PreferenceCategory android:title="音块">
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="1"
+                    android:dialogTitle="音块速率"
+                    android:key="down_speed"
+                    android:summary="设置音块的滑落速度，会影响弹奏难度，值越大，速度越快，可根据个人习惯进行调整"
+                    android:title="音块速率"
+                    app:floatNumber="true"
+                    app:maxValue="5.5"
+                    app:minValue="0.5" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="1"
+                    android:dialogTitle="音块大小"
+                    android:key="note_size"
+                    android:summary="设置音块大小，可根据个人习惯进行调整"
+                    android:title="音块大小"
+                    app:floatNumber="true"
+                    app:maxValue="2"
+                    app:minValue="0.5" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="note_dismiss"
+                    android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
+                    android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
+                    android:title="击中音块消失" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="change_color"
+                    android:summaryOff="&lt;关闭&gt;首音块不变色"
+                    android:summaryOn="&lt;打开&gt;首音块变色"
+                    android:title="音块变色" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="瀑布流音块移动速度、音块颜色等"
+            android:title="瀑布流设置">
+            <PreferenceCategory android:title="瀑布流">
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="1"
+                    android:dialogTitle="瀑布流曲谱播放速度"
+                    android:key="waterfall_song_speed"
+                    android:summary="值越小，曲谱整体播放速度越慢，持续时间越长"
+                    android:title="瀑布流曲谱播放速度"
+                    app:floatNumber="true"
+                    app:maxValue="1.5"
+                    app:minValue="0.5" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="0.8"
+                    android:dialogTitle="瀑布流音块移动速度"
+                    android:key="waterfall_down_speed"
+                    android:summary="设置瀑布流音块的移动速度，值越小，音块越矮，移动速度越慢"
+                    android:title="瀑布流音块移动速度"
+                    app:floatNumber="true"
+                    app:maxValue="1.5"
+                    app:minValue="0.1" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="waterfall_background_play"
+                    android:summaryOff="&lt;关闭&gt;禁止后台状态下播放声音"
+                    android:summaryOn="&lt;打开&gt;允许后台状态下播放声音"
+                    android:title="允许后台播放" />
+                <net.margaritov.preference.colorpicker.ColorPickerPreference
+                    alphaSlider="false"
+                    android:defaultValue="0xFF2BBBFB"
+                    android:key="waterfall_left_hand_color"
+                    android:summary="瀑布流左手音块颜色"
+                    android:title="瀑布流左手音块颜色" />
+                <net.margaritov.preference.colorpicker.ColorPickerPreference
+                    alphaSlider="false"
+                    android:defaultValue="0xFFFF802D"
+                    android:key="waterfall_right_hand_color"
+                    android:summary="瀑布流右手音块颜色"
+                    android:title="瀑布流右手音块颜色" />
+                <net.margaritov.preference.colorpicker.ColorPickerPreference
+                    alphaSlider="false"
+                    android:defaultValue="0xFFFFFF00"
+                    android:key="waterfall_free_style_color"
+                    android:summary="瀑布流自由演奏音块颜色"
+                    android:title="瀑布流自由演奏音块颜色" />
+            </PreferenceCategory>
+        </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="声音">
+
+    <PreferenceCategory android:title="键盘、声音及MIDI设备">
         <ly.pp.justpiano3.view.SoundListPreference
             android:dialogTitle="设置管理音源"
             android:key="sound_list"
+            android:summary="当前音源：默认音源"
             android:title="音源" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/b_s_key"
-            android:summaryOff="@string/b_s_open_2"
-            android:summaryOn="@string/b_s_open_1"
-            android:title="@string/b_s_open" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0.8"
-            android:dependency="@string/b_s_key"
-            android:dialogTitle="@string/b_s_vol_title"
-            android:key="b_s_vol"
-            android:summary="@string/b_s_vol_sum"
-            android:title="@string/b_s_vol_title"
-            app:floatNumber="true"
-            app:maxValue="1.5"
-            app:minValue="0.1" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0"
-            android:dialogTitle="延音强度"
-            android:key="sound_delay"
-            android:summary="触发停止播放琴键声音时，音符的延音长度"
-            android:title="延音强度"
-            app:floatNumber="false"
-            app:maxValue="100"
-            app:minValue="0" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0"
-            android:dialogTitle="混响强度"
-            android:key="sound_reverb"
-            android:summary="播放琴键声音时，混响效果强度"
-            android:title="混响强度"
-            app:floatNumber="false"
-            app:maxValue="100"
-            app:minValue="0" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="sound_vibration"
-            android:summaryOff="&lt;关闭&gt;禁用按键震动效果"
-            android:summaryOn="&lt;打开&gt;启用按键震动效果"
-            android:title="按键震动" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="10"
-            android:dependency="sound_vibration"
-            android:dialogTitle="按键震动时长（毫秒）"
-            android:key="sound_vibration_time"
-            android:summary="按键震动时长（毫秒）"
-            android:title="按键震动时长"
-            app:floatNumber="false"
-            app:maxValue="100"
-            app:minValue="0" />
+
+        <PreferenceScreen
+            android:summary="延音、混响、按键震动等"
+            android:title="声音效果设置">
+            <PreferenceCategory android:title="声音效果">
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="pedal_delay"
+                    android:summaryOff="&lt;关闭&gt;禁用外接延音踏板控制延音"
+                    android:summaryOn="&lt;打开&gt;启用外接延音踏板控制延音"
+                    android:title="启用外接延音踏板控制延音" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="0"
+                    android:dialogTitle="延音强度"
+                    android:key="sound_delay"
+                    android:summary="触发停止播放琴键声音时，音符的延音长度"
+                    android:title="延音强度"
+                    app:floatNumber="false"
+                    app:maxValue="100"
+                    app:minValue="0" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="0"
+                    android:dialogTitle="混响强度"
+                    android:key="sound_reverb"
+                    android:summary="播放琴键声音时，混响效果强度"
+                    android:title="混响强度"
+                    app:floatNumber="false"
+                    app:maxValue="100"
+                    app:minValue="0" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="sound_vibration"
+                    android:summaryOff="&lt;关闭&gt;禁用按键震动效果"
+                    android:summaryOn="&lt;打开&gt;启用按键震动效果"
+                    android:title="按键震动" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="10"
+                    android:dependency="sound_vibration"
+                    android:dialogTitle="按键震动时长（毫秒）"
+                    android:key="sound_vibration_time"
+                    android:summary="按键震动时长（毫秒）"
+                    android:title="按键震动时长"
+                    app:floatNumber="false"
+                    app:maxValue="100"
+                    app:minValue="0" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="标签展示、移调、联网传输模式"
+            android:title="钢琴键盘">
+            <PreferenceCategory android:title="钢琴键盘">
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="keyboard_anim"
+                    android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
+                    android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
+                    android:title="启用键盘移动缩放动画" />
+                <ListPreference
+                    android:defaultValue="0"
+                    android:dialogTitle="钢琴键盘展示标签类型"
+                    android:entries="@array/octave_tag_type_name"
+                    android:entryValues="@array/octave_tag_type_value"
+                    android:key="octave_tag_type"
+                    android:summary="设置钢琴键盘中按键下方展示的标签类型"
+                    android:title="钢琴键盘展示标签类型" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="0"
+                    android:dialogTitle="触屏点击声音移调"
+                    android:key="keyboard_sound_tune"
+                    android:summary="调整键盘模式触屏点击按键播放的声音移调"
+                    android:title="触屏点击声音移调"
+                    app:floatNumber="false"
+                    app:maxValue="6"
+                    app:minValue="-6" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="0"
+                    android:dialogTitle="MIDI键盘移调"
+                    android:key="midi_keyboard_tune"
+                    android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
+                    android:title="MIDI键盘移调"
+                    app:floatNumber="false"
+                    app:maxValue="6"
+                    app:minValue="-6" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="在线键盘">
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="keyboard_realtime"
+                    android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有琴键按下或抬起操作统一进行传输，有少许延迟，整体流畅性更好"
+                    android:summaryOn="&lt;打开&gt;每个琴键按下或抬起时，立即传输数据，延迟较低，实时性好，能耗更高"
+                    android:title="协奏模式(琴键数据实时传输)" />
+            </PreferenceCategory>
+        </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="钢琴键盘">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="keyboard_anim"
-            android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
-            android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
-            android:title="启用键盘移动缩放动画" />
-        <ListPreference
-            android:defaultValue="0"
-            android:dialogTitle="钢琴键盘展示标签类型"
-            android:entries="@array/octave_tag_type_name"
-            android:entryValues="@array/octave_tag_type_value"
-            android:key="octave_tag_type"
-            android:summary="设置钢琴键盘中按键下方展示的标签类型"
-            android:title="钢琴键盘展示标签类型" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0"
-            android:dialogTitle="触屏点击声音移调"
-            android:key="keyboard_sound_tune"
-            android:summary="调整键盘模式触屏点击按键播放的声音移调"
-            android:title="触屏点击声音移调"
-            app:floatNumber="false"
-            app:maxValue="6"
-            app:minValue="-6" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0"
-            android:dialogTitle="MIDI键盘移调"
-            android:key="midi_keyboard_tune"
-            android:summary="键盘模式下接入MIDI键盘时调整MIDI键盘移调"
-            android:title="MIDI键盘移调"
-            app:floatNumber="false"
-            app:maxValue="6"
-            app:minValue="-6" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="瀑布流">
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="1"
-            android:dialogTitle="瀑布流曲谱播放速度"
-            android:key="waterfall_song_speed"
-            android:summary="值越小，曲谱整体播放速度越慢，持续时间越长"
-            android:title="瀑布流曲谱播放速度"
-            app:floatNumber="true"
-            app:maxValue="1.5"
-            app:minValue="0.5" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0.8"
-            android:dialogTitle="瀑布流音符移动速率"
-            android:key="waterfall_down_speed"
-            android:summary="设置音符的移动速率，值越小，音符越矮，移动速度越慢"
-            android:title="瀑布流音符下落速率"
-            app:floatNumber="true"
-            app:maxValue="1.5"
-            app:minValue="0.1" />
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
-            alphaSlider="false"
-            android:defaultValue="0xFF2BBBFB"
-            android:key="waterfall_left_hand_color"
-            android:summary="瀑布流左手音块颜色"
-            android:title="瀑布流左手音块颜色" />
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
-            alphaSlider="false"
-            android:defaultValue="0xFFFF802D"
-            android:key="waterfall_right_hand_color"
-            android:summary="瀑布流右手音块颜色"
-            android:title="瀑布流右手音块颜色" />
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
-            alphaSlider="false"
-            android:defaultValue="0xFFFFFF00"
-            android:key="waterfall_free_style_color"
-            android:summary="瀑布流自由演奏音块颜色"
-            android:title="瀑布流自由演奏音块颜色" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="在线键盘">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="keyboard_realtime"
-            android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有琴键按下或抬起操作统一进行传输，有少许延迟，整体流畅性更好"
-            android:summaryOn="&lt;打开&gt;每个琴键按下或抬起时，立即传输数据，延迟较低，实时性好，能耗更高"
-            android:title="协奏模式(琴键数据实时传输)" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="在线聊天">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="chats_time_show"
-            android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
-            android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
-            android:title="聊天行首显示时间" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="chats_sound"
-            android:summaryOff="&lt;关闭&gt; 在线接收到其他人聊天时关闭声音提醒"
-            android:summaryOn="&lt;打开&gt; 在线接收到其他人聊天时打开声音提醒"
-            android:title="聊天音效提醒" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="save_chats"
-            android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
-            android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
-            android:title="存储聊天记录" />
-        <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="15"
-            android:dialogTitle="聊天字体大小"
-            android:key="chats_text_size"
-            android:summary="设置聊天字体显示大小"
-            android:title="聊天字体大小"
-            app:floatNumber="false"
-            app:maxValue="20"
-            app:minValue="10" />
-    </PreferenceCategory>
+
+    <PreferenceScreen
+        android:summary="聊天记录、聊天音效、字体大小等"
+        android:title="聊天设置">
+        <PreferenceCategory android:title="在线聊天">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="chats_time_show"
+                android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
+                android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
+                android:title="聊天行首显示时间" />
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="chats_sound"
+                android:summaryOff="&lt;关闭&gt; 在线接收到其他人聊天时关闭声音提醒"
+                android:summaryOn="&lt;打开&gt; 在线接收到其他人聊天时打开声音提醒"
+                android:title="聊天音效提醒" />
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="save_chats"
+                android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
+                android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
+                android:title="存储聊天记录" />
+            <ly.pp.justpiano3.view.SeekBarPreference
+                android:defaultValue="15"
+                android:dialogTitle="聊天字体大小"
+                android:key="chats_text_size"
+                android:summary="设置聊天字体显示大小"
+                android:title="聊天字体大小"
+                app:floatNumber="false"
+                app:maxValue="20"
+                app:minValue="10" />
+        </PreferenceCategory>
+    </PreferenceScreen>
+
     <PreferenceCategory android:title="关于">
         <Preference
             android:key="app_version"

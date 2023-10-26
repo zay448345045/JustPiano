@@ -180,10 +180,10 @@ class WaterfallView @JvmOverloads constructor(
      */
     fun pausePlay() {
         if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
+            // 暂停播放时，停止播放所有音符
+            SoundEngineUtil.stopPlayAllSounds()
             waterfallDownNotesThread!!.isPause = true
         }
-        // 暂停播放时，停止播放所有音符
-        SoundEngineUtil.stopPlayAllSounds()
     }
 
     /**

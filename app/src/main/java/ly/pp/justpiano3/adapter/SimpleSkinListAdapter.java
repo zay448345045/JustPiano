@@ -74,7 +74,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                     }
                 }
                 SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
-                if (name.equals("原生主题")) {
+                if (name.equals("默认皮肤")) {
                     edit.putString("skin_list", "original");
                 } else {
                     edit.putString("skin_list", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + fileList.get(index - 1).getName());
