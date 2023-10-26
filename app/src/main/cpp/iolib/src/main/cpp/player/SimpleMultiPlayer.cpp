@@ -232,13 +232,13 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::triggerDown(int32_t index, int32_t volume) {
-        if (index < mNumSampleBuffers) {
+        if (index >= 0 && index < mNumSampleBuffers && volume > 0) {
             mSampleSources[index]->setPlayMode(volume);
         }
     }
 
     void SimpleMultiPlayer::triggerUp(int32_t index) {
-        if (index < mNumSampleBuffers) {
+        if (index >= 0 && index < mNumSampleBuffers) {
             mSampleSources[index]->setStopMode();
         }
     }

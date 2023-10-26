@@ -42,23 +42,16 @@ public class SoundEngineUtil {
 
     public static native void setRecordFilePath(String recordFilePath);
 
-    public static byte playSound(byte pitch, byte volume) {
+    public static void playSound(byte pitch, byte volume) {
         if (enableSf2Synth && sf2SynthPtr != null) {
             noteOn(sf2SynthPtr, 0, pitch, volume);
-            return pitch;
         } else {
-            if (pitch >= 24 && pitch <= 108 && volume > 0) {
-                triggerDown(108 - pitch, volume);
-                return pitch;
-            }
+            triggerDown(108 - pitch, volume);
         }
-        return 0;
     }
 
     public static void stopPlaySound(byte pitch) {
-        if (pitch >= 24 && pitch <= 108) {
-            triggerUp(108 - pitch);
-        }
+        triggerUp(108 - pitch);
     }
 
     public static void stopPlayAllSounds() {

@@ -108,7 +108,8 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + playView.progress;
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (newNote && hideNote) {
-                playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                playNote = noteValue;
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
@@ -127,12 +128,14 @@ public final class PlayNote {
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (GlobalSetting.INSTANCE.getAutoPlay()) {
                 if (newNote && ((trackValue != handValue || hideNote) && GlobalSetting.INSTANCE.isOpenChord())) {
-                    playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                    SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                    playNote = noteValue;
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
             } else if (newNote && trackValue != handValue && GlobalSetting.INSTANCE.isOpenChord()) {
-                playNote = SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
+                playNote = noteValue;
                 newNote = false;
                 return posiAdd15AddAnim;
             }
