@@ -200,7 +200,7 @@ public class SoundDownload extends Activity implements Callback {
                     break;
                 case 3:
                     linearLayout.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "很抱歉,连接出错!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "网络连接错误或您未授予文件读取权限!", Toast.LENGTH_LONG).show();
                     break;
                 case 5:
                     linearLayout.setVisibility(View.GONE);

@@ -85,6 +85,9 @@ public final class MainGameAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        if (activity == null) {
+            return view;
+        }
         boolean z = true;
         int i2;
         int i3;

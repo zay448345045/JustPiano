@@ -211,7 +211,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
             }
         } catch (Exception e5) {
             e5.printStackTrace();
-            Toast.makeText(getApplicationContext(), "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(getApplicationContext(),
+                    "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show());
             System.exit(-1);
         }
         for (int i = 108; i >= 24; i--) {

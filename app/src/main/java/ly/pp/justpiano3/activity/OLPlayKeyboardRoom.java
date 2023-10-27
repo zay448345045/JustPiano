@@ -37,6 +37,7 @@ import protobuf.dto.OnlineKeyboardNoteDTO;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.*;
 
@@ -123,7 +124,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                         olKeyboardStates[positionSub1].setMidiKeyboardOn(false);
                     }
                 }
-                if (name.equals(jpapplication.getKitiName())) {
+                if (Objects.equals(name, jpapplication.getKitiName())) {
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
                     int colorIndex = bundle1.getInt("IV");
@@ -137,7 +138,13 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("PI"), o2.getByte("PI")));
             }
             gridView.setAdapter(new KeyboardPlayerImageAdapter(list, this));
-            // 加载完成，确认用户已经进入房间内，开始记录弹奏
+            // 加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (MidiDeviceUtil.getMidiOutputPort() != null) {
+                    buildAndConnectMidiReceiver();
+                }
+                MidiDeviceUtil.addMidiConnectionListener(this);
+            }
             openNotesSchedule();
         }
     }
@@ -192,7 +199,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     if (!recordStart) {
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                         jpDialogBuilder.setTitle("提示");
-                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
+                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，请确保您授予了app的文件读取权限");
                         jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = DateUtil.format(DateUtil.now());
@@ -301,12 +308,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiDeviceUtil.getMidiOutputPort() != null) {
-                buildAndConnectMidiReceiver();
-            }
-            MidiDeviceUtil.addMidiConnectionListener(this);
-        }
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         for (int i = 0; i < 3; i++) {

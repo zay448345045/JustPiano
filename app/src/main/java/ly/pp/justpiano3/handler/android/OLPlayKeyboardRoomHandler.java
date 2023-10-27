@@ -34,7 +34,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                 case 5:
                     post(() -> {
                         long[] notes = message.getData().getLongArray("NOTES");
-                        if (notes.length == 0) {
+                        if (notes == null || notes.length == 0) {
                             return;
                         }
                         int roomPositionSub1 = (byte) (notes[0] & 0xF);
@@ -118,7 +118,6 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                     post(() -> {
                         int i = message.getData().getInt("MSG_T");
                         int i2 = message.getData().getInt("MSG_CT");
-                        byte b = (byte) message.getData().getInt("MSG_CI");
                         String string = message.getData().getString("MSG_C");
                         if (i != 0) {
                             olPlayKeyboardRoom.mo2860a(i, string, i2);

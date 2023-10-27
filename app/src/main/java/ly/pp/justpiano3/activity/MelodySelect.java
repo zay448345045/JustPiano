@@ -37,12 +37,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
@@ -65,7 +62,6 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class MelodySelect extends ComponentActivity implements Callback, OnClickListener {
-    public Handler handler;
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
@@ -83,7 +79,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private int categoryPosition = -1;
     private PopupWindow sortPopupWindow;
     private PopupWindow menuPopupWindow;
-    private TextView timeText;
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
     private RecyclerView songsListView;
@@ -121,26 +116,15 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     @Override
     public boolean handleMessage(Message message) {
         Bundle data = message.getData();
-        switch (message.what) {
-            case 1:
-                int orderPosition = data.getInt("selIndex");
-                SongDao songDao = JPApplication.getSongDatabase().songDao();
-                DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
-                pagedListLiveData.removeObservers(this);
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
-                pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
-                sortPopupWindow.dismiss();
-                this.orderPosition = orderPosition;
-                break;
-            case 2:
-                break;
-            case 3:
-                CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
-                if (timeText != null) {
-                    timeText.setText(format);
-                    break;
-                }
-                break;
+        if (message.what == 1) {
+            int orderPosition = data.getInt("selIndex");
+            SongDao songDao = JPApplication.getSongDatabase().songDao();
+            DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, orderPosition);
+            pagedListLiveData.removeObservers(this);
+            pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource);
+            pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+            sortPopupWindow.dismiss();
+            this.orderPosition = orderPosition;
         }
         return false;
     }
@@ -386,7 +370,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         isRecord = findViewById(R.id.check_record);
         isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件", 0);
+                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件，请确保您授予了app的文件读取权限", 0);
             }
         });
 
@@ -426,7 +410,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 categoryPosition = position;
             }
         });
-        timeText = findViewById(R.id.time_text);
         sharedPreferences = getSharedPreferences("set", MODE_PRIVATE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -435,7 +418,6 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     @Override
     protected void onDestroy() {
         SongPlay.INSTANCE.stopPlay();
-        handler = null;
         super.onDestroy();
     }
 
@@ -448,7 +430,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         while (!firstLoadFocusFinish) {
-            handler = new Handler(this);
+            Handler handler = new Handler(this);
             List<String> sortNamesList = new ArrayList<>();
             Collections.addAll(sortNamesList, Consts.sortNames);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);

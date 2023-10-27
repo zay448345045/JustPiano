@@ -74,7 +74,6 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     public Button showTitleButton;
     private PopupWindow popupWindow;
     private final List<String> pageList = new ArrayList<>();
-    private Handler handler;
     private boolean firstLoadFocusFinish;
     private List<Map<String, Object>> songList;
 
@@ -296,7 +295,6 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
 
     @Override
     protected void onDestroy() {
-        handler = null;
         super.onDestroy();
     }
 
@@ -309,7 +307,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     @Override
     public void onWindowFocusChanged(boolean z) {
         while (!firstLoadFocusFinish) {
-            handler = new Handler(this);
+            Handler handler = new Handler(this);
             int width = pageButton.getWidth() + 40;
             m3643a(pageNum);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);

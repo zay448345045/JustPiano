@@ -5,19 +5,12 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.view.SkinListPreference;
-import ly.pp.justpiano3.view.SoundListPreference;
 
 public class SettingsMode extends PreferenceActivity {
 

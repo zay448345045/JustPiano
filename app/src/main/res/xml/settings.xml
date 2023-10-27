@@ -221,7 +221,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:summary="标签展示、移调、联网传输模式"
+            android:summary="动画效果、标签展示、移调等"
             android:title="钢琴键盘">
             <PreferenceCategory android:title="钢琴键盘">
                 <SwitchPreference
@@ -257,50 +257,51 @@
                     app:maxValue="6"
                     app:minValue="-6" />
             </PreferenceCategory>
-            <PreferenceCategory android:title="在线键盘">
-                <SwitchPreference
-                    android:defaultValue="true"
-                    android:key="keyboard_realtime"
-                    android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有琴键按下或抬起操作统一进行传输，有少许延迟，整体流畅性更好"
-                    android:summaryOn="&lt;打开&gt;每个琴键按下或抬起时，立即传输数据，延迟较低，实时性好，能耗更高"
-                    android:title="协奏模式(琴键数据实时传输)" />
-            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
 
-    <PreferenceScreen
-        android:summary="聊天记录、聊天音效、字体大小等"
-        android:title="聊天设置">
-        <PreferenceCategory android:title="在线聊天">
+    <PreferenceCategory android:title="联网模式">
+        <PreferenceScreen
+            android:summary="聊天记录、聊天音效、字体大小等"
+            android:title="聊天设置">
+            <PreferenceCategory android:title="在线聊天">
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="chats_time_show"
+                    android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
+                    android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间"
+                    android:title="聊天行首显示时间" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="chats_sound"
+                    android:summaryOff="&lt;关闭&gt; 在线接收到其他人聊天时关闭声音提醒"
+                    android:summaryOn="&lt;打开&gt; 在线接收到其他人聊天时打开声音提醒"
+                    android:title="聊天音效提醒" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="save_chats"
+                    android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
+                    android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
+                    android:title="存储聊天记录" />
+                <ly.pp.justpiano3.view.SeekBarPreference
+                    android:defaultValue="15"
+                    android:dialogTitle="聊天字体大小"
+                    android:key="chats_text_size"
+                    android:summary="设置聊天字体显示大小"
+                    android:title="聊天字体大小"
+                    app:floatNumber="false"
+                    app:maxValue="20"
+                    app:minValue="10" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
             <SwitchPreference
-                android:defaultValue="false"
-                android:key="chats_time_show"
-                android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
-                android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间（示例：23:59[公]琴娘:啦啦啦）"
-                android:title="聊天行首显示时间" />
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="chats_sound"
-                android:summaryOff="&lt;关闭&gt; 在线接收到其他人聊天时关闭声音提醒"
-                android:summaryOn="&lt;打开&gt; 在线接收到其他人聊天时打开声音提醒"
-                android:title="聊天音效提醒" />
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="save_chats"
-                android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
-                android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
-                android:title="存储聊天记录" />
-            <ly.pp.justpiano3.view.SeekBarPreference
-                android:defaultValue="15"
-                android:dialogTitle="聊天字体大小"
-                android:key="chats_text_size"
-                android:summary="设置聊天字体显示大小"
-                android:title="聊天字体大小"
-                app:floatNumber="false"
-                app:maxValue="20"
-                app:minValue="10" />
-        </PreferenceCategory>
-    </PreferenceScreen>
+                android:defaultValue="true"
+                android:key="keyboard_realtime"
+                android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有琴键按下或抬起操作统一进行传输，有少许延迟，整体流畅性更好"
+                android:summaryOn="&lt;打开&gt;每个琴键按下或抬起时，立即传输数据，延迟较低，实时性好，能耗更高"
+                android:title="联网键盘协奏模式" />
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="关于">
         <Preference

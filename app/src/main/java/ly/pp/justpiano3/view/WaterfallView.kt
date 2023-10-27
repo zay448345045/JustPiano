@@ -439,8 +439,8 @@ class WaterfallView @JvmOverloads constructor(
                     updateNoteStatusByProgress(playIntervalTime)
                 }
                 // 根据当前是否暂停，取出进度，进行绘制坐标计算，设置进度时要加上用户当前在手动拖动进度时设置的进度偏移时间
-                progress =
-                    (if (isPause) pauseProgress!! else playIntervalTime) + progressScrollOffset
+                progress = (if (isPause && pauseProgress != null)
+                    pauseProgress!! else playIntervalTime) + progressScrollOffset
                 // 如果发现进度大于总进度，说明播放完成，此时标记暂停
                 // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
                 if (waterfallNotes.isNotEmpty() && progress > totalProgress) {
