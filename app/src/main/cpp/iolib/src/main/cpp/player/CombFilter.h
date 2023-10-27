@@ -15,10 +15,8 @@ namespace iolib {
     public:
         CombFilter(float gain, int delay) {
             this->mGain = gain;
-            this->mDelay = delay;
             this->mPointer = 0;
-            this->mBuffer.resize(delay);
-            std::fill(mBuffer.begin(), mBuffer.end(), 0.0f);
+            setDelay(delay);
         }
 
         float process(float input) {

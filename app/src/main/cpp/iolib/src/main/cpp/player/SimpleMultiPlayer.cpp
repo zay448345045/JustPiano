@@ -121,9 +121,9 @@ namespace iolib {
 
             // reverb compute algorithm
             if (mReverbValue != 0) {
-                audioData[i] =
-                        mCombFilter->process(audioData[i]) + mAllPassFilter->process(audioData[i]);
-                audioData[i + 1] = audioData[i];
+                mMixBuffer[i] = mCombFilter->process(mMixBuffer[i])
+                               + mAllPassFilter->process(mMixBuffer[i]);
+                mMixBuffer[i + 1] = mMixBuffer[i];
             }
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
@@ -271,9 +271,9 @@ namespace iolib {
     void SimpleMultiPlayer::setReverbValue(int32_t reverb) {
         this->mReverbValue = reverb;
         this->mCombFilter->setGain((float) reverb / 100);
-        this->mCombFilter->setDelay(reverb);
+        this->mCombFilter->setDelay(reverb * 10);
         this->mAllPassFilter->setGain((float) reverb / 100);
-        this->mAllPassFilter->setDelay(reverb);
+        this->mAllPassFilter->setDelay(reverb * 10);
     }
 
     int32_t SimpleMultiPlayer::getReverbValue() const {
