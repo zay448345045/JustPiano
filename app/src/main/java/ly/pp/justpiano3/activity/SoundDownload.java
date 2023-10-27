@@ -160,16 +160,15 @@ public class SoundDownload extends Activity implements Callback {
             edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
             edit.apply();
 
+            SoundEngineUtil.unloadSf2Sound();
             if (soundFileName.endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadWavAssetsNative();
-                SoundEngineUtil.unloadSf2Sound();
                 for (int i = 108; i >= 24; i--) {
                     SoundEngineUtil.preloadSounds(this, i);
                 }
                 SoundEngineUtil.afterLoadSounds(this);
             } else if (soundFileName.endsWith(".sf2")) {
-                SoundEngineUtil.unloadSf2Sound();
                 SoundEngineUtil.loadSf2Sound(this, new File(
                         Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
             }

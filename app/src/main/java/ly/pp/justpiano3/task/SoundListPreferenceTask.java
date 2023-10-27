@@ -45,17 +45,15 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         if (soundFile.getName().endsWith(".ss")) {
             GZIPUtil.ZIPFileTo(soundFile, dir.toString());
         }
-
+        SoundEngineUtil.unloadSf2Sound();
         if (soundFile.getName().endsWith(".ss")) {
             SoundEngineUtil.teardownAudioStreamNative();
             SoundEngineUtil.unloadWavAssetsNative();
-            SoundEngineUtil.unloadSf2Sound();
             for (int i = 108; i >= 24; i--) {
                 SoundEngineUtil.preloadSounds(soundListPreference.context, i);
             }
             SoundEngineUtil.afterLoadSounds(soundListPreference.context);
         } else if (soundFile.getName().endsWith(".sf2")) {
-            SoundEngineUtil.unloadSf2Sound();
             SoundEngineUtil.loadSf2Sound(soundListPreference.context, soundFile);
         }
         return null;

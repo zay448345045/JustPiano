@@ -28,7 +28,7 @@ public class SoundEngineUtil {
 
     public static native void teardownAudioStreamNative();
 
-    public static native void loadWavAssetNative(byte[] wavByteArray, int index, float pan);
+    public static native void loadWavAssetNative(byte[] wavByteArray);
 
     public static native void unloadWavAssetsNative();
 
@@ -42,12 +42,24 @@ public class SoundEngineUtil {
 
     public static native void setRecordFilePath(String recordFilePath);
 
+    public static native void setReverbValue(int reverbValue);
+
+    public static native void setDelayValue(int delayValue);
+
+    private static native void malloc();
+
+    private static native void free();
+
+    private static native void open();
+
+    private static native void close();
+
+    private static native void loadSf2(String path);
+
+    private static native void unloadSf2();
+
     public static void playSound(byte pitch, byte volume) {
-        if (enableSf2Synth && sf2SynthPtr != null) {
-            noteOn(sf2SynthPtr, 0, pitch, volume);
-        } else {
-            triggerDown(108 - pitch, volume);
-        }
+        triggerDown(108 - pitch, volume);
     }
 
     public static void stopPlaySound(byte pitch) {
@@ -56,14 +68,6 @@ public class SoundEngineUtil {
 
     public static void stopPlayAllSounds() {
         triggerUpAll();
-    }
-
-    public static void setReverb(int soundReverb) {
-        setReverbValue(sf2SynthPtr != null ? sf2SynthPtr : 0, soundReverb);
-    }
-
-    public static void setDelay(int soundDelay) {
-        setDelayValue(soundDelay);
     }
 
     public static void playChatSound() {
@@ -93,7 +97,7 @@ public class SoundEngineUtil {
         int dataLen = dataStream.available();
         byte[] dataBytes = new byte[dataLen];
         dataStream.read(dataBytes, 0, dataLen);
-        loadWavAssetNative(dataBytes, index, 0);
+        loadWavAssetNative(dataBytes);
         dataStream.close();
     }
 
@@ -104,7 +108,7 @@ public class SoundEngineUtil {
             int dataLen = dataStream.available();
             byte[] dataBytes = new byte[dataLen];
             dataStream.read(dataBytes, 0, dataLen);
-            loadWavAssetNative(dataBytes, 0, 0);
+            loadWavAssetNative(dataBytes);
             assetFD.close();
             dataStream.close();
         } catch (Exception e) {
@@ -122,13 +126,13 @@ public class SoundEngineUtil {
                 }
             }
         }
+        unloadSf2Sound();
         teardownAudioStreamNative();
         unloadWavAssetsNative();
         for (int i = 108; i >= 24; i--) {
             preloadSounds(context, i);
         }
         afterLoadSounds(context);
-        unloadSf2Sound();
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();
@@ -138,10 +142,6 @@ public class SoundEngineUtil {
         loadChatWav(context);
         setupAudioStreamNative(2, 44100);
     }
-
-    /* ================ sf2音源部分 ================ */
-    private static Long sf2SynthPtr;
-    private static boolean enableSf2Synth;
 
     private static String getCopyFile(Context context, File sf2File) {
         File cacheFile = new File(context.getFilesDir(), sf2File.getName());
@@ -162,40 +162,14 @@ public class SoundEngineUtil {
     }
 
     public static void loadSf2Sound(Context context, File sf2File) {
-        String filePath = getCopyFile(context, sf2File);
-        if (!enableSf2Synth) {
-            sf2SynthPtr = malloc();
-            open(sf2SynthPtr);
-            loadFont(sf2SynthPtr, filePath);
-            enableSf2Synth = true;
-        }
+        malloc();
+        open();
+        loadSf2(getCopyFile(context, sf2File));
     }
 
     public static void unloadSf2Sound() {
-        if (enableSf2Synth) {
-            unloadFont(sf2SynthPtr);
-            close(sf2SynthPtr);
-            free(sf2SynthPtr);
-            sf2SynthPtr = null;
-            enableSf2Synth = false;
-        }
+        unloadSf2();
+        close();
+        free();
     }
-
-    private static native long malloc();
-
-    private static native void free(long instance);
-
-    private static native void open(long instance);
-
-    private static native void close(long instance);
-
-    private static native void loadFont(long instance, String path);
-
-    private static native void unloadFont(long instance);
-
-    private static native void noteOn(long instance, int channel, int note, int velocity);
-
-    private static native void setReverbValue(long instance, int reverbValue);
-
-    private static native void setDelayValue(int delayValue);
 }

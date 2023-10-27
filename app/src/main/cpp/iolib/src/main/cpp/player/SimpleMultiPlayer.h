@@ -76,6 +76,8 @@ namespace iolib {
 
         void triggerDown(int32_t index, int32_t volume);
 
+        void triggerDownSingle(int32_t index, int32_t volume);
+
         void triggerUp(int32_t index);
 
         void resetAll();

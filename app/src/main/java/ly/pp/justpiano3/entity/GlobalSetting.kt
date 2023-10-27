@@ -246,8 +246,8 @@ object GlobalSetting {
         soundDelay = sharedPreferences.getString("sound_delay", "0")!!.toInt()
         soundReverb = sharedPreferences.getString("sound_reverb", "0")!!.toInt()
         // 延音和混响：数值直接更新到C++层
-        SoundEngineUtil.setDelay(soundDelay)
-        SoundEngineUtil.setReverb(soundReverb)
+        SoundEngineUtil.setDelayValue(soundDelay)
+        SoundEngineUtil.setReverbValue(soundReverb)
         soundVibration = sharedPreferences.getBoolean("sound_vibration", false)
         soundVibrationTime = sharedPreferences.getString("sound_vibration_time", "10")!!.toInt()
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)

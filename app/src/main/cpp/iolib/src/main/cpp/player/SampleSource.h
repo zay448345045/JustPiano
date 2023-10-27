@@ -26,11 +26,11 @@ using namespace std;
 
 namespace iolib {
 
-/**
- * Defines an interface for audio data provided to a player object.
- * Concrete examples include OneShotSampleBuffer. One could imagine a LoopingSampleBuffer.
- * Supports stereo position via mPan member.
- */
+    /**
+     * Defines an interface for audio data provided to a player object.
+     * Concrete examples include OneShotSampleBuffer. One could imagine a LoopingSampleBuffer.
+     * Supports stereo position via mPan member.
+     */
     class SampleSource : public DataSource {
     public:
 
@@ -41,6 +41,16 @@ namespace iolib {
         void setPlayMode(int32_t volume) {
             mCurFrameIndexVector->push_back(
                     tuple<int32_t, float, bool>(0, (float) volume / 128.0f, false));
+        }
+
+        void setPlaySingleMode(int32_t volume) {
+            if (mCurFrameIndexVector->empty()) {
+                setPlayMode(volume);
+            } else {
+                tuple<int32_t, float, bool> &tuple = mCurFrameIndexVector->front();
+                get<0>(tuple) = 0;
+                get<2>(tuple) = false;
+            }
         }
 
         void setStopMode() {

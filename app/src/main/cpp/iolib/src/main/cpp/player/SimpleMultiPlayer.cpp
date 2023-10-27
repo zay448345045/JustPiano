@@ -72,21 +72,16 @@ namespace iolib {
     void SimpleMultiPlayer::handleSf2DelayNoteOff(int32_t numFrames) {
         for (int32_t index = 0; index < mNumSampleBuffers; index++) {
             shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mSampleSources[index]->getCurFrameIndexVector();
-            bool noteOff = !noteVector->empty();
-            for (auto i = static_cast<int32_t>(noteVector->size() - 1); i >= 0; i--) {
-                tuple<int32_t, float, bool> &noteInfoTuple = (*noteVector)[i];
-                if (get<2>(noteInfoTuple)) {
-                    if (get<0>(noteInfoTuple) < mDelayValue * 1000) {
-                        get<0>(noteInfoTuple) += numFrames;
-                        noteOff = false;
+            if (!noteVector->empty()) {
+                tuple<int32_t, float, bool> &tuple = noteVector->front();
+                if (get<2>(tuple)) {
+                    if (get<0>(tuple) <= mDelayValue * 1000) {
+                        get<0>(tuple) += numFrames;
+                    } else {
+                        fluid_synth_noteoff(pSynth, 0, 108 - index);
+                        noteVector->clear();
                     }
-                } else {
-                    noteOff = false;
                 }
-            }
-            if (noteOff) {
-                fluid_synth_noteoff(pSynth, 0, 108 - index);
-                noteVector->clear();
             }
         }
     }
@@ -234,6 +229,12 @@ namespace iolib {
     void SimpleMultiPlayer::triggerDown(int32_t index, int32_t volume) {
         if (index >= 0 && index < mNumSampleBuffers && volume > 0) {
             mSampleSources[index]->setPlayMode(volume);
+        }
+    }
+
+    void SimpleMultiPlayer::triggerDownSingle(int32_t index, int32_t volume) {
+        if (index >= 0 && index < mNumSampleBuffers && volume > 0) {
+            mSampleSources[index]->setPlaySingleMode(volume);
         }
     }
 

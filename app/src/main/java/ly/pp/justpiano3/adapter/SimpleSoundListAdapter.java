@@ -64,7 +64,6 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
             olPlayKeyboardRoom.jpprogressBar.show();
             ThreadPoolUtil.execute(() -> {
                 if (name.equals("默认音源")) {
-                    SoundEngineUtil.unloadSf2Sound();
                     SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
                 } else {
                     try {
@@ -85,17 +84,15 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(olPlayKeyboardRoom).edit();
                         edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + fileList.get(index - 1).getName());
                         edit.apply();
-
+                        SoundEngineUtil.unloadSf2Sound();
                         if (name.endsWith(".ss")) {
                             SoundEngineUtil.teardownAudioStreamNative();
                             SoundEngineUtil.unloadWavAssetsNative();
-                            SoundEngineUtil.unloadSf2Sound();
                             for (int i = 108; i >= 24; i--) {
                                 SoundEngineUtil.preloadSounds(olPlayKeyboardRoom, i);
                             }
                             SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom);
                         } else if (name.endsWith(".sf2")) {
-                            SoundEngineUtil.unloadSf2Sound();
                             SoundEngineUtil.loadSf2Sound(olPlayKeyboardRoom, new File(
                                     Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + name));
                         }
