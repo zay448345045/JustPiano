@@ -498,7 +498,11 @@ class WaterfallView @JvmOverloads constructor(
                 // 解锁画布
                 canvas?.let {
                     if (holder.surface.isValid) {
-                        holder.unlockCanvasAndPost(it)
+                        try {
+                            holder.unlockCanvasAndPost(it)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }

@@ -202,7 +202,11 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
             e.printStackTrace();
         } finally {
             if (mCanvas != null && mHolder.getSurface().isValid()) {
-                mHolder.unlockCanvasAndPost(mCanvas);
+                try {
+                    mHolder.unlockCanvasAndPost(mCanvas);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

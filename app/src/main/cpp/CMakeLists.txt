@@ -80,9 +80,11 @@ target_link_libraries( # Specifies the target library.
         soundengine
 
         -Wl,--whole-archive
+        -Wl,--hash-style=both
         iolib
         parselib
         -Wl,--no-whole-archive
+        -Wl,--hash-style=both
 
         oboe
 

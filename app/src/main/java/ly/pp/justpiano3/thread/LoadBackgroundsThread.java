@@ -139,7 +139,11 @@ public final class LoadBackgroundsThread extends Thread {
                 // 绘制进度条，（若进度已满则）处理播放完成
                 playView.drawProgressAndFinish(progress, canvas);
                 if (canvas != null && surfaceholder.getSurface().isValid()) {
-                    surfaceholder.unlockCanvasAndPost(canvas);
+                    try {
+                        surfaceholder.unlockCanvasAndPost(canvas);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 canvas = null;
             }

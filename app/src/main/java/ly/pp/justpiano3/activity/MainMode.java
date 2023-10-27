@@ -138,6 +138,18 @@ public class MainMode extends Activity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        } else if (requestCode == PERMISSION_REQUEST_CODE) {
+            // Check if storage permission was granted after returning from settings
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    // Storage permission granted
+                    createDirectories();
+                } else {
+                    // Storage permission not granted
+                    // Handle accordingly
+                    Toast.makeText(this, "您未授予文件访问权限，无法使用切换皮肤音源、分享、录音等功能", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -167,32 +179,31 @@ public class MainMode extends Activity implements OnClickListener {
     }
 
     private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            }, PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            // Check if all permissions were granted
-            boolean allPermissionsGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allPermissionsGranted = false;
-                    break;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, PERMISSION_REQUEST_CODE);
+                } catch (Exception e) {
+                    Toast.makeText(this, "引导授予文件访问权限失败，请在手动授予app的文件存储权限", Toast.LENGTH_SHORT).show();
                 }
             }
-            if (allPermissionsGranted) {
-                // All permissions granted, do something
-                createDirectories();
-            } else {
-                // Permissions denied, handle accordingly
-                // do something here
-                Toast.makeText(this, "您未授予文件读取权限，无法使用切换皮肤音源、分享、录音等功能", Toast.LENGTH_LONG).show();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.KILL_BACKGROUND_PROCESSES) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.KILL_BACKGROUND_PROCESSES}, 1);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
             }
         }
     }
