@@ -2,6 +2,7 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 
@@ -76,7 +77,7 @@ public class OLBaseActivity extends ComponentActivity {
         // 禁止app字体大小跟随系统字体大小调节
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
-            android.content.res.Configuration configuration = resources.getConfiguration();
+            Configuration configuration = resources.getConfiguration();
             configuration.fontScale = 1.0f;
             resources.updateConfiguration(configuration, resources.getDisplayMetrics());
         }

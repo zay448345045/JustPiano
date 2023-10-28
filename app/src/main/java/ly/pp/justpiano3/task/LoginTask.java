@@ -16,6 +16,7 @@ import ly.pp.justpiano3.activity.LoginActivity;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -108,11 +109,19 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
                 if (!StringUtil.isNullOrEmpty(newVersion)) {
                     loginActivity.addVersionUpdateDialog(message, newVersion);
                 } else {
-                    loginActivity.addDialog("提示", "确定", message);
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);
+                    jpDialogBuilder.setTitle("提示");
+                    jpDialogBuilder.setMessage(message);
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                    jpDialogBuilder.buildAndShowDialog();
                 }
                 return;
             case 3:
-                loginActivity.addDialog("提示", "确定", "网络错误!");
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("网络错误!");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             default:
         }
