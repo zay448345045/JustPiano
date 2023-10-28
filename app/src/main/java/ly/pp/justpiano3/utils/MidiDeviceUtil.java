@@ -131,7 +131,7 @@ public class MidiDeviceUtil {
                         MidiOutputPort midiOutputPort = device.openOutputPort(port.getPortNumber());
                         // 安卓版本10及以上：启动C++监听midi，否则注册java的midi监听
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            startReadingMidi(device, port.getPortNumber());
+                            startReadingMidi(device, port.getPortNumber(), device.getInfo().getId());
                         } else if (midiReceiver != null) {
                             midiOutputPort.connect(midiReceiver);
                         }
@@ -161,7 +161,7 @@ public class MidiDeviceUtil {
                 return;
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                stopReadingMidi(midiOutputPort.getPortNumber());
+                stopReadingMidi(info.getId());
             } else if (midiReceiver != null) {
                 midiOutputPort.disconnect(midiReceiver);
             }
@@ -249,10 +249,10 @@ public class MidiDeviceUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber);
+    private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber, int deviceId);
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    private static native void stopReadingMidi(int portNumber);
+    private static native void stopReadingMidi(int deviceId);
 
     /**
      * Called from the native C++ code when MIDI messages are received

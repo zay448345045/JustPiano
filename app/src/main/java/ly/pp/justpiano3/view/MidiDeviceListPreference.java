@@ -6,6 +6,7 @@ import android.media.midi.MidiDeviceInfo;
 import android.os.Build;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -15,12 +16,14 @@ import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.MidiDeviceListAdapter;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class MidiDeviceListPreference extends DialogPreference {
     public Context context;
+    public JPProgressBar jpProgressBar;
     private MidiDeviceInfo[] midiDeviceInfoList;
     private String[] midiDeviceNameList;
 
@@ -50,6 +53,8 @@ public class MidiDeviceListPreference extends DialogPreference {
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         loadMidiDeviceList();
+        jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
+        jpProgressBar.setCancelable(false);
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
