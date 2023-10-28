@@ -42,6 +42,13 @@
             android:summary="当前音源：默认音源"
             android:title="音源" />
 
+        <ly.pp.justpiano3.view.MidiDeviceListPreference
+            android:enabled="false"
+            android:key="midi_device_list"
+            android:dialogTitle="管理MIDI设备"
+            android:summary="您的安卓设备不支持连接MIDI设备"
+            android:title="MIDI设备" />
+
         <PreferenceScreen
             android:summary="延音、混响、按键震动等"
             android:title="声音效果设置">
@@ -53,7 +60,7 @@
 
         <PreferenceScreen
             android:summary="动画效果、标签展示、移调等"
-            android:title="钢琴键盘">
+            android:title="钢琴键盘设置">
             <intent
                 android:data="settings_keyboard"
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
@@ -74,8 +81,8 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="keyboard_realtime"
-            android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有琴键按下或抬起操作统一进行传输，有少许延迟，整体流畅性更好"
-            android:summaryOn="&lt;打开&gt;每个琴键按下或抬起时，立即传输数据，延迟较低，实时性好，能耗更高"
+            android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有按键操作统一广播，缺乏实时性，低能耗，单人独奏更流畅"
+            android:summaryOn="&lt;打开&gt;检测到每个按键操作时，立即广播数据，低延迟，高能耗，适合多人合奏"
             android:title="联网键盘协奏模式" />
     </PreferenceCategory>
 

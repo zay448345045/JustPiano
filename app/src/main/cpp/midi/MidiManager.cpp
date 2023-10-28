@@ -6,25 +6,28 @@
 
 #include <atomic>
 #include <string>
-#include <chrono>
+#include <map>
 
 #include <amidi/AMidi.h>
 #include <android/log.h>
 
 static const char *TAG = "MidiManager-JNI";
-static AMidiDevice *sNativeReceiveDevice = nullptr;
-// The thread only reads this value, so no special protection is required.
-static AMidiOutputPort *sMidiOutputPort = nullptr;
 
-static pthread_t sReadThread;
-static std::atomic<bool> isReading(false);
+typedef struct {
+    pthread_t sReadThread;
+    AMidiDevice *sNativeReceiveDevice;
+    AMidiOutputPort *sMidiOutputPort;
+    bool sReading;
+} midi_device_handle_t;
 
 // The Data Callback
 static JavaVM *theJvm;           // Need this for allocating data buffer for...
 static jclass dataCallbackClass;  // This is the (Java) class...
 static jmethodID midDataCallback;  // ...this callback routine
 
-static void sendTheReceivedData(uint8_t *data, int numBytes) {
+static std::map<intptr_t, midi_device_handle_t> midiDeviceMap;
+
+static void sendTheReceivedData(uint8_t *data, size_t numBytes) {
     JNIEnv *env;
     theJvm->AttachCurrentThread(&env, nullptr);
     if (env == nullptr) {
@@ -32,7 +35,7 @@ static void sendTheReceivedData(uint8_t *data, int numBytes) {
     }
 
     // send it to the (Java) callback
-    for (int i = 0; i < numBytes; i += 3) {
+    for (size_t i = 0; i < numBytes; i += 3) {
         if ((data[i] & 0xF0) == 0x90) {
             env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], data[i + 2]);
         } else if ((data[i] & 0xF0) == 0x80) {
@@ -49,34 +52,29 @@ static void sendTheReceivedData(uint8_t *data, int numBytes) {
  * application-provided (Java) callback.
  */
 static void *readThreadRoutine(void *context) {
-    (void) context;  // unused
-    isReading = true;
-    AMidiOutputPort *outputPort = sMidiOutputPort;
-
+    midi_device_handle_t &midiDeviceHandle = midiDeviceMap[reinterpret_cast<intptr_t>(context)];
     const size_t MAX_BYTES_TO_RECEIVE = 128;
     uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
-
-    while (isReading) {
+    while (midiDeviceHandle.sReading) {
         // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU unnecessarily
         usleep(2000);
         int32_t opcode;
         size_t numBytesReceived;
         int64_t timestamp;
         ssize_t numMessagesReceived = AMidiOutputPort_receive(
-                outputPort, &opcode, incomingMessage, MAX_BYTES_TO_RECEIVE,
-                &numBytesReceived, &timestamp);
-
+                midiDeviceHandle.sMidiOutputPort, &opcode, incomingMessage,
+                MAX_BYTES_TO_RECEIVE, &numBytesReceived, &timestamp);
         if (numMessagesReceived < 0) {
             __android_log_print(ANDROID_LOG_WARN, TAG, "Failure receiving MIDI data %zd",
                                 numMessagesReceived);
             // Exit the thread
-            isReading = false;
+            midiDeviceHandle.sReading = false;
         } else if (numMessagesReceived > 0 && numBytesReceived >= 0) {
             if (opcode == AMIDI_OPCODE_DATA && (incomingMessage[0] & 0xF0) != 0xF0) {
                 sendTheReceivedData(incomingMessage, numBytesReceived);
             }
         }
-    }  // end while(isReading)
+    }
     return nullptr;
 }
 
@@ -100,15 +98,16 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
     dataCallbackClass = static_cast<jclass>(env->NewGlobalRef(clazz));
     midDataCallback = env->GetStaticMethodID(clazz, "onNativeMessageReceive", "(BB)V");
 
-    AMidiDevice_fromJava(env, midiDeviceObj, &sNativeReceiveDevice);
-    AMidiOutputPort *outputPort;
-    AMidiOutputPort_open(sNativeReceiveDevice, portNumber, &outputPort);
-
-    // sMidiOutputPort.store(outputPort);
-    sMidiOutputPort = outputPort;
-
+    midi_device_handle_t deviceHandle;
+    deviceHandle.sReading = true;
+    AMidiDevice_fromJava(env, midiDeviceObj, &deviceHandle.sNativeReceiveDevice);
+    AMidiOutputPort_open(deviceHandle.sNativeReceiveDevice, portNumber,
+                         &deviceHandle.sMidiOutputPort);
     // Start read thread
-    pthread_create(&sReadThread, nullptr, readThreadRoutine, nullptr);
+    pthread_create(&deviceHandle.sReadThread, nullptr, readThreadRoutine,
+                   reinterpret_cast<void *>(static_cast<intptr_t>(portNumber)));
+    // store value by portNumber to support multi-device open
+    midiDeviceMap[static_cast<intptr_t>(portNumber)] = deviceHandle;
 }
 
 /**
@@ -116,12 +115,13 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
  * @param   (unnamed)   JNI Env pointer.
  * @param   (unnamed)   TBMidiManager (Java) object.
  */
-void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_stopReadingMidi(JNIEnv *, jclass) {
+void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_stopReadingMidi(JNIEnv *, jclass, jint portNumber) {
+    midi_device_handle_t &midiDeviceHandle = midiDeviceMap[static_cast<intptr_t>(portNumber)];
+    AMidiOutputPort_close(midiDeviceHandle.sMidiOutputPort);
     // need some synchronization here
-    isReading = false;
-    pthread_join(sReadThread, nullptr);
-
-    AMidiDevice_release(sNativeReceiveDevice);
-    sNativeReceiveDevice = nullptr;
+    midiDeviceHandle.sReading = false;
+    pthread_join(midiDeviceHandle.sReadThread, nullptr);
+    AMidiDevice_release(midiDeviceHandle.sNativeReceiveDevice);
+    midiDeviceMap.erase(static_cast<intptr_t>(portNumber));
 }
 }  // extern "C"

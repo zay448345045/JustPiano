@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.midi.JPMidiReceiver;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -40,12 +37,11 @@ import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardView;
 
-public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
+public class KeyBoard extends Activity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener, View.OnClickListener {
     public KeyboardView firstKeyboardView;
     public KeyboardView secondKeyboardView;
     public LinearLayout keyboard1Layout;
     public LinearLayout keyboard2Layout;
-    private MidiReceiver midiReceiver;
     public ScheduledExecutorService scheduledExecutor;
     public SharedPreferences sharedPreferences;
     // 用于记录上次的移动
@@ -104,7 +100,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            buildAndConnectMidiReceiver();
             MidiDeviceUtil.addMidiConnectionListener(this);
         }
     }
@@ -130,9 +125,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
     @Override
     public void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
-            }
             MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         if (recordStart) {
@@ -281,29 +273,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiConn
             return false;
         }
     });
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void buildAndConnectMidiReceiver() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new JPMidiReceiver(this);
-            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
-        }
-    }
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiConnect() {
-        buildAndConnectMidiReceiver();
-    }
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiDisconnect() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
-            midiReceiver = null;
-        }
-    }
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)

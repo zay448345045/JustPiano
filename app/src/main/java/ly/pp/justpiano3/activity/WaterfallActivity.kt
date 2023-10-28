@@ -3,7 +3,6 @@ package ly.pp.justpiano3.activity
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.RectF
-import android.media.midi.MidiReceiver
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -17,8 +16,6 @@ import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
-import ly.pp.justpiano3.midi.JPMidiReceiver
-import ly.pp.justpiano3.midi.MidiConnectionListener
 import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
@@ -32,7 +29,8 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListener {
+class WaterfallActivity : Activity(), View.OnTouchListener,
+    MidiDeviceUtil.MidiMessageReceiveListener {
     /**
      * 瀑布流view
      */
@@ -47,11 +45,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
      * 定时任务执行器，用于播放动画
      */
     private var scheduledExecutor: ScheduledExecutorService? = null
-
-    /**
-     * midi键盘协议解析器
-     */
-    private var midiReceiver: MidiReceiver? = null
 
     /**
      * 记录目前是否有按钮处于按压状态，避免多个按钮重复按下
@@ -169,7 +162,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                     && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
                 ) {
-                    buildAndConnectMidiReceiver()
                     MidiDeviceUtil.addMidiConnectionListener(this@WaterfallActivity)
                 }
             }
@@ -232,13 +224,9 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && packageManager.hasSystemFeature(
-                PackageManager.FEATURE_MIDI
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver)
-            }
             MidiDeviceUtil.removeMidiConnectionListener(this)
         }
         // 停止播放，释放资源
@@ -468,27 +456,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
             }
         }
         false
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private fun buildAndConnectMidiReceiver() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = JPMidiReceiver(this)
-            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver)
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onMidiConnect() {
-        buildAndConnectMidiReceiver()
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onMidiDisconnect() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver)
-            midiReceiver = null
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

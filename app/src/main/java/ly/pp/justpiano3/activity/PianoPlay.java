@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
-import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,8 +39,6 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
-import ly.pp.justpiano3.midi.JPMidiReceiver;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimerTask;
@@ -59,7 +56,7 @@ import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineLoadPlayUserDTO;
 import protobuf.dto.OnlineQuitRoomDTO;
 
-public final class PianoPlay extends OLBaseActivity implements MidiConnectionListener {
+public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.MidiMessageReceiveListener {
     public TextView leftHandDegreeTextView;
     public TextView songLengthTextView;
     public HorizontalListView horizontalListView;
@@ -88,7 +85,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     public double onlineRightHandDegree;
     public int score;
     public JPApplication jpapplication;
-    public MidiReceiver midiReceiver;
     public View finishView;
     private View miniScoreView;
     public LayoutParams layoutParams2;
@@ -498,9 +494,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             recordFinish();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
-            }
             MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         SoundEngineUtil.stopPlayAllSounds();
@@ -598,29 +591,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
             isPlayingStart = false;
             f4620k = false;
             finish();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void buildAndConnectMidiReceiver() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new JPMidiReceiver(this);
-            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
-        }
-    }
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiConnect() {
-        buildAndConnectMidiReceiver();
-    }
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiDisconnect() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
-            midiReceiver = null;
         }
     }
 

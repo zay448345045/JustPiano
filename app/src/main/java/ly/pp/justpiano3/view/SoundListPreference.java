@@ -43,8 +43,8 @@ public class SoundListPreference extends DialogPreference {
         List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(
                 Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
         int size = localSoundList.size();
-        soundNameList = new CharSequence[(size + 2)];
-        soundKeyList = new CharSequence[(size + 2)];
+        soundNameList = new CharSequence[size + 2];
+        soundKeyList = new CharSequence[size + 2];
         for (int i = 0; i < size; i++) {
             String soundName = localSoundList.get(i).getName();
             soundNameList[i] = soundName.subSequence(0, soundName.lastIndexOf('.'));

@@ -63,9 +63,9 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             OLPlayKeyboardRoom olPlayKeyboardRoom = ((OLPlayKeyboardRoom) olPlayRoomActivity);
             Button soundMuteButton = inflate.findViewById(R.id.ol_sound_b);
             soundMuteButton.setVisibility(View.VISIBLE);
-            soundMuteButton.setText(olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted() ? "取消静音" : "静音");
+            soundMuteButton.setText(olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].getMuted() ? "取消静音" : "静音");
             soundMuteButton.setOnClickListener(v -> {
-                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted());
+                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].getMuted());
                 if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
                     ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                 }

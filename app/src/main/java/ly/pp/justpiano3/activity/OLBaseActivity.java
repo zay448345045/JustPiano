@@ -68,8 +68,8 @@ public class OLBaseActivity extends ComponentActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         JPStack.pop(this);
+        super.onDestroy();
     }
 
     @Override

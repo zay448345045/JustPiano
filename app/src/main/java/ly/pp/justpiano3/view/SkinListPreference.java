@@ -46,8 +46,8 @@ public class SkinListPreference extends DialogPreference {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
         List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(str);
         int size = localSkinList.size();
-        skinNameList = new CharSequence[(size + 2)];
-        skinKeyList = new CharSequence[(size + 2)];
+        skinNameList = new CharSequence[size + 2];
+        skinKeyList = new CharSequence[size + 2];
         for (int i = 0; i < size; i++) {
             str = localSkinList.get(i).getName();
             skinNameList[i] = str.subSequence(0, str.lastIndexOf('.'));

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
-import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,8 +42,6 @@ import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.entity.OLNote;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
-import ly.pp.justpiano3.midi.JPMidiReceiver;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.FileUtil;
@@ -57,15 +54,13 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
 
-public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiConnectionListener {
+public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
     public static final int NOTES_SEND_INTERVAL = 120;
     // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
     public Integer keyboardNoteDownColor;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
-    public MidiReceiver midiReceiver;
-    public boolean midiKeyboardOn;
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
@@ -89,7 +84,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
             // 协奏模式
             OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-            builder.addData((((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1));
+            builder.addData((((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4) + roomPositionSub1));
             builder.addData(0);
             builder.addData(pitch);
             builder.addData(volume);
@@ -145,7 +140,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     roomPositionSub1 = (byte) positionSub1;
                     int colorIndex = bundle1.getInt("IV");
                     keyboardNoteDownColor = colorIndex == 0 ? null : ColorUtil.getUserColorByUserColorIndex(this, colorIndex);
-                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
+                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(MidiDeviceUtil.hasMidiDeviceConnected());
                 }
                 playerList.add(bundle1);
             }
@@ -156,9 +151,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             gridView.setAdapter(new KeyboardPlayerImageAdapter(list, this));
             // 加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                if (MidiDeviceUtil.getMidiOutputPort() != null) {
-                    buildAndConnectMidiReceiver();
-                }
                 MidiDeviceUtil.addMidiConnectionListener(this);
             }
             openNotesSchedule();
@@ -289,7 +281,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 if (roomPositionSub1 >= 0) {
-                    if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                    if (!olKeyboardStates[roomPositionSub1].getMuted()) {
                         SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
                     }
                     if (GlobalSetting.INSTANCE.getSoundVibration()) {
@@ -335,9 +327,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     @Override
     protected void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            if (MidiDeviceUtil.getMidiOutputPort() != null && midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
-            }
             MidiDeviceUtil.removeMidiConnectionListener(this);
         }
         stopNotesSchedule();
@@ -365,39 +354,20 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         stopNotesSchedule();
     }
 
+    @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void buildAndConnectMidiReceiver() {
-        midiKeyboardOn = true;
-        if (midiReceiver == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            midiReceiver = new JPMidiReceiver(this);
-            MidiDeviceUtil.getMidiOutputPort().connect(midiReceiver);
+    public void onMidiConnect(String deviceName) {
+        olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
+        if (playerGrid.getAdapter() != null) {
+            ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
+        } else {
+            playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
         }
     }
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiConnect() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null) {
-            buildAndConnectMidiReceiver();
-            olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
-            if (playerGrid.getAdapter() != null) {
-                ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
-            } else {
-                playerGrid.setAdapter(new KeyboardPlayerImageAdapter(playerList, this));
-            }
-        }
-    }
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiDisconnect() {
-        if (MidiDeviceUtil.getMidiOutputPort() != null) {
-            midiKeyboardOn = false;
-            if (midiReceiver != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                MidiDeviceUtil.getMidiOutputPort().disconnect(midiReceiver);
-                midiReceiver = null;
-            }
-        }
+    public void onMidiDisconnect(String deviceName) {
         olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
         if (playerGrid.getAdapter() != null) {
             ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
@@ -411,7 +381,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public void onMidiMessageReceive(byte pitch, byte volume) {
         if (volume > 0) {
             if (roomPositionSub1 >= 0) {
-                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                if (!olKeyboardStates[roomPositionSub1].getMuted()) {
                     SoundEngineUtil.playSound(pitch, volume);
                 }
                 blinkView(roomPositionSub1);
@@ -422,7 +392,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             }
         } else {
             if (roomPositionSub1 >= 0) {
-                if (!olKeyboardStates[roomPositionSub1].isMuted()) {
+                if (!olKeyboardStates[roomPositionSub1].getMuted()) {
                     SoundEngineUtil.stopPlaySound(pitch);
                 }
                 blinkView(roomPositionSub1);
@@ -523,7 +493,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 try {
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
                     // 字节数组开头，存入是否开启midi键盘和楼号
-                    builder.addData(((midiKeyboardOn ? 1 : 0) << 4) + roomPositionSub1);
+                    builder.addData(((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4) + roomPositionSub1);
                     // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
                     while (!notesQueue.isEmpty()) {
                         OLNote olNote = notesQueue.poll();
@@ -545,7 +515,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
 
     private boolean hasAnotherUser() {
         for (int i = 0; i < olKeyboardStates.length; i++) {
-            if (i != roomPositionSub1 && olKeyboardStates[i].isHasUser()) {
+            if (i != roomPositionSub1 && olKeyboardStates[i].getHasUser()) {
                 return true;
             }
         }

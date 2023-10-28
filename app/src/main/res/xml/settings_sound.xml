@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="声音效果">
         <SwitchPreference
+            android:enabled="false"
             android:defaultValue="false"
-            android:key="pedal_delay"
-            android:summaryOff="&lt;关闭&gt;禁用外接延音踏板控制延音"
-            android:summaryOn="&lt;打开&gt;启用外接延音踏板控制延音"
-            android:title="启用外接延音踏板控制延音" />
+            android:key="midi_device_pedal_delay"
+            android:summaryOff="&lt;关闭&gt;禁用外接MIDI设备的延音踏板控制延音"
+            android:summaryOn="&lt;打开&gt;启用外接MIDI设备的延音踏板控制延音"
+            android:title="启用外接MIDI设备的延音踏板控制延音" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="延音强度"

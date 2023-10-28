@@ -60,7 +60,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
-        imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.drawable.stop : R.drawable.null_pic);
+        imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].getMuted() ? R.drawable.stop : R.drawable.null_pic);
         if (string4.equals("O")) {
             imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png"));
             return view;
@@ -122,7 +122,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(userName);
         ImageView imageView1 = view.findViewById(R.id.ol_player_midi);
-        imageView1.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
+        imageView1.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].getMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
         textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.userColor[i2]);
         imageView.setBackgroundResource(ColorUtil.filledUserColor[i2]);
         return view;

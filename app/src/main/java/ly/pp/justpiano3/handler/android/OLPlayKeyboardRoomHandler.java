@@ -44,7 +44,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             return;
                         }
                         boolean midiKeyboardOn = (notes[0] >> 4) > 0;
-                        if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMidiKeyboardOn() != midiKeyboardOn) {
+                        if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMidiKeyboardOn() != midiKeyboardOn) {
                             olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
                             if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
                                 ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
@@ -137,13 +137,13 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
 
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
         if (notes[i + 2] > 0) {
-            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].isMuted()) {
+            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
                 SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
             }
             olPlayKeyboardRoom.keyboardView.fireKeyDown((byte) notes[i + 1], (byte) notes[i + 2],
                     user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor()));
         } else {
-            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].isMuted()) {
+            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
                 SoundEngineUtil.stopPlaySound((byte) notes[i + 1]);
             }
             olPlayKeyboardRoom.keyboardView.fireKeyUp((byte) notes[i + 1]);
