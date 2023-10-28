@@ -206,21 +206,21 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
     }
 
     override fun onStop() {
-        if (waterfallView.isPlaying) {
+        if (!GlobalSetting.waterfallBackgroundPlay && waterfallView.isPlaying) {
             waterfallView.pausePlay()
         }
         super.onStop()
     }
 
     override fun onStart() {
-        if (!waterfallView.isPlaying) {
+        if (!GlobalSetting.waterfallBackgroundPlay && !waterfallView.isPlaying) {
             waterfallView.resumePlay()
         }
         super.onStart()
     }
 
     override fun onRestart() {
-        if (!waterfallView.isPlaying) {
+        if (!GlobalSetting.waterfallBackgroundPlay && !waterfallView.isPlaying) {
             waterfallView.resumePlay()
         }
         super.onRestart()

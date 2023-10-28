@@ -172,6 +172,12 @@ object GlobalSetting {
         private set
 
     /**
+     * 瀑布流允许后台播放
+     */
+    var waterfallBackgroundPlay: Boolean = false
+        private set
+
+    /**
      * 瀑布流左手音块颜色
      */
     var waterfallLeftHandColor: Int = 0xFF2BBBFB.toInt()
@@ -260,6 +266,7 @@ object GlobalSetting {
         chatTextSize = sharedPreferences.getString("chats_text_size", "15")!!.toInt()
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "0.8")!!.toFloat()
+        waterfallBackgroundPlay = sharedPreferences.getBoolean("waterfall_background_play", false)
         waterfallLeftHandColor = sharedPreferences.getInt(
             "waterfall_left_hand_color",
             0xFF2BBBFB.toInt()

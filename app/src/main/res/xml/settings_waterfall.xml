@@ -20,6 +20,12 @@
             app:floatNumber="true"
             app:maxValue="1.5"
             app:minValue="0.1" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="waterfall_background_play"
+            android:summaryOff="&lt;关闭&gt;禁止后台状态下播放声音"
+            android:summaryOn="&lt;打开&gt;允许后台状态下播放声音"
+            android:title="允许后台播放" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="false"
             android:defaultValue="0xFF2BBBFB"
