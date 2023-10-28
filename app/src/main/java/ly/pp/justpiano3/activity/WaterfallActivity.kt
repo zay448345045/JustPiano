@@ -179,18 +179,23 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
     /**
      * 重新确定瀑布流音符长条的左侧和右侧的坐标值
      */
-    private fun updateWaterfallNoteLeftRightLocation(
-        waterfallNotes: Array<WaterfallNote>,
-        keyboardView: KeyboardView
-    ) {
-        for (waterfallNote in waterfallNotes) {
-            val (left, right) = convertWidthToWaterfallWidth(
-                isBlackKey(waterfallNote.pitch),
-                keyboardView.convertPitchToReact(waterfallNote.pitch)
-            )
-            waterfallNote.left = left
-            waterfallNote.right = right
+    private fun updateWaterfallNoteLeftRightLocation() {
+        for (waterfallNote in waterfallView.waterfallNotes) {
+            recomputeWaterfallNoteLeftAndRight(waterfallNote)
         }
+        // 自由演奏的音符也重新计算
+        for (waterfallNote in waterfallView.freeStyleNotes) {
+            recomputeWaterfallNoteLeftAndRight(waterfallNote)
+        }
+    }
+
+    private fun recomputeWaterfallNoteLeftAndRight(waterfallNote: WaterfallNote) {
+        val (left, right) = convertWidthToWaterfallWidth(
+            isBlackKey(waterfallNote.pitch),
+            keyboardView.convertPitchToReact(waterfallNote.pitch)
+        )
+        waterfallNote.left = left
+        waterfallNote.right = right
     }
 
     private fun parseParamsFromIntentExtras(): PmSongData? {
@@ -441,37 +446,25 @@ class WaterfallActivity : Activity(), View.OnTouchListener, MidiConnectionListen
             R.id.waterfall_sub_key -> {
                 keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum - 1, 0)
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation(
-                    waterfallView.waterfallNotes,
-                    keyboardView
-                )
+                updateWaterfallNoteLeftRightLocation()
             }
 
             R.id.waterfall_add_key -> {
                 keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum + 1, 0)
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation(
-                    waterfallView.waterfallNotes,
-                    keyboardView
-                )
+                updateWaterfallNoteLeftRightLocation()
             }
 
             R.id.waterfall_key_move_left -> {
                 keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset - 1, 0)
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation(
-                    waterfallView.waterfallNotes,
-                    keyboardView
-                )
+                updateWaterfallNoteLeftRightLocation()
             }
 
             R.id.waterfall_key_move_right -> {
                 keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset + 1, 0)
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation(
-                    waterfallView.waterfallNotes,
-                    keyboardView
-                )
+                updateWaterfallNoteLeftRightLocation()
             }
         }
         false
