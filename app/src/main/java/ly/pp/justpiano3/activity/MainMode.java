@@ -77,7 +77,6 @@ public class MainMode extends Activity implements OnClickListener {
                 startActivityForResult(intent, 0);
                 return;
             case R.id.listen:
-                intent = new Intent();
                 intent.setClass(this, RecordFiles.class);
                 startActivity(intent);
                 return;
@@ -89,7 +88,6 @@ public class MainMode extends Activity implements OnClickListener {
                 finish();
                 return;
             case R.id.chat_files:
-                intent = new Intent();
                 intent.setClass(this, ChatFiles.class);
                 startActivity(intent);
                 return;

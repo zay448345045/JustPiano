@@ -5,8 +5,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
-import androidx.annotation.NonNull;
-
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -25,14 +23,35 @@ public class SettingsMode extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
         ImageLoadUtil.setBackground(this, "ground", getWindow());
         getWindow().getDecorView().findViewById(android.R.id.content).setBackgroundResource(R.color.black);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        String data = getIntent().getDataString();
+        if (data == null) {
+            getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+        } else {
+            switch (data) {
+                case "settings_piano_play":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new PianoPlaySettingsFragment()).commit();
+                    break;
+                case "settings_play_note":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new PlayNoteSettingsFragment()).commit();
+                    break;
+                case "settings_waterfall":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new WaterfallSettingsFragment()).commit();
+                    break;
+                case "settings_sound":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new SoundSettingsFragment()).commit();
+                    break;
+                case "settings_keyboard":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new KeyboardSettingsFragment()).commit();
+                    break;
+                case "settings_online_chat":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new OnlineChatSettingsFragment()).commit();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -52,6 +71,54 @@ public class SettingsMode extends PreferenceActivity {
             if (soundPreference != null) {
                 soundPreference.setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
             }
+        }
+    }
+
+    public static class PianoPlaySettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_piano_play);
+        }
+    }
+
+    public static class PlayNoteSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_play_note);
+        }
+    }
+
+    public static class WaterfallSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_waterfall);
+        }
+    }
+
+    public static class SoundSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_sound);
+        }
+    }
+
+    public static class KeyboardSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_keyboard);
+        }
+    }
+
+    public static class OnlineChatSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_online_chat);
         }
     }
 }

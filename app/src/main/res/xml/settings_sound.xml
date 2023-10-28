@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="声音效果">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="pedal_delay"
+            android:summaryOff="&lt;关闭&gt;禁用外接延音踏板控制延音"
+            android:summaryOn="&lt;打开&gt;启用外接延音踏板控制延音"
+            android:title="启用外接延音踏板控制延音" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="0"
+            android:dialogTitle="延音强度"
+            android:key="sound_delay"
+            android:summary="触发停止播放琴键声音时，音符的延音长度"
+            android:title="延音强度"
+            app:floatNumber="false"
+            app:maxValue="100"
+            app:minValue="0" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="0"
+            android:dialogTitle="混响强度"
+            android:key="sound_reverb"
+            android:summary="播放琴键声音时，混响效果强度"
+            android:title="混响强度"
+            app:floatNumber="false"
+            app:maxValue="100"
+            app:minValue="0" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="sound_vibration"
+            android:summaryOff="&lt;关闭&gt;禁用按键震动效果"
+            android:summaryOn="&lt;打开&gt;启用按键震动效果"
+            android:title="按键震动" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="10"
+            android:dependency="sound_vibration"
+            android:dialogTitle="按键震动时长（毫秒）"
+            android:key="sound_vibration_time"
+            android:summary="按键震动时长（毫秒）"
+            android:title="按键震动时长"
+            app:floatNumber="false"
+            app:maxValue="100"
+            app:minValue="0" />
+    </PreferenceCategory>
+</PreferenceScreen>

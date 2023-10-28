@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="在线聊天">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="chats_time_show"
+            android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
+            android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间"
+            android:title="聊天行首显示时间" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="chats_sound"
+            android:summaryOff="&lt;关闭&gt; 在线接收到其他人聊天时关闭声音提醒"
+            android:summaryOn="&lt;打开&gt; 在线接收到其他人聊天时打开声音提醒"
+            android:title="聊天音效提醒" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="save_chats"
+            android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
+            android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
+            android:title="存储聊天记录" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="15"
+            android:dialogTitle="聊天字体大小"
+            android:key="chats_text_size"
+            android:summary="设置聊天字体显示大小"
+            android:title="聊天字体大小"
+            app:floatNumber="false"
+            app:maxValue="20"
+            app:minValue="10" />
+    </PreferenceCategory>
+</PreferenceScreen>

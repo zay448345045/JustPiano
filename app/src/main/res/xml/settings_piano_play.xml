@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="和弦、弹奏外观及效果">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/b_s_key"
+            android:summaryOff="@string/b_s_open_2"
+            android:summaryOn="@string/b_s_open_1"
+            android:title="@string/b_s_open" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="0.8"
+            android:dependency="@string/b_s_key"
+            android:dialogTitle="@string/b_s_vol_title"
+            android:key="b_s_vol"
+            android:summary="@string/b_s_vol_sum"
+            android:title="@string/b_s_vol_title"
+            app:floatNumber="true"
+            app:maxValue="1.5"
+            app:minValue="0.1" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyboard_prefer"
+            android:summaryOff="&lt;关闭&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
+            android:summaryOn="&lt;打开&gt; 显示键盘按下效果(对于低配置手机关闭可以提高帧率)"
+            android:title="按键效果" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="tishi_cj"
+            android:summaryOff="关闭弹奏等级显示"
+            android:summaryOn="打开弹奏等级显示"
+            android:title="提示弹奏等级显示(暴击、完美等)" />
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="判断线类型"
+            android:entries="@array/rough_line"
+            android:entryValues="@array/rough_linev"
+            android:key="rough_line"
+            android:summary="设置判断线是否加粗及加粗样式"
+            android:title="判断线类型" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="show_line"
+            android:summaryOff="关闭吊线提示"
+            android:summaryOn="打开吊线提示"
+            android:title="弹奏提示" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="open_long_key"
+            android:summaryOff="键盘缩略图已关闭"
+            android:summaryOn="键盘缩略图已打开"
+            android:title="键盘缩略图" />
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="1"
+            android:dialogTitle="节拍比率(仅本地模式有效)"
+            android:key="temp_speed"
+            android:summary="值越小，曲谱整体节拍越慢，持续时间越长"
+            android:title="节拍比率(仅本地模式有效)"
+            app:floatNumber="true"
+            app:maxValue="1.5"
+            app:minValue="0.5" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="auto_play"
+            android:summaryOff="&lt;关闭&gt;自动弹奏时值较短的音符"
+            android:summaryOn="&lt;打开&gt;自动弹奏时值较短的音符"
+            android:title="自动弹奏(仅本地模式有效)" />
+    </PreferenceCategory>
+</PreferenceScreen>

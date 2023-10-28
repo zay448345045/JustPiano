@@ -12,7 +12,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Process;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -42,7 +41,6 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
 
 public final class JPApplication extends Application {
 
@@ -65,6 +63,7 @@ public final class JPApplication extends Application {
     private String password = "";
     private int widthPixels;
     private int heightPixels;
+    private boolean appInException;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -220,11 +219,11 @@ public final class JPApplication extends Application {
 
         @Override
         public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
-            ThreadPoolUtil.execute(() -> {
-                Looper.prepare();
-                Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
-                Looper.loop();
-            });
+            if (appInException) {
+                return;
+            }
+            appInException = true;
+            Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
             // 上传崩溃日志
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
@@ -232,7 +231,7 @@ public final class JPApplication extends Application {
                     StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
                     BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
                             + BuildConfig.BUILD_TYPE + '\n' + byteArrayOutputStream).execute();
-
+            // 关闭服务，退出进程
             if (connectionService != null) {
                 connectionService.outLine();
             }
@@ -241,7 +240,7 @@ public final class JPApplication extends Application {
                 bindService = false;
             }
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
