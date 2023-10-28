@@ -11,8 +11,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
@@ -20,6 +27,11 @@ import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
@@ -34,16 +46,14 @@ import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.ScrollText;
-import protobuf.dto.*;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import protobuf.dto.OnlineChangeRoomHandDTO;
+import protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlinePlaySongDTO;
+import protobuf.dto.OnlinePlayStartDTO;
 
 public final class OLPlayRoom extends OLPlayRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
@@ -451,7 +461,6 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPStack.push(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.ol_play_room);
@@ -513,14 +522,14 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 break;
             case TEAM:
                 popupWindow2 = new PopupWindow(this);
-                inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
-                popupWindow2.setContentView(inflate2);
+                View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
+                popupWindow2.setContentView(inflate3);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                inflate2.findViewById(R.id.group_1).setOnClickListener(this);
-                inflate2.findViewById(R.id.group_2).setOnClickListener(this);
-                inflate2.findViewById(R.id.group_3).setOnClickListener(this);
+                inflate3.findViewById(R.id.group_1).setOnClickListener(this);
+                inflate3.findViewById(R.id.group_2).setOnClickListener(this);
+                inflate3.findViewById(R.id.group_3).setOnClickListener(this);
                 popupWindow2.setFocusable(true);
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
@@ -528,17 +537,17 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 break;
             case COUPLE:
                 popupWindow2 = new PopupWindow(this);
-                inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
-                popupWindow2.setContentView(inflate2);
+                View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
+                popupWindow2.setContentView(inflate4);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                inflate2.findViewById(R.id.couple_1).setOnClickListener(this);
-                inflate2.findViewById(R.id.couple_2).setOnClickListener(this);
-                inflate2.findViewById(R.id.couple_3).setOnClickListener(this);
-                inflate2.findViewById(R.id.couple_4).setOnClickListener(this);
-                inflate2.findViewById(R.id.couple_5).setOnClickListener(this);
-                inflate2.findViewById(R.id.couple_6).setOnClickListener(this);
+                inflate4.findViewById(R.id.couple_1).setOnClickListener(this);
+                inflate4.findViewById(R.id.couple_2).setOnClickListener(this);
+                inflate4.findViewById(R.id.couple_3).setOnClickListener(this);
+                inflate4.findViewById(R.id.couple_4).setOnClickListener(this);
+                inflate4.findViewById(R.id.couple_5).setOnClickListener(this);
+                inflate4.findViewById(R.id.couple_6).setOnClickListener(this);
                 popupWindow2.setFocusable(true);
                 popupWindow2.setTouchable(true);
                 popupWindow2.setOutsideTouchable(true);
@@ -596,7 +605,6 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
 
     @Override
     protected void onDestroy() {
-        JPStack.pop(this);
         super.onDestroy();
     }
 

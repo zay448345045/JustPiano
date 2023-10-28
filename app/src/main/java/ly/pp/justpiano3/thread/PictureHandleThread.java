@@ -7,8 +7,6 @@ import java.lang.ref.SoftReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
-
 public final class PictureHandleThread extends Thread {
     private final PictureHandle pictureHandle;
     private final Map<String, ImageView> map = new LinkedHashMap<>();

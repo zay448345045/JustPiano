@@ -46,9 +46,9 @@ import ly.pp.justpiano3.listener.ChangeBlessingClick;
 import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -449,7 +449,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
         jpApplication = (JPApplication) getApplication();
@@ -614,7 +613,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         friendList.clear();
         familyList.clear();
         mailList.clear();
-        JPStack.pop(this);
         super.onDestroy();
     }
 }

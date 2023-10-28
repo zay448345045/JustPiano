@@ -7,10 +7,15 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
 import com.king.anetty.ANetty;
 import com.king.anetty.Netty;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -29,15 +34,16 @@ import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;
-import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.utils.DeviceUtil;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.ReceiveTasks;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
-
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class ConnectionService extends Service implements Runnable {
 

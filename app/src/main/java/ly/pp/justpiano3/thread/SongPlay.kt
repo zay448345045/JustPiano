@@ -62,6 +62,8 @@ object SongPlay {
                 playingPitchList.clear()
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
                 if (!nextSongFilePath.isNullOrEmpty()) {
+                    // 如果有下一首歌曲要播放，中间需要一小段停歇的间隔
+                    delay(1000)
                     callBack?.onSongChangeNext(nextSongFilePath)
                 }
             }

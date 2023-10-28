@@ -1,16 +1,21 @@
 package ly.pp.justpiano3.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.DashPathEffect
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
-import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
-import java.util.*
+import java.util.Arrays
 import kotlin.math.abs
 import kotlin.math.min
 

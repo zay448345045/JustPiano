@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,36 +9,46 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.FileProvider;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
-import ly.pp.justpiano3.task.LoginTask;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.JPStack;
-import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
-public class LoginActivity extends OLBaseActivity implements OnClickListener {
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
+import ly.pp.justpiano3.task.LoginTask;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OkHttpUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class LoginActivity extends Activity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";
@@ -179,7 +190,6 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
@@ -227,7 +237,11 @@ public class LoginActivity extends OLBaseActivity implements OnClickListener {
             account = accountTextView.getText().toString();
             password = passwordTextView.getText().toString();
             if (account.isEmpty() || password.isEmpty()) {
-                addDialog("提示", "确定", "用户名或密码不能为空");
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("用户名或密码不能为空");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
                 return;
             }
             new LoginTask(this).execute();

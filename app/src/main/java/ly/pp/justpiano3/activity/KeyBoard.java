@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.midi.MidiReceiver;
-import android.os.*;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,18 +22,23 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.midi.JPMidiReceiver;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.KeyboardView;
-
 import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.midi.JPMidiReceiver;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.FileUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.VibrationUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.KeyboardView;
 
 public class KeyBoard extends Activity implements View.OnTouchListener, MidiConnectionListener, View.OnClickListener {
     public KeyboardView firstKeyboardView;

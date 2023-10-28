@@ -39,7 +39,6 @@ import ly.pp.justpiano3.listener.ShoesClick;
 import ly.pp.justpiano3.listener.TrousersClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
@@ -204,7 +203,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
         connectionservice = ((JPApplication) getApplication()).getConnectionService();
@@ -431,8 +429,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
             bitmap.recycle();
         }
         shoesArray.clear();
-
-        JPStack.pop(this);
         super.onDestroy();
     }
 

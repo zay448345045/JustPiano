@@ -3,13 +3,14 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-
-import java.lang.ref.WeakReference;
 
 public final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;

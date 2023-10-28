@@ -8,9 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.protobuf.MessageLite;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
@@ -21,17 +34,11 @@ import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.ChangeDeclarationClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
@@ -257,7 +264,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
             case R.id.ol_family_changepic:
                 jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("提示");
-                jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，可至官网上传");
+                jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，请至官网上传");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
 //                Intent intent = new Intent("android.intent.action.GET_CONTENT");
@@ -279,7 +286,6 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         familyHandler = new FamilyHandler(this);
-        JPStack.push(this);
         Bundle bundle = getIntent().getExtras();
         familyID = bundle.getString("familyID");
         familyPageNum = bundle.getInt("pageNum");
@@ -587,7 +593,6 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.pop(this);
         super.onDestroy();
     }
 }

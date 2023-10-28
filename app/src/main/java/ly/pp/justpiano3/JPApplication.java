@@ -9,8 +9,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.*;
+import android.os.Build;
+import android.os.Environment;
+import android.os.IBinder;
+import android.os.Looper;
 import android.os.Process;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
@@ -21,17 +25,6 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import io.netty.util.internal.StringUtil;
-import kotlin.Unit;
-import ly.pp.justpiano3.activity.JustPiano;
-import ly.pp.justpiano3.database.SongDatabase;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.task.FeedbackTask;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.MidiDeviceUtil;
-
 import com.babyte.breakpad.BaByteBreakpad;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +32,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+
+import io.netty.util.internal.StringUtil;
+import kotlin.Unit;
+import ly.pp.justpiano3.activity.JustPiano;
+import ly.pp.justpiano3.database.SongDatabase;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 
 public final class JPApplication extends Application {
 

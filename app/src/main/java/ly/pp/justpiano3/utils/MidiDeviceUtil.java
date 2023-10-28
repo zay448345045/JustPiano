@@ -12,12 +12,12 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.midi.MidiConnectionListener;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.midi.MidiConnectionListener;
 
 public class MidiDeviceUtil {
 

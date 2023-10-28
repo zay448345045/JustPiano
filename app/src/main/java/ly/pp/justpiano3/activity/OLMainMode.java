@@ -20,7 +20,6 @@ import ly.pp.justpiano3.handler.android.OLMainModeHandler;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -131,7 +130,6 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JPStack.push(this);
         if (jpapplication.loginResultTitle != null && jpapplication.loginResultMessage != null
                 && !jpapplication.loginResultTitle.isEmpty() && !jpapplication.loginResultMessage.isEmpty()) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -147,7 +145,6 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.pop(this);
         super.onDestroy();
     }
 

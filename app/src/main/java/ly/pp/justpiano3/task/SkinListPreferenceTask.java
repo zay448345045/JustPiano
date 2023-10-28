@@ -2,7 +2,6 @@ package ly.pp.justpiano3.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.preference.PreferenceActivity;
 import android.widget.Toast;
 
 import java.io.File;

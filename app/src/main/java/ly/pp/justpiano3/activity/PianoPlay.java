@@ -13,11 +13,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.*;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
 import com.google.protobuf.MessageLite;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -32,20 +45,19 @@ import ly.pp.justpiano3.midi.MidiConnectionListener;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.PianoPlayTask;
 import ly.pp.justpiano3.thread.StartPlayTimerTask;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.*;
+import ly.pp.justpiano3.utils.FileUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.ShareUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.view.HorizontalListView;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import ly.pp.justpiano3.view.PlayKeyBoardView;
+import ly.pp.justpiano3.view.PlayView;
 import protobuf.dto.OnlineChallengeDTO;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineLoadPlayUserDTO;
 import protobuf.dto.OnlineQuitRoomDTO;
-
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
 
 public final class PianoPlay extends OLBaseActivity implements MidiConnectionListener {
     public TextView leftHandDegreeTextView;
@@ -451,7 +463,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JPStack.push(this);
         jpapplication = (JPApplication) getApplication();
         checkAnJian();
         layoutinflater = LayoutInflater.from(this);
@@ -483,7 +494,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiConnectionLis
 
     @Override
     protected void onDestroy() {
-        JPStack.pop(this);
         if (isOpenRecord) {
             recordFinish();
         }

@@ -60,7 +60,7 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
         fun bindData(song: Song) {
             playImageView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
             listenImageView.setOnClickListener {
-                if (song.filePath == melodySelect.songsPath) {
+                if (song.filePath == melodySelect.songsPath && SongPlay.isPlaying()) {
                     melodySelect.songsPath = ""
                     SongPlay.stopPlay()
                     return@setOnClickListener

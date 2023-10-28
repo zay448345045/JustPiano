@@ -1,10 +1,8 @@
 package ly.pp.justpiano3.listener;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import java.io.File;
 

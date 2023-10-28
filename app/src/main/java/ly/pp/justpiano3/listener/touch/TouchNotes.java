@@ -6,14 +6,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.PlayView;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class TouchNotes implements OnTouchListener {
     private final PlayView playView;

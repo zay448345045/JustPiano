@@ -29,7 +29,6 @@ import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.DrawPrizeView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -94,7 +93,6 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         challengeHandler = new ChallengeHandler(this);
-        JPStack.push(this);
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
@@ -183,7 +181,6 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        JPStack.pop(this);
         super.onDestroy();
     }
 }
