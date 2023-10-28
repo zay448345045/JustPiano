@@ -92,7 +92,7 @@ extern "C" {
  * @param   portNumber      The index of the "output" port to open.
  */
 void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
-        JNIEnv *env, jclass clazz, jobject midiDeviceObj, jint portNumber) {
+        JNIEnv *env, jclass clazz, jobject midiDeviceObj, jint portNumber, jint deviceId) {
     env->GetJavaVM(&theJvm);
     // Setup the receive data callback (into Java)
     dataCallbackClass = static_cast<jclass>(env->NewGlobalRef(clazz));
@@ -105,9 +105,9 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
                          &deviceHandle.sMidiOutputPort);
     // Start read thread
     pthread_create(&deviceHandle.sReadThread, nullptr, readThreadRoutine,
-                   reinterpret_cast<void *>(static_cast<intptr_t>(portNumber)));
+                   reinterpret_cast<void *>(static_cast<intptr_t>(deviceId)));
     // store value by portNumber to support multi-device open
-    midiDeviceMap[static_cast<intptr_t>(portNumber)] = deviceHandle;
+    midiDeviceMap[static_cast<intptr_t>(deviceId)] = deviceHandle;
 }
 
 /**
@@ -115,13 +115,13 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
  * @param   (unnamed)   JNI Env pointer.
  * @param   (unnamed)   TBMidiManager (Java) object.
  */
-void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_stopReadingMidi(JNIEnv *, jclass, jint portNumber) {
-    midi_device_handle_t &midiDeviceHandle = midiDeviceMap[static_cast<intptr_t>(portNumber)];
+void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_stopReadingMidi(JNIEnv *, jclass, jint deviceId) {
+    midi_device_handle_t &midiDeviceHandle = midiDeviceMap[static_cast<intptr_t>(deviceId)];
     AMidiOutputPort_close(midiDeviceHandle.sMidiOutputPort);
     // need some synchronization here
     midiDeviceHandle.sReading = false;
     pthread_join(midiDeviceHandle.sReadThread, nullptr);
     AMidiDevice_release(midiDeviceHandle.sNativeReceiveDevice);
-    midiDeviceMap.erase(static_cast<intptr_t>(portNumber));
+    midiDeviceMap.erase(static_cast<intptr_t>(deviceId));
 }
 }  // extern "C"

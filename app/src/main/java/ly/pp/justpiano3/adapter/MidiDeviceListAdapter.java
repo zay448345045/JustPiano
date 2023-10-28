@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.task.MidiDeviceListPreferenceTask;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 
@@ -62,24 +63,14 @@ public final class MidiDeviceListAdapter extends BaseAdapter {
             enableText.setText("开启中");
             enableText.setTextColor(Color.RED);
             operateButton.setText("断开");
-            operateButton.setOnClickListener(view1 -> {
-                MidiDeviceUtil.closeDevice(context, (MidiDeviceInfo) view1.getTag());
-//                enableText.setText("已关闭");
-//                enableText.setTextColor(Color.BLACK);
-//                operateButton.setText("连接");
-                notifyDataSetChanged();
-            });
+            operateButton.setOnClickListener(view1 -> new MidiDeviceListPreferenceTask(
+                    this, midiDeviceInfoList[i]).execute(false));
         } else {
             enableText.setText("已禁用");
             enableText.setTextColor(Color.BLACK);
             operateButton.setText("连接");
-            operateButton.setOnClickListener(view1 -> {
-                MidiDeviceUtil.openDevice(context, (MidiDeviceInfo) view1.getTag());
-//                enableText.setText("已开启");
-//                enableText.setTextColor(Color.RED);
-//                operateButton.setText("断开");
-                notifyDataSetChanged();
-            });
+            operateButton.setOnClickListener(view1 -> new MidiDeviceListPreferenceTask(
+                    this, midiDeviceInfoList[i]).execute(true));
         }
         return view;
     }
