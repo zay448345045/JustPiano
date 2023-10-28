@@ -49,6 +49,7 @@ public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String str) {
+        // TODO 响应str有什么用？能否判断结果成功还是失败
         olPlayHallRoom.get().jpprogressBar.cancel();
     }
 

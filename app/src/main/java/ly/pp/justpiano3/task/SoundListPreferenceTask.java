@@ -9,7 +9,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.SoundListPreference;
 
-public final class SoundListPreferenceTask extends AsyncTask<String, Void, String> {
+public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void> {
     private final SoundListPreference soundListPreference;
 
     public SoundListPreferenceTask(SoundListPreference soundListPreference) {
@@ -17,13 +17,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
     }
 
     @Override
-    protected void onPostExecute(String str) {
-        soundListPreference.jpProgressBar.cancel();
-        Toast.makeText(soundListPreference.context, "音源设置成功!", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected String doInBackground(String... objects) {
+    protected Void doInBackground(String... objects) {
         if (objects[0].equals("original")) {
             SoundEngineUtil.reLoadOriginalSounds(soundListPreference.context);
             return null;
@@ -57,6 +51,12 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
             SoundEngineUtil.loadSf2Sound(soundListPreference.context, soundFile);
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void v) {
+        soundListPreference.jpProgressBar.cancel();
+        Toast.makeText(soundListPreference.context, "音源设置成功!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

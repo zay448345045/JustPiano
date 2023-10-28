@@ -21,7 +21,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class LoginTask extends AsyncTask<String, Void, String> {
+public final class LoginTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<LoginActivity> activity;
     private String loginResponse = "";
     private String message = "";
@@ -32,8 +32,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
-        String f5140b = "";
+    protected Void doInBackground(Void... v) {
         LoginActivity loginActivity = activity.get();
         loginActivity.accountX = loginActivity.accountTextView.getText().toString();
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
@@ -61,18 +60,16 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                         loginResponse = line;
                     }
                     response.body().close();
-                    return f5140b;
                 }
             } catch (Exception e) {
-                f5140b = "";
                 e.printStackTrace();
             }
         }
-        return f5140b;
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         LoginActivity loginActivity = activity.get();
         int i = 3;
         String newVersion = null;

@@ -14,7 +14,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
+public final class PopUserInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<PopUserInfo> popUserInfo;
 
     public PopUserInfoTask(PopUserInfo popUserInfo) {
@@ -22,7 +22,7 @@ public final class PopUserInfoTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
         if (!popUserInfo.get().kitiName.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数

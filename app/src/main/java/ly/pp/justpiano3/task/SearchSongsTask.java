@@ -63,10 +63,6 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onCancelled() {
-    }
-
-    @Override
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             if (searchSongs.get().headType < 2) {

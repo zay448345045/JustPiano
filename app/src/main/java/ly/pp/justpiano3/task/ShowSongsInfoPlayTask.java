@@ -17,7 +17,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String> {
+public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
     private final Intent intent;
     private byte[] songBytes = null;
@@ -29,7 +29,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected Void doInBackground(Void... v) {
         if (!showSongsInfo.get().songID.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
@@ -56,7 +56,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         if (songBytes == null || songBytes.length <= 3) {
             showSongsInfo.get().jpprogressBar.dismiss();
             Toast.makeText(showSongsInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();

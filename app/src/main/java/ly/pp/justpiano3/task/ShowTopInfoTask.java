@@ -20,7 +20,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
+public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<ShowTopInfo> showTopInfo;
 
     public ShowTopInfoTask(ShowTopInfo showTopInfo) {
@@ -28,7 +28,7 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
         if (!showTopInfo.get().f4988d.isEmpty()) {
             // 创建请求参数

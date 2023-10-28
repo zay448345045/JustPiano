@@ -18,7 +18,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
+public final class OLMelodySelectTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
 
     public OLMelodySelectTask(OLMelodySelect oLMelodySelect) {
@@ -26,7 +26,7 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String string = "";
         if (!olMelodySelect.get().f4317e.isEmpty()) {
             // 创建请求参数

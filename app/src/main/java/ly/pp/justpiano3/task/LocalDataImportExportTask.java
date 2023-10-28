@@ -17,7 +17,7 @@ import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.LocalSongData;
 import ly.pp.justpiano3.utils.StreamUtil;
 
-public final class LocalDataImportExportTask extends AsyncTask<String, Void, String> {
+public final class LocalDataImportExportTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<Activity> weakReference;
     private final int type;
 
@@ -27,7 +27,7 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String result;
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/local_data.db");
         if (type == 2) {

@@ -28,7 +28,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class SongSyncTask extends AsyncTask<String, Void, String> {
+public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<Activity> weakReference;
     private final String maxSongId;
     private int count = 0;
@@ -39,7 +39,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected Void doInBackground(Void... v) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)
@@ -86,7 +86,7 @@ public final class SongSyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         if (weakReference.get() instanceof OLMainMode) {
             ((OLMainMode) weakReference.get()).loginOnline();
         } else if (weakReference.get() instanceof MelodySelect) {

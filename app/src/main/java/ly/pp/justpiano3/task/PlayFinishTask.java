@@ -16,7 +16,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public final class PlayFinishTask extends AsyncTask<String, Void, String> {
+public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<PlayFinish> playFinish;
 
     public PlayFinishTask(PlayFinish playFinish) {
@@ -24,7 +24,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
         if (!playFinish.get().jpapplication.getAccountName().isEmpty()) {
             HttpUrl url = new HttpUrl.Builder()

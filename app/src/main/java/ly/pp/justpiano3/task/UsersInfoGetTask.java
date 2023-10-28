@@ -13,7 +13,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
+public final class UsersInfoGetTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
 
     public UsersInfoGetTask(UsersInfo usersInfo) {
@@ -21,7 +21,7 @@ public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
         if (!userInfo.get().jpapplication.getAccountName().isEmpty()) {
             // 创建FormBody对象，添加请求参数

@@ -9,10 +9,9 @@ import java.io.File;
 import java.util.Objects;
 
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.SkinListPreference;
 
-public final class SkinListPreferenceTask extends AsyncTask<String, Void, String> {
+public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> {
     private final SkinListPreference skinListPreference;
 
     public SkinListPreferenceTask(SkinListPreference skinListPreference) {
@@ -20,7 +19,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, String
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected Void doInBackground(String... objects) {
         File dir = skinListPreference.context.getDir("Skin", Context.MODE_PRIVATE);
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
@@ -37,7 +36,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, String
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         skinListPreference.jpProgressBar.cancel();
         Toast.makeText(skinListPreference.context, "皮肤设置成功!", Toast.LENGTH_SHORT).show();
     }
