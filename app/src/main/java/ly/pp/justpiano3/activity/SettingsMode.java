@@ -50,6 +50,9 @@ public class SettingsMode extends PreferenceActivity {
                 case "settings_online_chat":
                     getFragmentManager().beginTransaction().replace(android.R.id.content, new OnlineChatSettingsFragment()).commit();
                     break;
+                case "settings_easteregg":
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, new EasterEggFragment()).commit();
+                    break;
                 default:
                     break;
             }
@@ -135,6 +138,13 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
+        }
+    }
+    public static class EasterEggFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_easteregg);
         }
     }
 }

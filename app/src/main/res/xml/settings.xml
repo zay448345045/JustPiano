@@ -87,9 +87,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="关于">
-        <Preference
+        <PreferenceScreen
             android:key="app_version"
-            android:title="软件版本" />
+            android:title="软件版本" >
+        <intent
+            android:data="settings_easteregg"
+            android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
+            android:targetPackage="ly.pp.justpiano3" />
+        </PreferenceScreen>
         <Preference
             android:summary="京ICP备2020039885号-3A"
             android:title="备案信息" />
