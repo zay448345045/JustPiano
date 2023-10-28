@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:layout="@layout/easter_egg"
-        android:layout_height="match_parent"/>
-</PreferenceScreen>

@@ -43,9 +43,9 @@
             android:title="音源" />
 
         <ly.pp.justpiano3.view.MidiDeviceListPreference
+            android:dialogTitle="管理MIDI设备"
             android:enabled="false"
             android:key="midi_device_list"
-            android:dialogTitle="管理MIDI设备"
             android:summary="您的安卓设备不支持连接MIDI设备"
             android:title="MIDI设备" />
 
@@ -89,11 +89,10 @@
     <PreferenceCategory android:title="关于">
         <PreferenceScreen
             android:key="app_version"
-            android:title="软件版本" >
-        <intent
-            android:data="settings_easteregg"
-            android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
-            android:targetPackage="ly.pp.justpiano3" />
+            android:title="软件版本">
+            <Preference
+                android:layout_height="match_parent"
+                android:layout="@layout/easter_egg" />
         </PreferenceScreen>
         <Preference
             android:summary="京ICP备2020039885号-3A"
