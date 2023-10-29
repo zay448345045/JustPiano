@@ -180,6 +180,9 @@ public class MidiDeviceUtil {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static String getDeviceIdAndName(MidiDeviceInfo deviceInfo) {
+        if (deviceInfo == null) {
+            return null;
+        }
         String name = deviceInfo.getProperties().getString(MidiDeviceInfo.PROPERTY_NAME);
         return deviceInfo.getId() + "-" + (StringUtil.isNullOrEmpty(name) ? "未知设备" : name);
     }

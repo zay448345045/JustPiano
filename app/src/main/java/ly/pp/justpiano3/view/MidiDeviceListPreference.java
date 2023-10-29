@@ -40,8 +40,11 @@ public class MidiDeviceListPreference extends DialogPreference {
     private void loadMidiDeviceList() {
         List<MidiDeviceInfo> allConnectedMidiDeviceList = MidiDeviceUtil.getAllMidiDeviceList();
         int size = allConnectedMidiDeviceList.size();
-        midiDeviceNameList = new String[size];
-        midiDeviceInfoList = new MidiDeviceInfo[size];
+        midiDeviceNameList = new String[size == 0 ? 1 : size];
+        midiDeviceInfoList = new MidiDeviceInfo[size == 0 ? 1 : size];
+        if (size == 0) {
+            midiDeviceNameList[0] = "您当前没有连接任何MIDI设备";
+        }
         for (int i = 0; i < size; i++) {
             MidiDeviceInfo deviceInfo = allConnectedMidiDeviceList.get(i);
             String deviceIdAndName = MidiDeviceUtil.getDeviceIdAndName(deviceInfo);
@@ -54,7 +57,6 @@ public class MidiDeviceListPreference extends DialogPreference {
     protected void onPrepareDialogBuilder(Builder builder) {
         loadMidiDeviceList();
         jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-        jpProgressBar.setCancelable(false);
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);

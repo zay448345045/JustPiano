@@ -54,23 +54,28 @@ public final class MidiDeviceListAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.ol_skin_view, null);
         }
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(midiDeviceNameList[i]);
-        Button operateButton = view.findViewById(R.id.skin_dele);
-        operateButton.setTag(midiDeviceInfoList[i]);
         Button enableText = view.findViewById(R.id.set_skin);
         enableText.setBackgroundResource(R.drawable._none);
-        if (MidiDeviceUtil.getAllConnectedMidiDeviceIdAndNameList().contains(
-                MidiDeviceUtil.getDeviceIdAndName(midiDeviceInfoList[i]))) {
-            enableText.setText("开启中");
-            enableText.setTextColor(Color.RED);
-            operateButton.setText("断开");
-            operateButton.setOnClickListener(view1 -> new MidiDeviceListPreferenceTask(
-                    this, midiDeviceInfoList[i]).execute(false));
+        Button operateButton = view.findViewById(R.id.skin_dele);
+        if (midiDeviceInfoList[i] == null) {
+            operateButton.setVisibility(View.INVISIBLE);
+            enableText.setText("");
         } else {
-            enableText.setText("已禁用");
-            enableText.setTextColor(Color.BLACK);
-            operateButton.setText("连接");
-            operateButton.setOnClickListener(view1 -> new MidiDeviceListPreferenceTask(
-                    this, midiDeviceInfoList[i]).execute(true));
+            operateButton.setTag(midiDeviceInfoList[i]);
+            if (MidiDeviceUtil.getAllConnectedMidiDeviceIdAndNameList().contains(
+                    MidiDeviceUtil.getDeviceIdAndName(midiDeviceInfoList[i]))) {
+                enableText.setText("开启中");
+                enableText.setTextColor(Color.RED);
+                operateButton.setText("断开");
+                operateButton.setOnClickListener(view1 -> new MidiDeviceListPreferenceTask(
+                        this, midiDeviceInfoList[i]).execute(false));
+            } else {
+                enableText.setText("已禁用");
+                enableText.setTextColor(Color.BLACK);
+                operateButton.setText("连接");
+                operateButton.setOnClickListener(view1 -> new MidiDeviceListPreferenceTask(
+                        this, midiDeviceInfoList[i]).execute(true));
+            }
         }
         return view;
     }
