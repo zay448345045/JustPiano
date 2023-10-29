@@ -313,7 +313,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
                     if (!recordStart) {
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                         jpDialogBuilder.setTitle("提示");
-                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，请确保您授予了app的文件读取权限");
+                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，请确保您授予了app的文件存储权限");
                         jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);

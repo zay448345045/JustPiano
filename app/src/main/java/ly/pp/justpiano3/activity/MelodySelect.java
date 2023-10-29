@@ -370,7 +370,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         isRecord = findViewById(R.id.check_record);
         isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件，请确保您授予了app的文件读取权限", 0);
+                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件，请确保您授予了app的文件存储权限", 0);
             }
         });
 
