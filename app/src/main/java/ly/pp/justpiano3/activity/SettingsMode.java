@@ -73,18 +73,13 @@ public class SettingsMode extends PreferenceActivity {
             if (soundPreference != null) {
                 soundPreference.setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
             }
-
-            // 检测是否支持midi功能，支持midi功能时，midi设备的设置才允许点击
+            // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                     && getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 Preference midiDevicePreference = findPreference("midi_device_list");
                 if (midiDevicePreference != null) {
                     midiDevicePreference.setSummary("启用/禁用MIDI设备");
                     midiDevicePreference.setEnabled(true);
-                }
-                Preference midiDevicePedalPreference = findPreference("midi_device_pedal_delay");
-                if (midiDevicePedalPreference != null) {
-                    midiDevicePedalPreference.setEnabled(true);
                 }
             }
         }
@@ -119,6 +114,13 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                Preference midiDevicePedalPreference = findPreference("midi_device_pedal_delay");
+                if (midiDevicePedalPreference != null) {
+                    midiDevicePedalPreference.setEnabled(true);
+                }
+            }
         }
     }
 

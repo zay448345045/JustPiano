@@ -83,7 +83,6 @@
 		6.增加分类“新增曲谱”备用，此分类内储存新曲\n
 		7.此版本去除所有广告，并可与4.3版本共存\n
 		8.修复4.3版本曲库中6首乱码名称曲\n
-		\n
 	</string>
 	<string name="settings_name">设置</string>
 	<string name="b_s_sum">减小和弦音量,突出主旋律</string>

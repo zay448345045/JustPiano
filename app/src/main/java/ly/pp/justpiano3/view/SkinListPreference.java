@@ -17,6 +17,7 @@ import android.widget.ListView;
 import java.io.File;
 import java.util.List;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -86,7 +87,9 @@ public class SkinListPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
-        persistString(skinKey);
+        if (!StringUtil.isNullOrEmpty(skinKey)) {
+            persistString(skinKey);
+        }
         if (context instanceof PreferenceActivity) {
             ImageLoadUtil.setBackground(context, "ground", ((PreferenceActivity) context).getWindow());
         }

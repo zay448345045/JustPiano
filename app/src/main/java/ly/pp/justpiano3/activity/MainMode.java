@@ -144,7 +144,7 @@ public class MainMode extends Activity implements OnClickListener {
                 } else {
                     // Storage permission not granted
                     // Handle accordingly
-                    Toast.makeText(this, "您未授予文件访问权限，无法使用切换皮肤音源、分享、录音等功能", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "您未授予文件访问权限，无法使用切换皮肤音源、录音、聊天记录存储等功能", Toast.LENGTH_SHORT).show();
                 }
             }
         }

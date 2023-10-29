@@ -16,6 +16,7 @@ import android.widget.ListView;
 import java.io.File;
 import java.util.List;
 
+import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SoundListAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -82,7 +83,9 @@ public class SoundListPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
-        persistString(soundKey);
+        if (!StringUtil.isNullOrEmpty(soundKey)) {
+            persistString(soundKey);
+        }
         GlobalSetting.INSTANCE.loadSettings(context, false);
         setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
     }
