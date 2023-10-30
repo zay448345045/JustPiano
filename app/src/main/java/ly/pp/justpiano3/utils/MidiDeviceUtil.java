@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -125,8 +124,7 @@ public class MidiDeviceUtil {
         midiManager.openDevice(info, device -> {
             if (device != null) {
                 String deviceIdAndName = getDeviceIdAndName(device.getInfo());
-                MidiDeviceInfo.PortInfo[] ports = device.getInfo().getPorts();
-                for (MidiDeviceInfo.PortInfo port : ports) {
+                for (MidiDeviceInfo.PortInfo port : device.getInfo().getPorts()) {
                     if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
                         MidiOutputPort midiOutputPort = device.openOutputPort(port.getPortNumber());
                         // 安卓版本10及以上：启动C++监听midi，否则注册java的midi监听
@@ -201,7 +199,16 @@ public class MidiDeviceUtil {
     public static List<MidiDeviceInfo> getAllMidiDeviceList() {
         List<MidiDeviceInfo> deviceIdAndNamdList = new ArrayList<>();
         if (midiManager != null) {
-            Collections.addAll(deviceIdAndNamdList, midiManager.getDevices());
+            for (MidiDeviceInfo deviceInfo : midiManager.getDevices()) {
+                if (deviceInfo != null) {
+                    for (MidiDeviceInfo.PortInfo port : deviceInfo.getPorts()) {
+                        if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                            deviceIdAndNamdList.add(deviceInfo);
+                            break;
+                        }
+                    }
+                }
+            }
         }
         return deviceIdAndNamdList;
     }
