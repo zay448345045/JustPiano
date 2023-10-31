@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.listener.tab;
 
+import android.view.View;
 import android.widget.TabHost.OnTabChangeListener;
 
 import ly.pp.justpiano3.R;
@@ -24,6 +25,9 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
             olPlayRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
                     intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
+        if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
+            ((OLPlayKeyboardRoom) olPlayRoomActivity).waterfallView.setVisibility(View.INVISIBLE);
+        }
         switch (str) {
             case "tab1":
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
@@ -38,7 +42,11 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                 break;
             case "tab3":
                 if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-                    olPlayRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
+                    if (olPlayRoomActivity.msgListView != null && olPlayRoomActivity.msgListView.getAdapter() != null) {
+                        olPlayRoomActivity.msgListView.setSelection(olPlayRoomActivity.msgListView.getAdapter().getCount() - 1);
+                    }
+                    ((OLPlayKeyboardRoom) olPlayRoomActivity).waterfallView.setVisibility(View.VISIBLE);
+                    ((OLPlayKeyboardRoom) olPlayRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
                 }
                 break;
             case "tab4":

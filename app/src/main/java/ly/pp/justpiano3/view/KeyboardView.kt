@@ -122,7 +122,7 @@ class KeyboardView @JvmOverloads constructor(
     // 键盘上绘制的标签文字paint
     private var keyboardTextPaint = Paint()
 
-    // 按键标签显示的文字最大字号
+    // 按键标签显示的文字大小
     private var maxOctaveTagFontSize = 15f
 
     // 素材图片

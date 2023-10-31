@@ -3,14 +3,14 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
-
-import java.lang.ref.WeakReference;
-
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
+
+import java.lang.ref.WeakReference;
 
 public final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -136,17 +136,22 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
     }
 
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
-        if (notes[i + 2] > 0) {
+        byte pitch = (byte) notes[i + 1];
+        byte volume = (byte) notes[i + 2];
+        if (volume > 0) {
             if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
-                SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
+                SoundEngineUtil.playSound(pitch, volume);
             }
-            olPlayKeyboardRoom.keyboardView.fireKeyDown((byte) notes[i + 1], (byte) notes[i + 2],
-                    user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor()));
+            Integer color = user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor());
+            olPlayKeyboardRoom.keyboardView.fireKeyDown(pitch, volume, color);
+            olPlayKeyboardRoom.onlineWaterfallKeyDownHandle(pitch, volume, color == null ?
+                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : color);
         } else {
             if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
-                SoundEngineUtil.stopPlaySound((byte) notes[i + 1]);
+                SoundEngineUtil.stopPlaySound(pitch);
             }
-            olPlayKeyboardRoom.keyboardView.fireKeyUp((byte) notes[i + 1]);
+            olPlayKeyboardRoom.keyboardView.fireKeyUp(pitch);
+            olPlayKeyboardRoom.onlineWaterfallKeyUpHandle(pitch);
         }
     }
 }

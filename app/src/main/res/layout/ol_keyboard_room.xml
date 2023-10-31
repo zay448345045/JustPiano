@@ -13,8 +13,20 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_0dp"
         android:layout_weight="0.75"
-        android:fadingEdge="horizontal"
-        android:fadingEdgeLength="5dp">
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ly.pp.justpiano3.view.WaterfallView
+                android:id="@+id/ol_waterfall_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5">
+            </ly.pp.justpiano3.view.WaterfallView>
+        </FrameLayout>
 
         <RelativeLayout
             android:id="@+id/RelativeLayout1"
@@ -41,7 +53,6 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
-
                 android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
@@ -78,7 +89,7 @@
                     android:gravity="center"
                     android:text="@string/ol_kbr_ha"
                     android:textColor="@color/white1"
-                    android:textSize="18sp"></Button>
+                    android:textSize="18sp"/>
 
                 <Button
                     android:id="@+id/keyboard_count_down"
@@ -101,7 +112,7 @@
                     android:textStyle="bold"
                     android:text="@string/keyboard_mode_arrow_left"
                     android:textColor="@color/white1"
-                    android:textSize="18sp"></Button>
+                    android:textSize="18sp"/>
 
                 <Button
                     android:id="@+id/keyboard_move_right"
@@ -111,10 +122,8 @@
                     android:background="@drawable/selector_orange_button"
                     android:textStyle="bold"
                     android:text="@string/keyboard_mode_arrow_right"
-
-
                     android:textColor="@color/white1"
-                    android:textSize="18sp"></Button>
+                    android:textSize="18sp"/>
 
                 <Button
                     android:id="@+id/keyboard_count_up"
@@ -126,7 +135,6 @@
                     android:text="@string/keyboard_mode_plus"
                     android:textColor="@color/white1"
                     android:textSize="18sp">
-
                 </Button>
 
                 <ImageView
@@ -149,7 +157,6 @@
                     android:textColor="@color/v3"
                     android:textSize="18sp" />
             </LinearLayout>
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -329,6 +336,7 @@
                 </RelativeLayout>
             </TabHost>
         </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout

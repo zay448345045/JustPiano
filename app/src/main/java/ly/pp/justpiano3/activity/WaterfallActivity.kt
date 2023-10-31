@@ -2,12 +2,7 @@ package ly.pp.justpiano3.activity
 
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.graphics.RectF
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -16,11 +11,7 @@ import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
-import ly.pp.justpiano3.utils.MidiDeviceUtil
-import ly.pp.justpiano3.utils.PmSongUtil
-import ly.pp.justpiano3.utils.SoundEngineUtil
-import ly.pp.justpiano3.utils.ThreadPoolUtil
-import ly.pp.justpiano3.utils.VibrationUtil
+import ly.pp.justpiano3.utils.*
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
 import ly.pp.justpiano3.view.ScrollText
@@ -61,24 +52,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
      */
     private var freeStyle = false
 
-    companion object {
-
-        /**
-         * 每个八度的音符数量
-         */
-        private const val NOTES_PER_OCTAVE = 12
-
-        /**
-         * 瀑布的宽度占键盘黑键宽度的百分比
-         */
-        const val BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f
-
-        /**
-         * 瀑布流音符最大高度
-         */
-        const val NOTE_MAX_HEIGHT = 1000
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.waterfall)
@@ -90,28 +63,30 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
         songNameView.text = if (freeStyle) "自由演奏" else pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
-        // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
-        waterfallView.setNoteFallListener(object : WaterfallView.NoteFallListener {
-            override fun onNoteAppear(waterfallNote: WaterfallNote?) {
-                // 瀑布流音符在瀑布流view的顶端出现，目前无操作
-            }
+        if (!freeStyle) {
+            // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
+            waterfallView.setNoteFallListener(object : WaterfallView.NoteFallListener {
+                override fun onNoteAppear(waterfallNote: WaterfallNote?) {
+                    // 瀑布流音符在瀑布流view的顶端出现，目前无操作
+                }
 
-            override fun onNoteFallDown(waterfallNote: WaterfallNote?) {
-                // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
-                SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
-                keyboardView.fireKeyDown(
-                    waterfallNote.pitch,
-                    waterfallNote.volume,
-                    waterfallNote.color
-                )
-            }
+                override fun onNoteFallDown(waterfallNote: WaterfallNote?) {
+                    // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
+                    SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
+                    keyboardView.fireKeyDown(
+                        waterfallNote.pitch,
+                        waterfallNote.volume,
+                        waterfallNote.color
+                    )
+                }
 
-            override fun onNoteLeave(waterfallNote: WaterfallNote?) {
-                // 瀑布流音符完全离开瀑布流view，停止播放声音并触发键盘view的琴键抬起效果
-                SoundEngineUtil.stopPlaySound(waterfallNote!!.pitch)
-                keyboardView.fireKeyUp(waterfallNote.pitch)
-            }
-        })
+                override fun onNoteLeave(waterfallNote: WaterfallNote?) {
+                    // 瀑布流音符完全离开瀑布流view，停止播放声音并触发键盘view的琴键抬起效果
+                    SoundEngineUtil.stopPlaySound(waterfallNote!!.pitch)
+                    keyboardView.fireKeyUp(waterfallNote.pitch)
+                }
+            })
+        }
         keyboardView = findViewById(R.id.waterfall_keyboard)
         keyboardView.octaveTagType =
             KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
@@ -182,9 +157,8 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
     }
 
     private fun recomputeWaterfallNoteLeftAndRight(waterfallNote: WaterfallNote) {
-        val (left, right) = convertWidthToWaterfallWidth(
-            isBlackKey(waterfallNote.pitch),
-            keyboardView.convertPitchToReact(waterfallNote.pitch)
+        val (left, right) = WaterfallUtil.convertWidthToWaterfallWidth(
+            waterfallNote.pitch, keyboardView.convertPitchToReact(waterfallNote.pitch)
         )
         waterfallNote.left = left
         waterfallNote.right = right
@@ -257,9 +231,8 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 totalTime += it.tickArray[i] * it.globalSpeed
                 val leftHand = it.trackArray[i] > 0
                 // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
-                val (left, right) = convertWidthToWaterfallWidth(
-                    isBlackKey(pitch),
-                    keyboardView!!.convertPitchToReact(pitch)
+                val (left, right) = WaterfallUtil.convertWidthToWaterfallWidth(
+                    pitch, keyboardView!!.convertPitchToReact(pitch)
                 )
                 // 初始化瀑布流音符对象，上边界暂时置0
                 val waterfallNote =
@@ -312,21 +285,21 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         if (leftHandWaterfallNoteList.isNotEmpty()) {
             fillNoteEndTime(
                 leftHandWaterfallNoteList,
-                leftHandWaterfallNoteList[leftHandWaterfallNoteList.size - 1].bottom + NOTE_MAX_HEIGHT
+                leftHandWaterfallNoteList[leftHandWaterfallNoteList.size - 1].bottom + WaterfallUtil.NOTE_MAX_HEIGHT
             )
             waterfallNoteList.addAll(leftHandWaterfallNoteList)
         }
         if (rightHandWaterfallNoteList.isNotEmpty()) {
             fillNoteEndTime(
                 rightHandWaterfallNoteList,
-                rightHandWaterfallNoteList[rightHandWaterfallNoteList.size - 1].bottom + NOTE_MAX_HEIGHT
+                rightHandWaterfallNoteList[rightHandWaterfallNoteList.size - 1].bottom + WaterfallUtil.NOTE_MAX_HEIGHT
             )
             waterfallNoteList.addAll(rightHandWaterfallNoteList)
         }
         waterfallNoteList.sortBy { it.bottom }
         for (currentWaterfallNote in waterfallNoteList) {
-            if (currentWaterfallNote.top - currentWaterfallNote.bottom > NOTE_MAX_HEIGHT) {
-                currentWaterfallNote.top = currentWaterfallNote.bottom + NOTE_MAX_HEIGHT
+            if (currentWaterfallNote.top - currentWaterfallNote.bottom > WaterfallUtil.NOTE_MAX_HEIGHT) {
+                currentWaterfallNote.top = currentWaterfallNote.bottom + WaterfallUtil.NOTE_MAX_HEIGHT
             }
         }
         return waterfallNoteList.toTypedArray()
@@ -351,34 +324,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 // 如果上一个音符的上边界和当前音符的上边界相同，则表示同时按下，此时循环，继续设定两个音符的结束时间相同即可
             } while (index >= 0 && waterfallNoteList.size - index < 128 && waterfallNoteList[index].bottom == waterfallNoteList[index + 1].bottom)
         }
-    }
-
-    /**
-     * 将琴键RectF的宽度，转换成瀑布流长条的宽度（略小于琴键的宽度）
-     * 返回值为瀑布流音符横坐标的左边界和右边界
-     */
-    private fun convertWidthToWaterfallWidth(isBlack: Boolean, rectF: RectF?): Pair<Float, Float> {
-        if (rectF == null) {
-            return Pair(-1f, -1f)
-        }
-        // 根据比例计算瀑布流的宽度
-        val waterfallWidth = if (isBlack) rectF.width() * BLACK_KEY_WATERFALL_WIDTH_FACTOR
-        else rectF.width() * KeyboardView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR
-        // 根据中轴线和新的宽度计算坐标，返回
-        return Pair(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2)
-    }
-
-    /**
-     * 根据一个midi音高，判断它是否为黑键
-     */
-    private fun isBlackKey(pitch: Byte): Boolean {
-        val pitchInOctave = pitch % NOTES_PER_OCTAVE
-        for (blackKeyOffsetInOctave in KeyboardView.BLACK_KEY_OFFSETS) {
-            if (pitchInOctave == blackKeyOffsetInOctave) {
-                return true
-            }
-        }
-        return false
     }
 
     /**
@@ -433,28 +378,22 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         when (msg.what) {
             R.id.waterfall_sub_key -> {
                 keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum - 1, 0)
-                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation()
             }
 
             R.id.waterfall_add_key -> {
                 keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum + 1, 0)
-                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation()
             }
 
             R.id.waterfall_key_move_left -> {
                 keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset - 1, 0)
-                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation()
             }
 
             R.id.waterfall_key_move_right -> {
                 keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset + 1, 0)
-                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                updateWaterfallNoteLeftRightLocation()
             }
         }
+        waterfallView.octaveLineXList = keyboardView.allOctaveLineX
+        updateWaterfallNoteLeftRightLocation()
         false
     }
 
@@ -473,9 +412,8 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
 
     fun freeStyleKeyDownHandle(pitch: Byte, volume: Byte) {
         if (freeStyle) {
-            val (left, right) = convertWidthToWaterfallWidth(
-                isBlackKey(pitch),
-                keyboardView.convertPitchToReact(pitch)
+            val (left, right) = WaterfallUtil.convertWidthToWaterfallWidth(
+                pitch, keyboardView.convertPitchToReact(pitch)
             )
             waterfallView.addFreeStyleWaterfallNote(
                 WaterfallNote(

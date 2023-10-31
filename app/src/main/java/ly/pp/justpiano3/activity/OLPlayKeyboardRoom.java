@@ -12,47 +12,30 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
-import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import kotlin.Pair;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.*;
+import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
+import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import ly.pp.justpiano3.view.KeyboardView;
+import ly.pp.justpiano3.view.WaterfallView;
+import protobuf.dto.OnlineKeyboardNoteDTO;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.entity.OLKeyboardState;
-import ly.pp.justpiano3.entity.OLNote;
-import ly.pp.justpiano3.entity.Room;
-import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
-import ly.pp.justpiano3.utils.ColorUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.FileUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.MidiDeviceUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.utils.VibrationUtil;
-import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
-import ly.pp.justpiano3.view.KeyboardView;
-import protobuf.dto.OnlineKeyboardNoteDTO;
+import java.util.concurrent.*;
 
 public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
     public static final int NOTES_SEND_INTERVAL = 120;
@@ -65,6 +48,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
     public LinearLayout keyboardLayout;
+    public WaterfallView waterfallView;
     public KeyboardView keyboardView;
     public SharedPreferences sharedPreferences;
     public ScheduledExecutorService keyboardScheduledExecutor;
@@ -154,6 +138,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 MidiDeviceUtil.addMidiConnectionListener(this);
             }
             openNotesSchedule();
+//            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
         }
     }
 
@@ -189,7 +174,20 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             default:
                 break;
         }
+        onlineWaterfallViewNoteWidthUpdateHandle();
         return false;
+    }
+
+    public void onlineWaterfallViewNoteWidthUpdateHandle() {
+        if (waterfallView.getVisibility() == View.VISIBLE) {
+            waterfallView.setOctaveLineXList(keyboardView.getAllOctaveLineX());
+            for (WaterfallNote waterfallNote : waterfallView.getFreeStyleNotes()) {
+                Pair<Float, Float> result = WaterfallUtil.Companion.convertWidthToWaterfallWidth(
+                        waterfallNote.getPitch(), keyboardView.convertPitchToReact(waterfallNote.getPitch()));
+                waterfallNote.setLeft(result.getFirst());
+                waterfallNote.setRight(result.getSecond());
+            }
+        }
     }
 
     @Override
@@ -261,6 +259,10 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         initRoomActivity(savedInstanceState);
         jpprogressBar = new JPProgressBar(this);
         TabSpec newTabSpec = roomTabs.newTabSpec("tab3");
+        newTabSpec.setContent(R.id.msg_tab);
+        newTabSpec.setIndicator("瀑布");
+        roomTabs.addTab(newTabSpec);
+        newTabSpec = roomTabs.newTabSpec("tab4");
         newTabSpec.setContent(R.id.players_tab);
         newTabSpec.setIndicator("邀请");
         roomTabs.addTab(newTabSpec);
@@ -273,11 +275,11 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         findViewById(R.id.keyboard_resize).setOnTouchListener(this);
         keyboardSetting = findViewById(R.id.keyboard_setting);
         keyboardSetting.setOnClickListener(this);
-        Button keyboardRecord = findViewById(R.id.keyboard_record);
-        keyboardRecord.setOnClickListener(this);
+        findViewById(R.id.keyboard_record).setOnClickListener(this);
         for (int i = 0; i < olKeyboardStates.length; i++) {
             olKeyboardStates[i] = new OLKeyboardState(false, false, false);
         }
+        waterfallView = findViewById(R.id.ol_waterfall_view);
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
@@ -295,6 +297,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 if (hasAnotherUser()) {
                     broadNote(pitch, volume);
                 }
+                onlineWaterfallKeyDownHandle(pitch, volume, keyboardNoteDownColor == null ?
+                        GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardNoteDownColor);
             }
 
             @Override
@@ -306,6 +310,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 if (hasAnotherUser()) {
                     broadNote(pitch, 0);
                 }
+                onlineWaterfallKeyUpHandle(pitch);
             }
         });
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -320,11 +325,35 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             setTabTitleViewLayout(i);
         }
         roomTabs.setCurrentTab(1);
+    }
+
+    public void onlineWaterfallKeyDownHandle(byte pitch, byte volume, int color) {
+        if (waterfallView.getVisibility() == View.VISIBLE) {
+            Pair<Float, Float> result = WaterfallUtil.Companion.convertWidthToWaterfallWidth(
+                    pitch, keyboardView.convertPitchToReact(pitch));
+            waterfallView.addFreeStyleWaterfallNote(
+                    new WaterfallNote(
+                            result.getFirst(),
+                            result.getSecond(),
+                            waterfallView.getHeight() + waterfallView.getPlayProgress(),
+                            Float.MAX_VALUE,
+                            color,
+                            pitch,
+                            volume
+                    )
+            );
+        }
+    }
+
+    public void onlineWaterfallKeyUpHandle(byte pitch) {
+        if (waterfallView.getVisibility() == View.VISIBLE) {
+            waterfallView.stopFreeStyleWaterfallNote(pitch);
+        }
     }
 
     @Override
@@ -342,6 +371,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
         }
         SoundEngineUtil.stopPlayAllSounds();
+        waterfallView.stopPlay();
+        waterfallView.destroy();
         super.onDestroy();
     }
 
@@ -393,6 +424,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             if (hasAnotherUser()) {
                 broadNote(pitch, volume);
             }
+            onlineWaterfallKeyDownHandle(pitch, volume, keyboardNoteDownColor == null ?
+                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardNoteDownColor);
         } else {
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].getMuted()) {
@@ -404,6 +437,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             if (hasAnotherUser()) {
                 broadNote(pitch, 0);
             }
+            onlineWaterfallKeyUpHandle(pitch);
         }
     }
 
