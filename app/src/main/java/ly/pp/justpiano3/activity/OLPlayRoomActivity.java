@@ -4,44 +4,18 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.protobuf.MessageLite;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -60,13 +34,9 @@ import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
+
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineLoadUserInfoDTO;
@@ -169,16 +139,16 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
             new JPDialogBuilder(this).setWidth(288).setTitle(str).loadInflate(inflate)
                     .setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
-                try {
-                    OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
-                    builder.setType(5);
-                    builder.setRoomPosition(jSONObject4.getInt("I"));
-                    sendMsg(OnlineProtocolType.COUPLE, builder.build());
-                    dialog.dismiss();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+                        try {
+                            OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
+                            builder.setType(5);
+                            builder.setRoomPosition(jSONObject4.getInt("I"));
+                            sendMsg(OnlineProtocolType.COUPLE, builder.build());
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -311,10 +281,13 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
 
     protected void changeRoomTitleClick() {
         if (playerKind.equals("G")) {
-            Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
+            // 取消Toast提示
+            // Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
         } else {
             View inflate = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
             EditText text1 = inflate.findViewById(R.id.text_1);
+            // 填充当前房间名称
+            text1.setText(roomName);
             EditText text2 = inflate.findViewById(R.id.text_2);
             new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate)
                     .setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2))
