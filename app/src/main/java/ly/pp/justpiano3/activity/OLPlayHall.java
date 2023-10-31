@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -190,7 +191,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             }
             mo2829a(listView, arrayList, 3, false);
         }
-        listView.setCacheColorHint(0);
+        listView.setCacheColorHint(Color.TRANSPARENT);
         listView.setAlwaysDrawnWithCacheEnabled(true);
         int i2 = bundle.getInt("R");
         new JPDialogBuilder(this).setTitle(i2 + "房" + " 房间信息").loadInflate(inflate).setFirstButton("进入房间", (dialog, which) -> {
@@ -403,20 +404,20 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         showTimeHandler = new Handler(this);
         timeTextView = findViewById(R.id.time_text);
         msgListView = findViewById(R.id.ol_msg_list);
-        msgListView.setCacheColorHint(0);
+        msgListView.setCacheColorHint(Color.TRANSPARENT);
         findViewById(R.id.ol_challenge_b).setOnClickListener(this);
         findViewById(R.id.pre_button).setOnClickListener(this);
         findViewById(R.id.next_button).setOnClickListener(this);
         findViewById(R.id.online_button).setOnClickListener(this);
         msgList.clear();
         roomListView = findViewById(R.id.ol_room_list);
-        roomListView.setCacheColorHint(0);
+        roomListView.setCacheColorHint(Color.TRANSPARENT);
         userInHallListView = findViewById(R.id.ol_player_list);
-        userInHallListView.setCacheColorHint(0);
+        userInHallListView.setCacheColorHint(Color.TRANSPARENT);
         imageView = findViewById(R.id.ol_express_b);
         imageView.setOnClickListener(this);
         friendListView = findViewById(R.id.ol_friend_list);
-        friendListView.setCacheColorHint(0);
+        friendListView.setCacheColorHint(Color.TRANSPARENT);
         roomList.clear();
         connectionService = jpapplication.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(this);

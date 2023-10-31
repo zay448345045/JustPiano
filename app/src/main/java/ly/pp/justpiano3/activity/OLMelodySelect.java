@@ -2,6 +2,7 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -264,7 +265,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             ListView f4326o = findViewById(R.id.ol_f_list);
             f4327p = findViewById(R.id.ol_c_list);
             f4326o.setAdapter(new OLMelodySelectTypeAdapter(this));
-            f4326o.setCacheColorHint(0);
+            f4326o.setCacheColorHint(Color.TRANSPARENT);
             f4326o.setOnItemClickListener((parent, view, position, id) -> {
                 linearLayout.setVisibility(View.GONE);
                 f4314a = position;

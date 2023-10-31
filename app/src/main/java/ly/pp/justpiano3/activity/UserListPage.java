@@ -2,6 +2,7 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -30,7 +31,7 @@ public class UserListPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_user_list);
         listView = findViewById(R.id.list_view);
-        listView.setCacheColorHint(0);
+        listView.setCacheColorHint(Color.TRANSPARENT);
         TextView textView = findViewById(R.id.ol_top_title);
         textView.setText("聊天屏蔽用户名单");
         TextView descTextView = findViewById(R.id.ol_top_tips);

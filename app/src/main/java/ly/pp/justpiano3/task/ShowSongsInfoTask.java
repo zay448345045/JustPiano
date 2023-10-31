@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.task;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -54,7 +55,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             showSongsInfo.get().mo2977a(str, showSongsInfo.get().songsListView);
-            showSongsInfo.get().songsListView.setCacheColorHint(0);
+            showSongsInfo.get().songsListView.setCacheColorHint(Color.TRANSPARENT);
             showSongsInfo.get().jpprogressBar.cancel();
         } else if (str.equals("[]")) {
             showSongsInfo.get().jpprogressBar.cancel();

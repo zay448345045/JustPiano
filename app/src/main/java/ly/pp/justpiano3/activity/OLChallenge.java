@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -117,7 +118,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         viewChallenge = findViewById(R.id.viewChallenge);
         viewChallenge.setOnClickListener(this);
         scoreListView = findViewById(R.id.challenge_score_view);
-        scoreListView.setCacheColorHint(0);
+        scoreListView.setCacheColorHint(Color.TRANSPARENT);
     }
 
     public final void showDrawPrizeDialog(Bundle bundle) {

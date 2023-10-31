@@ -3,6 +3,7 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -265,7 +266,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 finishView = layoutinflater.inflate(R.layout.ol_room_play_finish, null);
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
-                gradeListView.setCacheColorHint(0);
+                gradeListView.setCacheColorHint(Color.TRANSPARENT);
                 playView = new PlayView(jpapplication, this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
                 break;
             case 3:    //大厅考级

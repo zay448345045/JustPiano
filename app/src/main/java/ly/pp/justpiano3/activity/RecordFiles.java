@@ -3,6 +3,7 @@ package ly.pp.justpiano3.activity;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -99,7 +100,7 @@ public class RecordFiles extends Activity {
         setContentView(R.layout.record_list);
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         f4919d = findViewById(R.id.listFile);
-        f4919d.setCacheColorHint(0);
+        f4919d.setCacheColorHint(Color.TRANSPARENT);
         f4921f = findViewById(R.id.txt1);
         m3824a(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/"));
     }

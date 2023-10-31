@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -342,7 +343,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         View inflate = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
                         ListView listView = inflate.findViewById(R.id.account_list);
                         listView.setBackgroundResource(R.color.translent);
-                        listView.setCacheColorHint(0);
+                        listView.setCacheColorHint(Color.TRANSPARENT);
                         listView.setAlwaysDrawnWithCacheEnabled(true);
                         listView.setSelector(R.color.translent);
                         TextView textView = inflate.findViewById(R.id.account_msg);

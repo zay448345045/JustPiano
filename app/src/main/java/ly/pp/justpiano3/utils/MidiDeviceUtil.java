@@ -197,20 +197,20 @@ public class MidiDeviceUtil {
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static List<MidiDeviceInfo> getAllMidiDeviceList() {
-        List<MidiDeviceInfo> deviceIdAndNamdList = new ArrayList<>();
+        List<MidiDeviceInfo> midiDeviceInfoList = new ArrayList<>();
         if (midiManager != null) {
             for (MidiDeviceInfo deviceInfo : midiManager.getDevices()) {
                 if (deviceInfo != null) {
                     for (MidiDeviceInfo.PortInfo port : deviceInfo.getPorts()) {
                         if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
-                            deviceIdAndNamdList.add(deviceInfo);
+                            midiDeviceInfoList.add(deviceInfo);
                             break;
                         }
                     }
                 }
             }
         }
-        return deviceIdAndNamdList;
+        return midiDeviceInfoList;
     }
 
     /**

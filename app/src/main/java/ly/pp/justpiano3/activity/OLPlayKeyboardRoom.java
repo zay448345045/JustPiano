@@ -12,30 +12,51 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TabHost.TabSpec;
+import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import kotlin.Pair;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.entity.*;
-import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
-import ly.pp.justpiano3.utils.*;
-import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
-import ly.pp.justpiano3.view.KeyboardView;
-import ly.pp.justpiano3.view.WaterfallView;
-import protobuf.dto.OnlineKeyboardNoteDTO;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import kotlin.Pair;
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.OLKeyboardState;
+import ly.pp.justpiano3.entity.OLNote;
+import ly.pp.justpiano3.entity.Room;
+import ly.pp.justpiano3.entity.WaterfallNote;
+import ly.pp.justpiano3.handler.android.OLPlayKeyboardRoomHandler;
+import ly.pp.justpiano3.utils.ColorUtil;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.FileUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.VibrationUtil;
+import ly.pp.justpiano3.utils.WaterfallUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPProgressBar;
+import ly.pp.justpiano3.view.KeyboardView;
+import ly.pp.justpiano3.view.WaterfallView;
+import protobuf.dto.OnlineKeyboardNoteDTO;
 
 public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
     public static final int NOTES_SEND_INTERVAL = 120;
@@ -279,7 +300,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         for (int i = 0; i < olKeyboardStates.length; i++) {
             olKeyboardStates[i] = new OLKeyboardState(false, false, false);
         }
-        waterfallView = findViewById(R.id.ol_waterfall_view);
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
@@ -323,6 +343,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
+        waterfallView = findViewById(R.id.ol_waterfall_view);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         for (int i = 0; i < 4; i++) {

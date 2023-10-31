@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.util.DisplayMetrics;
@@ -458,12 +459,12 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
-        hallListView.setCacheColorHint(0);
+        hallListView.setCacheColorHint(Color.TRANSPARENT);
         hallList.clear();
         friendListView = findViewById(R.id.ol_friend_list);
-        friendListView.setCacheColorHint(0);
+        friendListView.setCacheColorHint(Color.TRANSPARENT);
         familyListView = findViewById(R.id.ol_family_list);
-        familyListView.setCacheColorHint(0);
+        familyListView.setCacheColorHint(Color.TRANSPARENT);
         familyListView.setLoadListener(() -> ThreadPoolUtil.execute(() -> {
             familyPageNum++;
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
@@ -472,7 +473,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
         }));
         mailListView = findViewById(R.id.ol_mail_list);
-        mailListView.setCacheColorHint(0);
+        mailListView.setCacheColorHint(Color.TRANSPARENT);
         friendList.clear();
         familyList.clear();
         connectionService = jpApplication.getConnectionService();

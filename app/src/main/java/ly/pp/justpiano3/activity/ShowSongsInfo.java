@@ -2,6 +2,7 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -154,7 +155,7 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
                 break;
             case "T":
                 f4974j.setText("-新晋冠军-");
-                songsListView.setCacheColorHint(0);
+                songsListView.setCacheColorHint(Color.TRANSPARENT);
                 break;
             case "M":
                 f4974j.setText("-上传测试-");

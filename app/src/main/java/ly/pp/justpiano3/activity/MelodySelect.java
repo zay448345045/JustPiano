@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -393,7 +394,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             }
         });
         categoryListView.setAdapter(new LocalSongsItemAdapter(this));
-        categoryListView.setCacheColorHint(0);
+        categoryListView.setCacheColorHint(Color.TRANSPARENT);
         categoryListView.setOnItemClickListener((parent, view, position, id) -> {
             view.setSelected(true);
             if (position == Consts.items.length - 1) {

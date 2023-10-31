@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.task;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -74,7 +75,7 @@ public final class OLMelodySelectTask extends AsyncTask<Void, Void, String> {
             olMelodySelect.get().popupWindowSelectAdapter.notifyDataSetChanged();
             olMelodySelect.get().mo2809a(str);
             olMelodySelect.get().mo2808a(olMelodySelect.get().f4327p, olMelodySelect.get().f4316c, olMelodySelect.get().f4322k);
-            olMelodySelect.get().f4327p.setCacheColorHint(0);
+            olMelodySelect.get().f4327p.setCacheColorHint(Color.TRANSPARENT);
             olMelodySelect.get().jpprogressBar.cancel();
             return;
         }
