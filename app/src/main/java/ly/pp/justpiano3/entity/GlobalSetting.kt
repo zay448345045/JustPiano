@@ -214,6 +214,12 @@ object GlobalSetting {
         private set
 
     /**
+     * 联网键盘模式瀑布流透明度
+     */
+    var waterfallOnlineAlpha: Float = 0.5f
+        private set
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -270,5 +276,6 @@ object GlobalSetting {
         showNotification = sharedPreferences.getBoolean("show_notification", false)
         keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type", "0")!!.toInt()
         keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)
+        waterfallOnlineAlpha = sharedPreferences.getString("waterfall_online_alpha", "0.5")!!.toFloat()
     }
 }

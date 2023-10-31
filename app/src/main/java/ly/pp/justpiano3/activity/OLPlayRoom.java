@@ -52,6 +52,7 @@ import ly.pp.justpiano3.view.ScrollText;
 import protobuf.dto.OnlineChangeRoomHandDTO;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineLoadRoomPositionDTO;
 import protobuf.dto.OnlinePlaySongDTO;
 import protobuf.dto.OnlinePlayStartDTO;
 
@@ -601,6 +602,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             setTabTitleViewLayout(i);
         }
         roomTabs.setCurrentTab(1);
+        // 注意这里在向服务端发消息
+        sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
     }
 
     @Override

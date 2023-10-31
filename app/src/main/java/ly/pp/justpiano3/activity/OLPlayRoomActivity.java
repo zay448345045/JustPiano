@@ -69,7 +69,6 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
-import protobuf.dto.OnlineLoadRoomPositionDTO;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineQuitRoomDTO;
 import protobuf.dto.OnlineRoomChatDTO;
@@ -615,8 +614,6 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         expressImageView.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         handler = new Handler(this);
-        // 注意这里在向服务端发消息
-        sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);

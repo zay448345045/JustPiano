@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardView;
 import ly.pp.justpiano3.view.WaterfallView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
+import protobuf.dto.OnlineLoadRoomPositionDTO;
 
 public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
     public static final int NOTES_SEND_INTERVAL = 120;
@@ -269,6 +271,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
         }
     }
 
@@ -343,18 +346,23 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        waterfallView = findViewById(R.id.ol_waterfall_view);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int tabTitleHeight = (int) ((displayMetrics.heightPixels * 45f) / 480);
         for (int i = 0; i < 4; i++) {
-            roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
+            roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = tabTitleHeight;
             setTabTitleViewLayout(i);
         }
+        waterfallView = findViewById(R.id.ol_waterfall_view);
+        waterfallView.setTranslationY(tabTitleHeight);
+        waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
         roomTabs.setCurrentTab(1);
+        // 注意这里在向服务端发消息
+        sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
     }
 
     public void onlineWaterfallKeyDownHandle(byte pitch, byte volume, int color) {
-        if (waterfallView.getVisibility() == View.VISIBLE) {
+        if (waterfallView != null) {
             Pair<Float, Float> result = WaterfallUtil.Companion.convertWidthToWaterfallWidth(
                     pitch, keyboardView.convertPitchToReact(pitch));
             waterfallView.addFreeStyleWaterfallNote(
@@ -372,7 +380,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     }
 
     public void onlineWaterfallKeyUpHandle(byte pitch) {
-        if (waterfallView.getVisibility() == View.VISIBLE) {
+        if (waterfallView != null) {
             waterfallView.stopFreeStyleWaterfallNote(pitch);
         }
     }
@@ -479,6 +487,8 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, weight));
                         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - weight));
+                        waterfallView.setLayoutParams(new RelativeLayout.LayoutParams(
+                                playerLayout.getWidth(), playerLayout.getHeight()));
                     }
                     break;
                 case MotionEvent.ACTION_UP:
