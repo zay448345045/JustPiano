@@ -19,15 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ly.pp.justpiano3.view.WaterfallView
-                android:id="@+id/ol_waterfall_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true" />
-
             <RelativeLayout
                 android:id="@+id/relative_player_layout"
                 android:layout_width="@dimen/dimen_304dp"
@@ -339,6 +330,16 @@
                     </RelativeLayout>
                 </TabHost>
             </RelativeLayout>
+
+            <ly.pp.justpiano3.view.WaterfallView
+                android:id="@+id/ol_waterfall_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true" />
         </RelativeLayout>
     </LinearLayout>
 
