@@ -138,7 +138,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 MidiDeviceUtil.addMidiConnectionListener(this);
             }
             openNotesSchedule();
-//            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
+            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
         }
     }
 

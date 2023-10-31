@@ -1,12 +1,7 @@
 package ly.pp.justpiano3.thread
 
 import android.content.Context
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import ly.pp.justpiano3.JPApplication
 import ly.pp.justpiano3.enums.PlaySongsModeEnum
 import ly.pp.justpiano3.utils.PmSongUtil
@@ -43,7 +38,7 @@ object SongPlay {
         PmSongUtil.parsePmDataByFilePath(context, songFilePath)?.let {
             job?.cancel()
             job = threadPoolScope.launch {
-                val playingPitchList: MutableList<Byte> = mutableListOf()
+                val playingPitchMap: MutableMap<Byte, Byte> = mutableMapOf()
                 for (i in it.pitchArray.indices) {
                     if (!isActive) {
                         return@launch
@@ -51,15 +46,21 @@ object SongPlay {
                     val delayTime = it.tickArray[i].toLong() * it.globalSpeed
                     if (delayTime > 0 && i > 0) {
                         delay(delayTime)
-                        playingPitchList.forEach { SoundEngineUtil.stopPlaySound((it)) }
-                        playingPitchList.clear()
+                        val iterator = playingPitchMap.entries.iterator()
+                        while (iterator.hasNext()) {
+                            val entry = iterator.next()
+                            if (entry.value == it.trackArray[i]) {
+                                SoundEngineUtil.stopPlaySound(entry.key)
+                                iterator.remove()
+                            }
+                        }
                     }
                     val pitch = (it.pitchArray[i] + tune).toByte()
                     SoundEngineUtil.playSound(pitch, it.volumeArray[i])
-                    playingPitchList.add(pitch)
+                    playingPitchMap[pitch] = it.trackArray[i]
                 }
-                playingPitchList.forEach { SoundEngineUtil.stopPlaySound((it)) }
-                playingPitchList.clear()
+                playingPitchMap.values.forEach { SoundEngineUtil.stopPlaySound((it)) }
+                playingPitchMap.clear()
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
                 if (!nextSongFilePath.isNullOrEmpty()) {
                     // 如果有下一首歌曲要播放，中间需要一小段停歇的间隔
