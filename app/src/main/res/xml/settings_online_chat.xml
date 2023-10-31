@@ -8,6 +8,14 @@
             android:summaryOff="&lt;关闭&gt; 在线聊天行首不显示当前时间"
             android:summaryOn="&lt;打开&gt; 在线聊天行首显示当前时间"
             android:title="聊天行首显示时间" />
+        <ListPreference
+                android:defaultValue="MM:ss"
+                android:dialogTitle="聊天行首显示时间类型"
+                android:entries="@array/chats_time_show_mode_name"
+                android:entryValues="@array/chats_time_show_mode_value"
+                android:key="chats_time_show_modes"
+                android:summary="聊天行首显示时间类型"
+                android:title="聊天行首显示时间类型" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="chats_sound"

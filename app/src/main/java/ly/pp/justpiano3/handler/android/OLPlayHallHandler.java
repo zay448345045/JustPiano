@@ -10,31 +10,22 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.RoomModeEnum;
+import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.view.JPDialogBuilder;
+import protobuf.dto.OnlineClTestDTO;
+import protobuf.dto.OnlineEnterRoomDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.ref.WeakReference;
 import java.util.Date;
-
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.enums.RoomModeEnum;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.JPDialogBuilder;
-import protobuf.dto.OnlineClTestDTO;
-import protobuf.dto.OnlineEnterRoomDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -58,7 +49,7 @@ public final class OLPlayHallHandler extends Handler {
                     }
                     String time = "";
                     if (GlobalSetting.INSTANCE.getShowChatTime()) {
-                        time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
+                        time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
                     }
                     message.getData().putString("TIME", time);
 

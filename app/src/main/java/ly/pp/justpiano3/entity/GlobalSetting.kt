@@ -196,6 +196,12 @@ object GlobalSetting {
         private set
 
     /**
+     * 聊天是否展示时间
+     */
+    var showChatTimeModes: String = "MM:ss"
+        private set
+
+    /**
      * 曲谱播放时是否显示通知栏
      */
     var showNotification: Boolean = false
@@ -267,6 +273,7 @@ object GlobalSetting {
         )
         saveChatRecord = sharedPreferences.getBoolean("save_chats", false)
         showChatTime = sharedPreferences.getBoolean("chats_time_show", false)
+        showChatTimeModes = sharedPreferences.getString("chats_time_show_modes", "HH:mm")!!
         showNotification = sharedPreferences.getBoolean("show_notification", false)
         keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type", "0")!!.toInt()
         keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)

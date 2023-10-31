@@ -364,7 +364,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         }
         String time = "";
         if (GlobalSetting.INSTANCE.getShowChatTime()) {
-            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), "HH:mm");
+            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
         }
         message.getData().putString("TIME", time);
         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示

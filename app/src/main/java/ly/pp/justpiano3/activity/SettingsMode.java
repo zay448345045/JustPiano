@@ -3,10 +3,7 @@ package ly.pp.justpiano3.activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-
+import android.preference.*;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -137,6 +134,20 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
+
+            final SwitchPreference switchPreference = (SwitchPreference) findPreference("chats_time_show");
+            final ListPreference listPreference = (ListPreference) findPreference("chats_time_show_modes");
+
+            // 根据SwitchPreference的初始状态来设置ListPreference的可用性
+            listPreference.setEnabled(switchPreference.isChecked());
+
+            // 为SwitchPreference设置监听器
+            switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                // newValue为SwitchPreference即将设置的新值
+                boolean isEnabled = (Boolean) newValue;
+                listPreference.setEnabled(isEnabled);
+                return true; // 返回true以更新SwitchPreference的状态
+            });
         }
     }
 }

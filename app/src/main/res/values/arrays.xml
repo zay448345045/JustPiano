@@ -22,4 +22,12 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="chats_time_show_mode_name">
+        <item>HH:mm | 12:23 | 24小时:分钟(默认)</item>
+        <item>HH:mm:ss | 12:23:13 | 24小时:分钟:秒钟</item>
+    </string-array>
+    <string-array name="chats_time_show_mode_value">
+        <item>HH:mm</item>
+        <item>HH:mm:ss</item>
+    </string-array>
 </resources>
