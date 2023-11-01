@@ -80,7 +80,7 @@ public class SoundEngineUtil {
 
     public static void stopPlaySound(byte pitch) {
         if (MidiDeviceUtil.getSustainPedalStatus()) {
-            sustainNotePitchMap.put(pitch, null);
+            sustainNotePitchMap.put(pitch, (byte) 0);
         } else {
             triggerUp(108 - pitch);
         }
