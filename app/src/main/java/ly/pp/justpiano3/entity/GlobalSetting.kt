@@ -222,7 +222,7 @@ object GlobalSetting {
     /**
      * 联网键盘模式瀑布流透明度
      */
-    var waterfallOnlineAlpha: Int = 128
+    var waterfallOnlineAlpha: Int = 100
         private set
 
     /**
@@ -283,6 +283,6 @@ object GlobalSetting {
         showNotification = sharedPreferences.getBoolean("show_notification", false)
         keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type", "0")!!.toInt()
         keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)
-        waterfallOnlineAlpha = sharedPreferences.getString("online_waterfall_alpha", "128")!!.toInt()
+        waterfallOnlineAlpha = sharedPreferences.getString("online_waterfall_alpha", "100")!!.toInt()
     }
 }

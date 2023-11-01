@@ -500,7 +500,7 @@ class WaterfallView @JvmOverloads constructor(
                     // 八度虚线绘制
                     drawOctaveLine(it, octaveLinePaint, octaveLinePath)
                     // 将缓冲区中计算好的所有音块进行统一绘制
-                    it.drawBitmap(notesBufferBitmap, 0f, 0f, alphaPaint)
+                    it.drawBitmap(notesBufferBitmap, 0f, 0f, null)
                     // 进度条绘制
                     drawProgressBar(it)
                 }

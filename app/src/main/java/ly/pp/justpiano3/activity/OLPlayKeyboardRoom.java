@@ -86,6 +86,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
     private boolean recordStart;
     private String recordFilePath;
     private String recordFileName;
+    private int tabTitleHeight;
 
     private void broadNote(int pitch, int volume) {
         if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
@@ -163,6 +164,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             openNotesSchedule();
             waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
         }
+        RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
+        waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
+        waterfallView.setLayoutParams(waterfallViewLayoutParams);
     }
 
     @Override
@@ -348,7 +352,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int tabTitleHeight = (int) ((displayMetrics.heightPixels * 45f) / 480);
+        tabTitleHeight = (int) ((displayMetrics.heightPixels * 45f) / 480);
         for (int i = 0; i < 4; i++) {
             roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = tabTitleHeight;
             setTabTitleViewLayout(i);
@@ -487,8 +491,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, weight));
                         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - weight));
-                        waterfallView.setLayoutParams(new RelativeLayout.LayoutParams(
-                                playerLayout.getWidth(), playerLayout.getHeight()));
+                        RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
+                        waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
+                        waterfallView.setLayoutParams(waterfallViewLayoutParams);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -499,6 +504,9 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);
                     edit.apply();
+                    RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
+                    waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
+                    waterfallView.setLayoutParams(waterfallViewLayoutParams);
                     break;
                 default:
                     break;
