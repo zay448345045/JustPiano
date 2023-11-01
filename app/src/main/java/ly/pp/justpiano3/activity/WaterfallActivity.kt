@@ -137,7 +137,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                     && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
                 ) {
-                    MidiDeviceUtil.addMidiConnectionListener(this@WaterfallActivity)
+                    MidiDeviceUtil.setMidiConnectionListener(this@WaterfallActivity)
                 }
             }
         })

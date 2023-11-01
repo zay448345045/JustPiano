@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javazoom.jl.converter.Converter;
 
@@ -20,8 +22,22 @@ public class SoundEngineUtil {
      */
     public static final String CHAT_SOUND_FILE_NAME = "chat_b5.wav";
 
+    /**
+     * 处于延音状态下的音符列表
+     */
+    private static final Map<Byte, Byte> sustainNotePitchMap = new ConcurrentHashMap<>();
+
     static {
         System.loadLibrary("soundengine");
+        // 注册延音踏板状态变更监听器
+        MidiDeviceUtil.addMidiSustainPedalListener(status -> {
+            if (!status) {
+                for (Byte pitch : sustainNotePitchMap.keySet()) {
+                    stopPlaySound(pitch);
+                }
+                sustainNotePitchMap.clear();
+            }
+        });
     }
 
     public static native void setupAudioStreamNative(int numChannels, int sampleRate);
@@ -63,7 +79,11 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlaySound(byte pitch) {
-        triggerUp(108 - pitch);
+        if (MidiDeviceUtil.getSustainPedalStatus()) {
+            sustainNotePitchMap.put(pitch, null);
+        } else {
+            triggerUp(108 - pitch);
+        }
     }
 
     public static void stopPlayAllSounds() {

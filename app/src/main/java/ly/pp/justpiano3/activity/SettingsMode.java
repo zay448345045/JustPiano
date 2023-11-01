@@ -111,13 +111,6 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                Preference midiDevicePedalPreference = findPreference("midi_device_pedal_delay");
-                if (midiDevicePedalPreference != null) {
-                    midiDevicePedalPreference.setEnabled(true);
-                }
-            }
         }
     }
 

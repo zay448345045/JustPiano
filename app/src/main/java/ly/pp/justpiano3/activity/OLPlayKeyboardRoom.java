@@ -158,7 +158,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
             gridView.setAdapter(new KeyboardPlayerImageAdapter(list, this));
             // 加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                MidiDeviceUtil.addMidiConnectionListener(this);
+                MidiDeviceUtil.setMidiConnectionListener(this);
             }
             openNotesSchedule();
             waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());

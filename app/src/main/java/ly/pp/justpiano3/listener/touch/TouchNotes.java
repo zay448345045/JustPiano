@@ -22,7 +22,7 @@ public final class TouchNotes implements OnTouchListener {
     public TouchNotes(PlayView playView) {
         this.playView = playView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            MidiDeviceUtil.addMidiConnectionListener(playView.pianoPlay);
+            MidiDeviceUtil.setMidiConnectionListener(playView.pianoPlay);
         }
     }
 

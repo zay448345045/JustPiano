@@ -36,11 +36,8 @@ static void sendTheReceivedData(uint8_t *data, size_t numBytes) {
 
     // send it to the (Java) callback
     for (size_t i = 0; i < numBytes; i += 3) {
-        if ((data[i] & 0xF0) == 0x90) {
-            env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], data[i + 2]);
-        } else if ((data[i] & 0xF0) == 0x80) {
-            env->CallStaticVoidMethod(dataCallbackClass, midDataCallback, data[i + 1], 0);
-        }
+        env->CallStaticVoidMethod(dataCallbackClass, midDataCallback,
+                                  data[i], data[i + 1], data[i + 2]);
     }
 }
 
@@ -96,7 +93,7 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
     env->GetJavaVM(&theJvm);
     // Setup the receive data callback (into Java)
     dataCallbackClass = static_cast<jclass>(env->NewGlobalRef(clazz));
-    midDataCallback = env->GetStaticMethodID(clazz, "onNativeMessageReceive", "(BB)V");
+    midDataCallback = env->GetStaticMethodID(clazz, "onMidiMessageReceive", "(BBB)V");
 
     midi_device_handle_t deviceHandle;
     deviceHandle.sReading = true;

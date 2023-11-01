@@ -20,7 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class ly.pp.justpiano3.utils.MidiDeviceUtil{*;}
+-keepclassmembers class ly.pp.justpiano3.utils.MidiDeviceUtil {
+    void onMidiMessageReceive(...);
+}
 -keep class javazoom.jl.decoder.JavaLayerUtils{*;}
 -keep class io.netty.**{*;}
 -keep class protobuf.**{*;}

@@ -100,7 +100,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            MidiDeviceUtil.addMidiConnectionListener(this);
+            MidiDeviceUtil.setMidiConnectionListener(this);
         }
     }
 

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -30,6 +31,26 @@ public class MidiDeviceUtil {
     }
 
     private static MidiManager midiManager;
+
+    /**
+     * MIDI设备的延音踏板状态（开/关）
+     */
+    private static final AtomicBoolean sustainPedal = new AtomicBoolean(false);
+
+    private static final List<MidiSustainPedalListener> midiSustainPedalListeners = new ArrayList<>();
+
+    /**
+     * midi设备延音踏板开关状态变更监听
+     */
+    public interface MidiSustainPedalListener {
+
+        /**
+         * 延音踏板开关状态变更
+         *
+         * @param status 变更后的状态
+         */
+        void onChange(boolean status);
+    }
 
     /**
      * 处于开启（使用）状态的midi设备列表，key：设备id+设备名称，value：设备端口（用于连接和断开）
@@ -83,15 +104,8 @@ public class MidiDeviceUtil {
 
         @Override
         public void onSend(byte[] msg, int offset, int count, long timestamp) {
-            // 此为java层回调midi音符事件，保持和C++层调用一致的API，API使用方对使用了C++ midi还是java midi无感知
             for (int i = offset; i < offset + count; i += 3) {
-                if ((msg[i] & 0xF0) == 0x90) {
-                    midiMessageReceiveListener.onMidiMessageReceive(
-                            (byte) (msg[i + 1] + GlobalSetting.INSTANCE.getMidiKeyboardTune()), msg[i + 2]);
-                } else if ((msg[i] & 0xF0) == 0x80) {
-                    midiMessageReceiveListener.onMidiMessageReceive(
-                            (byte) (msg[i + 1] + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
-                }
+                onMidiMessageReceive(msg[i], msg[i + 1], msg[i + 2]);
             }
         }
     }
@@ -222,7 +236,7 @@ public class MidiDeviceUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void addMidiConnectionListener(MidiMessageReceiveListener midiMessageReceiveListener) {
+    public static void setMidiConnectionListener(MidiMessageReceiveListener midiMessageReceiveListener) {
         if (midiManager == null) {
             return;
         }
@@ -258,6 +272,14 @@ public class MidiDeviceUtil {
         }
     }
 
+    public static void addMidiSustainPedalListener(MidiSustainPedalListener midiSustainPedalListener) {
+        midiSustainPedalListeners.add(midiSustainPedalListener);
+    }
+
+    public static void removeMidiSustainPedalListener(MidiSustainPedalListener midiSustainPedalListener) {
+        midiSustainPedalListeners.remove(midiSustainPedalListener);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber, int deviceId);
 
@@ -265,13 +287,34 @@ public class MidiDeviceUtil {
     private static native void stopReadingMidi(int deviceId);
 
     /**
-     * Called from the native C++ code when MIDI messages are received
+     * C++和java接收到midi数据后均会调用此方法
      */
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    private static void onNativeMessageReceive(byte pitch, byte volume) {
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private static void onMidiMessageReceive(byte value1, byte value2, byte value3) {
         if (midiReceiver != null) {
-            midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                    (byte) (pitch + GlobalSetting.INSTANCE.getMidiKeyboardTune()), volume);
+            int midiEventType = value1 & 0xF0;
+            if (midiEventType == 0x90) {
+                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()),value3);
+            } else if (midiEventType == 0x80) {
+                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
+            } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
+                // 延音踏板，midi的CC控制器64号判断
+                boolean currentSustainPedalValue = (value3 & 0xFF) >= 64;
+                if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue) {
+                    for (MidiSustainPedalListener midiSustainPedalListener : midiSustainPedalListeners) {
+                        midiSustainPedalListener.onChange(currentSustainPedalValue);
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * 获取延音踏板当前状态
+     */
+    public static boolean getSustainPedalStatus() {
+        return sustainPedal.get();
     }
 }
