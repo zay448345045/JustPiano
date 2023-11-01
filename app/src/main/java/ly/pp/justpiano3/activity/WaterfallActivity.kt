@@ -2,7 +2,11 @@ package ly.pp.justpiano3.activity
 
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -11,7 +15,12 @@ import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
-import ly.pp.justpiano3.utils.*
+import ly.pp.justpiano3.utils.MidiDeviceUtil
+import ly.pp.justpiano3.utils.PmSongUtil
+import ly.pp.justpiano3.utils.SoundEngineUtil
+import ly.pp.justpiano3.utils.ThreadPoolUtil
+import ly.pp.justpiano3.utils.VibrationUtil
+import ly.pp.justpiano3.utils.WaterfallUtil
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
 import ly.pp.justpiano3.view.ScrollText
