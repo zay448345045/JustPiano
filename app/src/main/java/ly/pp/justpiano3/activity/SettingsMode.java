@@ -134,20 +134,6 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
-
-            final SwitchPreference switchPreference = (SwitchPreference) findPreference("chats_time_show");
-            final ListPreference listPreference = (ListPreference) findPreference("chats_time_show_modes");
-
-            // 根据SwitchPreference的初始状态来设置ListPreference的可用性
-            listPreference.setEnabled(switchPreference.isChecked());
-
-            // 为SwitchPreference设置监听器
-            switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                // newValue为SwitchPreference即将设置的新值
-                boolean isEnabled = (Boolean) newValue;
-                listPreference.setEnabled(isEnabled);
-                return true; // 返回true以更新SwitchPreference的状态
-            });
         }
     }
 }
