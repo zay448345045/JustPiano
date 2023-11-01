@@ -45,13 +45,13 @@
             android:summary="瀑布流自由演奏音块颜色"
             android:title="瀑布流自由演奏音块颜色" />
         <ly.pp.justpiano3.view.SeekBarPreference
-            android:defaultValue="0.5"
+            android:defaultValue="128"
             android:dialogTitle="联网模式瀑布流背景透明度"
-            android:key="waterfall_online_alpha"
+            android:key="online_waterfall_alpha"
             android:summary="设置联网模式瀑布流背景透明度，值越小，越趋向于透明"
             android:title="联网模式瀑布流背景透明度"
-            app:floatNumber="true"
-            app:maxValue="0.8"
-            app:minValue="0.2" />
+            app:floatNumber="false"
+            app:maxValue="216"
+            app:minValue="40" />
     </PreferenceCategory>
 </PreferenceScreen>

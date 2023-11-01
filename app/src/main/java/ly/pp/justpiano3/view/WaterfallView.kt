@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.PixelFormat
+import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
@@ -42,6 +44,11 @@ class WaterfallView @JvmOverloads constructor(
     private var progressBarBaseImage: Bitmap? = null
     private var progressBarRect: RectF? = null
     private var progressBarBaseRect: RectF? = null
+
+    /**
+     * 整个瀑布流视图的透明度，开启瀑布流绘制线程前设置有效
+     */
+    var waterfallViewAlpha = 255;
 
     /**
      * 瀑布流音块下落速率
@@ -141,6 +148,10 @@ class WaterfallView @JvmOverloads constructor(
     }
 
     init {
+        // 设置背景透明
+        this.setBackgroundColor(Color.TRANSPARENT);
+        this.setZOrderOnTop(true); //necessary
+        holder.setFormat(PixelFormat.TRANSPARENT);
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
@@ -408,7 +419,15 @@ class WaterfallView @JvmOverloads constructor(
 
         override fun run() {
             // 先初始化绘制Paint对象，避免绘制时进行频繁的创建对象
-            val (notePaint, octaveLinePaint, octaveLinePath) = initPaint()
+            val octaveLinePaint = Paint()
+            octaveLinePaint.color = Color.WHITE
+            octaveLinePaint.alpha = 64
+            octaveLinePaint.strokeWidth = 3f
+            octaveLinePaint.style = Paint.Style.STROKE
+            octaveLinePaint.pathEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
+            val notePaint = Paint()
+            val octaveLinePath = Path()
+            val alphaPaint = Paint()
             // 记录绘制的起始时间
             val startPlayTime = System.currentTimeMillis()
             // 循环绘制，直到外部有触发终止绘制
@@ -456,29 +475,14 @@ class WaterfallView @JvmOverloads constructor(
                 // 先在缓冲区执行绘制所有音块
                 drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
                 // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(octaveLinePaint, octaveLinePath)
+                doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
             }
-        }
-
-        /**
-         * 初始化Paint
-         */
-        private fun initPaint(): Triple<Paint, Paint, Path> {
-            // 初始化每个八度的虚线Paint
-            val octaveLinePaint = Paint()
-            octaveLinePaint.color = Color.WHITE
-            octaveLinePaint.alpha = 64
-            octaveLinePaint.strokeWidth = 3f
-            octaveLinePaint.style = Paint.Style.STROKE
-            octaveLinePaint.pathEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
-            // 初始化音块Paint，初始化虚线对应的路径对象
-            return Triple(Paint(), octaveLinePaint, Path())
         }
 
         /**
          * 执行绘制瀑布流
          */
-        private fun doDrawWaterfall(octaveLinePaint: Paint, octaveLinePath: Path) {
+        private fun doDrawWaterfall(alphaPaint: Paint, octaveLinePaint: Paint, octaveLinePath: Path) {
             var canvas: Canvas? = null
             try {
                 // 获取绘制canvas，优先使用硬件加速
@@ -490,12 +494,14 @@ class WaterfallView @JvmOverloads constructor(
                     }
                 } else null
                 canvas?.let {
+                    // 设置整体绘制的透明度
+                    alphaPaint.alpha = waterfallViewAlpha
                     // 绘制背景图
-                    it.drawBitmap(backgroundImage!!, null, backgroundRect!!, null)
+                    it.drawBitmap(backgroundImage!!, null, backgroundRect!!, alphaPaint)
                     // 八度虚线绘制
                     drawOctaveLine(it, octaveLinePaint, octaveLinePath)
                     // 将缓冲区中计算好的所有音块进行统一绘制
-                    it.drawBitmap(notesBufferBitmap, 0f, 0f, null)
+                    it.drawBitmap(notesBufferBitmap, 0f, 0f, alphaPaint)
                     // 进度条绘制
                     drawProgressBar(it)
                 }

@@ -271,7 +271,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
-            waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
+            waterfallView.setWaterfallViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
         }
     }
 
@@ -355,7 +355,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
         waterfallView = findViewById(R.id.ol_waterfall_view);
         waterfallView.setTranslationY(tabTitleHeight);
-        waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
+        waterfallView.setWaterfallViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
         roomTabs.setCurrentTab(1);
         // 注意这里在向服务端发消息
         sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
