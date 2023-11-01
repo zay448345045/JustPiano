@@ -8,7 +8,6 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PixelFormat
-import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
@@ -46,9 +45,9 @@ class WaterfallView @JvmOverloads constructor(
     private var progressBarBaseRect: RectF? = null
 
     /**
-     * 整个瀑布流视图的透明度，开启瀑布流绘制线程前设置有效
+     * 整个瀑布流视图的透明度
      */
-    var waterfallViewAlpha = 255;
+    var viewAlpha = 255;
 
     /**
      * 瀑布流音块下落速率
@@ -105,7 +104,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 瀑布流循环绘制线程
      */
-    private var waterfallDownNotesThread: WaterfallDownNotesThread? = null
+    private var drawNotesThread: DrawNotesThread? = null
 
     /**
      * 瀑布流监听器
@@ -149,8 +148,8 @@ class WaterfallView @JvmOverloads constructor(
 
     init {
         // 设置背景透明
-        this.setBackgroundColor(Color.TRANSPARENT);
-        this.setZOrderOnTop(true); //necessary
+        setBackgroundColor(Color.TRANSPARENT);
+        setZOrderOnTop(true);
         holder.setFormat(PixelFormat.TRANSPARENT);
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
@@ -187,18 +186,18 @@ class WaterfallView @JvmOverloads constructor(
         // 初始化进度条的绘制坐标，初始情况下，进度条宽度为0
         progressBarRect = RectF(0f, 0f, 0f, progressBarImage!!.height.toFloat())
         // 开启绘制线程
-        waterfallDownNotesThread = WaterfallDownNotesThread()
-        waterfallDownNotesThread!!.start()
+        drawNotesThread = DrawNotesThread()
+        drawNotesThread!!.start()
     }
 
     /**
      * 暂停播放
      */
     fun pausePlay() {
-        if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
+        if (drawNotesThread != null && drawNotesThread!!.isRunning) {
             // 暂停播放时，停止播放所有音符
             SoundEngineUtil.stopPlayAllSounds()
-            waterfallDownNotesThread!!.isPause = true
+            drawNotesThread!!.isPause = true
         }
     }
 
@@ -206,8 +205,8 @@ class WaterfallView @JvmOverloads constructor(
      * 继续播放
      */
     fun resumePlay() {
-        if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
-            waterfallDownNotesThread!!.isPause = false
+        if (drawNotesThread != null && drawNotesThread!!.isRunning) {
+            drawNotesThread!!.isPause = false
         }
     }
 
@@ -226,18 +225,18 @@ class WaterfallView @JvmOverloads constructor(
      * 停止播放
      */
     fun stopPlay() {
-        if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
-            waterfallDownNotesThread!!.isRunning = false
+        if (drawNotesThread != null && drawNotesThread!!.isRunning) {
+            drawNotesThread!!.isRunning = false
         }
-        waterfallDownNotesThread = null
+        drawNotesThread = null
     }
 
     val isPlaying: Boolean
         /**
          * 是否正在播放
          */
-        get() = if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
-            !waterfallDownNotesThread!!.isPause
+        get() = if (drawNotesThread != null && drawNotesThread!!.isRunning) {
+            !drawNotesThread!!.isPause
         } else {
             false
         }
@@ -246,8 +245,8 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 获取目前的播放进度，单位毫秒，如果未在播放，返回0
          */
-        get() = if (waterfallDownNotesThread != null && waterfallDownNotesThread!!.isRunning) {
-            waterfallDownNotesThread!!.progress
+        get() = if (drawNotesThread != null && drawNotesThread!!.isRunning) {
+            drawNotesThread!!.progress
         } else 0f
 
     /**
@@ -307,7 +306,7 @@ class WaterfallView @JvmOverloads constructor(
                         (event.x.coerceAtLeast(0f) - lastX) / width * totalProgress
                     // 如果经过计算后的进度落在总进度之内，则继续执行设置进度操作
                     if (moveProgressOffset + playProgress in 0f..totalProgress) {
-                        waterfallDownNotesThread!!.progressScrollOffset += moveProgressOffset
+                        drawNotesThread!!.progressScrollOffset += moveProgressOffset
                     }
                     // 更新此时滑动后的手指坐标，后续计算手指滑动了多少坐标
                     lastX = event.x.coerceAtLeast(0f)
@@ -376,7 +375,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 瀑布流双缓冲绘制线程
      */
-    private inner class WaterfallDownNotesThread : Thread() {
+    private inner class DrawNotesThread : Thread() {
         /**
          * 是否在运行
          */
@@ -495,7 +494,7 @@ class WaterfallView @JvmOverloads constructor(
                 } else null
                 canvas?.let {
                     // 设置整体绘制的透明度
-                    alphaPaint.alpha = waterfallViewAlpha
+                    alphaPaint.alpha = viewAlpha
                     // 绘制背景图
                     it.drawBitmap(backgroundImage!!, null, backgroundRect!!, alphaPaint)
                     // 八度虚线绘制
