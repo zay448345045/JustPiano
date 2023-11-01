@@ -47,7 +47,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 整个瀑布流视图的透明度
      */
-    var viewAlpha = 255;
+    var viewAlpha = 255
 
     /**
      * 瀑布流音块下落速率
@@ -148,9 +148,9 @@ class WaterfallView @JvmOverloads constructor(
 
     init {
         // 设置背景透明
-        setBackgroundColor(Color.TRANSPARENT);
-        setZOrderOnTop(true);
-        holder.setFormat(PixelFormat.TRANSPARENT);
+        setBackgroundColor(Color.TRANSPARENT)
+        setZOrderOnTop(true)
+        holder.setFormat(PixelFormat.TRANSPARENT)
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片

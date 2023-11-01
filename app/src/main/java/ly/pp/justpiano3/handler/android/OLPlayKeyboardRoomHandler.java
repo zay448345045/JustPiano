@@ -3,14 +3,15 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+
+import java.lang.ref.WeakReference;
+
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-
-import java.lang.ref.WeakReference;
 
 public final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -136,6 +137,9 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
     }
 
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
+        if (olPlayKeyboardRoom.roomPositionSub1 < 0 || olPlayKeyboardRoom.roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
+            return;
+        }
         byte pitch = (byte) notes[i + 1];
         byte volume = (byte) notes[i + 2];
         if (volume > 0) {
