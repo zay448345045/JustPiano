@@ -70,6 +70,11 @@ class WaterfallView @JvmOverloads constructor(
     var freeStyleNotes: MutableList<WaterfallNote> = mutableListOf()
 
     /**
+     * 是否显示八度虚线
+     */
+    var showOctaveLine: Boolean = true
+
+    /**
      * 所有八度虚线的横坐标列表
      */
     var octaveLineXList: List<Float>? = null
@@ -481,7 +486,11 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 执行绘制瀑布流
          */
-        private fun doDrawWaterfall(alphaPaint: Paint, octaveLinePaint: Paint, octaveLinePath: Path) {
+        private fun doDrawWaterfall(
+            alphaPaint: Paint,
+            octaveLinePaint: Paint,
+            octaveLinePath: Path
+        ) {
             var canvas: Canvas? = null
             try {
                 // 获取绘制canvas，优先使用硬件加速
@@ -498,7 +507,9 @@ class WaterfallView @JvmOverloads constructor(
                     // 绘制背景图
                     it.drawBitmap(backgroundImage!!, null, backgroundRect!!, alphaPaint)
                     // 八度虚线绘制
-                    drawOctaveLine(it, octaveLinePaint, octaveLinePath)
+                    if (showOctaveLine) {
+                        drawOctaveLine(it, octaveLinePaint, octaveLinePath)
+                    }
                     // 将缓冲区中计算好的所有音块进行统一绘制
                     it.drawBitmap(notesBufferBitmap, 0f, 0f, null)
                     // 进度条绘制

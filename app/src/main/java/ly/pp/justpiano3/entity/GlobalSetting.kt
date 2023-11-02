@@ -231,6 +231,11 @@ object GlobalSetting {
     var forceEnableSustainPedal: Boolean = false
 
     /**
+     * 是否显示瀑布流八度虚线
+     */
+    var waterfallOctaveLine: Boolean = true
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -290,5 +295,6 @@ object GlobalSetting {
         keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)
         waterfallOnlineAlpha = sharedPreferences.getString("online_waterfall_alpha", "100")!!.toInt()
         forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
+        waterfallOctaveLine = sharedPreferences.getBoolean("waterfall_octave_line", true)
     }
 }

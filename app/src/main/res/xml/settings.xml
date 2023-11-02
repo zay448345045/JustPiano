@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="弹奏、音块及界面">
         <ly.pp.justpiano3.view.SkinListPreference
             android:dialogTitle="设置管理皮肤"
@@ -84,6 +85,16 @@
             android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有按键操作统一广播，缺乏实时性，低能耗，单人独奏更流畅"
             android:summaryOn="&lt;打开&gt;检测到每个按键操作时，立即广播数据，低延迟，高能耗，适合多人合奏"
             android:title="联网键盘协奏模式" />
+
+        <ly.pp.justpiano3.view.SeekBarPreference
+            android:defaultValue="100"
+            android:dialogTitle="联网模式瀑布流背景透明度"
+            android:key="online_waterfall_alpha"
+            android:summary="设置联网模式瀑布流背景透明度，值越小，越趋向于透明"
+            android:title="联网模式瀑布流背景透明度"
+            app:floatNumber="false"
+            app:maxValue="150"
+            app:minValue="50" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="关于">

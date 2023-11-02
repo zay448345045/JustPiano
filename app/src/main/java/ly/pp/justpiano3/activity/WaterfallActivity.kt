@@ -104,6 +104,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
+                waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine;
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 // 设置音块下落速率，播放速度
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
