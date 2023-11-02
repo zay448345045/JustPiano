@@ -2,6 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="声音效果">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="force_enable_sustain_pedal"
+            android:summaryOff="&lt;关闭&gt;默认不开启延音踏板，采集MIDI设备的延音踏板信号"
+            android:summaryOn="&lt;打开&gt;强制开启延音踏板，不采集MIDI设备的延音踏板信号"
+            android:title="强制开启延音踏板" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="延音强度"

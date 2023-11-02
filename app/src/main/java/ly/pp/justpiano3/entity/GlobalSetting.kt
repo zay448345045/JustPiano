@@ -226,6 +226,11 @@ object GlobalSetting {
         private set
 
     /**
+     * 是否强制开启延音踏板
+     */
+    var forceEnableSustainPedal: Boolean = false
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -284,5 +289,6 @@ object GlobalSetting {
         keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type", "0")!!.toInt()
         keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)
         waterfallOnlineAlpha = sharedPreferences.getString("online_waterfall_alpha", "100")!!.toInt()
+        forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
     }
 }

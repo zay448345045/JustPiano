@@ -315,6 +315,6 @@ public class MidiDeviceUtil {
      * 获取延音踏板当前状态
      */
     public static boolean getSustainPedalStatus() {
-        return sustainPedal.get();
+        return GlobalSetting.INSTANCE.getForceEnableSustainPedal() || sustainPedal.get();
     }
 }

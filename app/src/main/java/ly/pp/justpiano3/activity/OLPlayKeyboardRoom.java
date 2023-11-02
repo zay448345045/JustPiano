@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -491,9 +492,15 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, weight));
                         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - weight));
-                        RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
-                        waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
-                        waterfallView.setLayoutParams(waterfallViewLayoutParams);
+                        playerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
+                                waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
+                                waterfallView.setLayoutParams(waterfallViewLayoutParams);
+                                playerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            }
+                        });
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -504,9 +511,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);
                     edit.apply();
-                    RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
-                    waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
-                    waterfallView.setLayoutParams(waterfallViewLayoutParams);
                     break;
                 default:
                     break;
