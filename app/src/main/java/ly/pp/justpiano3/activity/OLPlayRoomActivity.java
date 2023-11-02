@@ -838,4 +838,19 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         }
         return false;
     }
+
+    /**
+     * 指定楼的view开启/关闭展示重连中效果
+     *
+     * @param index     索引，楼号 - 1
+     * @param reconnect 是否开启重连中效果
+     */
+    public void reconnectView(int index, boolean reconnect) {
+        View itemView = playerGrid.getChildAt(index);
+        if (itemView == null) {
+            return;
+        }
+        View playingView = itemView.findViewById(R.id.ol_player_wait);
+        playingView.post(() -> playingView.setVisibility(reconnect ? View.VISIBLE : View.INVISIBLE));
+    }
 }
