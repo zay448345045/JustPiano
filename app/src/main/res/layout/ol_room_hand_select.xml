@@ -19,7 +19,7 @@
         android:gravity="center"
         android:text="@string/melodylist1_hand"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp"/>
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/right_hand"
@@ -32,7 +32,7 @@
         android:gravity="center"
         android:text="@string/ol_hand_list_r"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp"/>
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/jiangdiao"
@@ -47,7 +47,7 @@
         android:gravity="center"
         android:text="@string/ol_hand_list_flat"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp"/>
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/shengdiao"
@@ -63,47 +63,38 @@
         android:gravity="center"
         android:text="@string/ol_hand_list_sharp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp"/>
+        android:textSize="28sp" />
 
-    <LinearLayout
-        android:id="@+id/orientation"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/changeScreenOrientation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/jiangdiao"
         android:layout_alignStart="@id/jiangdiao"
-        android:layout_alignEnd="@id/shengdiao">
+        android:layout_alignEnd="@id/shengdiao"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:layout_toEndOf="@+id/jiangdiao"
+        android:background="@drawable/selector_ol_button"
+        android:gravity="center"
+        android:text="@string/ol_hand_list_rotate"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="28sp" />
 
-        <TextView
-            android:id="@+id/changeScreenOrientation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/right_hand"
-            android:layout_alignStart="@id/right_hand"
-            android:layout_alignEnd="@id/right_hand"
-            android:layout_marginTop="@dimen/dimen_3dp"
-            android:layout_marginBottom="@dimen/dimen_3dp"
-            android:layout_toEndOf="@+id/jiangdiao"
-            android:background="@drawable/selector_ol_button"
-            android:gravity="center"
-            android:text="@string/ol_hand_list_rotate"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="28sp"/>
-    </LinearLayout>
-
-<!--    <ly.pp.justpiano3.view.DataSelectView-->
-<!--            android:id="@+id/note_speed"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="@dimen/dimen_40dp"-->
-<!--            android:layout_below="@id/orientation"-->
-<!--            android:layout_alignStart="@id/orientation"-->
-<!--            android:layout_alignEnd="@id/orientation"-->
-<!--            android:layout_marginTop="@dimen/dimen_3dp"-->
-<!--            android:background="@drawable/selector_ol_button"-->
-<!--            app:dataEditable="false"-->
-<!--            app:dataTextSize="26"-->
-<!--            app:dataTextColor="@color/white1"-->
-<!--            app:dataDefaultName="中"-->
-<!--            app:dataNameList="@array/down_entries"-->
-<!--            app:dataValueList="@array/down_value"/>-->
+    <TextView
+        android:id="@+id/ol_more_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/changeScreenOrientation"
+        android:layout_alignStart="@id/jiangdiao"
+        android:layout_alignEnd="@id/shengdiao"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:layout_toEndOf="@+id/jiangdiao"
+        android:background="@drawable/selector_ol_button"
+        android:gravity="center"
+        android:text="@string/ol_more_settings"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="28sp" />
 
 </RelativeLayout>

@@ -225,6 +225,7 @@
 	<string name="ol_hand_list_flat">降调</string>
 	<string name="ol_hand_list_sharp">升调</string>
 	<string name="ol_hand_list_rotate">旋转屏幕</string>
+	<string name="ol_more_settings">更多设置</string>
 	<string name="ol_hand_list_medium">中</string>
 	<string name="ol_kb_set_midi_down">MIDI键盘降调</string>
 	<string name="ol_kb_set_midi_up">MIDI键盘升调</string>

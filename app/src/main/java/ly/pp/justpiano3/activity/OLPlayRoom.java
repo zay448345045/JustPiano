@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -42,10 +43,12 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
 import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.ScrollText;
@@ -285,6 +288,11 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
             case R.id.changeScreenOrientation:
                 changeScreenOrientation();
                 return;
+            case R.id.ol_more_settings:
+                Intent intent = new Intent();
+                intent.setClass(this, SettingsMode.class);
+                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+                return;
             case R.id.rand_0:
                 playSongByDegreeRandom(2, 4);
                 return;
@@ -411,6 +419,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                     inflate2.findViewById(R.id.shengdiao).setOnClickListener(this);
                     inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
                     inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
+                    inflate2.findViewById(R.id.ol_more_settings).setOnClickListener(this);
                     popupWindow2.setFocusable(true);
                     popupWindow2.setTouchable(true);
                     popupWindow2.setOutsideTouchable(true);
@@ -456,6 +465,14 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 }
                 return;
             default:
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         }
     }
 
