@@ -4,19 +4,19 @@
     <PreferenceCategory android:title="瀑布流">
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="1"
-            android:dialogTitle="瀑布流曲谱播放速度"
+            android:dialogTitle="曲谱播放速度"
             android:key="waterfall_song_speed"
             android:summary="值越小，曲谱整体播放速度越慢，持续时间越长"
-            android:title="瀑布流曲谱播放速度"
+            android:title="曲谱播放速度"
             app:floatNumber="true"
             app:maxValue="1.5"
             app:minValue="0.5" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0.8"
-            android:dialogTitle="瀑布流音块移动速度"
+            android:dialogTitle="音块移动速度"
             android:key="waterfall_down_speed"
-            android:summary="设置瀑布流音块的移动速度，值越小，音块越矮，移动速度越慢"
-            android:title="瀑布流音块移动速度"
+            android:summary="设置音块的移动速度，值越小，音块越矮，移动速度越慢"
+            android:title="音块移动速度"
             app:floatNumber="true"
             app:maxValue="1.5"
             app:minValue="0.1" />
@@ -36,19 +36,19 @@
             alphaSlider="false"
             android:defaultValue="0xFF2BBBFB"
             android:key="waterfall_left_hand_color"
-            android:summary="瀑布流左手音块颜色"
-            android:title="瀑布流左手音块颜色" />
+            android:summary="左手音块颜色"
+            android:title="左手音块颜色" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="false"
             android:defaultValue="0xFFFF802D"
             android:key="waterfall_right_hand_color"
-            android:summary="瀑布流右手音块颜色"
-            android:title="瀑布流右手音块颜色" />
+            android:summary="右手音块颜色"
+            android:title="右手音块颜色" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="false"
             android:defaultValue="0xFFFFFF00"
             android:key="waterfall_free_style_color"
-            android:summary="瀑布流自由演奏音块颜色"
-            android:title="瀑布流自由演奏音块颜色" />
+            android:summary="自由演奏音块颜色"
+            android:title="自由演奏音块颜色" />
     </PreferenceCategory>
 </PreferenceScreen>
