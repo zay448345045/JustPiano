@@ -289,6 +289,9 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 changeScreenOrientation();
                 return;
             case R.id.ol_more_settings:
+                if (normalModePopupWindow != null) {
+                    normalModePopupWindow.dismiss();
+                }
                 Intent intent = new Intent();
                 intent.setClass(this, SettingsMode.class);
                 startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
