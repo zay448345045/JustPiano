@@ -46,6 +46,8 @@ public class OLBaseActivity extends ComponentActivity {
 
     public final void outLine() {
         if (jpprogressBar != null && jpprogressBar.isShowing()) {
+            jpprogressBar.setText("");
+            jpprogressBar.setCancelable(true);
             jpprogressBar.dismiss();
         }
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -64,6 +66,7 @@ public class OLBaseActivity extends ComponentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JPStack.push(this);
+        jpprogressBar = new JPProgressBar(this);
     }
 
     @Override

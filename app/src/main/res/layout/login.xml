@@ -215,7 +215,7 @@
             android:layout_alignBottom="@+id/ol_change_server"
             android:layout_toEndOf="@+id/ol_change_server"
             android:visibility="gone"
-            android:hint="服务器ip，点击登录键生效修改"
+            android:hint="服务器ip"
             android:maxLines="1"
             android:textColor="@color/white1"
             android:textSize="14sp" />

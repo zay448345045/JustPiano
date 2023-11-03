@@ -10,8 +10,6 @@ import android.util.Log;
 
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
-import com.king.anetty.ANetty;
-import com.king.anetty.Netty;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +35,7 @@ import ly.pp.justpiano3.task.ReceiveTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.NettyUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ReceiveTasks;
 import protobuf.dto.OnlineBaseDTO;
@@ -51,6 +50,16 @@ public class ConnectionService extends Service implements Runnable {
      * 对战服务端口
      */
     public static final Integer ONLINE_PORT = 8908;
+
+    /**
+     * 断线重连最长等待时间（毫秒）
+     */
+    public static final Long AUTO_RECONNECT_MAX_WAIT_TIME = 30000L;
+
+    /**
+     * 断线重连期间每次重连的时间间隔（毫秒）
+     */
+    public static final Long AUTO_RECONNECT_INTERVAL_TIME = 2000L;
     private final JPBinder jpBinder = new JPBinder(this);
     private String onlineSessionId;
     /**
@@ -59,7 +68,7 @@ public class ConnectionService extends Service implements Runnable {
     private Long autoReconnectTime;
     private int autoReconnectCount;
     private JPApplication jpapplication;
-    private Netty mNetty;
+    private NettyUtil mNetty;
 
     public static class JPBinder extends Binder {
         private final ConnectionService connectionService;
@@ -85,11 +94,19 @@ public class ConnectionService extends Service implements Runnable {
         Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
         builder.setField(fieldDescriptor, message);
         if (mNetty != null && mNetty.isConnected()) {
-            if (autoReconnectTime == null || type == OnlineProtocolType.LOGIN) {
-//                Log.i(getClass().getSimpleName(), "autoReconnect! writeData autoReconnect:"
-//                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type + " " + message + JPStack.top());
+            if (type == OnlineProtocolType.LOGIN || autoReconnectTime == null) {
                 OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
                 mNetty.sendMessage(builder);
+                if (autoReconnectTime != null) {
+                    handleOnTopBaseActivity(olBaseActivity -> {
+                        if (autoReconnectTime != null) {
+                            outLineAndDialogWithAutoReconnect();
+                        }
+                    }, AUTO_RECONNECT_INTERVAL_TIME);
+                }
+                Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+                        + " autoReconnect! writeData autoReconnect:"
+                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type);
             }
         } else {
             outLineAndDialogWithAutoReconnect();
@@ -118,7 +135,7 @@ public class ConnectionService extends Service implements Runnable {
      * 初始化Netty
      */
     private void initNetty() {
-        mNetty = new ANetty(new ChannelInitializer<SocketChannel>() {
+        mNetty = new NettyUtil(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 // 建立管道
@@ -144,10 +161,19 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-//                                Log.i(getClass().getSimpleName(), "autoReconnect! channelRead0 autoReconnect:"
-//                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + msg + JPStack.top());
+                                Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+                                        + " autoReconnect! channelRead0 autoReconnect:"
+                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime)
+                                        + " " + msg.getResponseCase().getNumber());
                                 autoReconnectTime = null;
                                 autoReconnectCount = 0;
+                                handleOnTopBaseActivity(olBaseActivity -> {
+                                    olBaseActivity.jpprogressBar.setCancelable(true);
+                                    olBaseActivity.jpprogressBar.setText("");
+                                    if (olBaseActivity.jpprogressBar.isShowing()) {
+                                        olBaseActivity.jpprogressBar.dismiss();
+                                    }
+                                }, 0L);
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
@@ -173,9 +199,9 @@ public class ConnectionService extends Service implements Runnable {
                             }
                         });
             }
-        }, false);
+        });
 
-        mNetty.setOnConnectListener(new Netty.OnConnectListener() {
+        mNetty.setOnConnectListener(new NettyUtil.OnConnectListener() {
             @Override
             public void onSuccess() {
                 if (autoReconnectTime == null) {
@@ -212,7 +238,7 @@ public class ConnectionService extends Service implements Runnable {
             }
         });
 
-        mNetty.setOnSendMessageListener(new Netty.OnSendMessageListener() {
+        mNetty.setOnSendMessageListener(new NettyUtil.OnSendMessageListener() {
             @Override
             public void onSendMessage(Object msg, boolean success) {
                 // 发送消息的回调
@@ -240,27 +266,47 @@ public class ConnectionService extends Service implements Runnable {
     }
 
     private void outLineAndDialogWithAutoReconnect() {
-        if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < 5000L) {
-            // 如果不是断线自动重连状态，先进行断线自动重连
-            Log.i(getClass().getSimpleName(), "autoReconnect! autoReconnect:"
-                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
+        Log.i(getClass().getSimpleName(), " autoReconnect! autoReconnect:"
+                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
+        // 如果不是断线自动重连状态，先进行断线自动重连
+        if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < AUTO_RECONNECT_MAX_WAIT_TIME) {
+            // 初始化断线重连变量
             if (autoReconnectTime == null) {
                 autoReconnectTime = System.currentTimeMillis();
                 autoReconnectCount = 0;
+                handleOnTopBaseActivity(olBaseActivity -> {
+                    if (!olBaseActivity.jpprogressBar.isShowing()) {
+                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
+                        olBaseActivity.jpprogressBar.setCancelable(false);
+                        olBaseActivity.jpprogressBar.show();
+                    }
+                }, 0L);
+            } else {
+                handleOnTopBaseActivity(olBaseActivity -> {
+                    if (olBaseActivity.jpprogressBar.isShowing() && autoReconnectTime != null) {
+                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
+                    }
+                }, 0L);
             }
-            if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * 1000L) {
-                Activity topActivity = JPStack.top();
-                if (topActivity instanceof OLBaseActivity) {
-                    OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
-                    olBaseActivity.olBaseActivityHandler.postDelayed(() -> {
-                        mNetty.disconnect();
+            // 每隔一小段时间尝试连接一次
+            if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * AUTO_RECONNECT_INTERVAL_TIME) {
+                mNetty.disconnect();
+                handleOnTopBaseActivity(olBaseActivity -> {
+                    if (olBaseActivity.jpprogressBar.isShowing()) {
+                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
                         mNetty.connect(OnlineUtil.server, ONLINE_PORT);
-                    }, 1000L);
-                }
-                autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / 1000L) + 1;
+                        Log.i(getClass().getSimpleName(), " autoReconnect! do autoReconnect:"
+                                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
+                    }
+                }, AUTO_RECONNECT_INTERVAL_TIME);
+                autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / AUTO_RECONNECT_INTERVAL_TIME) + 1;
             }
         } else {
-            Log.i(getClass().getSimpleName(), "autoReconnect! fail autoReconnect:"
+            Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+                    + " autoReconnect! fail autoReconnect:"
                     + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
             outLine();
             Activity topActivity = JPStack.top();
@@ -270,6 +316,21 @@ public class ConnectionService extends Service implements Runnable {
                 message.what = 0;
                 olBaseActivity.olBaseActivityHandler.handleMessage(message);
             }
+        }
+    }
+
+    /**
+     * 安卓低版本无法使用Consumer，暂时使用私有接口，配合下面方法入参使用
+     */
+    private interface OLBaseActivityRunner {
+        void run(OLBaseActivity olBaseActivity);
+    }
+
+    private void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
+        Activity topActivity = JPStack.top();
+        if (topActivity instanceof OLBaseActivity) {
+            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
         }
     }
 }

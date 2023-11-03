@@ -99,7 +99,6 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
-        jpprogressBar = new JPProgressBar(this);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));

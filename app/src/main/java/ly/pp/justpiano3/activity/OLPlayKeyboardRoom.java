@@ -287,7 +287,6 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setContentView(R.layout.ol_keyboard_room);
         initRoomActivity(savedInstanceState);
-        jpprogressBar = new JPProgressBar(this);
         TabSpec newTabSpec = roomTabs.newTabSpec("tab3");
         newTabSpec.setContent(R.id.msg_tab);
         newTabSpec.setIndicator("瀑布");
