@@ -204,5 +204,20 @@
             android:layout_toEndOf="@+id/ol_change_account"
             android:text="测试服"
             android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/ol_debug_server_ip"
+            style="@style/EditTextStyle"
+            android:layout_width="@dimen/dimen_200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_alignBaseline="@+id/ol_change_server"
+            android:layout_alignBottom="@+id/ol_change_server"
+            android:layout_toEndOf="@+id/ol_change_server"
+            android:visibility="gone"
+            android:hint="服务器ip，点击登录键生效修改"
+            android:maxLines="1"
+            android:textColor="@color/white1"
+            android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>

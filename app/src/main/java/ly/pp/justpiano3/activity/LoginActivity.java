@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private CheckBox rememPassword;
     private CheckBox autoLogin;
     private String account;
+    private EditText debugIpEditText;
 
     public final void loginSuccess(int i, String message, String title) {
         Intent intent = new Intent();
@@ -87,6 +89,9 @@ public class LoginActivity extends Activity implements OnClickListener {
             edit.putBoolean("auto_login", autoLogin.isChecked());
             edit.putString("current_account", accountX);
             edit.putString("current_password", password);
+            if (BuildConfig.DEBUG && debugIpEditText != null) {
+                edit.putString("debug_server_ip", debugIpEditText.getText().toString());
+            }
             edit.apply();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -152,6 +157,9 @@ public class LoginActivity extends Activity implements OnClickListener {
                     return;
                 }
                 OnlineUtil.server = changeServerCheckBox.isChecked() ? OnlineUtil.TEST_ONLINE_SERVER_URL : OnlineUtil.ONLINE_SERVER_URL;
+                if (BuildConfig.DEBUG && debugIpEditText != null && !debugIpEditText.getText().toString().isEmpty()) {
+                    OnlineUtil.server = debugIpEditText.getText().toString();
+                }
                 new LoginTask(this).execute();
                 return;
             case R.id.ol_register:
@@ -245,6 +253,11 @@ public class LoginActivity extends Activity implements OnClickListener {
                 return;
             }
             new LoginTask(this).execute();
+        }
+        if (BuildConfig.DEBUG) {
+            debugIpEditText = findViewById(R.id.ol_debug_server_ip);
+            debugIpEditText.setVisibility(View.VISIBLE);
+            debugIpEditText.setText(sharedPreferences.getString("debug_server_ip", ""));
         }
     }
 
