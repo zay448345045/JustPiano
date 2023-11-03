@@ -26,6 +26,11 @@ android {
         multiDexEnabled true
     }
 
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
+
     signingConfigs {
         debug {
             storeFile file('../key.jks')
@@ -90,7 +95,7 @@ dependencies {
     // jlayer，用于解码mp3音源
     implementation 'javazoom:jlayer:1.0.1'
     // netty
-    implementation 'com.king.anetty:anetty:1.0.3'
+    implementation 'io.netty:netty-all:4.1.100.Final'
     // protobuf，版本号最好和服务端保持一致，降低序列化问题风险
     implementation 'com.google.protobuf:protobuf-java:3.23.0'
     implementation 'androidx.multidex:multidex:2.0.1'

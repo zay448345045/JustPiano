@@ -97,13 +97,13 @@ public class ConnectionService extends Service implements Runnable {
             if (type == OnlineProtocolType.LOGIN || autoReconnectTime == null) {
                 OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
                 mNetty.sendMessage(builder);
-                if (autoReconnectTime != null) {
-                    handleOnTopBaseActivity(olBaseActivity -> {
-                        if (autoReconnectTime != null) {
-                            outLineAndDialogWithAutoReconnect();
-                        }
-                    }, AUTO_RECONNECT_INTERVAL_TIME);
-                }
+//                if (autoReconnectTime != null) {
+//                    handleOnTopBaseActivity(olBaseActivity -> {
+//                        if (autoReconnectTime != null) {
+//                            outLineAndDialogWithAutoReconnect();
+//                        }
+//                    }, AUTO_RECONNECT_INTERVAL_TIME);
+//                }
                 Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
                         + " autoReconnect! writeData autoReconnect:"
                         + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type);
