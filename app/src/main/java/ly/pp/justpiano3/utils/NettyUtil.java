@@ -177,15 +177,19 @@ public class NettyUtil {
         this.mOnSendMessageListener = listener;
     }
 
-    public void close() {
-        if (isOpen()) {
-            mChannelFuture.channel().close();
+    public ChannelFuture close() {
+        try {
+            return mChannelFuture.channel().close().sync();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void disconnect() {
-        if (isConnected()) {
-            mChannelFuture.channel().disconnect();
+    public ChannelFuture disconnect() {
+        try {
+            return mChannelFuture.channel().disconnect().sync();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
