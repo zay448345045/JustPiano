@@ -8,6 +8,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
 
@@ -103,10 +105,10 @@ public class ConnectionService extends Service implements Runnable {
                             outLineAndDialogWithAutoReconnect();
                         }
                     }, AUTO_RECONNECT_INTERVAL_TIME);
+                    Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+                            + " autoReconnect! writeData autoReconnect:"
+                            + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type);
                 }
-                Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
-                        + " autoReconnect! writeData autoReconnect:"
-                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type);
             }
         } else {
             outLineAndDialogWithAutoReconnect();
@@ -137,9 +139,9 @@ public class ConnectionService extends Service implements Runnable {
     private void initNetty() {
         mNetty = new NettyUtil(new ChannelInitializer<SocketChannel>() {
             @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
+            protected void initChannel(@NonNull SocketChannel socketChannel) throws Exception {
                 // 建立管道
-                ChannelPipeline channelPipeline = ch.pipeline();
+                ChannelPipeline channelPipeline = socketChannel.pipeline();
                 // 添加相关编码器，解码器，处理器等
                 channelPipeline
                         // 入站处理器执行顺序是从上往下看，出站处理器执行顺序是从下往上
@@ -161,19 +163,21 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
-                                        + " autoReconnect! channelRead0 autoReconnect:"
-                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime)
-                                        + " " + msg.getResponseCase().getNumber());
-                                autoReconnectTime = null;
-                                autoReconnectCount = 0;
-                                handleOnTopBaseActivity(olBaseActivity -> {
-                                    olBaseActivity.jpprogressBar.setCancelable(true);
-                                    olBaseActivity.jpprogressBar.setText("");
-                                    if (olBaseActivity.jpprogressBar.isShowing()) {
-                                        olBaseActivity.jpprogressBar.dismiss();
-                                    }
-                                }, 0L);
+                                if (autoReconnectTime != null) {
+                                    Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+                                            + " autoReconnect! channelRead0 autoReconnect:"
+                                            + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime)
+                                            + " " + msg.getResponseCase().getNumber());
+                                    autoReconnectTime = null;
+                                    autoReconnectCount = 0;
+                                    handleOnTopBaseActivity(olBaseActivity -> {
+                                        olBaseActivity.jpprogressBar.setCancelable(true);
+                                        olBaseActivity.jpprogressBar.setText("");
+                                        if (olBaseActivity.jpprogressBar.isShowing()) {
+                                            olBaseActivity.jpprogressBar.dismiss();
+                                        }
+                                    }, 0L);
+                                }
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
@@ -195,6 +199,8 @@ public class ConnectionService extends Service implements Runnable {
                                     if (autoReconnectTime == null && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
                                         writeData(OnlineProtocolType.HEART_BEAT, OnlineHeartBeatDTO.getDefaultInstance());
                                     }
+                                } else {
+                                    super.userEventTriggered(ctx, obj);
                                 }
                             }
                         });
@@ -243,7 +249,7 @@ public class ConnectionService extends Service implements Runnable {
             public void onSendMessage(Object msg, boolean success) {
                 // 发送消息的回调
                 if (!success) {
-                    Log.e("autoReconnect! anetty", msg.toString() + JPStack.top());
+                    Log.e(getClass().getSimpleName(), "autoReconnect! onSendMessage" + msg.toString());
                     outLineAndDialogWithAutoReconnect();
                 }
             }

@@ -72,6 +72,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         TextView textView3 = view.findViewById(R.id.ol_player_level);
         TextView textView4 = view.findViewById(R.id.ol_player_class);
         TextView textView5 = view.findViewById(R.id.ol_player_clname);
+        TextView autoConnectWaitView = view.findViewById(R.id.ol_player_wait);
         ImageView imageView2 = view.findViewById(R.id.ol_player_trousers);
         ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
         ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
@@ -91,6 +92,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             imageView6.setImageResource(Consts.couples[cpKind]);
         }
         ImageLoadUtil.setFamilyImageBitmap(olPlayKeyboardRoom, familyID, imageView7);
+        autoConnectWaitView.setVisibility("W".equals(string3) ? View.VISIBLE : View.INVISIBLE);
         if (!"H".equals(string4)) {
             if ("R".equals(string3)) {
                 textView2.setText("准备");

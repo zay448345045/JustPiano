@@ -61,6 +61,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         TextView textView3 = view.findViewById(R.id.ol_player_level);
         TextView textView4 = view.findViewById(R.id.ol_player_class);
         TextView textView5 = view.findViewById(R.id.ol_player_clname);
+        TextView autoConnectWaitView = view.findViewById(R.id.ol_player_wait);
         String string = playerList.get(i).getString("N");
         String string2 = playerList.get(i).getString("S");
         String str = string2.equals("f") ? "f" : "m";
@@ -158,6 +159,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
             textView2.setText("房主");
             textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.exit));
         }
+        autoConnectWaitView.setVisibility("W".equals(string3) ? View.VISIBLE : View.INVISIBLE);
         switch (string3) {
             case "P":
                 textView2.setText("弹奏中");
@@ -170,6 +172,8 @@ public final class PlayerImageAdapter extends BaseAdapter {
             case "B":
                 textView2.setText("后台");
                 textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.green_y));
+                break;
+            default:
                 break;
         }
         int i6 = playerList.get(i).getInt("TR");
