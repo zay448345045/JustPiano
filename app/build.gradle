@@ -7,7 +7,7 @@ plugins {
 
 android {
     compileSdkVersion 33
-    ndkVersion "25.2.9519653"
+    ndkVersion "19.2.5345600"
     buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "ly.pp.justpiano3"
