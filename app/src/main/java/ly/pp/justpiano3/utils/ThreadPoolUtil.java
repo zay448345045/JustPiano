@@ -64,10 +64,11 @@ public class ThreadPoolUtil {
      *
      * @param runnable 线程
      */
-    public static void execute(Runnable runnable) {
+    public static Future<?> execute(Runnable runnable) {
         if (runnable != null) {
-            THREAD_POOL_EXECUTOR.execute(runnable);
+            return THREAD_POOL_EXECUTOR.submit(runnable);
         }
+        return null;
     }
 
     public static <T> Future<T> submit(Callable<T> callable) {
@@ -83,16 +84,17 @@ public class ThreadPoolUtil {
      * @param runnable 执行内容
      * @param delay    延迟执行的毫秒数
      */
-    public static void executeWithDelay(Runnable runnable, long delay) {
+    public static Future<?> executeWithDelay(Runnable runnable, long delay) {
         if (runnable != null) {
-            THREAD_POOL_EXECUTOR.execute(() -> {
+            return THREAD_POOL_EXECUTOR.submit(() -> {
                 try {
                     Thread.sleep(delay);
-                } catch (InterruptedException e) {
+                    runnable.run();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                runnable.run();
             });
         }
+        return null;
     }
 }
