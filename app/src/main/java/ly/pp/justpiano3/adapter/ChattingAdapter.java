@@ -16,7 +16,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.JPStack;
@@ -77,8 +77,8 @@ public final class ChattingAdapter extends BaseAdapter {
         // 投递通知到房间内处理
         if (i2 != 3 && userText != null) {
             userText.setOnClickListener(v -> {
-                if (activity instanceof OLPlayRoomActivity && string != null) {
-                    ((OLPlayRoomActivity) activity).setPrivateChatUserName(string);
+                if (activity instanceof OLRoomActivity && string != null) {
+                    ((OLRoomActivity) activity).setPrivateChatUserName(string);
                 } else if (activity instanceof OLPlayHall && string != null) {
                     ((OLPlayHall) activity).setPrivateChatUserName(string);
                 }
@@ -134,7 +134,7 @@ public final class ChattingAdapter extends BaseAdapter {
         if (!string2.startsWith("//")) {
             textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
             TextView textView2 = view.findViewById(R.id.ol_user_mao);
-            if (activity instanceof OLPlayRoomActivity) {
+            if (activity instanceof OLRoomActivity) {
                 switch (id) {
                     case 1:
                         textView.setTextColor(0xffFFFACD);

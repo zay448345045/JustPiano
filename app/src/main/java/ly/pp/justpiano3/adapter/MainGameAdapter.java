@@ -23,7 +23,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.OLSendMailClick;
 import ly.pp.justpiano3.service.ConnectionService;
@@ -239,8 +239,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHall) activity).sendMail(string2);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string2, 0);
-                    } else if (activity instanceof OLPlayRoomActivity) {
-                        ((OLPlayRoomActivity) activity).sendMail(string2);
+                    } else if (activity instanceof OLRoomActivity) {
+                        ((OLRoomActivity) activity).sendMail(string2);
                     }
                 });
                 view.findViewById(R.id.ol_friend_dele).setOnClickListener(v -> {
@@ -403,7 +403,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         builder.setName(string7);
                         connectionService.writeData(OnlineProtocolType.DIALOG, builder.build());
                     });
-                } else if (activity instanceof OLPlayRoomActivity) {
+                } else if (activity instanceof OLRoomActivity) {
                     textView.setText("邀请");
                     textView.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
@@ -423,8 +423,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayHall) activity).sendMail(string7);
                     } else if (activity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) activity).sendMail(string7, 0);
-                    } else if (activity instanceof OLPlayRoomActivity) {
-                        ((OLPlayRoomActivity) activity).sendMail(string7);
+                    } else if (activity instanceof OLRoomActivity) {
+                        ((OLRoomActivity) activity).sendMail(string7);
                     }
                 });
                 button = view.findViewById(R.id.ol_friend_dele);

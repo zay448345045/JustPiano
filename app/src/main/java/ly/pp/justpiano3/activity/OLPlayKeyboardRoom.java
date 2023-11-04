@@ -55,13 +55,12 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.utils.WaterfallUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.KeyboardView;
 import ly.pp.justpiano3.view.WaterfallView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
 import protobuf.dto.OnlineLoadRoomPositionDTO;
 
-public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
+public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
     public static final int NOTES_SEND_INTERVAL = 120;
     // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
@@ -276,6 +275,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha() / 256f);
             waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
             waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
         }
@@ -360,6 +360,7 @@ public final class OLPlayKeyboardRoom extends OLPlayRoomActivity implements View
         }
         waterfallView = findViewById(R.id.ol_waterfall_view);
         waterfallView.setTranslationY(tabTitleHeight);
+        waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha() / 256f);
         waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
         waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
         roomTabs.setCurrentTab(1);

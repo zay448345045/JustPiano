@@ -6,17 +6,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChangeRoomInfoDTO;
 
 public final class ChangeRoomNameClick implements OnClickListener {
-    private final OLPlayRoomActivity olPlayRoomActivity;
+    private final OLRoomActivity olRoomActivity;
     private final EditText name;
     private final EditText password;
 
-    public ChangeRoomNameClick(OLPlayRoomActivity olPlayRoomActivity, EditText name, EditText password) {
-        this.olPlayRoomActivity = olPlayRoomActivity;
+    public ChangeRoomNameClick(OLRoomActivity olRoomActivity, EditText name, EditText password) {
+        this.olRoomActivity = olRoomActivity;
         this.name = name;
         this.password = password;
     }
@@ -26,14 +26,14 @@ public final class ChangeRoomNameClick implements OnClickListener {
         String name = this.name.getText().toString();
         String password = this.password.getText().toString();
         if (StringUtil.isNullOrEmpty(name)) {
-            Toast.makeText(olPlayRoomActivity, "房名不能为空!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(olRoomActivity, "房名不能为空!", Toast.LENGTH_SHORT).show();
         } else if (name.length() > 8 || password.length() > 8) {
-            Toast.makeText(olPlayRoomActivity, "房名或密码只能在八个字以下!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(olRoomActivity, "房名或密码只能在八个字以下!", Toast.LENGTH_SHORT).show();
         } else {
             OnlineChangeRoomInfoDTO.Builder builder = OnlineChangeRoomInfoDTO.newBuilder();
             builder.setRoomName(name);
             builder.setRoomPassword(password);
-            olPlayRoomActivity.sendMsg(OnlineProtocolType.CHANGE_ROOM_INFO, builder.build());
+            olRoomActivity.sendMsg(OnlineProtocolType.CHANGE_ROOM_INFO, builder.build());
             dialogInterface.dismiss();
         }
     }

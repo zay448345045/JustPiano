@@ -133,13 +133,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
             }
             if ("H".equals(olPlayRoom.playerKind)) {
                 olPlayRoom.playButton.setText("开始");
-                olPlayRoom.playButton.setTextSize(20);
             } else if ("R".equals(string3)) {
                 olPlayRoom.playButton.setText("取消");
-                olPlayRoom.playButton.setTextSize(20);
             } else {
                 olPlayRoom.playButton.setText("准备");
-                olPlayRoom.playButton.setTextSize(20);
             }
         }
         int i5 = playerList.get(i).getInt("CP");

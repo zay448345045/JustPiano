@@ -5,52 +5,52 @@ import android.widget.TabHost.OnTabChangeListener;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineLoadUserListDTO;
 
 public final class PlayRoomTabChange implements OnTabChangeListener {
-    private final OLPlayRoomActivity olPlayRoomActivity;
+    private final OLRoomActivity olRoomActivity;
 
-    public PlayRoomTabChange(OLPlayRoomActivity olPlayRoomActivity) {
-        this.olPlayRoomActivity = olPlayRoomActivity;
+    public PlayRoomTabChange(OLRoomActivity olRoomActivity) {
+        this.olRoomActivity = olRoomActivity;
     }
 
     @Override
     public void onTabChanged(String str) {
         int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
-        int childCount = olPlayRoomActivity.roomTabs.getTabWidget().getChildCount();
+        int childCount = olRoomActivity.roomTabs.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {
-            olPlayRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
+            olRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
                     intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
-        if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-            ((OLPlayKeyboardRoom) olPlayRoomActivity).waterfallView.setVisibility(View.INVISIBLE);
+        if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+            ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.INVISIBLE);
         }
         switch (str) {
             case "tab1":
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
-                builder.setPage(olPlayRoomActivity.page);
-                olPlayRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
+                builder.setPage(olRoomActivity.page);
+                olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 break;
             case "tab2":
-                if (olPlayRoomActivity.msgListView != null && olPlayRoomActivity.msgListView.getAdapter() != null) {
-                    olPlayRoomActivity.msgListView.setSelection(olPlayRoomActivity.msgListView.getAdapter().getCount() - 1);
+                if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
+                    olRoomActivity.msgListView.setSelection(olRoomActivity.msgListView.getAdapter().getCount() - 1);
                 }
                 break;
             case "tab3":
-                if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-                    if (olPlayRoomActivity.msgListView != null && olPlayRoomActivity.msgListView.getAdapter() != null) {
-                        olPlayRoomActivity.msgListView.setSelection(olPlayRoomActivity.msgListView.getAdapter().getCount() - 1);
+                if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+                    if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
+                        olRoomActivity.msgListView.setSelection(olRoomActivity.msgListView.getAdapter().getCount() - 1);
                     }
-                    ((OLPlayKeyboardRoom) olPlayRoomActivity).waterfallView.setVisibility(View.VISIBLE);
-                    ((OLPlayKeyboardRoom) olPlayRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
+                    ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.VISIBLE);
+                    ((OLPlayKeyboardRoom) olRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
                 }
                 break;
             case "tab4":
-                olPlayRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
+                olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
                 break;
         }
     }

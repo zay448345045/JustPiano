@@ -43,7 +43,6 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
-import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
@@ -59,7 +58,7 @@ import protobuf.dto.OnlineLoadRoomPositionDTO;
 import protobuf.dto.OnlinePlaySongDTO;
 import protobuf.dto.OnlinePlayStartDTO;
 
-public final class OLPlayRoom extends OLPlayRoomActivity {
+public final class OLPlayRoom extends OLRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
     public LiveData<PagedList<Song>> pagedListLiveData;
     public String currentPlaySongPath;
@@ -174,7 +173,7 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
         }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void mo2861a(GridView gridView, Bundle bundle) {
+    public void updatePlayerList(GridView gridView, Bundle bundle) {
         playerList.clear();
         if (bundle != null) {
             int size = bundle.size() - 6;
@@ -400,9 +399,8 @@ public final class OLPlayRoom extends OLPlayRoomActivity {
                 return;
             case R.id.ol_ready_b:
                 if (playerKind.equals("G")) {
-                    OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-                    builder1.setStatus("R");
-                    sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+                    String status = Objects.equals("准备", playButton.getText().toString()) ? "N" : "R";
+                    sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus(status).build());
                 } else {
                     sendMsg(OnlineProtocolType.PLAY_START, OnlinePlayStartDTO.getDefaultInstance());
                 }

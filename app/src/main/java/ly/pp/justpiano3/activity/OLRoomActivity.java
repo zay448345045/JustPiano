@@ -77,7 +77,7 @@ import protobuf.dto.OnlineSetUserInfoDTO;
 /**
  * 房间
  */
-public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callback, View.OnClickListener, View.OnLongClickListener {
+public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, View.OnClickListener, View.OnLongClickListener {
     // 防止横竖屏切换时前后台状态错误
     public boolean isChangeScreen;
     public int lv;
@@ -786,9 +786,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         super.onStart();
         if (!onStart) {
             onStart = true;
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus("N").build());
         }
     }
 
@@ -797,9 +795,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         super.onRestart();
         if (!onStart) {
             onStart = true;
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("N");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus("N").build());
             roomTabs.setCurrentTab(1);
             if (msgListView != null && msgListView.getAdapter() != null) {
                 msgListView.setSelection(msgListView.getAdapter().getCount() - 1);
@@ -812,9 +808,7 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
         super.onStop();
         if (onStart && !isChangeScreen) {
             onStart = false;
-            OnlineChangeRoomUserStatusDTO.Builder builder1 = OnlineChangeRoomUserStatusDTO.newBuilder();
-            builder1.setStatus("B");
-            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, builder1.build());
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus("B").build());
         }
     }
 
@@ -837,20 +831,5 @@ public class OLPlayRoomActivity extends OLBaseActivity implements Handler.Callba
             return true;
         }
         return false;
-    }
-
-    /**
-     * 指定楼的view开启/关闭展示重连中效果
-     *
-     * @param index     索引，楼号 - 1
-     * @param reconnect 是否开启重连中效果
-     */
-    public void reconnectView(int index, boolean reconnect) {
-        View itemView = playerGrid.getChildAt(index);
-        if (itemView == null) {
-            return;
-        }
-        View playingView = itemView.findViewById(R.id.ol_player_wait);
-        playingView.post(() -> playingView.setVisibility(reconnect ? View.VISIBLE : View.INVISIBLE));
     }
 }

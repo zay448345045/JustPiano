@@ -5,18 +5,18 @@ import android.content.DialogInterface.OnClickListener;
 
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class AddFriendsClick implements OnClickListener {
-    private OLPlayRoomActivity olPlayRoomActivity = null;
+    private OLRoomActivity olRoomActivity = null;
     private OLPlayHall olPlayHall = null;
     private OLPlayHallRoom olPlayHallRoom = null;
     private final String name;
 
-    public AddFriendsClick(OLPlayRoomActivity olPlayRoomActivity, String name) {
-        this.olPlayRoomActivity = olPlayRoomActivity;
+    public AddFriendsClick(OLRoomActivity olRoomActivity, String name) {
+        this.olRoomActivity = olRoomActivity;
         this.name = name;
     }
 
@@ -32,14 +32,14 @@ public final class AddFriendsClick implements OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        if (olPlayRoomActivity != null) {
-            if (olPlayRoomActivity.jpapplication.getConnectionService() == null) {
+        if (olRoomActivity != null) {
+            if (olRoomActivity.jpapplication.getConnectionService() == null) {
                 return;
             }
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(0);
             builder.setName(name);
-            olPlayRoomActivity.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
+            olRoomActivity.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
             dialogInterface.dismiss();
         } else if (olPlayHall != null) {
             if (olPlayHall.jpapplication.getConnectionService() == null) {

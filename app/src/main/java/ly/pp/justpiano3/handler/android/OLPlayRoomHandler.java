@@ -30,7 +30,7 @@ public final class OLPlayRoomHandler extends Handler {
             switch (message.what) {
                 case 1:
                     post(() -> {
-                        olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData());
+                        olPlayRoom.updatePlayerList(olPlayRoom.playerGrid, message.getData());
                         String songFilePath = message.getData().getString("SI");
                         if (!songFilePath.isEmpty()) {
                             int tune = message.getData().getInt("diao");
@@ -137,7 +137,7 @@ public final class OLPlayRoomHandler extends Handler {
                     });
                     return;
                 case 7:
-                    post(() -> olPlayRoom.mo2861a(olPlayRoom.playerGrid, message.getData()));
+                    post(() -> olPlayRoom.updatePlayerList(olPlayRoom.playerGrid, message.getData()));
                     return;
                 case 8:
                     post(olPlayRoom::handleKicked);

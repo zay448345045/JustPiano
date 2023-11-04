@@ -20,7 +20,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
@@ -240,7 +240,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.ROOM_CHAT, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 Bundle bundle = new Bundle();
                 OnlineRoomChatVO roomChat = receivedMessage.getRoomChat();
                 message.what = 2;
@@ -260,7 +260,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_INFO, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 Bundle bundle = new Bundle();
                 message.what = 10;
                 bundle.putString("R", receivedMessage.getChangeRoomInfo().getRoomName());
@@ -494,15 +494,15 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 OnlineChangeRoomPositionVO changeRoomPosition = receivedMessage.getChangeRoomPosition();
                 message.what = 1;
-                OLPlayRoomActivity olPlayRoomActivity = (OLPlayRoomActivity) topActivity;
+                OLRoomActivity olRoomActivity = (OLRoomActivity) topActivity;
                 for (OnlineRoomPositionUserVO roomPositionUser : changeRoomPosition.getRoomPositionUserList()) {
-                    buildAndPutUser(olPlayRoomActivity, roomPositionUser);
+                    buildAndPutUser(olRoomActivity, roomPositionUser);
                 }
                 Bundle bundle = new Bundle();
-                Iterator<User> it = olPlayRoomActivity.getRoomPlayerMap().values().iterator();
+                Iterator<User> it = olRoomActivity.getRoomPlayerMap().values().iterator();
                 for (int i = 0; it.hasNext(); i++) {
                     User user = it.next();
                     fillUserBundle(bundle, i, user);
@@ -523,14 +523,14 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
-                OLPlayRoomActivity olPlayRoomActivity = (OLPlayRoomActivity) topActivity;
+            if (topActivity instanceof OLRoomActivity) {
+                OLRoomActivity olRoomActivity = (OLRoomActivity) topActivity;
                 OnlineLoadRoomPositionVO loadRoomPosition = receivedMessage.getLoadRoomPosition();
                 message.what = 1;
                 Bundle bundle = new Bundle();
                 for (int i = 0; i < loadRoomPosition.getRoomPositionUserList().size(); i++) {
                     OnlineRoomPositionUserVO roomPositionUser = loadRoomPosition.getRoomPositionUserList().get(i);
-                    fillUserBundle(bundle, i, buildAndPutUser(olPlayRoomActivity, roomPositionUser));
+                    fillUserBundle(bundle, i, buildAndPutUser(olRoomActivity, roomPositionUser));
                 }
                 bundle.putString("SI", loadRoomPosition.getSongPath());
                 bundle.putInt("diao", loadRoomPosition.getTune());
@@ -1148,7 +1148,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.COUPLE, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 Bundle bundle = new Bundle();
                 message.what = 22;
                 OnlineCoupleVO couple = receivedMessage.getCouple();
@@ -1207,7 +1207,7 @@ public final class ReceiveTasks {
         });
     }
 
-    private static User buildAndPutUser(OLPlayRoomActivity olPlayRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {
+    private static User buildAndPutUser(OLRoomActivity olRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {
         User user = new User((byte) roomPositionUser.getPosition(),
                 roomPositionUser.getName(),
                 roomPositionUser.getClothes().getHair(),
@@ -1224,7 +1224,7 @@ public final class ReceiveTasks {
                 roomPositionUser.getHand(),
                 roomPositionUser.getCoupleType(),
                 String.valueOf(roomPositionUser.getFamily()));
-        olPlayRoomActivity.getRoomPlayerMap().put(user.getPosition(), user);
+        olRoomActivity.getRoomPlayerMap().put(user.getPosition(), user);
         return user;
     }
 

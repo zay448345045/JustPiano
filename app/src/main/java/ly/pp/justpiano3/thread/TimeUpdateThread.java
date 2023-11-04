@@ -2,26 +2,26 @@ package ly.pp.justpiano3.thread;
 
 import android.os.Message;
 
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.OLRoomActivity;
 
 public final class TimeUpdateThread extends Thread {
-    private final OLPlayRoomActivity olPlayRoomActivity;
+    private final OLRoomActivity olRoomActivity;
 
-    public TimeUpdateThread(OLPlayRoomActivity olPlayRoomActivity) {
-        this.olPlayRoomActivity = olPlayRoomActivity;
+    public TimeUpdateThread(OLRoomActivity olRoomActivity) {
+        this.olRoomActivity = olRoomActivity;
     }
 
     @Override
     public void run() {
         do {
             try {
-                Message message = Message.obtain(olPlayRoomActivity.handler);
+                Message message = Message.obtain(olRoomActivity.handler);
                 message.what = 3;
-                olPlayRoomActivity.handler.sendMessage(message);
+                olRoomActivity.handler.sendMessage(message);
                 Thread.sleep(60000);
             } catch (Exception e) {
-                olPlayRoomActivity.timeUpdateRunning = false;
+                olRoomActivity.timeUpdateRunning = false;
             }
-        } while (olPlayRoomActivity.timeUpdateRunning);
+        } while (olRoomActivity.timeUpdateRunning);
     }
 }

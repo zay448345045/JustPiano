@@ -333,6 +333,7 @@
 
             <ly.pp.justpiano3.view.WaterfallView
                 android:id="@+id/ol_waterfall_view"
+                android:alpha="0.390625"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </RelativeLayout>

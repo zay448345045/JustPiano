@@ -178,6 +178,9 @@ public class NettyUtil {
     }
 
     public ChannelFuture close() {
+        if (mChannelFuture == null) {
+            return null;
+        }
         try {
             return mChannelFuture.channel().close().sync();
         } catch (Exception e) {

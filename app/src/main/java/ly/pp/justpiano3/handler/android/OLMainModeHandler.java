@@ -51,12 +51,9 @@ public final class OLMainModeHandler extends Handler {
                 return;
             case 5:
                 oLMainMode.jpprogressBar.cancel();
-                //intent.putExtra("HEAD", 5);
                 Looper.prepare();
                 oLMainMode.addDialog("提示", "确定", "该账号已在别处登录!");
                 Looper.loop();
-                //oLMainMode.startActivity(intent);
-                //oLMainMode.finish();
                 return;
             case 6:
                 oLMainMode.jpprogressBar.cancel();
