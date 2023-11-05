@@ -6,8 +6,7 @@
             android:defaultValue="false"
             android:key="force_enable_sustain_pedal"
             android:summaryOff="&lt;关闭&gt;默认不开启延音踏板，实时采集MIDI设备的延音踏板信号"
-            android:summaryOn="&lt;打开&gt;强制开启延音踏板，不采集MIDI设备的延音踏板信号
-            ，对于某些sf2音源，松开琴键时可能一直保持播放，不会停止，请谨慎选择"
+            android:summaryOn="&lt;打开&gt;强制开启延音踏板，不采集MIDI设备的延音踏板信号，对于某些sf2音源，松开琴键时可能一直保持播放，不会停止，请谨慎选择"
             android:title="强制开启延音踏板" />
         <ly.pp.justpiano3.view.SeekBarPreference
             android:defaultValue="0"
