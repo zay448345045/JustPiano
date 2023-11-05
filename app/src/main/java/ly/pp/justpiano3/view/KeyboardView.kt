@@ -57,7 +57,7 @@ class KeyboardView @JvmOverloads constructor(
         /**
          * 一个八度内要绘制的图像种类，包括黑键、白键右侧(右上角抠掉黑键的，比如do键)、白键MIDDLE(左右都被抠掉黑键的，比如do re mi的re键)、白键左侧
          */
-        private val KEY_IMAGE_TYPE = arrayOf(
+        val KEY_IMAGE_TYPE = arrayOf(
             KeyImageTypeEnum.WHITE_KEY_RIGHT,
             KeyImageTypeEnum.BLACK_KEY,
             KeyImageTypeEnum.WHITE_KEY_MIDDLE,
@@ -73,7 +73,7 @@ class KeyboardView @JvmOverloads constructor(
         )
 
         // midi音高转白键或黑键索引
-        private val OCTAVE_PITCH_TO_KEY_INDEX = intArrayOf(0, 0, 1, 1, 2, 3, 2, 4, 3, 5, 4, 6)
+        val OCTAVE_PITCH_TO_KEY_INDEX = intArrayOf(0, 0, 1, 1, 2, 3, 2, 4, 3, 5, 4, 6)
 
         // 按键标签用于测量标签宽度的文字，取最长的文字sol
         private const val OCTAVE_TAG_WORD_SAMPLE = "sol"
@@ -94,9 +94,12 @@ class KeyboardView @JvmOverloads constructor(
     private lateinit var keyboardImageRectArray: Array<RectF>
 
     // 当前页面中显示的所在八度完整区域内的rect和是否按下的boolean标记
-    private lateinit var whiteKeyRectArray: Array<RectF>
-    private lateinit var blackKeyRectArray: Array<RectF>
-    private lateinit var notesOnArray: BooleanArray
+    lateinit var whiteKeyRectArray: Array<RectF>
+        private set
+    lateinit var blackKeyRectArray: Array<RectF>
+        private set
+    lateinit var notesOnArray: BooleanArray
+        private set
     private lateinit var notesOnPaintArray: Array<Paint?>
 
     /**
@@ -157,7 +160,7 @@ class KeyboardView @JvmOverloads constructor(
         fun onKeyUp(pitch: Byte)
     }
 
-    private enum class KeyImageTypeEnum {
+    enum class KeyImageTypeEnum {
         BLACK_KEY, WHITE_KEY_LEFT, WHITE_KEY_MIDDLE, WHITE_KEY_RIGHT
     }
 
@@ -426,25 +429,6 @@ class KeyboardView @JvmOverloads constructor(
         } while (textWidth > width * 0.8)
     }
 
-    /**
-     * 根据midi音高值，获取对应琴键的绘制绝对坐标位置，供外界取用
-     * 注意黑键和白键的绝对坐标位置的宽度有差异
-     */
-    fun convertPitchToReact(pitch: Byte): RectF? {
-        val pitchInScreen = getPitchInScreen(pitch.toInt())
-        // 入参的音高不在键盘view所绘制的琴键范围内，返回空
-        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-            return null
-        }
-        val octaveI = pitchInScreen / NOTES_PER_OCTAVE
-        val noteI = pitchInScreen % NOTES_PER_OCTAVE
-        return if (KEY_IMAGE_TYPE[noteI] == KeyImageTypeEnum.BLACK_KEY) {
-            blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[noteI] + octaveI * BLACK_NOTES_PER_OCTAVE]
-        } else {
-            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[noteI] + octaveI * WHITE_NOTES_PER_OCTAVE]
-        }
-    }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
         if (!pianoKeyTouchable) {
@@ -615,7 +599,7 @@ class KeyboardView @JvmOverloads constructor(
      * 比如midi音高为60，而view中只绘制（可以理解为显示）了两个八度
      * 那么转换后的音高就应该是以屏幕最左侧绘制的八度的do键为0算起的，一定比60小，比如可能为0，可能为12
      */
-    private fun getPitchInScreen(pitch: Int): Int {
+    fun getPitchInScreen(pitch: Int): Int {
         return pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE
     }
 

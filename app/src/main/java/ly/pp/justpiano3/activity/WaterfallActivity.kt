@@ -104,7 +104,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
-                waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine;
+                waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine
                 waterfallView.octaveLineXList = keyboardView.allOctaveLineX
                 // 设置音块下落速率，播放速度
                 waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
@@ -169,8 +169,9 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
     }
 
     private fun recomputeWaterfallNoteLeftAndRight(waterfallNote: WaterfallNote) {
-        val (left, right) = WaterfallUtil.convertWidthToWaterfallWidth(
-            waterfallNote.pitch, keyboardView.convertPitchToReact(waterfallNote.pitch)
+        val (left, right) = WaterfallUtil.convertToWaterfallWidth(
+            keyboardView,
+            waterfallNote.pitch
         )
         waterfallNote.left = left
         waterfallNote.right = right
@@ -243,9 +244,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 totalTime += it.tickArray[i] * it.globalSpeed
                 val leftHand = it.trackArray[i] > 0
                 // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
-                val (left, right) = WaterfallUtil.convertWidthToWaterfallWidth(
-                    pitch, keyboardView!!.convertPitchToReact(pitch)
-                )
+                val (left, right) = WaterfallUtil.convertToWaterfallWidth(keyboardView!!, pitch)
                 // 初始化瀑布流音符对象，上边界暂时置0
                 val waterfallNote =
                     WaterfallNote(
@@ -311,7 +310,8 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         waterfallNoteList.sortBy { it.bottom }
         for (currentWaterfallNote in waterfallNoteList) {
             if (currentWaterfallNote.top - currentWaterfallNote.bottom > WaterfallUtil.NOTE_MAX_HEIGHT) {
-                currentWaterfallNote.top = currentWaterfallNote.bottom + WaterfallUtil.NOTE_MAX_HEIGHT
+                currentWaterfallNote.top =
+                    currentWaterfallNote.bottom + WaterfallUtil.NOTE_MAX_HEIGHT
             }
         }
         return waterfallNoteList.toTypedArray()
@@ -424,19 +424,13 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
 
     fun freeStyleKeyDownHandle(pitch: Byte, volume: Byte) {
         if (freeStyle) {
-            val (left, right) = WaterfallUtil.convertWidthToWaterfallWidth(
-                pitch, keyboardView.convertPitchToReact(pitch)
-            )
+            val (left, right) = WaterfallUtil.convertToWaterfallWidth(keyboardView, pitch)
             waterfallView.addFreeStyleWaterfallNote(
-                WaterfallNote(
-                    left,
-                    right,
-                    waterfallView.height + waterfallView.playProgress,
-                    Float.MAX_VALUE,
-                    GlobalSetting.waterfallFreeStyleColor,
-                    pitch,
-                    volume
-                )
+                left,
+                right,
+                pitch,
+                volume,
+                GlobalSetting.waterfallFreeStyleColor
             )
         }
     }

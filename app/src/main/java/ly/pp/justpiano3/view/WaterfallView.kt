@@ -15,6 +15,7 @@ import android.view.MotionEvent
 import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
+import ly.pp.justpiano3.utils.ObjectPool
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import java.util.Arrays
 import kotlin.math.abs
@@ -68,6 +69,13 @@ class WaterfallView @JvmOverloads constructor(
      * 自由演奏瀑布流音块内容，key：音高，value：音块列表
      */
     var freeStyleNotes: MutableMap<Byte, MutableList<WaterfallNote>> = mutableMapOf()
+
+    /**
+     * 自由演奏瀑布流音块对象池
+     */
+    private var waterfallNoteObjectPool: ObjectPool<WaterfallNote> = ObjectPool<WaterfallNote>(
+        { WaterfallNote() }, 1024
+    )
 
     /**
      * 是否显示八度虚线
@@ -250,7 +258,7 @@ class WaterfallView @JvmOverloads constructor(
             false
         }
 
-    val playProgress: Float
+    private val playProgress: Float
         /**
          * 获取目前的播放进度，单位毫秒，如果未在播放，返回0
          */
@@ -271,8 +279,22 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 增加自由演奏模式的瀑布流音块（音块会从下到上移动），只是增加，音块会无限长，直到调用停止
      */
-    fun addFreeStyleWaterfallNote(waterfallNote: WaterfallNote) {
-        freeStyleNotes[waterfallNote.pitch]?.add(waterfallNote)
+    fun addFreeStyleWaterfallNote(
+        left: Float,
+        right: Float,
+        pitch: Byte,
+        volume: Byte,
+        color: Int
+    ) {
+        val freeStyleNote = waterfallNoteObjectPool.acquire()
+        freeStyleNote.left = left
+        freeStyleNote.right = right
+        freeStyleNote.top = height + playProgress
+        freeStyleNote.bottom = Float.MAX_VALUE
+        freeStyleNote.color = color
+        freeStyleNote.pitch = pitch
+        freeStyleNote.volume = volume
+        freeStyleNotes[pitch]?.add(freeStyleNote)
     }
 
     /**
@@ -593,7 +615,7 @@ class WaterfallView @JvmOverloads constructor(
                         )
                         // 如果音块已经移动到了屏幕外，则从list中删除
                         if (it.bottom - progress < 0f) {
-                            freeStyleNoteList.removeAt(i)
+                            waterfallNoteObjectPool.release(freeStyleNoteList.removeAt(i))
                         }
                     }
                 }

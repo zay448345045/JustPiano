@@ -210,8 +210,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             waterfallView.setOctaveLineXList(keyboardView.getAllOctaveLineX());
             for (List<WaterfallNote> freeStyleNoteList : waterfallView.getFreeStyleNotes().values()) {
                 for (WaterfallNote waterfallNote : freeStyleNoteList) {
-                    Pair<Float, Float> result = WaterfallUtil.Companion.convertWidthToWaterfallWidth(
-                            waterfallNote.getPitch(), keyboardView.convertPitchToReact(waterfallNote.getPitch()));
+                    Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+                            keyboardView, waterfallNote.getPitch());
                     waterfallNote.setLeft(result.getFirst());
                     waterfallNote.setRight(result.getSecond());
                 }
@@ -372,19 +372,14 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     public void onlineWaterfallKeyDownHandle(byte pitch, byte volume, int color) {
         if (waterfallView != null) {
-            Pair<Float, Float> result = WaterfallUtil.Companion.convertWidthToWaterfallWidth(
-                    pitch, keyboardView.convertPitchToReact(pitch));
+            Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+                    keyboardView, pitch);
             waterfallView.addFreeStyleWaterfallNote(
-                    new WaterfallNote(
-                            result.getFirst(),
-                            result.getSecond(),
-                            waterfallView.getHeight() + waterfallView.getPlayProgress(),
-                            Float.MAX_VALUE,
-                            color,
-                            pitch,
-                            volume
-                    )
-            );
+                    result.getFirst(),
+                    result.getSecond(),
+                    pitch,
+                    volume,
+                    color);
         }
     }
 
