@@ -293,22 +293,28 @@ public class MidiDeviceUtil {
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private static void onMidiMessageReceive(byte value1, byte value2, byte value3) {
-        if (midiReceiver != null) {
-            int midiEventType = value1 & 0xF0;
-            if (midiEventType == 0x90) {
-                mainHandler.post(() -> midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3));
-            } else if (midiEventType == 0x80) {
-                mainHandler.post(() -> midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0));
-            } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
-                // 延音踏板，midi的CC控制器64号判断
-                boolean currentSustainPedalValue = (value3 & 0xFF) >= 64;
-                if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
-                        && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()) {
-                    for (MidiSustainPedalListener midiSustainPedalListener : midiSustainPedalListeners) {
-                        midiSustainPedalListener.onChange(currentSustainPedalValue);
-                    }
+        int midiEventType = value1 & 0xF0;
+        if (midiEventType == 0x90) {
+            mainHandler.post(() -> {
+                if (midiReceiver != null) {
+                    midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                            (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
+                }
+            });
+        } else if (midiEventType == 0x80) {
+            mainHandler.post(() -> {
+                if (midiReceiver != null) {
+                    midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                            (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
+                }
+            });
+        } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
+            // 延音踏板，midi的CC控制器64号判断
+            boolean currentSustainPedalValue = (value3 & 0xFF) >= 64;
+            if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
+                    && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()) {
+                for (MidiSustainPedalListener midiSustainPedalListener : midiSustainPedalListeners) {
+                    midiSustainPedalListener.onChange(currentSustainPedalValue);
                 }
             }
         }
