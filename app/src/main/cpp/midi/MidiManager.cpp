@@ -50,7 +50,7 @@ static void sendTheReceivedData(uint8_t *data, size_t numBytes) {
  */
 static void *readThreadRoutine(void *context) {
     midi_device_handle_t &midiDeviceHandle = midiDeviceMap[reinterpret_cast<intptr_t>(context)];
-    const size_t MAX_BYTES_TO_RECEIVE = 128;
+    const size_t MAX_BYTES_TO_RECEIVE = 256;
     uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
     while (midiDeviceHandle.sReading) {
         // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU unnecessarily
