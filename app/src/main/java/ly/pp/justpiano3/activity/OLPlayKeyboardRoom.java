@@ -92,7 +92,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
             // 协奏模式
             OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-            builder.addData((((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4) + roomPositionSub1));
+            builder.addData(buildNoteHeadData());
             builder.addData(0);
             builder.addData(pitch);
             builder.addData(volume);
@@ -100,6 +100,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         } else {
             notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
         }
+    }
+
+    private int buildNoteHeadData() {
+        return ((MidiDeviceUtil.getSustainPedalStatus() ? 1 : 0) << 5)
+                + ((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4)
+                + roomPositionSub1;
     }
 
     public void mo2860a(int i, String str, int i2) {
@@ -575,7 +581,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 try {
                     OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
                     // 字节数组开头，存入是否开启midi键盘和楼号
-                    builder.addData(((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4) + roomPositionSub1);
+                    builder.addData(buildNoteHeadData());
                     // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
                     while (!notesQueue.isEmpty()) {
                         OLNote olNote = notesQueue.poll();

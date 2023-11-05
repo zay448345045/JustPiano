@@ -44,7 +44,8 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         if (user == null) {
                             return;
                         }
-                        boolean midiKeyboardOn = (notes[0] >> 4) > 0;
+                        boolean sustainPedalOn = ((notes[0] >> 5) & 1) == 1;
+                        boolean midiKeyboardOn = ((notes[0] >> 4) & 1) == 1;
                         if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMidiKeyboardOn() != midiKeyboardOn) {
                             olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
                             if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
@@ -61,7 +62,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         // 无间隔时间，不用启动子线程，提升一键一发的执行效率
                         if (totalIntervalTime == 0) {
                             for (int i = 1; i < notes.length; i += 3) {
-                                handleKeyboardView(olPlayKeyboardRoom, notes, user, i);
+                                handleKeyboardView(olPlayKeyboardRoom, notes, user, i, sustainPedalOn);
                             }
                         } else {
                             olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
@@ -77,7 +78,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     }
                                     lastTimeMillis = currentTimeMillis;
                                     int finalI = i;
-                                    olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI));
+                                    olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI, sustainPedalOn));
                                 }
                             });
                         }
@@ -136,7 +137,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
         }
     }
 
-    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
+    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i, boolean sustainPedalOn) {
         if (olPlayKeyboardRoom.roomPositionSub1 < 0 || olPlayKeyboardRoom.roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
             return;
         }
@@ -151,7 +152,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
             olPlayKeyboardRoom.onlineWaterfallKeyDownHandle(pitch, volume, color == null ?
                     GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : color);
         } else {
-            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
+            if (!sustainPedalOn && !olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
                 SoundEngineUtil.stopPlaySound(pitch);
             }
             olPlayKeyboardRoom.keyboardView.fireKeyUp(pitch);
