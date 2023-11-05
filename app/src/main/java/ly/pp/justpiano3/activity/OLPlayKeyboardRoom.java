@@ -209,11 +209,14 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         if (waterfallView.getVisibility() == View.VISIBLE) {
             waterfallView.setOctaveLineXList(keyboardView.getAllOctaveLineX());
             for (List<WaterfallNote> freeStyleNoteList : waterfallView.getFreeStyleNotes().values()) {
-                for (WaterfallNote waterfallNote : freeStyleNoteList) {
-                    Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
-                            keyboardView, waterfallNote.getPitch());
-                    waterfallNote.setLeft(result.getFirst());
-                    waterfallNote.setRight(result.getSecond());
+                for (int i = freeStyleNoteList.size() - 1; i >= 0; i--) {
+                    WaterfallNote waterfallNote = freeStyleNoteList.get(i);
+                    if (waterfallNote != null) {
+                        Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+                                keyboardView, waterfallNote.getPitch());
+                        waterfallNote.setLeft(result.getFirst());
+                        waterfallNote.setRight(result.getSecond());
+                    }
                 }
             }
         }

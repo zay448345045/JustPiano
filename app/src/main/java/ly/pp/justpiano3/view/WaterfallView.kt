@@ -301,12 +301,11 @@ class WaterfallView @JvmOverloads constructor(
      * 停止继续延长自由演奏模式的瀑布流音块
      */
     fun stopFreeStyleWaterfallNote(pitch: Byte) {
-        freeStyleNotes[pitch]?.let { notes ->
-            val iterator = notes.iterator()
-            while (iterator.hasNext()) {
-                val note = iterator.next()
-                if (note.bottom > height + playProgress) {
-                    note.bottom = height + playProgress
+        val freeStyleNoteList = freeStyleNotes[pitch] ?: return
+        for (i in freeStyleNoteList.indices.reversed()) {
+            freeStyleNoteList.getOrNull(i)?.let {
+                if (it.bottom > height + playProgress) {
+                    it.bottom = height + playProgress
                 }
             }
         }
@@ -604,8 +603,7 @@ class WaterfallView @JvmOverloads constructor(
             // 执行计算绘制自由演奏音块
             for (freeStyleNoteList in freeStyleNotes.values) {
                 for (i in freeStyleNoteList.indices.reversed()) {
-                    val freeStyleNote = freeStyleNoteList.getOrNull(i)
-                    freeStyleNote?.let {
+                    freeStyleNoteList.getOrNull(i)?.let {
                         notePaint.color = it.color
                         // 根据音符的力度，确定音块绘制的透明度
                         notePaint.alpha = minOf(it.volume * 2, 255)
