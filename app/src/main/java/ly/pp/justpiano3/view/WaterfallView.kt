@@ -65,9 +65,9 @@ class WaterfallView @JvmOverloads constructor(
     lateinit var waterfallNotes: Array<WaterfallNote>
 
     /**
-     * 自由演奏瀑布流音块内容，key：音高，value：音块
+     * 自由演奏瀑布流音块内容，key：音高，value：音块列表
      */
-    var freeStyleNotes: MutableList<WaterfallNote> = mutableListOf()
+    var freeStyleNotes: MutableMap<Byte, MutableList<WaterfallNote>> = mutableMapOf()
 
     /**
      * 是否显示八度虚线
@@ -162,6 +162,10 @@ class WaterfallView @JvmOverloads constructor(
         backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
         progressBarImage = ImageLoadUtil.loadSkinImage(context, "progress_bar")
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(context, "progress_bar_base")
+        // 初始化自由演奏音符内存分配
+        for (i in 0..Byte.MAX_VALUE) {
+            freeStyleNotes[i.toByte()] = mutableListOf()
+        }
     }
 
     /**
@@ -268,18 +272,16 @@ class WaterfallView @JvmOverloads constructor(
      * 增加自由演奏模式的瀑布流音块（音块会从下到上移动），只是增加，音块会无限长，直到调用停止
      */
     fun addFreeStyleWaterfallNote(waterfallNote: WaterfallNote) {
-        freeStyleNotes.add(waterfallNote)
+        freeStyleNotes[waterfallNote.pitch]?.add(waterfallNote)
     }
 
     /**
      * 停止继续延长自由演奏模式的瀑布流音块
      */
     fun stopFreeStyleWaterfallNote(pitch: Byte) {
-        for (i in freeStyleNotes.indices.reversed()) {
-            val freeStyleNote = freeStyleNotes[i]
-            if (freeStyleNote.pitch == pitch && freeStyleNote.bottom > height + playProgress) {
-                freeStyleNote.bottom = height + playProgress
-                break
+        freeStyleNotes[pitch]?.forEach {
+            if (it.bottom > height + playProgress) {
+                it.bottom = height + playProgress
             }
         }
     }
@@ -574,23 +576,25 @@ class WaterfallView @JvmOverloads constructor(
                 }
             }
             // 执行计算绘制自由演奏音块
-            for (i in freeStyleNotes.indices.reversed()) {
-                val freeStyleNote = freeStyleNotes.getOrNull(i)
-                freeStyleNote?.let {
-                    notePaint.color = it.color
-                    // 根据音符的力度，确定音块绘制的透明度
-                    notePaint.alpha = minOf(it.volume * 2, 255)
-                    // 绘制自由演奏音块，它自下而上移动
-                    canvas.drawRect(
-                        it.left,
-                        it.top - progress,
-                        it.right,
-                        min(height.toFloat(), it.bottom - progress),
-                        notePaint
-                    )
-                    // 如果音块已经移动到了屏幕外，则从list中删除
-                    if (it.bottom - progress < 0f) {
-                        freeStyleNotes.removeAt(i)
+            for (freeStyleNoteList in freeStyleNotes.values) {
+                for (i in freeStyleNoteList.indices.reversed()) {
+                    val freeStyleNote = freeStyleNoteList.getOrNull(i)
+                    freeStyleNote?.let {
+                        notePaint.color = it.color
+                        // 根据音符的力度，确定音块绘制的透明度
+                        notePaint.alpha = minOf(it.volume * 2, 255)
+                        // 绘制自由演奏音块，它自下而上移动
+                        canvas.drawRect(
+                            it.left,
+                            it.top - progress,
+                            it.right,
+                            min(height.toFloat(), it.bottom - progress),
+                            notePaint
+                        )
+                        // 如果音块已经移动到了屏幕外，则从list中删除
+                        if (it.bottom - progress < 0f) {
+                            freeStyleNoteList.removeAt(i)
+                        }
                     }
                 }
             }

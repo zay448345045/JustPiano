@@ -32,6 +32,8 @@ public class MidiDeviceUtil {
 
     private static MidiManager midiManager;
 
+    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
+
     /**
      * MIDI设备的延音踏板状态（开/关）
      */
@@ -79,7 +81,7 @@ public class MidiDeviceUtil {
         }
 
         /**
-         * midi键盘接收到消息，注意它不一定在主线程调用
+         * midi键盘接收到的音符消息，在主线程调用，请避免直接做耗时长的操作
          *
          * @param pitch  原始midi音高
          * @param volume midi音符力度
@@ -123,7 +125,7 @@ public class MidiDeviceUtil {
             public void onDeviceRemoved(MidiDeviceInfo info) {
                 closeDevice(context, info);
             }
-        }, new Handler(Looper.getMainLooper()));
+        }, mainHandler);
         // 如果在app开启前就已经连接了midi设备，需要如下的代码来直接尝试检测并开启midi设备
         for (MidiDeviceInfo info : midiManager.getDevices()) {
             openDevice(context, info);
@@ -158,7 +160,7 @@ public class MidiDeviceUtil {
                     }
                 }
             }
-        }, new Handler(Looper.getMainLooper()));
+        }, mainHandler);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -294,11 +296,11 @@ public class MidiDeviceUtil {
         if (midiReceiver != null) {
             int midiEventType = value1 & 0xF0;
             if (midiEventType == 0x90) {
-                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
+                mainHandler.post(() -> midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3));
             } else if (midiEventType == 0x80) {
-                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
+                mainHandler.post(() -> midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0));
             } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
                 // 延音踏板，midi的CC控制器64号判断
                 boolean currentSustainPedalValue = (value3 & 0xFF) >= 64;
