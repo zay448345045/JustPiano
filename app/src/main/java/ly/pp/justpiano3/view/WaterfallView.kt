@@ -301,9 +301,13 @@ class WaterfallView @JvmOverloads constructor(
      * 停止继续延长自由演奏模式的瀑布流音块
      */
     fun stopFreeStyleWaterfallNote(pitch: Byte) {
-        freeStyleNotes[pitch]?.forEach {
-            if (it.bottom > height + playProgress) {
-                it.bottom = height + playProgress
+        freeStyleNotes[pitch]?.let { notes ->
+            val iterator = notes.iterator()
+            while (iterator.hasNext()) {
+                val note = iterator.next()
+                if (note.bottom > height + playProgress) {
+                    note.bottom = height + playProgress
+                }
             }
         }
     }
