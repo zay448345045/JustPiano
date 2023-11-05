@@ -1,17 +1,17 @@
 package ly.pp.justpiano3.utils;
 
-import android.util.ArrayMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 一个对象池
  */
 public class ObjectPool<T> {
-    private final ArrayMap<T, Boolean> pool;
+    private final ConcurrentHashMap<T, Boolean> pool;
     private final ObjectFactory<T> factory;
     private final int maxPoolSize;
 
     public ObjectPool(ObjectFactory<T> factory, int maxPoolSize) {
-        this.pool = new ArrayMap<>();
+        this.pool = new ConcurrentHashMap<>(maxPoolSize);
         this.factory = factory;
         this.maxPoolSize = maxPoolSize;
     }
