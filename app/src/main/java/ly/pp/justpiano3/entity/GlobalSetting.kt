@@ -24,7 +24,7 @@ object GlobalSetting {
     /**
      * 当前音源名称
      */
-    var soundName: String = "默认皮肤"
+    var soundName: String = "默认音源"
         private set
 
     /**

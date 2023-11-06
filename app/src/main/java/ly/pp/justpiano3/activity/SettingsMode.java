@@ -7,6 +7,9 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -15,6 +18,17 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 public class SettingsMode extends PreferenceActivity {
 
     public static final int SETTING_MODE_CODE = 122;
+
+    private static final Map<String, PreferenceFragment> preferenceFragmentMap = new HashMap<>();
+
+    static {
+        preferenceFragmentMap.put("settings_piano_play", new PianoPlaySettingsFragment());
+        preferenceFragmentMap.put("settings_play_note", new PlayNoteSettingsFragment());
+        preferenceFragmentMap.put("settings_waterfall", new WaterfallSettingsFragment());
+        preferenceFragmentMap.put("settings_sound", new SoundSettingsFragment());
+        preferenceFragmentMap.put("settings_keyboard", new KeyboardSettingsFragment());
+        preferenceFragmentMap.put("settings_online_chat", new OnlineChatSettingsFragment());
+    }
 
     @Override
     public void onBackPressed() {
@@ -27,33 +41,9 @@ public class SettingsMode extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         ImageLoadUtil.setBackground(this, "ground", getWindow());
         getWindow().getDecorView().findViewById(android.R.id.content).setBackgroundResource(R.color.black);
-        String data = getIntent().getDataString();
-        if (data == null) {
-            getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
-        } else {
-            switch (data) {
-                case "settings_piano_play":
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, new PianoPlaySettingsFragment()).commit();
-                    break;
-                case "settings_play_note":
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, new PlayNoteSettingsFragment()).commit();
-                    break;
-                case "settings_waterfall":
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, new WaterfallSettingsFragment()).commit();
-                    break;
-                case "settings_sound":
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, new SoundSettingsFragment()).commit();
-                    break;
-                case "settings_keyboard":
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, new KeyboardSettingsFragment()).commit();
-                    break;
-                case "settings_online_chat":
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, new OnlineChatSettingsFragment()).commit();
-                    break;
-                default:
-                    break;
-            }
-        }
+        PreferenceFragment preferenceFragment = preferenceFragmentMap.get(getIntent().getDataString());
+        getFragmentManager().beginTransaction().replace(android.R.id.content,
+                preferenceFragment == null ? new SettingsFragment() : preferenceFragment).commit();
     }
 
     public static class SettingsFragment extends PreferenceFragment {

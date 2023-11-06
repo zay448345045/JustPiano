@@ -40,10 +40,12 @@ class KeyboardView @JvmOverloads constructor(
 
         // 自定义属性默认值
         private const val DEFAULT_WHITE_KEY_NUM = 8
-        private const val DEFAULT_WHITE_KEY_OFFSET = 21
-        private const val MAX_WHITE_KEY_RIGHT_VALUE = 49
+        private const val DEFAULT_WHITE_KEY_OFFSET = 28
+        private const val MIN_WHITE_KEY_OFFSET = 5
+        private const val MAX_WHITE_KEY_RIGHT_VALUE = 57
         private const val MIN_WHITE_KEY_NUM = 7
-        private const val WHITE_KEY_OFFSET_0_MIDI_PITCH = 24
+        private const val MAX_WHITE_KEY_NUM = MAX_WHITE_KEY_RIGHT_VALUE - MIN_WHITE_KEY_OFFSET
+        private const val WHITE_KEY_OFFSET_0_MIDI_PITCH = 12
 
         // 每个八度内白键的索引
         val WHITE_KEY_OFFSETS = intArrayOf(0, 2, 4, 5, 7, 9, 11)
@@ -130,10 +132,17 @@ class KeyboardView @JvmOverloads constructor(
 
     // 素材图片
     private var keyboardImage: Bitmap
-    private var whiteKeyRightImage: Bitmap
-    private var whiteKeyMiddleImage: Bitmap
-    private var whiteKeyLeftImage: Bitmap
-    private var blackKeyImage: Bitmap
+    private var whiteKeyPressWithoutRightImage: Bitmap
+    private var whiteKeyPressWithoutLeftAndRightImage: Bitmap
+    private var whiteKeyPressWithoutLeftImage: Bitmap
+    private var blackKeyPressImage: Bitmap
+
+    // 经过裁减处理的素材：88键钢琴的最右侧纯白键及其按压效果
+    private var pureWhiteKeyImage: Bitmap
+    private var pureWhiteKeyPressImage: Bitmap
+
+    // 经过裁减处理的素材：88键钢琴的最左侧键
+    private var leftmostWhiteKeyImage: Bitmap
 
     /**
      * 颜色过滤器处理 - 对象缓存
@@ -166,12 +175,17 @@ class KeyboardView @JvmOverloads constructor(
 
     init {
         handleCustomAttrs(context, attrs)
-        val keyBoardHd = ImageLoadUtil.loadSkinImage(context, "key_board_hd")!!
-        keyboardImage = cropKeyboardBitmap(keyBoardHd)
-        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(context, "white_r")
-        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(context, "white_m")
-        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
-        blackKeyImage = ImageLoadUtil.loadSkinImage(context, "black")
+        keyboardImage = cropKeyboardBitmap(ImageLoadUtil.loadSkinImage(context, "key_board_hd"))
+        whiteKeyPressWithoutRightImage = ImageLoadUtil.loadSkinImage(context, "white_r")
+        whiteKeyPressWithoutLeftAndRightImage = ImageLoadUtil.loadSkinImage(context, "white_m")
+        whiteKeyPressWithoutLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
+        blackKeyPressImage = ImageLoadUtil.loadSkinImage(context, "black")
+        pureWhiteKeyImage = cropPureWhiteKeyBitmap(keyboardImage)
+        pureWhiteKeyPressImage = cropPureWhiteKeyPressBitmap(
+            whiteKeyPressWithoutLeftImage,
+            whiteKeyPressWithoutRightImage
+        )
+        leftmostWhiteKeyImage = cropLeftmostWhiteKeyBitmap(keyboardImage)
     }
 
     private fun handleCustomAttrs(context: Context, attrs: AttributeSet?) {
@@ -198,12 +212,17 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun changeSkinKeyboardImage(context: Context?) {
-        val keyBoardHd = ImageLoadUtil.loadSkinImage(context, "key_board_hd")!!
-        keyboardImage = cropKeyboardBitmap(keyBoardHd)
-        whiteKeyRightImage = ImageLoadUtil.loadSkinImage(context, "white_r")
-        whiteKeyMiddleImage = ImageLoadUtil.loadSkinImage(context, "white_m")
-        whiteKeyLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
-        blackKeyImage = ImageLoadUtil.loadSkinImage(context, "black")
+        keyboardImage = cropKeyboardBitmap(ImageLoadUtil.loadSkinImage(context, "key_board_hd"))
+        whiteKeyPressWithoutRightImage = ImageLoadUtil.loadSkinImage(context, "white_r")
+        whiteKeyPressWithoutLeftAndRightImage = ImageLoadUtil.loadSkinImage(context, "white_m")
+        whiteKeyPressWithoutLeftImage = ImageLoadUtil.loadSkinImage(context, "white_l")
+        blackKeyPressImage = ImageLoadUtil.loadSkinImage(context, "black")
+        pureWhiteKeyImage = cropPureWhiteKeyBitmap(keyboardImage)
+        pureWhiteKeyPressImage = cropPureWhiteKeyPressBitmap(
+            whiteKeyPressWithoutLeftImage,
+            whiteKeyPressWithoutRightImage
+        )
+        leftmostWhiteKeyImage = cropLeftmostWhiteKeyBitmap(keyboardImage)
         postInvalidate()
     }
 
@@ -242,7 +261,7 @@ class KeyboardView @JvmOverloads constructor(
         // 先加一个左侧看不见的八度的，防止动画穿帮
         keyboardRectList.add(RectF(left - width, 0f, right - width, viewHeight))
         var octave = 0
-        // 循环添加绘制每一个八度的位置坐标，直到触及view的右边界
+        // 循环添加绘制每一个八度的位置坐标
         while (left < viewWidth) {
             octave++
             // 先添加绘制键盘图的位置坐标，再叠上5个黑键
@@ -338,7 +357,7 @@ class KeyboardView @JvmOverloads constructor(
                 val currentPitchInOctave = i % NOTES_PER_OCTAVE
                 when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
                     KeyImageTypeEnum.BLACK_KEY -> canvas.drawBitmap(
-                        blackKeyImage,
+                        blackKeyPressImage,
                         null,
                         blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
                                 + currentOctave * BLACK_NOTES_PER_OCTAVE],
@@ -346,7 +365,7 @@ class KeyboardView @JvmOverloads constructor(
                     )
 
                     KeyImageTypeEnum.WHITE_KEY_LEFT -> canvas.drawBitmap(
-                        whiteKeyLeftImage,
+                        whiteKeyPressWithoutLeftImage,
                         null,
                         whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
                                 + currentOctave * WHITE_NOTES_PER_OCTAVE],
@@ -354,7 +373,7 @@ class KeyboardView @JvmOverloads constructor(
                     )
 
                     KeyImageTypeEnum.WHITE_KEY_MIDDLE -> canvas.drawBitmap(
-                        whiteKeyMiddleImage,
+                        whiteKeyPressWithoutLeftAndRightImage,
                         null,
                         whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
                                 + currentOctave * WHITE_NOTES_PER_OCTAVE],
@@ -362,7 +381,7 @@ class KeyboardView @JvmOverloads constructor(
                     )
 
                     KeyImageTypeEnum.WHITE_KEY_RIGHT -> canvas.drawBitmap(
-                        whiteKeyRightImage,
+                        whiteKeyPressWithoutRightImage,
                         null,
                         whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
                                 + currentOctave * WHITE_NOTES_PER_OCTAVE],
@@ -623,7 +642,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun setWhiteKeyNum(whiteKeyNum: Int, animInterval: Int) {
-        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || isAnimRunning) {
+        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_NUM || isAnimRunning) {
             return
         }
         val anim = ValueAnimator.ofFloat(1f, this.whiteKeyNum.toFloat() / whiteKeyNum)
@@ -678,7 +697,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun setWhiteKeyOffset(whiteKeyOffset: Int, animInterval: Int) {
-        if (whiteKeyOffset < 0 || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || isAnimRunning) {
+        if (whiteKeyOffset < MIN_WHITE_KEY_OFFSET || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || isAnimRunning) {
             return
         }
         val anim = ValueAnimator.ofFloat(0f, (this.whiteKeyOffset - whiteKeyOffset) * whiteKeyWidth)
@@ -710,13 +729,61 @@ class KeyboardView @JvmOverloads constructor(
     /**
      * 裁剪键盘，八个白键的键盘皮肤图要分成七份（乘7/8），裁成一个八度
      *
-     * @param bitmap 原图
+     * @param keyboardBitmap 原图
      * @return 裁剪后的图像
      */
-    private fun cropKeyboardBitmap(bitmap: Bitmap?): Bitmap {
-        val whiteKeyNum7Div8Factor = 0.875f
-        val newWidth = (bitmap!!.width * whiteKeyNum7Div8Factor).toInt()
-        return Bitmap.createBitmap(bitmap, 0, 0, newWidth, bitmap.height, null, false)
+    private fun cropKeyboardBitmap(keyboardBitmap: Bitmap): Bitmap {
+        return Bitmap.createBitmap(
+            keyboardBitmap, 0, 0,
+            (keyboardBitmap.width * 0.875f).toInt(), keyboardBitmap.height, null, false
+        )
+    }
+
+    /**
+     * 裁剪键盘，获取88键钢琴的最右侧纯白键素材
+     *
+     * @param keyboardBitmap 7/8裁减后的一个八度的键盘素材原图
+     * @return 裁剪后的图像
+     */
+    private fun cropPureWhiteKeyBitmap(keyboardBitmap: Bitmap): Bitmap {
+        return Bitmap.createBitmap(
+            keyboardBitmap, 0, 0,
+            (keyboardBitmap.width * 0.875f).toInt(), keyboardBitmap.height, null, false
+        )
+    }
+
+    /**
+     * 裁剪键盘，获取88键钢琴的最右侧纯白键按压效果素材
+     *
+     * @param keyboardBitmap 左侧缺口和右侧缺口的两张白键按压素材图
+     * @return 裁剪后的图像
+     */
+    private fun cropPureWhiteKeyPressBitmap(
+        whiteKeyPressWithoutLeftBitmap: Bitmap,
+        whiteKeyPressWithoutRightBitmap: Bitmap
+    ): Bitmap {
+        return Bitmap.createBitmap(
+            whiteKeyPressWithoutRightBitmap,
+            0,
+            0,
+            (whiteKeyPressWithoutLeftBitmap.width * 0.875f).toInt(),
+            whiteKeyPressWithoutLeftBitmap.height,
+            null,
+            false
+        )
+    }
+
+    /**
+     * 裁剪键盘，获取88键钢琴的最左侧白键素材
+     *
+     * @param keyboardBitmap 7/8裁减后的一个八度的键盘素材原图
+     * @return 裁剪后的图像
+     */
+    private fun cropLeftmostWhiteKeyBitmap(keyboardBitmap: Bitmap): Bitmap {
+        return Bitmap.createBitmap(
+            keyboardBitmap, 0, 0,
+            (keyboardBitmap.width * 0.875f).toInt(), keyboardBitmap.height, null, false
+        )
     }
 
     /**

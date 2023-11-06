@@ -21,9 +21,9 @@ public final class ChangeSkinClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        skinListAdapter.skinListPreference.skinKey = skinKey;
         switch (skinKey) {
             case "original":
+                skinListAdapter.skinListPreference.skinKey = skinKey;
                 new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
                 break;
             case "more":
@@ -33,6 +33,7 @@ public final class ChangeSkinClick implements OnClickListener {
                 skinListAdapter.context.startActivity(intent);
                 break;
             default:
+                skinListAdapter.skinListPreference.skinKey = skinKey;
                 skinListAdapter.skinListPreference.skinFile = new File(skinKey);
                 new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
                 break;

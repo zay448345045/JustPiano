@@ -351,6 +351,6 @@
             android:layout_height="match_parent"
             android:keepScreenOn="true"
             app:whiteKeyNum="15"
-            app:whiteKeyOffset="14" />
+            app:whiteKeyOffset="28" />
     </LinearLayout>
 </LinearLayout>

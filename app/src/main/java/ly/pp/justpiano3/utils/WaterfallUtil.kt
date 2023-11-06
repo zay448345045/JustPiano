@@ -11,19 +11,6 @@ class WaterfallUtil {
     companion object {
 
         /**
-         * 根据一个midi音高，判断它是否为黑键
-         */
-        private fun isBlackKey(pitch: Byte): Boolean {
-            val pitchInOctave = pitch % NOTES_PER_OCTAVE
-            for (blackKeyOffsetInOctave in KeyboardView.BLACK_KEY_OFFSETS) {
-                if (pitchInOctave == blackKeyOffsetInOctave) {
-                    return true
-                }
-            }
-            return false
-        }
-
-        /**
          * 根据一个键盘view的琴键坐标信息，计算出（瀑布流音块）长条的坐标和宽度（略小于琴键的宽度）
          * 返回值为瀑布流音符横坐标的左边界和右边界
          */
@@ -35,6 +22,19 @@ class WaterfallUtil {
                 else rectF.width() * KeyboardView.BLACK_KEY_WIDTH_FACTOR * BLACK_KEY_WATERFALL_WIDTH_FACTOR
             // 根据中轴线和新的宽度计算坐标，返回
             return Pair(rectF.centerX() - waterfallWidth / 2, rectF.centerX() + waterfallWidth / 2)
+        }
+
+        /**
+         * 根据一个midi音高，判断它是否为黑键
+         */
+        private fun isBlackKey(pitch: Byte): Boolean {
+            val pitchInOctave = pitch % NOTES_PER_OCTAVE
+            for (blackKeyOffsetInOctave in KeyboardView.BLACK_KEY_OFFSETS) {
+                if (pitchInOctave == blackKeyOffsetInOctave) {
+                    return true
+                }
+            }
+            return false
         }
 
         /**

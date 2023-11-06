@@ -220,50 +220,50 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
             SharedPreferences.Editor edit = sharedPreferences.edit();
             switch (msg.what) {
                 case R.id.keyboard1_count_down:
-                    int keyboard1WhiteKeyNum = firstKeyboardView.getWhiteKeyNum() - 1;
-                    firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() - 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_down:
-                    int keyboard2WhiteKeyNum = secondKeyboardView.getWhiteKeyNum() - 1;
-                    secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() - 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_count_up:
-                    keyboard1WhiteKeyNum = firstKeyboardView.getWhiteKeyNum() + 1;
-                    firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() + 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard2_count_up:
-                    keyboard2WhiteKeyNum = secondKeyboardView.getWhiteKeyNum() + 1;
-                    secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() + 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_left:
-                    int keyboard1WhiteKeyOffset = firstKeyboardView.getWhiteKeyOffset() - 1;
-                    firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() - 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_left:
-                    int keyboard2WhiteKeyOffset = secondKeyboardView.getWhiteKeyOffset() - 1;
-                    secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() - 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard1_move_right:
-                    keyboard1WhiteKeyOffset = firstKeyboardView.getWhiteKeyOffset() + 1;
-                    firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() + 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;
                 case R.id.keyboard2_move_right:
-                    keyboard2WhiteKeyOffset = secondKeyboardView.getWhiteKeyOffset() + 1;
-                    secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                    secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() + 1,
+                            GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
                     edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
                     edit.apply();
                     break;

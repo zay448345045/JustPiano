@@ -177,7 +177,7 @@
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="21">
+                app:whiteKeyOffset="28">
             </ly.pp.justpiano3.view.KeyboardView>
         </LinearLayout>
 
@@ -194,7 +194,7 @@
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="14">
+                app:whiteKeyOffset="21">
             </ly.pp.justpiano3.view.KeyboardView>
         </LinearLayout>
     </LinearLayout>

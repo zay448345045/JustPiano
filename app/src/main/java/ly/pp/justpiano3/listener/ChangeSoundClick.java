@@ -21,9 +21,9 @@ public final class ChangeSoundClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        soundListAdapter.soundListPreference.soundKey = soundKey;
         switch (soundKey) {
             case "original":
+                soundListAdapter.soundListPreference.soundKey = soundKey;
                 new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute("original");
                 break;
             case "more":
@@ -33,6 +33,7 @@ public final class ChangeSoundClick implements OnClickListener {
                 soundListAdapter.context.startActivity(intent);
                 break;
             default:
+                soundListAdapter.soundListPreference.soundKey = soundKey;
                 new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(soundKey, String.valueOf(soundListAdapter.soundKeyList[position]));
                 break;
         }
