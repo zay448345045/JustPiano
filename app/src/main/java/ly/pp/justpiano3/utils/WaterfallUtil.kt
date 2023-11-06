@@ -29,7 +29,7 @@ class WaterfallUtil {
          */
         private fun isBlackKey(pitch: Byte): Boolean {
             val pitchInOctave = pitch % NOTES_PER_OCTAVE
-            for (blackKeyOffsetInOctave in KeyboardView.BLACK_KEY_OFFSETS) {
+            for (blackKeyOffsetInOctave in KeyboardView.BLACK_KEY_OFFSET) {
                 if (pitchInOctave == blackKeyOffsetInOctave) {
                     return true
                 }
@@ -42,7 +42,7 @@ class WaterfallUtil {
          * 注意黑键和白键的绝对坐标位置的宽度有差异
          */
         private fun convertPitchToReact(keyboardView: KeyboardView, pitch: Byte): RectF? {
-            val pitchInScreen = keyboardView.getPitchInScreen(pitch.toInt())
+            val pitchInScreen = keyboardView.getPitchInScreen(pitch)
             // 入参的音高不在键盘view所绘制的琴键范围内，返回空
             if (pitchInScreen < 0 || pitchInScreen >= keyboardView.notesOnArray.size) {
                 return null

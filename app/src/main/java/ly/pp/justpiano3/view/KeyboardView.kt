@@ -45,10 +45,10 @@ class KeyboardView @JvmOverloads constructor(
         private const val WHITE_KEY_OFFSET_0_MIDI_PITCH = 12
 
         // 每个八度内白键的索引
-        val WHITE_KEY_OFFSETS = intArrayOf(0, 2, 4, 5, 7, 9, 11)
+        val WHITE_KEY_OFFSET = intArrayOf(0, 2, 4, 5, 7, 9, 11)
 
         // 每个八度内黑键的索引
-        val BLACK_KEY_OFFSETS = intArrayOf(1, 3, 6, 8, 10)
+        val BLACK_KEY_OFFSET = intArrayOf(1, 3, 6, 8, 10)
 
         // 最大音量值
         const val MAX_VOLUME: Byte = 127
@@ -57,18 +57,18 @@ class KeyboardView @JvmOverloads constructor(
          * 一个八度内要绘制的图像种类，包括黑键、白键右侧(右上角抠掉黑键的，比如do键)、白键MIDDLE(左右都被抠掉黑键的，比如do re mi的re键)、白键左侧
          */
         val KEY_IMAGE_TYPE = arrayOf(
-            KeyImageTypeEnum.WHITE_KEY_RIGHT,
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT,
             KeyImageTypeEnum.BLACK_KEY,
-            KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT,
             KeyImageTypeEnum.BLACK_KEY,
-            KeyImageTypeEnum.WHITE_KEY_LEFT,
-            KeyImageTypeEnum.WHITE_KEY_RIGHT,
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT,
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT,
             KeyImageTypeEnum.BLACK_KEY,
-            KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT,
             KeyImageTypeEnum.BLACK_KEY,
-            KeyImageTypeEnum.WHITE_KEY_MIDDLE,
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT,
             KeyImageTypeEnum.BLACK_KEY,
-            KeyImageTypeEnum.WHITE_KEY_LEFT
+            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT
         )
 
         // midi音高转白键或黑键索引
@@ -162,7 +162,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     enum class KeyImageTypeEnum {
-        BLACK_KEY, WHITE_KEY_LEFT, WHITE_KEY_MIDDLE, WHITE_KEY_RIGHT
+        BLACK_KEY, WHITE_KEY_WITHOUT_LEFT, WHITE_KEY_WITHOUT_LEFT_AND_RIGHT, WHITE_KEY_WITHOUT_RIGHT
     }
 
     init {
@@ -251,10 +251,10 @@ class KeyboardView @JvmOverloads constructor(
         val blackKeyRectList: MutableList<RectF> = ArrayList()
         // 先加一个左侧看不见的八度的，防止动画穿帮
         keyboardRectList.add(RectF(left - width, 0f, right - width, viewHeight))
-        var octave = 0
+        var octaveCount = 0
         // 循环添加绘制每一个八度的位置坐标
         while (left < viewWidth) {
-            octave++
+            octaveCount++
             // 先添加绘制键盘图的位置坐标，再叠上5个黑键
             keyboardRectList.add(RectF(left, 0f, right, viewHeight))
             val blackKeyLeft1 = left + blackKeyWidth * 1.15f
@@ -319,8 +319,8 @@ class KeyboardView @JvmOverloads constructor(
         keyboardImageRectArray = keyboardRectList.toTypedArray()
         whiteKeyRectArray = whiteKeyRectList.toTypedArray()
         blackKeyRectArray = blackKeyRectList.toTypedArray()
-        notesOnArray = BooleanArray(octave * NOTES_PER_OCTAVE)
-        notesOnPaintArray = arrayOfNulls(octave * NOTES_PER_OCTAVE)
+        notesOnArray = BooleanArray(octaveCount * NOTES_PER_OCTAVE)
+        notesOnPaintArray = arrayOfNulls(octaveCount * NOTES_PER_OCTAVE)
         for (i in notesOnPaintArray.indices) {
             notesOnPaintArray[i] = Paint(Paint.ANTI_ALIAS_FLAG)
         }
@@ -332,6 +332,23 @@ class KeyboardView @JvmOverloads constructor(
         for (rectF in keyboardImageRectArray) {
             canvas.drawBitmap(keyboardImage, null, rectF, null)
         }
+        // 特殊逻辑处理，88键钢琴的最低音和最高音在展示时，需要分别叠加绘制最左侧/最右侧的琴键
+        if (whiteKeyOffset == MIN_WHITE_KEY_OFFSET) {
+            canvas.drawBitmap(
+                leftmostWhiteKeyImage,
+                null,
+                whiteKeyRectArray[MIN_WHITE_KEY_OFFSET],
+                null
+            )
+        }
+        if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_RIGHT_VALUE) {
+            canvas.drawBitmap(
+                pureWhiteKeyImage,
+                null,
+                whiteKeyRectArray[getPitchInScreen(108) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
+                null
+            )
+        }
         // 按数组中的位置坐标值，拿图片进行绘制
         drawNotesOn(canvas)
         // 根据按键标签种类绘制按键标签
@@ -342,6 +359,27 @@ class KeyboardView @JvmOverloads constructor(
         for ((i, noteOn) in notesOnArray.withIndex()) {
             // 如果某个琴键处于按下状态，根据具体图片类型来绘制具体琴键按下的图片，叠在键盘图的上面
             if (noteOn) {
+                // 首先特殊逻辑处理，如果88键钢琴键盘的最低音或最高音琴键被按下，不遵从之后的规律
+                if (whiteKeyOffset == MIN_WHITE_KEY_OFFSET && i == WHITE_KEY_OFFSET[MIN_WHITE_KEY_OFFSET]) {
+                    canvas.drawBitmap(
+                        whiteKeyPressWithoutRightImage,
+                        null,
+                        whiteKeyRectArray[MIN_WHITE_KEY_OFFSET],
+                        notesOnPaintArray[i]
+                    )
+                    continue
+                }
+                if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_RIGHT_VALUE
+                    && i == whiteKeyNum / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE
+                ) {
+                    canvas.drawBitmap(
+                        pureWhiteKeyPressImage,
+                        null,
+                        whiteKeyRectArray[getPitchInScreen(108) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
+                        notesOnPaintArray[i]
+                    )
+                    continue
+                }
                 val currentOctave = i / NOTES_PER_OCTAVE
                 val currentPitchInOctave = i % NOTES_PER_OCTAVE
                 when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
@@ -353,7 +391,7 @@ class KeyboardView @JvmOverloads constructor(
                         notesOnPaintArray[i]
                     )
 
-                    KeyImageTypeEnum.WHITE_KEY_LEFT -> canvas.drawBitmap(
+                    KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT -> canvas.drawBitmap(
                         whiteKeyPressWithoutLeftImage,
                         null,
                         whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
@@ -361,7 +399,7 @@ class KeyboardView @JvmOverloads constructor(
                         notesOnPaintArray[i]
                     )
 
-                    KeyImageTypeEnum.WHITE_KEY_MIDDLE -> canvas.drawBitmap(
+                    KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT -> canvas.drawBitmap(
                         whiteKeyPressWithoutLeftAndRightImage,
                         null,
                         whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
@@ -369,7 +407,7 @@ class KeyboardView @JvmOverloads constructor(
                         notesOnPaintArray[i]
                     )
 
-                    KeyImageTypeEnum.WHITE_KEY_RIGHT -> canvas.drawBitmap(
+                    KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT -> canvas.drawBitmap(
                         whiteKeyPressWithoutRightImage,
                         null,
                         whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
@@ -542,7 +580,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
-        val pitchInScreen = getPitchInScreen(pitch.toInt())
+        val pitchInScreen = getPitchInScreen(pitch)
         if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
             return
         }
@@ -583,7 +621,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyUp(pitch: Byte) {
-        val pitchInScreen = getPitchInScreen(pitch.toInt())
+        val pitchInScreen = getPitchInScreen(pitch)
         if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
             return
         }
@@ -599,24 +637,29 @@ class KeyboardView @JvmOverloads constructor(
      * 比如midi音高为60，而view中只绘制（可以理解为显示）了两个八度
      * 那么转换后的音高就应该是以屏幕最左侧绘制的八度的do键为0算起的，一定比60小，比如可能为0，可能为12
      */
-    fun getPitchInScreen(pitch: Int): Int {
+    fun getPitchInScreen(pitch: Byte): Int {
         return pitch - WHITE_KEY_OFFSET_0_MIDI_PITCH - whiteKeyOffset / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE
     }
 
-    // Convert x to MIDI pitch. Ignores black keys.
+    // Convert x to MIDI pitch, Ignores black keys
     private fun xToWhitePitch(x: Float): Byte {
         val whiteKeyOffsetInScreen = (x / whiteKeyWidth + whiteKeyOffset).toInt()
         val octaveWhiteKeyOffset = whiteKeyOffsetInScreen % WHITE_NOTES_PER_OCTAVE
-        return (WHITE_KEY_OFFSET_0_MIDI_PITCH + WHITE_KEY_OFFSETS[octaveWhiteKeyOffset]
+        return (WHITE_KEY_OFFSET_0_MIDI_PITCH + WHITE_KEY_OFFSET[octaveWhiteKeyOffset]
                 + whiteKeyOffsetInScreen / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE).toByte()
     }
 
-    // Convert x to MIDI pitch. Ignores white keys.
+    // Convert x to MIDI pitch, Ignores white keys
     private fun xyToBlackPitch(x: Float, y: Float): Byte {
         for (i in blackKeyRectArray.indices) {
             if (blackKeyRectArray[i].contains(x, y)) {
-                return (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSETS[i % BLACK_NOTES_PER_OCTAVE]
-                        + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE).toByte()
+                val pitch = (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSET[i % BLACK_NOTES_PER_OCTAVE]
+                        + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE)
+                // 88键钢琴的最左侧和最右侧键（理应有以外的黑键的时候），特殊处理，不判断黑键
+                if (pitch == 109 || pitch == 20) {
+                    return -1
+                }
+                return pitch.toByte()
             }
         }
         return -1
@@ -690,8 +733,13 @@ class KeyboardView @JvmOverloads constructor(
             whiteKeyPressWithoutRightBitmap.height, null, false
         )
         val whiteKeyHalfRightBitmap = Bitmap.createBitmap(
-            whiteKeyPressWithoutLeftBitmap, whiteKeyPressWithoutLeftBitmap.width shr 1, 0,
-            whiteKeyPressWithoutLeftBitmap.width, whiteKeyPressWithoutLeftBitmap.height, null, false
+            whiteKeyPressWithoutLeftBitmap,
+            whiteKeyPressWithoutLeftBitmap.width shr 1,
+            0,
+            whiteKeyPressWithoutLeftBitmap.width shr 1,
+            whiteKeyPressWithoutLeftBitmap.height,
+            null,
+            false
         )
         val mergedBitmap = Bitmap.createBitmap(
             whiteKeyPressWithoutLeftBitmap.width,
@@ -701,7 +749,7 @@ class KeyboardView @JvmOverloads constructor(
         canvas.drawBitmap(whiteKeyHalfLeftBitmap, 0f, 0f, null)
         canvas.drawBitmap(
             whiteKeyHalfRightBitmap,
-            (whiteKeyHalfRightBitmap.width shr 1).toFloat(),
+            whiteKeyHalfRightBitmap.width.toFloat(),
             0f,
             null
         )
@@ -716,7 +764,7 @@ class KeyboardView @JvmOverloads constructor(
      */
     private fun cropLeftmostWhiteKeyBitmap(keyboardBitmap: Bitmap): Bitmap {
         return Bitmap.createBitmap(
-            keyboardBitmap, 0, 0,
+            keyboardBitmap, (keyboardBitmap.width * 3f / 7f).toInt(), 0,
             (keyboardBitmap.width / 7f).toInt(), keyboardBitmap.height, null, false
         )
     }
@@ -726,7 +774,7 @@ class KeyboardView @JvmOverloads constructor(
      */
     private fun isBlackKey(pitch: Byte): Boolean {
         val pitchInOctave = pitch % NOTES_PER_OCTAVE
-        for (blackKeyOffsetInOctave in BLACK_KEY_OFFSETS) {
+        for (blackKeyOffsetInOctave in BLACK_KEY_OFFSET) {
             if (pitchInOctave == blackKeyOffsetInOctave) {
                 return true
             }
