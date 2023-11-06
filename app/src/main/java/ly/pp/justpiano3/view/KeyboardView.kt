@@ -428,7 +428,7 @@ class KeyboardView @JvmOverloads constructor(
             OctaveTagType.OCTAVE_C -> {
                 for ((index, rectF) in keyboardImageRectArray.withIndex()) {
                     canvas.drawText(
-                        OCTAVE_C + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index),
+                        OCTAVE_C + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index - 1),
                         rectF.left + (rectF.width() / 7 - keyboardTextPaint.measureText(
                             OCTAVE_TAG_WORD_SAMPLE
                         )) / 2,
@@ -440,7 +440,7 @@ class KeyboardView @JvmOverloads constructor(
             OctaveTagType.PITCH_NAME -> {
                 for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
                     canvas.drawText(
-                        PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index / WHITE_NOTES_PER_OCTAVE + 1),
+                        PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index / WHITE_NOTES_PER_OCTAVE),
                         whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(
                             OCTAVE_TAG_WORD_SAMPLE
                         )) / 2,
@@ -653,8 +653,9 @@ class KeyboardView @JvmOverloads constructor(
     private fun xyToBlackPitch(x: Float, y: Float): Byte {
         for (i in blackKeyRectArray.indices) {
             if (blackKeyRectArray[i].contains(x, y)) {
-                val pitch = (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSET[i % BLACK_NOTES_PER_OCTAVE]
-                        + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE)
+                val pitch =
+                    (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSET[i % BLACK_NOTES_PER_OCTAVE]
+                            + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE)
                 // 88键钢琴的最左侧和最右侧键（理应有以外的黑键的时候），特殊处理，不判断黑键
                 if (pitch == 109 || pitch == 20) {
                     return -1
