@@ -70,12 +70,6 @@ object GlobalSetting {
         private set
 
     /**
-     * 是否开启键盘模式动画
-     */
-    var keyboardAnim: Boolean = true
-        private set
-
-    /**
      * 是否开启和弦
      */
     var isOpenChord: Boolean = true
@@ -265,7 +259,6 @@ object GlobalSetting {
         roughLine = sharedPreferences.getString("rough_line", "1")!!.toInt()
         midiKeyboardTune = sharedPreferences.getString("midi_keyboard_tune", "0")!!.toInt()
         keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()
-        keyboardAnim = sharedPreferences.getBoolean("keyboard_anim", true)
         chatSound = sharedPreferences.getBoolean("chats_sound", false)
         notesDownSpeed = 3 / (sharedPreferences.getString("down_speed", "1")!!.toFloat())
         noteSize = sharedPreferences.getString("note_size", "1")!!.toFloat()

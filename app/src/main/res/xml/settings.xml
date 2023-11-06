@@ -60,7 +60,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:summary="动画效果、标签展示、移调等"
+            android:summary="键盘标签展示、移调等"
             android:title="钢琴键盘设置">
             <intent
                 android:data="settings_keyboard"

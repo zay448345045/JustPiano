@@ -2,12 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="钢琴键盘">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="keyboard_anim"
-            android:summaryOff="&lt;关闭&gt;键盘模式切换琴键数量和琴键位置时禁用动画效果"
-            android:summaryOn="&lt;打开&gt;键盘模式切换琴键数量和琴键位置时启用动画效果"
-            android:title="启用键盘移动缩放动画" />
         <ListPreference
             android:defaultValue="0"
             android:dialogTitle="钢琴键盘展示标签类型"

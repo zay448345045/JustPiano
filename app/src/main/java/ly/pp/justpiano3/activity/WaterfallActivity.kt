@@ -391,19 +391,19 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
     private val handler = Handler(Looper.getMainLooper()) { msg ->
         when (msg.what) {
             R.id.waterfall_sub_key -> {
-                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum - 1, 0)
+                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum - 1)
             }
 
             R.id.waterfall_add_key -> {
-                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum + 1, 0)
+                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum + 1)
             }
 
             R.id.waterfall_key_move_left -> {
-                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset - 1, 0)
+                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset - 1)
             }
 
             R.id.waterfall_key_move_right -> {
-                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset + 1, 0)
+                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset + 1)
             }
         }
         waterfallView.octaveLineXList = keyboardView.allOctaveLineX

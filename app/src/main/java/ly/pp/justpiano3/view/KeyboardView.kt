@@ -1,8 +1,5 @@
 package ly.pp.justpiano3.view
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -103,11 +100,6 @@ class KeyboardView @JvmOverloads constructor(
     lateinit var notesOnArray: BooleanArray
         private set
     private lateinit var notesOnPaintArray: Array<Paint?>
-
-    /**
-     * 是否在展示动画，展示动画期间不允许重新绘制、修改白键数量等操作
-     */
-    private var isAnimRunning = false
     private val mFingerMap: MutableMap<Int, Byte> = HashMap()
     var keyboardListener: KeyboardListener? = null
     var whiteKeyNum = 0
@@ -182,8 +174,7 @@ class KeyboardView @JvmOverloads constructor(
         blackKeyPressImage = ImageLoadUtil.loadSkinImage(context, "black")
         pureWhiteKeyImage = cropPureWhiteKeyBitmap(keyboardImage)
         pureWhiteKeyPressImage = cropPureWhiteKeyPressBitmap(
-            whiteKeyPressWithoutLeftImage,
-            whiteKeyPressWithoutRightImage
+            whiteKeyPressWithoutLeftImage, whiteKeyPressWithoutRightImage
         )
         leftmostWhiteKeyImage = cropLeftmostWhiteKeyBitmap(keyboardImage)
     }
@@ -341,12 +332,10 @@ class KeyboardView @JvmOverloads constructor(
         for (rectF in keyboardImageRectArray) {
             canvas.drawBitmap(keyboardImage, null, rectF, null)
         }
-        // 没有在动画播放期间的话，开始按数组中的位置坐标值，拿图片进行绘制
-        if (!isAnimRunning) {
-            drawNotesOn(canvas)
-            // 根据按键标签种类绘制按键标签
-            drawOctaveTagByType(canvas)
-        }
+        // 按数组中的位置坐标值，拿图片进行绘制
+        drawNotesOn(canvas)
+        // 根据按键标签种类绘制按键标签
+        drawOctaveTagByType(canvas)
     }
 
     private fun drawNotesOn(canvas: Canvas) {
@@ -548,69 +537,61 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     private fun fireKeyDownAndHandleListener(pitch: Byte, volume: Byte, color: Int?) {
-        if (!isAnimRunning) {
-            keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME))
-            fireKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME), color)
-        }
+        keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME))
+        fireKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME), color)
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
-        if (!isAnimRunning) {
-            val pitchInScreen = getPitchInScreen(pitch.toInt())
-            if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-                return
-            }
-            if (notesOnArray[pitchInScreen]) {
-                return
-            }
-            notesOnArray[pitchInScreen] = true
-            if (notesOnPaintArray[pitchInScreen] == null) {
-                notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
-            }
-            val blackKey = isBlackKey(pitch)
-            val handledVolume = (volume * 128f / 100).roundToInt().coerceAtMost(127)
-            notesOnPaintArray[pitchInScreen]!!.alpha = handledVolume * 2
-            if (color != null) {
-                // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
-                // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
-                val handledColor = if (blackKey) Color.argb(
-                    128, Color.red(color), Color.green(color), Color.blue(color)
-                ) else Color.argb(255, Color.red(color), Color.green(color), Color.blue(color))
-                var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
-                if (porterDuffColorFilter == null) {
-                    porterDuffColorFilter = PorterDuffColorFilter(
-                        handledColor,
-                        if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
-                    )
-                    colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
-                }
-                notesOnPaintArray[pitchInScreen]!!.colorFilter = porterDuffColorFilter
-            } else {
-                notesOnPaintArray[pitchInScreen]!!.colorFilter = null
-            }
-            postInvalidate()
+        val pitchInScreen = getPitchInScreen(pitch.toInt())
+        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
+            return
         }
+        if (notesOnArray[pitchInScreen]) {
+            return
+        }
+        notesOnArray[pitchInScreen] = true
+        if (notesOnPaintArray[pitchInScreen] == null) {
+            notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
+        }
+        val blackKey = isBlackKey(pitch)
+        val handledVolume = (volume * 128f / 100).roundToInt().coerceAtMost(127)
+        notesOnPaintArray[pitchInScreen]!!.alpha = handledVolume * 2
+        if (color != null) {
+            // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
+            // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
+            val handledColor = if (blackKey) Color.argb(
+                128, Color.red(color), Color.green(color), Color.blue(color)
+            ) else Color.argb(255, Color.red(color), Color.green(color), Color.blue(color))
+            var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
+            if (porterDuffColorFilter == null) {
+                porterDuffColorFilter = PorterDuffColorFilter(
+                    handledColor,
+                    if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
+                )
+                colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
+            }
+            notesOnPaintArray[pitchInScreen]!!.colorFilter = porterDuffColorFilter
+        } else {
+            notesOnPaintArray[pitchInScreen]!!.colorFilter = null
+        }
+        postInvalidate()
     }
 
     private fun fireKeyUpAndHandleListener(pitch: Byte) {
-        if (!isAnimRunning) {
-            keyboardListener?.onKeyUp(pitch)
-            fireKeyUp(pitch)
-        }
+        keyboardListener?.onKeyUp(pitch)
+        fireKeyUp(pitch)
     }
 
     fun fireKeyUp(pitch: Byte) {
-        if (!isAnimRunning) {
-            val pitchInScreen = getPitchInScreen(pitch.toInt())
-            if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-                return
-            }
-            if (!notesOnArray[pitchInScreen]) {
-                return
-            }
-            notesOnArray[pitchInScreen] = false
-            postInvalidate()
+        val pitchInScreen = getPitchInScreen(pitch.toInt())
+        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
+            return
         }
+        if (!notesOnArray[pitchInScreen]) {
+            return
+        }
+        notesOnArray[pitchInScreen] = false
+        postInvalidate()
     }
 
     /**
@@ -641,89 +622,25 @@ class KeyboardView @JvmOverloads constructor(
         return -1
     }
 
-    fun setWhiteKeyNum(whiteKeyNum: Int, animInterval: Int) {
-        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_NUM || isAnimRunning) {
+    fun setWhiteKeyNum(whiteKeyNum: Int) {
+        if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_NUM) {
             return
         }
-        val anim = ValueAnimator.ofFloat(1f, this.whiteKeyNum.toFloat() / whiteKeyNum)
-        var rightAnim = false
         if (whiteKeyNum + whiteKeyOffset > MAX_WHITE_KEY_RIGHT_VALUE) {
             whiteKeyOffset = MAX_WHITE_KEY_RIGHT_VALUE - whiteKeyNum
-            rightAnim = true
         }
         this.whiteKeyNum = whiteKeyNum
-        if (animInterval == 0) {
-            makeDraw()
-            postInvalidate()
-            return
-        }
-        anim.duration = animInterval.toLong()
-        isAnimRunning = true
-        val oriLeft = FloatArray(keyboardImageRectArray.size)
-        val oriRight = FloatArray(keyboardImageRectArray.size)
-        for (i in keyboardImageRectArray.indices) {
-            oriLeft[i] = keyboardImageRectArray[i].left
-            oriRight[i] = keyboardImageRectArray[i].right
-        }
-        val finalRightAnim = rightAnim
-        anim.addUpdateListener { animation: ValueAnimator ->
-            val currentValue = animation.animatedValue as Float
-            for (i in keyboardImageRectArray.indices) {
-                keyboardImageRectArray[i].left =
-                    if (finalRightAnim) (oriLeft[i] - viewWidth) * currentValue + viewWidth else oriLeft[i] * currentValue
-                keyboardImageRectArray[i].right =
-                    if (finalRightAnim) (oriRight[i] - viewWidth) * currentValue + viewWidth else oriRight[i] * currentValue
-            }
-            postInvalidate()
-        }
-        makeAnimListenerAndStart(anim)
+        makeDraw()
+        postInvalidate()
     }
 
-    private fun makeAnimListenerAndStart(anim: ValueAnimator) {
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                isAnimRunning = false
-                makeDraw()
-                postInvalidate()
-            }
-
-            override fun onAnimationCancel(animation: Animator) {
-                isAnimRunning = false
-                makeDraw()
-                postInvalidate()
-            }
-        })
-        anim.start()
-    }
-
-    fun setWhiteKeyOffset(whiteKeyOffset: Int, animInterval: Int) {
-        if (whiteKeyOffset < MIN_WHITE_KEY_OFFSET || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE || isAnimRunning) {
+    fun setWhiteKeyOffset(whiteKeyOffset: Int) {
+        if (whiteKeyOffset < MIN_WHITE_KEY_OFFSET || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE) {
             return
         }
-        val anim = ValueAnimator.ofFloat(0f, (this.whiteKeyOffset - whiteKeyOffset) * whiteKeyWidth)
         this.whiteKeyOffset = whiteKeyOffset
-        if (animInterval == 0) {
-            makeDraw()
-            postInvalidate()
-            return
-        }
-        anim.duration = animInterval.toLong()
-        isAnimRunning = true
-        val oriLeft = FloatArray(keyboardImageRectArray.size)
-        val oriRight = FloatArray(keyboardImageRectArray.size)
-        for (i in keyboardImageRectArray.indices) {
-            oriLeft[i] = keyboardImageRectArray[i].left
-            oriRight[i] = keyboardImageRectArray[i].right
-        }
-        anim.addUpdateListener { animation: ValueAnimator ->
-            val currentValue = animation.animatedValue as Float
-            for (i in keyboardImageRectArray.indices) {
-                keyboardImageRectArray[i].left = oriLeft[i] + currentValue
-                keyboardImageRectArray[i].right = oriRight[i] + currentValue
-            }
-            postInvalidate()
-        }
-        makeAnimListenerAndStart(anim)
+        makeDraw()
+        postInvalidate()
     }
 
     /**
@@ -740,37 +657,55 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     /**
-     * 裁剪键盘，获取88键钢琴的最右侧纯白键素材
+     * 裁剪+处理键盘图片素材，获取88键钢琴的最右侧纯白键素材
      *
      * @param keyboardBitmap 7/8裁减后的一个八度的键盘素材原图
-     * @return 裁剪后的图像
+     * @return 处理后的图像
      */
     private fun cropPureWhiteKeyBitmap(keyboardBitmap: Bitmap): Bitmap {
-        return Bitmap.createBitmap(
-            keyboardBitmap, 0, 0,
-            (keyboardBitmap.width * 0.875f).toInt(), keyboardBitmap.height, null, false
+        return cropPureWhiteKeyPressBitmap(
+            Bitmap.createBitmap(
+                keyboardBitmap, (keyboardBitmap.width * 6f / 7f).toInt(), 0,
+                (keyboardBitmap.width / 7f).toInt(), keyboardBitmap.height, null, false
+            ), Bitmap.createBitmap(
+                keyboardBitmap, 0, 0,
+                (keyboardBitmap.width / 7f).toInt(), keyboardBitmap.height, null, false
+            )
         )
     }
 
     /**
-     * 裁剪键盘，获取88键钢琴的最右侧纯白键按压效果素材
+     * 裁剪+处理键盘图片素材，获取88键钢琴的最右侧纯白键按压效果素材
      *
-     * @param keyboardBitmap 左侧缺口和右侧缺口的两张白键按压素材图
-     * @return 裁剪后的图像
+     * @param whiteKeyPressWithoutLeftBitmap 左侧缺口的白键按压素材图
+     * @param whiteKeyPressWithoutRightBitmap 右侧缺口的白键按压素材图
+     * @return 处理后的图像
      */
     private fun cropPureWhiteKeyPressBitmap(
         whiteKeyPressWithoutLeftBitmap: Bitmap,
         whiteKeyPressWithoutRightBitmap: Bitmap
     ): Bitmap {
-        return Bitmap.createBitmap(
-            whiteKeyPressWithoutRightBitmap,
-            0,
-            0,
-            (whiteKeyPressWithoutLeftBitmap.width * 0.875f).toInt(),
-            whiteKeyPressWithoutLeftBitmap.height,
-            null,
-            false
+        val whiteKeyHalfLeftBitmap = Bitmap.createBitmap(
+            whiteKeyPressWithoutRightBitmap, 0, 0, whiteKeyPressWithoutRightBitmap.width shr 1,
+            whiteKeyPressWithoutRightBitmap.height, null, false
         )
+        val whiteKeyHalfRightBitmap = Bitmap.createBitmap(
+            whiteKeyPressWithoutLeftBitmap, whiteKeyPressWithoutLeftBitmap.width shr 1, 0,
+            whiteKeyPressWithoutLeftBitmap.width, whiteKeyPressWithoutLeftBitmap.height, null, false
+        )
+        val mergedBitmap = Bitmap.createBitmap(
+            whiteKeyPressWithoutLeftBitmap.width,
+            whiteKeyPressWithoutLeftBitmap.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(mergedBitmap)
+        canvas.drawBitmap(whiteKeyHalfLeftBitmap, 0f, 0f, null)
+        canvas.drawBitmap(
+            whiteKeyHalfRightBitmap,
+            (whiteKeyHalfRightBitmap.width shr 1).toFloat(),
+            0f,
+            null
+        )
+        return mergedBitmap
     }
 
     /**
@@ -782,7 +717,7 @@ class KeyboardView @JvmOverloads constructor(
     private fun cropLeftmostWhiteKeyBitmap(keyboardBitmap: Bitmap): Bitmap {
         return Bitmap.createBitmap(
             keyboardBitmap, 0, 0,
-            (keyboardBitmap.width * 0.875f).toInt(), keyboardBitmap.height, null, false
+            (keyboardBitmap.width / 7f).toInt(), keyboardBitmap.height, null, false
         )
     }
 

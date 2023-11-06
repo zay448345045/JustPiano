@@ -73,7 +73,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public LinearLayout keyboardLayout;
     public WaterfallView waterfallView;
     public KeyboardView keyboardView;
-    public SharedPreferences sharedPreferences;
     public ScheduledExecutorService keyboardScheduledExecutor;
     public ScheduledExecutorService noteScheduledExecutor;
     public ImageView keyboardSetting;
@@ -178,29 +177,25 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     public boolean handleMessage(Message message) {
         super.handleMessage(message);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
+        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
         switch (message.what) {
             case R.id.keyboard_count_down:
-                int keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() - 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() - 1);
                 edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_count_up:
-                keyboard1WhiteKeyNum = keyboardView.getWhiteKeyNum() + 1;
-                keyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() + 1);
                 edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
                 edit.apply();
                 break;
             case R.id.keyboard_move_left:
-                int keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() - 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() - 1);
                 edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
             case R.id.keyboard_move_right:
-                keyboard1WhiteKeyOffset = keyboardView.getWhiteKeyOffset() + 1;
-                keyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset, GlobalSetting.INSTANCE.getKeyboardAnim() ? interval : 0);
+                keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() + 1);
                 edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
                 edit.apply();
                 break;
@@ -352,12 +347,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 onlineWaterfallKeyUpHandle(pitch);
             }
         });
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int keyboardWhiteKeyNum = sharedPreferences.getInt("ol_keyboard_white_key_num", 15);
         int keyboardWhiteKeyOffset = sharedPreferences.getInt("ol_keyboard_white_key_offset", 14);
         float keyboardWeight = sharedPreferences.getFloat("ol_keyboard_weight", 0.75f);
-        keyboardView.setWhiteKeyOffset(keyboardWhiteKeyOffset, 0);
-        keyboardView.setWhiteKeyNum(keyboardWhiteKeyNum, 0);
+        keyboardView.setWhiteKeyOffset(keyboardWhiteKeyOffset);
+        keyboardView.setWhiteKeyNum(keyboardWhiteKeyNum);
         playerLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -516,7 +511,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     reSize = false;
                     view.setPressed(false);
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) playerLayout.getLayoutParams();
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);
                     edit.apply();
                     break;
