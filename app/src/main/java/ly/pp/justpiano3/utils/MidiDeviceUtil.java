@@ -292,7 +292,7 @@ public class MidiDeviceUtil {
      * C++和java接收到midi数据后均会调用此方法
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private static void onMidiMessageReceive(byte value1, byte value2, byte value3) {
+    private static void onMidiMessageReceive(int value1, byte value2, byte value3) {
         int midiEventType = value1 & 0xF0;
         if (midiEventType == 0x90) {
             mainHandler.post(() -> {

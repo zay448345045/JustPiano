@@ -97,7 +97,7 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
     env->GetJavaVM(&theJvm);
     // Setup the receive data callback (into Java)
     dataCallbackClass = static_cast<jclass>(env->NewGlobalRef(clazz));
-    midDataCallback = env->GetStaticMethodID(clazz, "onMidiMessageReceive", "(BBB)V");
+    midDataCallback = env->GetStaticMethodID(clazz, "onMidiMessageReceive", "(IBB)V");
 
     midi_device_handle_t deviceHandle;
     deviceHandle.sReading = true;

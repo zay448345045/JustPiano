@@ -163,6 +163,10 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
+//                                Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+//                                        + " autoReconnect! channelRead0 autoReconnect:"
+//                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime)
+//                                        + " " + msg.getResponseCase().getNumber() + " " + msg);
                                 if (autoReconnectTime != null) {
                                     Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
                                             + " autoReconnect! channelRead0 autoReconnect:"
