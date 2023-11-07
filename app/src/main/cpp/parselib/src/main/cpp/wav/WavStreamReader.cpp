@@ -73,10 +73,6 @@ namespace parselib {
                 break; // done
             }
 
-//        char *tagStr = (char *) &tag;
-//        __android_log_print(ANDROID_LOG_INFO, TAG, "[%c%c%c%c]",
-//                            tagStr[0], tagStr[1], tagStr[2], tagStr[3]);
-
             WavChunkHeader *chunk;
             if (tag == WavRIFFChunkHeader::RIFFID_RIFF) {
                 chunk = mWavChunk = new WavRIFFChunkHeader(tag);

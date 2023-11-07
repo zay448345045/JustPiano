@@ -164,7 +164,7 @@ public class SoundDownload extends Activity implements Callback {
             if (soundFileName.endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadWavAssetsNative();
-                for (int i = 108; i >= 24; i--) {
+                for (int i = 108; i >= 21; i--) {
                     SoundEngineUtil.preloadSounds(this, i);
                 }
                 SoundEngineUtil.afterLoadSounds(this);

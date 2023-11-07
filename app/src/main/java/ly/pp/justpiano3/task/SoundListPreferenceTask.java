@@ -43,7 +43,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
         if (soundFile.getName().endsWith(".ss")) {
             SoundEngineUtil.teardownAudioStreamNative();
             SoundEngineUtil.unloadWavAssetsNative();
-            for (int i = 108; i >= 24; i--) {
+            for (int i = 108; i >= 21; i--) {
                 SoundEngineUtil.preloadSounds(soundListPreference.context, i);
             }
             SoundEngineUtil.afterLoadSounds(soundListPreference.context);

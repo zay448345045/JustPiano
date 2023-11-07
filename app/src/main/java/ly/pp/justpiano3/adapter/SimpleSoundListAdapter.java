@@ -88,7 +88,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         if (name.endsWith(".ss")) {
                             SoundEngineUtil.teardownAudioStreamNative();
                             SoundEngineUtil.unloadWavAssetsNative();
-                            for (int i = 108; i >= 24; i--) {
+                            for (int i = 108; i >= 21; i--) {
                                 SoundEngineUtil.preloadSounds(olPlayKeyboardRoom, i);
                             }
                             SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom);

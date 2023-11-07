@@ -224,10 +224,10 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show());
             System.exit(-1);
         }
-        for (int i = 108; i >= 24; i--) {
+        for (int i = 108; i >= 21; i--) {
             SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             progress++;
-            loading = "正在载入声音资源..." + progress + "/85";
+            loading = "正在载入声音资源..." + progress + "/88";
             Message obtainMessage2 = handler.obtainMessage();
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);

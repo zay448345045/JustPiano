@@ -293,7 +293,21 @@ public final class PlayView extends SurfaceView implements Callback {
                 noteArray[i] += tune;
             }
         }
-        computePlayNotes(tune);
+        setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                loadParams();
+                loadBackgroundsThread = new LoadBackgroundsThread(PlayView.this, pianoPlay);
+                loadBackgroundsThread.start();
+                showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
+                showScoreAndLevelsThread.start();
+                setOnTouchListener(new TouchNotes(PlayView.this));
+                ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+        pianoPlay.setContentView(this);
     }
 
     private void loadPm(byte[] bArr) {
@@ -310,10 +324,6 @@ public final class PlayView extends SurfaceView implements Callback {
         pm_2 = pmSongData.getGlobalSpeed();
         arrayLength = tickArray.length;
         lastPosition = 0;
-        computePlayNotes(0);
-    }
-
-    private void computePlayNotes(int tune) {
         setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -324,7 +334,7 @@ public final class PlayView extends SurfaceView implements Callback {
                 showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
                 showScoreAndLevelsThread.start();
                 setOnTouchListener(new TouchNotes(PlayView.this));
-                ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
+                ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });

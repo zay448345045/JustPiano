@@ -91,13 +91,17 @@ public class SoundEngineUtil {
     }
 
     public static void playChatSound() {
-        triggerDown(85, 127);
+        triggerDown(88, 127);
     }
 
     public static void preloadSounds(Context context, int i) {
+        File mp3File = new File(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3");
+        if (!mp3File.exists()) {
+            return;
+        }
         try {
             Converter converter = new Converter();
-            converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
+            converter.convert(mp3File.getAbsolutePath(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             loadWavInputStreamByIndex(context, i);
         } catch (Exception e1) {
             try {
@@ -149,7 +153,7 @@ public class SoundEngineUtil {
         unloadSf2Sound();
         teardownAudioStreamNative();
         unloadWavAssetsNative();
-        for (int i = 108; i >= 24; i--) {
+        for (int i = 108; i >= 21; i--) {
             preloadSounds(context, i);
         }
         afterLoadSounds(context);
