@@ -349,7 +349,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         });
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int keyboardWhiteKeyNum = sharedPreferences.getInt("ol_keyboard_white_key_num", 15);
-        int keyboardWhiteKeyOffset = sharedPreferences.getInt("ol_keyboard_white_key_offset", 14);
+        int keyboardWhiteKeyOffset = sharedPreferences.getInt("ol_keyboard_white_key_offset", 21);
         float keyboardWeight = sharedPreferences.getFloat("ol_keyboard_weight", 0.75f);
         keyboardView.setWhiteKeyOffset(keyboardWhiteKeyOffset);
         keyboardView.setWhiteKeyNum(keyboardWhiteKeyNum);

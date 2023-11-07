@@ -39,9 +39,8 @@ class KeyboardView @JvmOverloads constructor(
         private const val DEFAULT_WHITE_KEY_NUM = 8
         private const val DEFAULT_WHITE_KEY_OFFSET = 28
         private const val MIN_WHITE_KEY_OFFSET = 5
-        private const val MAX_WHITE_KEY_RIGHT_VALUE = 57
         private const val MIN_WHITE_KEY_NUM = 7
-        private const val MAX_WHITE_KEY_NUM = MAX_WHITE_KEY_RIGHT_VALUE - MIN_WHITE_KEY_OFFSET
+        private const val MAX_WHITE_KEY_NUM = 52
         private const val WHITE_KEY_OFFSET_0_MIDI_PITCH = 12
 
         // 每个八度内白键的索引
@@ -341,7 +340,7 @@ class KeyboardView @JvmOverloads constructor(
                 null
             )
         }
-        if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_RIGHT_VALUE) {
+        if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET) {
             canvas.drawBitmap(
                 pureWhiteKeyImage,
                 null,
@@ -369,7 +368,7 @@ class KeyboardView @JvmOverloads constructor(
                     )
                     continue
                 }
-                if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_RIGHT_VALUE
+                if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET
                     && i == whiteKeyNum / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE
                 ) {
                     canvas.drawBitmap(
@@ -670,8 +669,8 @@ class KeyboardView @JvmOverloads constructor(
         if (whiteKeyNum < MIN_WHITE_KEY_NUM || whiteKeyNum > MAX_WHITE_KEY_NUM) {
             return
         }
-        if (whiteKeyNum + whiteKeyOffset > MAX_WHITE_KEY_RIGHT_VALUE) {
-            whiteKeyOffset = MAX_WHITE_KEY_RIGHT_VALUE - whiteKeyNum
+        if (whiteKeyNum + whiteKeyOffset > MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET) {
+            whiteKeyOffset = MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET - whiteKeyNum
         }
         this.whiteKeyNum = whiteKeyNum
         makeDraw()
@@ -679,7 +678,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun setWhiteKeyOffset(whiteKeyOffset: Int) {
-        if (whiteKeyOffset < MIN_WHITE_KEY_OFFSET || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_RIGHT_VALUE) {
+        if (whiteKeyOffset < MIN_WHITE_KEY_OFFSET || whiteKeyOffset + whiteKeyNum > MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET) {
             return
         }
         this.whiteKeyOffset = whiteKeyOffset

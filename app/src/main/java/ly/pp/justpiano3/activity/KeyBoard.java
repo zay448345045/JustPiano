@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -63,7 +62,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
     }
 
     @Override
-    @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_keyboard_mode);
@@ -88,8 +86,8 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int keyboard1WhiteKeyNum = sharedPreferences.getInt("keyboard1_white_key_num", 8);
         int keyboard2WhiteKeyNum = sharedPreferences.getInt("keyboard2_white_key_num", 8);
-        int keyboard1WhiteKeyOffset = sharedPreferences.getInt("keyboard1_white_key_offset", 21);
-        int keyboard2WhiteKeyOffset = sharedPreferences.getInt("keyboard2_white_key_offset", 14);
+        int keyboard1WhiteKeyOffset = sharedPreferences.getInt("keyboard1_white_key_offset", 28);
+        int keyboard2WhiteKeyOffset = sharedPreferences.getInt("keyboard2_white_key_offset", 21);
         float keyboardWeight = sharedPreferences.getFloat("keyboard_weight", 0.5f);
         firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum);
         secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum);
