@@ -1,13 +1,11 @@
 package ly.pp.justpiano3;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
@@ -15,7 +13,6 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,8 +60,6 @@ public final class JPApplication extends Application {
     private boolean bindService;
     private String accountName = "";
     private String password = "";
-    private int widthPixels;
-    private int heightPixels;
     private boolean appInException;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -311,27 +306,6 @@ public final class JPApplication extends Application {
 
     public void setBindService(boolean bindService) {
         this.bindService = bindService;
-    }
-
-    public void updateWidthAndHeightPixels(Activity activity) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Configuration configuration = getResources().getConfiguration();
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            this.heightPixels = displayMetrics.heightPixels;
-            this.widthPixels = displayMetrics.widthPixels;
-        } else {
-            this.heightPixels = displayMetrics.widthPixels;
-            this.widthPixels = displayMetrics.heightPixels;
-        }
-    }
-
-    public int getWidthPixels() {
-        return widthPixels;
-    }
-
-    public int getHeightPixels() {
-        return heightPixels;
     }
 
     public ServiceConnection getServiceConnection() {

@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceHolder;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
@@ -23,7 +22,6 @@ public final class LoadBackgroundsThread extends Thread {
     private final Paint f6023i;
     private final Paint f6024j;
     private final Paint f6025k;
-    private final JPApplication jpapplication;
     private final Rect f6028n;
     private final Rect f6029o;
     private final Rect backgroundRect;
@@ -39,11 +37,10 @@ public final class LoadBackgroundsThread extends Thread {
      */
     private int progressPauseTime;
 
-    public LoadBackgroundsThread(JPApplication jPApplication, PlayView playView, PianoPlay pianoPlay) {
-        jpapplication = jPApplication;
+    public LoadBackgroundsThread(PlayView playView, PianoPlay pianoPlay) {
         this.playView = playView;
         surfaceholder = playView.surfaceholder;
-        widthDiv120 = (float) (jPApplication.getWidthPixels() / 120);
+        widthDiv120 = (float) (playView.getWidth() / 120);
         longKeyboardHeight = (float) playView.longKeyboardImage.getHeight();
         f6023i = new Paint();
         f6023i.setARGB(200, 255, 125, 25);//深橙色
@@ -53,7 +50,7 @@ public final class LoadBackgroundsThread extends Thread {
         f6024j.setColor(0xff00ff00);
         f6025k = new Paint();
         f6025k.setARGB(255, 255, 125, 25);
-        f6028n = new Rect(0, 0, jPApplication.getWidthPixels(), (int) playView.halfHeightSub20);
+        f6028n = new Rect(0, 0, playView.getWidth(), (int) playView.halfHeightSub20);
         f6029o = new Rect(0, (int) playView.halfHeightSub20, playView.screenWidth, playView.whiteKeyHeight);
         backgroundRect = new Rect(0, 0, playView.screenWidth, playView.whiteKeyHeight);
         this.pianoPlay = pianoPlay;
@@ -85,15 +82,15 @@ public final class LoadBackgroundsThread extends Thread {
                     canvas.drawBitmap(playView.backgroundImage, null, f6028n, null);
                     canvas.drawBitmap(playView.barImage, null, f6029o, null);
                     if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
-                        canvas.drawBitmap(playView.roughLineImage, null, new RectF(0f, (float) (jpapplication.getHeightPixels() * 0.49) - playView.roughLineImage.getHeight(), (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() * 0.49)), null);
+                        canvas.drawBitmap(playView.roughLineImage, null, new RectF(0f, (float) (playView.getHeight() * 0.49) - playView.roughLineImage.getHeight(), (float) playView.getWidth(), (float) (playView.getHeight() * 0.49)), null);
                     }
                     // 绘制吊线和音块
                     playView.mo2930b(canvas);
                 }
                 // 绘制屏幕上方的小键盘
                 if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {
-                    canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0f, 0f, (float) jpapplication.getWidthPixels(), longKeyboardHeight), null);
-                    canvas.drawRoundRect(new RectF((float) (((jpapplication.getWidthPixels() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((jpapplication.getWidthPixels() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
+                    canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0f, 0f, (float) playView.getWidth(), longKeyboardHeight), null);
+                    canvas.drawRoundRect(new RectF((float) (((playView.getWidth() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((playView.getWidth() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
                     switch (playView.currentPlayNote.noteValue % 12) {
                         case 0:
                         case 2:

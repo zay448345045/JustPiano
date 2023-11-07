@@ -18,8 +18,8 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class JustPianoView extends View {
     public JPApplication jpapplication;
-    private final RectF allScreenRect;
-    private final RectF progressBarRect;
+    private RectF allScreenRect;
+    private RectF progressBarRect;
     private Bitmap logoBitmap;
     private Bitmap progressBarBitmap;
     private Bitmap progressBarBaseBitmap;
@@ -43,16 +43,19 @@ public class JustPianoView extends View {
     public JustPianoView(Context context, JPApplication jPApplication) {
         super(context);
         jpapplication = jPApplication;
-        allScreenRect = new RectF(0, 0, jpapplication.getWidthPixels(), jpapplication.getHeightPixels());
+    }
+
+    public void init() {
+        allScreenRect = new RectF(0, 0, getWidth(), getHeight());
         try {
             logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
-            progressBarBitmap = ImageLoadUtil.loadSkinImage(context, "progress_bar");
-            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(context, "progress_bar_base");
+            progressBarBitmap = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar");
+            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar_base");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        progressBarRect = new RectF(0, jpapplication.getHeightPixels() - ((float) progressBarBitmap.getHeight()),
-                jPApplication.getWidthPixels(), jpapplication.getHeightPixels());
+        progressBarRect = new RectF(0, getHeight() - ((float) progressBarBitmap.getHeight()),
+                getWidth(), getHeight());
     }
 
     public final void destroy() {
@@ -81,13 +84,13 @@ public class JustPianoView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int progressOne = (jpapplication.getWidthPixels() * progress) / 85;
+        int progressOne = (getWidth() * progress) / 85;
         canvas.drawBitmap(logoBitmap, null, allScreenRect, null);
         canvas.drawBitmap(progressBarBaseBitmap, null, progressBarRect, null);
 
-        progressBarDynamicRect.set(progressOne - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - progressBarBitmap.getHeight(), progressOne, jpapplication.getHeightPixels());
+        progressBarDynamicRect.set(progressOne - getWidth(), getHeight() - progressBarBitmap.getHeight(), progressOne, getHeight());
         canvas.drawBitmap(progressBarBitmap, null, progressBarDynamicRect, null);
 
-        canvas.drawText(loading + info, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - progressBarBitmap.getHeight()), paint);
+        canvas.drawText(loading + info, (float) getWidth(), (float) (getHeight() - progressBarBitmap.getHeight()), paint);
     }
 }

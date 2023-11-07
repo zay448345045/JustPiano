@@ -3,7 +3,6 @@ package ly.pp.justpiano3.view.play;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.PlayView;
@@ -25,7 +24,7 @@ public final class PlayNote {
     private boolean newNote = true;
     private final int posiAdd15;
 
-    public PlayNote(JPApplication jPApplication, PlayView playView, byte i, int i2, byte f, int f2, int i3, boolean z, int i4) {
+    public PlayNote(PlayView playView, byte i, int i2, byte f, int f2, int i3, boolean z, int i4) {
         handValue = i4;
         this.playView = playView;
         noteDiv12 = i3;
@@ -37,7 +36,7 @@ public final class PlayNote {
         volumeValue = f;
         int widthPixels = playView.noteImage.getWidth();
         halfWidth = widthPixels / 2f;
-        int width = jPApplication.getWidthPixels() / 16;
+        int width = playView.getWidth() / 16;
         int f4 = widthPixels / 2;
         if (trackValue != handValue) {
             return;

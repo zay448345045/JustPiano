@@ -81,7 +81,7 @@ public final class PianoPlayHandler extends Handler {
                 });
                 return;
             case 4:
-                post(() -> pianoPlay.keyboardview.updateTouchNoteNum());
+                post(() -> pianoPlay.playKeyBoardView.updateTouchNoteNum());
                 return;
             case 5:
                 post(() -> pianoPlay.mo2906a(true));
@@ -119,8 +119,8 @@ public final class PianoPlayHandler extends Handler {
             case 7:
                 post(() -> {
                     if (message.arg1 == 0) {  //本地模式或联网模式计时完成后开始
-                        if (pianoPlay.f4591J != null) {
-                            pianoPlay.f4591J.setVisibility(View.GONE);
+                        if (pianoPlay.pausedPlay != null) {
+                            pianoPlay.pausedPlay.setVisibility(View.GONE);
                         }
                         pianoPlay.rightHandDegreeTextView.setVisibility(View.VISIBLE);
                         pianoPlay.highScoreTextView.setVisibility(View.VISIBLE);

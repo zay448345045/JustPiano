@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import java.io.File;
@@ -147,8 +149,15 @@ public class JustPiano extends Activity implements Callback, Runnable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new Handler(this);
-        ((JPApplication) getApplication()).updateWidthAndHeightPixels(this);
         justpianoview = new JustPianoView(this, (JPApplication) getApplication());
+        justpianoview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        justpianoview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                justpianoview.init();
+                justpianoview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
         setContentView(justpianoview);
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;

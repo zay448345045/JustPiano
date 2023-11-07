@@ -9,13 +9,12 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Bundle;
 import android.os.Message;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.ViewTreeObserver;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -147,7 +146,6 @@ public final class PlayView extends SurfaceView implements Callback {
     private int handValue;
     private byte[] tickArray;
     private byte[] trackArray;
-    private boolean f4713V = true;
     private Rect f4801bz;
     private final Paint line = new Paint();
     public float widthDiv8;
@@ -181,7 +179,6 @@ public final class PlayView extends SurfaceView implements Callback {
         leftHandDegree = d2;
         score = i;
         songsTime = i5;
-        loadParams();
         try {
             loadPm(context, str, tune);
         } catch (Exception e) {
@@ -201,7 +198,6 @@ public final class PlayView extends SurfaceView implements Callback {
         songID = songId;
         rightHandDegree = d;
         score = i;
-        loadParams();
         try {
             loadPm(bArr);
         } catch (Exception e) {
@@ -223,7 +219,7 @@ public final class PlayView extends SurfaceView implements Callback {
         xImage = ImageLoadUtil.loadSkinImage(pianoPlay, "x_img");
         scoreImage = ImageLoadUtil.loadSkinImage(pianoPlay, "score");
         scoreNumImage = ImageLoadUtil.loadSkinImage(pianoPlay, "number");
-        if (jpapplication.getHeightPixels() < 1080) {
+        if (getHeight() < 1080) {
             matrix.postScale(0.7f, 0.7f);
             perfectImage = Bitmap.createBitmap(perfectImage, 0, 0, perfectImage.getWidth(), perfectImage.getHeight(), matrix, true);
             coolImage = Bitmap.createBitmap(coolImage, 0, 0, coolImage.getWidth(), coolImage.getHeight(), matrix, true);
@@ -270,11 +266,11 @@ public final class PlayView extends SurfaceView implements Callback {
         width = playNoteImage.getWidth();
         height = playNoteImage.getHeight();
         playNoteImage = Bitmap.createBitmap(playNoteImage, 0, 0, width, height, matrix, true);
-        whiteKeyHeight = (int) (jpapplication.getHeightPixels() * 0.49);
+        whiteKeyHeight = (int) (getHeight() * 0.49);
         halfHeightSub20 = whiteKeyHeight - 20;
-        blackKeyHeight = jpapplication.getHeightPixels() / 3.4f;
-        blackKeyWidth = jpapplication.getWidthPixels() * 0.0413f;
-        halfHeightSub10 = jpapplication.getHeightPixels() * 0.5f - 10;
+        blackKeyHeight = getHeight() / 3.4f;
+        blackKeyWidth = getWidth() * 0.0413f;
+        halfHeightSub10 = getHeight() * 0.5f - 10;
         whiteKeyHeightAdd90 = whiteKeyHeight + 90f;
     }
 
@@ -318,73 +314,88 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void computePlayNotes(int tune) {
-        ThreadPoolUtil.execute(() -> {
-            long startTime = System.currentTimeMillis();
-            int i3 = 0;
-            int actualTime;
-            int lastActualTime = 0;
-            int length = 0;
-            while (true) {
-                int i4 = length;
-                if (i4 < arrayLength) {
-                    tick += tickArray[i4];
-                    actualTime = -tick * pm_2;
-                    position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
-                    if (trackArray[i4] != handValue) {
-                        notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
-                        hideNote = true;
-                    } else if (lastPosition < position) {
-                        notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
-                        hideNote = true;
-                    } else {
-                        if (lastActualTime - actualTime >= 100 || i4 == 0) {
-                            hideNote = false;
-                        }
-                        lastPosition = position;
-                        lastActualTime = actualTime;
-                        if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
-                            i3 = noteArray[i4] / 12;
-                        }
-                        if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
-                            trackArray[i4] = 2;
-                        }
-                        notesList.add(new PlayNote(jpapplication, this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
-                        hideNote = true;
-                    }
-                    length = i4 + 1;
-                    if (System.currentTimeMillis() - startTime > 200) {
-                        startTime = System.currentTimeMillis();
-                        int finalLength = length;
-                        pianoPlay.runOnUiThread(() -> {
-                            if (pianoPlay.jpprogressbar == null) {
-                                pianoPlay.jpprogressbar = new JPProgressBar(pianoPlay);
-                                pianoPlay.jpprogressbar.setCancelable(false);
-                            }
-                            pianoPlay.jpprogressbar.setText(String.format(Locale.getDefault(),
-                                    "弹奏界面正在准备中...%.2f%%", (float) finalLength / arrayLength * 100));
-                            if (!pianoPlay.jpprogressbar.isShowing()) {
-                                pianoPlay.jpprogressbar.show();
-                            }
-                        });
-                    }
-                } else {
-                    pianoPlay.runOnUiThread(() -> {
-                        pianoPlay.setContentView(this);
-                        pianoPlay.keyboardview = new PlayKeyBoardView(pianoPlay, this);
-                        pianoPlay.addContentView(pianoPlay.keyboardview, pianoPlay.layoutParams2);
-                        pianoPlay.m3785a(pianoPlay.playKind, false);
-                        pianoPlay.isPlayingStart = true;
-                        if (pianoPlay.jpprogressbar != null && pianoPlay.jpprogressbar.isShowing()) {
-                            pianoPlay.jpprogressbar.dismiss();
-                        }
-                    });
-                    return;
-                }
+        setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                loadParams();
+                loadBackgroundsThread = new LoadBackgroundsThread(PlayView.this, pianoPlay);
+                loadBackgroundsThread.start();
+                showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
+                showScoreAndLevelsThread.start();
+                setOnTouchListener(new TouchNotes(PlayView.this));
+                ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+        pianoPlay.setContentView(this);
     }
 
-    private void loadParams() {
+    private void buildNoteByPmResult(int tune) {
+        long startTime = System.currentTimeMillis();
+        int i3 = 0;
+        int actualTime;
+        int lastActualTime = 0;
+        int length = 0;
+        while (true) {
+            int i4 = length;
+            if (i4 < arrayLength) {
+                tick += tickArray[i4];
+                actualTime = -tick * pm_2;
+                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
+                if (trackArray[i4] != handValue) {
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                    hideNote = true;
+                } else if (lastPosition < position) {
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                    hideNote = true;
+                } else {
+                    if (lastActualTime - actualTime >= 100 || i4 == 0) {
+                        hideNote = false;
+                    }
+                    lastPosition = position;
+                    lastActualTime = actualTime;
+                    if (noteArray[i4] < i3 * 12 || noteArray[i4] > i3 * 12 + 12) {
+                        i3 = noteArray[i4] / 12;
+                    }
+                    if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
+                        trackArray[i4] = 2;
+                    }
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                    hideNote = true;
+                }
+                length = i4 + 1;
+                if (System.currentTimeMillis() - startTime > 200) {
+                    startTime = System.currentTimeMillis();
+                    int finalLength = length;
+                    pianoPlay.runOnUiThread(() -> {
+                        if (pianoPlay.jpprogressbar == null) {
+                            pianoPlay.jpprogressbar = new JPProgressBar(pianoPlay);
+                            pianoPlay.jpprogressbar.setCancelable(false);
+                        }
+                        pianoPlay.jpprogressbar.setText(String.format(Locale.getDefault(),
+                                "弹奏界面正在准备中...%.2f%%", (float) finalLength / arrayLength * 100));
+                        if (!pianoPlay.jpprogressbar.isShowing()) {
+                            pianoPlay.jpprogressbar.show();
+                        }
+                    });
+                }
+            } else {
+                pianoPlay.runOnUiThread(() -> {
+                    pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
+                    pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
+                    pianoPlay.m3785a(pianoPlay.playKind, false);
+                    pianoPlay.isPlayingStart = true;
+                    if (pianoPlay.jpprogressbar != null && pianoPlay.jpprogressbar.isShowing()) {
+                        pianoPlay.jpprogressbar.dismiss();
+                    }
+                });
+                return;
+            }
+        }
+    }
+
+    public void loadParams() {
         if (barImage == null) {
             loadImages();
         }
@@ -394,14 +405,14 @@ public final class PlayView extends SurfaceView implements Callback {
         missStandard = 500f / GlobalSetting.INSTANCE.getNotesDownSpeed();
         line.setColor(Color.argb(178, 244, 255, 64));
         line.setStrokeWidth(3);
-        screenWidth = jpapplication.getWidthPixels();
-        screenHeight = jpapplication.getHeightPixels();
-        widthDiv8 = jpapplication.getWidthPixels() / 8f;// 每个琴键宽度
-        width2Div8 = jpapplication.getWidthPixels() / 4f;
-        width4Div8 = jpapplication.getWidthPixels() / 2f;
-        width5Div8 = jpapplication.getWidthPixels() / 1.6f;
-        width6Div8 = jpapplication.getWidthPixels() * 0.75f;
-        width8Div8 = jpapplication.getWidthPixels();
+        screenWidth = getWidth();
+        screenHeight = getHeight();
+        widthDiv8 = getWidth() / 8f;// 每个琴键宽度
+        width2Div8 = getWidth() / 4f;
+        width4Div8 = getWidth() / 2f;
+        width5Div8 = getWidth() / 1.6f;
+        width6Div8 = getWidth() * 0.75f;
+        width8Div8 = getWidth();
         progressBarHight = progressBarImage.getHeight();
         progressBarWidth = progressBarImage.getWidth();
         surfaceholder = getHolder();
@@ -418,22 +429,21 @@ public final class PlayView extends SurfaceView implements Callback {
         uploadTouchStatusList = new ArrayList<>();
     }
 
-
     public List<Rect> getKeyRectArray() {
         List<Rect> arrayList = new ArrayList<>();
-        arrayList.add(new Rect(0, whiteKeyHeight, (int) widthDiv8, jpapplication.getHeightPixels()));
+        arrayList.add(new Rect(0, whiteKeyHeight, (int) widthDiv8, getHeight()));
         arrayList.add(new Rect((int) (widthDiv8 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) widthDiv8, whiteKeyHeight, (int) (widthDiv8 * 2), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) widthDiv8, whiteKeyHeight, (int) (widthDiv8 * 2), getHeight()));
         arrayList.add(new Rect((int) (widthDiv8 * 2 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 2 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 2), whiteKeyHeight, (int) (widthDiv8 * 3), jpapplication.getHeightPixels()));
-        arrayList.add(new Rect((int) (widthDiv8 * 3), whiteKeyHeight, (int) (widthDiv8 * 4), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 2), whiteKeyHeight, (int) (widthDiv8 * 3), getHeight()));
+        arrayList.add(new Rect((int) (widthDiv8 * 3), whiteKeyHeight, (int) (widthDiv8 * 4), getHeight()));
         arrayList.add(new Rect((int) (widthDiv8 * 4 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 4 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 4), whiteKeyHeight, (int) (widthDiv8 * 5), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 4), whiteKeyHeight, (int) (widthDiv8 * 5), getHeight()));
         arrayList.add(new Rect((int) ((widthDiv8 * 5) - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 5 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 5), whiteKeyHeight, (int) (widthDiv8 * 6), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 5), whiteKeyHeight, (int) (widthDiv8 * 6), getHeight()));
         arrayList.add(new Rect((int) (widthDiv8 * 6 - blackKeyWidth), whiteKeyHeight, (int) (widthDiv8 * 6 + blackKeyWidth), (int) (whiteKeyHeight + blackKeyHeight + 5)));
-        arrayList.add(new Rect((int) (widthDiv8 * 6), whiteKeyHeight, (int) (widthDiv8 * 7), jpapplication.getHeightPixels()));
-        arrayList.add(new Rect((int) (widthDiv8 * 7), whiteKeyHeight, (int) (widthDiv8 * 8), jpapplication.getHeightPixels()));
+        arrayList.add(new Rect((int) (widthDiv8 * 6), whiteKeyHeight, (int) (widthDiv8 * 7), getHeight()));
+        arrayList.add(new Rect((int) (widthDiv8 * 7), whiteKeyHeight, (int) (widthDiv8 * 8), getHeight()));
         return arrayList;
     }
 
@@ -635,10 +645,10 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     public void drawProgressAndFinish(int progress, Canvas canvas) {
-        float size = (float) progress / (jpapplication.getHeightPixels() - whiteKeyHeight - position) * jpapplication.getWidthPixels();
+        float size = (float) progress / (getHeight() - whiteKeyHeight - position) * getWidth();
         if (canvas != null) {
             f4773bE.set(0, 0, progressBarWidth, progressBarHight);
-            f4774bF.set(0, 0, (float) jpapplication.getWidthPixels(), (float) progressBarHight);
+            f4774bF.set(0, 0, (float) getWidth(), (float) progressBarHight);
             canvas.drawBitmap(progressBarBaseImage, null, f4774bF, null);
             f4774bF.set(0, 0, size, (float) progressBarHight);
             canvas.drawBitmap(progressBarImage, f4773bE, f4774bF, null);
@@ -751,7 +761,6 @@ public final class PlayView extends SurfaceView implements Callback {
     public void mo2930b(Canvas canvas) {
         tempNotesArray.clear();
         boolean newNote = true;
-        f4713V = true;
         for (PlayNote note : notesList) {
             currentPlayNote = note;
             if (currentPlayNote.posiAdd15AddAnim < halfHeightSub20 + 60) {
@@ -784,9 +793,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && f4713V) {
+                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight ) {
                     currentNotePitch = currentPlayNote.noteValue;
-                    f4713V = false;
                 }
                 if (gameType > 0) {
                     if (currentPlayNote.mo3107b(canvas) < 0) {
@@ -881,15 +889,15 @@ public final class PlayView extends SurfaceView implements Callback {
         while (true) {
             i5 = e;
             if (i5 >= 6) {
-                f4772bD.set((float) ((jpapplication.getWidthPixels() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
-                        (float) (jpapplication.getWidthPixels() - (i2 * 6) - TOTAL_SCORE_SHOW_OFFSET), scoreImage.getHeight());
+                f4772bD.set((float) ((getWidth() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
+                        (float) (getWidth() - (i2 * 6) - TOTAL_SCORE_SHOW_OFFSET), scoreImage.getHeight());
                 canvas.drawBitmap(scoreImage, null, f4772bD, null);
                 return;
             }
             e = currentTotalScoreNumberList.get(i5);
             f4801bz.set(e * i2, 0, (e + 1) * i2, i3);
-            f4769bA.set(jpapplication.getWidthPixels() - ((i6 + 1) * i2) - TOTAL_SCORE_SHOW_OFFSET, 0,
-                    jpapplication.getWidthPixels() - (i2 * i6) - TOTAL_SCORE_SHOW_OFFSET, i3);
+            f4769bA.set(getWidth() - ((i6 + 1) * i2) - TOTAL_SCORE_SHOW_OFFSET, 0,
+                    getWidth() - (i2 * i6) - TOTAL_SCORE_SHOW_OFFSET, i3);
             canvas.drawBitmap(scoreNumImage, f4801bz, f4769bA, null);
             i6++;
             e = i5 + 1;
@@ -902,22 +910,6 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        loadBackgroundsThread = new LoadBackgroundsThread(jpapplication, this, pianoPlay);
-        loadBackgroundsThread.start();
-        showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
-        showScoreAndLevelsThread.start();
-        setOnTouchListener(new TouchNotes(this));
-        setAccessibilityDelegate(new View.AccessibilityDelegate() {
-            @Override
-            public boolean performAccessibilityAction(View host, int action, Bundle args) {
-                if (action == AccessibilityNodeInfo.ACTION_CLICK
-                        || action == AccessibilityNodeInfo.ACTION_LONG_CLICK) {
-                    pianoPlay.finish();
-                    return true;
-                }
-                return super.performAccessibilityAction(host, action, args);
-            }
-        });
     }
 
     @Override

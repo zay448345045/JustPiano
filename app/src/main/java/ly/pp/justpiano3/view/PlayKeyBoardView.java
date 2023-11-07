@@ -26,7 +26,7 @@ public class PlayKeyBoardView extends View {
         super(context);
         this.playView = playView;
         keyBoardImage = playView.keyboardImage;
-        keyBoardRect = new Rect(0, playView.whiteKeyHeight, playView.jpapplication.getWidthPixels(), playView.jpapplication.getHeightPixels());
+        keyBoardRect = new Rect(0, playView.whiteKeyHeight, playView.getWidth(), playView.getHeight());
         fireRectArray = playView.getFireRectArray();
         keyRectArray = playView.getKeyRectArray();
     }
