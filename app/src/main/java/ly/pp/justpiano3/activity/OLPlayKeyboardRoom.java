@@ -281,7 +281,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
-            waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha() / 256f);
             waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
             waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
         }
@@ -366,7 +365,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         }
         waterfallView = findViewById(R.id.ol_waterfall_view);
         waterfallView.setTranslationY(tabTitleHeight);
-        waterfallView.setAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha() / 256f);
         waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
         waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
         roomTabs.setCurrentTab(1);

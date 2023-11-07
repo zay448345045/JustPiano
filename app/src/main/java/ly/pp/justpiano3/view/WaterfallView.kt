@@ -8,6 +8,7 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PixelFormat
+import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
@@ -529,6 +530,8 @@ class WaterfallView @JvmOverloads constructor(
                     }
                 } else null
                 canvas?.let {
+                    // 透明底色
+                    it.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
                     // 设置整体绘制的透明度
                     alphaPaint.alpha = viewAlpha
                     // 绘制背景图
