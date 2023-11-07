@@ -9,7 +9,6 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import java.io.File;
@@ -25,6 +24,7 @@ import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
 public class JustPiano extends Activity implements Callback, Runnable {
@@ -151,14 +151,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
         handler = new Handler(this);
         justpianoview = new JustPianoView(this, (JPApplication) getApplication());
         justpianoview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        justpianoview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                justpianoview.init();
-                justpianoview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
         setContentView(justpianoview);
+        ViewUtil.registerViewLayoutObserver(justpianoview, () -> justpianoview.init());
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;
         handler.sendMessage(obtainMessage);

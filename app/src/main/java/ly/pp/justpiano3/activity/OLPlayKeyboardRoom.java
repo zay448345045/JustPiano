@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -53,6 +52,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.VibrationUtil;
+import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.utils.WaterfallUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardView;
@@ -495,14 +495,10 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, weight));
                         keyboardLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - weight));
-                        playerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
-                                waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
-                                waterfallView.setLayoutParams(waterfallViewLayoutParams);
-                                playerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                            }
+                        ViewUtil.registerViewLayoutObserver(playerLayout, () -> {
+                            RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
+                            waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
+                            waterfallView.setLayoutParams(waterfallViewLayoutParams);
                         });
                     }
                     break;

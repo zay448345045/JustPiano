@@ -83,14 +83,11 @@ public class JustPianoView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         int progressOne = (getWidth() * progress) / 88;
         canvas.drawBitmap(logoBitmap, null, allScreenRect, null);
         canvas.drawBitmap(progressBarBaseBitmap, null, progressBarRect, null);
-
         progressBarDynamicRect.set(progressOne - getWidth(), getHeight() - progressBarBitmap.getHeight(), progressOne, getHeight());
         canvas.drawBitmap(progressBarBitmap, null, progressBarDynamicRect, null);
-
         canvas.drawText(loading + info, (float) getWidth(), (float) (getHeight() - progressBarBitmap.getHeight()), paint);
     }
 }

@@ -20,6 +20,7 @@ import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import ly.pp.justpiano3.utils.ThreadPoolUtil
 import ly.pp.justpiano3.utils.VibrationUtil
+import ly.pp.justpiano3.utils.ViewUtil
 import ly.pp.justpiano3.utils.WaterfallUtil
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
@@ -100,57 +101,52 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         keyboardView.octaveTagType =
             KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
-        keyboardView.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
-                waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine
-                waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-                // 设置音块下落速率，播放速度
-                waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
-                // 开启增减白键数量、移动键盘按钮的监听
-                findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
-                findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
-                findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
-                findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
-                // 设置键盘的点击监听
-                keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
-                    override fun onKeyDown(pitch: Byte, volume: Byte) {
-                        SoundEngineUtil.playSound(
-                            (pitch + GlobalSetting.keyboardSoundTune).toByte(),
-                            volume
+        ViewUtil.registerViewLayoutObserver(keyboardView) {
+            // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
+            waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine
+            waterfallView.octaveLineXList = keyboardView.allOctaveLineX
+            // 设置音块下落速率，播放速度
+            waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
+            // 开启增减白键数量、移动键盘按钮的监听
+            findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
+            findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
+            findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
+            findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
+            // 设置键盘的点击监听
+            keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
+                override fun onKeyDown(pitch: Byte, volume: Byte) {
+                    SoundEngineUtil.playSound(
+                        (pitch + GlobalSetting.keyboardSoundTune).toByte(),
+                        volume
+                    )
+                    if (GlobalSetting.soundVibration) {
+                        VibrationUtil.vibrateOnce(
+                            this@WaterfallActivity,
+                            GlobalSetting.soundVibrationTime.toLong()
                         )
-                        if (GlobalSetting.soundVibration) {
-                            VibrationUtil.vibrateOnce(
-                                this@WaterfallActivity,
-                                GlobalSetting.soundVibrationTime.toLong()
-                            )
-                        }
-                        freeStyleKeyDownHandle(pitch, volume)
                     }
-
-                    override fun onKeyUp(pitch: Byte) {
-                        SoundEngineUtil.stopPlaySound(pitch)
-                        freeStyleKeyUpHandle(pitch)
-                    }
-                })
-                // 移除布局监听，避免重复调用
-                keyboardView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                ThreadPoolUtil.execute {
-                    // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
-                    val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardView)
-                    waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
-                    runOnUiThread {
-                        progressBar.dismiss()
-                    }
+                    freeStyleKeyDownHandle(pitch, volume)
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-                ) {
-                    MidiDeviceUtil.setMidiConnectionListener(this@WaterfallActivity)
+
+                override fun onKeyUp(pitch: Byte) {
+                    SoundEngineUtil.stopPlaySound(pitch)
+                    freeStyleKeyUpHandle(pitch)
+                }
+            })
+            ThreadPoolUtil.execute {
+                // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
+                val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardView)
+                waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
+                runOnUiThread {
+                    progressBar.dismiss()
                 }
             }
-        })
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
+            ) {
+                MidiDeviceUtil.setMidiConnectionListener(this@WaterfallActivity)
+            }
+        }
     }
 
     /**

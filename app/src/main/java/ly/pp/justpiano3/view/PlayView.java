@@ -9,12 +9,13 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.os.Message;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
 import protobuf.dto.OnlineChallengeDTO;
@@ -294,20 +296,11 @@ public final class PlayView extends SurfaceView implements Callback {
             }
         }
         setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                loadParams();
-                loadBackgroundsThread = new LoadBackgroundsThread(PlayView.this, pianoPlay);
-                loadBackgroundsThread.start();
-                showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
-                showScoreAndLevelsThread.start();
-                setOnTouchListener(new TouchNotes(PlayView.this));
-                ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
-                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
         pianoPlay.setContentView(this);
+        ViewUtil.registerViewLayoutObserver(this, () -> {
+            loadParams();
+            ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
+        });
     }
 
     private void loadPm(byte[] bArr) {
@@ -325,20 +318,11 @@ public final class PlayView extends SurfaceView implements Callback {
         arrayLength = tickArray.length;
         lastPosition = 0;
         setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                loadParams();
-                loadBackgroundsThread = new LoadBackgroundsThread(PlayView.this, pianoPlay);
-                loadBackgroundsThread.start();
-                showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
-                showScoreAndLevelsThread.start();
-                setOnTouchListener(new TouchNotes(PlayView.this));
-                ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
-                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
         pianoPlay.setContentView(this);
+        ViewUtil.registerViewLayoutObserver(this, () -> {
+            loadParams();
+            ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
+        });
     }
 
     private void buildNoteByPmResult(int tune) {
@@ -392,10 +376,6 @@ public final class PlayView extends SurfaceView implements Callback {
                 }
             } else {
                 pianoPlay.runOnUiThread(() -> {
-                    pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
-                    pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
-                    pianoPlay.m3785a(pianoPlay.playKind, false);
-                    pianoPlay.isPlayingStart = true;
                     if (pianoPlay.jpprogressbar != null && pianoPlay.jpprogressbar.isShowing()) {
                         pianoPlay.jpprogressbar.dismiss();
                     }
@@ -425,9 +405,6 @@ public final class PlayView extends SurfaceView implements Callback {
         width8Div8 = getWidth();
         progressBarHight = progressBarImage.getHeight();
         progressBarWidth = progressBarImage.getWidth();
-        surfaceholder = getHolder();
-        surfaceholder.addCallback(this);
-        surfaceholder.setKeepScreenOn(true);
         f4801bz = new Rect();
         f4769bA = new Rect();
         f4772bD = new RectF();
@@ -437,6 +414,14 @@ public final class PlayView extends SurfaceView implements Callback {
         f4771bC = new RectF();
         uploadTimeArray = new byte[uploadTime];
         uploadTouchStatusList = new ArrayList<>();
+
+        pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
+        pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
+        pianoPlay.m3785a(pianoPlay.playKind, false);
+        pianoPlay.isPlayingStart = true;
+        surfaceholder = getHolder();
+        surfaceholder.addCallback(this);
+        surfaceholder.setKeepScreenOn(true);
     }
 
     public List<Rect> getKeyRectArray() {
@@ -553,51 +538,6 @@ public final class PlayView extends SurfaceView implements Callback {
             builder.setStatusArray(GZIPUtil.arrayToZIP(uploadTimeArray));
             pianoPlay.sendMsg(OnlineProtocolType.MINI_GRADE, builder.build());
             uploadNoteIndex = 0;
-        }
-    }
-
-    public void drawFire(Canvas canvas, int i) {
-        switch (i) {
-            case 0:
-                canvas.drawBitmap(fireImage, null, new RectF(0, halfHeightSub20 - fireImage.getHeight(), widthDiv8, halfHeightSub20), null);
-                return;
-            case 1:
-                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), widthDiv8 + blackKeyWidth, halfHeightSub20), null);
-                return;
-            case 2:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 2, halfHeightSub20), null);
-                return;
-            case 3:
-                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 2 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), (widthDiv8 * 2 + blackKeyWidth), halfHeightSub20), null);
-                return;
-            case 4:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 2, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 3, halfHeightSub20), null);
-                return;
-            case 5:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 3, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 4, halfHeightSub20), null);
-                return;
-            case 6:
-                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 4 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), (widthDiv8 * 4 + blackKeyWidth), halfHeightSub20), null);
-                return;
-            case 7:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 4, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 5, halfHeightSub20), null);
-                return;
-            case 8:
-                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 5 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), (widthDiv8 * 5 + blackKeyWidth), halfHeightSub20), null);
-                return;
-            case 9:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 5, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 6, halfHeightSub20), null);
-                return;
-            case 10:
-                canvas.drawBitmap(fireImage, null, new RectF((widthDiv8 * 6 - blackKeyWidth), halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 6 + blackKeyWidth, halfHeightSub20), null);
-                return;
-            case 11:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 6, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 7, halfHeightSub20), null);
-                return;
-            case 12:
-                canvas.drawBitmap(fireImage, null, new RectF(widthDiv8 * 7, halfHeightSub20 - fireImage.getHeight(), widthDiv8 * 8, halfHeightSub20), null);
-                return;
-            default:
         }
     }
 
@@ -920,6 +860,22 @@ public final class PlayView extends SurfaceView implements Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        loadBackgroundsThread = new LoadBackgroundsThread(this, pianoPlay);
+        loadBackgroundsThread.start();
+        showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
+        showScoreAndLevelsThread.start();
+        setOnTouchListener(new TouchNotes(this));
+        setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                if (action == AccessibilityNodeInfo.ACTION_CLICK
+                        || action == AccessibilityNodeInfo.ACTION_LONG_CLICK) {
+                    pianoPlay.finish();
+                    return true;
+                }
+                return super.performAccessibilityAction(host, action, args);
+            }
+        });
     }
 
     @Override
