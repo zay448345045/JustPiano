@@ -95,13 +95,9 @@ public class SoundEngineUtil {
     }
 
     public static void preloadSounds(Context context, int i) {
-        File mp3File = new File(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3");
-        if (!mp3File.exists()) {
-            return;
-        }
         try {
             Converter converter = new Converter();
-            converter.convert(mp3File.getAbsolutePath(), context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
+            converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             loadWavInputStreamByIndex(context, i);
         } catch (Exception e1) {
             try {
