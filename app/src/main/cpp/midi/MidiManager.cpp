@@ -36,8 +36,12 @@ static void sendTheReceivedData(uint8_t *data, size_t numBytes) {
 
     // send it to the (Java) callback
     for (size_t i = 0; i < numBytes; i += 3) {
-        env->CallStaticVoidMethod(dataCallbackClass, midDataCallback,
-                                  data[i], data[i + 1], data[i + 2]);
+        int midiEventType = data[i] & 0xF0;
+        if (midiEventType == 0x90 || midiEventType == 0x80 ||
+            (midiEventType == 0xB0 && (data[i + 1] & 0xFF) == 64)) {
+            env->CallStaticVoidMethod(dataCallbackClass, midDataCallback,
+                                      data[i], data[i + 1], data[i + 2]);
+        }
     }
 }
 
