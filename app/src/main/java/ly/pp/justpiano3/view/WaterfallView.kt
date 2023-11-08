@@ -17,6 +17,7 @@ import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.ObjectPool
+import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import java.util.Arrays
 import kotlin.math.abs
@@ -513,16 +514,17 @@ class WaterfallView @JvmOverloads constructor(
                 val noteCount = drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
                 // 判断有音块，且view为显示状态，且瀑布流未暂停也未滑动时才实际执行绘制
                 // 如果第一次发现无音块时，或第一次发现view被显示时，也绘制且只绘制一帧，进行补帧，随后停止
-                canvasDraw = if ((noteCount > 0 || canvasDraw) && visibility == VISIBLE && (isScrolling || !isPause)) {
+                if ((noteCount > 0 || canvasDraw) && visibility == VISIBLE && (isScrolling || !isPause)) {
                     // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                    // 准备更新变量的值，当绘制方法返回false时表示没有绘制成功，就接着再给绘制的机会
-                    !doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
+                    // 更新变量的值，当绘制方法返回false时表示没有绘制成功，就接着再给绘制的机会
+                    canvasDraw = !doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
                 } else {
-                    // 准备更新变量的值，按view为显示状态的条件允许下一次绘制，按无音块的条件阻止下一次绘制
-                    visibility != VISIBLE || noteCount > 0
+                    canvasDraw = visibility != VISIBLE || noteCount > 0
+                    // 未触发绘制，避免死循环消耗太多CPU，按刷新率约60算，整体休眠一帧的时间
+                    sleep(10)
                 }
-                // 最后，避免死循环消耗太多CPU，按刷新率60算，整体休眠约一帧的时间
-                sleep(15)
+                // 避免死循环消耗太多CPU，休眠一个音块的最低声音单位的时间
+                sleep(PmSongUtil.PM_GLOBAL_SPEED.toLong())
             }
         }
 
