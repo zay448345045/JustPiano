@@ -33,8 +33,9 @@ import java.util.List;
  *
  * @author Florian Bomers
  */
-public final class MidiUtils {
-
+public final class MidiUtil {
+    public final static byte MIN_PIANO_MIDI_PITCH = 21;
+    public final static byte MAX_PIANO_MIDI_PITCH = 108;
     public final static int DEFAULT_TEMPO_MPQ = 500000; // 120bpm
     public final static int META_END_OF_TRACK_TYPE = 0x2F;
     public final static int META_TEMPO_TYPE = 0x51;
@@ -42,7 +43,7 @@ public final class MidiUtils {
     /**
      * Suppresses default constructor, ensuring non-instantiability.
      */
-    private MidiUtils() {
+    private MidiUtil() {
     }
 
     /**

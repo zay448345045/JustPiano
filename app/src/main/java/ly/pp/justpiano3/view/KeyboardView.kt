@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import ly.pp.justpiano3.R
+import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.UnitConvertUtil
 import kotlin.math.roundToInt
@@ -344,7 +345,7 @@ class KeyboardView @JvmOverloads constructor(
             canvas.drawBitmap(
                 pureWhiteKeyImage,
                 null,
-                whiteKeyRectArray[getPitchInScreen(108) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
+                whiteKeyRectArray[getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
                 null
             )
         }
@@ -366,53 +367,51 @@ class KeyboardView @JvmOverloads constructor(
                         whiteKeyRectArray[MIN_WHITE_KEY_OFFSET],
                         notesOnPaintArray[i]
                     )
-                    continue
-                }
-                if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET
-                    && i == whiteKeyNum / WHITE_NOTES_PER_OCTAVE * NOTES_PER_OCTAVE
+                } else if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET
+                    && i == getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH)
                 ) {
                     canvas.drawBitmap(
                         pureWhiteKeyPressImage,
                         null,
-                        whiteKeyRectArray[getPitchInScreen(108) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
+                        whiteKeyRectArray[getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
                         notesOnPaintArray[i]
                     )
-                    continue
-                }
-                val currentOctave = i / NOTES_PER_OCTAVE
-                val currentPitchInOctave = i % NOTES_PER_OCTAVE
-                when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
-                    KeyImageTypeEnum.BLACK_KEY -> canvas.drawBitmap(
-                        blackKeyPressImage,
-                        null,
-                        blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * BLACK_NOTES_PER_OCTAVE],
-                        notesOnPaintArray[i]
-                    )
+                } else {
+                    val currentOctave = i / NOTES_PER_OCTAVE
+                    val currentPitchInOctave = i % NOTES_PER_OCTAVE
+                    when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
+                        KeyImageTypeEnum.BLACK_KEY -> canvas.drawBitmap(
+                            blackKeyPressImage,
+                            null,
+                            blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                    + currentOctave * BLACK_NOTES_PER_OCTAVE],
+                            notesOnPaintArray[i]
+                        )
 
-                    KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT -> canvas.drawBitmap(
-                        whiteKeyPressWithoutLeftImage,
-                        null,
-                        whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * WHITE_NOTES_PER_OCTAVE],
-                        notesOnPaintArray[i]
-                    )
+                        KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT -> canvas.drawBitmap(
+                            whiteKeyPressWithoutLeftImage,
+                            null,
+                            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                    + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                            notesOnPaintArray[i]
+                        )
 
-                    KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT -> canvas.drawBitmap(
-                        whiteKeyPressWithoutLeftAndRightImage,
-                        null,
-                        whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * WHITE_NOTES_PER_OCTAVE],
-                        notesOnPaintArray[i]
-                    )
+                        KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT -> canvas.drawBitmap(
+                            whiteKeyPressWithoutLeftAndRightImage,
+                            null,
+                            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                    + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                            notesOnPaintArray[i]
+                        )
 
-                    KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT -> canvas.drawBitmap(
-                        whiteKeyPressWithoutRightImage,
-                        null,
-                        whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                + currentOctave * WHITE_NOTES_PER_OCTAVE],
-                        notesOnPaintArray[i]
-                    )
+                        KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT -> canvas.drawBitmap(
+                            whiteKeyPressWithoutRightImage,
+                            null,
+                            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                    + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                            notesOnPaintArray[i]
+                        )
+                    }
                 }
             }
         }
@@ -656,7 +655,7 @@ class KeyboardView @JvmOverloads constructor(
                     (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSET[i % BLACK_NOTES_PER_OCTAVE]
                             + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE)
                 // 88键钢琴的最左侧和最右侧键（理应有以外的黑键的时候），特殊处理，不判断黑键
-                if (pitch == 109 || pitch == 20) {
+                if (pitch == MidiUtil.MAX_PIANO_MIDI_PITCH + 1 || pitch == MidiUtil.MIN_PIANO_MIDI_PITCH - 1) {
                     return -1
                 }
                 return pitch.toByte()

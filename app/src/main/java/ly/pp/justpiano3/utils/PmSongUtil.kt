@@ -4,7 +4,7 @@ import android.content.Context
 import ly.pp.justpiano3.entity.OriginalNote
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.SongData
-import ly.pp.justpiano3.midi.MidiUtils
+import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.midi.ShortMessage
 import ly.pp.justpiano3.midi.StandardMidiFileReader
 import ly.pp.justpiano3.midi.Track
@@ -212,7 +212,7 @@ object PmSongUtil {
         // midi文件转化为midi序列，相当于解析了
         val sequence = StandardMidiFileReader().getSequence(midiFile)
         // 这个缓存就在计算midi中所有的速度变化事件，计算好了之后缓存下来，传入，就不用每次都计算了，提性能用的
-        val tempoCache = MidiUtils.TempoCache(sequence)
+        val tempoCache = MidiUtil.TempoCache(sequence)
         // 提取midi的所有音轨，过滤掉无音符的音轨
         val filteredTracks: MutableList<Track> = ArrayList()
         for (track in sequence.tracks) {
@@ -235,7 +235,7 @@ object PmSongUtil {
                         val velocity = shortMessage.data2
                         if (velocity > 0) {
                             // tick换算为实际的时间，看JDK源码得知，考虑到了变速，按tick划分变速，计算没有问题
-                            val time = MidiUtils.tick2microsecond(sequence, event.tick, tempoCache)
+                            val time = MidiUtil.tick2microsecond(sequence, event.tick, tempoCache)
                             originalNoteList.add(
                                 OriginalNote(
                                     time / 1000,

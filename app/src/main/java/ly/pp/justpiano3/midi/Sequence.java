@@ -278,7 +278,7 @@ public class Sequence {
      */
     public long getMicrosecondLength() {
 
-        return MidiUtils.tick2microsecond(this, getTickLength(), null);
+        return MidiUtil.tick2microsecond(this, getTickLength(), null);
     }
 
     /**

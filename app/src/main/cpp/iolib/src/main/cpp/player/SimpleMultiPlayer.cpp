@@ -113,12 +113,11 @@ namespace iolib {
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
+        mDecayFactor += (logSampleCount - mDecayFactor) / 64;
         int32_t frameSampleCount = numFrames * mChannelCount;
         for (int32_t i = 0; i < frameSampleCount; i += mChannelCount) {
             mMixBuffer[i] /= mDecayFactor;
             mMixBuffer[i + 1] = mMixBuffer[i];
-            mDecayFactor += (logSampleCount - mDecayFactor) / 256;
-
             // reverb compute algorithm
             if (mReverbValue != 0) {
                 mMixBuffer[i] = mCombFilter->process(mMixBuffer[i])

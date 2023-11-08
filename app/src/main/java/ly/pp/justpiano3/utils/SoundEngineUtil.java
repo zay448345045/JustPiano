@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javazoom.jl.converter.Converter;
+import ly.pp.justpiano3.midi.MidiUtil;
 
 public class SoundEngineUtil {
 
@@ -149,7 +150,7 @@ public class SoundEngineUtil {
         unloadSf2Sound();
         teardownAudioStreamNative();
         unloadWavAssetsNative();
-        for (int i = 108; i >= 21; i--) {
+        for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             preloadSounds(context, i);
         }
         afterLoadSounds(context);

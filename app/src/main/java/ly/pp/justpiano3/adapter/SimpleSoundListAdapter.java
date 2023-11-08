@@ -16,6 +16,7 @@ import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -88,7 +89,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                         if (name.endsWith(".ss")) {
                             SoundEngineUtil.teardownAudioStreamNative();
                             SoundEngineUtil.unloadWavAssetsNative();
-                            for (int i = 108; i >= 21; i--) {
+                            for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                                 SoundEngineUtil.preloadSounds(olPlayKeyboardRoom, i);
                             }
                             SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom);

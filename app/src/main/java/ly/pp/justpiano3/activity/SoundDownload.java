@@ -27,6 +27,7 @@ import java.net.URL;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
+import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -164,7 +165,7 @@ public class SoundDownload extends Activity implements Callback {
             if (soundFileName.endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadWavAssetsNative();
-                for (int i = 108; i >= 21; i--) {
+                for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.preloadSounds(this, i);
                 }
                 SoundEngineUtil.afterLoadSounds(this);

@@ -296,12 +296,14 @@ public class MidiDeviceUtil {
         int midiEventType = value1 & 0xF0;
         if (midiEventType == 0x90) {
             mainHandler.post(() -> {
+                // 音符按下
                 if (midiReceiver != null) {
                     midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
                             (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
                 }
             });
         } else if (midiEventType == 0x80) {
+            // 音符抬起
             mainHandler.post(() -> {
                 if (midiReceiver != null) {
                     midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(

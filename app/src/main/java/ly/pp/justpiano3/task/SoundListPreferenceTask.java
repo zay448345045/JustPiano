@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.SoundListPreference;
@@ -43,7 +44,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
         if (soundFile.getName().endsWith(".ss")) {
             SoundEngineUtil.teardownAudioStreamNative();
             SoundEngineUtil.unloadWavAssetsNative();
-            for (int i = 108; i >= 21; i--) {
+            for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                 SoundEngineUtil.preloadSounds(soundListPreference.context, i);
             }
             SoundEngineUtil.afterLoadSounds(soundListPreference.context);

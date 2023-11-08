@@ -21,6 +21,7 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
+import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -218,7 +219,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                     "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show());
             System.exit(-1);
         }
-        for (int i = 108; i >= 21; i--) {
+        for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             SoundEngineUtil.preloadSounds(getApplicationContext(), i);
             progress++;
             loading = "正在载入声音资源..." + progress + "/88";
