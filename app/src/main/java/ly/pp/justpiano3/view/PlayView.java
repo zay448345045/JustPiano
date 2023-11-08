@@ -15,6 +15,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.nio.charset.StandardCharsets;
@@ -295,7 +296,8 @@ public final class PlayView extends SurfaceView implements Callback {
                 noteArray[i] += tune;
             }
         }
-        setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         pianoPlay.setContentView(this);
         ViewUtil.registerViewLayoutObserver(this, () -> {
             loadParams();
@@ -317,7 +319,8 @@ public final class PlayView extends SurfaceView implements Callback {
         pm_2 = pmSongData.getGlobalSpeed();
         arrayLength = tickArray.length;
         lastPosition = 0;
-        setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         pianoPlay.setContentView(this);
         ViewUtil.registerViewLayoutObserver(this, () -> {
             loadParams();
@@ -743,7 +746,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volumeValue;
                     newNote = false;
                 }
-                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight ) {
+                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight) {
                     currentNotePitch = currentPlayNote.noteValue;
                 }
                 if (gameType > 0) {

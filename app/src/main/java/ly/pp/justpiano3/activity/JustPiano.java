@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.File;
@@ -151,7 +151,8 @@ public class JustPiano extends Activity implements Callback, Runnable {
         super.onCreate(savedInstanceState);
         handler = new Handler(this);
         justpianoview = new JustPianoView(this, (JPApplication) getApplication());
-        justpianoview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        justpianoview.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(justpianoview);
         ViewUtil.registerViewLayoutObserver(justpianoview, () -> justpianoview.init());
         Message obtainMessage = handler.obtainMessage();
