@@ -12,10 +12,8 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
-import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.ObjectPool
@@ -518,9 +516,10 @@ class WaterfallView @JvmOverloads constructor(
                 // 如果第一次发现无音块时，或第一次发现view被显示时，也绘制且只绘制一帧，进行补帧，随后停止
                 if ((noteCount > 0 || canvasDraw) && visibility == VISIBLE && (isScrolling || !isPause)) {
                     // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
+                    // 更新变量的值，当绘制方法返回false时表示没有绘制成功，就接着再给绘制的机会
                     canvasDraw = !doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
                 } else {
-                    canvasDraw = visibility != VISIBLE || noteCount > 0;
+                    canvasDraw = visibility != VISIBLE || noteCount > 0
                     // 未触发绘制，避免死循环消耗太多CPU，按刷新率约60算，整体休眠一帧的时间
                     sleep(10)
                 }
