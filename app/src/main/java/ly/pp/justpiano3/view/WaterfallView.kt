@@ -12,11 +12,14 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
+import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.ObjectPool
+import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import java.util.Arrays
 import kotlin.math.abs
@@ -422,7 +425,7 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 歌曲暂停时，目前的播放进度，内部保存的变量，不对外暴露
          */
-        private var pauseProgress: Float? = null
+        var pauseProgress: Float? = null
 
         /**
          * 播放进度
@@ -432,7 +435,7 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 处于暂停状态的时间累加，作为时间偏移进行计算
          */
-        private var progressPauseTime: Float = 0f
+        var progressPauseTime: Float = 0f
 
         /**
          * 用户手动调节拖动进度条导致的播放进度的偏移量，仅本次拖动生效，本次拖动结束后此值清零
@@ -448,6 +451,11 @@ class WaterfallView @JvmOverloads constructor(
          * 音块绘制缓冲canvas
          */
         var notesBufferCanvas = Canvas(notesBufferBitmap)
+
+        /**
+         * 是否执行绘制
+         */
+        var canvasDraw = true
 
         override fun run() {
             // 先初始化绘制Paint对象，避免绘制时进行频繁的创建对象
@@ -505,9 +513,19 @@ class WaterfallView @JvmOverloads constructor(
                 // 检测并调用瀑布流音块监听
                 handleWaterfallNoteListener()
                 // 先在缓冲区执行绘制所有音块
-                drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
-                // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
-                doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
+                val noteCount = drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
+                // 判断有音块，且view为显示状态，且瀑布流未暂停也未滑动时才实际执行绘制
+                // 如果第一次发现无音块时，或第一次发现view被显示时，也绘制且只绘制一帧，进行补帧，随后停止
+                if ((noteCount > 0 || canvasDraw) && visibility == VISIBLE && (isScrolling || !isPause)) {
+                    // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
+                    canvasDraw = !doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
+                } else {
+                    canvasDraw = visibility != VISIBLE || noteCount > 0;
+                    // 未触发绘制，避免死循环消耗太多CPU，按刷新率约60算，整体休眠一帧的时间
+                    sleep(10)
+                }
+                // 避免死循环消耗太多CPU，休眠一个音块的最低声音单位的时间
+                sleep(PmSongUtil.PM_GLOBAL_SPEED.toLong())
             }
         }
 
@@ -518,7 +536,7 @@ class WaterfallView @JvmOverloads constructor(
             alphaPaint: Paint,
             octaveLinePaint: Paint,
             octaveLinePath: Path
-        ) {
+        ): Boolean {
             var canvas: Canvas? = null
             try {
                 // 获取绘制canvas，优先使用硬件加速
@@ -557,6 +575,7 @@ class WaterfallView @JvmOverloads constructor(
                     }
                 }
             }
+            return canvas != null
         }
 
         /**
@@ -579,15 +598,17 @@ class WaterfallView @JvmOverloads constructor(
         }
 
         /**
-         * 在缓冲bitmap中绘制所有应该绘制的音块
+         * 在缓冲bitmap中绘制所有应该绘制的音块，返回音块总数，后续判断总数是否为0决定是否执行实际绘制
          */
-        private fun drawNotesOnBufferBitmap(canvas: Canvas, notePaint: Paint) {
+        private fun drawNotesOnBufferBitmap(canvas: Canvas, notePaint: Paint): Int {
+            var noteCount = 0
             // 先清空缓冲bitmap中的内容
             notesBufferBitmap.eraseColor(Color.TRANSPARENT)
             // 执行计算绘制瀑布流音符
             for ((index, waterfallNote) in waterfallNotes.withIndex()) {
                 // 瀑布流音块当前在view内对用户可见的，才绘制
                 if (noteIsVisible(waterfallNote)) {
+                    noteCount++
                     // 根据音符是否为弹奏中状态，确定颜色是否要高亮显示
                     notePaint.color =
                         if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(waterfallNote.color) else waterfallNote.color
@@ -607,6 +628,7 @@ class WaterfallView @JvmOverloads constructor(
             for (freeStyleNoteList in freeStyleNotes.values) {
                 for (i in freeStyleNoteList.indices.reversed()) {
                     freeStyleNoteList.getOrNull(i)?.let {
+                        noteCount++
                         notePaint.color = it.color
                         // 根据音符的力度，确定音块绘制的透明度
                         notePaint.alpha = minOf(it.volume * 2, 255)
@@ -625,6 +647,7 @@ class WaterfallView @JvmOverloads constructor(
                     }
                 }
             }
+            return noteCount
         }
 
         /**

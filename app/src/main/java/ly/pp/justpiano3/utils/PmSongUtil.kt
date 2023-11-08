@@ -31,7 +31,7 @@ object PmSongUtil {
     /**
      * pm文件全局速度，目前固定值为5
      */
-    private const val PM_GLOBAL_SPEED = 5
+    const val PM_GLOBAL_SPEED = 5
 
     /**
      * pm时间间隔过长时，填充的空音符数组
