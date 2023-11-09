@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +71,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long realTimeLastMessageSendTime;
-    private OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();
+    private final OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();
+    private final List<Long> olNoteCacheDataList = new ArrayList<>();
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
     public LinearLayout keyboardLayout;
@@ -90,15 +92,19 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     private void broadNote(byte pitch, byte volume) {
         if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-            onlineKeyboardNoteDtoBuilder.addData(0);
-            onlineKeyboardNoteDtoBuilder.addData(pitch);
-            onlineKeyboardNoteDtoBuilder.addData(volume);
+            olNoteCacheDataList.add(0L);
+            olNoteCacheDataList.add((long) pitch);
+            olNoteCacheDataList.add((long) volume);
             if (System.currentTimeMillis() - realTimeLastMessageSendTime > PmSongUtil.PM_GLOBAL_SPEED) {
                 realTimeLastMessageSendTime = System.currentTimeMillis();
                 handler.postDelayed(() -> {
-                    onlineKeyboardNoteDtoBuilder.setData(0, buildNoteHeadData());
-                    sendMsg(OnlineProtocolType.KEYBOARD, onlineKeyboardNoteDtoBuilder.build());
-                    onlineKeyboardNoteDtoBuilder.clear();
+                    if (!olNoteCacheDataList.isEmpty()) {
+                        onlineKeyboardNoteDtoBuilder.clear();
+                        onlineKeyboardNoteDtoBuilder.addData(buildNoteHeadData());
+                        onlineKeyboardNoteDtoBuilder.addAllData(olNoteCacheDataList);
+                        olNoteCacheDataList.clear();
+                        sendMsg(OnlineProtocolType.KEYBOARD, onlineKeyboardNoteDtoBuilder.build());
+                    }
                 }, PmSongUtil.PM_GLOBAL_SPEED);
             }
         } else {
@@ -108,8 +114,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     private byte buildNoteHeadData() {
         return (byte) (((MidiDeviceUtil.getSustainPedalStatus() ? 1 : 0) << 5)
-                        + ((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4)
-                        + roomPositionSub1);
+                + ((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4)
+                + roomPositionSub1);
     }
 
     public void mo2860a(int i, String str, int i2) {
@@ -332,9 +338,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     }
                     blinkView(roomPositionSub1);
                 }
-                if (hasAnotherUser()) {
-                    broadNote(pitch, volume);
-                }
+//                if (hasAnotherUser()) {
+                broadNote(pitch, volume);
+//                }
                 onlineWaterfallKeyDownHandle(pitch, volume, keyboardNoteDownColor == null ?
                         GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardNoteDownColor);
             }
