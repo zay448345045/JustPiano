@@ -47,8 +47,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
     private boolean reSize;
     // 记录目前是否在走动画，不能重复走
     private boolean busyAnim;
-    // 琴键动画间隔
-    private int interval = 320;
     private boolean recordStart;
     private String recordFilePath;
     private String recordFileName;
@@ -197,8 +195,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
         scheduledExecutor.scheduleWithFixedDelay(() -> {
             Message msg = Message.obtain(handler);
             msg.what = vid;
-            interval -= 40;
-            interval = Math.max(80, interval);
             handler.sendMessage(msg);
         }, 0, 80, TimeUnit.MILLISECONDS);
     }
@@ -207,7 +203,6 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
         if (scheduledExecutor != null) {
             scheduledExecutor.shutdownNow();
             scheduledExecutor = null;
-            interval = 320;
         }
     }
 

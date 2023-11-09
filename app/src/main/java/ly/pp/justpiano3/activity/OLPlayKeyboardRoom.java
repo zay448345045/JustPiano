@@ -50,6 +50,7 @@ import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.utils.ViewUtil;
@@ -68,6 +69,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public Integer keyboardNoteDownColor;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
+    private long realTimeLastMessageSendTime;
+    private OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
     public LinearLayout keyboardLayout;
@@ -80,31 +83,33 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     private boolean reSize;
     // 记录目前是否在走动画，不能重复走
     private boolean busyAnim;
-    // 琴键动画间隔
-    private int interval = 320;
     private boolean recordStart;
     private String recordFilePath;
     private String recordFileName;
     private int tabTitleHeight;
 
-    private void broadNote(int pitch, int volume) {
+    private void broadNote(byte pitch, byte volume) {
         if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-            // 协奏模式
-            OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
-            builder.addData(buildNoteHeadData());
-            builder.addData(0);
-            builder.addData(pitch);
-            builder.addData(volume);
-            sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
+            onlineKeyboardNoteDtoBuilder.addData(0);
+            onlineKeyboardNoteDtoBuilder.addData(pitch);
+            onlineKeyboardNoteDtoBuilder.addData(volume);
+            if (System.currentTimeMillis() - realTimeLastMessageSendTime > PmSongUtil.PM_GLOBAL_SPEED) {
+                realTimeLastMessageSendTime = System.currentTimeMillis();
+                handler.postDelayed(() -> {
+                    onlineKeyboardNoteDtoBuilder.setData(0, buildNoteHeadData());
+                    sendMsg(OnlineProtocolType.KEYBOARD, onlineKeyboardNoteDtoBuilder.build());
+                    onlineKeyboardNoteDtoBuilder.clear();
+                }, PmSongUtil.PM_GLOBAL_SPEED);
+            }
         } else {
             notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
         }
     }
 
-    private int buildNoteHeadData() {
-        return ((MidiDeviceUtil.getSustainPedalStatus() ? 1 : 0) << 5)
-                + ((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4)
-                + roomPositionSub1;
+    private byte buildNoteHeadData() {
+        return (byte) (((MidiDeviceUtil.getSustainPedalStatus() ? 1 : 0) << 5)
+                        + ((MidiDeviceUtil.hasMidiDeviceConnected() ? 1 : 0) << 4)
+                        + roomPositionSub1);
     }
 
     public void mo2860a(int i, String str, int i2) {
@@ -341,7 +346,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     blinkView(roomPositionSub1);
                 }
                 if (hasAnotherUser()) {
-                    broadNote(pitch, 0);
+                    broadNote(pitch, (byte) 0);
                 }
                 onlineWaterfallKeyUpHandle(pitch);
             }
@@ -470,7 +475,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             }
             keyboardView.fireKeyUp(pitch);
             if (hasAnotherUser()) {
-                broadNote(pitch, 0);
+                broadNote(pitch, (byte) 0);
             }
             onlineWaterfallKeyUpHandle(pitch);
         }
@@ -538,8 +543,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         keyboardScheduledExecutor.scheduleWithFixedDelay(() -> {
             Message msg = Message.obtain(handler);
             msg.what = vid;
-            interval -= 40;
-            interval = Math.max(80, interval);
             handler.sendMessage(msg);
         }, 0, 80, TimeUnit.MILLISECONDS);
     }
@@ -548,7 +551,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         if (keyboardScheduledExecutor != null) {
             keyboardScheduledExecutor.shutdownNow();
             keyboardScheduledExecutor = null;
-            interval = 320;
         }
     }
 
@@ -571,20 +573,20 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     return;
                 }
                 try {
-                    OnlineKeyboardNoteDTO.Builder builder = OnlineKeyboardNoteDTO.newBuilder();
+                    onlineKeyboardNoteDtoBuilder.clear();
                     // 字节数组开头，存入是否开启midi键盘和楼号
-                    builder.addData(buildNoteHeadData());
+                    onlineKeyboardNoteDtoBuilder.addData(buildNoteHeadData());
                     // 存下size然后自减，确保并发环境下size还是根据上面时间戳而计算来的严格的size，否则此时队列中实际size可能增多了
                     while (!notesQueue.isEmpty()) {
                         OLNote olNote = notesQueue.poll();
                         if (olNote == null) {
                             continue;
                         }
-                        builder.addData(olNote.getAbsoluteTime());
-                        builder.addData(olNote.getPitch());
-                        builder.addData(olNote.getVolume());
+                        onlineKeyboardNoteDtoBuilder.addData(olNote.getAbsoluteTime());
+                        onlineKeyboardNoteDtoBuilder.addData(olNote.getPitch());
+                        onlineKeyboardNoteDtoBuilder.addData(olNote.getVolume());
                     }
-                    sendMsg(OnlineProtocolType.KEYBOARD, builder.build());
+                    sendMsg(OnlineProtocolType.KEYBOARD, onlineKeyboardNoteDtoBuilder.build());
                     blinkView(roomPositionSub1);
                 } catch (Exception e) {
                     e.printStackTrace();
