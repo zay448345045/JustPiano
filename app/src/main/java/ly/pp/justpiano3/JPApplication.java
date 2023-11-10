@@ -28,8 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 
 import io.netty.util.internal.StringUtil;
 import kotlin.Unit;
@@ -110,11 +108,6 @@ public final class JPApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        List<String> supportedAbisList = Arrays.asList(Build.SUPPORTED_ABIS);
-        if (supportedAbisList.contains("x86") || supportedAbisList.contains("x86_64")) {
-            Process.killProcess(Process.myPid());
-            System.exit(1);
-        }
         // 严苛模式开启
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
         // 设置拦截app中未捕获的异常

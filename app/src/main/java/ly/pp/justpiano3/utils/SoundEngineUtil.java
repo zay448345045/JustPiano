@@ -3,6 +3,7 @@ package ly.pp.justpiano3.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.os.Process;
 import android.preference.PreferenceManager;
 
 import java.io.File;
@@ -29,7 +30,12 @@ public class SoundEngineUtil {
     private static final Map<Byte, Byte> sustainNotePitchMap = new ConcurrentHashMap<>();
 
     static {
-        System.loadLibrary("soundengine");
+        try {
+            System.loadLibrary("soundengine");
+        } catch (Exception e) {
+            Process.killProcess(Process.myPid());
+            System.exit(1);
+        }
         // 注册延音踏板状态变更监听器
         MidiDeviceUtil.addMidiSustainPedalListener(status -> {
             if (!status) {
