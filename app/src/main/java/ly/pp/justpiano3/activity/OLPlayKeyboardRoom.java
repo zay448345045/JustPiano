@@ -338,9 +338,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     }
                     blinkView(roomPositionSub1);
                 }
-//                if (hasAnotherUser()) {
-                broadNote(pitch, volume);
-//                }
+                if (hasAnotherUser()) {
+                    broadNote(pitch, volume);
+                }
                 onlineWaterfallKeyDownHandle(pitch, volume, keyboardNoteDownColor == null ?
                         GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardNoteDownColor);
             }

@@ -27,6 +27,7 @@ public class MidiDeviceUtil {
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             System.loadLibrary("midi");
+            init();
         }
     }
 
@@ -39,7 +40,7 @@ public class MidiDeviceUtil {
      */
     private static final AtomicBoolean sustainPedal = new AtomicBoolean(false);
 
-    private static final List<MidiSustainPedalListener> midiSustainPedalListeners = new ArrayList<>();
+    private static MidiSustainPedalListener midiSustainPedalListener;
 
     /**
      * midi设备延音踏板开关状态变更监听
@@ -274,13 +275,12 @@ public class MidiDeviceUtil {
         }
     }
 
-    public static void addMidiSustainPedalListener(MidiSustainPedalListener midiSustainPedalListener) {
-        midiSustainPedalListeners.add(midiSustainPedalListener);
+    public static void setMidiSustainPedalListener(MidiSustainPedalListener midiSustainPedalListener) {
+        MidiDeviceUtil.midiSustainPedalListener = midiSustainPedalListener;
     }
 
-    public static void removeMidiSustainPedalListener(MidiSustainPedalListener midiSustainPedalListener) {
-        midiSustainPedalListeners.remove(midiSustainPedalListener);
-    }
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private static native void init();
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber, int deviceId);
@@ -295,27 +295,23 @@ public class MidiDeviceUtil {
     private static void onMidiMessageReceive(int value1, byte value2, byte value3) {
         int midiEventType = value1 & 0xF0;
         if (midiEventType == 0x90) {
-            mainHandler.post(() -> {
-                // 音符按下
-                if (midiReceiver != null) {
-                    midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                            (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
-                }
-            });
+            // 音符按下
+            if (midiReceiver != null) {
+                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
+            }
         } else if (midiEventType == 0x80) {
             // 音符抬起
-            mainHandler.post(() -> {
-                if (midiReceiver != null) {
-                    midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
-                            (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
-                }
-            });
+            if (midiReceiver != null) {
+                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
+            }
         } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
             // 延音踏板，midi的CC控制器64号判断
             boolean currentSustainPedalValue = (value3 & 0xFF) >= 64;
             if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
                     && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()) {
-                for (MidiSustainPedalListener midiSustainPedalListener : midiSustainPedalListeners) {
+                if (midiSustainPedalListener != null) {
                     midiSustainPedalListener.onChange(currentSustainPedalValue);
                 }
             }

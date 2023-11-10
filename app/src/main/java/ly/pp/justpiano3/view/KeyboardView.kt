@@ -591,7 +591,7 @@ class KeyboardView @JvmOverloads constructor(
         }
         val blackKey = isBlackKey(pitch)
         val handledVolume = (volume * 128f / 100).roundToInt().coerceAtMost(127)
-        notesOnPaintArray[pitchInScreen]!!.alpha = handledVolume * 2
+        notesOnPaintArray[pitchInScreen]!!.alpha = handledVolume shl 1
         if (color != null) {
             // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
             // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实

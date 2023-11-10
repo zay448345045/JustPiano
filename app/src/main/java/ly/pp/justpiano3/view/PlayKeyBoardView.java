@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayKeyBoardView extends View {
-    public Map<Integer, Integer> touchNoteSet = new ConcurrentHashMap<>(16);
+    public Map<Integer, Integer> touchNoteMap = new ConcurrentHashMap<>(16);
     public PlayView playView;
     private Bitmap keyBoardImage;
     private Rect keyBoardRect;
@@ -39,7 +39,7 @@ public class PlayKeyBoardView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(keyBoardImage, null, keyBoardRect, null);
-        for (int i : touchNoteSet.keySet()) {
+        for (int i : touchNoteMap.keySet()) {
             drawKeyboardFire(canvas, fireRectArray.get(i), keyRectArray.get(i), playView, i);
         }
     }

@@ -590,14 +590,14 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             if (playView.currentPlayNote != null) {
                 playView.positionAdd15AddAnim = playView.currentPlayNote.posiAdd15AddAnim;
             }
-            playKeyBoardView.touchNoteSet.put(trueNote, 0);
+            playKeyBoardView.touchNoteMap.put(trueNote, 0);
             updateKeyboardPrefer();
         } else {
             SoundEngineUtil.stopPlaySound((byte) (trueNote + playView.noteMod12 * 12));
             if (pitch % 12 == 0) {
-                playKeyBoardView.touchNoteSet.remove(12);
+                playKeyBoardView.touchNoteMap.remove(12);
             }
-            playKeyBoardView.touchNoteSet.remove(pitch % 12);
+            playKeyBoardView.touchNoteMap.remove(pitch % 12);
             updateKeyboardPrefer();
         }
     }

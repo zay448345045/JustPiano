@@ -114,20 +114,20 @@ public final class TouchNotes implements OnTouchListener {
     }
 
     public void fireKeyDown(int touchNoteNum) {
-        if (touchNoteNum != -1 && !playView.pianoPlay.playKeyBoardView.touchNoteSet.containsKey(touchNoteNum)) {
+        if (touchNoteNum != -1 && !playView.pianoPlay.playKeyBoardView.touchNoteMap.containsKey(touchNoteNum)) {
             SoundEngineUtil.playSound((byte) (touchNoteNum + playView.noteMod12 * 12), playView.volume0);
             if (GlobalSetting.INSTANCE.getSoundVibration()) {
                 VibrationUtil.vibrateOnce(playView.pianoPlay, GlobalSetting.INSTANCE.getSoundVibrationTime());
             }
             playView.judgeTouchNote(touchNoteNum + playView.noteMod12 * 12, false);
-            playView.pianoPlay.playKeyBoardView.touchNoteSet.put(touchNoteNum, 0);
+            playView.pianoPlay.playKeyBoardView.touchNoteMap.put(touchNoteNum, 0);
             playView.pianoPlay.updateKeyboardPrefer();
         }
     }
 
     public void fireKeyUp(int touchNoteNum) {
         SoundEngineUtil.stopPlaySound((byte) (touchNoteNum + playView.noteMod12 * 12));
-        playView.pianoPlay.playKeyBoardView.touchNoteSet.remove(touchNoteNum);
+        playView.pianoPlay.playKeyBoardView.touchNoteMap.remove(touchNoteNum);
         playView.pianoPlay.updateKeyboardPrefer();
     }
 }

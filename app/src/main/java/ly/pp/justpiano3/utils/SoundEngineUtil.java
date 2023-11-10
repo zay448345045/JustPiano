@@ -37,7 +37,7 @@ public class SoundEngineUtil {
             System.exit(1);
         }
         // 注册延音踏板状态变更监听器
-        MidiDeviceUtil.addMidiSustainPedalListener(status -> {
+        MidiDeviceUtil.setMidiSustainPedalListener(status -> {
             if (!status) {
                 for (Byte pitch : sustainNotePitchMap.keySet()) {
                     stopPlaySound(pitch);

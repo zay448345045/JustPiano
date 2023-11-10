@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Process;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -218,9 +220,11 @@ public final class JPApplication extends Application {
                 return;
             }
             appInException = true;
-            Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
+            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(),
+                    "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show());
             // 上传崩溃日志
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            throwable.printStackTrace();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
                     StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
