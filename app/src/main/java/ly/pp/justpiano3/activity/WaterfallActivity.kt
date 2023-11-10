@@ -9,7 +9,6 @@ import android.os.Looper
 import android.os.Message
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewTreeObserver
 import androidx.annotation.RequiresApi
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
@@ -212,7 +211,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
         ) {
-            MidiDeviceUtil.removeMidiConnectionListener(this)
+            MidiDeviceUtil.removeMidiConnectionListener()
         }
         // 停止播放，释放资源
         waterfallView.stopPlay()

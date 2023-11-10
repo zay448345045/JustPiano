@@ -243,7 +243,7 @@ public class MidiDeviceUtil {
             return;
         }
         if (midiReceiver != null) {
-            removeMidiConnectionListener(midiMessageReceiveListener);
+            removeMidiConnectionListener();
         }
         midiReceiver = new JPMidiReceiver(midiMessageReceiveListener);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -257,7 +257,7 @@ public class MidiDeviceUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void removeMidiConnectionListener(MidiMessageReceiveListener midiMessageReceiveListener) {
+    public static void removeMidiConnectionListener() {
         if (midiManager == null) {
             return;
         }

@@ -405,7 +405,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     protected void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            MidiDeviceUtil.removeMidiConnectionListener(this);
+            MidiDeviceUtil.removeMidiConnectionListener();
         }
         stopNotesSchedule();
         if (recordStart) {

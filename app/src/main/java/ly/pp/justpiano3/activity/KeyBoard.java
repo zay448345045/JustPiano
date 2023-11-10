@@ -121,7 +121,7 @@ public class KeyBoard extends Activity implements View.OnTouchListener, MidiDevi
     @Override
     public void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            MidiDeviceUtil.removeMidiConnectionListener(this);
+            MidiDeviceUtil.removeMidiConnectionListener();
         }
         if (recordStart) {
             SoundEngineUtil.setRecord(false);

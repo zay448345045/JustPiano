@@ -110,6 +110,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public void m3785a(int i, boolean z) {
         if (z) {  //仅显示对话框就行了，其他不做不分析，用于按下后退键时
             if (i == 0) {
+                if (rightHandDegreeTextView == null) {
+                    rightHandDegreeTextView = findViewById(R.id.m_nandu);
+                }
                 rightHandDegreeTextView.setVisibility(View.VISIBLE);
             } else {
                 rightHandDegreeTextView = findViewById(R.id.m_nandu);
@@ -477,7 +480,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             recordFinish();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            MidiDeviceUtil.removeMidiConnectionListener(this);
+            MidiDeviceUtil.removeMidiConnectionListener();
         }
         SoundEngineUtil.stopPlayAllSounds();
         super.onDestroy();
