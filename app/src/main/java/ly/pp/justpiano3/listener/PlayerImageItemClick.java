@@ -25,6 +25,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineKickedQuitRoomDTO;
@@ -49,7 +50,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
     }
 
     private PopupWindow buildPopupWindow(User user) {
-        ConnectionService connectionService = olRoomActivity.jpapplication.getConnectionService();
+        ConnectionService connectionService = OnlineUtil.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(olRoomActivity);
         View inflate = LayoutInflater.from(olRoomActivity).inflate(R.layout.ol_room_user_operation, null);
         Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);

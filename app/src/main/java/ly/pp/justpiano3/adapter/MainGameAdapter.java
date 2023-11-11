@@ -28,6 +28,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.OLSendMailClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineDialogDTO;
 import protobuf.dto.OnlineEnterHallDTO;
@@ -41,7 +42,7 @@ public final class MainGameAdapter extends BaseAdapter {
 
     public MainGameAdapter(List<Bundle> list, JPApplication jpApplication, int i, Activity act) {
         this.list = list;
-        connectionService = jpApplication.getConnectionService();
+        connectionService = OnlineUtil.getConnectionService();
         type = i;
         activity = JPStack.top();
     }

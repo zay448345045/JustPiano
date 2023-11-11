@@ -1,14 +1,18 @@
 package ly.pp.justpiano3.utils;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.service.ConnectionService;
 
 /**
@@ -40,6 +44,28 @@ public class OnlineUtil {
      * 当前选择的服务器
      */
     public static String server = ONLINE_SERVER_URL;
+
+    /**
+     * 对战服务端口
+     */
+    public static final Integer ONLINE_PORT = 8908;
+
+    /**
+     * 断线重连最长等待时间（毫秒）
+     */
+    public static final Long AUTO_RECONNECT_MAX_WAIT_TIME = 30000L;
+
+    /**
+     * 断线重连期间每次重连的时间间隔（毫秒）
+     */
+    public static final Long AUTO_RECONNECT_INTERVAL_TIME = 1000L;
+
+    public static String onlineSessionId;
+    /**
+     * 断线时的时间戳，用于断线重连判断，如果非空，表示目前没有掉线，断线自动重连成功后会置空
+     */
+    public static Long autoReconnectTime;
+    public static int autoReconnectCount;
 
     private static ConnectionService connectionService;
 
@@ -105,6 +131,78 @@ public class OnlineUtil {
                     serviceConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static ConnectionService getConnectionService() {
+        return connectionService;
+    }
+
+    public static void outLineAndDialogWithAutoReconnect(JPApplication jpApplication) {
+        Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! autoReconnect:"
+                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
+        // 如果不是断线自动重连状态，先进行断线自动重连
+        if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < AUTO_RECONNECT_MAX_WAIT_TIME) {
+            // 初始化断线重连变量
+            if (autoReconnectTime == null) {
+                autoReconnectTime = System.currentTimeMillis();
+                autoReconnectCount = 0;
+                handleOnTopBaseActivity(olBaseActivity -> {
+                    if (!olBaseActivity.jpprogressBar.isShowing()) {
+                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
+                        olBaseActivity.jpprogressBar.setCancelable(false);
+                        olBaseActivity.jpprogressBar.show();
+                    }
+                }, 0L);
+            } else {
+                handleOnTopBaseActivity(olBaseActivity -> {
+                    if (olBaseActivity.jpprogressBar.isShowing() && autoReconnectTime != null) {
+                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
+                    }
+                }, 0L);
+            }
+            // 每隔一小段时间尝试连接一次
+            if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * AUTO_RECONNECT_INTERVAL_TIME) {
+                outlineConnectionService(jpApplication);
+                handleOnTopBaseActivity(olBaseActivity -> {
+                    if (olBaseActivity.jpprogressBar.isShowing()) {
+                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
+                        onlineConnectionService(jpApplication);
+                        Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! do autoReconnect:"
+                                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
+                    }
+                }, AUTO_RECONNECT_INTERVAL_TIME);
+                autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / AUTO_RECONNECT_INTERVAL_TIME) + 1;
+            }
+        } else {
+            Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! fail autoReconnect:"
+                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
+            outlineConnectionService(jpApplication);
+            Activity topActivity = JPStack.top();
+            if (topActivity instanceof OLBaseActivity) {
+                OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+                Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
+                message.what = 0;
+                olBaseActivity.olBaseActivityHandler.handleMessage(message);
+            }
+        }
+    }
+
+    /**
+     * 安卓低版本无法使用Consumer，暂时使用私有接口，配合下面方法入参使用
+     */
+    public interface OLBaseActivityRunner {
+        void run(OLBaseActivity olBaseActivity);
+    }
+
+    public static void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
+        Activity topActivity = JPStack.top();
+        if (topActivity instanceof OLBaseActivity) {
+            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
         }
     }
 }

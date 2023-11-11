@@ -7,6 +7,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class AddFriendsClick implements OnClickListener {
@@ -33,31 +34,31 @@ public final class AddFriendsClick implements OnClickListener {
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         if (olRoomActivity != null) {
-            if (olRoomActivity.jpapplication.getConnectionService() == null) {
+            if (OnlineUtil.getConnectionService() == null) {
                 return;
             }
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(0);
             builder.setName(name);
-            olRoomActivity.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
             dialogInterface.dismiss();
         } else if (olPlayHall != null) {
-            if (olPlayHall.jpapplication.getConnectionService() == null) {
+            if (OnlineUtil.getConnectionService() == null) {
                 return;
             }
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(0);
             builder.setName(name);
-            olPlayHall.jpapplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
             dialogInterface.dismiss();
         } else if (olPlayHallRoom != null) {
-            if (olPlayHallRoom.jpApplication.getConnectionService() == null) {
+            if (OnlineUtil.getConnectionService() == null) {
                 return;
             }
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(0);
             builder.setName(name);
-            olPlayHallRoom.jpApplication.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
             dialogInterface.dismiss();
         }
     }

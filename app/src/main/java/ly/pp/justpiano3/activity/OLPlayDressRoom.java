@@ -25,7 +25,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
@@ -39,6 +38,7 @@ import ly.pp.justpiano3.listener.ShoesClick;
 import ly.pp.justpiano3.listener.TrousersClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
@@ -205,7 +205,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
-        connectionservice = ((JPApplication) getApplication()).getConnectionService();
+        connectionservice = OnlineUtil.getConnectionService();
         Bundle extras = getIntent().getExtras();
         hairNow = extras.getInt("H");
         eyeNow = extras.getInt("E");

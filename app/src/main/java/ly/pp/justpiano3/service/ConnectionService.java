@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.service;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -30,7 +29,6 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;
@@ -46,31 +44,11 @@ import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
 
-public class ConnectionService extends Service implements Runnable {
+public class ConnectionService extends Service {
 
-    /**
-     * 对战服务端口
-     */
-    public static final Integer ONLINE_PORT = 8908;
-
-    /**
-     * 断线重连最长等待时间（毫秒）
-     */
-    public static final Long AUTO_RECONNECT_MAX_WAIT_TIME = 30000L;
-
-    /**
-     * 断线重连期间每次重连的时间间隔（毫秒）
-     */
-    public static final Long AUTO_RECONNECT_INTERVAL_TIME = 2000L;
     private final JPBinder jpBinder = new JPBinder(this);
-    private String onlineSessionId;
-    /**
-     * 断线时的时间戳，用于断线重连判断，如果非空，表示目前没有掉线，断线自动重连成功后会置空
-     */
-    private Long autoReconnectTime;
-    private int autoReconnectCount;
-    private JPApplication jpapplication;
-    private NettyUtil mNetty;
+    private NettyUtil nettyUtil;
+    private JPApplication jpApplication;
 
     public static class JPBinder extends Binder {
         private final ConnectionService connectionService;
@@ -84,47 +62,41 @@ public class ConnectionService extends Service implements Runnable {
         }
     }
 
-    public final void outLine() {
-        // 关闭连接
-        if (mNetty != null) {
-            mNetty.close();
-        }
-    }
-
-    public final void writeData(int type, MessageLite message) {
-        OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
-        Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
-        builder.setField(fieldDescriptor, message);
-        if (mNetty != null && mNetty.isConnected()) {
-            if (type == OnlineProtocolType.LOGIN || autoReconnectTime == null) {
-                OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
-                mNetty.sendMessage(builder);
-                if (autoReconnectTime != null) {
-                    handleOnTopBaseActivity(olBaseActivity -> {
-                        if (autoReconnectTime != null) {
-                            outLineAndDialogWithAutoReconnect();
-                        }
-                    }, AUTO_RECONNECT_INTERVAL_TIME);
-                    Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
-                            + " autoReconnect! writeData autoReconnect:"
-                            + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + " " + type);
-                }
-            }
-        } else {
-            outLineAndDialogWithAutoReconnect();
-        }
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return jpBinder;
     }
 
+    public void writeData(int type, MessageLite message) {
+        if (nettyUtil != null && nettyUtil.isConnected()) {
+            OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
+            Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
+            builder.setField(fieldDescriptor, message);
+            if (type == OnlineProtocolType.LOGIN || OnlineUtil.autoReconnectTime == null) {
+                OnlineUtil.setMsgTypeByChannel(nettyUtil.getChannelFuture().channel(), type);
+                nettyUtil.sendMessage(builder);
+                if (OnlineUtil.autoReconnectTime != null) {
+                    OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
+                        if (OnlineUtil.autoReconnectTime != null) {
+                            OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+                        }
+                    }, OnlineUtil.AUTO_RECONNECT_INTERVAL_TIME);
+                    Log.i(OnlineUtil.class.getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
+                            + " autoReconnect! writeData autoReconnect:"
+                            + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime) + " " + type);
+                }
+            }
+        } else {
+            OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        jpapplication = (JPApplication) getApplication();
-        new Thread(this).start();
+        jpApplication = (JPApplication) getApplication();
+        EncryptUtil.updateDeviceKeyPair();
+        initNetty();
     }
 
     @Override
@@ -136,8 +108,8 @@ public class ConnectionService extends Service implements Runnable {
     /**
      * 初始化Netty
      */
-    private void initNetty() {
-        mNetty = new NettyUtil(new ChannelInitializer<SocketChannel>() {
+    public void initNetty() {
+        nettyUtil = new NettyUtil(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(@NonNull SocketChannel socketChannel) throws Exception {
                 // 建立管道
@@ -163,18 +135,18 @@ public class ConnectionService extends Service implements Runnable {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-//                                Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
-//                                        + " autoReconnect! channelRead0 autoReconnect:"
-//                                        + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime)
-//                                        + " " + msg.getResponseCase().getNumber() + " " + msg);
-                                if (autoReconnectTime != null) {
-                                    Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
+                                Log.i(getClass().getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
+                                        + " autoReconnect! channelRead0 autoReconnect:"
+                                        + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime)
+                                        + " " + msg.getResponseCase().getNumber() + " " + msg);
+                                if (OnlineUtil.autoReconnectTime != null) {
+                                    Log.i(getClass().getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
                                             + " autoReconnect! channelRead0 autoReconnect:"
-                                            + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime)
+                                            + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime)
                                             + " " + msg.getResponseCase().getNumber());
-                                    autoReconnectTime = null;
-                                    autoReconnectCount = 0;
-                                    handleOnTopBaseActivity(olBaseActivity -> {
+                                    OnlineUtil.autoReconnectTime = null;
+                                    OnlineUtil.autoReconnectCount = 0;
+                                    OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
                                         olBaseActivity.jpprogressBar.setCancelable(true);
                                         olBaseActivity.jpprogressBar.setText("");
                                         if (olBaseActivity.jpprogressBar.isShowing()) {
@@ -193,14 +165,14 @@ public class ConnectionService extends Service implements Runnable {
                                 super.exceptionCaught(ctx, cause);
                                 cause.printStackTrace();
                                 ctx.close();
-                                outLineAndDialogWithAutoReconnect();
+                                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
                             }
 
                             @Override
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
-                                    if (autoReconnectTime == null && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
+                                    if (OnlineUtil.autoReconnectTime == null && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
                                         writeData(OnlineProtocolType.HEART_BEAT, OnlineHeartBeatDTO.getDefaultInstance());
                                     }
                                 } else {
@@ -210,24 +182,23 @@ public class ConnectionService extends Service implements Runnable {
                         });
             }
         });
-
-        mNetty.setOnConnectListener(new NettyUtil.OnConnectListener() {
+        nettyUtil.setOnConnectListener(new NettyUtil.OnConnectListener() {
             @Override
             public void onSuccess() {
-                if (autoReconnectTime == null) {
-                    onlineSessionId = UUID.randomUUID().toString().replace("-", "");
+                if (OnlineUtil.autoReconnectTime == null) {
+                    OnlineUtil.onlineSessionId = UUID.randomUUID().toString().replace("-", "");
                 }
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
-                builder.setAccount(jpapplication.getAccountName());
-                builder.setPassword(jpapplication.getPassword());
+                builder.setAccount(jpApplication.getAccountName());
+                builder.setPassword(jpApplication.getPassword());
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
-                builder.setPackageName(getPackageName());
-                builder.setOnlineSessionId(onlineSessionId);
-                builder.setAutoReconnect(autoReconnectTime != null);
+                builder.setPackageName(jpApplication.getPackageName());
+                builder.setOnlineSessionId(OnlineUtil.onlineSessionId);
+                builder.setAutoReconnect(OnlineUtil.autoReconnectTime != null);
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
-                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication));
+                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpApplication));
                 deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
                 deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
@@ -237,24 +208,23 @@ public class ConnectionService extends Service implements Runnable {
             @Override
             public void onFailed() {
                 // 连接失败
-                outLineAndDialogWithAutoReconnect();
+                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
             }
 
             @Override
             public void onError(Exception e) {
                 // 连接异常
                 e.printStackTrace();
-                outLineAndDialogWithAutoReconnect();
+                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
             }
         });
-
-        mNetty.setOnSendMessageListener(new NettyUtil.OnSendMessageListener() {
+        nettyUtil.setOnSendMessageListener(new NettyUtil.OnSendMessageListener() {
             @Override
             public void onSendMessage(Object msg, boolean success) {
                 // 发送消息的回调
                 if (!success) {
                     Log.e(getClass().getSimpleName(), "autoReconnect! onSendMessage" + msg.toString());
-                    outLineAndDialogWithAutoReconnect();
+                    OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
                 }
             }
 
@@ -262,85 +232,17 @@ public class ConnectionService extends Service implements Runnable {
             public void onException(Throwable e) {
                 // 异常
                 e.printStackTrace();
-                outLineAndDialogWithAutoReconnect();
+                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
             }
         });
+        nettyUtil.connect(OnlineUtil.server, OnlineUtil.ONLINE_PORT);
     }
 
-    @Override
-    public void run() {
-        // 更新客户端公钥
-        EncryptUtil.updateDeviceKeyPair();
-        initNetty();
-        mNetty.connect(OnlineUtil.server, ONLINE_PORT);
-    }
-
-    private void outLineAndDialogWithAutoReconnect() {
-        Log.i(getClass().getSimpleName(), " autoReconnect! autoReconnect:"
-                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
-        // 如果不是断线自动重连状态，先进行断线自动重连
-        if (autoReconnectTime == null || System.currentTimeMillis() - autoReconnectTime < AUTO_RECONNECT_MAX_WAIT_TIME) {
-            // 初始化断线重连变量
-            if (autoReconnectTime == null) {
-                autoReconnectTime = System.currentTimeMillis();
-                autoReconnectCount = 0;
-                handleOnTopBaseActivity(olBaseActivity -> {
-                    if (!olBaseActivity.jpprogressBar.isShowing()) {
-                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
-                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
-                        olBaseActivity.jpprogressBar.setCancelable(false);
-                        olBaseActivity.jpprogressBar.show();
-                    }
-                }, 0L);
-            } else {
-                handleOnTopBaseActivity(olBaseActivity -> {
-                    if (olBaseActivity.jpprogressBar.isShowing() && autoReconnectTime != null) {
-                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
-                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
-                    }
-                }, 0L);
-            }
-            // 每隔一小段时间尝试连接一次
-            if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * AUTO_RECONNECT_INTERVAL_TIME) {
-                outLine();
-                handleOnTopBaseActivity(olBaseActivity -> {
-                    if (olBaseActivity.jpprogressBar.isShowing()) {
-                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
-                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
-                        mNetty.connect(OnlineUtil.server, ONLINE_PORT);
-                        Log.i(getClass().getSimpleName(), " autoReconnect! do autoReconnect:"
-                                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
-                    }
-                }, AUTO_RECONNECT_INTERVAL_TIME);
-                autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / AUTO_RECONNECT_INTERVAL_TIME) + 1;
-            }
-        } else {
-            Log.i(getClass().getSimpleName(), mNetty.getChannelFuture().channel().localAddress().toString()
-                    + " autoReconnect! fail autoReconnect:"
-                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
-            outLine();
-            Activity topActivity = JPStack.top();
-            if (topActivity instanceof OLBaseActivity) {
-                OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
-                Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
-                message.what = 0;
-                olBaseActivity.olBaseActivityHandler.handleMessage(message);
-            }
-        }
-    }
-
-    /**
-     * 安卓低版本无法使用Consumer，暂时使用私有接口，配合下面方法入参使用
-     */
-    private interface OLBaseActivityRunner {
-        void run(OLBaseActivity olBaseActivity);
-    }
-
-    private void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
-        Activity topActivity = JPStack.top();
-        if (topActivity instanceof OLBaseActivity) {
-            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
-            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
+    public void outLine() {
+        // 关闭连接
+        if (nettyUtil != null) {
+            nettyUtil.close();
+            nettyUtil = null;
         }
     }
 }

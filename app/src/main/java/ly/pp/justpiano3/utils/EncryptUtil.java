@@ -48,7 +48,7 @@ public class EncryptUtil {
     }
 
     /**
-     * 更新客户端密钥
+     * 更新客户端公钥
      */
     public static void updateDeviceKeyPair() {
         keyPair = EncryptUtil.generateRSAKeyPair();

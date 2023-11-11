@@ -49,6 +49,7 @@ import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -476,7 +477,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         mailListView.setCacheColorHint(Color.TRANSPARENT);
         friendList.clear();
         familyList.clear();
-        connectionService = jpApplication.getConnectionService();
+        connectionService = OnlineUtil.getConnectionService();
         tabHost = findViewById(R.id.tabhost);
         tabHost.setup();
         TabSpec newTabSpec = tabHost.newTabSpec("tab1");

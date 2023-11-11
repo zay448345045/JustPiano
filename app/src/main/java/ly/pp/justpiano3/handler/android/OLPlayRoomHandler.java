@@ -14,6 +14,7 @@ import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineQuitRoomDTO;
 
 public final class OLPlayRoomHandler extends Handler {
@@ -99,7 +100,7 @@ public final class OLPlayRoomHandler extends Handler {
                         SongPlay.INSTANCE.stopPlay();
                         String songFilePath = message.getData().getString("S");
                         if (!olPlayRoom.onStart) {
-                            olPlayRoom.jpapplication.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
                             Intent intent = new Intent(olPlayRoom, OLPlayHall.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("hallName", olPlayRoom.hallName);

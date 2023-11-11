@@ -6,8 +6,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSendMailDTO;
 
 public final class SendMailClick implements OnClickListener {
@@ -33,8 +33,7 @@ public final class SendMailClick implements OnClickListener {
             builder.setName(userName);
             builder.setMessage(valueOf);
             if (!userName.isEmpty()) {
-                JPApplication jpApplication = (JPApplication) context.getApplicationContext();
-                jpApplication.getConnectionService().writeData(OnlineProtocolType.SEND_MAIL, builder.build());
+                OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SEND_MAIL, builder.build());
             }
             dialogInterface.dismiss();
             Toast.makeText(context, "发送成功!", Toast.LENGTH_SHORT).show();

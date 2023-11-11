@@ -11,6 +11,7 @@ import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class JPProgressBar extends Dialog {
 
@@ -26,7 +27,7 @@ public final class JPProgressBar extends Dialog {
         imageView = findViewById(R.id.loading_img);
         textView = findViewById(R.id.loading_text);
         jpApplication = (JPApplication) context.getApplicationContext();
-        connectionService = jpApplication.getConnectionService();
+        connectionService = OnlineUtil.getConnectionService();
     }
 
     public String getText() {

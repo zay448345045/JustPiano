@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
@@ -34,6 +35,7 @@ import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -96,8 +98,7 @@ public final class JPApplication extends Application {
         // 严苛模式开启
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
         // 设置拦截app中未捕获的异常
-        CrashHandler crashHandler = new CrashHandler();
-        crashHandler.init();
+        new CrashHandler().init();
         // 初始化一些图像缓存
         ImageLoadUtil.init(this);
         // 从app应用数据中加载设置
@@ -198,7 +199,7 @@ public final class JPApplication extends Application {
         }
 
         @Override
-        public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
+        public void uncaughtException(@NotNull Thread thread, @NonNull Throwable throwable) {
             if (appInException) {
                 return;
             }
@@ -211,8 +212,7 @@ public final class JPApplication extends Application {
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
                     StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
-                    BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
-                            + BuildConfig.BUILD_TYPE + '\n' + byteArrayOutputStream).execute();
+                    DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
             // 关闭网络连接服务，退出进程
             OnlineUtil.outlineConnectionService(JPApplication.this);
             try {
@@ -250,7 +250,7 @@ public final class JPApplication extends Application {
         // 禁止app字体大小跟随系统字体大小调节
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
-            android.content.res.Configuration configuration = resources.getConfiguration();
+            Configuration configuration = resources.getConfiguration();
             configuration.fontScale = 1.0f;
             resources.updateConfiguration(configuration, resources.getDisplayMetrics());
         }

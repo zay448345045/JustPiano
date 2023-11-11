@@ -66,7 +66,7 @@ public class DialogUtil {
                 builder.setType(3);
                 builder.setName(userName);
                 builder.setGold(jpDialogBuilder.getGoldConvertView().getActualValue().intValue());
-                jpApplication.getConnectionService().writeData(OnlineProtocolType.DIALOG, builder.build());
+                OnlineUtil.getConnectionService().writeData(OnlineProtocolType.DIALOG, builder.build());
             });
         }
     }

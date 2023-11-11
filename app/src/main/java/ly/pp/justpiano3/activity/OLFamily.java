@@ -34,6 +34,7 @@ import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.ChangeDeclarationClick;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
@@ -160,7 +161,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
             new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", (dialog, which) -> {
-                        if (jpapplication.getConnectionService() == null) {
+                        if (OnlineUtil.getConnectionService() == null) {
                             return;
                         }
                         OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
@@ -302,7 +303,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_family);
-        cs = jpapplication.getConnectionService();
+        cs = OnlineUtil.getConnectionService();
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);

@@ -103,7 +103,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         hallName = bundle.getString("hallName");
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_challenge);
-        connectionService = jpapplication.getConnectionService();
+        connectionService = OnlineUtil.getConnectionService();
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
         sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
@@ -144,10 +144,10 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
             try {
                 new JPDialogBuilder(this).setTitle("抽取奖励").loadInflate(inflate)
                         .setFirstButton("确认领取", (dialog, which) -> {
-                            if (jpapplication.getConnectionService() != null) {
+                            if (OnlineUtil.getConnectionService() != null) {
                                 OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
                                 builder.setType(6);
-                                jpapplication.getConnectionService().writeData(OnlineProtocolType.CHALLENGE, builder.build());
+                                OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHALLENGE, builder.build());
                                 Toast.makeText(this, "领取奖励成功!", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }

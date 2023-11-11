@@ -58,6 +58,7 @@ import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
 import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineClTestDTO;
@@ -419,7 +420,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(Color.TRANSPARENT);
         roomList.clear();
-        connectionService = jpapplication.getConnectionService();
+        connectionService = OnlineUtil.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);

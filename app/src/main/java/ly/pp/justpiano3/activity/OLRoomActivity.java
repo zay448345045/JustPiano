@@ -65,6 +65,7 @@ import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
@@ -582,7 +583,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         getRoomPlayerMap().clear();
-        connectionService = jpapplication.getConnectionService();
+        connectionService = OnlineUtil.getConnectionService();
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         roomInfoBundle = getIntent().getExtras();
