@@ -138,7 +138,7 @@ public class OnlineUtil {
         return connectionService;
     }
 
-    public static void autoReconnectFinish() {
+    public static void cancelAutoReconnect() {
         if (OnlineUtil.autoReconnectTime != null) {
             Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! channelRead0 autoReconnect:"
                     + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime));
@@ -169,7 +169,7 @@ public class OnlineUtil {
                 autoReconnectCount = 0;
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (!olBaseActivity.jpprogressBar.isShowing()) {
-                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
                                 (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
                         olBaseActivity.jpprogressBar.setCancelable(false);
                         olBaseActivity.jpprogressBar.show();
@@ -178,7 +178,7 @@ public class OnlineUtil {
             } else {
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (olBaseActivity.jpprogressBar.isShowing() && autoReconnectTime != null) {
-                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
                                 (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
                     }
                 }, 0L);
@@ -188,7 +188,7 @@ public class OnlineUtil {
                 outlineConnectionService(jpApplication);
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (olBaseActivity.jpprogressBar.isShowing()) {
-                        olBaseActivity.jpprogressBar.setText("断线重连中...等待连接剩余秒数：" + Math.max(0,
+                        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
                                 (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000));
                         onlineConnectionService(jpApplication);
                         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! do autoReconnect:"

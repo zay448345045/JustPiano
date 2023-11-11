@@ -62,6 +62,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                OnlineUtil.cancelAutoReconnect();
                 String maxSongIdFromDatabase = getMaxSongIdFromDatabase();
                 new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
                 return;

@@ -23,7 +23,6 @@ import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
@@ -50,7 +49,6 @@ public final class PlayerImageItemClick implements OnItemClickListener {
     }
 
     private PopupWindow buildPopupWindow(User user) {
-        ConnectionService connectionService = OnlineUtil.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(olRoomActivity);
         View inflate = LayoutInflater.from(olRoomActivity).inflate(R.layout.ol_room_user_operation, null);
         Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);
@@ -90,11 +88,11 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (connectionService != null) {
+                        if (OnlineUtil.getConnectionService() != null) {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             builder.setType(4);
-                            connectionService.writeData(OnlineProtocolType.COUPLE, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.COUPLE, builder.build());
                         }
                     }
                 });
@@ -131,10 +129,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olRoomActivity.playerKind.equals("H") && connectionService != null) {
+                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
-                            connectionService.writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
                         }
                     }
                 });
@@ -144,10 +142,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olRoomActivity.playerKind.equals("H") && connectionService != null) {
+                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
-                            connectionService.writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
                         }
                     }
                 });
@@ -156,13 +154,13 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 kickOutButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olRoomActivity.playerKind.equals("H") && connectionService != null) {
+                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
                             if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
                                 Toast.makeText(olRoomActivity, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                             } else {
                                 OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
                                 builder.setRoomPosition(user.getPosition());
-                                connectionService.writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
+                                OnlineUtil.getConnectionService().writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
                                 if (olRoomActivity instanceof OLPlayKeyboardRoom) {
                                     ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
                                 }
@@ -180,11 +178,11 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (connectionService != null) {
+                        if (OnlineUtil.getConnectionService() != null) {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             builder.setType(4);
-                            connectionService.writeData(OnlineProtocolType.COUPLE, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.COUPLE, builder.build());
                         }
                     }
                 });
@@ -205,10 +203,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             showUserInfoDialogButton.setOnClickListener(v -> {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
-                    if (connectionService != null) {
+                    if (OnlineUtil.getConnectionService() != null) {
                         OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
                         builder.setName(user.getPlayerName());
-                        connectionService.writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
+                        OnlineUtil.getConnectionService().writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
                     }
                 }
             });

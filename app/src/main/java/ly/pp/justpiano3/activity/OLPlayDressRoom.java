@@ -36,7 +36,6 @@ import ly.pp.justpiano3.listener.HairClick;
 import ly.pp.justpiano3.listener.JacketClick;
 import ly.pp.justpiano3.listener.ShoesClick;
 import ly.pp.justpiano3.listener.TrousersClick;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -84,7 +83,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public int jacketNow = -1;
     public int trousersNow = -1;
     public int shoesNow = -1;
-    private ConnectionService connectionservice;
 
     // 装价格常量
     public static int[] fHair = new int[0];
@@ -103,8 +101,8 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     }
 
     public final void sendMsg(int type, MessageLite msg) {
-        if (connectionservice != null) {
-            connectionservice.writeData(type, msg);
+        if (OnlineUtil.getConnectionService() != null) {
+            OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -205,7 +203,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         jpprogressBar = new JPProgressBar(this);
         olPlayDressRoomHandler = new OLPlayDressRoomHandler(this);
-        connectionservice = OnlineUtil.getConnectionService();
         Bundle extras = getIntent().getExtras();
         hairNow = extras.getInt("H");
         eyeNow = extras.getInt("E");

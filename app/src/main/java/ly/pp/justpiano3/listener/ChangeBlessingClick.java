@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
@@ -45,7 +46,7 @@ public final class ChangeBlessingClick implements OnClickListener {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
             builder.setMessage(valueOf);
             builder.setName(f5460d);
-            olPlayHallRoom.connectionService.writeData(OnlineProtocolType.SEND_MAIL, builder.build());
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SEND_MAIL, builder.build());
             Toast.makeText(olPlayHallRoom, "发送成功!", Toast.LENGTH_SHORT).show();
             olPlayHallRoom.mailList.clear();
             String format = SimpleDateFormat.getDateInstance(2, Locale.CHINESE).format(new Date());
@@ -80,7 +81,7 @@ public final class ChangeBlessingClick implements OnClickListener {
             builder.setType(4);
             builder.setDeclaration(valueOf);
             olPlayHallRoom.coupleBlessView.setText("祝语:\n" + valueOf);
-            olPlayHallRoom.connectionService.writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
         }
     }
 }

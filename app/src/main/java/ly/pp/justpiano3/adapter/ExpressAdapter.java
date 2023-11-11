@@ -9,22 +9,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
-import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineHallChatDTO;
 import protobuf.dto.OnlineRoomChatDTO;
 
 public final class ExpressAdapter extends BaseAdapter {
     public PopupWindow popupWindow;
-    public ConnectionService connectionService;
     public int messageType;
     private final Context context;
     private final Integer[] expressSeq;
 
-    public ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, int b) {
+    public ExpressAdapter(Context context, Integer[] numArr, PopupWindow popupWindow, int b) {
         this.context = context;
         expressSeq = numArr;
         this.popupWindow = popupWindow;
-        this.connectionService = connectionService;
         messageType = b;
     }
 
@@ -50,18 +48,18 @@ public final class ExpressAdapter extends BaseAdapter {
         imageView.setOnClickListener(v -> {
             if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
-                if (connectionService != null) {
+                if (OnlineUtil.getConnectionService() != null) {
                     if (messageType == 12) {
                         OnlineHallChatDTO.Builder builder = OnlineHallChatDTO.newBuilder();
                         builder.setMessage("//" + i);
                         builder.setUserName("");
-                        connectionService.writeData(messageType, builder.build());
+                        OnlineUtil.getConnectionService().writeData(messageType, builder.build());
                     } else if (messageType == 13) {
                         OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
                         builder.setMessage("//" + i);
                         builder.setUserName("");
                         builder.setColor(99);
-                        connectionService.writeData(messageType, builder.build());
+                        OnlineUtil.getConnectionService().writeData(messageType, builder.build());
                     }
                 }
             }

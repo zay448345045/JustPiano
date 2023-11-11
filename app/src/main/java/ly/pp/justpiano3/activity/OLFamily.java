@@ -32,7 +32,6 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.ChangeDeclarationClick;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -43,7 +42,6 @@ import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPApplication jpapplication;
-    public ConnectionService cs;
     public JPProgressBar jpprogressBar;
     public FamilyPositionEnum position;
     public TextView declaration;
@@ -243,7 +241,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 if (infoWindow != null && infoWindow.isShowing()) {
                     infoWindow.dismiss();
                 }
-                if (cs != null) {
+                if (OnlineUtil.getConnectionService() != null) {
                     OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
                     builder1.setName(peopleNow);
                     sendMsg(OnlineProtocolType.USER_INFO_DIALOG, builder1.build());
@@ -303,7 +301,6 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_family);
-        cs = OnlineUtil.getConnectionService();
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
@@ -402,8 +399,8 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     public final void sendMsg(int type, MessageLite msg) {
-        if (cs != null) {
-            cs.writeData(type, msg);
+        if (OnlineUtil.getConnectionService() != null) {
+            OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }

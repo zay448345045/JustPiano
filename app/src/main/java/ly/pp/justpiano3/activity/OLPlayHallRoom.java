@@ -45,7 +45,6 @@ import ly.pp.justpiano3.handler.android.OLPlayHallRoomHandler;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeBlessingClick;
 import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
@@ -102,7 +101,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public List<Bundle> hallList = new ArrayList<>();
     public List<Bundle> mailList = new ArrayList<>();
     public ListView mailListView;
-    public ConnectionService connectionService;
     public ImageView userModView;
     public ImageView userTrousersView;
     public ImageView userJacketsView;
@@ -128,8 +126,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     private LayoutInflater layoutinflater;
 
     public void sendMsg(int type, MessageLite message) {
-        if (connectionService != null) {
-            connectionService.writeData(type, message);
+        if (OnlineUtil.getConnectionService() != null) {
+            OnlineUtil.getConnectionService().writeData(type, message);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -209,7 +207,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("I"), o2.getByte("I")));
         }
         if (hallListAdapter == null) {
-            hallListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 0, this);
+            hallListAdapter = new MainGameAdapter(list, 0);
             listView.setAdapter(hallListAdapter);
             return;
         }
@@ -246,7 +244,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
         if (userListAdapter == null) {
-            userListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 1, this);
+            userListAdapter = new MainGameAdapter(list, 1);
             listView.setAdapter(userListAdapter);
             return;
         }
@@ -277,7 +275,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     public void mo2849c(ListView listView, List<Bundle> list) {
         if (mailListAdapter == null) {
-            mailListAdapter = new MainGameAdapter(list, (JPApplication) getApplicationContext(), 2, this);
+            mailListAdapter = new MainGameAdapter(list, 2);
             listView.setAdapter(mailListAdapter);
             return;
         }
@@ -477,7 +475,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         mailListView.setCacheColorHint(Color.TRANSPARENT);
         friendList.clear();
         familyList.clear();
-        connectionService = OnlineUtil.getConnectionService();
         tabHost = findViewById(R.id.tabhost);
         tabHost.setup();
         TabSpec newTabSpec = tabHost.newTabSpec("tab1");

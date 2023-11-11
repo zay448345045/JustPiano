@@ -57,7 +57,6 @@ import ly.pp.justpiano3.listener.ChangeRoomNameClick;
 import ly.pp.justpiano3.listener.PlayerImageItemClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
@@ -105,7 +104,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public String roomName;
     public JPApplication jpapplication;
     public String playerKind = "";
-    public ConnectionService connectionService;
     public Bundle roomInfoBundle;
     public Bundle hallInfoBundle;
     public boolean timeUpdateRunning;
@@ -218,8 +216,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void sendMsg(int type, MessageLite msg) {
-        if (connectionService != null) {
-            connectionService.writeData(type, msg);
+        if (OnlineUtil.getConnectionService() != null) {
+            OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -229,7 +227,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
-        listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
+        listView.setAdapter(new MainGameAdapter(list, i));
     }
 
     public void sendMail(String str) {
@@ -583,7 +581,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         getRoomPlayerMap().clear();
-        connectionService = OnlineUtil.getConnectionService();
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         roomNameView = findViewById(R.id.room_title);
         roomInfoBundle = getIntent().getExtras();
@@ -621,7 +618,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 13));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 13));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);

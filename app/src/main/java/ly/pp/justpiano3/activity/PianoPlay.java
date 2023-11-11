@@ -40,7 +40,6 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.StartPlayTimerTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
@@ -89,7 +88,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public View finishView;
     private View miniScoreView;
     public LayoutParams layoutParams2;
-    private ConnectionService connectionService;
     private ProgressBar progressbar;
     private Bundle hallBundle;
     private boolean recordStart;
@@ -218,8 +216,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     }
 
     public void sendMsg(int type, MessageLite msg) {
-        if (connectionService != null) {
-            connectionService.writeData(type, msg);
+        if (OnlineUtil.getConnectionService() != null) {
+            OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -414,7 +412,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 playView = new PlayView(jpapplication, this, byteArray, this, onlineRightHandDegree, score, 1, 0, songId);
                 break;
             case 2:    //房间对战
-                connectionService = OnlineUtil.getConnectionService();
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 songsPath = extras.getString("path");
@@ -441,7 +438,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
-                connectionService = OnlineUtil.getConnectionService();
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 String songBytes = extras.getString("songBytes");

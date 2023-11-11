@@ -68,6 +68,7 @@ public class ConnectionService extends Service {
     }
 
     public void writeData(int type, MessageLite message) {
+        Log.i("autoReconnect", "writeData: " + nettyUtil + " " + type);
         if (nettyUtil != null && nettyUtil.isConnected()) {
             OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
             Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
@@ -134,7 +135,7 @@ public class ConnectionService extends Service {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                OnlineUtil.autoReconnectFinish();
+                                OnlineUtil.cancelAutoReconnect();
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
@@ -220,9 +221,11 @@ public class ConnectionService extends Service {
     }
 
     public void outLine() {
+        Log.i("autoReconnect", "outLine: " + nettyUtil);
         // 关闭连接
         if (nettyUtil != null) {
             nettyUtil.close();
+            nettyUtil = null;
         }
     }
 }

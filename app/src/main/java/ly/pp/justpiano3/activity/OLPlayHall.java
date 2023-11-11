@@ -55,7 +55,6 @@ import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.CreateRoomClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -70,7 +69,6 @@ import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineQuitHallDTO;
 
 public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
-    public ConnectionService connectionService;
     public String hallName = "";
     public byte hallID = (byte) 0;
     public JPApplication jpapplication;
@@ -103,12 +101,12 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     public void loadInRoomUserInfo(byte b) {
         OnlineLoadRoomUserListDTO.Builder builder = OnlineLoadRoomUserListDTO.newBuilder();
         builder.setRoomId(b);
-        connectionService.writeData(OnlineProtocolType.LOAD_ROOM_USER_LIST, builder.build());
+        OnlineUtil.getConnectionService().writeData(OnlineProtocolType.LOAD_ROOM_USER_LIST, builder.build());
     }
 
     public void sendMsg(int type, MessageLite message) {
-        if (connectionService != null) {
-            connectionService.writeData(type, message);
+        if (OnlineUtil.getConnectionService() != null) {
+            OnlineUtil.getConnectionService().writeData(type, message);
         } else {
             Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
         }
@@ -215,7 +213,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         if (z && list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
-        listView.setAdapter(new MainGameAdapter(list, (JPApplication) getApplicationContext(), i, this));
+        listView.setAdapter(new MainGameAdapter(list, i));
     }
 
     public void sendMail(String str) {
@@ -420,12 +418,11 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(Color.TRANSPARENT);
         roomList.clear();
-        connectionService = OnlineUtil.getConnectionService();
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
-                new ExpressAdapter(jpapplication, connectionService, Consts.expressions, popupWindow, 12));
+                new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 12));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);

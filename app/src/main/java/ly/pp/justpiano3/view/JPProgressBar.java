@@ -8,15 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class JPProgressBar extends Dialog {
 
-    private final JPApplication jpApplication;
-    private final ConnectionService connectionService;
     private final ImageView imageView;
     private final TextView textView;
     private String text;
@@ -26,8 +21,6 @@ public final class JPProgressBar extends Dialog {
         setContentView(R.layout.loading_view);
         imageView = findViewById(R.id.loading_img);
         textView = findViewById(R.id.loading_text);
-        jpApplication = (JPApplication) context.getApplicationContext();
-        connectionService = OnlineUtil.getConnectionService();
     }
 
     public String getText() {
