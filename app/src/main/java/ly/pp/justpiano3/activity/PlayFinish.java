@@ -54,6 +54,14 @@ public class PlayFinish extends Activity implements OnClickListener {
     private int missScore;
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, PianoPlay.class);
+        OLMelodySelect.songBytes = null;
+        setResult(-1, intent);
+        finish();
+    }
+
+    @Override
     public void onClick(View view) {
         Intent intent = new Intent(this, PianoPlay.class);
         int i = Math.max(topScore, totalScore);
@@ -192,43 +200,23 @@ public class PlayFinish extends Activity implements OnClickListener {
         retryButton.setOnClickListener(this);
         shareButton = findViewById(R.id.share_score);
         shareButton.setOnClickListener(this);
-        TextView perfectView = findViewById(R.id.perfect);
-        perfectView.setText(String.valueOf(perfect));
-        TextView coolView = findViewById(R.id.cool);
-        coolView.setText(String.valueOf(cool));
-        TextView greatView = findViewById(R.id.great);
-        greatView.setText(String.valueOf(great));
-        TextView badView = findViewById(R.id.bad);
-        badView.setText(String.valueOf(bad));
-        TextView missView = findViewById(R.id.miss);
-        missView.setText(String.valueOf(miss));
-        TextView totalView = findViewById(R.id.total);
-        totalView.setText(String.valueOf(clickNum));
-        TextView comboView = findViewById(R.id.combo);
-        comboView.setText(String.valueOf(combo));
-        TextView comboScoreView = findViewById(R.id.combo_scr);
-        comboScoreView.setText(String.valueOf(comboScore));
-        TextView perfectScoreView = findViewById(R.id.perfect_scr);
-        perfectScoreView.setText(String.valueOf(perfectScore));
-        TextView coolScoreView = findViewById(R.id.cool_scr);
-        coolScoreView.setText(String.valueOf(coolScore));
-        TextView greatScoreView = findViewById(R.id.great_scr);
-        greatScoreView.setText(String.valueOf(greatScore));
-        TextView badScoreView = findViewById(R.id.bad_scr);
-        badScoreView.setText(String.valueOf(badScore));
-        TextView missScoreView = findViewById(R.id.miss_scr);
-        missScoreView.setText(String.valueOf(missScore));
-        TextView totalScoreView = findViewById(R.id.total_scr);
-        totalScoreView.setText(String.valueOf(totalScore));
-        TextView highScoreView = findViewById(R.id.highscore);
-        highScoreView.setText(String.valueOf(topScore));
-        TextView titleScoreView = findViewById(R.id.titlescore);
-        titleScoreView.setText(String.valueOf(totalScore));
-        TextView reportView = findViewById(R.id.report);
-        if (isWinner) {
-            reportView.setText("恭喜您获得了《" + name + "》曲目的冠军!");
-        } else {
-            reportView.setText("很不幸，您差点就是《" + name + "》曲目的冠军了");
-        }
+        ((TextView) findViewById(R.id.perfect)).setText(String.valueOf(perfect));
+        ((TextView) findViewById(R.id.cool)).setText(String.valueOf(cool));
+        ((TextView) findViewById(R.id.great)).setText(String.valueOf(great));
+        ((TextView) findViewById(R.id.bad)).setText(String.valueOf(bad));
+        ((TextView) findViewById(R.id.miss)).setText(String.valueOf(miss));
+        ((TextView) findViewById(R.id.total)).setText(String.valueOf(clickNum));
+        ((TextView) findViewById(R.id.combo)).setText(String.valueOf(combo));
+        ((TextView) findViewById(R.id.combo_scr)).setText(String.valueOf(comboScore));
+        ((TextView) findViewById(R.id.perfect_scr)).setText(String.valueOf(perfectScore));
+        ((TextView) findViewById(R.id.cool_scr)).setText(String.valueOf(coolScore));
+        ((TextView) findViewById(R.id.great_scr)).setText(String.valueOf(greatScore));
+        ((TextView) findViewById(R.id.bad_scr)).setText(String.valueOf(badScore));
+        ((TextView) findViewById(R.id.miss_scr)).setText(String.valueOf(missScore));
+        ((TextView) findViewById(R.id.total_scr)).setText(String.valueOf(totalScore));
+        ((TextView) findViewById(R.id.highscore)).setText(String.valueOf(topScore));
+        ((TextView) findViewById(R.id.titlescore)).setText(String.valueOf(totalScore));
+        ((TextView) findViewById(R.id.report)).setText(isWinner ? "恭喜您获得了《" + name + "》曲目的冠军!"
+                : "很不幸，您差点就是《" + name + "》曲目的冠军了");
     }
 }

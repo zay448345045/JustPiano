@@ -61,11 +61,8 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String str) {
         switch (str) {
             case "0":
-                playFinish.get().jpprogressBar.dismiss();
-                break;
             case "1":
                 playFinish.get().jpprogressBar.dismiss();
-                Toast.makeText(playFinish.get(), "连接出错!", Toast.LENGTH_SHORT).show();
                 break;
             case "2":
                 playFinish.get().jpprogressBar.dismiss();
