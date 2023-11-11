@@ -72,18 +72,17 @@ public class ConnectionService extends Service {
             OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
             Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
             builder.setField(fieldDescriptor, message);
-            if (type == OnlineProtocolType.LOGIN || OnlineUtil.autoReconnectTime == null) {
+            if (type == OnlineProtocolType.LOGIN || !OnlineUtil.autoReconnecting()) {
                 OnlineUtil.setMsgTypeByChannel(nettyUtil.getChannelFuture().channel(), type);
                 nettyUtil.sendMessage(builder);
-                if (OnlineUtil.autoReconnectTime != null) {
+                if (OnlineUtil.autoReconnecting()) {
                     OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
-                        if (OnlineUtil.autoReconnectTime != null) {
+                        if (OnlineUtil.autoReconnecting()) {
                             OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
                         }
                     }, OnlineUtil.AUTO_RECONNECT_INTERVAL_TIME);
                     Log.i(OnlineUtil.class.getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
-                            + " autoReconnect! writeData autoReconnect:"
-                            + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime) + " " + type);
+                            + " autoReconnect! writeData autoReconnect: " + type);
                 }
             }
         } else {
@@ -135,25 +134,7 @@ public class ConnectionService extends Service {
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
-                                Log.i(getClass().getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
-                                        + " autoReconnect! channelRead0 autoReconnect:"
-                                        + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime)
-                                        + " " + msg.getResponseCase().getNumber() + " " + msg);
-                                if (OnlineUtil.autoReconnectTime != null) {
-                                    Log.i(getClass().getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
-                                            + " autoReconnect! channelRead0 autoReconnect:"
-                                            + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime)
-                                            + " " + msg.getResponseCase().getNumber());
-                                    OnlineUtil.autoReconnectTime = null;
-                                    OnlineUtil.autoReconnectCount = 0;
-                                    OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
-                                        olBaseActivity.jpprogressBar.setCancelable(true);
-                                        olBaseActivity.jpprogressBar.setText("");
-                                        if (olBaseActivity.jpprogressBar.isShowing()) {
-                                            olBaseActivity.jpprogressBar.dismiss();
-                                        }
-                                    }, 0L);
-                                }
+                                OnlineUtil.autoReconnectFinish();
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
@@ -172,7 +153,7 @@ public class ConnectionService extends Service {
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
                                 if (obj instanceof IdleStateEvent) {
                                     IdleStateEvent event = (IdleStateEvent) obj;
-                                    if (OnlineUtil.autoReconnectTime == null && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
+                                    if (!OnlineUtil.autoReconnecting() && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
                                         writeData(OnlineProtocolType.HEART_BEAT, OnlineHeartBeatDTO.getDefaultInstance());
                                     }
                                 } else {
@@ -185,7 +166,7 @@ public class ConnectionService extends Service {
         nettyUtil.setOnConnectListener(new NettyUtil.OnConnectListener() {
             @Override
             public void onSuccess() {
-                if (OnlineUtil.autoReconnectTime == null) {
+                if (!OnlineUtil.autoReconnecting()) {
                     OnlineUtil.onlineSessionId = UUID.randomUUID().toString().replace("-", "");
                 }
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
@@ -194,7 +175,7 @@ public class ConnectionService extends Service {
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
                 builder.setPackageName(jpApplication.getPackageName());
                 builder.setOnlineSessionId(OnlineUtil.onlineSessionId);
-                builder.setAutoReconnect(OnlineUtil.autoReconnectTime != null);
+                builder.setAutoReconnect(OnlineUtil.autoReconnecting());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();

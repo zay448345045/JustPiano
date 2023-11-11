@@ -64,8 +64,8 @@ public class OnlineUtil {
     /**
      * 断线时的时间戳，用于断线重连判断，如果非空，表示目前没有掉线，断线自动重连成功后会置空
      */
-    public static Long autoReconnectTime;
-    public static int autoReconnectCount;
+    private static Long autoReconnectTime;
+    private static int autoReconnectCount;
 
     private static ConnectionService connectionService;
 
@@ -136,6 +136,26 @@ public class OnlineUtil {
 
     public static ConnectionService getConnectionService() {
         return connectionService;
+    }
+
+    public static void autoReconnectFinish() {
+        if (OnlineUtil.autoReconnectTime != null) {
+            Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! channelRead0 autoReconnect:"
+                    + (OnlineUtil.autoReconnectTime == null ? "null" : System.currentTimeMillis() - OnlineUtil.autoReconnectTime));
+            OnlineUtil.autoReconnectTime = null;
+            OnlineUtil.autoReconnectCount = 0;
+            OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
+                olBaseActivity.jpprogressBar.setCancelable(true);
+                olBaseActivity.jpprogressBar.setText("");
+                if (olBaseActivity.jpprogressBar.isShowing()) {
+                    olBaseActivity.jpprogressBar.dismiss();
+                }
+            }, 0L);
+        }
+    }
+
+    public static boolean autoReconnecting() {
+        return autoReconnectTime != null;
     }
 
     public static void outLineAndDialogWithAutoReconnect(JPApplication jpApplication) {
