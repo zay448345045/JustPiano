@@ -1,7 +1,15 @@
 package ly.pp.justpiano3.utils;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.service.ConnectionService;
 
 /**
  * @author as
@@ -33,6 +41,22 @@ public class OnlineUtil {
      */
     public static String server = ONLINE_SERVER_URL;
 
+    private static ConnectionService connectionService;
+
+    private static boolean bindService;
+
+    private static final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            connectionService = ((ConnectionService.JPBinder) service).getConnectionService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            connectionService = null;
+        }
+    };
+
     /**
      * channel绑定的消息类型属性key
      */
@@ -56,5 +80,31 @@ public class OnlineUtil {
      */
     public static Integer getMsgTypeByChannel(Channel channel) {
         return channel.attr(MSG_TYPE_ATTRIBUTE_KEY).get();
+    }
+
+    public static void outlineConnectionService(JPApplication jpApplication) {
+        try {
+            if (connectionService != null) {
+                connectionService.outLine();
+            }
+            if (bindService) {
+                jpApplication.unbindService(serviceConnection);
+                bindService = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void onlineConnectionService(JPApplication jpApplication) {
+        try {
+            if (bindService) {
+                jpApplication.unbindService(serviceConnection);
+            }
+            bindService = jpApplication.bindService(new Intent(jpApplication, ConnectionService.class),
+                    serviceConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

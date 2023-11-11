@@ -1,16 +1,13 @@
 package ly.pp.justpiano3;
 
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
 import android.os.StrictMode;
@@ -36,10 +33,10 @@ import kotlin.Unit;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class JPApplication extends Application {
 
@@ -56,23 +53,9 @@ public final class JPApplication extends Application {
 
     public String loginResultTitle = "";
     public String loginResultMessage = "";
-    private ConnectionService connectionService;
-    private boolean bindService;
     private String accountName = "";
     private String password = "";
     private boolean appInException;
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            setConnectionService(((ConnectionService.JPBinder) service).getConnectionService());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            setConnectionService(null);
-        }
-    };
-
 
     public String getAccountName() {
         if (accountName.isEmpty()) {
@@ -230,14 +213,8 @@ public final class JPApplication extends Application {
                     StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
                     BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
                             + BuildConfig.BUILD_TYPE + '\n' + byteArrayOutputStream).execute();
-            // 关闭服务，退出进程
-            if (connectionService != null) {
-                connectionService.outLine();
-            }
-            if (bindService) {
-                unbindService(serviceConnection);
-                bindService = false;
-            }
+            // 关闭网络连接服务，退出进程
+            OnlineUtil.outlineConnectionService(JPApplication.this);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -251,17 +228,12 @@ public final class JPApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        if (connectionService != null) {
-            connectionService.outLine();
-        }
         // 在应用程序终止时关闭数据库连接
         if (songDatabase != null) {
             songDatabase.close();
         }
-        if (bindService) {
-            unbindService(serviceConnection);
-            bindService = false;
-        }
+        // 关闭网络连接服务
+        OnlineUtil.outlineConnectionService(this);
     }
 
     @Override
@@ -287,25 +259,5 @@ public final class JPApplication extends Application {
 
     public static SongDatabase getSongDatabase() {
         return songDatabase;
-    }
-
-    public ConnectionService getConnectionService() {
-        return connectionService;
-    }
-
-    public void setConnectionService(ConnectionService connectionService) {
-        this.connectionService = connectionService;
-    }
-
-    public boolean isBindService() {
-        return bindService;
-    }
-
-    public void setBindService(boolean bindService) {
-        this.bindService = bindService;
-    }
-
-    public ServiceConnection getServiceConnection() {
-        return serviceConnection;
     }
 }

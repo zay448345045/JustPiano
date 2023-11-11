@@ -1,12 +1,10 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.List;
@@ -17,12 +15,10 @@ import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
-import ly.pp.justpiano3.service.ConnectionService;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
 
 public class OLMainMode extends OLBaseActivity implements OnClickListener {
     final OLMainMode context = this;
@@ -103,32 +99,14 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         setContentView(R.layout.ol_main_mode);
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
-        Button topButton = findViewById(R.id.ol_top_b);
-        topButton.setOnClickListener(this);
-        Button userButton = findViewById(R.id.ol_users_b);
-        userButton.setOnClickListener(this);
-        Button hallButton = findViewById(R.id.ol_playhall_b);
-        hallButton.setOnClickListener(this);
-        Button songButton = findViewById(R.id.ol_songs_b);
-        songButton.setOnClickListener(this);
-        Button webButton = findViewById(R.id.ol_web_b);
-        webButton.setOnClickListener(this);
-        webButton.setVisibility(View.VISIBLE);
-        Button chatBlackButton = findViewById(R.id.ol_chatblack_b);
-        chatBlackButton.setOnClickListener(this);
-        Button findUserButton = findViewById(R.id.ol_finduser_b);
-        findUserButton.setOnClickListener(this);
-        try {
-            if (jpapplication.getConnectionService() != null) {
-                jpapplication.getConnectionService().outLine();
-            }
-            if (jpapplication.isBindService()) {
-                jpapplication.unbindService(jpapplication.getServiceConnection());
-                jpapplication.setBindService(false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        findViewById(R.id.ol_top_b).setOnClickListener(this);
+        findViewById(R.id.ol_users_b).setOnClickListener(this);
+        findViewById(R.id.ol_playhall_b).setOnClickListener(this);
+        findViewById(R.id.ol_songs_b).setOnClickListener(this);
+        findViewById(R.id.ol_web_b).setOnClickListener(this);
+        findViewById(R.id.ol_chatblack_b).setOnClickListener(this);
+        findViewById(R.id.ol_finduser_b).setOnClickListener(this);
+        OnlineUtil.outlineConnectionService(jpapplication);
         if (jpapplication.loginResultTitle != null && jpapplication.loginResultMessage != null
                 && !jpapplication.loginResultTitle.isEmpty() && !jpapplication.loginResultMessage.isEmpty()) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -145,20 +123,6 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    public void loginOnline() {
-        jpprogressBar.show();
-        if (jpapplication.isBindService()) {
-            try {
-                jpapplication.unbindService(jpapplication.getServiceConnection());
-                jpapplication.setBindService(false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        jpapplication.setBindService(jpapplication.bindService(new Intent(this, ConnectionService.class),
-                jpapplication.getServiceConnection(), Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT));
     }
 
     public static String getMaxSongIdFromDatabase() {

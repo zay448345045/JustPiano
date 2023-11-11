@@ -60,7 +60,8 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 i = 1;
                 olMainMode.get().jpprogressBar.dismiss();
             } else {
-                olMainMode.get().loginOnline();
+                olMainMode.get().jpprogressBar.show();
+                OnlineUtil.onlineConnectionService(olMainMode.get().jpapplication);
                 i = 0;
             }
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olMainMode.get());

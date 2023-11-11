@@ -43,7 +43,6 @@
             android:layout_height="match_parent"
             android:background="#10293535"
             android:drawableTop="@drawable/music"
-
             android:text="@string/olmainmode_songs"
             android:textColor="@color/white1"
             android:textSize="24sp" />
@@ -54,7 +53,6 @@
             android:layout_height="match_parent"
             android:background="#10c6ffe9"
             android:drawableTop="@drawable/friends"
-
             android:text="@string/olmainmode_ol"
             android:textColor="#ffff4664"
             android:textSize="24sp" />
