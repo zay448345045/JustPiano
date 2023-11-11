@@ -100,10 +100,9 @@ public class NettyUtil {
         EventLoopGroup mGroup = new NioEventLoopGroup();
         mBootstrap.group(mGroup)
                 .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.SO_REUSEADDR, true)
-                .option(ChannelOption.AUTO_CLOSE, false)
-                .option(ChannelOption.SO_KEEPALIVE, false)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 2000)
+                .option(ChannelOption.SO_REUSEADDR, false)
+                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000)
                 .handler(new LoggingHandler(LogLevel.DEBUG));
         mBootstrap.handler(mChannelInitializer);
     }

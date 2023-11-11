@@ -76,15 +76,15 @@ public class ConnectionService extends Service {
             if (type == OnlineProtocolType.LOGIN || !OnlineUtil.autoReconnecting()) {
                 OnlineUtil.setMsgTypeByChannel(nettyUtil.getChannelFuture().channel(), type);
                 nettyUtil.sendMessage(builder);
-                if (OnlineUtil.autoReconnecting()) {
-                    OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
-                        if (OnlineUtil.autoReconnecting()) {
-                            OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
-                        }
-                    }, OnlineUtil.AUTO_RECONNECT_INTERVAL_TIME);
-                    Log.i(OnlineUtil.class.getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
-                            + " autoReconnect! writeData autoReconnect: " + type);
-                }
+//                if (OnlineUtil.autoReconnecting()) {
+//                    OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
+//                        if (OnlineUtil.autoReconnecting()) {
+//                            OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+//                        }
+//                    }, OnlineUtil.AUTO_RECONNECT_INTERVAL_TIME);
+//                    Log.i(OnlineUtil.class.getSimpleName(), nettyUtil.getChannelFuture().channel().localAddress().toString()
+//                            + " autoReconnect! writeData autoReconnect: " + type);
+//                }
             }
         } else {
             OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
@@ -95,7 +95,6 @@ public class ConnectionService extends Service {
     public void onCreate() {
         super.onCreate();
         jpApplication = (JPApplication) getApplication();
-        EncryptUtil.updateDeviceKeyPair();
         initNetty();
     }
 

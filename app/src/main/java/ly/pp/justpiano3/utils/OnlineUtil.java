@@ -20,6 +20,10 @@ import ly.pp.justpiano3.service.ConnectionService;
  */
 public class OnlineUtil {
 
+    static {
+        EncryptUtil.updateDeviceKeyPair();
+    }
+
     /**
      * 官网地址
      */
