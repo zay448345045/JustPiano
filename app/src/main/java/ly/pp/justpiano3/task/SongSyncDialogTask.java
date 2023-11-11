@@ -61,6 +61,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
                 olMainMode.get().jpprogressBar.dismiss();
             } else {
                 olMainMode.get().jpprogressBar.show();
+                OnlineUtil.cancelAutoReconnect();
                 OnlineUtil.onlineConnectionService(olMainMode.get().jpapplication);
                 i = 0;
             }

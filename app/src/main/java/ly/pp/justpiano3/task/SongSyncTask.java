@@ -89,6 +89,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void v) {
         if (weakReference.get() instanceof OLMainMode) {
             ((OLMainMode) weakReference.get()).jpprogressBar.show();
+            OnlineUtil.cancelAutoReconnect();
             OnlineUtil.onlineConnectionService(((OLMainMode) weakReference.get()).jpapplication);
         } else if (weakReference.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) weakReference.get();
