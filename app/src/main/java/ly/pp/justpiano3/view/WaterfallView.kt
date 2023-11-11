@@ -15,6 +15,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
+import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.ObjectPool
 import ly.pp.justpiano3.utils.PmSongUtil
@@ -288,6 +289,9 @@ class WaterfallView @JvmOverloads constructor(
         volume: Byte,
         color: Int
     ) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            return
+        }
         val freeStyleNote = waterfallNoteObjectPool.acquire()
         freeStyleNote.left = left
         freeStyleNote.right = right

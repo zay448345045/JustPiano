@@ -138,7 +138,8 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
     }
 
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i, boolean sustainPedalOn) {
-        if (olPlayKeyboardRoom.roomPositionSub1 < 0 || olPlayKeyboardRoom.roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
+        if (i + 2 >= notes.length || olPlayKeyboardRoom.roomPositionSub1 < 0
+                || olPlayKeyboardRoom.roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
             return;
         }
         byte pitch = (byte) notes[i + 1];

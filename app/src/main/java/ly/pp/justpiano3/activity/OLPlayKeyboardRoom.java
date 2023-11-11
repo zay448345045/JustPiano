@@ -25,11 +25,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,7 +74,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long realTimeLastMessageSendTime;
     private final OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();
-    private final List<Long> olNoteCacheDataList = new ArrayList<>();
+    private final Map<Long, Long> olNoteCacheDataMap = new ConcurrentHashMap<>();
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
     public LinearLayout playerLayout;
     public LinearLayout keyboardLayout;
@@ -92,17 +94,20 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     private void broadNote(byte pitch, byte volume) {
         if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-            olNoteCacheDataList.add(0L);
-            olNoteCacheDataList.add((long) pitch);
-            olNoteCacheDataList.add((long) volume);
+            olNoteCacheDataMap.put((long) pitch, (long) volume);
             if (System.currentTimeMillis() - realTimeLastMessageSendTime > PmSongUtil.PM_GLOBAL_SPEED) {
                 realTimeLastMessageSendTime = System.currentTimeMillis();
                 handler.postDelayed(() -> {
-                    if (!olNoteCacheDataList.isEmpty()) {
+                    if (!olNoteCacheDataMap.isEmpty()) {
+                        Map<Long, Long> finalMap = new HashMap<>(olNoteCacheDataMap);
+                        olNoteCacheDataMap.clear();
                         onlineKeyboardNoteDtoBuilder.clear();
                         onlineKeyboardNoteDtoBuilder.addData(buildNoteHeadData());
-                        onlineKeyboardNoteDtoBuilder.addAllData(olNoteCacheDataList);
-                        olNoteCacheDataList.clear();
+                        for (Map.Entry<Long, Long> entry : finalMap.entrySet()) {
+                            onlineKeyboardNoteDtoBuilder.addData(0);
+                            onlineKeyboardNoteDtoBuilder.addData(entry.getKey());
+                            onlineKeyboardNoteDtoBuilder.addData(entry.getValue());
+                        }
                         sendMsg(OnlineProtocolType.KEYBOARD, onlineKeyboardNoteDtoBuilder.build());
                     }
                 }, PmSongUtil.PM_GLOBAL_SPEED);

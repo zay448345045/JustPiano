@@ -82,14 +82,14 @@ public class SoundEngineUtil {
     private static native void unloadSf2();
 
     public static void playSound(byte pitch, byte volume) {
-        triggerDown(108 - pitch, volume);
+        triggerDown(MidiUtil.MAX_PIANO_MIDI_PITCH - pitch, volume);
     }
 
     public static void stopPlaySound(byte pitch) {
         if (MidiDeviceUtil.getSustainPedalStatus()) {
             sustainNotePitchMap.put(pitch, (byte) 0);
         } else {
-            triggerUp(108 - pitch);
+            triggerUp(MidiUtil.MAX_PIANO_MIDI_PITCH - pitch);
         }
     }
 

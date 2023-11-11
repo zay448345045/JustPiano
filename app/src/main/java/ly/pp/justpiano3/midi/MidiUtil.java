@@ -92,35 +92,12 @@ public final class MidiUtil {
     }
 
     /**
-     * converts<br>
-     * 1 - MPQ-Tempo to BPM tempo<br>
-     * 2 - BPM tempo to MPQ tempo<br>
-     */
-    public static double convertTempo(double tempo) {
-        if (tempo <= 0) {
-            tempo = 1;
-        }
-        return ((double) 60000000L) / tempo;
-    }
-
-    /**
      * convert tick to microsecond with given tempo.
      * Does not take tempo changes into account.
      * Does not work for SMPTE timing!
      */
-    public static long ticks2microsec(long tick, double tempoMPQ, int resolution) {
+    public static long ticks2Microsecond(long tick, double tempoMPQ, int resolution) {
         return (long) (((double) tick) * tempoMPQ / resolution);
-    }
-
-    /**
-     * convert tempo to microsecond with given tempo
-     * Does not take tempo changes into account.
-     * Does not work for SMPTE timing!
-     */
-    public static long microsec2ticks(long us, double tempoMPQ, int resolution) {
-        // do not round to nearest tick
-        //return (long) Math.round((((double)us) * resolution) / tempoMPQ);
-        return (long) ((((double) us) * resolution) / tempoMPQ);
     }
 
     /**
@@ -159,103 +136,18 @@ public final class MidiUtil {
             // this implementation needs a tempo event at tick 0!
             int i = snapshotIndex + 1;
             while (i < cacheCount && ticks[i] <= tick) {
-                snapshotMicro += ticks2microsec(ticks[i] - ticks[i - 1], tempos[i - 1], resolution);
+                snapshotMicro += ticks2Microsecond(ticks[i] - ticks[i - 1], tempos[i - 1], resolution);
                 snapshotIndex = i;
                 i++;
             }
             us = snapshotMicro
-                    + ticks2microsec(tick - ticks[snapshotIndex],
+                    + ticks2Microsecond(tick - ticks[snapshotIndex],
                     tempos[snapshotIndex],
                     resolution);
         }
         cache.snapshotIndex = snapshotIndex;
         cache.snapshotMicro = snapshotMicro;
         return us;
-    }
-
-    /**
-     * Given a microsecond time, convert to tick.
-     * returns tempo at the given time in cache.getCurrTempoMPQ
-     */
-    public static long microsecond2tick(Sequence seq, long micros, TempoCache cache) {
-        if (seq.getDivisionType() != Sequence.PPQ) {
-            double dTick = (((double) micros)
-                    * ((double) seq.getDivisionType())
-                    * ((double) seq.getResolution()))
-                    / ((double) 1000000);
-            long tick = (long) dTick;
-            if (cache != null) {
-                cache.currTempo = (int) cache.getTempoMPQAt(tick);
-            }
-            return tick;
-        }
-
-        if (cache == null) {
-            cache = new TempoCache(seq);
-        }
-        long[] ticks = cache.ticks;
-        int[] tempos = cache.tempos; // in MPQ
-        int cacheCount = tempos.length;
-
-        int resolution = seq.getResolution();
-
-        long us = 0;
-        long tick = 0;
-        int i = 1;
-
-        // walk through all tempo changes and add time for the respective blocks
-        // to find the right tick
-        if (micros > 0 && cacheCount > 0) {
-            // this loop requires that the first tempo Event is at time 0
-            while (i < cacheCount) {
-                long nextTime = us + ticks2microsec(ticks[i] - ticks[i - 1],
-                        tempos[i - 1], resolution);
-                if (nextTime > micros) {
-                    break;
-                }
-                us = nextTime;
-                i++;
-            }
-            tick = ticks[i - 1] + microsec2ticks(micros - us, tempos[i - 1], resolution);
-        }
-        cache.currTempo = tempos[i - 1];
-        return tick;
-    }
-
-    /**
-     * Binary search for the event indexes of the track
-     *
-     * @param tick - tick number of index to be found in array
-     * @return index in track which is on or after "tick".
-     * if no entries are found that follow after tick, track.size() is returned
-     */
-    public static int tick2index(Track track, long tick) {
-        int ret = 0;
-        if (tick > 0) {
-            int low = 0;
-            int high = track.size() - 1;
-            while (low < high) {
-                // take the middle event as estimate
-                ret = (low + high) >> 1;
-                // tick of estimate
-                long t = track.get(ret).getTick();
-                if (t == tick) {
-                    break;
-                } else if (t < tick) {
-                    // estimate too low
-                    if (low == high - 1) {
-                        // "or after tick"
-                        ret++;
-                        break;
-                    }
-                    low = ret;
-                } else { // if (t>tick)
-                    // estimate too high
-                    high = ret;
-                }
-            }
-        }
-        return ret;
     }
 
     public static final class TempoCache {
@@ -265,10 +157,6 @@ public final class MidiUtil {
         int snapshotIndex;
         // microsecond at the snapshot
         int snapshotMicro;
-
-        int currTempo; // MPQ, used as return value for microsecond2tick
-
-        private boolean firstTempoIsFake = false;
 
         public TempoCache() {
             // just some defaults, to prevents weird stuff
@@ -301,7 +189,7 @@ public final class MidiUtil {
                 }
             }
             int size = list.size() + 1;
-            firstTempoIsFake = true;
+            boolean firstTempoIsFake = true;
             if ((size > 1) && (list.get(0).getTick() == 0)) {
                 // do not need to add an initial tempo event at the beginning
                 size--;
@@ -323,27 +211,6 @@ public final class MidiUtil {
             }
             snapshotIndex = 0;
             snapshotMicro = 0;
-        }
-
-        public int getCurrTempoMPQ() {
-            return currTempo;
-        }
-
-        float getTempoMPQAt(long tick) {
-            return getTempoMPQAt(tick, -1.0f);
-        }
-
-        synchronized float getTempoMPQAt(long tick, float startTempoMPQ) {
-            for (int i = 0; i < ticks.length; i++) {
-                if (ticks[i] > tick) {
-                    if (i > 0) i--;
-                    if (startTempoMPQ > 0 && i == 0 && firstTempoIsFake) {
-                        return startTempoMPQ;
-                    }
-                    return (float) tempos[i];
-                }
-            }
-            return tempos[tempos.length - 1];
         }
     }
 }

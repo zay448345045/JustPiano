@@ -578,6 +578,9 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            return
+        }
         val pitchInScreen = getPitchInScreen(pitch)
         if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
             return
@@ -619,6 +622,9 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyUp(pitch: Byte) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            return
+        }
         val pitchInScreen = getPitchInScreen(pitch)
         if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
             return
