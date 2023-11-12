@@ -535,6 +535,8 @@ public final class ReceiveTasks {
                 bundle.putString("SI", loadRoomPosition.getSongPath());
                 bundle.putInt("diao", loadRoomPosition.getTune());
                 message.setData(bundle);
+                // 兼容4.8暂时这样写
+                message.arg1 = loadRoomPosition.getSongProgress();
                 if (topActivity instanceof OLPlayRoom) {
                     bundle.putString("MSG_C", loadRoomPosition.getRoomPositionCouple().getCoupleName());
                     bundle.putInt("MSG_CI", loadRoomPosition.getRoomPositionCouple().getCouplePosition());

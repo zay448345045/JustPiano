@@ -40,15 +40,27 @@ object SongPlay {
      * 开始播放
      */
     fun startPlay(context: Context, songFilePath: String, tune: Int) {
+        startPlay(context, songFilePath, 0, tune)
+    }
+
+    /**
+     * 开始播放，支持指定起始播放进度
+     */
+    fun startPlay(context: Context, songFilePath: String, songProgress: Int, tune: Int) {
         PmSongUtil.parsePmDataByFilePath(context, songFilePath)?.let {
             job?.cancel()
             job = threadPoolScope.launch {
                 val playingPitchMap: MutableMap<Byte, Byte> = mutableMapOf()
+                var progressTime = 0L
                 for (i in it.pitchArray.indices) {
                     if (!isActive) {
                         return@launch
                     }
                     val delayTime = it.tickArray[i].toLong() * it.globalSpeed
+                    progressTime += delayTime
+                    if (progressTime < songProgress) {
+                        continue
+                    }
                     if (delayTime > 0 && i > 0) {
                         delay(delayTime)
                         val iterator = playingPitchMap.entries.iterator()
@@ -111,7 +123,7 @@ object SongPlay {
     fun stopPlay() {
         job?.cancel()
         job = null
-        SoundEngineUtil.stopPlayAllSounds();
+        SoundEngineUtil.stopPlayAllSounds()
     }
 
     /**

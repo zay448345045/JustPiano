@@ -414,6 +414,8 @@ message OnlineLoadRoomPositionVO {
   OnlineRoomPositionCoupleVO room_position_couple = 3;
   // 用户信息
   repeated OnlineRoomPositionUserVO room_position_user = 4;
+  // 房间播放曲谱进度
+  int32 song_progress = 5;
 }
 
 // 搭档信息

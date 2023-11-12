@@ -53,7 +53,7 @@ public final class OLPlayRoomHandler extends Handler {
                                     }
                                 }
                                 if (!SongPlay.INSTANCE.isPlaying()) {
-                                    SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, olPlayRoom.getTune());
+                                    SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, message.arg1, olPlayRoom.getTune());
                                 }
                             }
                         }
