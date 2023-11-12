@@ -14,7 +14,6 @@ import ly.pp.justpiano3.R
 import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
-import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil

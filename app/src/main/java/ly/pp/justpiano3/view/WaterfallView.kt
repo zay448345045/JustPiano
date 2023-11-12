@@ -286,7 +286,7 @@ class WaterfallView @JvmOverloads constructor(
      * 补帧，若目前瀑布流没有在连续绘制，补充绘制一帧
      */
     fun doDrawFrame() {
-        drawNotesThread?.canvasDraw = true;
+        drawNotesThread?.canvasDraw = true
     }
 
     /**
