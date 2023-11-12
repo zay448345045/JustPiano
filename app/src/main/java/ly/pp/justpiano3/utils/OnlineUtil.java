@@ -202,16 +202,20 @@ public class OnlineUtil {
                 autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / AUTO_RECONNECT_INTERVAL_TIME) + 1;
             }
         } else {
-            Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! fail autoReconnect:"
-                    + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
-            outlineConnectionService(jpApplication);
-            Activity topActivity = JPStack.top();
-            if (topActivity instanceof OLBaseActivity) {
-                OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
-                Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
-                message.what = 0;
-                olBaseActivity.olBaseActivityHandler.handleMessage(message);
-            }
+            outLineAndDialog(jpApplication);
+        }
+    }
+
+    public static void outLineAndDialog(JPApplication jpApplication) {
+        Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! fail autoReconnect:"
+                + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
+        outlineConnectionService(jpApplication);
+        Activity topActivity = JPStack.top();
+        if (topActivity instanceof OLBaseActivity) {
+            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+            Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
+            message.what = 0;
+            olBaseActivity.olBaseActivityHandler.handleMessage(message);
         }
     }
 

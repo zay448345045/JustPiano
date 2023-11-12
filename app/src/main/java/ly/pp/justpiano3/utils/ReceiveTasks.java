@@ -9,9 +9,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -220,6 +222,8 @@ public final class ReceiveTasks {
                 }
                 EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
                 ((OLMainMode) topActivity).olMainModeHandler.handleMessage(message);
+            } else if (Objects.equals("X", receivedMessage.getLogin().getStatus())) {
+                OnlineUtil.outLineAndDialog((JPApplication) topActivity.getApplication());
             }
         });
 
