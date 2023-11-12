@@ -686,9 +686,12 @@ class WaterfallView @JvmOverloads constructor(
             // 1、音符的上下左右边界都要在view内，对于左右边界，可以允许有一部分出现在view内
             // 2、进度 - 音符下边界小于0的时候，音符在view的上方，未开始出现，这种情况下过滤掉，不绘制
             // 3、进度 - 音符上边界大于view的高度的时候，音符已经完全离开了view的下边界，这种情况下过滤掉，不绘制
+            // 4、音高 - 必须在88键钢琴范围内
             return waterfallNote.right > 0 && waterfallNote.left < width
                     && progress - waterfallNote.bottom > 0
                     && progress - waterfallNote.top + NOTE_MIN_INTERVAL < height
+                    && waterfallNote.pitch >= MidiUtil.MIN_PIANO_MIDI_PITCH
+                    && waterfallNote.pitch <= MidiUtil.MAX_PIANO_MIDI_PITCH
         }
 
         /**

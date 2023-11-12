@@ -238,10 +238,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
             for (i in it.pitchArray.indices) {
                 val pitch = it.pitchArray[i]
                 val volume = it.volumeArray[i]
-                // 音高超范围的音符直接跳过
-                if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
-                    continue
-                }
                 // 计算音符播放的累计时间
                 totalTime += it.tickArray[i] * it.globalSpeed
                 val leftHand = it.trackArray[i] > 0
