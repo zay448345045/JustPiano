@@ -33,7 +33,7 @@ class WaterfallView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback{
+    SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback {
 
     /**
      * 背景图及背景的绘制范围
@@ -283,6 +283,13 @@ class WaterfallView @JvmOverloads constructor(
     }
 
     /**
+     * 补帧，若目前瀑布流没有在连续绘制，补充绘制一帧
+     */
+    fun doDrawFrame() {
+        drawNotesThread?.canvasDraw = true;
+    }
+
+    /**
      * 增加自由演奏模式的瀑布流音块（音块会从下到上移动），只是增加，音块会无限长，直到调用停止
      */
     fun addFreeStyleWaterfallNote(
@@ -521,7 +528,7 @@ class WaterfallView @JvmOverloads constructor(
                 val noteCount = drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
                 // 判断有音块，且view为显示状态，且瀑布流未暂停也未滑动时才实际执行绘制
                 // 如果第一次发现无音块时，或第一次发现view被显示时，也绘制且只绘制一帧，进行补帧，随后停止
-                if ((noteCount > 0 || canvasDraw) && visibility == VISIBLE && (isScrolling || !isPause)) {
+                if (canvasDraw || (noteCount > 0 && visibility == VISIBLE && (isScrolling || !isPause))) {
                     // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
                     // 更新变量的值，当绘制方法返回false时表示没有绘制成功，就接着再给绘制的机会
                     canvasDraw = !doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)

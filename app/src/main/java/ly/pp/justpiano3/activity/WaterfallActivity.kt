@@ -164,6 +164,8 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 }
             }
         }
+        // 补帧
+        waterfallView.doDrawFrame()
     }
 
     private fun recomputeWaterfallNoteLeftAndRight(waterfallNote: WaterfallNote) {
