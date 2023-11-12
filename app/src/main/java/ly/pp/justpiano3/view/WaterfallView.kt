@@ -13,6 +13,7 @@ import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.SurfaceHolder
 import android.view.SurfaceView
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.MidiUtil
@@ -32,7 +33,7 @@ class WaterfallView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    SurfaceView(context, attrs, defStyleAttr) {
+    SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback{
 
     /**
      * 背景图及背景的绘制范围
@@ -163,6 +164,8 @@ class WaterfallView @JvmOverloads constructor(
     }
 
     init {
+        // 注册surfaceHolder回调
+        holder.addCallback(this)
         // 设置背景透明
         setBackgroundColor(Color.TRANSPARENT)
         setZOrderOnTop(true)
@@ -718,5 +721,17 @@ class WaterfallView @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    override fun surfaceCreated(holder: SurfaceHolder) {
+        drawNotesThread?.canvasDraw = true
+    }
+
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        // nothing
+    }
+
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
+        drawNotesThread?.canvasDraw = false
     }
 }
