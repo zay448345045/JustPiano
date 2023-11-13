@@ -35,10 +35,10 @@ public final class SearchSongsPlayClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        searchSongsAdapter.searchSongs.f4949d = f5865b;
+        searchSongsAdapter.searchSongs.songName = f5865b;
         searchSongsAdapter.searchSongs.songID = songID;
-        searchSongsAdapter.searchSongs.f4954i = f5867d;
-        searchSongsAdapter.searchSongs.f4953h = f5868e;
+        searchSongsAdapter.searchSongs.topScore = f5867d;
+        searchSongsAdapter.searchSongs.degree = f5868e;
         new SearchSongsPlayTask(searchSongsAdapter.searchSongs, intent).execute();
     }
 }

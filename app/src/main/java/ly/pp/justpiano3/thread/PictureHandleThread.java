@@ -46,10 +46,10 @@ public final class PictureHandleThread extends Thread {
             String str = map.keySet().iterator().next();
             ImageView imageView = map.remove(str);
             if (imageView.getTag().equals(str)) {
-                Bitmap a = pictureHandle.m3938b(str);
-                pictureHandle.map.put(str, new SoftReference<>(a));
-                if (str == imageView.getTag() && a != null) {
-                    pictureHandle.handler.post(() -> imageView.setImageBitmap(a));
+                Bitmap bitmap = pictureHandle.m3938b(str);
+                pictureHandle.map.put(str, new SoftReference<>(bitmap));
+                if (str == imageView.getTag() && bitmap != null) {
+                    pictureHandle.handler.post(() -> imageView.setImageBitmap(bitmap));
                 }
             }
             if (map.isEmpty() && pictureHandle.f5083a) {

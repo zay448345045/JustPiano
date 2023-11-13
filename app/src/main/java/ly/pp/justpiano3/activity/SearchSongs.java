@@ -39,28 +39,28 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
     public JPApplication jpapplication;
     public LayoutInflater layoutinflater;
     public int length = 0;
-    public String f4948c = "";
-    public String f4949d = "";
+    public String keywords = "";
+    public String songName = "";
     public String songID;
     public ListView songsListView;
     public JPProgressBar jpprogressBar;
-    public double f4953h;
-    public int f4954i;
+    public double degree;
+    public int topScore;
     public int headType = 0;
     public PictureHandle pictureHandle;
     public Handler searchSongsHandler;
-    private TextView keywords;
-    private Bitmap nailface = null;
+    private TextView keywordsTextView;
+    private Bitmap nailFace = null;
 
-    public Bitmap m3831a(Context context) {
+    public Bitmap loadNailFace(Context context) {
         try {
-            if (nailface == null) {
-                nailface = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
+            if (nailFace == null) {
+                nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return nailface;
+        return nailFace;
     }
 
     private List<Map<String, Object>> m3834a(String str) {
@@ -159,8 +159,8 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.ol_search_b) {
-            f4948c = keywords.getText().toString();
-            if (f4948c.isEmpty()) {
+            keywords = keywordsTextView.getText().toString();
+            if (keywords.isEmpty()) {
                 Toast.makeText(this, "请输入需要搜索的关键词!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -176,7 +176,7 @@ public class SearchSongs extends Activity implements Callback, OnClickListener {
         setContentView(R.layout.ol_search_songs);
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         layoutinflater = LayoutInflater.from(this);
-        keywords = findViewById(R.id.ol_keywords);
+        keywordsTextView = findViewById(R.id.ol_keywords);
         findViewById(R.id.ol_search_b).setOnClickListener(this);
         jpprogressBar = new JPProgressBar(this);
         songsListView = findViewById(R.id.ol_search_list);

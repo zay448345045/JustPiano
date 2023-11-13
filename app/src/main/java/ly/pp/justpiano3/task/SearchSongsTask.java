@@ -27,7 +27,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         String s = "";
-        if (!searchSongs.get().f4948c.isEmpty()) {
+        if (!searchSongs.get().keywords.isEmpty()) {
             String str;
             String str2;
             if (searchSongs.get().headType == 6) {
@@ -41,7 +41,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             FormBody formBody = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", str2)
-                    .add("keywords", searchSongs.get().f4948c)
+                    .add("keywords", searchSongs.get().keywords)
                     .add("user", searchSongs.get().jpapplication.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
@@ -81,7 +81,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             searchSongs.get().jpprogressBar.cancel();
         } else if (str.equals("[]")) {
             searchSongs.get().jpprogressBar.cancel();
-            Toast.makeText(searchSongs.get(), "没有找到与[" + searchSongs.get().f4948c + "]相关的信息", Toast.LENGTH_SHORT).show();
+            Toast.makeText(searchSongs.get(), "没有找到与[" + searchSongs.get().keywords + "]相关的信息", Toast.LENGTH_SHORT).show();
         } else {
             searchSongs.get().jpprogressBar.cancel();
             Toast.makeText(searchSongs.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();

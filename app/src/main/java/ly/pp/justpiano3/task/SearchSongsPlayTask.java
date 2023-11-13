@@ -80,10 +80,10 @@ public final class SearchSongsPlayTask {
             OLMelodySelect.songBytes = songBytes;
             intent.putExtra("head", 1);
             intent.putExtra("songBytes", songBytes);
-            intent.putExtra("songName", searchSongs.get().f4949d);
+            intent.putExtra("songName", searchSongs.get().songName);
             intent.putExtra("songID", searchSongs.get().songID);
-            intent.putExtra("topScore", searchSongs.get().f4954i);
-            intent.putExtra("degree", searchSongs.get().f4953h);
+            intent.putExtra("topScore", searchSongs.get().topScore);
+            intent.putExtra("degree", searchSongs.get().degree);
             searchSongs.get().startActivity(intent);
             searchSongs.get().jpprogressBar.cancel();
         });

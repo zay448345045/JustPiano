@@ -54,7 +54,7 @@ public final class SearchPeopleAdapter extends BaseAdapter {
         ImageView imageView = view.findViewById(R.id.user_face);
         ((TextView) view.findViewById(R.id.ol_position_top)).setText(String.valueOf(i));
         imageView.setTag(peopleList.get(i).get("faceID").toString());
-        searchSongs.pictureHandle.mo3027a(imageView, searchSongs.m3831a(searchSongs));
+        searchSongs.pictureHandle.mo3027a(imageView, searchSongs.loadNailFace(searchSongs));
         String str = peopleList.get(i).get("userName").toString();
         textView.setText(str);
         ImageView imageView2 = view.findViewById(R.id.ol_user_sex);

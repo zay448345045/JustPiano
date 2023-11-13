@@ -5,6 +5,8 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
+import androidx.annotation.NonNull;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -77,7 +79,7 @@ public class NettyUtil {
 
         mHandler = new Handler(mHandlerThread.getLooper()) {
             @Override
-            public void handleMessage(Message msg) {
+            public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case NETTY_INIT:
@@ -182,14 +184,6 @@ public class NettyUtil {
         }
         try {
             return mChannelFuture.channel().close().sync();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ChannelFuture disconnect() {
-        try {
-            return mChannelFuture.channel().disconnect().sync();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

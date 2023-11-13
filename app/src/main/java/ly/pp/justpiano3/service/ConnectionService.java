@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
@@ -102,10 +101,8 @@ public class ConnectionService extends Service {
         nettyUtil = new NettyUtil(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(@NonNull SocketChannel socketChannel) throws Exception {
-                // 建立管道
-                ChannelPipeline channelPipeline = socketChannel.pipeline();
                 // 添加相关编码器，解码器，处理器等
-                channelPipeline
+                socketChannel.pipeline()
                         // 入站处理器执行顺序是从上往下看，出站处理器执行顺序是从下往上
                         // 处理器从收到数据包到发送数据包的顺序，看注释的数字序号
                         // 1.解析服务端在包头添加的数据包长度（防止粘包）
