@@ -283,7 +283,7 @@ class WaterfallView @JvmOverloads constructor(
     }
 
     /**
-     * 补帧，若目前瀑布流没有在连续绘制，补充绘制一帧
+     * 强制补帧，若目前瀑布流没有在持续绘制，则补充绘制一帧
      */
     fun doDrawFrame() {
         drawNotesThread?.canvasDraw = true
@@ -731,7 +731,8 @@ class WaterfallView @JvmOverloads constructor(
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        drawNotesThread?.canvasDraw = true
+        // 后台切换到前台时，强制补一帧
+        doDrawFrame()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -739,6 +740,6 @@ class WaterfallView @JvmOverloads constructor(
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        drawNotesThread?.canvasDraw = false
+        // nothing
     }
 }

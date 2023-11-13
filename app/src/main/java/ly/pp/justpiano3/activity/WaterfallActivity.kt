@@ -163,7 +163,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 }
             }
         }
-        // 补帧
+        // 强制补帧
         waterfallView.doDrawFrame()
     }
 
