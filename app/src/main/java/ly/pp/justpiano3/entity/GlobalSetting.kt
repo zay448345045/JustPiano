@@ -235,9 +235,12 @@ object GlobalSetting {
     fun loadSettings(context: Context, online: Boolean) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         skinName = sharedPreferences.getString("skin_list", "original").toString()
-        skinName = if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)
+        skinName =
+            if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)
         soundName = sharedPreferences.getString("sound_list", "original").toString()
-        soundName = if (soundName == "original") "默认音源" else soundName.substring(soundName.lastIndexOf('/') + 1)
+        soundName = if (soundName == "original") "默认音源" else soundName.substring(
+            soundName.lastIndexOf('/') + 1
+        )
         if (online) {
             tempSpeed = 1f
             autoPlay = true
@@ -268,25 +271,20 @@ object GlobalSetting {
         waterfallSongSpeed = sharedPreferences.getString("waterfall_song_speed", "1.0")!!.toFloat()
         waterfallDownSpeed = sharedPreferences.getString("waterfall_down_speed", "0.8")!!.toFloat()
         waterfallBackgroundPlay = sharedPreferences.getBoolean("waterfall_background_play", false)
-        waterfallLeftHandColor = sharedPreferences.getInt(
-            "waterfall_left_hand_color",
-            0xFF2BBBFB.toInt()
-        )
-        waterfallRightHandColor = sharedPreferences.getInt(
-            "waterfall_right_hand_color",
-            0xFFFF802D.toInt()
-        )
-        waterfallFreeStyleColor = sharedPreferences.getInt(
-            "waterfall_free_style_color",
-            0xFFFFFF00.toInt()
-        )
+        waterfallLeftHandColor =
+            sharedPreferences.getInt("waterfall_left_hand_color", 0xFF2BBBFB.toInt())
+        waterfallRightHandColor =
+            sharedPreferences.getInt("waterfall_right_hand_color", 0xFFFF802D.toInt())
+        waterfallFreeStyleColor =
+            sharedPreferences.getInt("waterfall_free_style_color", 0xFFFFFF00.toInt())
         saveChatRecord = sharedPreferences.getBoolean("save_chats", false)
         showChatTime = sharedPreferences.getBoolean("chats_time_show", false)
         showChatTimeModes = sharedPreferences.getString("chats_time_show_modes", "HH:mm")!!
         showNotification = sharedPreferences.getBoolean("show_notification", false)
         keyboardOctaveTagType = sharedPreferences.getString("octave_tag_type", "0")!!.toInt()
         keyboardRealtime = sharedPreferences.getBoolean("keyboard_realtime", true)
-        waterfallOnlineAlpha = sharedPreferences.getString("online_waterfall_alpha", "100")!!.toInt()
+        waterfallOnlineAlpha =
+            sharedPreferences.getString("online_waterfall_alpha", "100")!!.toInt()
         forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
         waterfallOctaveLine = sharedPreferences.getBoolean("waterfall_octave_line", true)
     }

@@ -120,7 +120,7 @@ public class ConnectionService extends Service {
                         // 6.将protobuf DTO对象序列化为数据包字节数组
                         .addLast(new ProtobufEncoder())
                         // 5.心跳包发送，参数writerIdleTime指空闲多少秒之后发一个心跳包给服务器
-                        .addLast(new IdleStateHandler(0, 7, 0, TimeUnit.SECONDS))
+                        .addLast(new IdleStateHandler(0, 6, 0, TimeUnit.SECONDS))
                         // 4.protobuf对象进行java代码处理，在channelRead0方法中
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override

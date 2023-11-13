@@ -28,9 +28,11 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     private val floatNumber: Boolean
     private val defaultValue: String
     private var value: String? = null
+    private var message: String? = null
 
     init {
         suffix = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "text")
+        message = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "dialogMessage")
         defaultValue = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "defaultValue")
         // 获取自定义属性的最大和最小值
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference)
@@ -44,12 +46,17 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         val layout = LinearLayout(context)
         layout.orientation = LinearLayout.VERTICAL
         layout.setPadding(6, 6, 6, 60)
-        valueText = TextView(context)
-        valueText!!.gravity = Gravity.CENTER_HORIZONTAL
-        valueText!!.textSize = 22f
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        if (!message.isNullOrEmpty()) {
+            val messageText = TextView(context)
+            messageText.text = message
+            layout.addView(messageText, params)
+        }
+        valueText = TextView(context)
+        valueText!!.gravity = Gravity.CENTER_HORIZONTAL
+        valueText!!.textSize = 22f
         layout.addView(valueText, params)
         seekBar = SeekBar(context)
         seekBar!!.setOnSeekBarChangeListener(this)

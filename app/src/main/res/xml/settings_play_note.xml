@@ -7,6 +7,7 @@
             android:dialogTitle="音块速率"
             android:key="down_speed"
             android:summary="设置音块的滑落速度，会影响弹奏难度，值越大，速度越快，可根据个人习惯进行调整"
+            android:dialogMessage="中：0.5 快：0.75 很快：1 超快：1.5 神快：3"
             android:title="音块速率"
             app:floatNumber="true"
             app:maxValue="5.5"
