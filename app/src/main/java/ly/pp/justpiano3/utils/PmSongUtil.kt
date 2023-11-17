@@ -36,7 +36,15 @@ object PmSongUtil {
     /**
      * pm时间间隔过长时，填充的空音符数组
      */
-    private val PM_DEFAULT_FILLED_DATA = byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
+    private val PM_DEFAULT_EMPTY_FILLED_DATA =
+        byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
+
+    fun isPmDefaultEmptyFilledData(pmSongData: PmSongData, index: Int): Boolean {
+        return pmSongData.tickArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[0]
+                && pmSongData.trackArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[1]
+                && pmSongData.pitchArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[2]
+                && pmSongData.volumeArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[3]
+    }
 
     fun parsePmDataByFilePath(context: Context, filePath: String): PmSongData? {
         val inputStream: InputStream = try {
@@ -186,7 +194,7 @@ object PmSongUtil {
                 var intervalTime = (playTime - lastNotePlayTime).toInt()
                 // 若时间间隔过高，防止byte字节溢出，则需进行拆解（先循环填充空音符的时间间隔，之后填充剩余的时间间隔）
                 while (intervalTime > PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED) {
-                    fileOutputStream.write(PM_DEFAULT_FILLED_DATA)
+                    fileOutputStream.write(PM_DEFAULT_EMPTY_FILLED_DATA)
                     intervalTime -= PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED
                 }
                 // 写入pm音符数据，元素依次为：时间间隔/全局速度、左右手、音高、力度

@@ -241,6 +241,10 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                 val volume = it.volumeArray[i]
                 // 计算音符播放的累计时间
                 totalTime += it.tickArray[i] * it.globalSpeed
+                // 用于延时的空音符直接跳过
+                if (PmSongUtil.isPmDefaultEmptyFilledData(it, i)) {
+                    continue
+                }
                 val leftHand = it.trackArray[i] > 0
                 // 确定瀑布流音符长条的左侧和右侧的坐标值，根据钢琴键盘view中的琴键获取横坐标
                 val (left, right) = WaterfallUtil.convertToWaterfallWidth(keyboardView!!, pitch)
