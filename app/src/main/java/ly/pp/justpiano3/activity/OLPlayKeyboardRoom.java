@@ -509,6 +509,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 case MotionEvent.ACTION_DOWN:
                     reSize = true;
                     view.setPressed(true);
+                    waterfallView.setPressed(true);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float weight = event.getRawY() / (playerLayout.getHeight() + keyboardLayout.getHeight());
@@ -528,9 +529,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 case MotionEvent.ACTION_CANCEL:
                     reSize = false;
                     view.setPressed(false);
-                    RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
-                    waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
-                    waterfallView.setLayoutParams(waterfallViewLayoutParams);
+                    waterfallView.setPressed(false);
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) playerLayout.getLayoutParams();
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);

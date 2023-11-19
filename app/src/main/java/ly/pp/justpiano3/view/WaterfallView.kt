@@ -199,6 +199,17 @@ class WaterfallView @JvmOverloads constructor(
         // 初始化音符状态
         noteStatus = arrayOfNulls(this.waterfallNotes.size)
         Arrays.fill(noteStatus, NoteStatus.INIT)
+        // 初始化绘制线程，根据view的高度确定绘制范围参数
+        drawNotesThread = DrawNotesThread()
+        buildShowingRectWithWidthAndHeight(width, height)
+        // 开启绘制线程
+        drawNotesThread!!.start()
+    }
+
+    /**
+     * 根据宽度和高度确定绘制范围
+     */
+    private fun buildShowingRectWithWidthAndHeight(width: Int, height: Int) {
         // 计算曲谱总进度 = 所有音块（其实是最后一个音块）上边界的最大值 + view的高度（预留最后一个音块落下时的时间）
         totalProgress = (this.waterfallNotes.maxOfOrNull { it.top } ?: 0f) + height
         // 初始化背景图的绘制范围
@@ -208,9 +219,9 @@ class WaterfallView @JvmOverloads constructor(
             RectF(0f, 0f, width.toFloat(), progressBarBaseImage!!.height.toFloat())
         // 初始化进度条的绘制坐标，初始情况下，进度条宽度为0
         progressBarRect = RectF(0f, 0f, 0f, progressBarImage!!.height.toFloat())
-        // 开启绘制线程
-        drawNotesThread = DrawNotesThread()
-        drawNotesThread!!.start()
+        // 初始化音块缓冲区绘制范围
+        drawNotesThread?.notesBufferBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        drawNotesThread?.notesBufferCanvas = Canvas(drawNotesThread?.notesBufferBitmap!!)
     }
 
     /**
@@ -459,12 +470,12 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 音块绘制缓冲bitmap
          */
-        var notesBufferBitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        lateinit var notesBufferBitmap: Bitmap
 
         /**
          * 音块绘制缓冲canvas
          */
-        var notesBufferCanvas = Canvas(notesBufferBitmap)
+        lateinit var notesBufferCanvas: Canvas
 
         /**
          * 是否执行绘制
@@ -532,13 +543,13 @@ class WaterfallView @JvmOverloads constructor(
                 val noteCount = drawNotesOnBufferBitmap(notesBufferCanvas, notePaint)
                 // 判断有音块，且view为显示状态，且瀑布流未暂停也未滑动时才实际执行绘制
                 // 如果第一次发现无音块时，或第一次发现view被显示时，也绘制且只绘制一帧，进行补帧，随后停止
-                if (canvasDraw || (noteCount > 0 && visibility == VISIBLE && (isScrolling || !isPause))) {
+                if (canvasDraw || isPressed || (noteCount > 0 && visibility == VISIBLE && (isScrolling || !isPause))) {
                     // 执行屏幕绘制，在锁canvas绘制期间，尽可能执行最少的代码逻辑操作，保证绘制性能
                     // 更新变量的值，当绘制方法返回false时表示没有绘制成功，就接着再给绘制的机会
                     canvasDraw = !doDrawWaterfall(alphaPaint, octaveLinePaint, octaveLinePath)
                 } else {
                     canvasDraw = visibility != VISIBLE || noteCount > 0
-                    // 未触发绘制，避免死循环消耗太多CPU，按刷新率约60算，整体休眠一帧的时间
+                    // 未触发绘制，避免死循环消耗太多CPU，按刷新率60算，整体休眠约一帧的时间
                     sleep(10)
                 }
                 // 避免死循环消耗太多CPU，休眠一个音块的最低声音单位的时间
@@ -731,6 +742,15 @@ class WaterfallView @JvmOverloads constructor(
                     noteStatus[i] = NoteStatus.APPEAR
                 }
             }
+        }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        // view的宽高改变，执行重新计算背景图等绘制范围，然后强制补帧
+        if (drawNotesThread?.isRunning == true) {
+            buildShowingRectWithWidthAndHeight(w, h)
+            holder.setFixedSize(w, h)
         }
     }
 
