@@ -223,11 +223,13 @@ object GlobalSetting {
      * 是否强制开启延音踏板
      */
     var forceEnableSustainPedal: Boolean = false
+        private set
 
     /**
      * 是否显示瀑布流八度虚线
      */
     var waterfallOctaveLine: Boolean = true
+        private set
 
     /**
      * 从sharedPreferences获取设置

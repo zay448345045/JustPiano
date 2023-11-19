@@ -69,7 +69,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
-    public Integer keyboardNoteDownColor;
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long realTimeLastMessageSendTime;
@@ -168,7 +167,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
                     int colorIndex = bundle1.getInt("IV");
-                    keyboardNoteDownColor = colorIndex == 0 ? null : ColorUtil.getUserColorByUserColorIndex(this, colorIndex);
+                    keyboardView.setNoteOnColor(colorIndex == 0 ? null : ColorUtil.getUserColorByUserColorIndex(this, colorIndex));
                     olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(MidiDeviceUtil.hasMidiDeviceConnected());
                 }
                 playerList.add(bundle1);
@@ -182,7 +181,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 MidiDeviceUtil.setMidiConnectionListener(this);
             }
-            openNotesSchedule();
+            if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+                openNotesSchedule();
+            }
             waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
         }
         RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
@@ -299,6 +300,11 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
             waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
             waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
+            if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+                stopNotesSchedule();
+            } else {
+                openNotesSchedule();
+            }
         }
     }
 
@@ -346,8 +352,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 if (hasAnotherUser()) {
                     broadNote(pitch, volume);
                 }
-                onlineWaterfallKeyDownHandle(pitch, volume, keyboardNoteDownColor == null ?
-                        GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardNoteDownColor);
+                onlineWaterfallKeyDownHandle(pitch, volume, keyboardView.getNoteOnColor() == null ?
+                        GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
             }
 
             @Override
@@ -430,7 +436,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     protected void onStart() {
         super.onStart();
-        openNotesSchedule();
+        if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+            openNotesSchedule();
+        }
     }
 
     @Override
@@ -471,12 +479,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 }
                 blinkView(roomPositionSub1);
             }
-            keyboardView.fireKeyDown(pitch, volume, keyboardNoteDownColor);
+            keyboardView.fireKeyDown(pitch, volume, keyboardView.getNoteOnColor());
             if (hasAnotherUser()) {
                 broadNote(pitch, volume);
             }
-            onlineWaterfallKeyDownHandle(pitch, volume, keyboardNoteDownColor == null ?
-                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardNoteDownColor);
+            onlineWaterfallKeyDownHandle(pitch, volume, keyboardView.getNoteOnColor() == null ?
+                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
         } else {
             if (roomPositionSub1 >= 0) {
                 if (!olKeyboardStates[roomPositionSub1].getMuted()) {
@@ -570,7 +578,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             // 未初始化楼号，房间未完全加载完成，不开定时器
             return;
         }
-        keyboardView.setNoteOnColor(keyboardNoteDownColor);
         if (noteScheduledExecutor == null) {
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {
