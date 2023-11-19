@@ -371,6 +371,8 @@ class WaterfallView @JvmOverloads constructor(
                     resumePlay()
                     // 清空正在滑动的标记为false
                     isScrolling = false
+                    // 强制补帧
+                    doDrawFrame()
                 } else {
                     // 如果只是通过点按（没有滑动）导致触发的手指抬起操作，则触发点击事件，不做任何操作
                     performClick()
@@ -521,6 +523,8 @@ class WaterfallView @JvmOverloads constructor(
                 // 如果不标记暂停，progress在曲谱播放结束之后也一直增大，在播放结束后往回拖进度条，可能拉很长时间进度条都没到100%之前
                 if (waterfallNotes.isNotEmpty() && progress > totalProgress) {
                     isPause = true
+                    // 强制补帧
+                    doDrawFrame()
                 }
                 // 检测并调用瀑布流音块监听
                 handleWaterfallNoteListener()
