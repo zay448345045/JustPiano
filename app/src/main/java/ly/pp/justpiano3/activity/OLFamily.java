@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -301,10 +300,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                     @Override
                     public int compare(Map<String, String> map1, Map<String, String> map2) {
                         try {
-                            Date date1 = dateFormat.parse(map1.get("D"));
-                            Date date2 = dateFormat.parse(map2.get("D"));
-                            // 使用日期的比较方式进行降序排序
-                            return date2.compareTo(date1);
+                            return dateFormat.parse(map2.get("D")).compareTo(dateFormat.parse(map1.get("D")));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

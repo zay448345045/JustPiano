@@ -45,11 +45,7 @@ public class OLBaseActivity extends ComponentActivity {
     }
 
     public final void outLine() {
-        if (jpprogressBar != null && jpprogressBar.isShowing()) {
-            jpprogressBar.setText("");
-            jpprogressBar.setCancelable(true);
-            jpprogressBar.dismiss();
-        }
+        progressBarDismissAndReInit();
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("提示");
         jpDialogBuilder.setMessage("非常抱歉,可能由于网络质量不稳定，服务器未能响应，点击确定回到到联网主界面重新登录");
@@ -60,6 +56,14 @@ public class OLBaseActivity extends ComponentActivity {
             OLBaseActivity.returnMainMode(OLBaseActivity.this);
         });
         jpDialogBuilder.buildAndShowDialog();
+    }
+
+    public final void progressBarDismissAndReInit() {
+        if (jpprogressBar != null && jpprogressBar.isShowing()) {
+            jpprogressBar.setText("");
+            jpprogressBar.setCancelable(true);
+            jpprogressBar.dismiss();
+        }
     }
 
     @Override
