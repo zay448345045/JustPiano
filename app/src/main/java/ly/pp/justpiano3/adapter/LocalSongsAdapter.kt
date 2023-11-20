@@ -23,7 +23,10 @@ import ly.pp.justpiano3.thread.SongPlay
 import ly.pp.justpiano3.view.ScrollText
 import java.io.File
 
-class LocalSongsAdapter(private val melodySelect: MelodySelect, private val songsListView: RecyclerView) :
+class LocalSongsAdapter(
+    private val melodySelect: MelodySelect,
+    private val songsListView: RecyclerView
+) :
     PagedListAdapter<Song, LocalSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -34,13 +37,20 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         // 绑定数据到ViewHolder
-        getItem(position)?.let { holder.bindData(it) }
+        getItem(position)?.let { holder.bindData(position, it) }
     }
 
-    override fun onCurrentListChanged(previousList: PagedList<Song>?, currentList: PagedList<Song>?) {
+    override fun onCurrentListChanged(
+        previousList: PagedList<Song>?,
+        currentList: PagedList<Song>?
+    ) {
         super.onCurrentListChanged(previousList, currentList)
         // 当数据列表发生更改时，滚动到第一个位置
         songsListView.scrollToPosition(0)
+    }
+
+    fun getSongByPosition(position: Int): Song? {
+        return getItem(position)
     }
 
     inner class SongViewHolder(songView: View) : RecyclerView.ViewHolder(songView) {
@@ -57,7 +67,7 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
         private val leftHandDegreeRatingBar: RatingBar
         private val songNameScrollText: ScrollText
 
-        fun bindData(song: Song) {
+        fun bindData(position: Int, song: Song) {
             playImageView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
             listenImageView.setOnClickListener {
                 if (song.filePath == melodySelect.songsPath && SongPlay.isPlaying()) {
@@ -66,8 +76,10 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
                     return@setOnClickListener
                 }
                 melodySelect.songsPath = song.filePath
+                melodySelect.songsPositionInListView = position
                 SongPlay.startPlay(melodySelect, song.filePath, 0)
-                Toast.makeText(melodySelect, "开始播放:《" + song.name + "》", Toast.LENGTH_SHORT).show()
+                Toast.makeText(melodySelect, "开始播放:《" + song.name + "》", Toast.LENGTH_SHORT)
+                    .show()
             }
             waterFallImageView.setOnClickListener {
                 SongPlay.stopPlay()
@@ -90,8 +102,10 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
                     val songDao = JPApplication.getSongDatabase().songDao()
                     melodySelect.pagedListLiveData.removeObservers(melodySelect)
                     songDao.updateFavoriteSong(song.filePath, if (song.isFavorite == 0) 1 else 0)
-                    val songsDataSource = songDao.getLocalSongsWithDataSource(0, melodySelect.orderPosition)
-                    melodySelect.pagedListLiveData = songDao.getPageListByDatasourceFactory(songsDataSource)
+                    val songsDataSource =
+                        songDao.getLocalSongsWithDataSource(0, melodySelect.orderPosition)
+                    melodySelect.pagedListLiveData =
+                        songDao.getPageListByDatasourceFactory(songsDataSource)
                     melodySelect.pagedListLiveData.observe(melodySelect) { pagedList: PagedList<Song>? ->
                         this@LocalSongsAdapter.submitList(pagedList)
                     }
@@ -108,8 +122,9 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
             songNameScrollText.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
             val rightHandScore = song.rightHandHighScore
             val leftHandScore = song.leftHandHighScore
-            highScoreTextView.text = "右手最高:" + (if (rightHandScore <= 0) "0" else rightHandScore.toString()) +
-                    " 左手最高: " + if (leftHandScore <= 0) "0" else leftHandScore.toString()
+            highScoreTextView.text =
+                "右手最高:" + (if (rightHandScore <= 0) "0" else rightHandScore.toString()) +
+                        " 左手最高: " + if (leftHandScore <= 0) "0" else leftHandScore.toString()
             val length = song.length
             val str1 = if (length / 60 >= 10) "" + length / 60 else "0" + length / 60
             val str2 = if (length % 60 >= 10) "" + length % 60 else "0" + length % 60
@@ -121,7 +136,8 @@ class LocalSongsAdapter(private val melodySelect: MelodySelect, private val song
             rightHandDegreeRatingBar.isClickable = false
             rightHandDegreeRatingBar.rating = rightHandDegree / 2
             val leftHandDegree = song.leftHandDegree
-            leftHandDegreeTextView.text = if (leftHandDegree.toInt() == 10) " 左手 10" else " 左手 $leftHandDegree"
+            leftHandDegreeTextView.text =
+                if (leftHandDegree.toInt() == 10) " 左手 10" else " 左手 $leftHandDegree"
             leftHandDegreeRatingBar.numStars = 5
             leftHandDegreeRatingBar.isClickable = false
             leftHandDegreeRatingBar.rating = leftHandDegree / 2

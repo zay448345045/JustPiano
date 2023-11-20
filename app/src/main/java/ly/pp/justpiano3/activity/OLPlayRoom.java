@@ -626,6 +626,7 @@ public final class OLPlayRoom extends OLRoomActivity {
 
     @Override
     protected void onDestroy() {
+        SongPlay.INSTANCE.setCallBack(null);
         super.onDestroy();
     }
 
@@ -633,6 +634,9 @@ public final class OLPlayRoom extends OLRoomActivity {
      * 根据曲谱名称进行发消息播放
      */
     public void updateNewSongPlay(String songFilePath) {
+        if (StringUtil.isNullOrEmpty(songFilePath)) {
+            return;
+        }
         OnlinePlaySongDTO.Builder playSongBuilder = OnlinePlaySongDTO.newBuilder();
         playSongBuilder.setTune(tune);
         playSongBuilder.setSongPath(songFilePath.substring(6, songFilePath.length() - 3));

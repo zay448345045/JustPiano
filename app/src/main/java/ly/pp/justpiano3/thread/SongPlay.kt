@@ -79,11 +79,8 @@ object SongPlay {
                 playingPitchMap.values.forEach { SoundEngineUtil.stopPlaySound((it)) }
                 playingPitchMap.clear()
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
-                if (!nextSongFilePath.isNullOrEmpty()) {
-                    // 如果有下一首歌曲要播放，中间需要一小段停歇的间隔
-                    delay(1000)
-                    callBack?.onSongChangeNext(nextSongFilePath)
-                }
+                delay(1000)
+                callBack?.onSongChangeNext(nextSongFilePath)
             }
         }
     }
@@ -140,6 +137,6 @@ object SongPlay {
         /**
          * This will be called when song changes to the next and ready to start playing
          */
-        fun onSongChangeNext(songFilePath: String)
+        fun onSongChangeNext(songFilePath: String?)
     }
 }

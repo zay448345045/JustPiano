@@ -52,6 +52,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.SongData;
+import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
@@ -86,6 +87,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private ListView categoryListView;
     public LiveData<PagedList<Song>> pagedListLiveData;
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
+    public int songsPositionInListView;
 
     protected final void buildDoNotShowDialogAndShow(String message, int i) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -337,6 +339,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+        SongPlay.INSTANCE.setCallBack(this::autoPlayNextSong);
         jpprogressBar = new JPProgressBar(this);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);
@@ -416,9 +420,24 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     }
 
+    private void autoPlayNextSong(String songPath) {
+        if (isAutoPlayNext.isChecked()) {
+            LocalSongsAdapter localSongsAdapter = (LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter()));
+            if (songsPositionInListView >= 0 && songsPositionInListView < localSongsAdapter.getItemCount() - 1) {
+                Song song = localSongsAdapter.getSongByPosition(songsPositionInListView + 1);
+                if (song != null) {
+                    songsPath = song.getFilePath();
+                    songsPositionInListView++;
+                    SongPlay.INSTANCE.startPlay(this, song.getFilePath(), 0);
+                }
+            }
+        }
+    }
+
     @Override
     protected void onDestroy() {
         SongPlay.INSTANCE.stopPlay();
+        SongPlay.INSTANCE.setCallBack(null);
         super.onDestroy();
     }
 
@@ -459,7 +478,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         return totalSongInfoMutableLiveData;
     }
 
-    private void songsSort(int order){
+    private void songsSort(int order) {
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         DataSource.Factory<Integer, Song> songsDataSource = songDao.getLocalSongsWithDataSource(categoryPosition, order);
         pagedListLiveData.removeObservers(this);
