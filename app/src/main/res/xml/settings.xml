@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="弹奏、音块及界面">
-        <ly.pp.justpiano3.view.SkinListPreference
+        <ly.pp.justpiano3.view.preference.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
             android:summary="当前皮肤：默认皮肤"
@@ -37,7 +37,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="键盘、声音及MIDI设备">
-        <ly.pp.justpiano3.view.SoundListPreference
+        <ly.pp.justpiano3.view.preference.SoundListPreference
             android:dialogTitle="设置管理音源"
             android:key="sound_list"
             android:summary="当前音源：默认音源"
@@ -86,7 +86,7 @@
             android:summaryOn="&lt;打开&gt;检测到每个按键操作时，立即广播数据，低延迟，高能耗，适合多人合奏"
             android:title="联网键盘协奏模式" />
 
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="100"
             android:dialogTitle="联网模式瀑布流背景透明度"
             android:key="online_waterfall_alpha"

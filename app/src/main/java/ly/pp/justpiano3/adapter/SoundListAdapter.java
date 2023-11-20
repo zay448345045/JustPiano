@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.ChangeSoundClick;
-import ly.pp.justpiano3.view.SoundListPreference;
+import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SoundListAdapter extends BaseAdapter {
     public final SoundListPreference soundListPreference;

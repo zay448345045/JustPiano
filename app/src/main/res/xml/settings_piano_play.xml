@@ -8,7 +8,7 @@
             android:summaryOff="@string/b_s_open_2"
             android:summaryOn="@string/b_s_open_1"
             android:title="@string/b_s_open" />
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="0.8"
             android:dependency="@string/b_s_key"
             android:dialogTitle="@string/b_s_vol_title"
@@ -50,7 +50,7 @@
             android:summaryOff="键盘缩略图已关闭"
             android:summaryOn="键盘缩略图已打开"
             android:title="键盘缩略图" />
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="节拍比率(仅本地模式有效)"
             android:key="temp_speed"

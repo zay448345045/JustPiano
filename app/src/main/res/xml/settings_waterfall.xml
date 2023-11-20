@@ -2,7 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="瀑布流">
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.FilePickerPreference
+            android:defaultValue=""
+            android:key="waterfall_background_pic"
+            android:summary="瀑布流播放时展示的背景图片"
+            android:title="背景图" />
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="曲谱播放速度"
             android:key="waterfall_song_speed"
@@ -11,7 +16,7 @@
             app:floatNumber="true"
             app:maxValue="1.5"
             app:minValue="0.5" />
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="0.8"
             android:dialogTitle="音块移动速度"
             android:key="waterfall_down_speed"

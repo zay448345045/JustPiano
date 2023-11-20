@@ -301,7 +301,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 return;
             case R.id.lo_extra_func_midi_import:  // midi导入
                 menuPopupWindow.dismiss();
-                FilePickerUtil.openFileManager(this, false);
+                FilePickerUtil.openFileManager(this, false, null);
                 return;
             case R.id.lo_extra_func_data_export: // 数据导出
                 menuPopupWindow.dismiss();

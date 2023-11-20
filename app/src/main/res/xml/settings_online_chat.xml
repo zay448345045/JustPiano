@@ -29,7 +29,7 @@
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
             android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="15"
             android:dialogTitle="聊天字体大小"
             android:key="chats_text_size"

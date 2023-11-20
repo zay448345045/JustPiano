@@ -173,13 +173,7 @@ public class OnlineUtil {
                 autoReconnectCount = 0;
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (!olBaseActivity.jpprogressBar.isShowing()) {
-                        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
-                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
-                                + "点击取消");
-                        olBaseActivity.jpprogressBar.addClickableLink("点击取消", () -> {
-                            olBaseActivity.progressBarDismissAndReInit();
-                            OLBaseActivity.returnMainMode(olBaseActivity);
-                        });
+                        updateProgressBarText(olBaseActivity);
                         olBaseActivity.jpprogressBar.setCancelable(false);
                         olBaseActivity.jpprogressBar.show();
                     }
@@ -187,13 +181,7 @@ public class OnlineUtil {
             } else {
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (olBaseActivity.jpprogressBar.isShowing() && autoReconnectTime != null) {
-                        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
-                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
-                                + "点击取消");
-                        olBaseActivity.jpprogressBar.addClickableLink("点击取消", () -> {
-                            olBaseActivity.progressBarDismissAndReInit();
-                            OLBaseActivity.returnMainMode(olBaseActivity);
-                        });
+                        updateProgressBarText(olBaseActivity);
                     }
                 }, 0L);
             }
@@ -202,13 +190,7 @@ public class OnlineUtil {
                 outlineConnectionService(jpApplication);
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (olBaseActivity.jpprogressBar.isShowing()) {
-                        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
-                                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
-                                + "点击取消");
-                        olBaseActivity.jpprogressBar.addClickableLink("点击取消", () -> {
-                            olBaseActivity.progressBarDismissAndReInit();
-                            OLBaseActivity.returnMainMode(olBaseActivity);
-                        });
+                        updateProgressBarText(olBaseActivity);
                         onlineConnectionService(jpApplication);
                         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! do autoReconnect:"
                                 + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
@@ -219,6 +201,16 @@ public class OnlineUtil {
         } else {
             outLineAndDialog(jpApplication);
         }
+    }
+
+    private static void updateProgressBarText(OLBaseActivity olBaseActivity) {
+        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
+                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
+                + "点击取消");
+        olBaseActivity.jpprogressBar.addClickableLink("点击取消", () -> {
+            olBaseActivity.progressBarDismissAndReInit();
+            OLBaseActivity.returnMainMode(olBaseActivity);
+        });
     }
 
     public static void outLineAndDialog(JPApplication jpApplication) {

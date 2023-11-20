@@ -179,6 +179,20 @@ public class ImageLoadUtil {
         }
     }
 
+    public static Bitmap loadFileImage(String filePath) {
+        return loadFileImage(new File(filePath));
+    }
+
+    public static Bitmap loadFileImage(File file) {
+        Bitmap bitmap = null;
+        try (FileInputStream fis = new FileInputStream(file)) {
+            bitmap = BitmapFactory.decodeStream(fis);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
     public static void setBackground(Context context, String str, ViewGroup viewGroup) {
         if (viewGroup == null) {
             return;

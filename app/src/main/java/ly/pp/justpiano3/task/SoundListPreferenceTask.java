@@ -8,7 +8,7 @@ import java.io.File;
 import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.view.SoundListPreference;
+import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void> {
     private final SoundListPreference soundListPreference;

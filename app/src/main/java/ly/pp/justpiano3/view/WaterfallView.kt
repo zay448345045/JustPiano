@@ -15,6 +15,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import ly.pp.justpiano3.entity.GlobalSetting
 import ly.pp.justpiano3.entity.WaterfallNote
 import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.utils.ImageLoadUtil
@@ -173,7 +174,10 @@ class WaterfallView @JvmOverloads constructor(
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
-        backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
+        backgroundImage = ImageLoadUtil.loadFileImage(GlobalSetting.waterfallBackgroundPic)
+        if (backgroundImage == null) {
+            backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
+        }
         progressBarImage = ImageLoadUtil.loadSkinImage(context, "progress_bar")
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(context, "progress_bar_base")
         // 初始化自由演奏音符内存分配

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.ChangeSkinClick;
-import ly.pp.justpiano3.view.SkinListPreference;
+import ly.pp.justpiano3.view.preference.SkinListPreference;
 
 public final class SkinListAdapter extends BaseAdapter {
     public final SkinListPreference skinListPreference;

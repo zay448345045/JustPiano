@@ -1,25 +1,33 @@
 package ly.pp.justpiano3.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.preference.FilePickerPreference;
 
 public class SettingsMode extends PreferenceActivity {
 
     public static final int SETTING_MODE_CODE = 122;
 
     private static final Map<String, PreferenceFragment> preferenceFragmentMap = new HashMap<>();
+    private static final Map<String, FilePickerPreference> filePickerPreferenceMap = new HashMap<>();
 
     static {
         preferenceFragmentMap.put("settings_piano_play", new PianoPlaySettingsFragment());
@@ -96,6 +104,15 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_waterfall);
+            Preference waterfallBackgroundPicPreference = findPreference("waterfall_background_pic");
+            if (waterfallBackgroundPicPreference != null) {
+                waterfallBackgroundPicPreference.setSummary(
+                        GlobalSetting.INSTANCE.getWaterfallBackgroundPic().isEmpty()
+                                ? "默认背景图" : GlobalSetting.INSTANCE.getWaterfallBackgroundPic());
+                FilePickerPreference filePickerPreference = (FilePickerPreference) (waterfallBackgroundPicPreference);
+                filePickerPreference.setActivity(getActivity());
+                filePickerPreferenceMap.put("waterfall_background_pic", filePickerPreference);
+            }
         }
     }
 
@@ -120,6 +137,35 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);
+            if (fileList.size() != 1) {
+                return;
+            }
+            File file = fileList.get(0);
+            FilePickerPreference filePickerPreference = filePickerPreferenceMap.get(FilePickerUtil.extra);
+            if (filePickerPreference == null || file == null) {
+                return;
+            }
+            // 具体的文件选择项的文件格式校验，校验通过后执行存储
+            switch (filePickerPreference.getKey()) {
+                case "waterfall_background_pic":
+                    if (!file.exists() || (!file.getName().endsWith(".jpg")
+                            && !file.getName().endsWith("jpeg") && !file.getName().endsWith(".png"))) {
+                        Toast.makeText(this, "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            filePickerPreference.persistFilePath(file.getAbsolutePath());
         }
     }
 }

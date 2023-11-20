@@ -1,4 +1,4 @@
-package ly.pp.justpiano3.view
+package ly.pp.justpiano3.view.preference
 
 import android.app.AlertDialog
 import android.content.Context

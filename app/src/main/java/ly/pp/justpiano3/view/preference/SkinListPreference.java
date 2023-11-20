@@ -1,4 +1,4 @@
-package ly.pp.justpiano3.view;
+package ly.pp.justpiano3.view.preference;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -23,6 +23,7 @@ import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.view.JPProgressBar;
 
 public class SkinListPreference extends DialogPreference {
     public File skinFile;

@@ -10,7 +10,7 @@
             android:key="octave_tag_type"
             android:summary="设置钢琴键盘中按键下方展示的标签类型"
             android:title="钢琴键盘展示标签类型" />
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="触屏点击声音移调"
             android:key="keyboard_sound_tune"
@@ -19,7 +19,7 @@
             app:floatNumber="false"
             app:maxValue="6"
             app:minValue="-6" />
-        <ly.pp.justpiano3.view.SeekBarPreference
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="MIDI键盘移调"
             android:key="midi_keyboard_tune"

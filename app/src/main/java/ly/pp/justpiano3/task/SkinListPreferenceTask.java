@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Objects;
 
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.view.SkinListPreference;
+import ly.pp.justpiano3.view.preference.SkinListPreference;
 
 public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> {
     private final SkinListPreference skinListPreference;

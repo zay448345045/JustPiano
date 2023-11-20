@@ -15,7 +15,9 @@ public class FilePickerUtil {
 
     public static final int PICK_FILE_REQUEST_CODE = 110;
 
-    public static void openFileManager(Activity activity, boolean allowMultipleFiles) {
+    public static String extra;
+
+    public static void openFileManager(Activity activity, boolean allowMultipleFiles, String extra) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
@@ -34,7 +36,7 @@ public class FilePickerUtil {
         } else {
             chooserIntent = Intent.createChooser(intent, "Open file");
         }
-
+        FilePickerUtil.extra = extra;
         activity.startActivityForResult(chooserIntent, PICK_FILE_REQUEST_CODE);
     }
 
