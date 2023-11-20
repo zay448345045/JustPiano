@@ -20,11 +20,6 @@ import ly.pp.justpiano3.midi.MidiUtil;
 public class SoundEngineUtil {
 
     /**
-     * 聊天音效名称
-     */
-    public static final String CHAT_SOUND_FILE_NAME = "chat_b5.wav";
-
-    /**
      * 处于延音状态下的音符列表
      */
     private static final Map<Byte, Byte> sustainNotePitchMap = new ConcurrentHashMap<>();
@@ -97,10 +92,6 @@ public class SoundEngineUtil {
         triggerUpAll();
     }
 
-    public static void playChatSound() {
-        triggerDown(88, 127);
-    }
-
     public static void preloadSounds(Context context, int i) {
         try {
             Converter converter = new Converter();
@@ -128,21 +119,6 @@ public class SoundEngineUtil {
         dataStream.close();
     }
 
-    private static void loadChatWav(Context context) {
-        try {
-            AssetFileDescriptor assetFD = context.getResources().getAssets().openFd(CHAT_SOUND_FILE_NAME);
-            FileInputStream dataStream = assetFD.createInputStream();
-            int dataLen = dataStream.available();
-            byte[] dataBytes = new byte[dataLen];
-            dataStream.read(dataBytes, 0, dataLen);
-            loadWavAssetNative(dataBytes);
-            assetFD.close();
-            dataStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void reLoadOriginalSounds(Context context) {
         File dir = new File(context.getFilesDir(), "Sounds");
         if (dir.isDirectory()) {
@@ -166,7 +142,6 @@ public class SoundEngineUtil {
     }
 
     public static void afterLoadSounds(Context context) {
-        loadChatWav(context);
         setupAudioStreamNative(2, 44100);
     }
 

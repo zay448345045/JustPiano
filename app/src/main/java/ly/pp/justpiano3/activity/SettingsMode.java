@@ -111,7 +111,7 @@ public class SettingsMode extends PreferenceActivity {
                                 ? "默认背景图" : GlobalSetting.INSTANCE.getWaterfallBackgroundPic());
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (waterfallBackgroundPicPreference);
                 filePickerPreference.setActivity(getActivity());
-                filePickerPreferenceMap.put("waterfall_background_pic", filePickerPreference);
+                filePickerPreferenceMap.put(waterfallBackgroundPicPreference.getKey(), filePickerPreference);
             }
         }
     }
@@ -137,6 +137,15 @@ public class SettingsMode extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
+            Preference chatSoundFilePreference = findPreference("chats_sound_file");
+            if (chatSoundFilePreference != null) {
+                chatSoundFilePreference.setSummary(
+                        GlobalSetting.INSTANCE.getChatsSoundFile().isEmpty()
+                                ? "默认音效" : GlobalSetting.INSTANCE.getChatsSoundFile());
+                FilePickerPreference filePickerPreference = (FilePickerPreference) (chatSoundFilePreference);
+                filePickerPreference.setActivity(getActivity());
+                filePickerPreferenceMap.put(chatSoundFilePreference.getKey(), filePickerPreference);
+            }
         }
     }
 
@@ -157,8 +166,14 @@ public class SettingsMode extends PreferenceActivity {
             switch (filePickerPreference.getKey()) {
                 case "waterfall_background_pic":
                     if (!file.exists() || (!file.getName().endsWith(".jpg")
-                            && !file.getName().endsWith("jpeg") && !file.getName().endsWith(".png"))) {
+                            && !file.getName().endsWith(".jpeg") && !file.getName().endsWith(".png"))) {
                         Toast.makeText(this, "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case "chats_sound_file":
+                    if (!file.exists() || (!file.getName().endsWith(".wav") && !file.getName().endsWith(".mp3"))) {
+                        Toast.makeText(this, "请选择合法的wav或mp3格式文件", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     break;

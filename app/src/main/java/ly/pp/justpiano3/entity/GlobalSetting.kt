@@ -130,9 +130,15 @@ object GlobalSetting {
         private set
 
     /**
+     * 是否开启聊天音效
+     */
+    var chatsSound: Boolean = false
+        private set
+
+    /**
      * 聊天音效
      */
-    var chatSound: Boolean = false
+    var chatsSoundFile: String = ""
         private set
 
     /**
@@ -270,7 +276,8 @@ object GlobalSetting {
         roughLine = sharedPreferences.getString("rough_line", "1")!!.toInt()
         midiKeyboardTune = sharedPreferences.getString("midi_keyboard_tune", "0")!!.toInt()
         keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()
-        chatSound = sharedPreferences.getBoolean("chats_sound", false)
+        chatsSound = sharedPreferences.getBoolean("chats_sound", false)
+        chatsSoundFile = sharedPreferences.getString("chats_sound_file", "")!!
         notesDownSpeed = 3 / (sharedPreferences.getString("down_speed", "1")!!.toFloat())
         noteSize = sharedPreferences.getString("note_size", "1")!!.toFloat()
         noteDismiss = sharedPreferences.getBoolean("note_dismiss", false)

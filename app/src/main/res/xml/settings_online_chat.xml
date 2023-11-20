@@ -23,6 +23,11 @@
             android:summaryOff="&lt;关闭&gt; 在线接收到其他人聊天时关闭声音提醒"
             android:summaryOn="&lt;打开&gt; 在线接收到其他人聊天时打开声音提醒"
             android:title="聊天音效提醒" />
+        <ly.pp.justpiano3.view.preference.FilePickerPreference
+            android:defaultValue=""
+            android:key="chats_sound_file"
+            android:dependency="chats_sound"
+            android:title="选择聊天音效" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="save_chats"

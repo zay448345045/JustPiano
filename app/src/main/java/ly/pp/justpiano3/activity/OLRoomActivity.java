@@ -65,7 +65,7 @@ import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.SoundPlayer;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -403,8 +403,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         }
 
         // 聊天音效播放
-        if (GlobalSetting.INSTANCE.getChatSound() && !message.getData().getString("U").equals(jpapplication.getKitiName())) {
-            SoundEngineUtil.playChatSound();
+        if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(jpapplication.getKitiName())) {
+            SoundPlayer.playSound(this, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
 
         // 聊天记录存储
