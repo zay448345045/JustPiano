@@ -46,7 +46,7 @@ public class ImageLoadUtil {
     }
 
     public static void setFamilyImageBitmap(Context context, String familyId, ImageView familyImageView) {
-        if (!familyId.equals("0")) {
+        if (familyId != null && !familyId.equals("0")) {
             if (familyBitmapCacheMap.containsKey(familyId)) {
                 Bitmap bitmap = familyBitmapCacheMap.get(familyId);
                 if (bitmap == null) {

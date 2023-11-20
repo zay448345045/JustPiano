@@ -56,7 +56,7 @@ public final class FamilyHandler extends Handler {
                                 family.peopleList.add(hashMap);
                             }
                         }
-                        family.mo2907b(family.peopleListView, family.peopleList);
+                        family.bindFamilyPeopleListViewAdapter(family.peopleListView, family.peopleList);
                         family.declaration.setText("家族宣言:\n" + data.getString("D"));
                         family.info.setText("家族名称:" + data.getString("N")
                                 + "\n家族成立日期:" + data.getString("T")

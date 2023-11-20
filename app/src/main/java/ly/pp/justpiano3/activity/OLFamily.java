@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,8 +21,13 @@ import androidx.core.content.res.ResourcesCompat;
 import com.google.protobuf.MessageLite;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ly.pp.justpiano3.JPApplication;
@@ -48,7 +54,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public TextView info;
     public FamilyHandler familyHandler;
     public String familyID;
-    public String peopleNow;  //目前选择人的名字
+    public String peopleNow;  // 目前选择人的名字
     public List<Map<String, Object>> familyList;
     public int familyPageNum;
     public String myFamilyPosition;
@@ -132,7 +138,9 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         popupWindow.showAtLocation(manageFamily, Gravity.CENTER, 0, 0);
     }
 
-    //显示个人资料
+    /**
+     * 显示个人资料
+     */
     public void showInfoDialog(Bundle b) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
@@ -278,6 +286,45 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 builder.setType(10);
                 sendMsg(OnlineProtocolType.FAMILY, builder.build());
                 break;
+            case R.id.column_position:
+                Collections.sort(peopleList, (map1, map2) -> map1.get("P").compareTo(map2.get("P")));
+                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+                break;
+            case R.id.column_family_name:
+                Collections.sort(peopleList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
+                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+                break;
+            case R.id.column_last_login_time:
+                Collections.sort(peopleList, new Comparator<Map<String, String>>() {
+                    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+                    @Override
+                    public int compare(Map<String, String> map1, Map<String, String> map2) {
+                        try {
+                            Date date1 = dateFormat.parse(map1.get("D"));
+                            Date date2 = dateFormat.parse(map2.get("D"));
+                            // 使用日期的比较方式进行降序排序
+                            return date2.compareTo(date1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return 0;
+                    }
+                });
+                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+                break;
+            case R.id.column_level:
+                Collections.sort(peopleList, (map1, map2) -> Integer.compare(
+                        Integer.parseInt(map2.get("L")), Integer.parseInt(map1.get("L"))));
+                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+                break;
+            case R.id.column_contribution:
+                Collections.sort(peopleList, (map1, map2) -> Integer.compare(
+                        Integer.parseInt(map2.get("C")), Integer.parseInt(map1.get("C"))));
+                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+                break;
+            default:
+                break;
         }
     }
 
@@ -313,6 +360,15 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         peopleListView = findViewById(R.id.family_people_list);
         declaration = findViewById(R.id.declaration);
         info = findViewById(R.id.info_text);
+        findViewById(R.id.column_position).setOnClickListener(this);
+        findViewById(R.id.column_family_name).setOnClickListener(this);
+        findViewById(R.id.column_last_login_time).setOnClickListener(this);
+        findViewById(R.id.column_level).setOnClickListener(this);
+        findViewById(R.id.column_contribution).setOnClickListener(this);
+        if (myFamilyPicArray != null && myFamilyPicArray.length > 1) {
+            ((ImageView) findViewById(R.id.column_pic)).setImageBitmap(
+                    BitmapFactory.decodeByteArray(myFamilyPicArray, 0, myFamilyPicArray.length));
+        }
     }
 
     public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
@@ -394,7 +450,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public final void mo2907b(ListView listView, List<Map<String, String>> list) {
+    public final void bindFamilyPeopleListViewAdapter(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
     }
 
