@@ -47,7 +47,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
             for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                 SoundEngineUtil.preloadSounds(soundListPreference.context, i);
             }
-            SoundEngineUtil.afterLoadSounds(soundListPreference.context);
+            SoundEngineUtil.afterLoadSounds();
         } else if (soundFile.getName().endsWith(".sf2")) {
             SoundEngineUtil.loadSf2Sound(soundListPreference.context, soundFile);
         }

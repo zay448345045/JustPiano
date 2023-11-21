@@ -135,13 +135,13 @@ public class SoundEngineUtil {
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             preloadSounds(context, i);
         }
-        afterLoadSounds(context);
+        afterLoadSounds();
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();
     }
 
-    public static void afterLoadSounds(Context context) {
+    public static void afterLoadSounds() {
         setupAudioStreamNative(2, 44100);
     }
 

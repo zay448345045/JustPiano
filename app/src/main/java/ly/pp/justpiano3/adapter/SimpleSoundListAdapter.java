@@ -92,7 +92,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                             for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                                 SoundEngineUtil.preloadSounds(olPlayKeyboardRoom, i);
                             }
-                            SoundEngineUtil.afterLoadSounds(olPlayKeyboardRoom);
+                            SoundEngineUtil.afterLoadSounds();
                         } else if (name.endsWith(".sf2")) {
                             SoundEngineUtil.loadSf2Sound(olPlayKeyboardRoom, new File(
                                     Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + name));
