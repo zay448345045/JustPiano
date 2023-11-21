@@ -66,14 +66,11 @@ object SongPlay {
                     } else if (progressStartPlayNoteIndex == 0) {
                         progressStartPlayNoteIndex = i
                     }
+                    // 第一个需要播放的音符，减小延时时间以和入参的播放进度精确匹配
+                    val progressStartPlayDiff = if (i == progressStartPlayNoteIndex) totalProgressTime - songProgress else 0
                     // 当前音符间隔大于0且不是曲谱的第一个音符，则触发延时
                     if (delayTime > 0 && i > 0) {
-                        // 第一个需要播放的音符，减小延时时间以和入参的播放进度精确匹配
-                        if (i == progressStartPlayNoteIndex) {
-                            delay((delayTime - totalProgressTime + songProgress).toLong())
-                        } else {
-                            delay(delayTime.toLong())
-                        }
+                        delay((delayTime - progressStartPlayDiff).toLong())
                         // 延时后，判断如果不是pm文件中用于延音的空音符，则清理（停止播放）当前音轨正在播放中的音符
                         if (!PmSongUtil.isPmDefaultEmptyFilledData(it, i)) {
                             val iterator = playingPitchMap.entries.iterator()
