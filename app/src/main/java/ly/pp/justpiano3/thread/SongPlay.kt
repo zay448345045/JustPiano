@@ -52,8 +52,6 @@ object SongPlay {
             job = threadPoolScope.launch {
                 val playingPitchMap: MutableMap<Byte, Byte> = mutableMapOf()
                 var totalProgressTime = 0
-                // 此变量用于标记第一个需要播放的音符的下标，以配合入参的播放进度减去该音符延迟播放的时间，达到进度设置更精准的效果
-                var progressStartPlayNoteIndex = 0
                 for (i in it.pitchArray.indices) {
                     if (!isActive) {
                         return@launch
@@ -63,14 +61,10 @@ object SongPlay {
                     totalProgressTime += delayTime
                     if (totalProgressTime < songProgress) {
                         continue
-                    } else if (progressStartPlayNoteIndex == 0) {
-                        progressStartPlayNoteIndex = i
                     }
-                    // 第一个需要播放的音符，减小延时时间以和入参的播放进度精确匹配
-                    val progressStartPlayDiff = if (i == progressStartPlayNoteIndex) totalProgressTime - songProgress else 0
                     // 当前音符间隔大于0且不是曲谱的第一个音符，则触发延时
                     if (delayTime > 0 && i > 0) {
-                        delay((delayTime - progressStartPlayDiff).toLong())
+                        delay(delayTime.toLong())
                         // 延时后，判断如果不是pm文件中用于延音的空音符，则清理（停止播放）当前音轨正在播放中的音符
                         if (!PmSongUtil.isPmDefaultEmptyFilledData(it, i)) {
                             val iterator = playingPitchMap.entries.iterator()
