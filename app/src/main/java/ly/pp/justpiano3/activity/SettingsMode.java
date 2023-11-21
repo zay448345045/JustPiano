@@ -111,6 +111,10 @@ public class SettingsMode extends PreferenceActivity {
                                 ? "默认背景图" : GlobalSetting.INSTANCE.getWaterfallBackgroundPic());
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (waterfallBackgroundPicPreference);
                 filePickerPreference.setActivity(getActivity());
+                filePickerPreference.setDefaultButtonClickListener(view -> {
+                    filePickerPreference.persistFilePath("");
+                    filePickerPreference.setSummary("默认背景图");
+                });
                 filePickerPreferenceMap.put(waterfallBackgroundPicPreference.getKey(), filePickerPreference);
             }
         }
@@ -144,6 +148,10 @@ public class SettingsMode extends PreferenceActivity {
                                 ? "默认音效" : GlobalSetting.INSTANCE.getChatsSoundFile());
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (chatSoundFilePreference);
                 filePickerPreference.setActivity(getActivity());
+                filePickerPreference.setDefaultButtonClickListener(view -> {
+                    filePickerPreference.persistFilePath("");
+                    filePickerPreference.setSummary("默认音效");
+                });
                 filePickerPreferenceMap.put(chatSoundFilePreference.getKey(), filePickerPreference);
             }
         }
