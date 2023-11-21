@@ -65,7 +65,7 @@ import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.SoundPlayer;
+import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -87,7 +87,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public String hallName;
     public List<Bundle> friendPlayerList = new ArrayList<>();
     public boolean canNotNextPage;
-    public TextView sendTextView;
+    public EditText sendTextView;
     public List<Bundle> msgList = new ArrayList<>();
     public int maxListValue = 100;
     public GridView playerGrid;
@@ -248,9 +248,9 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
             sendTextView.setText(userTo);
         }
-        CharSequence text = sendTextView.getText();
-        if (text instanceof Spannable) {
-            Selection.setSelection((Spannable) text, text.length());
+        Spannable text = sendTextView.getText();
+        if (text != null) {
+            Selection.setSelection(text, text.length());
         }
     }
 
@@ -404,7 +404,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
         // 聊天音效播放
         if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(jpapplication.getKitiName())) {
-            SoundPlayer.playSound(this, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
+            SoundEffectPlayUtil.playSoundEffect(this, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
 
         // 聊天记录存储
@@ -686,7 +686,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     @Override
     public boolean handleMessage(Message message) {
         if (message.what == 3) {
-            CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
+            CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.CHINESE).format(new Date());
             if (timeTextView != null) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                     BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
@@ -818,7 +818,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             if (!text.isEmpty()) {
                 new JPDialogBuilder(this)
                         .setTitle("全服消息")
-                        .setMessage("您是否需要使用\"全服广播\"进行消息发送？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
+                        .setMessage("您是否需要发送全服广播？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
                         .setFirstButton("确定", (dialog, i) -> {
                             sendMessageClick(true);
                             dialog.dismiss();

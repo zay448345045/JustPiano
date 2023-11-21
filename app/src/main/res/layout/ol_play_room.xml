@@ -70,7 +70,6 @@
                     android:id="@+id/ol_group_b"
                     android:layout_width="@dimen/dimen_64dp"
                     android:layout_height="@dimen/dimen_45dp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
@@ -328,7 +327,7 @@
                                 android:scrollHorizontally="true"
                                 android:singleLine="true"
                                 android:textColor="@color/white1"
-                                android:textSize="14sp" />
+                                android:textSize="15sp" />
 
                             <Button
                                 android:id="@+id/ol_send_b"

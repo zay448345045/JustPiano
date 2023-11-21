@@ -85,15 +85,6 @@
 		8.修复4.3版本曲库中6首乱码名称曲\n
 	</string>
 	<string name="settings_name">设置</string>
-	<string name="b_s_sum">减小和弦音量,突出主旋律</string>
-	<string name="b_s_open">打开和弦</string>
-	<string name="b_s_open_1">和弦已打开</string>
-	<string name="b_s_open_2">和弦已关闭</string>
-	<string name="b_s_key">sound_check_box</string>
-	<string name="b_s_vol">sound_vol</string>
-	<string name="b_s_vol_title">和弦音量</string>
-	<string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果</string>
-	<string name="login_title">极品钢琴</string>
 	<string name="login_subtitle">浴火重生版</string>
 	<string name="login_acc_label">账号:</string>
 	<string name="login_pwd_label">密码:</string>
@@ -127,7 +118,6 @@
 	<string name="main_mode_fb">问题反馈</string>
 	<string name="main_mode_sound">音源下载</string>
 	<string name="main_mode_wrn">此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除</string>
-	<string name="msg_this_is_what">这是什么</string>
 	<string name="create_room_n">普通</string>
 	<string name="create_room_g">组队</string>
 	<string name="create_room_k">键盘</string>

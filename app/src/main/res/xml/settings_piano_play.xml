@@ -4,17 +4,17 @@
     <PreferenceCategory android:title="和弦、弹奏外观及效果">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/b_s_key"
-            android:summaryOff="@string/b_s_open_2"
-            android:summaryOn="@string/b_s_open_1"
-            android:title="@string/b_s_open" />
+            android:key="sound_check_box"
+            android:summaryOff="和弦已关闭"
+            android:summaryOn="和弦已打开"
+            android:title="打开和弦" />
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="0.8"
-            android:dependency="@string/b_s_key"
-            android:dialogTitle="@string/b_s_vol_title"
+            android:dependency="sound_check_box"
+            android:dialogTitle="和弦音量"
             android:key="b_s_vol"
-            android:summary="@string/b_s_vol_sum"
-            android:title="@string/b_s_vol_title"
+            android:summary="减小和弦音量可以突出乐谱的主弦弹奏效果"
+            android:title="和弦音量"
             app:floatNumber="true"
             app:maxValue="1.5"
             app:minValue="0.1" />

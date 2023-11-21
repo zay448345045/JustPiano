@@ -30,7 +30,7 @@ import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.SoundPlayer;
+import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
@@ -69,7 +69,7 @@ public final class OLPlayHallHandler extends Handler {
 
                     // 聊天音效播放
                     if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
-                        SoundPlayer.playSound(olPlayHall, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
+                        SoundEffectPlayUtil.playSoundEffect(olPlayHall, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
                     }
 
                     // 聊天记录存储

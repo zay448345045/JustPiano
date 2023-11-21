@@ -9,7 +9,7 @@ import android.net.Uri;
 import java.io.File;
 import java.io.IOException;
 
-public class SoundPlayer {
+public class SoundEffectPlayUtil {
 
     /**
      * 默认聊天音效名称
@@ -18,9 +18,9 @@ public class SoundPlayer {
     private static MediaPlayer mediaPlayer;
     private static boolean isPlaying = false;
 
-    public static void playSound(Context context, File soundFile) {
+    public static void playSoundEffect(Context context, File soundFile) {
         if (isPlaying) {
-            stopSound();
+            stopPlaySoundEffect();
         }
 
         mediaPlayer = new MediaPlayer();
@@ -52,7 +52,7 @@ public class SoundPlayer {
         }
     }
 
-    public static void stopSound() {
+    public static void stopPlaySoundEffect() {
         if (mediaPlayer != null && isPlaying) {
             mediaPlayer.stop();
             mediaPlayer.release();

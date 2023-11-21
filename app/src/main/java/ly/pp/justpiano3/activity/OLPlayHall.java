@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -90,7 +91,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     public Handler showTimeHandler;
     public int pageNum = 0;
     public OLPlayHallHandler olPlayHallHandler = new OLPlayHallHandler(this);
-    public TextView sendTextView;
+    public EditText sendTextView;
     private ImageView imageView;
     private LayoutInflater layoutInflater1;
     private LayoutInflater layoutInflater2;
@@ -247,16 +248,16 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         if (!userName.isEmpty() && !userName.equals(JPApplication.kitiName)) {
             sendTextView.setText(sendTo);
         }
-        CharSequence text = sendTextView.getText();
-        if (text instanceof Spannable) {
-            Selection.setSelection((Spannable) text, text.length());
+        Spannable text = sendTextView.getText();
+        if (text != null) {
+            Selection.setSelection(text, text.length());
         }
     }
 
     @Override
     public boolean handleMessage(Message message) {
         if (message.what == 3) {
-            CharSequence format = SimpleDateFormat.getTimeInstance(3, Locale.CHINESE).format(new Date());
+            CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.CHINESE).format(new Date());
             if (timeTextView != null) {
                 timeTextView.setText(format);
             }
@@ -359,22 +360,21 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
      * @param isBroadcast 是否为全服广播类型
      */
     private void sendHallChat(boolean isBroadcast) {
-        String str;
-        OnlineHallChatDTO.Builder builder1 = OnlineHallChatDTO.newBuilder();
-        builder1.setIsBroadcast(isBroadcast);
-        str = String.valueOf(sendTextView.getText());
+        OnlineHallChatDTO.Builder builder = OnlineHallChatDTO.newBuilder();
+        builder.setIsBroadcast(isBroadcast);
+        String str = String.valueOf(sendTextView.getText());
         if (!str.startsWith(sendTo) || str.length() <= sendTo.length()) {
-            builder1.setUserName("");
-            builder1.setMessage(str);
+            builder.setUserName("");
+            builder.setMessage(str);
         } else {
-            builder1.setUserName(sendTo);
+            builder.setUserName(sendTo);
             str = str.substring(sendTo.length());
-            builder1.setMessage(str);
+            builder.setMessage(str);
         }
         sendTextView.setText("");
         sendTo = "";
         if (!str.isEmpty()) {
-            sendMsg(OnlineProtocolType.HALL_CHAT, builder1.build());
+            sendMsg(OnlineProtocolType.HALL_CHAT, builder.build());
         }
     }
 
@@ -486,7 +486,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             if (!text.isEmpty()) {
                 new JPDialogBuilder(this)
                         .setTitle("全服消息")
-                        .setMessage("您是否需要使用\"全服广播\"进行消息发送？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
+                        .setMessage("您是否需要发送全服广播？\n(如无\"全服广播\"商品，将为您自动扣费5音符购买)\n发送内容：\"" + sendTextView.getText() + '\"')
                         .setFirstButton("确定", (dialog, i) -> {
                             sendHallChat(true);
                             dialog.dismiss();
