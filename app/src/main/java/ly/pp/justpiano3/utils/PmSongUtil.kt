@@ -39,6 +39,9 @@ object PmSongUtil {
     private val PM_DEFAULT_EMPTY_FILLED_DATA =
         byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
 
+    /**
+     * 是否为空拍时补充的延时空音符
+     */
     fun isPmDefaultEmptyFilledData(pmSongData: PmSongData, index: Int): Boolean {
         return pmSongData.tickArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[0]
                 && pmSongData.trackArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[1]

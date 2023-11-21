@@ -51,34 +51,52 @@ object SongPlay {
             job?.cancel()
             job = threadPoolScope.launch {
                 val playingPitchMap: MutableMap<Byte, Byte> = mutableMapOf()
-                var progressTime = 0L
+                var totalProgressTime = 0
+                // 此变量用于标记第一个需要播放的音符的下标，以配合入参的播放进度减去该音符延迟播放的时间，达到进度设置更精准的效果
+                var progressStartPlayNoteIndex = 0
                 for (i in it.pitchArray.indices) {
                     if (!isActive) {
                         return@launch
                     }
-                    val delayTime = it.tickArray[i].toLong() * it.globalSpeed
-                    progressTime += delayTime
-                    if (progressTime < songProgress) {
+                    // 先累加，过滤掉在入参给出的曲谱进度之前的音符
+                    val delayTime = it.tickArray[i] * it.globalSpeed
+                    totalProgressTime += delayTime
+                    if (totalProgressTime < songProgress) {
                         continue
+                    } else if (progressStartPlayNoteIndex == 0) {
+                        progressStartPlayNoteIndex = i
                     }
+                    // 当前音符间隔大于0且不是曲谱的第一个音符，则触发延时
                     if (delayTime > 0 && i > 0) {
-                        delay(delayTime)
-                        val iterator = playingPitchMap.entries.iterator()
-                        while (iterator.hasNext()) {
-                            val entry = iterator.next()
-                            if (entry.value == it.trackArray[i]) {
-                                SoundEngineUtil.stopPlaySound(entry.key)
-                                iterator.remove()
+                        // 第一个需要播放的音符，减小延时时间以和入参的播放进度精确匹配
+                        if (i == progressStartPlayNoteIndex) {
+                            delay((delayTime - totalProgressTime + songProgress).toLong())
+                        } else {
+                            delay(delayTime.toLong())
+                        }
+                        // 延时后，判断如果不是pm文件中用于延音的空音符，则清理（停止播放）当前音轨正在播放中的音符
+                        if (!PmSongUtil.isPmDefaultEmptyFilledData(it, i)) {
+                            val iterator = playingPitchMap.entries.iterator()
+                            while (iterator.hasNext()) {
+                                val entry = iterator.next()
+                                if (entry.value == it.trackArray[i]) {
+                                    SoundEngineUtil.stopPlaySound(entry.key)
+                                    iterator.remove()
+                                }
                             }
                         }
                     }
+                    // 执行播放当前音符，并把当前音符也加入到正在播放的音符之中，用于之后的清理（按音轨停止）
                     val pitch = (it.pitchArray[i] + tune).toByte()
                     SoundEngineUtil.playSound(pitch, it.volumeArray[i])
                     playingPitchMap[pitch] = it.trackArray[i]
                 }
+                // 播放完成之后，最后一次清理（停止）所有正在播放的音符
                 playingPitchMap.values.forEach { SoundEngineUtil.stopPlaySound((it)) }
                 playingPitchMap.clear()
+                // 获取下一首应该播放的曲谱（如果本地或房间选择了连续播放等选项的话）
                 val nextSongFilePath = computeNextSongByPlaySongsMode(songFilePath)
+                // 延时一小段时间，然后触发播放下一首曲谱的回调
                 delay(1000)
                 callBack?.onSongChangeNext(nextSongFilePath)
             }
