@@ -12,7 +12,6 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
-import ly.pp.justpiano3.task.SongSyncDialogTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -59,7 +58,10 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                new SongSyncDialogTask(this).execute();
+//                new SongSyncDialogTask(this).execute();
+                jpprogressBar.show();
+                OnlineUtil.cancelAutoReconnect();
+                OnlineUtil.onlineConnectionService(jpapplication);
                 return;
             case R.id.ol_top_b:
                 intent.setClass(this, OLTopUser.class);

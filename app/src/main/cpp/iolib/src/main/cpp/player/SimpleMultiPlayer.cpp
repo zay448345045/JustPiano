@@ -54,8 +54,8 @@ namespace iolib {
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
         if (mEnableSf2 && pSynth != nullptr) {
-            fluid_synth_write_float(pSynth, numFrames, &((float *) audioData)[0], 0, 2,
-                                    &((float *) audioData)[1], 0, 2);
+            fluid_synth_write_float(pSynth, numFrames, (float *) audioData,
+                                    0, 2,(float *) audioData, 1, 2);
             memcpy(mMixBuffer, ((float *) audioData),
                    numFrames * mChannelCount * sizeof(float));
             handleSf2DelayNoteOff(numFrames);
@@ -148,9 +148,10 @@ namespace iolib {
         builder.setChannelCount(mChannelCount);
         builder.setSampleRate(mSampleRate);
         builder.setCallback(this);
+        builder.setFormat(oboe::AudioFormat::Float);
         builder.setPerformanceMode(PerformanceMode::LowLatency);
         builder.setSharingMode(SharingMode::Exclusive);
-        builder.setSampleRateConversionQuality(SampleRateConversionQuality::Medium);
+        builder.setSampleRateConversionQuality(SampleRateConversionQuality::None);
 
         Result result = builder.openStream(mAudioStream);
         if (result != Result::OK) {
