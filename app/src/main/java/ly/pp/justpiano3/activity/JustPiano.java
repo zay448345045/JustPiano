@@ -74,7 +74,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
                             float leftDegree = pmSongData.getLeftHandDegree();
                             int songTime = pmSongData.getSongTime();
                             songCount++;
-                            // 由于分类可能被修改，更新时文件名必须去除分类（首字母）
                             Song currentSong = pmPathMap.get(pmFileName.substring(1));
                             if (currentSong != null) {
                                 info = "更新曲目:" + songName + "..." + songCount;

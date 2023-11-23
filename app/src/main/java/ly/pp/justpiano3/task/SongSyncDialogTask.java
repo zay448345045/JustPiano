@@ -1,6 +1,8 @@
 package ly.pp.justpiano3.task;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -18,23 +20,23 @@ import okhttp3.Response;
 
 public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMainMode> olMainMode;
-    private String maxSongId = "";
 
-    public SongSyncDialogTask(OLMainMode olMainMode, String maxSongId) {
+    public SongSyncDialogTask(OLMainMode olMainMode) {
         this.olMainMode = new WeakReference<>(olMainMode);
-        this.maxSongId = maxSongId;
     }
 
     @Override
     protected String doInBackground(String... objects) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(olMainMode.get());
+        long lastSongModifiedTime = sharedPreferences.getLong("song_sync_time", 0);
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)
-                .add("maxSongId", String.valueOf(maxSongId))
+                .add("lastSongModifiedTime", String.valueOf(lastSongModifiedTime))
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()
-                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SongSyncDialog")
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SyncSongDialog")
                 .post(formBody)
                 .build();
         try {
@@ -56,7 +58,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             String message = null;
             JSONObject jsonObject = new JSONObject(str);
             if (jsonObject.getInt("C") > 0) {
-                message = "您有《" + jsonObject.getString("F") + "》等" + jsonObject.getInt("C") + "首在线曲库最新曲谱需同步至本地曲库，同步后方可进入对战。是否现在同步曲谱?";
+                message = "您有《" + jsonObject.getString("F") + "》等" + jsonObject.getInt("C") + "首在线曲库曲谱改动需同步至本地曲库，同步后方可进入对战。是否现在同步曲谱?";
                 i = 1;
                 olMainMode.get().jpprogressBar.dismiss();
             } else {
@@ -70,7 +72,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             jpDialogBuilder.setMessage(message);
             jpDialogBuilder.setFirstButton("开始同步", (dialog, which) -> {
                 dialog.dismiss();
-                new SongSyncTask(olMainMode.get(), maxSongId).execute();
+                new SongSyncTask(olMainMode.get()).execute();
             });
             jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             if (i != 0) {

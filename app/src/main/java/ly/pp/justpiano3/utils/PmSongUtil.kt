@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.utils
 
+import android.R.id.input
 import android.content.Context
 import ly.pp.justpiano3.entity.OriginalNote
 import ly.pp.justpiano3.entity.PmSongData
@@ -13,8 +14,11 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlin.math.ceil
 import kotlin.math.roundToInt
+
 
 object PmSongUtil {
 
@@ -40,6 +44,11 @@ object PmSongUtil {
         byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
 
     /**
+     * 根据文件路径取出pm曲谱id、分类等的正则表达式pattern
+     */
+    private val pattern: Pattern = Pattern.compile("/([a-zA-Z]+)(\\d+).pm")
+
+    /**
      * 是否为空拍时补充的延时空音符
      */
     fun isPmDefaultEmptyFilledData(pmSongData: PmSongData, index: Int): Boolean {
@@ -49,8 +58,42 @@ object PmSongUtil {
                 && pmSongData.volumeArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[3]
     }
 
+    /**
+     * 根据pm文件路径获取曲谱id
+     */
+    fun getPmSongIdByFilePath(filePath: String): Int? {
+        val matcher: Matcher = pattern.matcher(filePath)
+        if (matcher.find()) {
+            return matcher.group(2)?.toInt()
+        }
+        return null
+    }
+
+    /**
+     * 根据pm文件路径获取曲谱分类
+     */
+    fun getPmSongCategoryByFilePath(filePath: String): String? {
+        val matcher: Matcher = pattern.matcher(filePath)
+        if (matcher.find()) {
+            return matcher.group(1)
+        }
+        return null
+    }
+
     fun parsePmDataByFilePath(context: Context, filePath: String): PmSongData? {
-        val inputStream: InputStream = try {
+        val inputStream = getPmFileInputStream(context, filePath)
+        inputStream?.let { stream ->
+            val pmData = ByteArray(stream.available())
+            stream.use {
+                it.read(pmData)
+            }
+            return parsePmDataByBytes(pmData)
+        }
+        return null
+    }
+
+    private fun getPmFileInputStream(context: Context, filePath: String): InputStream? {
+        return try {
             context.resources.assets.open(filePath)
         } catch (ignore: Exception) {
             try {
@@ -67,12 +110,7 @@ object PmSongUtil {
                     null
                 }
             }
-        } ?: return null
-        val pmData = ByteArray(inputStream.available())
-        inputStream.use {
-            it.read(pmData)
         }
-        return parsePmDataByBytes(pmData)
     }
 
     fun parsePmDataByBytes(pmData: ByteArray): PmSongData? {

@@ -297,7 +297,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 return;
             case R.id.lo_extra_func_sync:  // 曲库同步
                 menuPopupWindow.dismiss();
-                new SongSyncTask(this, OLMainMode.getMaxSongIdFromDatabase()).execute();
+                new SongSyncTask(this).execute();
                 return;
             case R.id.lo_extra_func_midi_import:  // midi导入
                 menuPopupWindow.dismiss();

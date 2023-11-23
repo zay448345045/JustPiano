@@ -8,7 +8,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -82,7 +81,7 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
         }
     }
 
-    public final void mo2977a(String str, ListView listView) {
+    public final void handleResultAndBindAdapter(String str, ListView listView) {
         try {
             songsList = m3857a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
             showSongsInfoAdapter = new ShowSongsInfoAdapter(this, songsList);
@@ -134,31 +133,29 @@ public class ShowSongsInfo extends Activity implements OnClickListener {
         setContentView(R.layout.ol_top_info);
         ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         layoutInflater = LayoutInflater.from(this);
-        TextView f4974j = findViewById(R.id.ol_top_title);
-        Button f4976l = findViewById(R.id.ol_top_before);
-        Button f4977m = findViewById(R.id.ol_top_next);
-        f4976l.setOnClickListener(this);
-        f4977m.setOnClickListener(this);
+        TextView topTitleTextView = findViewById(R.id.ol_top_title);
+        findViewById(R.id.ol_top_before).setOnClickListener(this);
+        findViewById(R.id.ol_top_next).setOnClickListener(this);
         pageText = findViewById(R.id.ol_top_page);
         pageText.setText("-" + (page + 1) + "-");
         songsListView = findViewById(R.id.ol_top_list);
         jpprogressBar = new JPProgressBar(this);
         switch (keywords) {
             case "N":
-                f4974j.setText("-最新曲目-");
+                topTitleTextView.setText("-最新曲目-");
                 break;
             case "H":
-                f4974j.setText("-热门曲目-");
+                topTitleTextView.setText("-热门曲目-");
                 break;
             case "F":
-                f4974j.setText("-曲谱收藏-");
+                topTitleTextView.setText("-曲谱收藏-");
                 break;
             case "T":
-                f4974j.setText("-新晋冠军-");
+                topTitleTextView.setText("-新晋冠军-");
                 songsListView.setCacheColorHint(Color.TRANSPARENT);
                 break;
             case "M":
-                f4974j.setText("-上传测试-");
+                topTitleTextView.setText("-上传测试-");
                 break;
         }
         new ShowSongsInfoTask(this).execute();

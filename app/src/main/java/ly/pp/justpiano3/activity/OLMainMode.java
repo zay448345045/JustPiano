@@ -7,11 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-import java.util.List;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
@@ -62,8 +59,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                     Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String maxSongIdFromDatabase = getMaxSongIdFromDatabase();
-                new SongSyncDialogTask(this, maxSongIdFromDatabase).execute();
+                new SongSyncDialogTask(this).execute();
                 return;
             case R.id.ol_top_b:
                 intent.setClass(this, OLTopUser.class);
@@ -123,16 +119,5 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    public static String getMaxSongIdFromDatabase() {
-        List<Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongs();
-        int maxSongId = 0;
-        for (Song song : allSongs) {
-            if (song.getFilePath().length() > 8 && song.getFilePath().charAt(7) == '/') {
-                maxSongId = Math.max(maxSongId, Integer.parseInt(song.getFilePath().substring(9, 15)));
-            }
-        }
-        return String.valueOf(maxSongId);
     }
 }

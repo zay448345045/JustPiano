@@ -54,7 +54,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
-            showSongsInfo.get().mo2977a(str, showSongsInfo.get().songsListView);
+            showSongsInfo.get().handleResultAndBindAdapter(str, showSongsInfo.get().songsListView);
             showSongsInfo.get().songsListView.setCacheColorHint(Color.TRANSPARENT);
             showSongsInfo.get().jpprogressBar.cancel();
         } else if (str.equals("[]")) {
