@@ -8,92 +8,91 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.PlayView;
 
 public final class PlayNote {
-    public boolean hideNote;
+    public boolean hide;
     public boolean unPassed;
-    public byte noteValue;
-    public int trackValue;
-    public byte volumeValue;
-    public Bitmap noteImage = null;
-    public int noteXPosition;
+    public byte pitch;
+    public int track;
+    public byte volume;
+    public Bitmap image = null;
+    public int positionX;
     public int posiAdd15AddAnim;
-    public int noteDiv12;
-    public int handValue;
-    private byte playNote;
+    public int octave;
+    public int hand;
     private final PlayView playView;
     private final float halfWidth;
     private boolean newNote = true;
     private final int posiAdd15;
 
     public PlayNote(PlayView playView, byte i, int i2, byte f, int f2, int i3, boolean z, int i4) {
-        handValue = i4;
+        hand = i4;
         this.playView = playView;
-        noteDiv12 = i3;
-        noteValue = i;
-        hideNote = z;
+        octave = i3;
+        pitch = i;
+        hide = z;
         posiAdd15 = 15 + f2;
-        trackValue = i2;
+        track = i2;
         unPassed = true;
-        volumeValue = f;
+        volume = f;
         int widthPixels = playView.noteImage.getWidth();
         halfWidth = widthPixels / 2f;
         int width = playView.getWidth() / 16;
         int f4 = widthPixels / 2;
-        if (trackValue != handValue) {
+        if (track != hand) {
             return;
         }
-        if (noteValue == i3 * 12 + 12) {
-            noteImage = playView.noteImage;
-            noteXPosition = width * 15 - f4;
+        if (pitch == i3 * 12 + 12) {
+            image = playView.noteImage;
+            positionX = width * 15 - f4;
             return;
         }
-        switch (noteValue % 12) {
+        switch (pitch % 12) {
             case 0:
-                noteXPosition = width - f4;
-                noteImage = playView.noteImage;
+                positionX = width - f4;
+                image = playView.noteImage;
                 return;
             case 1:
-                noteXPosition = 2 * width - f4;
-                noteImage = playView.blackNoteImage;
+                positionX = 2 * width - f4;
+                image = playView.blackNoteImage;
                 return;
             case 2:
-                noteXPosition = 3 * width - f4;
-                noteImage = playView.noteImage;
+                positionX = 3 * width - f4;
+                image = playView.noteImage;
                 return;
             case 3:
-                noteXPosition = 4 * width - f4;
-                noteImage = playView.blackNoteImage;
+                positionX = 4 * width - f4;
+                image = playView.blackNoteImage;
                 return;
             case 4:
-                noteXPosition = 5 * width - f4;
-                noteImage = playView.noteImage;
+                positionX = 5 * width - f4;
+                image = playView.noteImage;
                 return;
             case 5:
-                noteXPosition = 7 * width - f4;
-                noteImage = playView.noteImage;
+                positionX = 7 * width - f4;
+                image = playView.noteImage;
                 return;
             case 6:
-                noteXPosition = 8 * width - f4;
-                noteImage = playView.blackNoteImage;
+                positionX = 8 * width - f4;
+                image = playView.blackNoteImage;
                 return;
             case 7:
-                noteXPosition = 9 * width - f4;
-                noteImage = playView.noteImage;
+                positionX = 9 * width - f4;
+                image = playView.noteImage;
                 return;
             case 8:
-                noteXPosition = 10 * width - f4;
-                noteImage = playView.blackNoteImage;
+                positionX = 10 * width - f4;
+                image = playView.blackNoteImage;
                 return;
             case 9:
-                noteXPosition = 11 * width - f4;
-                noteImage = playView.noteImage;
+                positionX = 11 * width - f4;
+                image = playView.noteImage;
                 return;
             case 10:
-                noteXPosition = 12 * width - f4;
-                noteImage = playView.blackNoteImage;
+                positionX = 12 * width - f4;
+                image = playView.blackNoteImage;
                 return;
             case 11:
-                noteXPosition = 13 * width - f4;
-                noteImage = playView.noteImage;
+                positionX = 13 * width - f4;
+                image = playView.noteImage;
                 return;
             default:
         }
@@ -106,18 +105,16 @@ public final class PlayNote {
     public float mo3107b(Canvas canvas) {    // 联网模式
         posiAdd15AddAnim = posiAdd15 + playView.progress;
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
-            if (newNote && hideNote) {
-                SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
-                playNote = noteValue;
+            if (newNote && hide) {
+                SoundEngineUtil.playSound(pitch, (byte) (volume * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
-            } else if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
-                SoundEngineUtil.stopPlaySound(playNote);
+            } else if ((double) posiAdd15AddAnim >= playView.whiteKeyHeightAdd90) {
                 return posiAdd15AddAnim;
             }
         }
-        if (!(canvas == null || trackValue != handValue || hideNote)) {
-            canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
+        if (!(canvas == null || track != hand || hide)) {
+            canvas.drawBitmap(image, positionX, posiAdd15AddAnim, null);
         }
         return posiAdd15AddAnim;
     }
@@ -126,28 +123,23 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + playView.progress;
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (GlobalSetting.INSTANCE.getAutoPlay()) {
-                if (newNote && ((trackValue != handValue || hideNote) && GlobalSetting.INSTANCE.isOpenChord())) {
-                    SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
-                    playNote = noteValue;
+                if (newNote && ((track != hand || hide) && GlobalSetting.INSTANCE.isOpenChord())) {
+                    SoundEngineUtil.playSound(pitch, (byte) (volume * GlobalSetting.INSTANCE.getChordVolume()));
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
-            } else if (newNote && trackValue != handValue && GlobalSetting.INSTANCE.isOpenChord()) {
-                SoundEngineUtil.playSound(noteValue, (byte) (volumeValue * GlobalSetting.INSTANCE.getChordVolume()));
-                playNote = noteValue;
+            } else if (newNote && track != hand && GlobalSetting.INSTANCE.isOpenChord()) {
+                SoundEngineUtil.playSound(pitch, (byte) (volume * GlobalSetting.INSTANCE.getChordVolume()));
                 newNote = false;
                 return posiAdd15AddAnim;
             }
-            if (((double) posiAdd15AddAnim) >= playView.whiteKeyHeightAdd90) {
-                SoundEngineUtil.stopPlaySound(playNote);
-            }
         }
         if (GlobalSetting.INSTANCE.getAutoPlay()) {
-            if (canvas != null && trackValue == handValue && !hideNote) {
-                canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
+            if (canvas != null && track == hand && !hide) {
+                canvas.drawBitmap(image, positionX, posiAdd15AddAnim, null);
             }
-        } else if (canvas != null && trackValue == handValue) {
-            canvas.drawBitmap(noteImage, noteXPosition, posiAdd15AddAnim, null);
+        } else if (canvas != null && track == hand) {
+            canvas.drawBitmap(image, positionX, posiAdd15AddAnim, null);
         }
         return posiAdd15AddAnim;
     }

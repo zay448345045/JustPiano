@@ -40,6 +40,7 @@ import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
@@ -144,7 +145,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private List<Byte> uploadTouchStatusList;
     private byte[] uploadTimeArray;
     private int uploadNoteIndex;
-    private final List<PlayNote> tempNotesArray = new ArrayList<>();
+    private final List<PlayNote> deleteNotesArray = new ArrayList<>();
     private final List<Integer> currentTotalScoreNumberList = new ArrayList<>();
     private int handValue;
     private byte[] tickArray;
@@ -509,11 +510,11 @@ public final class PlayView extends SurfaceView implements Callback {
             hasTouched = true;
             i3 = i4;
             if (GlobalSetting.INSTANCE.getNoteDismiss()) {
-                judgingNote.noteImage = nullImage;
+                judgingNote.image = nullImage;
                 int index = notesList.indexOf(judgingNote);
                 for (int i1 = 0; i1 < notesList.size(); i1++) {
                     PlayNote note = notesList.get(i1);
-                    if (note.trackValue == note.handValue && !note.hideNote && i1 > index) {
+                    if (note.track == note.hand && !note.hide && i1 > index) {
                         judgingNote = note;
                         break;
                     }
@@ -712,42 +713,42 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     public void mo2930b(Canvas canvas) {
-        tempNotesArray.clear();
+        deleteNotesArray.clear();
         boolean newNote = true;
         for (PlayNote note : notesList) {
             currentPlayNote = note;
             if (currentPlayNote.posiAdd15AddAnim < halfHeightSub20 + 60) {
-                if (currentPlayNote.trackValue == currentPlayNote.handValue && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && newNote) {
+                if (currentPlayNote.track == currentPlayNote.hand && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight && newNote) {
                     if (currentPlayNote.unPassed) {
                         hasTouched = false;
                         currentPlayNote.unPassed = false;
                     }
-                    if (!currentPlayNote.noteImage.equals(nullImage)) {
+                    if (!currentPlayNote.image.equals(nullImage)) {
                         judgingNote = currentPlayNote;
                         if (currentPlayNote.posiAdd15AddAnim > -15f) {
                             if (GlobalSetting.INSTANCE.getShowLine() && canvas != null) {
-                                canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, whiteKeyHeight, currentPlayNote.getHalfWidth() + currentPlayNote.noteXPosition, 15 + currentPlayNote.posiAdd15AddAnim, line);
+                                canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.positionX, whiteKeyHeight, currentPlayNote.getHalfWidth() + currentPlayNote.positionX, 15 + currentPlayNote.posiAdd15AddAnim, line);
                             }
                             if (GlobalSetting.INSTANCE.getChangeNotesColor()) {
-                                currentPlayNote.noteImage = playNoteImage;
+                                currentPlayNote.image = playNoteImage;
                             } else if (currentPlayNote.posiAdd15AddAnim >= halfHeightSub20) {
-                                currentPlayNote.noteImage = playNoteImage;
+                                currentPlayNote.image = playNoteImage;
                             }
                         }
                     }
-                    if (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hideNote
+                    if (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hide
                             && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
-                    noteRightValue = currentPlayNote.noteValue;
-                    if (!currentPlayNote.hideNote) {
-                        noteMod12 = currentPlayNote.noteDiv12;
+                    noteRightValue = currentPlayNote.pitch;
+                    if (!currentPlayNote.hide) {
+                        noteMod12 = currentPlayNote.octave;
                     }
-                    volume0 = currentPlayNote.volumeValue;
+                    volume0 = currentPlayNote.volume;
                     newNote = false;
                 }
                 if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight) {
-                    currentNotePitch = currentPlayNote.noteValue;
+                    currentNotePitch = currentPlayNote.pitch;
                 }
                 if (gameType > 0) {
                     if (currentPlayNote.mo3107b(canvas) < 0) {
@@ -757,10 +758,13 @@ public final class PlayView extends SurfaceView implements Callback {
                     break;
                 }
             } else {
-                tempNotesArray.add(currentPlayNote);
+                deleteNotesArray.add(currentPlayNote);
             }
         }
-        notesList.removeAll(tempNotesArray);
+        for (PlayNote playNote : deleteNotesArray) {
+            SoundEngineUtil.stopPlaySound(playNote.pitch);
+        }
+        notesList.removeAll(deleteNotesArray);
         int i;
         int i2;
         int i3;

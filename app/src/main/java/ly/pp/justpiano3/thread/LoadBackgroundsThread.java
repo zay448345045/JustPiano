@@ -91,7 +91,7 @@ public final class LoadBackgroundsThread extends Thread {
                 if (canvas != null && GlobalSetting.INSTANCE.getLoadLongKeyboard()) {
                     canvas.drawBitmap(playView.longKeyboardImage, null, new RectF(0f, 0f, (float) playView.getWidth(), longKeyboardHeight), null);
                     canvas.drawRoundRect(new RectF((float) (((playView.getWidth() / 10) * playView.noteMod12) + 1), 1.0f, (((float) ((playView.getWidth() / 10) * playView.noteMod12)) + (13.0f * widthDiv120)) + 1.0f, 29.0f), 3.0f, 3.0f, f6023i);
-                    switch (playView.currentPlayNote.noteValue % 12) {
+                    switch (playView.currentPlayNote.pitch % 12) {
                         case 0:
                         case 2:
                         case 4:
@@ -127,7 +127,7 @@ public final class LoadBackgroundsThread extends Thread {
                             f6022h = 10.0f;
                             break;
                     }
-                    canvas.drawArc(new RectF(((float) playView.currentPlayNote.noteValue) * widthDiv120, f6021g, ((float) (playView.currentPlayNote.noteValue + 1)) * widthDiv120, f6021g + widthDiv120), 0.0f, 360.0f, false, f6024j);
+                    canvas.drawArc(new RectF(((float) playView.currentPlayNote.pitch) * widthDiv120, f6021g, ((float) (playView.currentPlayNote.pitch + 1)) * widthDiv120, f6021g + widthDiv120), 0.0f, 360.0f, false, f6024j);
                     canvas.drawArc(new RectF(((float) playView.currentNotePitch) * widthDiv120, f6022h, ((float) (playView.currentNotePitch + 1)) * widthDiv120, f6022h + widthDiv120), 0.0f, 360.0f, false, f6025k);
                 }
             } catch (Exception e) {
