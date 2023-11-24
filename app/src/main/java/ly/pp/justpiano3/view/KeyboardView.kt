@@ -15,7 +15,6 @@ import ly.pp.justpiano3.R
 import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.utils.ImageLoadUtil
 import ly.pp.justpiano3.utils.UnitConvertUtil
-import kotlin.math.roundToInt
 
 class KeyboardView @JvmOverloads constructor(
     context: Context,
@@ -49,9 +48,6 @@ class KeyboardView @JvmOverloads constructor(
 
         // 每个八度内黑键的索引
         val BLACK_KEY_OFFSET = intArrayOf(1, 3, 6, 8, 10)
-
-        // 最大音量值
-        const val MAX_VOLUME: Byte = 127
 
         /**
          * 一个八度内要绘制的图像种类，包括黑键、白键右侧(右上角抠掉黑键的，比如do键)、白键MIDDLE(左右都被抠掉黑键的，比如do re mi的re键)、白键左侧
@@ -538,11 +534,11 @@ class KeyboardView @JvmOverloads constructor(
         var volume: Byte = -1
         if (y < blackKeyHeight) {
             pitch = xyToBlackPitch(x, y)
-            volume = (y / blackKeyHeight * MAX_VOLUME).toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte()
+            volume = (y / blackKeyHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
         }
         if (pitch < 0) {
             pitch = xToWhitePitch(x)
-            volume = (y / viewHeight * MAX_VOLUME).toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte()
+            volume = (y / viewHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
         }
         return Pair(pitch, volume)
     }
@@ -573,8 +569,8 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     private fun fireKeyDownAndHandleListener(pitch: Byte, volume: Byte, color: Int?) {
-        keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME))
-        fireKeyDown(pitch, volume.coerceAtMost(MAX_VOLUME), color)
+        keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(Byte.MAX_VALUE))
+        fireKeyDown(pitch, volume.coerceAtMost(Byte.MAX_VALUE), color)
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
@@ -593,8 +589,7 @@ class KeyboardView @JvmOverloads constructor(
             notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
         }
         val blackKey = isBlackKey(pitch)
-        val handledVolume = (volume * MAX_VOLUME.toFloat() / 100).roundToInt().coerceAtMost(MAX_VOLUME.toInt())
-        notesOnPaintArray[pitchInScreen]!!.alpha = handledVolume shl 1
+        notesOnPaintArray[pitchInScreen]!!.alpha = volume.coerceAtMost(Byte.MAX_VALUE).toInt() shl 1
         if (color != null) {
             // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
             // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实

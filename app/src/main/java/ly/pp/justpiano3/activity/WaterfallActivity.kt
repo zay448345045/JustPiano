@@ -75,13 +75,13 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         if (!freeStyle) {
             // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
             waterfallView.setNoteFallListener(object : WaterfallView.NoteFallListener {
-                override fun onNoteAppear(waterfallNote: WaterfallNote?) {
+                override fun onNoteAppear(waterfallNote: WaterfallNote) {
                     // 瀑布流音符在瀑布流view的顶端出现，目前无操作
                 }
 
-                override fun onNoteFallDown(waterfallNote: WaterfallNote?) {
+                override fun onNoteFallDown(waterfallNote: WaterfallNote) {
                     // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
-                    SoundEngineUtil.playSound(waterfallNote!!.pitch, waterfallNote.volume)
+                    SoundEngineUtil.playSound(waterfallNote.pitch, waterfallNote.volume)
                     keyboardView.fireKeyDown(
                         waterfallNote.pitch,
                         waterfallNote.volume,
@@ -89,9 +89,9 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                     )
                 }
 
-                override fun onNoteLeave(waterfallNote: WaterfallNote?) {
+                override fun onNoteLeave(waterfallNote: WaterfallNote) {
                     // 瀑布流音符完全离开瀑布流view，停止播放声音并触发键盘view的琴键抬起效果
-                    SoundEngineUtil.stopPlaySound(waterfallNote!!.pitch)
+                    SoundEngineUtil.stopPlaySound(waterfallNote.pitch)
                     keyboardView.fireKeyUp(waterfallNote.pitch)
                 }
             })
@@ -238,7 +238,6 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
             var totalTime = 0f
             for (i in it.pitchArray.indices) {
                 val pitch = it.pitchArray[i]
-                val volume = it.volumeArray[i]
                 // 计算音符播放的累计时间
                 totalTime += it.tickArray[i] * it.globalSpeed
                 // 用于延时的空音符直接跳过
@@ -257,7 +256,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
                         totalTime,
                         if (leftHand) GlobalSetting.waterfallLeftHandColor else GlobalSetting.waterfallRightHandColor,
                         pitch,
-                        volume
+                        (it.volumeArray[i] * Byte.MAX_VALUE / 100f).toInt().toByte()
                     )
                 // 根据左右手拿到对应的list
                 val waterfallNoteListByHand: MutableList<WaterfallNote> =

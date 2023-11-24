@@ -136,17 +136,17 @@ class WaterfallView @JvmOverloads constructor(
         /**
          * 瀑布某个音刚在view最上方出现时触发
          */
-        fun onNoteAppear(waterfallNote: WaterfallNote?)
+        fun onNoteAppear(waterfallNote: WaterfallNote)
 
         /**
          * 瀑布某个音刚开始落到view的最下方时触发
          */
-        fun onNoteFallDown(waterfallNote: WaterfallNote?)
+        fun onNoteFallDown(waterfallNote: WaterfallNote)
 
         /**
          * 瀑布某个音彻底从瀑布流view下方消失时触发
          */
-        fun onNoteLeave(waterfallNote: WaterfallNote?)
+        fun onNoteLeave(waterfallNote: WaterfallNote)
     }
 
     /**
@@ -645,7 +645,7 @@ class WaterfallView @JvmOverloads constructor(
                     notePaint.color =
                         if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(waterfallNote.color) else waterfallNote.color
                     // 根据音符的力度，确定音块绘制的透明度
-                    notePaint.alpha = minOf(waterfallNote.volume / 100f * 128 * 2, 255f).toInt()
+                    notePaint.alpha = minOf(waterfallNote.volume * 2, 255).toInt()
                     // 绘制音块
                     canvas.drawRect(
                         waterfallNote.left,

@@ -341,10 +341,10 @@ public final class PlayView extends SurfaceView implements Callback {
                 actualTime = -tick * pm_2;
                 position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
-                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
                     hideNote = true;
                 } else if (lastPosition < position) {
-                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
                     hideNote = true;
                 } else {
                     if (lastActualTime - actualTime >= 100 || i4 == 0) {
@@ -358,7 +358,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
                         trackArray[i4] = 2;
                     }
-                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], volumeArray[i4], position, i3, hideNote, handValue));
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
                     hideNote = true;
                 }
                 length = i4 + 1;
