@@ -26,6 +26,7 @@ using namespace iolib;
 using namespace parselib;
 
 typedef struct {
+    fluid_audio_driver_t *audio_driver;
     fluid_settings_t *settings;
     fluid_synth_t *synth;
     int soundfont_id;
@@ -51,7 +52,8 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_teardownAudioStreamNative(JNIEnv *, 
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadWavAssetNative(JNIEnv *env, jclass, jbyteArray bytearray) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadWavAssetNative(JNIEnv *env, jclass,
+                                                               jbyteArray bytearray) {
     int len = env->GetArrayLength(bytearray);
 
     auto *buf = new unsigned char[len];
@@ -137,10 +139,10 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass) {
     handle->soundfont_id = 0;
     fluid_settings_setint(handle->settings, "synth.polyphony", 1024);
     fluid_settings_setnum(handle->settings, "synth.gain", 1);
+    fluid_settings_setnum(handle->settings, "synth.sample-rate", 22050);
     fluid_settings_setint(handle->settings, "synth.midi-channels", 1);
     fluid_settings_setint(handle->settings, "synth.min-note-length", 0);
-    fluid_settings_setint(handle->settings, "synth.chorus.active", 0);
-    fluid_settings_setint(handle->settings, "synth.cpu-cores", 8);
+    fluid_settings_setint(handle->settings, "synth.chorus.active", 1);
     fluid_settings_setnum(handle->settings, "synth.reverb.active",
                           sDTPlayer.getReverbValue() == 0 ? 0 : 1);
     fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
@@ -201,12 +203,14 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
                 break;
             }
         }
+        handle->audio_driver = new_fluid_audio_driver(handle->settings, handle->synth);
     }
 }
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *env, jclass) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
+        delete_fluid_audio_driver(handle->audio_driver);
         sDTPlayer.setSf2Synth(handle->synth, false);
         fluid_synth_sfunload(handle->synth, handle->soundfont_id, 1);
         handle->soundfont_id = 0;

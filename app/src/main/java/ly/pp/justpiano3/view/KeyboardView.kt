@@ -538,11 +538,11 @@ class KeyboardView @JvmOverloads constructor(
         var volume: Byte = -1
         if (y < blackKeyHeight) {
             pitch = xyToBlackPitch(x, y)
-            volume = (y / blackKeyHeight * MAX_VOLUME).toInt().toByte()
+            volume = (y / blackKeyHeight * MAX_VOLUME).toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte()
         }
         if (pitch < 0) {
             pitch = xToWhitePitch(x)
-            volume = (y / viewHeight * MAX_VOLUME).toInt().toByte()
+            volume = (y / viewHeight * MAX_VOLUME).toInt().coerceAtMost(MAX_VOLUME.toInt()).toByte()
         }
         return Pair(pitch, volume)
     }
@@ -593,7 +593,7 @@ class KeyboardView @JvmOverloads constructor(
             notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
         }
         val blackKey = isBlackKey(pitch)
-        val handledVolume = (volume * 128f / 100).roundToInt().coerceAtMost(127)
+        val handledVolume = (volume * MAX_VOLUME.toFloat() / 100).roundToInt().coerceAtMost(MAX_VOLUME.toInt())
         notesOnPaintArray[pitchInScreen]!!.alpha = handledVolume shl 1
         if (color != null) {
             // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
