@@ -117,13 +117,13 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFile
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValue(
         JNIEnv *env, jclass, jint reverbValue) {
-//    sDTPlayer.setReverbValue(reverbValue);
-//    if (handle != nullptr && handle->settings != nullptr) {
-//        fluid_settings_setnum(handle->settings, "synth.reverb.active", reverbValue == 0 ? 0 : 1);
-//        fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
-//        fluid_settings_setnum(handle->settings, "synth.reverb.damping", (float) reverbValue / 100);
-//        fluid_settings_setnum(handle->settings, "synth.reverb.level", (float) reverbValue / 100);
-//    }
+    sDTPlayer.setReverbValue(reverbValue);
+    if (handle != nullptr && handle->settings != nullptr) {
+        fluid_settings_setnum(handle->settings, "synth.reverb.active", reverbValue == 0 ? 0 : 1);
+        fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
+        fluid_settings_setnum(handle->settings, "synth.reverb.damping", (float) reverbValue / 100);
+        fluid_settings_setnum(handle->settings, "synth.reverb.level", (float) reverbValue / 100);
+    }
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setDelayValue(
@@ -143,12 +143,12 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass) {
     fluid_settings_setint(handle->settings, "synth.midi-channels", 1);
     fluid_settings_setint(handle->settings, "synth.min-note-length", 0);
     fluid_settings_setint(handle->settings, "synth.chorus.active", 1);
-    fluid_settings_setnum(handle->settings, "synth.reverb.active", 1);
-//                          sDTPlayer.getReverbValue() == 0 ? 0 : 1);
+    fluid_settings_setnum(handle->settings, "synth.reverb.active",
+                          sDTPlayer.getReverbValue() == 0 ? 0 : 1);
     fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
     fluid_settings_setnum(handle->settings, "synth.reverb.damp", 0.5f);
-    fluid_settings_setnum(handle->settings, "synth.reverb.level", 100);
-//                          (float) sDTPlayer.getReverbValue() / 100);
+    fluid_settings_setnum(handle->settings, "synth.reverb.level",
+                          (float) sDTPlayer.getReverbValue() / 100);
 }
 
 JNIEXPORT void JNICALL
