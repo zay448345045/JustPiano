@@ -99,7 +99,7 @@ static void *readThreadRoutine(void *context) {
     while (true) {
         std::unique_lock<std::mutex> lock(mutex);
         conditionVariable.wait(lock, [] { return !messageQueue.empty(); });
-        midi_received_message &message = messageQueue.front();
+        midi_received_message message = messageQueue.front();
         messageQueue.pop();
         lock.unlock();
         sendTheReceivedData(env, message.data, message.numBytes);
