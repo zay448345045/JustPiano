@@ -51,7 +51,7 @@
             android:title="MIDI设备" />
 
         <PreferenceScreen
-            android:summary="延音、混响、按键震动等"
+            android:summary="踏板、延音、按键震动等"
             android:title="声音效果设置">
             <intent
                 android:data="settings_sound"
