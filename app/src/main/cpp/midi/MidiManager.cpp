@@ -4,12 +4,8 @@
 #include <cstdio>
 #include <unistd.h>
 
-#include <atomic>
 #include <string>
 #include <map>
-#include <queue>
-#include <mutex>
-#include <condition_variable>
 
 #include <amidi/AMidi.h>
 #include <android/log.h>
@@ -23,20 +19,11 @@ typedef struct {
     bool sReading;
 } midi_device_handle_t;
 
-typedef struct {
-    uint8_t *data;
-    size_t numBytes;
-} midi_received_message;
-
 // The Data Callback
 static JavaVM *theJvm;           // Need this for allocating data buffer for...
 static jclass dataCallbackClass;  // This is the (Java) class...
 static jmethodID midDataCallback;  // ...this callback routine
-
 static std::map<intptr_t, midi_device_handle_t> midiDeviceMap;
-static std::queue<midi_received_message> messageQueue;
-static std::mutex mutex;
-static std::condition_variable conditionVariable;
 
 static void sendTheReceivedData(JNIEnv *env, uint8_t *data, size_t numBytes) {
     if (env == nullptr) {
@@ -65,6 +52,8 @@ static void *readThreadRoutine(void *context) {
     midi_device_handle_t &midiDeviceHandle = midiDeviceMap[reinterpret_cast<intptr_t>(context)];
     const size_t MAX_BYTES_TO_RECEIVE = 128;
     uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
+    JNIEnv *env;
+    theJvm->AttachCurrentThread(&env, nullptr);
     while (midiDeviceHandle.sReading) {
         // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU unnecessarily
         usleep(2000);
@@ -75,47 +64,22 @@ static void *readThreadRoutine(void *context) {
                 midiDeviceHandle.sMidiOutputPort, &opcode, incomingMessage,
                 MAX_BYTES_TO_RECEIVE, &numBytesReceived, &timestamp);
         if (numMessagesReceived < 0) {
-            __android_log_print(ANDROID_LOG_WARN, TAG, "Failure receiving MIDI data %zd",
-                                numMessagesReceived);
+            __android_log_print(ANDROID_LOG_WARN, TAG, "Failure read %zd", numMessagesReceived);
             // Exit the thread
             midiDeviceHandle.sReading = false;
         } else if (numMessagesReceived > 0 && numBytesReceived >= 0) {
             if (opcode == AMIDI_OPCODE_DATA && (incomingMessage[0] & 0xF0) != 0xF0) {
-                midi_received_message receivedMessage;
-                receivedMessage.data = incomingMessage;
-                receivedMessage.numBytes = numBytesReceived;
-                std::lock_guard<std::mutex> lock(mutex);
-                messageQueue.push(receivedMessage);
-                conditionVariable.notify_one();
+                sendTheReceivedData(env, incomingMessage, numBytesReceived);
             }
         }
     }
     return nullptr;
 }
 
-[[noreturn]] static void *consumerReceivedMidiData(void *) {
-    JNIEnv *env;
-    theJvm->AttachCurrentThread(&env, nullptr);
-    while (true) {
-        std::unique_lock<std::mutex> lock(mutex);
-        conditionVariable.wait(lock, [] { return !messageQueue.empty(); });
-        midi_received_message message = messageQueue.front();
-        messageQueue.pop();
-        lock.unlock();
-        sendTheReceivedData(env, message.data, message.numBytes);
-    }
-}
-
 //
 // JNI Functions
 //
 extern "C" {
-
-void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_init(JNIEnv *env, jclass) {
-    env->GetJavaVM(&theJvm);
-    pthread_t consumer;
-    pthread_create(&consumer, nullptr, consumerReceivedMidiData, nullptr);
-}
 
 /**
  * Native implementation of TBMidiManager.startReadingMidi() method.
@@ -127,6 +91,7 @@ void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_init(JNIEnv *env, jclass) {
  */
 void Java_ly_pp_justpiano3_utils_MidiDeviceUtil_startReadingMidi(
         JNIEnv *env, jclass clazz, jobject midiDeviceObj, jint portNumber, jint deviceId) {
+    env->GetJavaVM(&theJvm);
     // Setup the receive data callback (into Java)
     dataCallbackClass = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
     midDataCallback = env->GetStaticMethodID(clazz, "onMidiMessageReceive", "(IBB)V");

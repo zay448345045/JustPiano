@@ -135,6 +135,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass) {
     handle->settings = new_fluid_settings();
     handle->synth = nullptr;
     handle->soundfont_id = 0;
+    fluid_settings_setint(handle->settings, "synth.cpu-cores", 4);
     fluid_settings_setint(handle->settings, "audio.realtime-prio", 99);
     fluid_settings_setint(handle->settings, "synth.polyphony", 1024);
     fluid_settings_setnum(handle->settings, "synth.gain", 1);

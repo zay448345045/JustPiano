@@ -27,7 +27,6 @@ public class MidiDeviceUtil {
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             System.loadLibrary("midi");
-            init();
         }
     }
 
@@ -278,9 +277,6 @@ public class MidiDeviceUtil {
     public static void setMidiSustainPedalListener(MidiSustainPedalListener midiSustainPedalListener) {
         MidiDeviceUtil.midiSustainPedalListener = midiSustainPedalListener;
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    private static native void init();
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private static native void startReadingMidi(MidiDevice receiveDevice, int portNumber, int deviceId);
