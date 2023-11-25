@@ -47,7 +47,6 @@ include_directories(
 set(APP_SOURCES
         SoundEngine.cpp
         RecordingIO.cpp
-        utils/Utils.h
         )
 
 # Build the (native) library

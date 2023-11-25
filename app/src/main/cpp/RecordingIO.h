@@ -27,8 +27,11 @@ public:
 
     void write_buffer(float *sourceData, size_t numSamples);
 
-    void setRecordingFilePath(char *recordingFilePath) {
-        mRecordingFilePath = std::move(recordingFilePath);
+    void setRecordingFilePath(const char *recordingFilePath) {
+        if (mRecordingFilePath != nullptr) {
+            free(mRecordingFilePath);
+        }
+        mRecordingFilePath = strdup(recordingFilePath);
     }
 
     void reserveRecordingBuffer(int reserve);

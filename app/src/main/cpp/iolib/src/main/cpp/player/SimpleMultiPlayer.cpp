@@ -253,7 +253,7 @@ namespace iolib {
         mRecord = r;
     }
 
-    void SimpleMultiPlayer::setRecordFilePath(char *s) {
+    void SimpleMultiPlayer::setRecordFilePath(const char *s) {
         mRecordingIO->setRecordingFilePath(s);
     }
 

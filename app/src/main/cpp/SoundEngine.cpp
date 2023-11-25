@@ -10,7 +10,6 @@
 // parselib includes
 #include <stream/MemInputStream.h>
 #include <wav/WavStreamReader.h>
-#include "utils/Utils.h"
 
 #include <player/OneShotSampleSource.h>
 #include <player/SimpleMultiPlayer.h>
@@ -111,7 +110,7 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecord(
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFilePath(
         JNIEnv *env, jclass, jstring recordFilePath) {
-    char *path = java_str_to_c_str(env, recordFilePath);
+    const char *path = env->GetStringUTFChars(recordFilePath, NULL);
     sDTPlayer.setRecordFilePath(path);
 }
 
@@ -190,7 +189,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_close(JNIEnv *env, jclass) {
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring filePath) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id <= 0) {
-        char *path = java_str_to_c_str(env, filePath);
+        const char *path = env->GetStringUTFChars(filePath, nullptr);
         handle->soundfont_id = fluid_synth_sfload(handle->synth, path, 1);
         fluid_sfont_t *soundFont = fluid_synth_get_sfont_by_id(handle->synth, handle->soundfont_id);
         fluid_sfont_iteration_start(soundFont);

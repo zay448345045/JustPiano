@@ -88,7 +88,7 @@ namespace iolib {
 
         void setRecord(bool r);
 
-        void setRecordFilePath(char *s);
+        void setRecordFilePath(const char *s);
 
         void setSf2Synth(_fluid_synth_t *synth, bool enable);
 

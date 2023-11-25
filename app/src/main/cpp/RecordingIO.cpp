@@ -3,13 +3,13 @@
 #include <string>
 #include <unistd.h>
 #include "RecordingIO.h"
-#include "utils/Utils.h"
 #include <mutex>
 #include <cstdlib>
 #include <fcntl.h>
 #include <condition_variable>
 #include <sys/stat.h>
 
+using namespace std;
 mutex RecordingIO::flushMtx;
 condition_variable RecordingIO::flushed;
 bool RecordingIO::ongoing_flush_completed = true;
