@@ -95,8 +95,10 @@ public final class JPApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // 严苛模式开启
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
+        // debug下，严苛模式开启
+        if (BuildConfig.DEBUG) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
+        }
         // 设置拦截app中未捕获的异常
         new CrashHandler().init();
         // 初始化一些图像缓存

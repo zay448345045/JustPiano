@@ -172,7 +172,6 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_open(JNIEnv *env, jclass) {
             delete_fluid_synth(handle->synth);
         }
         handle->synth = new_fluid_synth(handle->settings);
-        fluid_synth_set_interp_method(handle->synth, -1, FLUID_INTERP_NONE);
     }
 }
 
@@ -204,6 +203,17 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
             }
         }
         handle->audio_driver = new_fluid_audio_driver(handle->settings, handle->synth);
+        fluid_synth_noteon(handle->synth, 0, 81, 127); // play middle C
+        sleep(2); // sleep for 1 second
+        fluid_synth_noteoff(handle->synth, 0, 81); // stop playing middle C
+
+        fluid_synth_noteon(handle->synth, 0, 83, 127);
+        sleep(2);
+        fluid_synth_noteoff(handle->synth, 0, 83);
+
+        fluid_synth_noteon(handle->synth, 0, 85, 127);
+        sleep(2);
+        fluid_synth_noteoff(handle->synth, 0, 85);
     }
 }
 
