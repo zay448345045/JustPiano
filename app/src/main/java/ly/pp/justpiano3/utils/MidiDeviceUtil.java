@@ -304,13 +304,18 @@ public class MidiDeviceUtil {
             }
         } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
             // 延音踏板，midi的CC控制器64号判断
-            boolean currentSustainPedalValue = (value3 & 0xFF) >= 64;
-            if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
-                    && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()) {
-                if (midiSustainPedalListener != null) {
-                    midiSustainPedalListener.onChange(currentSustainPedalValue);
-                }
-            }
+            changeSustainPedalStatus((value3 & 0xFF) >= 64);
+        }
+    }
+
+    /**
+     * 修改延音踏板状态
+     */
+    private static void changeSustainPedalStatus(boolean currentSustainPedalValue) {
+        if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
+                && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()
+                && midiSustainPedalListener != null) {
+            midiSustainPedalListener.onChange(currentSustainPedalValue);
         }
     }
 

@@ -35,16 +35,18 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                     return;
                 case 5:
                     post(() -> {
+                        // 1.读取键盘音符事件信息，为空或长度为零则直接结束
                         long[] notes = message.getData().getLongArray("NOTES");
                         if (notes == null || notes.length == 0) {
                             return;
                         }
+                        // 2.提取键盘音符事件的头信息，根据楼号确定用户
                         int roomPositionSub1 = (byte) (notes[0] & 0xF);
                         User user = olPlayKeyboardRoom.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
                         if (user == null) {
                             return;
                         }
-                        boolean sustainPedalOn = ((notes[0] >> 5) & 1) == 1;
+                        // 3.继续读头信息，根据midi键盘是否开启，更新midi键盘图标显示
                         boolean midiKeyboardOn = ((notes[0] >> 4) & 1) == 1;
                         if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMidiKeyboardOn() != midiKeyboardOn) {
                             olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
@@ -54,12 +56,14 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                 olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
                             }
                         }
+                        // 4.执行人物形象闪烁
                         olPlayKeyboardRoom.blinkView(roomPositionSub1);
+                        // 5.循环计算音符事件的总持续时间，如果总持续时间为0，直接进行播放和琴键按下/抬起处理，否则启动线程进行sleep逐个处理
                         long totalIntervalTime = 0;
                         for (int i = 1; i < notes.length; i += 3) {
                             totalIntervalTime += notes[i];
                         }
-                        // 无间隔时间，不用启动子线程，提升一键一发的执行效率
+                        boolean sustainPedalOn = ((notes[0] >> 5) & 1) == 1;
                         if (totalIntervalTime == 0) {
                             for (int i = 1; i < notes.length; i += 3) {
                                 handleKeyboardView(olPlayKeyboardRoom, notes, user, i, sustainPedalOn);
