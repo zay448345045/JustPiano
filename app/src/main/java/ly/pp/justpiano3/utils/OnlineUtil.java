@@ -149,10 +149,10 @@ public class OnlineUtil {
             OnlineUtil.autoReconnectTime = null;
             OnlineUtil.autoReconnectCount = 0;
             OnlineUtil.handleOnTopBaseActivity(olBaseActivity -> {
-                olBaseActivity.jpprogressBar.setCancelable(true);
-                olBaseActivity.jpprogressBar.setText("");
-                if (olBaseActivity.jpprogressBar.isShowing()) {
-                    olBaseActivity.jpprogressBar.dismiss();
+                olBaseActivity.jpProgressBar.setCancelable(true);
+                olBaseActivity.jpProgressBar.setText("");
+                if (olBaseActivity.jpProgressBar.isShowing()) {
+                    olBaseActivity.jpProgressBar.dismiss();
                 }
             }, 0L);
         }
@@ -172,15 +172,15 @@ public class OnlineUtil {
                 autoReconnectTime = System.currentTimeMillis();
                 autoReconnectCount = 0;
                 handleOnTopBaseActivity(olBaseActivity -> {
-                    if (!olBaseActivity.jpprogressBar.isShowing()) {
+                    if (!olBaseActivity.jpProgressBar.isShowing()) {
                         updateProgressBarText(olBaseActivity);
-                        olBaseActivity.jpprogressBar.setCancelable(false);
-                        olBaseActivity.jpprogressBar.show();
+                        olBaseActivity.jpProgressBar.setCancelable(false);
+                        olBaseActivity.jpProgressBar.show();
                     }
                 }, 0L);
             } else {
                 handleOnTopBaseActivity(olBaseActivity -> {
-                    if (olBaseActivity.jpprogressBar.isShowing() && autoReconnectTime != null) {
+                    if (olBaseActivity.jpProgressBar.isShowing() && autoReconnectTime != null) {
                         updateProgressBarText(olBaseActivity);
                     }
                 }, 0L);
@@ -189,7 +189,7 @@ public class OnlineUtil {
             if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * AUTO_RECONNECT_INTERVAL_TIME) {
                 outlineConnectionService(jpApplication);
                 handleOnTopBaseActivity(olBaseActivity -> {
-                    if (olBaseActivity.jpprogressBar.isShowing()) {
+                    if (olBaseActivity.jpProgressBar.isShowing()) {
                         updateProgressBarText(olBaseActivity);
                         onlineConnectionService(jpApplication);
                         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! do autoReconnect:"
@@ -204,10 +204,10 @@ public class OnlineUtil {
     }
 
     private static void updateProgressBarText(OLBaseActivity olBaseActivity) {
-        olBaseActivity.jpprogressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
+        olBaseActivity.jpProgressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
                 (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
                 + "点击取消");
-        olBaseActivity.jpprogressBar.addClickableLink("点击取消", () -> {
+        olBaseActivity.jpProgressBar.addClickableLink("点击取消", () -> {
             olBaseActivity.progressBarDismissAndReInit();
             OLBaseActivity.returnMainMode(olBaseActivity);
         });

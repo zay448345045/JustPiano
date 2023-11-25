@@ -23,8 +23,8 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        if (jpprogressBar != null) {
-            jpprogressBar.dismiss();
+        if (jpProgressBar != null) {
+            jpProgressBar.dismiss();
         }
         Intent intent = new Intent();
         intent.putExtra("no_auto", true);
@@ -59,7 +59,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                     return;
                 }
 //                new SongSyncDialogTask(this).execute();
-                jpprogressBar.show();
+                jpProgressBar.show();
                 OnlineUtil.cancelAutoReconnect();
                 OnlineUtil.onlineConnectionService(jpapplication);
                 return;

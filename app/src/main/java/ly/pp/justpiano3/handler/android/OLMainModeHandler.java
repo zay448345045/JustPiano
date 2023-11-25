@@ -24,39 +24,39 @@ public final class OLMainModeHandler extends Handler {
         Intent intent = new Intent(oLMainMode, OLPlayHallRoom.class);
         switch (message.what) {
             case 1:
-                oLMainMode.jpprogressBar.cancel();
+                oLMainMode.jpProgressBar.cancel();
                 intent.putExtra("HEAD", 1);
                 oLMainMode.startActivity(intent);
                 oLMainMode.finish();
                 return;
             case 2:
-                oLMainMode.jpprogressBar.cancel();
+                oLMainMode.jpProgressBar.cancel();
                 Looper.prepare();
                 oLMainMode.addDialog("提示", "确定", "连接服务器失败");
                 Looper.loop();
                 return;
             case 3:
-                if (oLMainMode.jpprogressBar != null && oLMainMode.jpprogressBar.isShowing()) {
-                    oLMainMode.jpprogressBar.cancel();
+                if (oLMainMode.jpProgressBar != null && oLMainMode.jpProgressBar.isShowing()) {
+                    oLMainMode.jpProgressBar.cancel();
                 }
                 Looper.prepare();
                 oLMainMode.addDialog("提示", "确定", "服务器未响应!");
                 Looper.loop();
                 return;
             case 4:
-                oLMainMode.jpprogressBar.cancel();
+                oLMainMode.jpProgressBar.cancel();
                 Looper.prepare();
                 oLMainMode.addDialog("提示", "确定", "账号不存在，请尝试返回主界面重新登录");
                 Looper.loop();
                 return;
             case 5:
-                oLMainMode.jpprogressBar.cancel();
+                oLMainMode.jpProgressBar.cancel();
                 Looper.prepare();
                 oLMainMode.addDialog("提示", "确定", "该账号已在别处登录!");
                 Looper.loop();
                 return;
             case 6:
-                oLMainMode.jpprogressBar.cancel();
+                oLMainMode.jpProgressBar.cancel();
                 Looper.prepare();
                 oLMainMode.addDialog("提示", "确定", "您的版本过低，请下载最新版本");
                 Looper.loop();

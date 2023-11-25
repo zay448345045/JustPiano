@@ -63,5 +63,6 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
     @Override
     protected void onPreExecute() {
         soundListPreference.jpProgressBar.show();
+        soundListPreference.jpProgressBar.setCancelable(false);
     }
 }

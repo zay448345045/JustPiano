@@ -60,9 +60,9 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             if (jsonObject.getInt("C") > 0) {
                 message = "您有《" + jsonObject.getString("F") + "》等" + jsonObject.getInt("C") + "首在线曲库曲谱改动需同步至本地曲库，同步后方可进入对战。是否现在同步曲谱?";
                 i = 1;
-                olMainMode.get().jpprogressBar.dismiss();
+                olMainMode.get().jpProgressBar.dismiss();
             } else {
-                olMainMode.get().jpprogressBar.show();
+                olMainMode.get().jpProgressBar.show();
                 OnlineUtil.cancelAutoReconnect();
                 OnlineUtil.onlineConnectionService(olMainMode.get().jpapplication);
                 i = 0;
@@ -80,14 +80,14 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             }
         } catch (Exception e) {
             Toast.makeText(olMainMode.get(), "无法检查曲库同步，请尝试重新登录", Toast.LENGTH_SHORT).show();
-            olMainMode.get().jpprogressBar.dismiss();
+            olMainMode.get().jpProgressBar.dismiss();
         }
     }
 
     @Override
     protected void onPreExecute() {
-        olMainMode.get().jpprogressBar.setCancelable(true);
-        olMainMode.get().jpprogressBar.setOnCancelListener(dialog -> cancel(true));
-        olMainMode.get().jpprogressBar.show();
+        olMainMode.get().jpProgressBar.setCancelable(true);
+        olMainMode.get().jpProgressBar.setOnCancelListener(dialog -> cancel(true));
+        olMainMode.get().jpProgressBar.show();
     }
 }

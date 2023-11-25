@@ -206,6 +206,7 @@ public class SoundDownload extends Activity implements Callback {
                 case 5:
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.show();
+                    jpProgressBar.setCancelable(false);
                     Toast.makeText(getApplicationContext(), "正在载入音源,请稍后。。。", Toast.LENGTH_SHORT).show();
                     break;
                 case 6:

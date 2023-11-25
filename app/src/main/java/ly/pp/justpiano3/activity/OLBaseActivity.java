@@ -21,7 +21,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 
 public class OLBaseActivity extends ComponentActivity {
     private boolean online = true;
-    public JPProgressBar jpprogressBar;
+    public JPProgressBar jpProgressBar;
     public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);
     private final Map<Byte, User> roomPlayerMap = new HashMap<>();
 
@@ -59,10 +59,10 @@ public class OLBaseActivity extends ComponentActivity {
     }
 
     public final void progressBarDismissAndReInit() {
-        if (jpprogressBar != null && jpprogressBar.isShowing()) {
-            jpprogressBar.setText("");
-            jpprogressBar.setCancelable(true);
-            jpprogressBar.dismiss();
+        if (jpProgressBar != null && jpProgressBar.isShowing()) {
+            jpProgressBar.setText("");
+            jpProgressBar.setCancelable(true);
+            jpProgressBar.dismiss();
         }
     }
 
@@ -70,7 +70,7 @@ public class OLBaseActivity extends ComponentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JPStack.push(this);
-        jpprogressBar = new JPProgressBar(this);
+        jpProgressBar = new JPProgressBar(this);
     }
 
     @Override

@@ -62,7 +62,8 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
         nameView.setText(name);
         nameView.setOnClickListener(v -> {
             dialog.dismiss();
-            olPlayKeyboardRoom.jpprogressBar.show();
+            olPlayKeyboardRoom.jpProgressBar.show();
+            olPlayKeyboardRoom.jpProgressBar.setCancelable(false);
             ThreadPoolUtil.execute(() -> {
                 File dir = olPlayKeyboardRoom.getDir("Skin", Context.MODE_PRIVATE);
                 if (dir.isDirectory()) {
@@ -84,7 +85,7 @@ public final class SimpleSkinListAdapter extends BaseAdapter {
                 olPlayKeyboardRoom.runOnUiThread(() -> {
                     olPlayKeyboardRoom.keyboardView.changeSkinKeyboardImage(olPlayKeyboardRoom);
                     ImageLoadUtil.setBackground(olPlayKeyboardRoom, "ground", olPlayKeyboardRoom.findViewById(R.id.layout));
-                    olPlayKeyboardRoom.jpprogressBar.dismiss();
+                    olPlayKeyboardRoom.jpProgressBar.dismiss();
                     Toast.makeText(olPlayKeyboardRoom, "皮肤设置成功", Toast.LENGTH_SHORT).show();
                 });
             });

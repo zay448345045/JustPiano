@@ -141,7 +141,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void v) {
         if (weakReference.get() instanceof OLMainMode) {
             Toast.makeText(weakReference.get(), "在线曲库同步成功，已处理曲谱" + count + "首", Toast.LENGTH_SHORT).show();
-            ((OLMainMode) weakReference.get()).jpprogressBar.show();
+            ((OLMainMode) weakReference.get()).jpProgressBar.show();
             OnlineUtil.cancelAutoReconnect();
             OnlineUtil.onlineConnectionService(((OLMainMode) weakReference.get()).jpapplication);
         } else if (weakReference.get() instanceof MelodySelect) {
@@ -165,8 +165,8 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
         if (weakReference.get() instanceof OLMainMode) {
             OLMainMode olMainMode = (OLMainMode) weakReference.get();
             Toast.makeText(olMainMode, "曲库同步中...", Toast.LENGTH_SHORT).show();
-            olMainMode.jpprogressBar.setCancelable(false);
-            olMainMode.jpprogressBar.show();
+            olMainMode.jpProgressBar.setCancelable(false);
+            olMainMode.jpProgressBar.show();
         } else if (weakReference.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) weakReference.get();
             Toast.makeText(melodySelect, "曲库同步中...", Toast.LENGTH_SHORT).show();

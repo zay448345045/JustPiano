@@ -62,7 +62,8 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
         nameView.setText(name);
         nameView.setOnClickListener(v -> {
             dialog.dismiss();
-            olPlayKeyboardRoom.jpprogressBar.show();
+            olPlayKeyboardRoom.jpProgressBar.show();
+            olPlayKeyboardRoom.jpProgressBar.setCancelable(false);
             ThreadPoolUtil.execute(() -> {
                 if (name.equals("默认音源")) {
                     SoundEngineUtil.reLoadOriginalSounds(olPlayKeyboardRoom.getApplicationContext());
@@ -102,7 +103,7 @@ public final class SimpleSoundListAdapter extends BaseAdapter {
                     }
                 }
                 olPlayKeyboardRoom.runOnUiThread(() -> {
-                    olPlayKeyboardRoom.jpprogressBar.dismiss();
+                    olPlayKeyboardRoom.jpProgressBar.dismiss();
                     Toast.makeText(olPlayKeyboardRoom, "音源设置成功", Toast.LENGTH_SHORT).show();
                 });
             });

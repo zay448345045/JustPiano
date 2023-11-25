@@ -43,5 +43,6 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
     @Override
     protected void onPreExecute() {
         skinListPreference.jpProgressBar.show();
+        skinListPreference.jpProgressBar.setCancelable(false);
     }
 }

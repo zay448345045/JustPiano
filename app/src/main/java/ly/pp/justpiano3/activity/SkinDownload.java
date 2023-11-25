@@ -191,6 +191,7 @@ public class SkinDownload extends Activity implements Callback {
                 case 5:
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.show();
+                    jpProgressBar.setCancelable(false);
                     break;
                 case 6:
                     linearLayout.setVisibility(View.GONE);

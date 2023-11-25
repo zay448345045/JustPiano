@@ -762,7 +762,7 @@ public final class PlayView extends SurfaceView implements Callback {
             }
         }
         for (PlayNote playNote : deleteNotesArray) {
-            SoundEngineUtil.stopPlaySound(playNote.pitch);
+            pianoPlay.pianoPlayHandler.postDelayed(() -> SoundEngineUtil.stopPlaySound(playNote.pitch), 100);
         }
         notesList.removeAll(deleteNotesArray);
         int i;

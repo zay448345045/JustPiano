@@ -415,12 +415,12 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
     override fun onMidiMessageReceive(pitch: Byte, volume: Byte) {
         if (volume > 0) {
             SoundEngineUtil.playSound(pitch, volume)
-            keyboardView.fireKeyDown(pitch, volume, null)
             freeStyleKeyDownHandle(pitch, volume)
+            keyboardView.fireKeyDown(pitch, volume, null)
         } else {
             SoundEngineUtil.stopPlaySound(pitch)
-            keyboardView.fireKeyUp(pitch)
             freeStyleKeyUpHandle(pitch)
+            keyboardView.fireKeyUp(pitch)
         }
     }
 
