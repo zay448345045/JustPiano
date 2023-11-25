@@ -52,6 +52,10 @@ namespace iolib {
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
         if (mEnableSf2 && pSynth != nullptr) {
+            fluid_synth_write_float(pSynth, numFrames, (float *) audioData,
+                                    0, 2,(float *) audioData, 1, 2);
+            memcpy(mMixBuffer, ((float *) audioData),
+                   numFrames * mChannelCount * sizeof(float));
             handleSf2DelayNoteOff(numFrames);
         } else {
             mixAudioToBuffer((float *) audioData, numFrames);

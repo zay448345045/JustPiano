@@ -25,7 +25,6 @@ using namespace iolib;
 using namespace parselib;
 
 typedef struct {
-    fluid_audio_driver_t *audio_driver;
     fluid_settings_t *settings;
     fluid_synth_t *synth;
     int soundfont_id;
@@ -110,7 +109,7 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecord(
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFilePath(
         JNIEnv *env, jclass, jstring recordFilePath) {
-    const char *path = env->GetStringUTFChars(recordFilePath, NULL);
+    const char *path = env->GetStringUTFChars(recordFilePath, nullptr);
     sDTPlayer.setRecordFilePath(path);
 }
 
@@ -202,14 +201,12 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
                 break;
             }
         }
-        handle->audio_driver = new_fluid_audio_driver(handle->settings, handle->synth);
     }
 }
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *env, jclass) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
-        delete_fluid_audio_driver(handle->audio_driver);
         sDTPlayer.setSf2Synth(handle->synth, false);
         fluid_synth_sfunload(handle->synth, handle->soundfont_id, 1);
         handle->soundfont_id = 0;
