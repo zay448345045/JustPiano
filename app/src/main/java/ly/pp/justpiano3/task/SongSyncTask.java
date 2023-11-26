@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
@@ -33,7 +34,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
+public final class SongSyncTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<Activity> weakReference;
     private int count = 0;
 
@@ -42,9 +43,9 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... v) {
+    protected String doInBackground(Void... v) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(weakReference.get());
-        long lastSongModifiedTime = sharedPreferences.getLong("song_sync_time", 0);
+        long lastSongModifiedTime = sharedPreferences.getLong("song_sync_time", PmSongUtil.SONG_SYNC_DEFAULT_TIME);
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)
@@ -67,14 +68,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
                     jSONObject = new JSONObject();
                     e.printStackTrace();
                 }
-
-                // 2.取当前同步时间，存储到sharedPreference，下一次曲谱同步时进行获取
-                long syncSongTime = jSONObject.getLong("T");
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(weakReference.get()).edit();
-                editor.putLong("song_sync_time", syncSongTime);
-                editor.apply();
-
-                // 3.取已删除的曲谱id列表，准备进行数据库曲谱同步的删除操作
+                // 2.取已删除的曲谱id列表，准备进行数据库曲谱同步的删除操作
                 List<Song> deleteSongList = new ArrayList<>();
                 String deleteSongIdList = jSONObject.getString("D");
                 if (!StringUtil.isNullOrEmpty(deleteSongIdList)) {
@@ -84,8 +78,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
                                 0, 0, 1, 0, 0, 0));
                     }
                 }
-
-                // 4.取新增/更新的曲谱文件，解压并准备进行数据库填充
+                // 3.取新增/更新的曲谱文件，解压并准备进行数据库填充
                 List<Song> insertSongList = new ArrayList<>();
                 List<Song> updateSongList = new ArrayList<>();
                 byte[] bytes = GZIPUtil.ZIPToArray(jSONObject.getString("S"));
@@ -97,29 +90,30 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
                 List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
                 for (File file : files) {
-                    String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getName());
+                    String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
                     if (item == null) {
+                        continue;
+                    }
+                    // 读取新的曲谱文件信息
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    byte[] pmData = new byte[fileInputStream.available()];
+                    fileInputStream.read(pmData);
+                    PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(pmData);
+                    if (pmSongData == null) {
                         continue;
                     }
                     // 按曲谱id取原pm文件，若原pm文件存在，走更新逻辑
                     PmSongData oldPmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(weakReference.get(),
                             "songs/" + item + "/" + file.getName());
                     if (oldPmSongData != null) {
-                        Integer songId = PmSongUtil.INSTANCE.getPmSongIdByFilePath(file.getName());
+                        Integer songId = PmSongUtil.INSTANCE.getPmSongIdByFilePath(file.getAbsolutePath());
                         if (songId != null) {
-                            updateSongList.add(new Song(songId, oldPmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
+                            updateSongList.add(new Song(songId, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
                                     "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
-                                    0, 0, 0, oldPmSongData.getRightHandDegree(), 1,
-                                    oldPmSongData.getLeftHandDegree(), oldPmSongData.getSongTime(), 0));
+                                    0, 0, 0, pmSongData.getRightHandDegree(), 1,
+                                    pmSongData.getLeftHandDegree(), pmSongData.getSongTime(), 0));
                         }
                     } else {
-                        FileInputStream fileInputStream = new FileInputStream(file);
-                        byte[] pmData = new byte[fileInputStream.available()];
-                        fileInputStream.read(pmData);
-                        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(pmData);
-                        if (pmSongData == null) {
-                            continue;
-                        }
                         insertSongList.add(new Song(null, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
                                 "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
                                 0, 0, 0, pmSongData.getRightHandDegree(), 1,
@@ -127,36 +121,51 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
                     }
                     count++;
                 }
-
-                // 5.执行曲谱同步，数据库批量操作
+                // 4.执行曲谱同步，数据库批量操作
                 JPApplication.getSongDatabase().songDao().syncSongs(insertSongList, updateSongList, deleteSongList);
+                // 5.取当前同步时间，存储到sharedPreference，下一次曲谱同步时进行获取
+                long syncSongTime = jSONObject.getLong("T");
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(weakReference.get()).edit();
+                editor.putLong("song_sync_time", syncSongTime);
+                editor.apply();
             }
         } catch (Exception e3) {
             e3.printStackTrace();
+            return "error";
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(Void v) {
+    protected void onPostExecute(String result) {
         if (weakReference.get() instanceof OLMainMode) {
-            Toast.makeText(weakReference.get(), "在线曲库同步成功，已处理曲谱" + count + "首", Toast.LENGTH_SHORT).show();
-            ((OLMainMode) weakReference.get()).jpProgressBar.show();
-            OnlineUtil.cancelAutoReconnect();
-            OnlineUtil.onlineConnectionService(((OLMainMode) weakReference.get()).jpapplication);
+            if (Objects.equals("error", result)) {
+                Toast.makeText(weakReference.get(), "曲库同步失败，请尝试卸载重装app或联系开发者", Toast.LENGTH_SHORT).show();
+                ((OLMainMode) weakReference.get()).jpProgressBar.dismiss();
+            } else {
+                Toast.makeText(weakReference.get(), "曲库同步成功，已处理曲谱" + count + "首", Toast.LENGTH_SHORT).show();
+                ((OLMainMode) weakReference.get()).jpProgressBar.show();
+                OnlineUtil.cancelAutoReconnect();
+                OnlineUtil.onlineConnectionService(((OLMainMode) weakReference.get()).jpapplication);
+            }
         } else if (weakReference.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) weakReference.get();
-            melodySelect.jpprogressBar.dismiss();
-            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(melodySelect);
-            jpDialogBuilder.setTitle("在线曲库同步");
-            jpDialogBuilder.setCancelableFalse();
-            jpDialogBuilder.setMessage("在线曲库同步成功，已处理曲谱" + count + "首");
-            jpDialogBuilder.setSecondButton("确定", ((dialogInterface, i) -> {
-                List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
-                melodySelect.getTotalSongInfoMutableLiveData().setValue(allSongsCountAndScore.get(0));
-                dialogInterface.dismiss();
-            }));
-            jpDialogBuilder.buildAndShowDialog();
+            if (Objects.equals("error", result)) {
+                Toast.makeText(weakReference.get(), "曲库同步失败，请尝试卸载重装app或联系开发者", Toast.LENGTH_SHORT).show();
+                ((MelodySelect) weakReference.get()).jpProgressBar.dismiss();
+            } else {
+                MelodySelect melodySelect = (MelodySelect) weakReference.get();
+                melodySelect.jpProgressBar.dismiss();
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(melodySelect);
+                jpDialogBuilder.setTitle("曲库同步");
+                jpDialogBuilder.setCancelableFalse();
+                jpDialogBuilder.setMessage("曲库同步成功，已处理曲谱" + count + "首");
+                jpDialogBuilder.setSecondButton("确定", ((dialogInterface, i) -> {
+                    List<SongDao.TotalSongInfo> allSongsCountAndScore = JPApplication.getSongDatabase().songDao().getAllSongsCountAndScore();
+                    melodySelect.getTotalSongInfoMutableLiveData().setValue(allSongsCountAndScore.get(0));
+                    dialogInterface.dismiss();
+                }));
+                jpDialogBuilder.buildAndShowDialog();
+            }
         }
     }
 
@@ -170,8 +179,8 @@ public final class SongSyncTask extends AsyncTask<Void, Void, Void> {
         } else if (weakReference.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) weakReference.get();
             Toast.makeText(melodySelect, "曲库同步中...", Toast.LENGTH_SHORT).show();
-            melodySelect.jpprogressBar.setCancelable(false);
-            melodySelect.jpprogressBar.show();
+            melodySelect.jpProgressBar.setCancelable(false);
+            melodySelect.jpProgressBar.show();
         }
     }
 }

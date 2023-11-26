@@ -13,6 +13,7 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -28,7 +29,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... objects) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(olMainMode.get());
-        long lastSongModifiedTime = sharedPreferences.getLong("song_sync_time", 0);
+        long lastSongModifiedTime = sharedPreferences.getLong("song_sync_time", PmSongUtil.SONG_SYNC_DEFAULT_TIME);
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)

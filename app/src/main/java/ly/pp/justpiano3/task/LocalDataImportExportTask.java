@@ -72,7 +72,7 @@ public final class LocalDataImportExportTask extends AsyncTask<Void, Void, Strin
     protected void onPostExecute(String str) {
         if (weakReference.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) weakReference.get();
-            melodySelect.jpprogressBar.dismiss();
+            melodySelect.jpProgressBar.dismiss();
             if (!StringUtil.isNullOrEmpty(str)) {
                 Toast.makeText(melodySelect, str, Toast.LENGTH_LONG).show();
             }
@@ -83,8 +83,8 @@ public final class LocalDataImportExportTask extends AsyncTask<Void, Void, Strin
     protected void onPreExecute() {
         if (weakReference.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) weakReference.get();
-            melodySelect.jpprogressBar.setCancelable(false);
-            melodySelect.jpprogressBar.show();
+            melodySelect.jpProgressBar.setCancelable(false);
+            melodySelect.jpProgressBar.show();
             if (type == 2) {
                 Toast.makeText(melodySelect, "导入开始，请耐心等候...", Toast.LENGTH_SHORT).show();
             }

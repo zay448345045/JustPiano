@@ -67,7 +67,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
-    public JPProgressBar jpprogressBar;
+    public JPProgressBar jpProgressBar;
     public String songsPath = "";
     public CheckBox isRecord;
     public CheckBox isLeftHand;
@@ -162,8 +162,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             } else if (midiFile.length() > 256 * 1024) {
                 Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
             }
-            jpprogressBar.setCancelable(false);
-            jpprogressBar.show();
+            jpProgressBar.setCancelable(false);
+            jpProgressBar.show();
             ThreadPoolUtil.execute(() -> {
                 String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
                 try {
@@ -182,7 +182,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 } finally {
                     String finalMessage = message;
                     runOnUiThread(() -> {
-                        jpprogressBar.dismiss();
+                        jpProgressBar.dismiss();
                         Toast.makeText(this, finalMessage, Toast.LENGTH_SHORT).show();
                         categoryListView.performItemClick(categoryListView.getAdapter().getView(Consts.items.length - 1, null, null),
                                 Consts.items.length - 1, categoryListView.getItemIdAtPosition(Consts.items.length - 1));
@@ -341,7 +341,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         SongPlay.INSTANCE.setCallBack(this::autoPlayNextSong);
-        jpprogressBar = new JPProgressBar(this);
+        jpProgressBar = new JPProgressBar(this);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);

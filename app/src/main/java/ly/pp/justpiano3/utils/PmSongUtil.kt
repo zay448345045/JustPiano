@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.utils
 
-import android.R.id.input
 import android.content.Context
 import ly.pp.justpiano3.entity.OriginalNote
 import ly.pp.justpiano3.entity.PmSongData
@@ -19,8 +18,12 @@ import java.util.regex.Pattern
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-
 object PmSongUtil {
+
+    /**
+     * 第一次曲谱同步的默认时间，为4.8版本上线时间
+     */
+    const val SONG_SYNC_DEFAULT_TIME = 1695787200000L
 
     /**
      * 决定是否为隐藏键音符的临界间隔时间，目前固定为100，单位毫秒

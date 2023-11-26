@@ -53,7 +53,7 @@ public final class GZIPUtil {
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = (ZipEntry) entries.nextElement();
                 InputStream inputStream = zipFile.getInputStream(zipEntry);
-                file2 = new File(new String((str + File.separator + zipEntry.getName()).getBytes("8859_1"), "GB2312"));
+                file2 = new File(new String((str + File.separator + zipEntry.getName()).getBytes(StandardCharsets.ISO_8859_1), "GB2312"));
                 if (!file2.exists()) {
                     File parentFile = file2.getParentFile();
                     if (!parentFile.exists()) {
