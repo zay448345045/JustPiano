@@ -166,6 +166,6 @@
             android:visibility="invisible"
             android:textColor="#FFFFFF"
             android:gravity="center"
-            android:text="重连中…" />
+            android:text="等待重连…" />
     </RelativeLayout>
 </LinearLayout>

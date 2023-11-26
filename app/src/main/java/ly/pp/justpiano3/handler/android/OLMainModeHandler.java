@@ -3,7 +3,6 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
@@ -21,47 +20,33 @@ public final class OLMainModeHandler extends Handler {
     @Override
     public void handleMessage(Message message) {
         OLMainMode oLMainMode = (OLMainMode) weakReference.get();
-        Intent intent = new Intent(oLMainMode, OLPlayHallRoom.class);
+        if (oLMainMode.jpProgressBar != null && oLMainMode.jpProgressBar.isShowing()) {
+            oLMainMode.jpProgressBar.cancel();
+        }
         switch (message.what) {
             case 1:
-                oLMainMode.jpProgressBar.cancel();
+                Intent intent = new Intent(oLMainMode, OLPlayHallRoom.class);
                 intent.putExtra("HEAD", 1);
                 oLMainMode.startActivity(intent);
                 oLMainMode.finish();
-                return;
+                break;
             case 2:
-                oLMainMode.jpProgressBar.cancel();
-                Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "连接服务器失败");
-                Looper.loop();
-                return;
+                post(() -> oLMainMode.addDialog("提示", "确定", "连接服务器失败"));
+                break;
             case 3:
-                if (oLMainMode.jpProgressBar != null && oLMainMode.jpProgressBar.isShowing()) {
-                    oLMainMode.jpProgressBar.cancel();
-                }
-                Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "服务器未响应!");
-                Looper.loop();
-                return;
+                post(() -> oLMainMode.addDialog("提示", "确定", "服务器未响应!"));
+                break;
             case 4:
-                oLMainMode.jpProgressBar.cancel();
-                Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "账号不存在，请尝试返回主界面重新登录");
-                Looper.loop();
-                return;
+                post(() -> oLMainMode.addDialog("提示", "确定", "账号不存在，请尝试返回主界面重新登录"));
+                break;
             case 5:
-                oLMainMode.jpProgressBar.cancel();
-                Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "该账号已在别处登录!");
-                Looper.loop();
-                return;
+                post(() -> oLMainMode.addDialog("提示", "确定", "该账号已在别处登录!"));
+                break;
             case 6:
-                oLMainMode.jpProgressBar.cancel();
-                Looper.prepare();
-                oLMainMode.addDialog("提示", "确定", "您的版本过低，请下载最新版本");
-                Looper.loop();
-                return;
+                post(() -> oLMainMode.addDialog("提示", "确定", "您的版本过低，请下载最新版本"));
+                break;
             default:
+                break;
         }
     }
 }

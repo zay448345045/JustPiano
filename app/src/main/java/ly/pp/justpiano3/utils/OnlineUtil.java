@@ -207,7 +207,7 @@ public class OnlineUtil {
         olBaseActivity.jpProgressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
                 (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
                 + "点击取消");
-        olBaseActivity.jpProgressBar.addClickableLink("点击取消", () -> {
+        olBaseActivity.jpProgressBar.setClickableLink("点击取消", () -> {
             olBaseActivity.progressBarDismissAndReInit();
             OLBaseActivity.returnMainMode(olBaseActivity);
         });

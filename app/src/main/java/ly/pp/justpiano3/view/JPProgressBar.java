@@ -43,7 +43,7 @@ public final class JPProgressBar extends Dialog {
         textView.postInvalidate();
     }
 
-    public void addClickableLink(String keyword, Runnable runnable) {
+    public void setClickableLink(String keyword, Runnable runnable) {
         // 创建一个SpannableString对象，用于设置超链接
         SpannableString spannableString = new SpannableString(text);
         // 设置超链接的点击事件

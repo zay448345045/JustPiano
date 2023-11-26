@@ -205,7 +205,10 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOGIN, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLMainMode) {
+            EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
+            if (Objects.equals("X", receivedMessage.getLogin().getStatus())) {
+                OnlineUtil.outLineAndDialog((JPApplication) topActivity.getApplication());
+            } else if (topActivity instanceof OLMainMode) {
                 switch (receivedMessage.getLogin().getStatus()) {
                     case "N":
                         message.what = 4;
@@ -220,10 +223,7 @@ public final class ReceiveTasks {
                         message.what = 1;
                         break;
                 }
-                EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
                 ((OLMainMode) topActivity).olMainModeHandler.handleMessage(message);
-            } else if (Objects.equals("X", receivedMessage.getLogin().getStatus())) {
-                OnlineUtil.outLineAndDialog((JPApplication) topActivity.getApplication());
             }
         });
 
