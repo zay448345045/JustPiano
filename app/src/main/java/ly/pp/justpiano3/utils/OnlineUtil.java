@@ -13,6 +13,7 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.OLBaseActivity;
+import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.service.ConnectionService;
 
 /**
@@ -163,6 +164,11 @@ public class OnlineUtil {
     }
 
     public static void outLineAndDialogWithAutoReconnect(JPApplication jpApplication) {
+        // 在进入对战页面时掉线，直接强制不重连
+        if (JPStack.top() instanceof OLMainMode) {
+            outLineAndDialog(jpApplication);
+            return;
+        }
         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! autoReconnect:"
                 + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
         // 如果不是断线自动重连状态，先进行断线自动重连
