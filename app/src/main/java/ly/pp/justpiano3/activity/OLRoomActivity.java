@@ -357,18 +357,14 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void handleChat(Message message) {
-        String id = message.getData().getString("STREAM_ID");
-        if (id != null && !id.isEmpty()) {
+        // 流消息逻辑
+        String streamId = message.getData().getString(Consts.STREAM_MESSAGE_PARAM_ID);
+        if (streamId != null && !streamId.isEmpty()) {
             for (Bundle bundle : msgList) {
-                if (id.equals(bundle.getString("STREAM_ID"))) {
-                    if ("END\n\n".equals(message.getData().getString("M"))) {
-                        bundle.putString("STREAM_ID", "");
-                    } else {
-                        bundle.putString("M", bundle.getString("M") + message.getData().getString("M"));
-                    }
-
-
-                    // bundle.putString();
+                // 找到之前的流消息，将新的数据替换进去，随后就不用向下执行了
+                if (streamId.equals(bundle.getString(Consts.STREAM_MESSAGE_PARAM_ID))) {
+                    bundle.putString("M", bundle.getString("M") + message.getData().getString("M"));
+                    bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, message.getData().getBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS));
                     bindMsgListView();
                     return;
                 }

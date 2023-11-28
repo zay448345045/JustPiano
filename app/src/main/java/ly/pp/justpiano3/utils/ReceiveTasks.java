@@ -5,6 +5,7 @@ import android.os.Handler;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
@@ -200,24 +201,9 @@ public final class ReceiveTasks {
                 bundle.putInt("T", roomChat.getType());
                 if (roomChat.getType() == 1) {
                     bundle.putInt("V", roomChat.getColor());
-                } else if (roomChat.getType() == 19/* 流消息 */) {
+                } else if (roomChat.getType() == Consts.STREAM_MESSAGE_CODE/* 流消息 */) {
                     // 自定义了一个简单的协议
-                    // 流消息开始
-                    if (roomChat.getMessage().startsWith("START:")) {
-                        bundle.putString("STREAM_ID", roomChat.getMessage().substring("START:".length()));
-                        bundle.putString("M", StringUtil.EMPTY_STRING);
-                    }
-                    // 流消息数据传输
-                    else if (roomChat.getMessage().startsWith("DATA:")) {
-                        String[] split = roomChat.getMessage().split("\n");
-                        bundle.putString("STREAM_ID", split[0].substring("DATA:".length()));
-                        bundle.putString("M", split[1]);
-                    }
-                    // 流消息结束
-                    else if (roomChat.getMessage().startsWith("END:")) {
-                        bundle.putString("STREAM_ID", roomChat.getMessage().substring("END:".length()));
-                        bundle.putString("M", "END\n\n");
-                    }
+                    streamMessageBundleBuild(roomChat.getMessage(), bundle);
                 }
                 message.setData(bundle);
                 if (topActivity instanceof OLPlayRoom) {
@@ -1176,6 +1162,34 @@ public final class ReceiveTasks {
                 }
             }
         });
+    }
+
+    /**
+     * 设置流消息的 bundle
+     *
+     * @param message 当前事件消息
+     * @param bundle  当前消息的bundle
+     */
+    private static void streamMessageBundleBuild(String message, Bundle bundle) {
+        // 流消息开始
+        if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_START)) {
+            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, message.substring(Consts.STREAM_MESSAGE_PROTO_START.length()));
+            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, true);
+            bundle.putString("M", StringUtil.EMPTY_STRING);
+        }
+        // 流消息数据传输
+        else if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_DATA)) {
+            String[] split = message.split(String.valueOf(StringUtil.LINE_FEED));
+            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, split[0].substring(Consts.STREAM_MESSAGE_PROTO_DATA.length()));
+            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, true);
+            bundle.putString("M", message.substring((split[0] + StringUtil.LINE_FEED).length()));
+        }
+        // 流消息结束
+        else if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_END)) {
+            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, message.substring(Consts.STREAM_MESSAGE_PROTO_END.length()));
+            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, false);
+            bundle.putString("M", StringUtil.EMPTY_STRING);
+        }
     }
 
     private static User buildAndPutUser(OLRoomActivity olRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {

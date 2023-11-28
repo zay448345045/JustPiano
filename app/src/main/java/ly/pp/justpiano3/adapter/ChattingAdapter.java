@@ -343,13 +343,9 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handleStreamMessage(View view, TextView userText, TextView msgText, Bundle bundle) {
         String sendUserName = bundle.getString("U");
         String message = bundle.getString("M");
-        String streamId = bundle.getString("STREAM_ID");
-        if (streamId != null && !streamId.isEmpty()) {
-            if (DateUtil.second() % 2 == 0) {
-                message += "🔶";
-            } else {
-                message += "🔸";
-            }
+        boolean streamStatus = bundle.getBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, false);
+        if (streamStatus) {
+            message += DateUtil.second() % 2 == 0 ? "🔶" : "🔸";
         }
         userText.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
         msgText.setText(message);
