@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -19,7 +16,10 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.JPStack;
+
+import java.util.List;
 
 public final class ChattingAdapter extends BaseAdapter {
     public Activity activity;
@@ -72,6 +72,9 @@ public final class ChattingAdapter extends BaseAdapter {
                 break;
             case 18: // 全服消息
                 handleServerMessage(view, userText, msgText, bundle);
+                break;
+            case 19: // 流消息
+                handleStreamMessage(view, userText, msgText, bundle);
                 break;
         }
         // 投递通知到房间内处理
@@ -334,6 +337,23 @@ public final class ChattingAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
         textView2.setText(string2);
         textView2.setTextColor(0xff00ffff);
+    }
+
+
+    private void handleStreamMessage(View view, TextView userText, TextView msgText, Bundle bundle) {
+        String sendUserName = bundle.getString("U");
+        String message = bundle.getString("M");
+        String streamId = bundle.getString("STREAM_ID");
+        if (streamId != null && !streamId.isEmpty()) {
+            if (DateUtil.second() % 2 == 0) {
+                message += "🔶";
+            } else {
+                message += "🔸";
+            }
+        }
+        userText.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
+        msgText.setText(message);
+        msgText.setTextColor(0xff00ffff);
     }
 
 }

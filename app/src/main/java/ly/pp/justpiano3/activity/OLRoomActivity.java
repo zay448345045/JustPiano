@@ -4,45 +4,16 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.core.content.res.ResourcesCompat;
-
 import com.google.protobuf.MessageLite;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -59,20 +30,17 @@ import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import protobuf.dto.OnlineCoupleDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlineQuitRoomDTO;
-import protobuf.dto.OnlineRoomChatDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+import protobuf.dto.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 房间
@@ -389,6 +357,25 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void handleChat(Message message) {
+        String id = message.getData().getString("STREAM_ID");
+        if (id != null && !id.isEmpty()) {
+            for (Bundle bundle : msgList) {
+                if (id.equals(bundle.getString("STREAM_ID"))) {
+                    if ("END\n\n".equals(message.getData().getString("M"))) {
+                        bundle.putString("STREAM_ID", "");
+                    } else {
+                        bundle.putString("M", bundle.getString("M") + message.getData().getString("M"));
+                    }
+
+
+                    // bundle.putString();
+                    bindMsgListView();
+                    return;
+                }
+            }
+        }
+
+
         if (msgList.size() > maxListValue) {
             msgList.remove(0);
         }
