@@ -11,7 +11,8 @@
             android:title="音块速率"
             app:floatNumber="true"
             app:maxValue="5.5"
-            app:minValue="0.5" />
+            app:minValue="0.5"
+            app:maxSteps="90"/>
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="音块大小"

@@ -25,6 +25,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     private val suffix: String?
     private val minValue: Float
     private val maxValue: Float
+    private val maxSteps: Int
     private val floatNumber: Boolean
     private val defaultValue: String
     private var value: String? = null
@@ -38,6 +39,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference)
         minValue = typedArray.getFloat(R.styleable.SeekBarPreference_minValue, 0f)
         maxValue = typedArray.getFloat(R.styleable.SeekBarPreference_maxValue, 100f)
+        maxSteps = typedArray.getInt(R.styleable.SeekBarPreference_maxSteps, 100)
         floatNumber = typedArray.getBoolean(R.styleable.SeekBarPreference_floatNumber, false)
         typedArray.recycle()
     }
@@ -60,6 +62,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         layout.addView(valueText, params)
         seekBar = SeekBar(context)
         seekBar!!.setOnSeekBarChangeListener(this)
+        seekBar!!.max = maxSteps
         layout.addView(
             seekBar,
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
