@@ -185,8 +185,8 @@ public class MidiDeviceUtil {
                 midiReceiver.midiMessageReceiveListener.onMidiDisconnect(deviceIdAndName);
             }
             midiDevicePortMap.remove(deviceIdAndName);
-            Toast.makeText(context, "MIDI设备[" + deviceIdAndName.substring(
-                    deviceIdAndName.indexOf('-') + 1) + "]已断开", Toast.LENGTH_SHORT).show();
+            mainHandler.post(() -> Toast.makeText(context, "MIDI设备[" + deviceIdAndName.substring(
+                    deviceIdAndName.indexOf('-') + 1) + "]已断开", Toast.LENGTH_SHORT).show());
         } catch (Exception e) {
             e.printStackTrace();
         }
