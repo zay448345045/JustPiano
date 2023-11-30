@@ -30,6 +30,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     private val defaultValue: String
     private var value: String? = null
     private var message: String? = null
+    private var emptyText: TextView? = null
 
     init {
         suffix = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "text")
@@ -51,15 +52,31 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        emptyText = TextView(context)
+        emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
+        emptyText!!.textSize = 4f
+        layout.addView(emptyText, params)
         if (!message.isNullOrEmpty()) {
+            emptyText = TextView(context)
+            emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
+            emptyText!!.textSize = 2f
+            layout.addView(emptyText, params)
             val messageText = TextView(context)
             messageText.text = message
             layout.addView(messageText, params)
+            emptyText = TextView(context)
+            emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
+            emptyText!!.textSize = 8f
+            layout.addView(emptyText, params)
         }
         valueText = TextView(context)
         valueText!!.gravity = Gravity.CENTER_HORIZONTAL
-        valueText!!.textSize = 22f
+        valueText!!.textSize = 24f
         layout.addView(valueText, params)
+        emptyText = TextView(context)
+        emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
+        emptyText!!.textSize = 14f
+        layout.addView(emptyText, params)
         seekBar = SeekBar(context)
         seekBar!!.max = maxSteps
         seekBar!!.setOnSeekBarChangeListener(this)

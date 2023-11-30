@@ -20,8 +20,9 @@
             android:summary="设置音块大小，可根据个人习惯进行调整"
             android:title="音块大小"
             app:floatNumber="true"
-            app:maxValue="2"
-            app:minValue="0.5" />
+            app:maxValue="1.5"
+            app:minValue="0.5"
+            app:maxSteps="150"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="note_dismiss"

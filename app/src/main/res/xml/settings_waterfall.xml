@@ -22,8 +22,9 @@
             android:summary="设置音块的移动速度，值越小，音块越矮，移动速度越慢"
             android:title="音块移动速度"
             app:floatNumber="true"
-            app:maxValue="1.5"
-            app:minValue="0.1" />
+            app:maxValue="1.1"
+            app:minValue="0.1"
+            app:maxSteps="140"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="waterfall_background_play"
