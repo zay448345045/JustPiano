@@ -10,9 +10,9 @@
             android:dialogMessage="       中：0.5，快：0.75，很快：1，超快：1.5，神快：3"
             android:title="音块速率"
             app:floatNumber="true"
-            app:maxValue="10.5"
+            app:maxValue="1.5"
             app:minValue="0.5"
-            app:maxSteps="45"/>
+            app:maxSteps="450"/>
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="音块大小"
