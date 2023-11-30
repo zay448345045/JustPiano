@@ -25,6 +25,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     private val suffix: String?
     private val minValue: Float
     private val maxValue: Float
+    private val critValue: Float
     private val maxSteps: Int
     private val floatNumber: Boolean
     private val defaultValue: String
@@ -40,6 +41,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference)
         minValue = typedArray.getFloat(R.styleable.SeekBarPreference_minValue, 0f)
         maxValue = typedArray.getFloat(R.styleable.SeekBarPreference_maxValue, 100f)
+        critValue = typedArray.getFloat(R.styleable.SeekBarPreference_critValue, 100f)
         maxSteps = typedArray.getInt(R.styleable.SeekBarPreference_maxSteps, 100)
         floatNumber = typedArray.getBoolean(R.styleable.SeekBarPreference_floatNumber, false)
         typedArray.recycle()
@@ -66,7 +68,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
             layout.addView(messageText, params)
             emptyText = TextView(context)
             emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
-            emptyText!!.textSize = 8f
+            emptyText!!.textSize = 10f
             layout.addView(emptyText, params)
         }
         valueText = TextView(context)
@@ -121,7 +123,8 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         val showValue = if (floatNumber) String.format("%.2f", floatValue) else floatValue.roundToInt().toString()
         val showText = if (suffix == null) showValue else showValue + suffix
         // 标记默认值
-        valueText!!.text = if (showValue.toFloat() == defaultValue.toFloat()) "$showText (默认)" else showText
+        valueText!!.text = if (showValue.toFloat() == defaultValue.toFloat()) "$showText (默认)" else if (showValue.toFloat() >= critValue) "$showText (不建议)" else showText
+        valueText!!.setTextColor(if (showValue.toFloat() >= critValue) 0xfff05189.toInt() else 0xffffffff.toInt())
         if (shouldPersist()) {
             persistString(showValue)
         }
