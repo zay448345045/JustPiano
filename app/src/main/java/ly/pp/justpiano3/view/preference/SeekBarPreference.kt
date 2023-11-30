@@ -61,8 +61,8 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         valueText!!.textSize = 22f
         layout.addView(valueText, params)
         seekBar = SeekBar(context)
-        seekBar!!.setOnSeekBarChangeListener(this)
         seekBar!!.max = maxSteps
+        seekBar!!.setOnSeekBarChangeListener(this)
         layout.addView(
             seekBar,
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
