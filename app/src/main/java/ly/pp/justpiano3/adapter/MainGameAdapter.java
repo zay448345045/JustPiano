@@ -82,9 +82,6 @@ public final class MainGameAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if (activity == null) {
-            return view;
-        }
         boolean z = true;
         int i2;
         int i3;
@@ -98,6 +95,9 @@ public final class MainGameAdapter extends BaseAdapter {
                 // 大厅列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_hall_view, null);
+                }
+                if (activity == null) {
+                    return view;
                 }
                 view.setKeepScreenOn(true);
                 CharSequence string = list.get(i).getString("N");
@@ -136,6 +136,9 @@ public final class MainGameAdapter extends BaseAdapter {
                 // 好友列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
+                }
+                if (activity == null) {
+                    return view;
                 }
                 view.setKeepScreenOn(true);
                 String string2 = list.get(i).getString("F");
@@ -275,6 +278,9 @@ public final class MainGameAdapter extends BaseAdapter {
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_mail_view, null);
                 }
+                if (activity == null) {
+                    return view;
+                }
                 view.setKeepScreenOn(true);
                 if (list.size() > i) {
                     String string4 = list.get(i).getString("F");
@@ -326,6 +332,9 @@ public final class MainGameAdapter extends BaseAdapter {
                 // 大厅用户列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
+                }
+                if (activity == null) {
+                    return view;
                 }
                 view.setKeepScreenOn(true);
                 String string7 = list.get(i).getString("U");

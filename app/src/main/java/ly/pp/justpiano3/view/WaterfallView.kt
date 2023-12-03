@@ -335,7 +335,7 @@ class WaterfallView @JvmOverloads constructor(
      */
     fun stopFreeStyleWaterfallNote(pitch: Byte) {
         val freeStyleNoteList = freeStyleNotes[pitch] ?: return
-        for (i in freeStyleNoteList.indices.reversed()) {
+        for (i in freeStyleNoteList.size - 1 downTo 0) {
             freeStyleNoteList.getOrNull(i)?.let {
                 if (it.bottom > height + playProgress) {
                     it.bottom = height + playProgress
@@ -660,7 +660,7 @@ class WaterfallView @JvmOverloads constructor(
             }
             // 执行计算绘制自由演奏音块
             for (freeStyleNoteList in freeStyleNotes.values) {
-                for (i in freeStyleNoteList.indices.reversed()) {
+                for (i in freeStyleNoteList.size - 1 downTo 0) {
                     freeStyleNoteList.getOrNull(i)?.let {
                         noteCount++
                         notePaint.color = it.color

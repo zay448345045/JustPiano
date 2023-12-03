@@ -133,9 +133,7 @@
                 android:layout_height="32dp"
                 android:visibility="gone"
                 android:background="@drawable/baseline_cached_24"/>
-
         </FrameLayout>
-
     </LinearLayout>
 
     <LinearLayout

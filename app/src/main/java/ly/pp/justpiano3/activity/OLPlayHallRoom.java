@@ -202,7 +202,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 //        systemTextView.setTextColor(getResources().getColor(i2));
     }
 
-    public void mo2843a(ListView listView, List<Bundle> list) {
+    public void sortListAndBindAdapter(ListView listView, List<Bundle> list) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("I"), o2.getByte("I")));
         }

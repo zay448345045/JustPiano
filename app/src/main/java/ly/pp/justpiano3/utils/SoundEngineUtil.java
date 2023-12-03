@@ -3,7 +3,6 @@ package ly.pp.justpiano3.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
-import android.os.Process;
 import android.preference.PreferenceManager;
 
 import java.io.File;
@@ -28,8 +27,7 @@ public class SoundEngineUtil {
         try {
             System.loadLibrary("soundengine");
         } catch (Exception e) {
-            Process.killProcess(Process.myPid());
-            System.exit(1);
+            e.printStackTrace();
         }
         // 注册延音踏板状态变更监听器
         MidiDeviceUtil.setMidiSustainPedalListener(status -> {

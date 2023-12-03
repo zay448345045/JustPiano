@@ -157,7 +157,7 @@ class WaterfallActivity : Activity(), View.OnTouchListener,
         }
         // 自由演奏的音符也重新计算
         for (freeStyleNoteList in waterfallView.freeStyleNotes.values) {
-            for (i in freeStyleNoteList.indices.reversed()) {
+            for (i in freeStyleNoteList.size - 1 downTo 0) {
                 freeStyleNoteList.getOrNull(i)?.let {
                     recomputeWaterfallNoteLeftAndRight(it)
                 }

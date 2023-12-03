@@ -68,7 +68,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         for (i = 0; i < size; i++) {
                             olPlayHallRoom.hallList.add(bundle.getBundle(String.valueOf(i)));
                         }
-                        olPlayHallRoom.mo2843a(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
+                        olPlayHallRoom.sortListAndBindAdapter(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
                         olPlayHallRoom.userName.setText(data.getString("U"));
                         JPApplication.kitiName = data.getString("U");
                         int lv = data.getInt("LV");
