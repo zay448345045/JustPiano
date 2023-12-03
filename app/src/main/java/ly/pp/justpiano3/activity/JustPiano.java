@@ -22,6 +22,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
 import ly.pp.justpiano3.midi.MidiUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -228,6 +229,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
             handler.sendMessage(obtainMessage2);
         }
         SoundEngineUtil.afterLoadSounds();
+        SoundEngineUtil.openFluidSynth();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String soundName = sharedPreferences.getString("sound_list", "original");
         if (soundName.endsWith(".sf2")) {
@@ -235,7 +237,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
             Message obtainMessage2 = handler.obtainMessage();
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);
-            SoundEngineUtil.loadSf2Sound(this, new File(soundName));
+            SoundEngineUtil.loadSf2(FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(soundName)));
         }
         obtainMessage = handler.obtainMessage();
         obtainMessage.what = 1;

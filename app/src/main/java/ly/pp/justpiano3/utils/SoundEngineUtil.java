@@ -7,9 +7,7 @@ import android.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -62,17 +60,13 @@ public class SoundEngineUtil {
 
     public static native void setDelayValue(int delayValue);
 
-    private static native void malloc();
+    public static native void openFluidSynth();
 
-    private static native void free();
+    public static native void closeFluidSynth();
 
-    private static native void open();
+    public static native void loadSf2(String path);
 
-    private static native void close();
-
-    private static native void loadSf2(String path);
-
-    private static native void unloadSf2();
+    public static native void unloadSf2();
 
     public static void playSound(byte pitch, byte volume) {
         triggerDown(MidiUtil.MAX_PIANO_MIDI_PITCH - pitch, volume);
@@ -127,7 +121,7 @@ public class SoundEngineUtil {
                 }
             }
         }
-        unloadSf2Sound();
+        unloadSf2();
         teardownAudioStreamNative();
         unloadWavAssetsNative();
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
@@ -141,35 +135,5 @@ public class SoundEngineUtil {
 
     public static void afterLoadSounds() {
         setupAudioStreamNative(2, 44100);
-    }
-
-    private static String getCopyFile(Context context, File sf2File) {
-        File cacheFile = new File(context.getFilesDir(), sf2File.getName());
-        try {
-            try (InputStream inputStream = new FileInputStream(sf2File)) {
-                try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
-                    byte[] buf = new byte[1024];
-                    int len;
-                    while ((len = inputStream.read(buf)) > 0) {
-                        outputStream.write(buf, 0, len);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return cacheFile.getAbsolutePath();
-    }
-
-    public static void loadSf2Sound(Context context, File sf2File) {
-        malloc();
-        open();
-        loadSf2(getCopyFile(context, sf2File));
-    }
-
-    public static void unloadSf2Sound() {
-        unloadSf2();
-        close();
-        free();
     }
 }

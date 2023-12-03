@@ -39,6 +39,7 @@ import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 
 public final class JPApplication extends Application {
 
@@ -217,6 +218,8 @@ public final class JPApplication extends Application {
                     DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
             // 关闭网络连接服务，退出进程
             OnlineUtil.outlineConnectionService(JPApplication.this);
+            // 关闭fluidsynth
+            SoundEngineUtil.closeFluidSynth();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -236,6 +239,8 @@ public final class JPApplication extends Application {
         }
         // 关闭网络连接服务
         OnlineUtil.outlineConnectionService(this);
+        // 关闭fluidsynth
+        SoundEngineUtil.closeFluidSynth();
     }
 
     @Override

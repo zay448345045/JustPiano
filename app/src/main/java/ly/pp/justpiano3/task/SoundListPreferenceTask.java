@@ -6,6 +6,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import ly.pp.justpiano3.midi.MidiUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
@@ -40,8 +41,8 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
         if (soundFile.getName().endsWith(".ss")) {
             GZIPUtil.ZIPFileTo(soundFile, dir.toString());
         }
-        SoundEngineUtil.unloadSf2Sound();
         if (soundFile.getName().endsWith(".ss")) {
+            SoundEngineUtil.unloadSf2();
             SoundEngineUtil.teardownAudioStreamNative();
             SoundEngineUtil.unloadWavAssetsNative();
             for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
@@ -49,7 +50,9 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
             }
             SoundEngineUtil.afterLoadSounds();
         } else if (soundFile.getName().endsWith(".sf2")) {
-            SoundEngineUtil.loadSf2Sound(soundListPreference.context, soundFile);
+            String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(soundListPreference.context, soundFile);
+            SoundEngineUtil.unloadSf2();
+            SoundEngineUtil.loadSf2(newSf2Path);
         }
         return null;
     }

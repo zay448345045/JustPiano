@@ -29,6 +29,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
 import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -160,9 +161,8 @@ public class SoundDownload extends Activity implements Callback {
             Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
             edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
             edit.apply();
-
-            SoundEngineUtil.unloadSf2Sound();
             if (soundFileName.endsWith(".ss")) {
+                SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadWavAssetsNative();
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
@@ -170,8 +170,10 @@ public class SoundDownload extends Activity implements Callback {
                 }
                 SoundEngineUtil.afterLoadSounds();
             } else if (soundFileName.endsWith(".sf2")) {
-                SoundEngineUtil.loadSf2Sound(this, new File(
+                String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(
                         Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
+                SoundEngineUtil.unloadSf2();
+                SoundEngineUtil.loadSf2(newSf2Path);
             }
         } catch (Exception e) {
             e.printStackTrace();

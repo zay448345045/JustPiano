@@ -130,7 +130,7 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setDelayValue
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *env, jclass) {
     handle = (fluid_handle_t *) malloc(sizeof(fluid_handle_t));
     handle->settings = new_fluid_settings();
     handle->synth = nullptr;
@@ -148,40 +148,23 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_malloc(JNIEnv *env, jclass) {
     fluid_settings_setnum(handle->settings, "synth.reverb.damp", 0.5f);
     fluid_settings_setnum(handle->settings, "synth.reverb.level",
                           (float) sDTPlayer.getReverbValue() / 100);
+    handle->synth = new_fluid_synth(handle->settings);
+    fluid_synth_set_interp_method(handle->synth, -1, FLUID_INTERP_HIGHEST);
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_free(JNIEnv *env, jclass) {
-    if (handle != nullptr) {
-        if (handle->synth != nullptr) {
-            delete_fluid_synth(handle->synth);
-        }
-        if (handle->settings != nullptr) {
-            delete_fluid_settings(handle->settings);
-        }
-        free(handle);
-        handle = nullptr;
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_open(JNIEnv *env, jclass) {
-    if (handle != nullptr && handle->settings != nullptr) {
-        if (handle->synth != nullptr) {
-            delete_fluid_synth(handle->synth);
-        }
-        handle->synth = new_fluid_synth(handle->settings);
-        fluid_synth_set_interp_method(handle->synth, -1, FLUID_INTERP_HIGHEST);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_close(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_closeFluidSynth(JNIEnv *env, jclass) {
     if (handle != nullptr) {
         if (handle->synth != nullptr) {
             delete_fluid_synth(handle->synth);
         }
         handle->synth = nullptr;
+        if (handle->settings != nullptr) {
+            delete_fluid_settings(handle->settings);
+        }
+        handle->settings = nullptr;
+        free(handle);
+        handle = nullptr;
     }
 }
 

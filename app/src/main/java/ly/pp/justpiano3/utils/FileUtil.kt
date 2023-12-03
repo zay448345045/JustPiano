@@ -12,6 +12,27 @@ import java.io.*
 object FileUtil {
 
     /**
+     * 复制文件到应用目录
+     */
+    fun copyFileToAppFilesDir(context: Context, sf2File: File): String? {
+        val cacheFile = File(context.filesDir, sf2File.name)
+        try {
+            FileInputStream(sf2File).use { inputStream ->
+                FileOutputStream(cacheFile).use { outputStream ->
+                    val buf = ByteArray(1024)
+                    var len: Int
+                    while (inputStream.read(buf).also { len = it } > 0) {
+                        outputStream.write(buf, 0, len)
+                    }
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        return cacheFile.absolutePath
+    }
+
+    /**
      * 移动文件到新文件的位置（拷贝流）
      *
      * @param src 源文件对象
