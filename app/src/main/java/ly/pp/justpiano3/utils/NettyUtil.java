@@ -189,6 +189,13 @@ public class NettyUtil {
         }
     }
 
+    public void destroy() {
+        mChannelFuture = null;
+        if (mBootstrap.config().group() != null) {
+            mBootstrap.config().group().shutdownGracefully().syncUninterruptibly();
+        }
+    }
+
     public boolean isConnected() {
         return mChannelFuture != null && mChannelFuture.channel().isActive();
     }

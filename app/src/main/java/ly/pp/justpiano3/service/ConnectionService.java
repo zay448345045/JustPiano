@@ -212,6 +212,7 @@ public class ConnectionService extends Service {
         // 关闭连接
         if (nettyUtil != null) {
             nettyUtil.close();
+            nettyUtil.destroy();
             nettyUtil = null;
         }
     }

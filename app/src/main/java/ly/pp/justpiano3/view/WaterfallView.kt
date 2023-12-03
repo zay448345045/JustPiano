@@ -224,8 +224,10 @@ class WaterfallView @JvmOverloads constructor(
         // 初始化进度条的绘制坐标，初始情况下，进度条宽度为0
         progressBarRect = RectF(0f, 0f, 0f, progressBarImage!!.height.toFloat())
         // 初始化音块缓冲区绘制范围
-        drawNotesThread?.notesBufferBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        drawNotesThread?.notesBufferCanvas = Canvas(drawNotesThread?.notesBufferBitmap!!)
+        if (width > 0 && height > 0) {
+            drawNotesThread?.notesBufferBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            drawNotesThread?.notesBufferCanvas = Canvas(drawNotesThread?.notesBufferBitmap!!)
+        }
     }
 
     /**
