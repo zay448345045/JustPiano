@@ -190,10 +190,12 @@ public class NettyUtil {
     }
 
     public void destroy() {
-        mChannelFuture = null;
-        if (mBootstrap.config().group() != null) {
-            mBootstrap.config().group().shutdownGracefully().syncUninterruptibly();
-        }
+        mHandler.post(() -> {
+            if (mBootstrap.config().group() != null) {
+                mBootstrap.config().group().shutdownGracefully().syncUninterruptibly();
+            }
+        });
+        mHandlerThread.quitSafely();
     }
 
     public boolean isConnected() {
