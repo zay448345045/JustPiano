@@ -56,7 +56,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     public String accountX = "";
     public TextView accountTextView;
     public TextView passwordTextView;
-    public JPProgressBar jpprogressBar;
+    public JPProgressBar jpProgressBar;
     public SharedPreferences sharedPreferences;
     private LayoutInflater layoutInflater;
     private CheckBox changeServerCheckBox;
@@ -131,7 +131,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        jpprogressBar.dismiss();
+        if (jpProgressBar.isShowing()) {
+            jpProgressBar.dismiss();
+        }
         if (rememAccount.isChecked() && rememPassword.isChecked()) {
             Editor edit = sharedPreferences.edit();
             edit.putBoolean("remem_account", true);
@@ -233,7 +235,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         if (rememPassword.isChecked()) {
             passwordTextView.setText(sharedPreferences.getString("current_password", ""));
         }
-        jpprogressBar = new JPProgressBar(this);
+        jpProgressBar = new JPProgressBar(this);
         account = extras == null ? null : extras.getString("name");
         password = extras == null ? null : extras.getString("password");
         if (account != null && !account.isEmpty() && password != null && !password.isEmpty()) {
@@ -288,9 +290,9 @@ public class LoginActivity extends Activity implements OnClickListener {
             file.delete();
         }
         runOnUiThread(() -> {
-            jpprogressBar.setCancelable(false);
-            jpprogressBar.setText(version + "版本准备开始下载，请稍候");
-            jpprogressBar.show();
+            jpProgressBar.setCancelable(false);
+            jpProgressBar.setText(version + "版本准备开始下载，请稍候");
+            jpProgressBar.show();
             Toast.makeText(LoginActivity.this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
         });
 
@@ -310,7 +312,9 @@ public class LoginActivity extends Activity implements OnClickListener {
     private void apkDownloadFallHandle(String version) {
         // 回到主线程操纵界面
         runOnUiThread(() -> {
-            jpprogressBar.dismiss();
+            if (jpProgressBar.isShowing()) {
+                jpProgressBar.dismiss();
+            }
             Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
         });
     }
@@ -331,7 +335,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                 // 回到主线程操纵界面
                 if (System.currentTimeMillis() - start > 200) {
                     start = System.currentTimeMillis();
-                    runOnUiThread(() -> jpprogressBar.setText(detail));
+                    runOnUiThread(() -> jpProgressBar.setText(detail));
                 }
             }
             installApk(LoginActivity.this, file);
@@ -339,7 +343,9 @@ public class LoginActivity extends Activity implements OnClickListener {
             e.printStackTrace();
         } finally {
             runOnUiThread(() -> {
-                jpprogressBar.dismiss();
+                if (jpProgressBar.isShowing()) {
+                    jpProgressBar.dismiss();
+                }
             });
         }
     }

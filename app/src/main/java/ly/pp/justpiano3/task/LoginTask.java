@@ -97,7 +97,9 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        loginActivity.jpprogressBar.dismiss();
+        if (loginActivity.jpProgressBar.isShowing()) {
+            loginActivity.jpProgressBar.dismiss();
+        }
         switch (i) {
             case 0:
             case 4:
@@ -130,8 +132,8 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         LoginActivity loginActivity = activity.get();
-        loginActivity.jpprogressBar.setCancelable(true);
-        loginActivity.jpprogressBar.setOnCancelListener(dialog -> cancel(true));
-        loginActivity.jpprogressBar.show();
+        loginActivity.jpProgressBar.setCancelable(true);
+        loginActivity.jpProgressBar.setOnCancelListener(dialog -> cancel(true));
+        loginActivity.jpProgressBar.show();
     }
 }
