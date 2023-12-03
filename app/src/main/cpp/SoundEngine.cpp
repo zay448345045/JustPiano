@@ -79,7 +79,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *env, j
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *env, jclass, jint index,
                                                         jint volume) {
-    if (handle != nullptr && handle->synth != nullptr) {
+    if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
         fluid_synth_noteon(handle->synth, 0, 108 - index, volume);
         sDTPlayer.triggerDownSingle(index, volume);
     } else {
@@ -133,7 +133,6 @@ JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *env, jclass) {
     handle = (fluid_handle_t *) malloc(sizeof(fluid_handle_t));
     handle->settings = new_fluid_settings();
-    handle->synth = nullptr;
     handle->soundfont_id = 0;
     fluid_settings_setint(handle->settings, "synth.cpu-cores", 4);
     fluid_settings_setint(handle->settings, "audio.realtime-prio", 99);
@@ -141,7 +140,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *env, jclass) 
     fluid_settings_setnum(handle->settings, "synth.gain", 1);
     fluid_settings_setint(handle->settings, "synth.midi-channels", 1);
     fluid_settings_setint(handle->settings, "synth.min-note-length", 0);
-    fluid_settings_setint(handle->settings, "synth.chorus.active", 1);
+    fluid_settings_setint(handle->settings, "synth.chorus.active", 0);
     fluid_settings_setnum(handle->settings, "synth.reverb.active",
                           sDTPlayer.getReverbValue() == 0 ? 0 : 1);
     fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Objects;
 
 import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.utils.FileUtil;
@@ -11,7 +12,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
-public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void> {
+public final class SoundListPreferenceTask extends AsyncTask<String, Void, String> {
     private final SoundListPreference soundListPreference;
 
     public SoundListPreferenceTask(SoundListPreference soundListPreference) {
@@ -19,7 +20,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
     }
 
     @Override
-    protected Void doInBackground(String... objects) {
+    protected String doInBackground(String... objects) {
         if (objects[0].equals("original")) {
             SoundEngineUtil.reLoadOriginalSounds(soundListPreference.context);
             return null;
@@ -38,31 +39,37 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
         if (!soundFile.exists()) {
             return null;
         }
-        if (soundFile.getName().endsWith(".ss")) {
-            GZIPUtil.ZIPFileTo(soundFile, dir.toString());
-        }
-        if (soundFile.getName().endsWith(".ss")) {
-            SoundEngineUtil.unloadSf2();
-            SoundEngineUtil.teardownAudioStreamNative();
-            SoundEngineUtil.unloadWavAssetsNative();
-            for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
-                SoundEngineUtil.preloadSounds(soundListPreference.context, i);
+        try {
+            if (soundFile.getName().endsWith(".ss")) {
+                GZIPUtil.ZIPFileTo(soundFile, dir.toString());
             }
-            SoundEngineUtil.afterLoadSounds();
-        } else if (soundFile.getName().endsWith(".sf2")) {
-            String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(soundListPreference.context, soundFile);
-            SoundEngineUtil.unloadSf2();
-            SoundEngineUtil.loadSf2(newSf2Path);
+            if (soundFile.getName().endsWith(".ss")) {
+                SoundEngineUtil.unloadSf2();
+                SoundEngineUtil.teardownAudioStreamNative();
+                SoundEngineUtil.unloadWavAssetsNative();
+                for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
+                    SoundEngineUtil.preloadSounds(soundListPreference.context, i);
+                }
+                SoundEngineUtil.afterLoadSounds();
+            } else if (soundFile.getName().endsWith(".sf2")) {
+                String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(soundListPreference.context, soundFile);
+                SoundEngineUtil.unloadSf2();
+                SoundEngineUtil.loadSf2(newSf2Path);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(Void v) {
+    protected void onPostExecute(String result) {
         if (soundListPreference.jpProgressBar.isShowing()) {
             soundListPreference.jpProgressBar.cancel();
         }
-        Toast.makeText(soundListPreference.context, "音源设置成功!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(soundListPreference.context, Objects.equals("error", result)
+                ? "音源设置失败!" : "音源设置成功!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
