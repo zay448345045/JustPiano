@@ -155,7 +155,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 Bundle bundle1 = bundle.getBundle(String.valueOf(i));
                 String name = bundle1.getString("N");
                 int positionSub1 = bundle1.getByte("PI") - 1;
-                if (positionSub1 < olKeyboardStates.length) {
+                if (positionSub1 >= 0 && positionSub1 < olKeyboardStates.length) {
                     // 判定位置是否有人，忽略琴娘
                     boolean hasUser = !name.isEmpty() && !name.equals("琴娘");
                     olKeyboardStates[positionSub1].setHasUser(hasUser);
@@ -451,7 +451,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect(String deviceName) {
-        olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
+        if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {
+            olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
+        }
         if (playerGrid.getAdapter() != null) {
             ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
         } else {
@@ -462,7 +464,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect(String deviceName) {
-        olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
+        if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {
+            olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
+        }
         if (playerGrid.getAdapter() != null) {
             ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
         } else {

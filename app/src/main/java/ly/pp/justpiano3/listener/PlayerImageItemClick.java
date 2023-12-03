@@ -161,7 +161,8 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                                 OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
                                 builder.setRoomPosition(user.getPosition());
                                 OnlineUtil.getConnectionService().writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
-                                if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+                                if (olRoomActivity instanceof OLPlayKeyboardRoom && user.getPosition() > 0
+                                        && user.getPosition() - 1 < ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates.length) {
                                     ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
                                 }
                             }

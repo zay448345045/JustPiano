@@ -139,25 +139,29 @@ public class MidiDeviceUtil {
         }
         midiManager.openDevice(info, device -> {
             if (device != null) {
-                String deviceIdAndName = getDeviceIdAndName(device.getInfo());
-                for (MidiDeviceInfo.PortInfo port : device.getInfo().getPorts()) {
-                    if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
-                        MidiOutputPort midiOutputPort = device.openOutputPort(port.getPortNumber());
-                        // 安卓版本10及以上：启动C++监听midi，否则注册java的midi监听
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            startReadingMidi(device, port.getPortNumber(), device.getInfo().getId());
-                        } else if (midiReceiver != null) {
-                            midiOutputPort.connect(midiReceiver);
+                try {
+                    String deviceIdAndName = getDeviceIdAndName(device.getInfo());
+                    for (MidiDeviceInfo.PortInfo port : device.getInfo().getPorts()) {
+                        if (port.getType() == MidiDeviceInfo.PortInfo.TYPE_OUTPUT) {
+                            MidiOutputPort midiOutputPort = device.openOutputPort(port.getPortNumber());
+                            // 安卓版本10及以上：启动C++监听midi，否则注册java的midi监听
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                startReadingMidi(device, port.getPortNumber(), device.getInfo().getId());
+                            } else if (midiReceiver != null) {
+                                midiOutputPort.connect(midiReceiver);
+                            }
+                            // 回调midi设备连接事件
+                            if (midiReceiver != null) {
+                                midiReceiver.midiMessageReceiveListener.onMidiConnect(deviceIdAndName);
+                            }
+                            midiDevicePortMap.put(deviceIdAndName, midiOutputPort);
+                            Toast.makeText(context, "MIDI设备[" + deviceIdAndName.substring(
+                                    deviceIdAndName.indexOf('-') + 1) + "]已连接", Toast.LENGTH_SHORT).show();
+                            break;
                         }
-                        // 回调midi设备连接事件
-                        if (midiReceiver != null) {
-                            midiReceiver.midiMessageReceiveListener.onMidiConnect(deviceIdAndName);
-                        }
-                        midiDevicePortMap.put(deviceIdAndName, midiOutputPort);
-                        Toast.makeText(context, "MIDI设备[" + deviceIdAndName.substring(
-                                deviceIdAndName.indexOf('-') + 1) + "]已连接", Toast.LENGTH_SHORT).show();
-                        break;
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }, mainHandler);
@@ -250,7 +254,11 @@ public class MidiDeviceUtil {
             for (MidiDeviceInfo info : midiManager.getDevices()) {
                 MidiOutputPort midiOutputPort = midiDevicePortMap.get(getDeviceIdAndName(info));
                 if (midiOutputPort != null) {
-                    midiOutputPort.connect(midiReceiver);
+                    try {
+                        midiOutputPort.connect(midiReceiver);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -266,7 +274,11 @@ public class MidiDeviceUtil {
                 for (MidiDeviceInfo info : midiManager.getDevices()) {
                     MidiOutputPort midiOutputPort = midiDevicePortMap.get(getDeviceIdAndName(info));
                     if (midiOutputPort != null) {
-                        midiOutputPort.disconnect(midiReceiver);
+                        try {
+                            midiOutputPort.disconnect(midiReceiver);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

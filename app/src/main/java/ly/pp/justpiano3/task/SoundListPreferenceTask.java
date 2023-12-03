@@ -56,7 +56,9 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Void>
 
     @Override
     protected void onPostExecute(Void v) {
-        soundListPreference.jpProgressBar.cancel();
+        if (soundListPreference.jpProgressBar.isShowing()) {
+            soundListPreference.jpProgressBar.cancel();
+        }
         Toast.makeText(soundListPreference.context, "音源设置成功!", Toast.LENGTH_SHORT).show();
     }
 
