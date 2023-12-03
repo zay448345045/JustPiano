@@ -41,7 +41,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference)
         minValue = typedArray.getFloat(R.styleable.SeekBarPreference_minValue, 0f)
         maxValue = typedArray.getFloat(R.styleable.SeekBarPreference_maxValue, 100f)
-        critValue = typedArray.getFloat(R.styleable.SeekBarPreference_critValue, 100f)
+        critValue = typedArray.getFloat(R.styleable.SeekBarPreference_critValue, Float.MAX_VALUE)
         maxSteps = typedArray.getInt(R.styleable.SeekBarPreference_maxSteps, 100)
         floatNumber = typedArray.getBoolean(R.styleable.SeekBarPreference_floatNumber, false)
         typedArray.recycle()
