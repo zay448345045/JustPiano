@@ -348,7 +348,11 @@ public final class ChattingAdapter extends BaseAdapter {
         }
         userText.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
         msgText.setText(message);
-        msgText.setTextColor(0xff00ffff);
+        // 设置标签颜色
+        TextView maoText = view.findViewById(R.id.ol_user_mao);
+        userText.setTextColor(0xffffd8ec);
+        msgText.setTextColor(0xffffd8ec);
+        maoText.setTextColor(0xffffd8ec);
     }
 
 }

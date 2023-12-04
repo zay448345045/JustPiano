@@ -448,8 +448,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 data.putString("M", data.getString("M") + songName + "[难度:" + songDifficulty + "]");
                 message.setData(data);
                 break;
-            case 19:// 流消息
-                // 流消息逻辑
+            case 19: // 流消息
                 String streamId = message.getData().getString(Consts.STREAM_MESSAGE_PARAM_ID);
                 if (streamId != null && !streamId.isEmpty()) {
                     for (Bundle bundle : msgList) {
