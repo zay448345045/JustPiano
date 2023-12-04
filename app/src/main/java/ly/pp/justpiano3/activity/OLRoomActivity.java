@@ -4,45 +4,16 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.core.content.res.ResourcesCompat;
-
 import com.google.protobuf.MessageLite;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -50,6 +21,7 @@ import ly.pp.justpiano3.adapter.ExpressAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.listener.AddFriendsClick;
@@ -59,20 +31,17 @@ import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
-import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
+import ly.pp.justpiano3.utils.*;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import protobuf.dto.OnlineChangeRoomUserStatusDTO;
-import protobuf.dto.OnlineCoupleDTO;
-import protobuf.dto.OnlineLoadUserInfoDTO;
-import protobuf.dto.OnlineQuitRoomDTO;
-import protobuf.dto.OnlineRoomChatDTO;
-import protobuf.dto.OnlineSetUserInfoDTO;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+import protobuf.dto.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 房间
@@ -389,6 +358,12 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void handleChat(Message message) {
+        // 消息处理（流消息，推荐消息等） 返回值表示是否拦截后续执行
+        boolean isIntercept = specialMessageHandle(message);
+        if (isIntercept) {
+            return;
+        }
+
         if (msgList.size() > maxListValue) {
             msgList.remove(0);
         }
@@ -437,12 +412,44 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 } else if (message.getData().getInt("T") == 18) {
                     writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                     writer.close();
+                } else if (message.getData().getInt("T") == 0) {
+                    writer.write((time + "[荐]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
+                    writer.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         bindMsgListView();
+    }
+
+    /**
+     * 特殊消息处理程序
+     *
+     * @param message 当前消息
+     * @return
+     */
+    private boolean specialMessageHandle(Message message) {
+        Bundle data = message.getData();
+        int type = data.getInt("T");
+        switch (type) {
+            case 0:// 推荐曲谱
+                String item = data.getString("I");
+                String songName = null;
+                String songDifficulty = null;
+                if (!item.isEmpty()) {
+                    String path = "songs/" + item + ".pm";
+                    List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(path);
+                    for (Song song : songByFilePath) {
+                        songName = song.getName();
+                        songDifficulty = String.format(Locale.getDefault(), "%.1f", song.getRightHandDegree());
+                    }
+                }
+                data.putString("M", data.getString("M") + songName + "[难度:" + songDifficulty + "]");
+                message.setData(data);
+                break;
+        }
+        return false;
     }
 
     public void handleFriendRequest(Message message) {
