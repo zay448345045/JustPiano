@@ -3,15 +3,13 @@ package ly.pp.justpiano3.adapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
-
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -19,7 +17,10 @@ import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.JPStack;
+
+import java.util.List;
 
 public final class ChattingAdapter extends BaseAdapter {
     public Activity activity;
@@ -50,6 +51,7 @@ public final class ChattingAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        long l = System.currentTimeMillis();
         Bundle bundle = msgList.get(i);
         int i2 = bundle.getInt("T");
         view = layoutInflater.inflate(R.layout.ol_msg_view, null);
@@ -73,6 +75,9 @@ public final class ChattingAdapter extends BaseAdapter {
             case 18: // 全服消息
                 handleServerMessage(view, userText, msgText, bundle);
                 break;
+            case 19: // 流消息
+                handleStreamMessage(view, userText, msgText, bundle);
+                break;
         }
         // 投递通知到房间内处理
         if (i2 != 3 && userText != null) {
@@ -86,6 +91,7 @@ public final class ChattingAdapter extends BaseAdapter {
         }
         // 处理文本框字体大小
         setMsgFontSize(userText, msgMaoHao, msgText);
+        Log.d("MYDEBUG", "展示消息列表延迟:" + (System.currentTimeMillis() - l));
         return view;
     }
 
@@ -102,27 +108,23 @@ public final class ChattingAdapter extends BaseAdapter {
 
     private void handleRecommendationMessage(View view, TextView textView, TextView textView2, Bundle bundle, int i) {
         String str1 = bundle.getString("I");
-        String string = bundle.getString("U");
-        String string2 = bundle.getString("M");
+        String userName = bundle.getString("U");
+        String message = bundle.getString("M");
         if (!str1.isEmpty()) {
-            str1 = "songs/" + str1 + ".pm";
             ((OLPlayRoom) activity).setTune(bundle.getInt("D"));
-            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + string);
-            String[] a = ((OLPlayRoom) activity).querySongNameAndDiffByPath(str1);
-            if (a[0] != null && a[1] != null) {
-                textView2.setText(string2 + a[0] + "[难度:" + a[1] + "]");
-                textView2.setTextColor(0xffff0000);
-                if (((OLPlayRoom) activity).getPlayerKind().equals("H")) {
-                    textView2.append(" (点击选取)");
-                    textView2.setOnClickListener(v -> {
-                        Message obtainMessage = ((OLPlayRoom) activity).getHandler().obtainMessage();
-                        Bundle songPathBundle = new Bundle();
-                        songPathBundle.putString("S", bundle.getString("I"));
-                        obtainMessage.setData(songPathBundle);
-                        obtainMessage.what = 1;
-                        ((OLPlayRoom) activity).getHandler().sendMessage(obtainMessage);
-                    });
-                }
+            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + userName);
+            textView2.setText(message);
+            textView2.setTextColor(0xffff0000);
+            if (((OLPlayRoom) activity).getPlayerKind().equals("H")) {
+                textView2.append(" (点击选取)");
+                textView2.setOnClickListener(v -> {
+                    Message obtainMessage = ((OLPlayRoom) activity).getHandler().obtainMessage();
+                    Bundle songPathBundle = new Bundle();
+                    songPathBundle.putString("S", bundle.getString("I"));
+                    obtainMessage.setData(songPathBundle);
+                    obtainMessage.what = 1;
+                    ((OLPlayRoom) activity).getHandler().sendMessage(obtainMessage);
+                });
             }
         }
     }
@@ -334,6 +336,23 @@ public final class ChattingAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
         textView2.setText(string2);
         textView2.setTextColor(0xff00ffff);
+    }
+
+
+    private void handleStreamMessage(View view, TextView userText, TextView msgText, Bundle bundle) {
+        String sendUserName = bundle.getString("U");
+        String message = bundle.getString("M");
+        boolean streamStatus = bundle.getBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, false);
+        if (streamStatus) {
+            message += DateUtil.second() % 2 == 0 ? "🔶" : "🔸";
+        }
+        userText.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
+        msgText.setText(message);
+        // 设置标签颜色
+        TextView maoText = view.findViewById(R.id.ol_user_mao);
+        userText.setTextColor(0xffffd8ec);
+        msgText.setTextColor(0xffffd8ec);
+        maoText.setTextColor(0xffffd8ec);
     }
 
 }

@@ -2,71 +2,19 @@ package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Handler;
-
-import org.json.JSONObject;
-
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.OLChallenge;
-import ly.pp.justpiano3.activity.OLFamily;
-import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.activity.OLPlayDressRoom;
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLRoomActivity;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.*;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.task.ReceiveTask;
-import protobuf.vo.OnlineChallengeUserVO;
-import protobuf.vo.OnlineChallengeVO;
-import protobuf.vo.OnlineChangeClothesVO;
-import protobuf.vo.OnlineChangeRoomPositionVO;
-import protobuf.vo.OnlineClTestVO;
-import protobuf.vo.OnlineCoupleVO;
-import protobuf.vo.OnlineDailyTimeUserVO;
-import protobuf.vo.OnlineDailyVO;
-import protobuf.vo.OnlineDialogVO;
-import protobuf.vo.OnlineEnterHallVO;
-import protobuf.vo.OnlineFamilyInfoVO;
-import protobuf.vo.OnlineFamilyUserVO;
-import protobuf.vo.OnlineFamilyVO;
-import protobuf.vo.OnlineFriendUserVO;
-import protobuf.vo.OnlineHallChatVO;
-import protobuf.vo.OnlineHallVO;
-import protobuf.vo.OnlineLoadPlayUserVO;
-import protobuf.vo.OnlineLoadRoomListVO;
-import protobuf.vo.OnlineLoadRoomPositionVO;
-import protobuf.vo.OnlineLoadRoomUserListVO;
-import protobuf.vo.OnlineLoadRoomUserVO;
-import protobuf.vo.OnlineLoadUserCoupleVO;
-import protobuf.vo.OnlineLoadUserInfoVO;
-import protobuf.vo.OnlineLoadUserListVO;
-import protobuf.vo.OnlineLoadUserVO;
-import protobuf.vo.OnlineMailVO;
-import protobuf.vo.OnlineMiniGradeOnVO;
-import protobuf.vo.OnlinePlayFinishVO;
-import protobuf.vo.OnlinePlayGradeVO;
-import protobuf.vo.OnlinePlayUserVO;
-import protobuf.vo.OnlineRoomChatVO;
-import protobuf.vo.OnlineRoomPositionUserVO;
-import protobuf.vo.OnlineRoomVO;
-import protobuf.vo.OnlineSetMiniGradeVO;
-import protobuf.vo.OnlineSetUserInfoVO;
-import protobuf.vo.OnlineShopProductVO;
-import protobuf.vo.OnlineShopVO;
-import protobuf.vo.OnlineUserInfoDialogVO;
-import protobuf.vo.OnlineUserVO;
+import org.json.JSONObject;
+import protobuf.vo.*;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class ReceiveTasks {
 
@@ -253,6 +201,9 @@ public final class ReceiveTasks {
                 bundle.putInt("T", roomChat.getType());
                 if (roomChat.getType() == 1) {
                     bundle.putInt("V", roomChat.getColor());
+                } else if (roomChat.getType() == Consts.STREAM_MESSAGE_CODE/* 流消息 */) {
+                    // 自定义了一个简单的协议
+                    streamMessageBundleBuild(roomChat.getMessage(), bundle);
                 }
                 message.setData(bundle);
                 if (topActivity instanceof OLPlayRoom) {
@@ -1211,6 +1162,34 @@ public final class ReceiveTasks {
                 }
             }
         });
+    }
+
+    /**
+     * 设置流消息的 bundle
+     *
+     * @param message 当前事件消息
+     * @param bundle  当前消息的bundle
+     */
+    private static void streamMessageBundleBuild(String message, Bundle bundle) {
+        // 流消息开始
+        if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_START)) {
+            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, message.substring(Consts.STREAM_MESSAGE_PROTO_START.length()));
+            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, true);
+            bundle.putString("M", StringUtil.EMPTY_STRING);
+        }
+        // 流消息数据传输
+        else if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_DATA)) {
+            String[] split = message.split(String.valueOf(StringUtil.LINE_FEED));
+            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, split[0].substring(Consts.STREAM_MESSAGE_PROTO_DATA.length()));
+            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, true);
+            bundle.putString("M", message.substring((split[0] + StringUtil.LINE_FEED).length()));
+        }
+        // 流消息结束
+        else if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_END)) {
+            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, message.substring(Consts.STREAM_MESSAGE_PROTO_END.length()));
+            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, false);
+            bundle.putString("M", StringUtil.EMPTY_STRING);
+        }
     }
 
     private static User buildAndPutUser(OLRoomActivity olRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {

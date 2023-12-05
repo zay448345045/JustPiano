@@ -2,6 +2,7 @@ package ly.pp.justpiano3.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -74,5 +75,20 @@ public class DateUtil {
             return now();
         }
     }
+
+    /**
+     * 现在 秒
+     */
+    public static int second() {
+        return Calendar.getInstance().get(Calendar.SECOND);
+    }
+
+    /**
+     * 现在 毫秒
+     */
+    public static int milliSecond() {
+        return Calendar.getInstance().get(Calendar.MILLISECOND);
+    }
+
 
 }
