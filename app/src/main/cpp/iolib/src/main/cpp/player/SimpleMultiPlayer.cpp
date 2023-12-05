@@ -51,8 +51,8 @@ namespace iolib {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        if (mEnableSf2 && pSynth != nullptr) {
-            fluid_synth_write_float(pSynth, numFrames, (float *) audioData,
+        if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr && mFluidHandle->soundfont_id > 0) {
+            fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
                                     0, 2,(float *) audioData, 1, 2);
             memcpy(mMixBuffer, ((float *) audioData),
                    numFrames * mChannelCount * sizeof(float));
@@ -76,7 +76,7 @@ namespace iolib {
                     if (get<0>(tuple) <= mDelayValue * 1000) {
                         get<0>(tuple) += numFrames;
                     } else {
-                        fluid_synth_noteoff(pSynth, 0, 108 - index);
+                        fluid_synth_noteoff(mFluidHandle->synth, 0, 108 - index);
                         noteVector->clear();
                     }
                 }
@@ -261,9 +261,8 @@ namespace iolib {
         mRecordingIO->setRecordingFilePath(s);
     }
 
-    void SimpleMultiPlayer::setSf2Synth(_fluid_synth_t *synth, bool enable) {
-        this->pSynth = synth;
-        this->mEnableSf2 = enable;
+    void SimpleMultiPlayer::setSf2Synth(fluid_handle_t *fluidHandle) {
+        this->mFluidHandle = fluidHandle;
     }
 
     void SimpleMultiPlayer::setReverbValue(int32_t reverb) {

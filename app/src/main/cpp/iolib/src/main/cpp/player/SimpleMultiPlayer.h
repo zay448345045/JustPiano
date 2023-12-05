@@ -35,6 +35,12 @@ namespace iolib {
 
     typedef unsigned char byte;     // an 8-bit unsigned value
 
+    typedef struct {
+        fluid_settings_t *settings;
+        fluid_synth_t *synth;
+        int soundfont_id;
+    } fluid_handle_t;
+
     /**
      * A simple streaming player for multiple SampleBuffers.
      */
@@ -90,7 +96,7 @@ namespace iolib {
 
         void setRecordFilePath(const char *s);
 
-        void setSf2Synth(_fluid_synth_t *synth, bool enable);
+        void setSf2Synth(fluid_handle_t *synth);
 
         void setReverbValue(int32_t reverb);
 
@@ -117,11 +123,10 @@ namespace iolib {
 
         bool mOutputReset;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
-        _fluid_synth_t *pSynth{nullptr};
+        fluid_handle_t *mFluidHandle{nullptr};
 
         void mixAudioToBuffer(float *audioData, int32_t numFrames);
 
-        bool mEnableSf2{false};
         int32_t mReverbValue{0};
         int32_t mDelayValue{0};
         float mDelayVolumeFactor{4e-5f};

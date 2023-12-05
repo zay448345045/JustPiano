@@ -24,12 +24,6 @@ extern "C" {
 using namespace iolib;
 using namespace parselib;
 
-typedef struct {
-    fluid_settings_t *settings;
-    fluid_synth_t *synth;
-    int soundfont_id;
-} fluid_handle_t;
-
 static SimpleMultiPlayer sDTPlayer;
 static fluid_handle_t *handle;
 
@@ -148,6 +142,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *env, jclass) 
     fluid_settings_setnum(handle->settings, "synth.reverb.level",
                           (float) sDTPlayer.getReverbValue() / 100);
     handle->synth = new_fluid_synth(handle->settings);
+    sDTPlayer.setSf2Synth(handle);
     fluid_synth_set_interp_method(handle->synth, -1, FLUID_INTERP_HIGHEST);
 }
 
@@ -180,7 +175,6 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
             int presetNumber = fluid_preset_get_num(preset);
             if (fluid_sfont_get_preset(soundFont, bank, presetNumber) != nullptr) {
                 fluid_synth_program_change(handle->synth, 0, presetNumber);
-                sDTPlayer.setSf2Synth(handle->synth, true);
                 break;
             }
         }
@@ -190,7 +184,6 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *env, jclass) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
-        sDTPlayer.setSf2Synth(handle->synth, false);
         fluid_synth_sfunload(handle->synth, handle->soundfont_id, 1);
         handle->soundfont_id = 0;
     }
