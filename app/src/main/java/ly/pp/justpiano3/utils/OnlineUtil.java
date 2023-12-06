@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import java.util.UUID;
+
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import ly.pp.justpiano3.JPApplication;
@@ -65,7 +67,7 @@ public class OnlineUtil {
      */
     public static final Long AUTO_RECONNECT_INTERVAL_TIME = 1000L;
 
-    public static String onlineSessionId;
+    public static String onlineSessionId = UUID.randomUUID().toString().replace("-", "");
     /**
      * 断线时的时间戳，用于断线重连判断，如果非空，表示目前没有掉线，断线自动重连成功后会置空
      */

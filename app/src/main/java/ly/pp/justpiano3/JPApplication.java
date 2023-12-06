@@ -102,10 +102,10 @@ public final class JPApplication extends Application {
         }
         // 设置拦截app中未捕获的异常
         new CrashHandler().init();
-        // 初始化一些图像缓存
-        ImageLoadUtil.init(this);
         // 从app应用数据中加载设置
         GlobalSetting.INSTANCE.loadSettings(this, false);
+        // 初始化一些图像缓存
+        ImageLoadUtil.init(this);
         // 从app应用数据中加载账号信息
         accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         // 初始化数据库

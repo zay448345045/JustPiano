@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.utils;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,11 +22,17 @@ public class ObjectPool<T> {
         if (pool.isEmpty()) {
             instance = factory.createObject();
         } else {
-            instance = pool.keySet().iterator().next();
-            pool.remove(instance);
+            Iterator<T> iterator = pool.keySet().iterator();
+            if (iterator.hasNext()) {
+                instance = iterator.next();
+                pool.remove(instance);
+            } else {
+                instance = factory.createObject();
+            }
         }
         return instance;
     }
+
 
     public void release(T instance) {
         if (pool.size() < maxPoolSize) {
