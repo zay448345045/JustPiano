@@ -36,8 +36,8 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         }
 
         File soundFile = new File(objects[1]);
-        if (!soundFile.exists()) {
-            return null;
+        if (soundFile.length() > 1024 * 1024 * 1024) {
+            return "invalid";
         }
         try {
             if (soundFile.getName().endsWith(".ss")) {
@@ -68,8 +68,12 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         if (soundListPreference.jpProgressBar.isShowing()) {
             soundListPreference.jpProgressBar.cancel();
         }
-        Toast.makeText(soundListPreference.context, Objects.equals("error", result)
-                ? "音源设置失败!" : "音源设置成功!", Toast.LENGTH_SHORT).show();
+        if (Objects.equals("invalid", result)) {
+            Toast.makeText(soundListPreference.context, "音源文件大小不得超过1G", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(soundListPreference.context, Objects.equals("error", result)
+                    ? "音源设置失败!" : "音源设置成功!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

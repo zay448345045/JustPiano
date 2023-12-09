@@ -157,7 +157,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 pmFile.getParentFile().mkdirs();
             }
             if (midiFile.length() > 2 * 1024 * 1024) {
-                Toast.makeText(this, "不接受超过2MB的midi文件", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "不接受大小超过2M的midi文件", Toast.LENGTH_SHORT).show();
                 return;
             } else if (midiFile.length() > 256 * 1024) {
                 Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
