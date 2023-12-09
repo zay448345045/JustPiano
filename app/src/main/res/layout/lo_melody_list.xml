@@ -11,8 +11,6 @@
         android:layout_height="wrap_content"
         android:background="@color/blue_d"
         android:layout_marginStart="@dimen/dimen_4dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:gravity="center_horizontal">
 
         <LinearLayout
@@ -63,17 +61,11 @@
 
             <EditText
                 android:id="@+id/search_edit"
-                style="@style/AutoCompleteStyle"
+                style="@style/EditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:completionThreshold="1"
-                android:configChanges="keyboard"
-                android:dropDownWidth="@dimen/dimen_320dp"
-                android:dropDownHeight="@dimen/dimen_240dp"
                 android:ems="10"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="#ffffffff"
@@ -146,7 +138,6 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:src="@drawable/list_icon" />
-
     </LinearLayout>
 
     <LinearLayout
