@@ -51,8 +51,10 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof ByteBuf) {
             ByteBuf byteBuf = (ByteBuf) msg;
-            // 读取数据是否加密的标记
-            if (byteBuf.readBoolean()) {
+            if (!byteBuf.isReadable()) {
+                // byteBuf不可读，直接释放byteBuf
+                byteBuf.release();
+            } else if (byteBuf.readBoolean()) {
                 // 数据形式为加密，需进行解密操作
                 byte[] bytes = new byte[byteBuf.readableBytes()];
                 byteBuf.readBytes(bytes);
@@ -60,6 +62,8 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
                 byte[] decryptedBytes = EncryptUtil.cipherHandle(Cipher.DECRYPT_MODE, RSADecryptCipher, flipBytes(bytes));
                 // 将解密后的消息内容传递给下一个处理器
                 ctx.fireChannelRead(Unpooled.wrappedBuffer(decryptedBytes));
+                // 释放原始byteBuf
+                byteBuf.release();
             } else {
                 ctx.fireChannelRead(byteBuf);
             }
@@ -97,9 +101,6 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
 
     /**
      * 数组翻转
-     *
-     * @param bytes
-     * @return
      */
     private byte[] flipBytes(byte[] bytes) {
         if (bytes == null) {

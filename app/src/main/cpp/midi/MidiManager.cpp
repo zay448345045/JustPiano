@@ -49,27 +49,29 @@ static void sendTheReceivedData(JNIEnv *env, uint8_t *data, size_t numBytes) {
  * application-provided (Java) callback.
  */
 static void *readThreadRoutine(void *context) {
-    midi_device_handle_t &midiDeviceHandle = midiDeviceMap[reinterpret_cast<intptr_t>(context)];
-    const size_t MAX_BYTES_TO_RECEIVE = 128;
-    uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
-    JNIEnv *env;
-    theJvm->AttachCurrentThread(&env, nullptr);
-    while (midiDeviceHandle.sReading) {
-        // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU unnecessarily
-        usleep(2000);
-        int32_t opcode;
-        size_t numBytesReceived;
-        int64_t timestamp;
-        ssize_t numMessagesReceived = AMidiOutputPort_receive(
-                midiDeviceHandle.sMidiOutputPort, &opcode, incomingMessage,
-                MAX_BYTES_TO_RECEIVE, &numBytesReceived, &timestamp);
-        if (numMessagesReceived < 0) {
-            __android_log_print(ANDROID_LOG_WARN, TAG, "Failure read %zd", numMessagesReceived);
-            // Exit the thread
-            midiDeviceHandle.sReading = false;
-        } else if (numMessagesReceived > 0 && numBytesReceived >= 0) {
-            if (opcode == AMIDI_OPCODE_DATA && (incomingMessage[0] & 0xF0) != 0xF0) {
-                sendTheReceivedData(env, incomingMessage, numBytesReceived);
+    if (theJvm != nullptr) {
+        midi_device_handle_t &midiDeviceHandle = midiDeviceMap[reinterpret_cast<intptr_t>(context)];
+        const size_t MAX_BYTES_TO_RECEIVE = 128;
+        uint8_t incomingMessage[MAX_BYTES_TO_RECEIVE];
+        JNIEnv *env;
+        theJvm->AttachCurrentThread(&env, nullptr);
+        while (midiDeviceHandle.sReading) {
+            // AMidiOutputPort_receive is non-blocking, so let's not burn up the CPU unnecessarily
+            usleep(2000);
+            int32_t opcode;
+            size_t numBytesReceived;
+            int64_t timestamp;
+            ssize_t numMessagesReceived = AMidiOutputPort_receive(
+                    midiDeviceHandle.sMidiOutputPort, &opcode, incomingMessage,
+                    MAX_BYTES_TO_RECEIVE, &numBytesReceived, &timestamp);
+            if (numMessagesReceived < 0) {
+                __android_log_print(ANDROID_LOG_WARN, TAG, "Failure read %zd", numMessagesReceived);
+                // Exit the thread
+                midiDeviceHandle.sReading = false;
+            } else if (numMessagesReceived > 0 && numBytesReceived >= 0) {
+                if (opcode == AMIDI_OPCODE_DATA && (incomingMessage[0] & 0xF0) != 0xF0) {
+                    sendTheReceivedData(env, incomingMessage, numBytesReceived);
+                }
             }
         }
     }

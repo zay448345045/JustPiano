@@ -81,7 +81,7 @@ public class MidiDeviceUtil {
         }
 
         /**
-         * midi键盘接收到的音符消息，在主线程调用，请避免直接做耗时长的操作
+         * midi键盘接收到的音符消息，避免直接做耗时长的操作
          *
          * @param pitch  原始midi音高
          * @param volume midi音符力度
@@ -297,7 +297,7 @@ public class MidiDeviceUtil {
     private static native void stopReadingMidi(int deviceId);
 
     /**
-     * C++和java接收到midi数据后均会调用此方法
+     * C++和java接收到midi数据后均会调用此方法，此方法中不要有长时间的阻塞操作，可能导致midi设备接收C++线程挂掉
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private static void onMidiMessageReceive(int value1, byte value2, byte value3) {
