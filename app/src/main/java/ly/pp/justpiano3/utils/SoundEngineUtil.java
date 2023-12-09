@@ -71,6 +71,9 @@ public class SoundEngineUtil {
     public static native void unloadSf2();
 
     public static void playSound(byte pitch, byte volume) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            return;
+        }
         triggerDown(MidiUtil.MAX_PIANO_MIDI_PITCH - pitch, volume);
     }
 
