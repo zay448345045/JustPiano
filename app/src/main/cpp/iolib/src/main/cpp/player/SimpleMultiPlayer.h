@@ -35,11 +35,10 @@ namespace iolib {
 
     typedef unsigned char byte;     // an 8-bit unsigned value
 
-    typedef struct FluidHandle {
+    typedef struct {
         fluid_settings_t *settings;
         fluid_synth_t *synth;
         int soundfont_id;
-        pthread_mutex_t synth_mutex = PTHREAD_MUTEX_INITIALIZER;
     } fluid_handle_t;
 
     /**
@@ -69,7 +68,7 @@ namespace iolib {
 
         // Wave Sample Loading...
         /**
-         * Adds the SampleSource/Samplebuffer pair to the list of source channels.
+         * Adds the SampleSource/SampleBuffer pair to the list of source channels.
          * Transfers ownership of those objects so that they can be deleted/unloaded.
          * The indexes associated with each source channel is the order in which they
          * are added.
@@ -88,10 +87,6 @@ namespace iolib {
         void triggerUp(int32_t index);
 
         void resetAll();
-
-        bool getOutputReset() { return mOutputReset; }
-
-        void clearOutputReset() { mOutputReset = false; }
 
         void setRecord(bool r);
 
@@ -122,7 +117,6 @@ namespace iolib {
 
         bool mRecord{};
 
-        bool mOutputReset;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
         fluid_handle_t *mFluidHandle{nullptr};
 

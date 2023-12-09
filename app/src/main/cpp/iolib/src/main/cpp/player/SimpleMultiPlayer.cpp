@@ -36,7 +36,7 @@ namespace iolib {
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
     SimpleMultiPlayer::SimpleMultiPlayer() : mMixBuffer(nullptr), mChannelCount(0), mSampleRate(0),
-                                             mOutputReset(false), mDecayFactor(1.0f) {}
+                                             mDecayFactor(1.0f) {}
 
     DataCallbackResult SimpleMultiPlayer::onAudioReady(AudioStream *oboeStream, void *audioData,
                                                        int32_t numFrames) {
@@ -51,15 +51,13 @@ namespace iolib {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr && mFluidHandle->soundfont_id > 0) {
-            if (pthread_mutex_trylock(&mFluidHandle->synth_mutex) == 0) {
-                fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
-                                        0, 2,(float *) audioData, 1, 2);
-                memcpy(mMixBuffer, ((float *) audioData),
-                       numFrames * mChannelCount * sizeof(float));
-                handleSf2DelayNoteOff(numFrames);
-                pthread_mutex_unlock(&mFluidHandle->synth_mutex);
-            }
+        if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr &&
+            mFluidHandle->soundfont_id > 0) {
+            fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
+                                    0, 2, (float *) audioData, 1, 2);
+            memcpy(mMixBuffer, ((float *) audioData),
+                   numFrames * mChannelCount * sizeof(float));
+            handleSf2DelayNoteOff(numFrames);
         } else {
             mixAudioToBuffer((float *) audioData, numFrames);
         }
@@ -122,7 +120,7 @@ namespace iolib {
             // reverb compute algorithm
             if (mReverbValue != 0) {
                 mMixBuffer[i] = mCombFilter->process(mMixBuffer[i])
-                               + mAllPassFilter->process(mMixBuffer[i]);
+                                + mAllPassFilter->process(mMixBuffer[i]);
                 mMixBuffer[i + 1] = mMixBuffer[i];
             }
         }
@@ -134,7 +132,6 @@ namespace iolib {
 
         resetAll();
         openStream();
-        mOutputReset = true;
     }
 
     void SimpleMultiPlayer::onErrorBeforeClose(AudioStream *, Result error) {
