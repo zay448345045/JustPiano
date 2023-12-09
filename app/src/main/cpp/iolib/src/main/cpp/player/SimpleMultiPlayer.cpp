@@ -51,19 +51,19 @@ namespace iolib {
             mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr &&
-            mFluidHandle->soundfont_id > 0) {
-            fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
-                                    0, 2, (float *) audioData, 1, 2);
-            memcpy(mMixBuffer, ((float *) audioData),
-                   numFrames * mChannelCount * sizeof(float));
-            handleSf2DelayNoteOff(numFrames);
-        } else {
-            mixAudioToBuffer((float *) audioData, numFrames);
-        }
-
-        if (mRecord) {
-            mRecordingIO->write_buffer(mMixBuffer, numFrames);
+        if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr && !mFluidHandle->loading) {
+            if (mFluidHandle->soundfont_id > 0) {
+                fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
+                                        0, 2, (float *) audioData, 1, 2);
+                memcpy(mMixBuffer, ((float *) audioData),
+                       numFrames * mChannelCount * sizeof(float));
+                handleSf2DelayNoteOff(numFrames);
+            } else {
+                mixAudioToBuffer((float *) audioData, numFrames);
+            }
+            if (mRecord) {
+                mRecordingIO->write_buffer(mMixBuffer, numFrames);
+            }
         }
         return DataCallbackResult::Continue;
     }

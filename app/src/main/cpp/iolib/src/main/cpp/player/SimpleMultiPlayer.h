@@ -39,6 +39,7 @@ namespace iolib {
         fluid_settings_t *settings;
         fluid_synth_t *synth;
         int soundfont_id;
+        bool loading;
     } fluid_handle_t;
 
     /**

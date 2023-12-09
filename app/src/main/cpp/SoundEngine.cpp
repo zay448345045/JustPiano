@@ -161,6 +161,7 @@ JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring filePath) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id <= 0) {
         const char *path = env->GetStringUTFChars(filePath, nullptr);
+        handle->loading = true;
         handle->soundfont_id = fluid_synth_sfload(handle->synth, path, 1);
         fluid_sfont_t *soundFont = fluid_synth_get_sfont_by_id(handle->synth, handle->soundfont_id);
         fluid_sfont_iteration_start(soundFont);
@@ -173,16 +174,18 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
                 break;
             }
         }
+        handle->loading = false;
     }
 }
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *env, jclass) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
-        int soundfont_id_temp = handle->soundfont_id;
+        handle->loading = true;
+        fluid_synth_all_sounds_off(handle->synth, 0);
+        fluid_synth_sfunload(handle->synth, handle->soundfont_id, 1);
         handle->soundfont_id = 0;
-        fluid_synth_sfunload(handle->synth, soundfont_id_temp, 1);
-
+        handle->loading = false;
     }
 }
 
