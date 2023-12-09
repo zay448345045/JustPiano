@@ -753,7 +753,7 @@ class WaterfallView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        // view的宽高改变，执行重新计算背景图等绘制范围，然后强制补帧
+        // view的宽高改变，执行重新计算背景图等绘制范围
         if (drawNotesThread?.isRunning == true) {
             buildShowingRectWithWidthAndHeight(w, h)
             holder.setFixedSize(w, h)

@@ -148,6 +148,19 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     }
 
     public void initPlayer(GridView gridView, Bundle bundle) {
+        if (roomPositionSub1 < 0) {
+            // 初次加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏，开启瀑布流等
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                MidiDeviceUtil.setMidiConnectionListener(this);
+            }
+            if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+                openNotesSchedule();
+            }
+            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
+            RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
+            waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
+            waterfallView.setLayoutParams(waterfallViewLayoutParams);
+        }
         playerList.clear();
         if (bundle != null) {
             int size = bundle.size() - 2;
@@ -177,18 +190,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("PI"), o2.getByte("PI")));
             }
             gridView.setAdapter(new KeyboardPlayerImageAdapter(list, this));
-            // 加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                MidiDeviceUtil.setMidiConnectionListener(this);
-            }
-            if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-                openNotesSchedule();
-            }
-            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
         }
-        RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
-        waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
-        waterfallView.setLayoutParams(waterfallViewLayoutParams);
     }
 
     @Override
