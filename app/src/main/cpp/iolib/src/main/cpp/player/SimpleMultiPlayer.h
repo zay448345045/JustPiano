@@ -35,10 +35,11 @@ namespace iolib {
 
     typedef unsigned char byte;     // an 8-bit unsigned value
 
-    typedef struct {
+    typedef struct FluidHandle {
         fluid_settings_t *settings;
         fluid_synth_t *synth;
         int soundfont_id;
+        pthread_mutex_t synth_mutex = PTHREAD_MUTEX_INITIALIZER;
     } fluid_handle_t;
 
     /**

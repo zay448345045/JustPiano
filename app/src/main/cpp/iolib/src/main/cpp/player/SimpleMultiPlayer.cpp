@@ -52,11 +52,14 @@ namespace iolib {
         }
         memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
         if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr && mFluidHandle->soundfont_id > 0) {
-            fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
-                                    0, 2,(float *) audioData, 1, 2);
-            memcpy(mMixBuffer, ((float *) audioData),
-                   numFrames * mChannelCount * sizeof(float));
-            handleSf2DelayNoteOff(numFrames);
+            if (pthread_mutex_trylock(&mFluidHandle->synth_mutex) == 0) {
+                fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
+                                        0, 2,(float *) audioData, 1, 2);
+                memcpy(mMixBuffer, ((float *) audioData),
+                       numFrames * mChannelCount * sizeof(float));
+                handleSf2DelayNoteOff(numFrames);
+                pthread_mutex_unlock(&mFluidHandle->synth_mutex);
+            }
         } else {
             mixAudioToBuffer((float *) audioData, numFrames);
         }
