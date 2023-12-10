@@ -85,6 +85,13 @@ android {
     }
 }
 
+apply plugin: 'img-optimizer'
+
+optimizerOptions {
+    triggerSize 5
+    type "lossy"
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.0'
