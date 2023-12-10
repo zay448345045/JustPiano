@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,7 +22,7 @@ import ly.pp.justpiano3.adapter.ChatFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-public class ChatFiles extends Activity {
+public class ChatFiles extends BaseActivity {
     public List<Map<String, Object>> dataList = null;
     private ListView f4919d;
     private TextView f4921f;

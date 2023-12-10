@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
-import android.widget.PopupWindow;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +15,7 @@ import java.util.Objects;
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.view.JPPopupWindow;
 
 /**
  * 屏蔽聊天处理
@@ -61,7 +61,7 @@ public class ChatBlackUserUtil {
      * 屏蔽聊天用户的按钮展示处理
      */
     public static void chatBlackButtonHandle(Context context, User user, Button chatBlackButton,
-                                             Button chatBlackCancelButton, PopupWindow popupWindow) {
+                                             Button chatBlackCancelButton, JPPopupWindow popupWindow) {
         if (isUserInChatBlackList(context, user.getPlayerName())) {
             chatBlackCancelButton.setVisibility(View.VISIBLE);
             chatBlackButton.setVisibility(View.GONE);

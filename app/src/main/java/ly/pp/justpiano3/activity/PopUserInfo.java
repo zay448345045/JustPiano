@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -24,7 +23,7 @@ import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class PopUserInfo extends Activity implements Callback, OnClickListener {
+public class PopUserInfo extends BaseActivity implements Callback, OnClickListener {
     public JPProgressBar jpprogressBar;
     public int headType = 0;
     public String kitiName = "";

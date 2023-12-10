@@ -29,7 +29,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class WaterfallActivity : Activity(), View.OnTouchListener,
+class WaterfallActivity : BaseActivity(), View.OnTouchListener,
     MidiDeviceUtil.MidiMessageReceiveListener {
     /**
      * 瀑布流view

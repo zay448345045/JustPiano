@@ -16,6 +16,12 @@ object GlobalSetting {
     var localPlayMode = LocalPlayModeEnum.NORMAL
 
     /**
+     * 全面屏适配开关
+     */
+    var allFullScreenShow: Boolean = true
+        private set
+
+    /**
      * 当前皮肤名称
      */
     var skinName: String = "默认皮肤"
@@ -248,6 +254,7 @@ object GlobalSetting {
      */
     fun loadSettings(context: Context, online: Boolean) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        allFullScreenShow = sharedPreferences.getBoolean("all_full_screen_show", true)
         skinName = sharedPreferences.getString("skin_list", "original").toString()
         skinName =
             if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)

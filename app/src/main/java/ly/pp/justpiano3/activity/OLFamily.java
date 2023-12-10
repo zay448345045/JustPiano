@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +39,7 @@ import ly.pp.justpiano3.listener.ChangeDeclarationClick;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSendMailDTO;
@@ -64,7 +64,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public byte[] myFamilyPicArray;
     public List<Map<String, String>> peopleList = new ArrayList<>();
     public ListView peopleListView;
-    public PopupWindow infoWindow;
+    public JPPopupWindow infoWindow;
     private LayoutInflater layoutinflater;
     private Button manageFamily;
     private Button inOut;
@@ -112,7 +112,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
-        PopupWindow popupWindow = new PopupWindow(this);
+        JPPopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
         Button button = inflate.findViewById(R.id.ol_family_levelup);
         Button button2 = inflate.findViewById(R.id.ol_family_changedecl);
@@ -367,8 +367,8 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
-        PopupWindow popupWindow = new PopupWindow(this);
+    public JPPopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
+        JPPopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
         Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
         Button mailSendButton = inflate.findViewById(R.id.ol_chat_b);  //私信

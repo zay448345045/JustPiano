@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,7 +32,7 @@ import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class ShowTopInfo extends Activity implements Callback, OnClickListener {
+public class ShowTopInfo extends BaseActivity implements Callback, OnClickListener {
     public JPApplication jpapplication;
     public List<Map<String, Object>> dataList;
     public LayoutInflater layoutInflater;

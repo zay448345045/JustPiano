@@ -34,6 +34,13 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="all_full_screen_show"
+            android:summaryOff="&lt;关闭&gt;关闭内容沉浸式显示"
+            android:summaryOn="&lt;打开&gt;隐藏状态栏与导航栏，开启内容沉浸式显示"
+            android:title="全面屏适配开关" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="键盘、声音及MIDI设备">

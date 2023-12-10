@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -30,7 +29,7 @@ import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
-public class MainMode extends Activity implements OnClickListener {
+public class MainMode extends BaseActivity implements OnClickListener {
     private static final int PERMISSION_REQUEST_CODE = 120;
     private boolean pressAgain;
 

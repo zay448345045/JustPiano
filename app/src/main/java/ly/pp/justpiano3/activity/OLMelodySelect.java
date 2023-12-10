@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -43,9 +41,10 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class OLMelodySelect extends Activity implements Callback, OnClickListener {
+public class OLMelodySelect extends BaseActivity implements Callback, OnClickListener {
     public static byte[] songBytes;
     public static String songID;
     public JPApplication jpapplication;
@@ -72,8 +71,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
     public boolean f4333v = true;
     public boolean f4334w = true;
     public boolean f4335x = true;
-    public Button showTitleButton;
-    private PopupWindow popupWindow;
+    private JPPopupWindow popupWindow;
     private final List<String> pageList = new ArrayList<>();
     private boolean firstLoadFocusFinish;
     private List<Map<String, Object>> songList;
@@ -315,7 +313,7 @@ public class OLMelodySelect extends Activity implements Callback, OnClickListene
             ListView listView = inflate.findViewById(R.id.list);
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, pageList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            popupWindow = new PopupWindow(inflate, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            popupWindow = new JPPopupWindow(inflate, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             popupWindow.setOutsideTouchable(true);
             popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_face, getTheme()));
             firstLoadFocusFinish = true;

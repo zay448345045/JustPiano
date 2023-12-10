@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -36,7 +35,7 @@ import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardView;
 
-public class KeyBoard extends Activity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener, View.OnClickListener {
+public class KeyBoard extends BaseActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener, View.OnClickListener {
     public KeyboardView firstKeyboardView;
     public KeyboardView secondKeyboardView;
     public LinearLayout keyboard1Layout;

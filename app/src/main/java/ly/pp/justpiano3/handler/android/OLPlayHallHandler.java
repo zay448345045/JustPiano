@@ -263,7 +263,7 @@ public final class OLPlayHallHandler extends Handler {
                                 DialogUtil.setShowDialog(false);
                             });
                         }
-                        DialogUtil.handleGoldSend(olPlayHall.jpapplication, jpDialogBuilder, i, data14.getString("N"), data14.getString("F"));
+                        DialogUtil.handleGoldSend(jpDialogBuilder, i, data14.getString("N"), data14.getString("F"));
                         jpDialogBuilder.buildAndShowDialog();
                         DialogUtil.setShowDialog(true);
                     }

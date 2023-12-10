@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.WindowUtil;
 
 public final class JPProgressBar extends Dialog {
 
@@ -68,6 +70,9 @@ public final class JPProgressBar extends Dialog {
     @Override
     public void show() {
         super.show();
+        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+            WindowUtil.fullScreenHandle(getWindow());
+        }
         if (!StringUtil.isNullOrEmpty(text)) {
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);

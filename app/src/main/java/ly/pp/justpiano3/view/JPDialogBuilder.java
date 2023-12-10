@@ -26,7 +26,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
+import ly.pp.justpiano3.utils.WindowUtil;
 
 public final class JPDialogBuilder {
     private EditText editText;
@@ -76,12 +78,14 @@ public final class JPDialogBuilder {
         return this;
     }
 
-    public void setCheckMessageUrl(boolean checkMessageUrl) {
+    public JPDialogBuilder setCheckMessageUrl(boolean checkMessageUrl) {
         this.checkMessageUrl = checkMessageUrl;
+        return this;
     }
 
-    public void setCancelableFalse() {
+    public JPDialogBuilder setCancelableFalse() {
         cancelable = false;
+        return this;
     }
 
     public JPDialog createJPDialog() {
@@ -156,7 +160,7 @@ public final class JPDialogBuilder {
         return this;
     }
 
-    public void setVisibleEditText(boolean visibleEditText, String hint) {
+    public JPDialogBuilder setVisibleEditText(boolean visibleEditText, String hint) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visibleEditText) {
@@ -164,19 +168,22 @@ public final class JPDialogBuilder {
             editText.setVisibility(View.VISIBLE);
             editText.setHint(hint);
         }
+        return this;
     }
 
-    public void setVisibleRadioGroup(boolean visibleRadioGroup) {
+    public JPDialogBuilder setVisibleRadioGroup(boolean visibleRadioGroup) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visibleRadioGroup) {
             radioGroup = (inflate.findViewById(R.id.Rgroup));
             radioGroup.setVisibility(View.VISIBLE);
         }
+        return this;
     }
 
-    public void addRadioButton(RadioButton radioButton) {
+    public JPDialogBuilder addRadioButton(RadioButton radioButton) {
         radioGroup.addView(radioButton);
+        return this;
     }
 
     public int getRadioGroupCheckedId() {
@@ -210,29 +217,29 @@ public final class JPDialogBuilder {
         try {
             JPDialog dialog = createJPDialog();
             if (!dialog.isShowing()) {
-                Window window = dialog.getWindow();
                 Context context = dialog.getContext();
-                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                focusNotAle(window);
                 dialog.show();
+                Window window = dialog.getWindow();
+                if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                    WindowUtil.fullScreenHandle(window);
+                }
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
                 layoutParams.width = UnitConvertUtil.dp2px(context, this.width);
                 window.setAttributes(layoutParams);
-                hideNavigationBar(window);
-                clearFocusNotAle(window);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setVisibleGoldConvertView(boolean visible) {
+    public JPDialogBuilder setVisibleGoldConvertView(boolean visible) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visible) {
             goldConvertView = (inflate.findViewById(R.id.gold_convert));
             goldConvertView.setVisibility(View.VISIBLE);
         }
+        return this;
     }
 
     public static class JPDialog extends Dialog {
@@ -240,33 +247,5 @@ public final class JPDialogBuilder {
         JPDialog(Context context) {
             super(context, R.style.Dialog);
         }
-    }
-
-    public void hideNavigationBar(Window window) {
-        // window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        window.getDecorView().setOnSystemUiVisibilityChangeListener(visibility -> {
-            try {
-                int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                        //布局位于状态栏下方
-                        //                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                        //全屏
-                        View.SYSTEM_UI_FLAG_FULLSCREEN |
-                        //隐藏导航栏
-                        //                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-                uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-                window.getDecorView().setSystemUiVisibility(uiOptions);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void focusNotAle(Window window) {
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-    }
-
-    public void clearFocusNotAle(Window window) {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 }

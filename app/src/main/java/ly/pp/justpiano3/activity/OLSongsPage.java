@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +10,7 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-public class OLSongsPage extends Activity implements OnClickListener {
+public class OLSongsPage extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {

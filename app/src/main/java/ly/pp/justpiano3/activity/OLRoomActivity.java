@@ -4,16 +4,44 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.*;
+import android.os.BatteryManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.protobuf.MessageLite;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -31,17 +59,21 @@ import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.thread.TimeUpdateThread;
-import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.DialogUtil;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-import protobuf.dto.*;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import ly.pp.justpiano3.view.JPPopupWindow;
+import protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineQuitRoomDTO;
+import protobuf.dto.OnlineRoomChatDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 /**
  * 房间
@@ -80,8 +112,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public ImageView expressImageView;
     public LayoutInflater layoutInflater;
     public final List<Bundle> playerList = new ArrayList<>();
-    public PopupWindow expressWindow;
-    public PopupWindow changeColor;
+    public JPPopupWindow expressWindow;
+    public JPPopupWindow changeColor;
     public TextView timeTextView;
     public int colorNum = 99;
     public TimeUpdateThread timeUpdateThread;
@@ -594,7 +626,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         jpDialogBuilder.setTitle(string);
         jpDialogBuilder.setMessage(string2);
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
-        DialogUtil.handleGoldSend(jpapplication, jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
+        DialogUtil.handleGoldSend(jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
         jpDialogBuilder.buildAndShowDialog();
     }
 
@@ -636,7 +668,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         expressImageView.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         handler = new Handler(this);
-        PopupWindow popupWindow = new PopupWindow(this);
+        JPPopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 13));
@@ -647,7 +679,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(true);
         expressWindow = popupWindow;
-        PopupWindow popupWindow3 = new PopupWindow(this);
+        JPPopupWindow popupWindow3 = new JPPopupWindow(this);
         View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
         popupWindow3.setContentView(inflate3);
         popupWindow3.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));

@@ -20,6 +20,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
 
 public class SettingsMode extends PreferenceActivity {
@@ -52,6 +53,9 @@ public class SettingsMode extends PreferenceActivity {
         PreferenceFragment preferenceFragment = preferenceFragmentMap.get(getIntent().getDataString());
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 preferenceFragment == null ? new SettingsFragment() : preferenceFragment).commit();
+        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+            WindowUtil.fullScreenHandle(getWindow());
+        }
     }
 
     public static class SettingsFragment extends PreferenceFragment {

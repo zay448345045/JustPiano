@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
-public class JustPiano extends Activity implements Callback, Runnable {
+public class JustPiano extends BaseActivity implements Callback, Runnable {
     public static boolean updateSQL = false;
     public Handler handler;
     private boolean isPause;

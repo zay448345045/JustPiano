@@ -7,19 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import protobuf.dto.OnlineHallChatDTO;
 import protobuf.dto.OnlineRoomChatDTO;
 
 public final class ExpressAdapter extends BaseAdapter {
-    public PopupWindow popupWindow;
+    public JPPopupWindow popupWindow;
     public int messageType;
     private final Context context;
     private final Integer[] expressSeq;
 
-    public ExpressAdapter(Context context, Integer[] numArr, PopupWindow popupWindow, int b) {
+    public ExpressAdapter(Context context, Integer[] numArr, JPPopupWindow popupWindow, int b) {
         this.context = context;
         expressSeq = numArr;
         this.popupWindow = popupWindow;

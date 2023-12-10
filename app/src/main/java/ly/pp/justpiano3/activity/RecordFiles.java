@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,7 +22,7 @@ import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-public class RecordFiles extends Activity {
+public class RecordFiles extends BaseActivity {
     private List<Map<String, Object>> dataList;
     private ListView f4919d;
     private TextView f4921f;

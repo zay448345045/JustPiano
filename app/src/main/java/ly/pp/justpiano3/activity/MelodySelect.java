@@ -23,12 +23,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -61,9 +59,10 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class MelodySelect extends ComponentActivity implements Callback, OnClickListener {
+public class MelodySelect extends BaseActivity implements Callback, OnClickListener {
     public SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
@@ -79,8 +78,8 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
     private boolean firstLoadFocusFinish;
     public int orderPosition;
     private int categoryPosition = -1;
-    private PopupWindow sortPopupWindow;
-    private PopupWindow menuPopupWindow;
+    private JPPopupWindow sortPopupWindow;
+    private JPPopupWindow menuPopupWindow;
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
     private RecyclerView songsListView;
@@ -219,7 +218,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 sortButton.setEnabled(false);
                 return;
             case R.id.list_sort_b:
-                PopupWindow popupWindow1 = new PopupWindow(this);
+                JPPopupWindow popupWindow1 = new JPPopupWindow(this);
                 View inflate1 = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
                 popupWindow1.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
                 popupWindow1.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -272,7 +271,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 songsSort(9);
                 return;
             case R.id.menu_list_fast:
-                PopupWindow popupWindow2 = new PopupWindow(this);
+                JPPopupWindow popupWindow2 = new JPPopupWindow(this);
                 View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -306,12 +305,9 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             case R.id.lo_extra_func_data_export: // 数据导出
                 menuPopupWindow.dismiss();
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setCheckMessageUrl(false);
-                jpDialogBuilder.setWidth(500);
-                jpDialogBuilder.setTitle("数据导入导出");
-                jpDialogBuilder.setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
+                jpDialogBuilder.setCheckMessageUrl(false).setWidth(500).setTitle("数据导入导出");
+                jpDialogBuilder.setVisibleRadioGroup(true).setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
                         "导出路径为SD卡\\JustPiano\\local_data.db，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
-                jpDialogBuilder.setVisibleRadioGroup(true);
                 RadioButton radioButton = new RadioButton(this);
                 radioButton.setText("APP本地数据导出至SD卡\\JustPiano\\local_data.db");
                 radioButton.setTextSize(13);
@@ -323,8 +319,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
                 radioButton.setTextSize(13);
                 radioButton.setTag(2);
                 radioButton.setHeight(150);
-                jpDialogBuilder.addRadioButton(radioButton);
-                jpDialogBuilder.setFirstButton("执行", (dialog, which) -> {
+                jpDialogBuilder.addRadioButton(radioButton).setFirstButton("执行", (dialog, which) -> {
                     dialog.dismiss();
                     new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
                 });
@@ -457,7 +452,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             ListView listView = inflate.findViewById(R.id.list);
             PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            sortPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             sortPopupWindow.setOutsideTouchable(true);
             sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();
@@ -467,7 +462,7 @@ public class MelodySelect extends ComponentActivity implements Callback, OnClick
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
             listView.setAdapter(popupWindowSelectAdapter);
             listView.setDivider(null);
-            menuPopupWindow = new PopupWindow(inflate, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            menuPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             menuPopupWindow.setOutsideTouchable(true);
             menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             firstLoadFocusFinish = true;

@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -60,6 +59,7 @@ import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineEnterRoomDTO;
@@ -95,7 +95,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     private ImageView imageView;
     private LayoutInflater layoutInflater1;
     private LayoutInflater layoutInflater2;
-    private PopupWindow popupWindow = null;
+    private JPPopupWindow popupWindow = null;
     private ShowTimeThread showTimeThread;
     private TextView timeTextView;
 
@@ -418,7 +418,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(Color.TRANSPARENT);
         roomList.clear();
-        PopupWindow popupWindow = new PopupWindow(this);
+        JPPopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(

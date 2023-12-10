@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,7 +48,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public String password;
     public String kitiName = "";

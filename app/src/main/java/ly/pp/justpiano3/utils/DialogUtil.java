@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.view.GoldConvertView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -31,10 +30,9 @@ public class DialogUtil {
     /**
      * 赠送音符消息接收-对话框处理
      */
-    public static void handleGoldSend(JPApplication jpApplication, JPDialogBuilder jpDialogBuilder, int messageType, String userName, String handlingFee) {
+    public static void handleGoldSend(JPDialogBuilder jpDialogBuilder, int messageType, String userName, String handlingFee) {
         if (messageType == 2 && !StringUtil.isNullOrEmpty(handlingFee)) {
-            jpDialogBuilder.setVisibleGoldConvertView(true);
-            jpDialogBuilder.getGoldConvertView().setGoldValueConvertRule(new GoldConvertView.GoldValueConvertRule() {
+            jpDialogBuilder.setVisibleGoldConvertView(true).getGoldConvertView().setGoldValueConvertRule(new GoldConvertView.GoldValueConvertRule() {
                 @Override
                 public BigDecimal convertToShow(BigDecimal actualValue) {
                     return actualValue;

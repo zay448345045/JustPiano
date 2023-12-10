@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +20,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class PlayFinish extends Activity implements OnClickListener {
+public class PlayFinish extends BaseActivity implements OnClickListener {
     private int head;
     public JPApplication jpapplication;
     public String scoreArray = "";

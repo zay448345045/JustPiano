@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -50,6 +49,7 @@ import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.ScrollText;
 import protobuf.dto.OnlineChangeRoomHandDTO;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
@@ -69,11 +69,11 @@ public final class OLPlayRoom extends OLRoomActivity {
     private int tune;
     private Button playSongsModeButton;
     private TextView searchTextView;
-    private PopupWindow normalModePopupWindow;
-    private PopupWindow moreSongsPopupWindow;
-    private PopupWindow groupModePopupWindow;
-    private PopupWindow coupleModePopupWindow;
-    private PopupWindow playSongsModePopupWindow;
+    private JPPopupWindow normalModePopupWindow;
+    private JPPopupWindow moreSongsPopupWindow;
+    private JPPopupWindow groupModePopupWindow;
+    private JPPopupWindow coupleModePopupWindow;
+    private JPPopupWindow playSongsModePopupWindow;
     private RecyclerView songsRecyclerView;
 
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
@@ -89,7 +89,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         }
     }
 
-    public void setGroupOrHand(int i, PopupWindow popupWindow) {
+    public void setGroupOrHand(int i, JPPopupWindow popupWindow) {
         OnlineChangeRoomHandDTO.Builder builder = OnlineChangeRoomHandDTO.newBuilder();
         builder.setHand(i);
         sendMsg(OnlineProtocolType.CHANGE_ROOM_HAND, builder.build());
@@ -410,7 +410,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 return;
             case R.id.ol_group_b:
                 if (roomMode == RoomModeEnum.NORMAL.getCode()) {
-                    PopupWindow popupWindow2 = new PopupWindow(this);
+                    JPPopupWindow popupWindow2 = new JPPopupWindow(this);
                     View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_hand_select, null);
                     popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
                     popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -512,7 +512,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         songNameScrollText.setFocusable(true);
         songNameScrollText.setFocusableInTouchMode(true);
         songNameScrollText.setOnClickListener(this);
-        PopupWindow popupWindow2 = new PopupWindow(this);
+        JPPopupWindow popupWindow2 = new JPPopupWindow(this);
         View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_song_rand, null);
         popupWindow2.setContentView(inflate2);
         inflate2.findViewById(R.id.rand_all).setOnClickListener(this);
@@ -540,7 +540,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 settingButton.setText((currentHand == 0 ? "右" : "左") + "00");
                 break;
             case TEAM:
-                popupWindow2 = new PopupWindow(this);
+                popupWindow2 = new JPPopupWindow(this);
                 View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
                 popupWindow2.setContentView(inflate3);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
@@ -555,7 +555,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 groupModePopupWindow = popupWindow2;
                 break;
             case COUPLE:
-                popupWindow2 = new PopupWindow(this);
+                popupWindow2 = new JPPopupWindow(this);
                 View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
                 popupWindow2.setContentView(inflate4);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
@@ -573,7 +573,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 coupleModePopupWindow = popupWindow2;
                 break;
         }
-        PopupWindow popupWindow4 = new PopupWindow(this);
+        JPPopupWindow popupWindow4 = new JPPopupWindow(this);
         View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
         popupWindow4.setContentView(inflate4);
         popupWindow4.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));

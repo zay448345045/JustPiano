@@ -245,7 +245,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             jpDialogBuilder.setMessage(messageStr);
                             jpDialogBuilder.setFirstButton(str, (dialog, which) -> dialog.dismiss());
                         }
-                        DialogUtil.handleGoldSend(olPlayHallRoom.jpApplication, jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
+                        DialogUtil.handleGoldSend(jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
                         jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
@@ -275,21 +275,21 @@ public final class OLPlayHallRoomHandler extends Handler {
                         jpDialogBuilder.setTitle("创建家族");
                         jpDialogBuilder.setMessage(string2);
                         if (b > 0) {
-                            jpDialogBuilder.setVisibleEditText(true, "请填写家族名称");
-                            jpDialogBuilder.setFirstButton("创建家族", (dialog, which) -> {
-                                String name = jpDialogBuilder.getEditTextString();
-                                if (name.isEmpty()) {
-                                    Toast.makeText(olPlayHallRoom, "家族名称不能为空!", Toast.LENGTH_SHORT).show();
-                                } else if (name.length() > 8) {
-                                    Toast.makeText(olPlayHallRoom, "家族名称只能在八个字以下!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    dialog.dismiss();
-                                    OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
-                                    builder.setType(4);
-                                    builder.setFamilyName(name);
-                                    olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                                }
-                            });
+                            jpDialogBuilder.setVisibleEditText(true, "请填写家族名称")
+                                    .setFirstButton("创建家族", (dialog, which) -> {
+                                        String name = jpDialogBuilder.getEditTextString();
+                                        if (name.isEmpty()) {
+                                            Toast.makeText(olPlayHallRoom, "家族名称不能为空!", Toast.LENGTH_SHORT).show();
+                                        } else if (name.length() > 8) {
+                                            Toast.makeText(olPlayHallRoom, "家族名称只能在八个字以下!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            dialog.dismiss();
+                                            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                                            builder.setType(4);
+                                            builder.setFamilyName(name);
+                                            olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder.build());
+                                        }
+                                    });
                             jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                         } else {
                             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());

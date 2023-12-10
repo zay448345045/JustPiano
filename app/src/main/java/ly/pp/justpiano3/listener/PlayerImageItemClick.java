@@ -9,7 +9,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -25,6 +24,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineKickedQuitRoomDTO;
@@ -41,15 +41,15 @@ public final class PlayerImageItemClick implements OnItemClickListener {
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
         User user = olRoomActivity.getRoomPlayerMap().get((byte) (i + 1));
         if (user != null) {
-            PopupWindow popupWindow = buildPopupWindow(user);
+            JPPopupWindow popupWindow = buildPopupWindow(user);
             int[] iArr = new int[2];
             view.getLocationOnScreen(iArr);
             popupWindow.showAtLocation(view, Gravity.TOP | Gravity.START, iArr[0] + view.getWidth(), iArr[1]);
         }
     }
 
-    private PopupWindow buildPopupWindow(User user) {
-        PopupWindow popupWindow = new PopupWindow(olRoomActivity);
+    private JPPopupWindow buildPopupWindow(User user) {
+        JPPopupWindow popupWindow = new JPPopupWindow(olRoomActivity);
         View inflate = LayoutInflater.from(olRoomActivity).inflate(R.layout.ol_room_user_operation, null);
         Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);
         Button privateChatButton = inflate.findViewById(R.id.ol_chat_b);

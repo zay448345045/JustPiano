@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,7 +34,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SearchSongs extends Activity implements Callback, OnClickListener {
+public class SearchSongs extends BaseActivity implements Callback, OnClickListener {
     public JPApplication jpapplication;
     public LayoutInflater layoutinflater;
     public int length = 0;

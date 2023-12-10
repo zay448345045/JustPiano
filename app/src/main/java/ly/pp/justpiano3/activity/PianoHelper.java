@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -16,7 +15,7 @@ import android.widget.ViewFlipper;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 
-public class PianoHelper extends Activity implements OnGestureListener {
+public class PianoHelper extends BaseActivity implements OnGestureListener {
     private GestureDetector gestureDetector = null;
     private ViewFlipper viewFlipper = null;
 

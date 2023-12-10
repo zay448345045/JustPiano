@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
 
 import java.util.HashMap;
@@ -19,7 +18,7 @@ import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class OLBaseActivity extends ComponentActivity {
+public class OLBaseActivity extends BaseActivity {
     private boolean online = true;
     public JPProgressBar jpProgressBar;
     public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);

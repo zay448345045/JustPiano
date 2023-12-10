@@ -122,7 +122,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 + roomPositionSub1);
     }
 
-    public void mo2860a(int i, String str, int i2) {
+    public void buildAndShowCpDialog(int i, String str, int i2) {
         String str5 = "情意绵绵的情侣";
         switch (i2) {
             case 0:
@@ -141,9 +141,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
         } else if (i == 5) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setCancelableFalse();
             jpDialogBuilder.setTitle("提示").setMessage(str).setFirstButton("确定", (dialog, which) -> dialog.dismiss())
-                    .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+                    .setCancelableFalse().setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         }
     }
 

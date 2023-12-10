@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import ly.pp.justpiano3.adapter.UserListPageAdapter;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class UserListPage extends Activity {
+public class UserListPage extends BaseActivity {
     public ListView listView;
     public JPProgressBar jpProgressBar;
 

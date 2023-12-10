@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -38,7 +37,7 @@ import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SkinDownload extends Activity implements Callback {
+public class SkinDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;

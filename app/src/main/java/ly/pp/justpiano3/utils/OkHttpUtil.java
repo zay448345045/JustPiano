@@ -12,7 +12,6 @@ import okhttp3.OkHttpClient;
  **/
 public class OkHttpUtil {
     private static final OkHttpClient client;
-    private static final String JSESSIONID = "JSESSIONID";
 
     static {
         client = new OkHttpClient.Builder()
@@ -23,5 +22,4 @@ public class OkHttpUtil {
     public static OkHttpClient client() {
         return client;
     }
-
 }

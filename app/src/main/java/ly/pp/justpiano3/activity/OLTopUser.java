@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.view.View.OnClickListener;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-public class OLTopUser extends Activity implements OnClickListener {
+public class OLTopUser extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {

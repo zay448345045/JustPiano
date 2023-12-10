@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,7 +27,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class ShowSongsInfo extends Activity implements OnClickListener {
+public class ShowSongsInfo extends BaseActivity implements OnClickListener {
     public JPApplication jpapplication;
     public LayoutInflater layoutInflater;
     public String keywords = "";

@@ -53,7 +53,8 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
                                 ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                             } else {
-                                olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
+                                olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(
+                                        olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
                             }
                         }
                         // 4.执行人物形象闪烁
@@ -66,7 +67,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         boolean sustainPedalOn = ((notes[0] >> 5) & 1) == 1;
                         if (totalIntervalTime == 0) {
                             for (int i = 1; i < notes.length; i += 3) {
-                                handleKeyboardView(olPlayKeyboardRoom, notes, user, i, sustainPedalOn);
+                                handleKeyboardView(olPlayKeyboardRoom, roomPositionSub1, notes, user, i, sustainPedalOn);
                             }
                         } else {
                             olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
@@ -82,7 +83,8 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                                     }
                                     lastTimeMillis = currentTimeMillis;
                                     int finalI = i;
-                                    olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI, sustainPedalOn));
+                                    olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom,
+                                            roomPositionSub1, notes, user, finalI, sustainPedalOn));
                                 }
                             });
                         }
@@ -127,7 +129,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         int i2 = message.getData().getInt("MSG_CT");
                         String string = message.getData().getString("MSG_C");
                         if (i != 0) {
-                            olPlayKeyboardRoom.mo2860a(i, string, i2);
+                            olPlayKeyboardRoom.buildAndShowCpDialog(i, string, i2);
                         }
                     });
                     return;
@@ -141,15 +143,15 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
         }
     }
 
-    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i, boolean sustainPedalOn) {
-        if (i + 2 >= notes.length || olPlayKeyboardRoom.roomPositionSub1 < 0
-                || olPlayKeyboardRoom.roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
+    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, int roomPositionSub1,
+                                    long[] notes, User user, int i, boolean sustainPedalOn) {
+        if (i + 2 >= notes.length || roomPositionSub1 < 0 || roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
             return;
         }
         byte pitch = (byte) notes[i + 1];
         byte volume = (byte) notes[i + 2];
         if (volume > 0) {
-            if (!olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
+            if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMuted()) {
                 SoundEngineUtil.playSound(pitch, volume);
             }
             Integer color = user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor());
@@ -157,7 +159,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
             olPlayKeyboardRoom.onlineWaterfallKeyDownHandle(pitch, volume, color == null ?
                     GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : color);
         } else {
-            if (!sustainPedalOn && !olPlayKeyboardRoom.olKeyboardStates[olPlayKeyboardRoom.roomPositionSub1].getMuted()) {
+            if (!sustainPedalOn && !olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMuted()) {
                 SoundEngineUtil.stopPlaySound(pitch);
             }
             olPlayKeyboardRoom.keyboardView.fireKeyUp(pitch);

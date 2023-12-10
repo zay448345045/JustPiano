@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -37,7 +36,7 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SoundDownload extends Activity implements Callback {
+public class SoundDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;

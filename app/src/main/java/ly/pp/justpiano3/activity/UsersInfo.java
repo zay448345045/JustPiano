@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -43,7 +42,7 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class UsersInfo extends Activity implements Callback, OnClickListener {
+public class UsersInfo extends BaseActivity implements Callback, OnClickListener {
     public JPApplication jpapplication;
     public boolean autoLogin = false;
     public boolean rememberNewPassword = false;

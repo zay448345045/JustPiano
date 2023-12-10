@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +17,7 @@ import ly.pp.justpiano3.task.RegisterTask;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class Register extends Activity implements OnClickListener {
+public class Register extends BaseActivity implements OnClickListener {
     public String sex;
     public String account;
     public String kitiName;
