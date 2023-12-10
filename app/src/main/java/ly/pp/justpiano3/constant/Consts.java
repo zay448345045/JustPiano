@@ -2,10 +2,11 @@ package ly.pp.justpiano3.constant;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.database.entity.Song;
 
 import java.util.Objects;
+
+import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.database.entity.Song;
 
 public interface Consts {
 

@@ -189,15 +189,16 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 开始播放
      */
-    fun startPlay(waterfallNotes: Array<WaterfallNote>, noteFallDownSpeed: Float) {
+    fun startPlay(waterfallNotes: Array<WaterfallNote>, noteFallDownSpeed: Float, tune: Int) {
         // 停止上一次播放，确保不会重复开线程进行播放
         stopPlay()
-        // 存储音块下落速率的值
+        // 存储音块下落速率和移调的值
         this.noteFallDownSpeed = noteFallDownSpeed
         // 初始化音符数据，对每个音符乘以音块速率的值，改变音符的高度间隔
         for (i in waterfallNotes.indices) {
             waterfallNotes[i].bottom *= noteFallDownSpeed
             waterfallNotes[i].top *= noteFallDownSpeed
+            waterfallNotes[i].pitch = (waterfallNotes[i].pitch + tune).toByte()
         }
         this.waterfallNotes = waterfallNotes
         // 初始化音符状态
