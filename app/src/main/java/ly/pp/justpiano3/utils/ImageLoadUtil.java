@@ -28,17 +28,17 @@ public class ImageLoadUtil {
 
     public static void init(Context context) {
         try {
-            if (!dressBitmapCacheMap.containsKey("mod/_none.png")) {
-                dressBitmapCacheMap.put("mod/_none.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.png")));
+            if (!dressBitmapCacheMap.containsKey("mod/_none.webp")) {
+                dressBitmapCacheMap.put("mod/_none.webp", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_none.webp")));
             }
-            if (!dressBitmapCacheMap.containsKey("mod/_close.png")) {
-                dressBitmapCacheMap.put("mod/_close.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_close.png")));
+            if (!dressBitmapCacheMap.containsKey("mod/_close.webp")) {
+                dressBitmapCacheMap.put("mod/_close.webp", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/_close.webp")));
             }
-            if (!dressBitmapCacheMap.containsKey("mod/f_m0.png")) {
-                dressBitmapCacheMap.put("mod/f_m0.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/f_m0.png")));
+            if (!dressBitmapCacheMap.containsKey("mod/f_m0.webp")) {
+                dressBitmapCacheMap.put("mod/f_m0.webp", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/f_m0.webp")));
             }
-            if (!dressBitmapCacheMap.containsKey("mod/m_m0.png")) {
-                dressBitmapCacheMap.put("mod/m_m0.png", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/m_m0.png")));
+            if (!dressBitmapCacheMap.containsKey("mod/m_m0.webp")) {
+                dressBitmapCacheMap.put("mod/m_m0.webp", BitmapFactory.decodeStream(context.getResources().getAssets().open("mod/m_m0.webp")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class ImageLoadUtil {
                     familyImageView.setImageBitmap(bitmap);
                 }
             } else {
-                File file = new File(context.getFilesDir(), familyId + ".jpg");
+                File file = new File(context.getFilesDir(), familyId + ".webp");
                 if (file.exists()) {
                     try (InputStream inputStream = new FileInputStream(file)) {
                         int length = (int) file.length();
@@ -87,15 +87,15 @@ public class ImageLoadUtil {
     public static void setUserDressImageBitmap(Context context, String gender, int trousers, int jacket, int hair, int eye, int shoes,
                                                ImageView bodyImageView, ImageView trousersImageView, ImageView jacketImageView,
                                                ImageView hairImageView, ImageView eyeImageView, ImageView shoesImageView) {
-        Bitmap noneModBitmap = dressBitmapCacheMap.get("mod/_none.png");
-        bodyImageView.setImageBitmap(dressBitmapCacheMap.get(gender.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png"));
+        Bitmap noneModBitmap = dressBitmapCacheMap.get("mod/_none.webp");
+        bodyImageView.setImageBitmap(dressBitmapCacheMap.get(gender.equals("f") ? "mod/f_m0.webp" : "mod/m_m0.webp"));
 
         try {
             if (trousers <= 0) {
                 trousersImageView.setImageBitmap(noneModBitmap);
             } else {
                 stringBuilderCache.setLength(0);
-                stringBuilderCache.append("mod/").append(gender).append('_').append('t').append(trousers - 1).append(".png");
+                stringBuilderCache.append("mod/").append(gender).append('_').append('t').append(trousers - 1).append(".webp");
                 String trousersString = stringBuilderCache.toString();
                 if (!dressBitmapCacheMap.containsKey(trousersString)) {
                     dressBitmapCacheMap.put(trousersString, BitmapFactory.decodeStream(context.getResources().getAssets().open(trousersString)));
@@ -107,7 +107,7 @@ public class ImageLoadUtil {
                 jacketImageView.setImageBitmap(noneModBitmap);
             } else {
                 stringBuilderCache.setLength(0);
-                stringBuilderCache.append("mod/").append(gender).append('_').append('j').append(jacket - 1).append(".png");
+                stringBuilderCache.append("mod/").append(gender).append('_').append('j').append(jacket - 1).append(".webp");
                 String jacketString = stringBuilderCache.toString();
                 if (!dressBitmapCacheMap.containsKey(jacketString)) {
                     dressBitmapCacheMap.put(jacketString, BitmapFactory.decodeStream(context.getResources().getAssets().open(jacketString)));
@@ -119,7 +119,7 @@ public class ImageLoadUtil {
                 hairImageView.setImageBitmap(noneModBitmap);
             } else {
                 stringBuilderCache.setLength(0);
-                stringBuilderCache.append("mod/").append(gender).append('_').append('h').append(hair - 1).append(".png");
+                stringBuilderCache.append("mod/").append(gender).append('_').append('h').append(hair - 1).append(".webp");
                 String hairString = stringBuilderCache.toString();
                 if (!dressBitmapCacheMap.containsKey(hairString)) {
                     dressBitmapCacheMap.put(hairString, BitmapFactory.decodeStream(context.getResources().getAssets().open(hairString)));
@@ -131,7 +131,7 @@ public class ImageLoadUtil {
                 eyeImageView.setImageBitmap(noneModBitmap);
             } else {
                 stringBuilderCache.setLength(0);
-                stringBuilderCache.append("mod/").append(gender).append('_').append('e').append(eye - 1).append(".png");
+                stringBuilderCache.append("mod/").append(gender).append('_').append('e').append(eye - 1).append(".webp");
                 String eyeString = stringBuilderCache.toString();
                 if (!dressBitmapCacheMap.containsKey(eyeString)) {
                     dressBitmapCacheMap.put(eyeString, BitmapFactory.decodeStream(context.getResources().getAssets().open(eyeString)));
@@ -143,7 +143,7 @@ public class ImageLoadUtil {
                 shoesImageView.setImageBitmap(noneModBitmap);
             } else {
                 stringBuilderCache.setLength(0);
-                stringBuilderCache.append("mod/").append(gender).append('_').append('s').append(shoes - 1).append(".png");
+                stringBuilderCache.append("mod/").append(gender).append('_').append('s').append(shoes - 1).append(".webp");
                 String shoesString = stringBuilderCache.toString();
                 if (!dressBitmapCacheMap.containsKey(shoesString)) {
                     dressBitmapCacheMap.put(shoesString, BitmapFactory.decodeStream(context.getResources().getAssets().open(shoesString)));
@@ -159,10 +159,10 @@ public class ImageLoadUtil {
         Bitmap bitmap = null;
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
             } catch (Exception e) {
                 try {
-                    return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".png"));
+                    return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".webp"));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -172,7 +172,7 @@ public class ImageLoadUtil {
             return bitmap;
         }
         try {
-            return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".png"));
+            return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".webp"));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -200,12 +200,12 @@ public class ImageLoadUtil {
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             Bitmap bitmap = null;
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
             } catch (Exception ignored) {
             }
             if (bitmap == null) {
                 try {
-                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
                 } catch (Exception ignored) {
                 }
             }
@@ -221,12 +221,12 @@ public class ImageLoadUtil {
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             Bitmap bitmap = null;
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
             } catch (Exception ignored) {
             }
             if (bitmap == null) {
                 try {
-                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
                 } catch (Exception ignored) {
                 }
             }

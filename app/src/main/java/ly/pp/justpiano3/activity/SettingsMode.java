@@ -177,8 +177,8 @@ public class SettingsMode extends PreferenceActivity {
             // 具体的文件选择项的文件格式校验，校验通过后执行存储
             switch (filePickerPreference.getKey()) {
                 case "waterfall_background_pic":
-                    if (!file.exists() || (!file.getName().endsWith(".jpg")
-                            && !file.getName().endsWith(".jpeg") && !file.getName().endsWith(".png"))) {
+                    if (!file.exists() || (!file.getName().endsWith(".webp")
+                            && !file.getName().endsWith(".jpeg") && !file.getName().endsWith(".webp"))) {
                         Toast.makeText(this, "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
                         return;
                     }

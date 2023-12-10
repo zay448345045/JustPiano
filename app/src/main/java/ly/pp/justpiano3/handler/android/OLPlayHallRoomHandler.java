@@ -157,7 +157,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             olPlayHallRoom.myFamilyPic.setImageBitmap(myFamilyBitmap);
                             ImageLoadUtil.familyBitmapCacheMap.put(olPlayHallRoom.familyID, myFamilyBitmap);
                             ThreadPoolUtil.execute(() -> {
-                                File file1 = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".jpg");
+                                File file1 = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".webp");
                                 try {
                                     if (!file1.exists()) {
                                         file1.createNewFile();

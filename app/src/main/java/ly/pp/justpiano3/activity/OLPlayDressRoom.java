@@ -282,14 +282,14 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         eyeImage = findViewById(R.id.ol_dress_eye);
         shoesImage = findViewById(R.id.ol_dress_shoes);
         goldNum = findViewById(R.id.gold_num);
-        none = ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png");
-        dressMod.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get(sex.equals("f") ? "mod/f_m0.png" : "mod/m_m0.png"));
+        none = ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.webp");
+        dressMod.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get(sex.equals("f") ? "mod/f_m0.webp" : "mod/m_m0.webp"));
         dressMod.setColorFilter(-1, Mode.MULTIPLY);
         Bitmap bitmap;
         int count = 0;
         do {
             try {
-                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_h" + count + ".png"));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_h" + count + ".webp"));
                 if (bitmap.getByteCount() > 0) {
                     hairArray.add(bitmap);
                     count++;
@@ -303,7 +303,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         count = 0;
         do {
             try {
-                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_e" + count + ".png"));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_e" + count + ".webp"));
                 if (bitmap.getByteCount() > 0) {
                     eyeArray.add(bitmap);
                     count++;
@@ -316,7 +316,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         count = 0;
         do {
             try {
-                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_j" + count + ".png"));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_j" + count + ".webp"));
                 if (bitmap.getByteCount() > 0) {
                     jacketArray.add(bitmap);
                     count++;
@@ -329,7 +329,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         count = 0;
         do {
             try {
-                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_t" + count + ".png"));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_t" + count + ".webp"));
                 if (bitmap.getByteCount() > 0) {
                     trousersArray.add(bitmap);
                     count++;
@@ -342,7 +342,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         count = 0;
         do {
             try {
-                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_s" + count + ".png"));
+                bitmap = BitmapFactory.decodeStream(getResources().getAssets().open("mod/" + sex + "_s" + count + ".webp"));
                 if (bitmap.getByteCount() > 0) {
                     shoesArray.add(bitmap);
                     count++;

@@ -54,7 +54,7 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
     public Bitmap loadNailFace(Context context) {
         try {
             if (nailFace == null) {
-                nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.jpg"));
+                nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.webp"));
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -62,10 +62,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
         imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].getMuted() ? R.drawable.stop : R.drawable.null_pic);
         if (string4.equals("O")) {
-            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png"));
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.webp"));
             return view;
         } else if (string4.equals("C")) {
-            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.png"));
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.webp"));
             return view;
         }
         TextView textView2 = view.findViewById(R.id.ol_ready_text);

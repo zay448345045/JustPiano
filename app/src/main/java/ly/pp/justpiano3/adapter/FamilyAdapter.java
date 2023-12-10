@@ -105,7 +105,7 @@ public final class FamilyAdapter extends BaseAdapter {
             img.setImageBitmap(familyBitmap);
             ImageLoadUtil.familyBitmapCacheMap.put(id, familyBitmap);
             ThreadPoolUtil.execute(() -> {
-                File file1 = new File(olPlayHallRoom.getFilesDir(), id + ".jpg");
+                File file1 = new File(olPlayHallRoom.getFilesDir(), id + ".webp");
                 try {
                     if (!file1.exists()) {
                         file1.createNewFile();

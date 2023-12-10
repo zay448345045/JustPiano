@@ -48,7 +48,7 @@ public class JustPianoView extends View {
     public void init() {
         allScreenRect = new RectF(0, 0, getWidth(), getHeight());
         try {
-            logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
+            logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.webp"));
             progressBarBitmap = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar");
             progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar_base");
         } catch (IOException e) {

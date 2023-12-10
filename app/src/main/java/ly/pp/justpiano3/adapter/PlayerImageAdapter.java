@@ -108,10 +108,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
             }
         }
         if (string4.equals("O")) {
-            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png"));
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.webp"));
             return view;
         } else if (string4.equals("C")) {
-            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.png"));
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.webp"));
             return view;
         }
         int i3 = playerList.get(i).getInt("LV");

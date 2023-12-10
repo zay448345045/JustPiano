@@ -74,7 +74,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
         }
         try {
             usersInfo.accountText.setText(usersInfo.jpapplication.getAccountName());
-            usersInfo.accountJpg = usersInfo.jpapplication.getAccountName() + ".jpg";
+            usersInfo.accountJpg = usersInfo.jpapplication.getAccountName() + ".webp";
             usersInfo.name = jsonObject.getString("uk");
             usersInfo.nameText.setText(usersInfo.name);
             usersInfo.face = jsonObject.getString("fi");
