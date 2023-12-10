@@ -134,7 +134,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener,
             ThreadPoolUtil.execute {
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardView)
-                waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed, GlobalSetting.waterfallTune)
+                waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
                 runOnUiThread {
                     progressBar.dismiss()
                 }
@@ -236,7 +236,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener,
         pmSongData?.let {
             var totalTime = 0f
             for (i in it.pitchArray.indices) {
-                val pitch = it.pitchArray[i]
+                val pitch = (it.pitchArray[i] + GlobalSetting.waterfallTune).toByte()
                 // 计算音符播放的累计时间
                 totalTime += it.tickArray[i] * it.globalSpeed
                 // 用于延时的空音符直接跳过

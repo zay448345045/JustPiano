@@ -155,7 +155,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
                 openNotesSchedule();
             }
-            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed(), 0);
+            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
             RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
             waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
             waterfallView.setLayoutParams(waterfallViewLayoutParams);
