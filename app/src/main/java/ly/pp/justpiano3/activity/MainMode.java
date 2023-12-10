@@ -132,9 +132,7 @@ public class MainMode extends BaseActivity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
         } else if (requestCode == PERMISSION_REQUEST_CODE) {
             // Check if storage permission was granted after returning from settings
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
