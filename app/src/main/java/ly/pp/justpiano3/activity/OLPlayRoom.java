@@ -616,6 +616,10 @@ public final class OLPlayRoom extends OLRoomActivity {
                 }
             } else {
                 roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
+                roomNameView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
+                timeTextView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
+                roomNameView.setTextSize(UnitConvertUtil.px2Sp(this,roomNameView.getLayoutParams().height / 2)-2);
+                timeTextView.setTextSize(UnitConvertUtil.px2Sp(this,roomNameView.getLayoutParams().height / 4)-1);
             }
             setTabTitleViewLayout(i);
         }
