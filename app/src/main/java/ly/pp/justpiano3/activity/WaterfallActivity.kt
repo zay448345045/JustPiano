@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -104,7 +103,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener,
             // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
             waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine
             waterfallView.octaveLineXList = keyboardView.allOctaveLineX
-            // 设置音块下落速率，播放速度
+            // 设置音块下落速率，播放速度、移调
             waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
             // 开启增减白键数量、移动键盘按钮的监听
             findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
@@ -237,7 +236,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener,
         pmSongData?.let {
             var totalTime = 0f
             for (i in it.pitchArray.indices) {
-                val pitch = it.pitchArray[i]
+                val pitch = (it.pitchArray[i] + GlobalSetting.waterfallTune).toByte()
                 // 计算音符播放的累计时间
                 totalTime += it.tickArray[i] * it.globalSpeed
                 // 用于延时的空音符直接跳过

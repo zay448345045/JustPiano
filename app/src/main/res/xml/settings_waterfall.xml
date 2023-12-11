@@ -25,6 +25,15 @@
             app:maxValue="1.1"
             app:minValue="0.1"
             app:maxSteps="140"/>
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="0"
+            android:dialogTitle="曲谱播放移调"
+            android:key="waterfall_tune"
+            android:summary="设置瀑布流曲谱整体播放移调数值"
+            android:title="曲谱播放移调"
+            app:floatNumber="false"
+            app:maxValue="6"
+            app:minValue="-6" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="waterfall_background_play"
