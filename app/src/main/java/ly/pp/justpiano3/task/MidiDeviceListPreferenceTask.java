@@ -25,7 +25,7 @@ public final class MidiDeviceListPreferenceTask extends AsyncTask<Boolean, Void,
     @Override
     protected String doInBackground(Boolean... open) {
         if (open[0]) {
-            MidiDeviceUtil.openDevice(midiDeviceListAdapter.context, midiDeviceInfo);
+            MidiDeviceUtil.openDevice(midiDeviceListAdapter.midiDeviceListPreference.context, midiDeviceInfo);
             int retry = 0;
             while (retry < 5 && !MidiDeviceUtil.getAllConnectedMidiDeviceIdAndNameList().contains(
                     MidiDeviceUtil.getDeviceIdAndName(midiDeviceInfo))) {
@@ -40,7 +40,7 @@ public final class MidiDeviceListPreferenceTask extends AsyncTask<Boolean, Void,
                 return "error";
             }
         } else {
-            MidiDeviceUtil.closeDevice(midiDeviceListAdapter.context, midiDeviceInfo);
+            MidiDeviceUtil.closeDevice(midiDeviceListAdapter.midiDeviceListPreference.context, midiDeviceInfo);
         }
         return null;
     }
@@ -48,7 +48,8 @@ public final class MidiDeviceListPreferenceTask extends AsyncTask<Boolean, Void,
     @Override
     protected void onPostExecute(String str) {
         if (Objects.equals(str, "error")) {
-            Toast.makeText(midiDeviceListAdapter.context, "MIDI设备手动连接失败，请确认设备物理连接是否正常", Toast.LENGTH_SHORT).show();
+            Toast.makeText(midiDeviceListAdapter.midiDeviceListPreference.context,
+                    "MIDI设备手动连接失败，请确认设备物理连接是否正常", Toast.LENGTH_SHORT).show();
         }
         midiDeviceListAdapter.notifyDataSetChanged();
         midiDeviceListAdapter.midiDeviceListPreference.jpProgressBar.cancel();
