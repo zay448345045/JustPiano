@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -99,7 +100,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public int playKind;
     private Map<Byte, Byte> playingPitchMap = new ConcurrentHashMap<>();
 
-    private List<Bundle> m3783a(List<Bundle> list, String str) {
+    private List<Bundle> sortByField(List<Bundle> list, String str) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.valueOf((String) o2.get(str)).compareTo(Integer.valueOf((String) o1.get(str))));
         }
@@ -225,7 +226,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
 
     public void mo2905a(HorizontalListView listView, List<Bundle> list) {
         MiniScoreAdapter c1209io = (MiniScoreAdapter) listView.getAdapter();
-        List<Bundle> bundleList = m3783a(list, "M");
+        List<Bundle> bundleList = sortByField(list, "M");
         if (c1209io == null) {
             listView.setAdapter(new MiniScoreAdapter(bundleList, layoutinflater, roomMode));
             return;
@@ -259,7 +260,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         if (roomMode > 0) {
             str = "E";
         }
-        listView.setAdapter(new FinishScoreAdapter(m3783a(list, str), layoutinflater, roomMode));
+        listView.setAdapter(new FinishScoreAdapter(sortByField(list, str), layoutinflater, roomMode));
     }
 
     public void recordFinish() {
@@ -603,5 +604,17 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);
         }
+    }
+
+    public void cleanAndPutPlayingNotePitch(byte pitch, byte track) {
+        Iterator<Map.Entry<Byte, Byte>> iterator = playingPitchMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Byte, Byte> entry = iterator.next();
+            if (entry.getValue() == track) {
+                SoundEngineUtil.stopPlaySound(entry.getKey());
+                iterator.remove();
+            }
+        }
+        playingPitchMap.put(pitch, track);
     }
 }

@@ -40,7 +40,6 @@ import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.view.play.PlayNote;
@@ -750,18 +749,15 @@ public final class PlayView extends SurfaceView implements Callback {
                     currentNotePitch = currentPlayNote.pitch;
                 }
                 if (gameType > 0) {
-                    if (currentPlayNote.mo3107b(canvas) < 0) {
+                    if (currentPlayNote.onlineNotePlayHandle(canvas) < 0) {
                         break;
                     }
-                } else if (currentPlayNote.mo3108c(canvas) < 0) {
+                } else if (currentPlayNote.localNotePlayHandle(canvas) < 0) {
                     break;
                 }
             } else {
                 deleteNotesArray.add(currentPlayNote);
             }
-        }
-        for (PlayNote playNote : deleteNotesArray) {
-            pianoPlay.pianoPlayHandler.postDelayed(() -> SoundEngineUtil.stopPlaySound(playNote.pitch), 100);
         }
         notesList.removeAll(deleteNotesArray);
         int i;
