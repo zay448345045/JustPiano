@@ -35,12 +35,6 @@
             app:maxValue="6"
             app:minValue="-6" />
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="waterfall_background_play"
-            android:summaryOff="&lt;关闭&gt;禁止后台状态下播放声音"
-            android:summaryOn="&lt;打开&gt;允许后台状态下播放声音"
-            android:title="允许后台播放" />
-        <SwitchPreference
             android:defaultValue="true"
             android:key="waterfall_octave_line"
             android:summaryOff="&lt;关闭&gt;隐藏八度虚线"

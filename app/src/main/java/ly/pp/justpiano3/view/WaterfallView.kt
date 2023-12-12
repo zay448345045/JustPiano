@@ -647,7 +647,7 @@ class WaterfallView @JvmOverloads constructor(
                     notePaint.color =
                         if (noteStatus[index] == NoteStatus.PLAYING) highlightColor(waterfallNote.color) else waterfallNote.color
                     // 根据音符的力度，确定音块绘制的透明度
-                    notePaint.alpha = minOf(waterfallNote.volume * 2, 255).toInt()
+                    notePaint.alpha = minOf(waterfallNote.volume * 2, 255)
                     // 绘制音块
                     canvas.drawRect(
                         waterfallNote.left,

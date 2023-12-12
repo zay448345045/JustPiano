@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.ref.WeakReference;
 import java.util.Date;
+import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -39,8 +40,8 @@ import protobuf.dto.OnlineSetUserInfoDTO;
 public final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
-    public OLPlayHallHandler(OLPlayHall ol) {
-        weakReference = new WeakReference<>(ol);
+    public OLPlayHallHandler(OLPlayHall olPlayHall) {
+        weakReference = new WeakReference<>(olPlayHall);
     }
 
     @Override
@@ -145,7 +146,7 @@ public final class OLPlayHallHandler extends Handler {
                 post(() -> {
                     olPlayHall.tabHost.setCurrentTab(1);
                     String string = message.getData().getString("U");
-                    if (!string.equals(JPApplication.kitiName)) {
+                    if (!Objects.equals(string, JPApplication.kitiName)) {
                         olPlayHall.sendTo = "@" + string + ":";
                         olPlayHall.sendTextView.setText(olPlayHall.sendTo);
                         Spannable text = olPlayHall.sendTextView.getText();

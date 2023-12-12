@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.handler;
 
+import androidx.annotation.NonNull;
+
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Arrays;
@@ -48,7 +50,7 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(@NonNull ChannelHandlerContext ctx, @NonNull Object msg) throws Exception {
         if (msg instanceof ByteBuf) {
             ByteBuf byteBuf = (ByteBuf) msg;
             if (!byteBuf.isReadable()) {

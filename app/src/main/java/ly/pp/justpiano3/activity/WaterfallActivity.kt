@@ -186,27 +186,6 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
         }
     }
 
-    override fun onStop() {
-        if (!GlobalSetting.waterfallBackgroundPlay && waterfallView.isPlaying) {
-            waterfallView.pausePlay()
-        }
-        super.onStop()
-    }
-
-    override fun onStart() {
-        if (!GlobalSetting.waterfallBackgroundPlay && !waterfallView.isPlaying) {
-            waterfallView.resumePlay()
-        }
-        super.onStart()
-    }
-
-    override fun onRestart() {
-        if (!GlobalSetting.waterfallBackgroundPlay && !waterfallView.isPlaying) {
-            waterfallView.resumePlay()
-        }
-        super.onRestart()
-    }
-
     override fun onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)

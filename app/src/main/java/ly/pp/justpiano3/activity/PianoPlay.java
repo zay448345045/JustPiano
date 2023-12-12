@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -226,13 +225,12 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
 
     public void mo2905a(HorizontalListView listView, List<Bundle> list) {
         MiniScoreAdapter c1209io = (MiniScoreAdapter) listView.getAdapter();
-        List<Bundle> a = m3783a(list, "M");
+        List<Bundle> bundleList = m3783a(list, "M");
         if (c1209io == null) {
-            ListAdapter c1209io2 = new MiniScoreAdapter(a, layoutinflater, roomMode);
-            listView.setAdapter(c1209io2);
+            listView.setAdapter(new MiniScoreAdapter(bundleList, layoutinflater, roomMode));
             return;
         }
-        c1209io.changeList(a);
+        c1209io.changeList(bundleList);
         c1209io.notifyDataSetChanged();
     }
 

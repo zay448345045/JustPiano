@@ -9,14 +9,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Bundle;
 import android.os.Message;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityNodeInfo;
+
+import androidx.annotation.NonNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -711,7 +711,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
     }
 
-    public void mo2930b(Canvas canvas) {
+    public void drawLineAndNotes(Canvas canvas) {
         deleteNotesArray.clear();
         boolean newNote = true;
         for (PlayNote note : notesList) {
@@ -861,27 +861,16 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+    public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i2, int i3) {
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+    public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         loadBackgroundsThread = new LoadBackgroundsThread(this, pianoPlay);
         loadBackgroundsThread.start();
         showScoreAndLevelsThread = new ShowScoreAndLevelsThread(touchNotesList, pianoPlay);
         showScoreAndLevelsThread.start();
         setOnTouchListener(new TouchNotes(this));
-        setAccessibilityDelegate(new View.AccessibilityDelegate() {
-            @Override
-            public boolean performAccessibilityAction(View host, int action, Bundle args) {
-                if (action == AccessibilityNodeInfo.ACTION_CLICK
-                        || action == AccessibilityNodeInfo.ACTION_LONG_CLICK) {
-                    pianoPlay.finish();
-                    return true;
-                }
-                return super.performAccessibilityAction(host, action, args);
-            }
-        });
     }
 
     @Override
@@ -895,7 +884,7 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+    public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
         if (pianoPlay.isBack) {
             if (loadBackgroundsThread != null) {
                 while (loadBackgroundsThread.isAlive()) {
