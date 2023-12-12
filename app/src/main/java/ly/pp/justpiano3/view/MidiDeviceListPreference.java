@@ -73,6 +73,8 @@ public class MidiDeviceListPreference extends DialogPreference {
     }
 
     public void midiDeviceListRefresh() {
-        midiDeviceListAdapter.notifyDataSetChanged();
+        if (midiDeviceListAdapter != null) {
+            midiDeviceListAdapter.notifyDataSetChanged();
+        }
     }
 }
