@@ -88,11 +88,11 @@ public final class OLPlayHallHandler extends Handler {
                                 writer.close();
                                 olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
                                 return;
-                            } else if (message.getData().getInt("T") == 2) {
+                            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
                                 writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
-                            } else if (message.getData().getInt("T") == 18) {
+                            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
                                 writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
-                            } else if (message.getData().getInt("T") == 1) {
+                            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
                                 writer.write(time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n');
                             }
                             writer.close();
@@ -148,9 +148,9 @@ public final class OLPlayHallHandler extends Handler {
                     if (!string.equals(JPApplication.kitiName)) {
                         olPlayHall.sendTo = "@" + string + ":";
                         olPlayHall.sendTextView.setText(olPlayHall.sendTo);
-                        CharSequence text = olPlayHall.sendTextView.getText();
-                        if (text instanceof Spannable) {
-                            Selection.setSelection((Spannable) text, text.length());
+                        Spannable text = olPlayHall.sendTextView.getText();
+                        if (text != null) {
+                            Selection.setSelection(text, text.length());
                         }
                     }
                 });

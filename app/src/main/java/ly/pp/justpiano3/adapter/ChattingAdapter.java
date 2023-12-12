@@ -19,6 +19,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.JPStack;
@@ -61,22 +62,22 @@ public final class ChattingAdapter extends BaseAdapter {
         TextView msgText = view.findViewById(R.id.ol_msg_text);
         String string = bundle.getString("U");
         switch (i2) {
-            case 0: // 曲谱推荐
+            case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE:
                 handleRecommendationMessage(view, userText, msgText, bundle, i);
                 break;
-            case 1: // 公共消息
+            case OnlineProtocolType.MsgType.PUBLIC_MESSAGE:
                 handlePublicMessage(view, userText, msgText, bundle);
                 break;
-            case 2: // 私聊消息
+            case OnlineProtocolType.MsgType.PRIVATE_MESSAGE:
                 handlePrivateMessage(view, userText, msgText, bundle);
                 break;
-            case 3: // 系统消息
+            case OnlineProtocolType.MsgType.SYSTEM_MESSAGE:
                 handleSystemMessage(view, userText, msgText, bundle);
                 break;
-            case 18: // 全服消息
+            case OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE:
                 handleServerMessage(view, userText, msgText, bundle);
                 break;
-            case 19: // 流消息
+            case OnlineProtocolType.MsgType.STREAM_MESSAGE:
                 handleStreamMessage(view, userText, msgText, bundle);
                 break;
         }
@@ -343,7 +344,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handleStreamMessage(View view, TextView userText, TextView msgText, Bundle bundle) {
         String sendUserName = bundle.getString("U");
         String message = bundle.getString("M");
-        boolean streamStatus = bundle.getBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, false);
+        boolean streamStatus = bundle.getBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, false);
         if (streamStatus) {
             message += DateUtil.second() % 2 == 0 ? "🔶" : "🔸";
         }

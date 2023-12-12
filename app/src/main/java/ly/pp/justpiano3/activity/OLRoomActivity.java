@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -310,10 +311,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     protected void changeRoomTitleClick() {
-        if (playerKind.equals("G")) {
-            // 取消Toast提示
-            // Toast.makeText(this, "只有房主才能修改房名!", Toast.LENGTH_SHORT).show();
-        } else {
+        if (!playerKind.equals("G")) {
             View inflate = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
             EditText text1 = inflate.findViewById(R.id.text_1);
             // 填充当前房间名称
@@ -395,7 +393,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (isIntercept) {
             return;
         }
-
         if (msgList.size() > maxListValue) {
             msgList.remove(0);
         }
@@ -410,7 +407,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         }
 
         // 聊天音效播放
-        if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(jpapplication.getKitiName())) {
+        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), jpapplication.getKitiName())) {
             SoundEffectPlayUtil.playSoundEffect(this, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
 
@@ -435,16 +432,16 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                     writer.close();
                     bindMsgListView();
                     return;
-                } else if (message.getData().getInt("T") == 2) {
+                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
                     writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                     writer.close();
-                } else if (message.getData().getInt("T") == 1) {
+                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
                     writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                     writer.close();
-                } else if (message.getData().getInt("T") == 18) {
+                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
                     writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                     writer.close();
-                } else if (message.getData().getInt("T") == 0) {
+                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
                     writer.write((time + "[荐]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
                     writer.close();
                 }
@@ -459,13 +456,12 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
      * 特殊消息处理程序
      *
      * @param message 当前消息
-     * @return
      */
     private boolean specialMessageHandle(Message message) {
         Bundle data = message.getData();
         int type = data.getInt("T");
         switch (type) {
-            case 0:// 推荐曲谱
+            case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE:
                 String item = data.getString("I");
                 String songName = null;
                 String songDifficulty = null;
@@ -480,14 +476,15 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 data.putString("M", data.getString("M") + songName + "[难度:" + songDifficulty + "]");
                 message.setData(data);
                 break;
-            case 19: // 流消息
-                String streamId = message.getData().getString(Consts.STREAM_MESSAGE_PARAM_ID);
+            case OnlineProtocolType.MsgType.STREAM_MESSAGE:
+                String streamId = message.getData().getString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID);
                 if (streamId != null && !streamId.isEmpty()) {
                     for (Bundle bundle : msgList) {
                         // 找到之前的流消息，将新的数据替换进去，随后就不用向下执行了
-                        if (streamId.equals(bundle.getString(Consts.STREAM_MESSAGE_PARAM_ID))) {
+                        if (streamId.equals(bundle.getString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID))) {
                             bundle.putString("M", bundle.getString("M") + message.getData().getString("M"));
-                            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, message.getData().getBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS));
+                            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS,
+                                    message.getData().getBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS));
                             bindMsgListView();
                             return true;
                         }
@@ -582,9 +579,9 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (string != null && !string.equals(JPApplication.kitiName)) {
             userTo = "@" + string + ":";
             sendTextView.setText(userTo);
-            CharSequence text = sendTextView.getText();
-            if (text instanceof Spannable) {
-                Selection.setSelection((Spannable) text, text.length());
+            Spannable text = sendTextView.getText();
+            if (text != null) {
+                Selection.setSelection(text, text.length());
             }
         }
     }

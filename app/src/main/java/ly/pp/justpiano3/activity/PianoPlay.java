@@ -30,9 +30,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.ConcurrentHashMap;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FinishScoreAdapter;
 import ly.pp.justpiano3.adapter.MiniScoreAdapter;
@@ -84,7 +85,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public PlayView playView;
     public double onlineRightHandDegree;
     public int score;
-    public JPApplication jpapplication;
     public View finishView;
     private View miniScoreView;
     public LayoutParams layoutParams2;
@@ -98,6 +98,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     private double localLeftHandDegree;
     private int localSongsTime;
     public int playKind;
+    private Map<Byte, Byte> playingPitchMap = new ConcurrentHashMap<>();
 
     private List<Bundle> m3783a(List<Bundle> list, String str) {
         if (list != null && !list.isEmpty()) {
@@ -376,7 +377,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
         checkAnJian();
         layoutinflater = LayoutInflater.from(this);
         isShowingSongsInfo = false;
@@ -401,7 +401,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 score = extras.getInt("score");
                 isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
-                playView = new PlayView(jpapplication, this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playKind, hand, 30, localSongsTime, 0);
+                playView = new PlayView(this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playKind, hand, 30, localSongsTime, 0);
                 break;
             case 1:    //在线曲库
                 songsName = extras.getString("songName");
@@ -409,7 +409,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
                 byte[] byteArray = extras.getByteArray("songBytes");
-                playView = new PlayView(jpapplication, this, byteArray, this, onlineRightHandDegree, score, 1, 0, songId);
+                playView = new PlayView(this, byteArray, this, onlineRightHandDegree, score, 1, 0, songId);
                 break;
             case 2:    //房间对战
                 roomBundle = extras.getBundle("bundle");
@@ -434,7 +434,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(Color.TRANSPARENT);
-                playView = new PlayView(jpapplication, this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
+                playView = new PlayView(this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
                 break;
             case 3:    //大厅考级
             case 4:    //挑战
@@ -450,7 +450,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 showHideGrade.setText("");
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
-                playView = new PlayView(jpapplication, this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
+                playView = new PlayView(this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
                 break;
         }
         if (isOpenRecord) {

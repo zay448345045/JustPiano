@@ -24,7 +24,6 @@ import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
@@ -254,7 +253,7 @@ public final class ReceiveTasks {
                 bundle.putInt("T", roomChat.getType());
                 if (roomChat.getType() == 1) {
                     bundle.putInt("V", roomChat.getColor());
-                } else if (roomChat.getType() == Consts.STREAM_MESSAGE_CODE/* 流消息 */) {
+                } else if (roomChat.getType() == OnlineProtocolType.MsgType.STREAM_MESSAGE) {
                     // 自定义了一个简单的协议
                     streamMessageBundleBuild(roomChat.getMessage(), bundle);
                 }
@@ -1225,22 +1224,22 @@ public final class ReceiveTasks {
      */
     private static void streamMessageBundleBuild(String message, Bundle bundle) {
         // 流消息开始
-        if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_START)) {
-            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, message.substring(Consts.STREAM_MESSAGE_PROTO_START.length()));
-            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, true);
+        if (message.startsWith(OnlineProtocolType.MsgType.StreamMsg.START)) {
+            bundle.putString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID, message.substring(OnlineProtocolType.MsgType.StreamMsg.START.length()));
+            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, true);
             bundle.putString("M", StringUtil.EMPTY_STRING);
         }
         // 流消息数据传输
-        else if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_DATA)) {
+        else if (message.startsWith(OnlineProtocolType.MsgType.StreamMsg.DATA)) {
             String[] split = message.split(String.valueOf(StringUtil.LINE_FEED));
-            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, split[0].substring(Consts.STREAM_MESSAGE_PROTO_DATA.length()));
-            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, true);
+            bundle.putString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID, split[0].substring(OnlineProtocolType.MsgType.StreamMsg.DATA.length()));
+            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, true);
             bundle.putString("M", message.substring((split[0] + StringUtil.LINE_FEED).length()));
         }
         // 流消息结束
-        else if (message.startsWith(Consts.STREAM_MESSAGE_PROTO_END)) {
-            bundle.putString(Consts.STREAM_MESSAGE_PARAM_ID, message.substring(Consts.STREAM_MESSAGE_PROTO_END.length()));
-            bundle.putBoolean(Consts.STREAM_MESSAGE_PARAM_STATUS, false);
+        else if (message.startsWith(OnlineProtocolType.MsgType.StreamMsg.END)) {
+            bundle.putString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID, message.substring(OnlineProtocolType.MsgType.StreamMsg.END.length()));
+            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, false);
             bundle.putString("M", StringUtil.EMPTY_STRING);
         }
     }

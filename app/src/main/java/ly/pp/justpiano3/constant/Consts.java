@@ -56,34 +56,4 @@ public interface Consts {
             return oldItem.equals(newItem);
         }
     };
-
-    // <editor-fold desc="流消息" defaultstate="collapsed">
-    /**
-     * 流消息 协议编号
-     */
-    int STREAM_MESSAGE_CODE = 19;
-    /**
-     * 流消息 协议：开始
-     */
-    String STREAM_MESSAGE_PROTO_START = "S:";
-    /**
-     * 流消息 协议：数据
-     */
-    String STREAM_MESSAGE_PROTO_DATA = "D:";
-    /**
-     * 流消息 协议：结束
-     */
-    String STREAM_MESSAGE_PROTO_END = "E:";
-    /**
-     * 流消息 参数名字 消息id
-     */
-    String STREAM_MESSAGE_PARAM_ID = "STREAM_ID";
-    /**
-     * 流消息 参数名字 消息状态
-     */
-    String STREAM_MESSAGE_PARAM_STATUS = "STREAM_STATUS";
-
-
-    // </editor-fold>
-
 }
