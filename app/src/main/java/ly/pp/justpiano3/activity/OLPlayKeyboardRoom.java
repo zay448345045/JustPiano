@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.media.midi.MidiDeviceInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -65,7 +66,7 @@ import ly.pp.justpiano3.view.WaterfallView;
 import protobuf.dto.OnlineKeyboardNoteDTO;
 import protobuf.dto.OnlineLoadRoomPositionDTO;
 
-public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener {
+public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener {
     public static final int NOTES_SEND_INTERVAL = 120;
     // 当前用户楼号 - 1
     public byte roomPositionSub1 = -1;
@@ -456,7 +457,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiConnect(String deviceName) {
+    public void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
         if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {
             olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
         }
@@ -469,7 +470,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onMidiDisconnect(String deviceName) {
+    public void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
         if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {
             olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
         }

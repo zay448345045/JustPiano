@@ -26,6 +26,7 @@ public class MidiDeviceListPreference extends DialogPreference {
     public JPProgressBar jpProgressBar;
     private MidiDeviceInfo[] midiDeviceInfoList;
     private String[] midiDeviceNameList;
+    private MidiDeviceListAdapter midiDeviceListAdapter;
 
     public MidiDeviceListPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -65,9 +66,13 @@ public class MidiDeviceListPreference extends DialogPreference {
         linearLayout.setBackgroundColor(-1);
         ListView listView = new ListView(context);
         listView.setDivider(null);
-        MidiDeviceListAdapter midiDeviceListAdapter = new MidiDeviceListAdapter(this, context, midiDeviceNameList, midiDeviceInfoList);
+        midiDeviceListAdapter = new MidiDeviceListAdapter(this, context, midiDeviceNameList, midiDeviceInfoList);
         listView.setAdapter(midiDeviceListAdapter);
         linearLayout.addView(listView);
         builder.setView(linearLayout);
+    }
+
+    public void midiDeviceListRefresh() {
+        midiDeviceListAdapter.notifyDataSetChanged();
     }
 }

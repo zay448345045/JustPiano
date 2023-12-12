@@ -28,8 +28,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class WaterfallActivity : BaseActivity(), View.OnTouchListener,
-    MidiDeviceUtil.MidiMessageReceiveListener {
+class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener {
     /**
      * 瀑布流view
      */

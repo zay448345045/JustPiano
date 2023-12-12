@@ -165,7 +165,7 @@ public class SoundDownload extends BaseActivity implements Callback {
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadWavAssetsNative();
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
-                    SoundEngineUtil.preloadSounds(this, i);
+                    SoundEngineUtil.loadSoundAssetsNative(this, i);
                 }
                 SoundEngineUtil.setupAudioStreamNative(2, 44100);
             } else if (soundFileName.endsWith(".sf2")) {

@@ -56,7 +56,7 @@ import protobuf.dto.OnlineClTestDTO;
 import protobuf.dto.OnlineLoadPlayUserDTO;
 import protobuf.dto.OnlineQuitRoomDTO;
 
-public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.MidiMessageReceiveListener {
+public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.MidiDeviceListener {
     public TextView leftHandDegreeTextView;
     public TextView songLengthTextView;
     public HorizontalListView horizontalListView;

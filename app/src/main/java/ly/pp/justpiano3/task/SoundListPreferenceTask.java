@@ -48,7 +48,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadWavAssetsNative();
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
-                    SoundEngineUtil.preloadSounds(soundListPreference.context, i);
+                    SoundEngineUtil.loadSoundAssetsNative(soundListPreference.context, i);
                 }
                 SoundEngineUtil.setupAudioStreamNative(2, 44100);
             } else if (soundFile.getName().endsWith(".sf2")) {

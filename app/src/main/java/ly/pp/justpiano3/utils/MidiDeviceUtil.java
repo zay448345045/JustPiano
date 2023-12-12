@@ -62,31 +62,33 @@ public class MidiDeviceUtil {
     private static JPMidiReceiver midiReceiver;
 
     /**
-     * 此接口监听midi键盘连接、断开连接及接收midi设备事件
+     * 此接口监听midi设备连接、断开连接及接收midi设备事件
      */
-    public interface MidiMessageReceiveListener {
+    public interface MidiDeviceListener {
 
         /**
          * midi键盘连接
          */
-        default void onMidiConnect(String deviceIdAndName) {
+        default void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
             // nothing
         }
 
         /**
          * midi键盘断开连接
          */
-        default void onMidiDisconnect(String deviceIdAndName) {
+        default void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
             // nothing
         }
 
         /**
-         * midi键盘接收到的音符消息，避免直接做耗时长的操作
+         * midi键盘接收到的音符消息，避免在此方法内直接做耗时长的操作
          *
          * @param pitch  原始midi音高
          * @param volume midi音符力度
          */
-        void onMidiMessageReceive(byte pitch, byte volume);
+        default void onMidiMessageReceive(byte pitch, byte volume) {
+            // nothing
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -95,13 +97,13 @@ public class MidiDeviceUtil {
         /**
          * midi监听器
          */
-        private final MidiMessageReceiveListener midiMessageReceiveListener;
+        private final MidiDeviceListener midiDeviceListener;
 
         /**
          * 构造，传入MidiConnectionListener
          */
-        private JPMidiReceiver(MidiMessageReceiveListener midiMessageReceiveListener) {
-            this.midiMessageReceiveListener = midiMessageReceiveListener;
+        private JPMidiReceiver(MidiDeviceListener midiDeviceListener) {
+            this.midiDeviceListener = midiDeviceListener;
         }
 
         @Override
@@ -150,11 +152,11 @@ public class MidiDeviceUtil {
                             } else if (midiReceiver != null) {
                                 midiOutputPort.connect(midiReceiver);
                             }
+                            midiDevicePortMap.put(deviceIdAndName, midiOutputPort);
                             // 回调midi设备连接事件
                             if (midiReceiver != null) {
-                                midiReceiver.midiMessageReceiveListener.onMidiConnect(deviceIdAndName);
+                                midiReceiver.midiDeviceListener.onMidiConnect(device.getInfo());
                             }
-                            midiDevicePortMap.put(deviceIdAndName, midiOutputPort);
                             Toast.makeText(context, "MIDI设备[" + deviceIdAndName.substring(
                                     deviceIdAndName.indexOf('-') + 1) + "]已连接", Toast.LENGTH_SHORT).show();
                             break;
@@ -184,11 +186,11 @@ public class MidiDeviceUtil {
                 midiOutputPort.disconnect(midiReceiver);
             }
             midiOutputPort.close();
+            midiDevicePortMap.remove(deviceIdAndName);
             // 回调midi设备断开事件
             if (midiReceiver != null) {
-                midiReceiver.midiMessageReceiveListener.onMidiDisconnect(deviceIdAndName);
+                midiReceiver.midiDeviceListener.onMidiDisconnect(info);
             }
-            midiDevicePortMap.remove(deviceIdAndName);
             mainHandler.post(() -> Toast.makeText(context, "MIDI设备[" + deviceIdAndName.substring(
                     deviceIdAndName.indexOf('-') + 1) + "]已断开", Toast.LENGTH_SHORT).show());
         } catch (Exception e) {
@@ -242,14 +244,14 @@ public class MidiDeviceUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void setMidiConnectionListener(MidiMessageReceiveListener midiMessageReceiveListener) {
+    public static void setMidiConnectionListener(MidiDeviceListener midiDeviceListener) {
         if (midiManager == null) {
             return;
         }
         if (midiReceiver != null) {
             removeMidiConnectionListener();
         }
-        midiReceiver = new JPMidiReceiver(midiMessageReceiveListener);
+        midiReceiver = new JPMidiReceiver(midiDeviceListener);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             for (MidiDeviceInfo info : midiManager.getDevices()) {
                 MidiOutputPort midiOutputPort = midiDevicePortMap.get(getDeviceIdAndName(info));
@@ -305,13 +307,13 @@ public class MidiDeviceUtil {
         if (midiEventType == 0x90) {
             // 音符按下
             if (midiReceiver != null) {
-                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                midiReceiver.midiDeviceListener.onMidiMessageReceive(
                         (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
             }
         } else if (midiEventType == 0x80) {
             // 音符抬起
             if (midiReceiver != null) {
-                midiReceiver.midiMessageReceiveListener.onMidiMessageReceive(
+                midiReceiver.midiDeviceListener.onMidiMessageReceive(
                         (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
             }
         } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {

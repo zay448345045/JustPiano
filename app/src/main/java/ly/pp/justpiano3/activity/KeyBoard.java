@@ -35,7 +35,7 @@ import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardView;
 
-public class KeyBoard extends BaseActivity implements View.OnTouchListener, MidiDeviceUtil.MidiMessageReceiveListener, View.OnClickListener {
+public class KeyBoard extends BaseActivity implements View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener, View.OnClickListener {
     public KeyboardView firstKeyboardView;
     public KeyboardView secondKeyboardView;
     public LinearLayout keyboard1Layout;

@@ -3,12 +3,15 @@ package ly.pp.justpiano3.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.midi.MidiDeviceInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.File;
 import java.util.HashMap;
@@ -20,10 +23,12 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
+import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
 
-public class SettingsMode extends PreferenceActivity {
+public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.MidiDeviceListener {
 
     public static final int SETTING_MODE_CODE = 122;
 
@@ -193,6 +198,24 @@ public class SettingsMode extends PreferenceActivity {
                     break;
             }
             filePickerPreference.persistFilePath(file.getAbsolutePath());
+        }
+    }
+
+    @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
+        Preference midiDevicePreference = findPreference("midi_device_list");
+        if (midiDevicePreference != null) {
+            ((MidiDeviceListPreference) midiDevicePreference).midiDeviceListRefresh();
+        }
+    }
+
+    @Override
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
+        Preference midiDevicePreference = findPreference("midi_device_list");
+        if (midiDevicePreference != null) {
+            ((MidiDeviceListPreference) midiDevicePreference).midiDeviceListRefresh();
         }
     }
 }

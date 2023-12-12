@@ -220,7 +220,7 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
             System.exit(-1);
         }
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
-            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
+            SoundEngineUtil.loadSoundAssetsNative(getApplicationContext(), i);
             progress++;
             loading = "正在载入声音资源..." + progress + "/88";
             Message obtainMessage2 = handler.obtainMessage();

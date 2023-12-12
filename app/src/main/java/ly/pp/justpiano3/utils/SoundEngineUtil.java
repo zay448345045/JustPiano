@@ -116,7 +116,7 @@ public class SoundEngineUtil {
         triggerUpAll();
     }
 
-    public static void preloadSounds(Context context, int i) {
+    public static void loadSoundAssetsNative(Context context, int i) {
         try {
             Converter converter = new Converter();
             converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
@@ -157,7 +157,7 @@ public class SoundEngineUtil {
         teardownAudioStreamNative();
         unloadWavAssetsNative();
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
-            preloadSounds(context, i);
+            loadSoundAssetsNative(context, i);
         }
         setupAudioStreamNative(2, 44100);
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
