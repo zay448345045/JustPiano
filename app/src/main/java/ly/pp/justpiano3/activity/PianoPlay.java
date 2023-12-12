@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +42,12 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.android.PianoPlayHandler;
 import ly.pp.justpiano3.listener.ShowOrHideMiniGradeClick;
+import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.thread.StartPlayTimerTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.HorizontalListView;
@@ -98,7 +101,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     private double localLeftHandDegree;
     private int localSongsTime;
     public int playKind;
-    private Map<Byte, Byte> playingPitchMap = new ConcurrentHashMap<>();
+    private final Map<Byte, Pair<Byte, Long>> playingPitchMap = new ConcurrentHashMap<>();
 
     private List<Bundle> sortByField(List<Bundle> list, String str) {
         if (list != null && !list.isEmpty()) {
@@ -607,14 +610,16 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     }
 
     public void cleanAndPutPlayingNotePitch(byte pitch, byte track) {
-        Iterator<Map.Entry<Byte, Byte>> iterator = playingPitchMap.entrySet().iterator();
+        Iterator<Map.Entry<Byte, Pair<Byte, Long>>> iterator = playingPitchMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Byte, Byte> entry = iterator.next();
-            if (entry.getValue() == track) {
+            Map.Entry<Byte, Pair<Byte, Long>> entry = iterator.next();
+            if (entry.getValue().first == track && System.currentTimeMillis() - entry.getValue().second >= PmSongUtil.PM_GLOBAL_SPEED) {
                 SoundEngineUtil.stopPlaySound(entry.getKey());
                 iterator.remove();
             }
         }
-        playingPitchMap.put(pitch, track);
+        if (pitch >= MidiUtil.MIN_PIANO_MIDI_PITCH && pitch <= MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            playingPitchMap.put(pitch, Pair.create(track, System.currentTimeMillis()));
+        }
     }
 }
