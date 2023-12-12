@@ -3,8 +3,13 @@ package ly.pp.justpiano3.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioDeviceCallback;
+import android.media.AudioDeviceInfo;
+import android.media.AudioManager;
+import android.os.Build;
 import android.os.Process;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,6 +75,28 @@ public class SoundEngineUtil {
 
     public static native void unloadSf2();
 
+    public static void init(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            AudioDeviceCallback deviceCallback = new AudioDeviceCallback() {
+                @Override
+                public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
+                    Log.i("SoundEngineUtil", "onAudioDevicesAdded: " + addedDevices.length);
+                    teardownAudioStreamNative();
+                    setupAudioStreamNative(2, 44100);
+                }
+
+                @Override
+                public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
+                    Log.i("SoundEngineUtil", "onAudioDevicesRemoved: " + removedDevices.length);
+                    teardownAudioStreamNative();
+                    setupAudioStreamNative(2, 44100);
+                }
+            };
+            audioManager.registerAudioDeviceCallback(deviceCallback, null);
+        }
+    }
+
     public static void playSound(byte pitch, byte volume) {
         if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
             return;
@@ -132,13 +159,9 @@ public class SoundEngineUtil {
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             preloadSounds(context, i);
         }
-        afterLoadSounds();
+        setupAudioStreamNative(2, 44100);
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();
-    }
-
-    public static void afterLoadSounds() {
-        setupAudioStreamNative(2, 44100);
     }
 }

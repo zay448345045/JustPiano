@@ -227,7 +227,7 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);
         }
-        SoundEngineUtil.afterLoadSounds();
+        SoundEngineUtil.setupAudioStreamNative(2, 44100);
         SoundEngineUtil.openFluidSynth();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String soundName = sharedPreferences.getString("sound_list", "original");

@@ -103,6 +103,7 @@ public final class JPApplication extends Application {
         // 设置拦截app中未捕获的异常
         new CrashHandler().init();
         // 从app应用数据中加载设置
+        SoundEngineUtil.init(this);
         GlobalSetting.INSTANCE.loadSettings(this, false);
         // 初始化一些图像缓存
         ImageLoadUtil.init(this);

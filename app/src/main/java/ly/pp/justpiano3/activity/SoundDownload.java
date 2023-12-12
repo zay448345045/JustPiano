@@ -167,7 +167,7 @@ public class SoundDownload extends BaseActivity implements Callback {
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.preloadSounds(this, i);
                 }
-                SoundEngineUtil.afterLoadSounds();
+                SoundEngineUtil.setupAudioStreamNative(2, 44100);
             } else if (soundFileName.endsWith(".sf2")) {
                 String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(
                         Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
