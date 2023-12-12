@@ -609,7 +609,10 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         }
     }
 
-    public void cleanAndPutPlayingNotePitch(byte pitch, byte track) {
+    public void playNoteSoundHandle(byte track, byte pitch, byte volume) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            return;
+        }
         Iterator<Map.Entry<Byte, Pair<Byte, Long>>> iterator = playingPitchMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Byte, Pair<Byte, Long>> entry = iterator.next();
@@ -618,8 +621,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 iterator.remove();
             }
         }
-        if (pitch >= MidiUtil.MIN_PIANO_MIDI_PITCH && pitch <= MidiUtil.MAX_PIANO_MIDI_PITCH) {
-            playingPitchMap.put(pitch, Pair.create(track, System.currentTimeMillis()));
-        }
+        SoundEngineUtil.playSound(pitch, volume);
+        playingPitchMap.put(pitch, Pair.create(track, System.currentTimeMillis()));
     }
 }
