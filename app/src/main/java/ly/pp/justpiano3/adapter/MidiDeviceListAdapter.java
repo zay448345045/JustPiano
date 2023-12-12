@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.media.midi.MidiDeviceInfo;
 import android.os.Build;
@@ -21,14 +20,12 @@ import ly.pp.justpiano3.view.MidiDeviceListPreference;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public final class MidiDeviceListAdapter extends BaseAdapter {
     public final MidiDeviceListPreference midiDeviceListPreference;
-    public Context context;
     private final MidiDeviceInfo[] midiDeviceInfoList;
     private final String[] midiDeviceNameList;
 
-    public MidiDeviceListAdapter(MidiDeviceListPreference midiDeviceListPreference, Context context,
+    public MidiDeviceListAdapter(MidiDeviceListPreference midiDeviceListPreference,
                                  String[] midiDeviceNameList, MidiDeviceInfo[] midiDeviceInfoList) {
         this.midiDeviceListPreference = midiDeviceListPreference;
-        this.context = context;
         this.midiDeviceNameList = midiDeviceNameList;
         this.midiDeviceInfoList = midiDeviceInfoList;
     }
@@ -51,7 +48,7 @@ public final class MidiDeviceListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.ol_skin_view, null);
+            view = LayoutInflater.from(midiDeviceListPreference.context).inflate(R.layout.ol_skin_view, null);
         }
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(midiDeviceNameList[i]);
         Button enableText = view.findViewById(R.id.set_skin);

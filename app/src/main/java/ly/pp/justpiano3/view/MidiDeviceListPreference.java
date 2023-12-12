@@ -66,13 +66,14 @@ public class MidiDeviceListPreference extends DialogPreference {
         linearLayout.setBackgroundColor(-1);
         ListView listView = new ListView(context);
         listView.setDivider(null);
-        midiDeviceListAdapter = new MidiDeviceListAdapter(this, context, midiDeviceNameList, midiDeviceInfoList);
+        midiDeviceListAdapter = new MidiDeviceListAdapter(this, midiDeviceNameList, midiDeviceInfoList);
         listView.setAdapter(midiDeviceListAdapter);
         linearLayout.addView(listView);
         builder.setView(linearLayout);
     }
 
     public void midiDeviceListRefresh() {
+        loadMidiDeviceList();
         if (midiDeviceListAdapter != null) {
             midiDeviceListAdapter.notifyDataSetChanged();
         }
