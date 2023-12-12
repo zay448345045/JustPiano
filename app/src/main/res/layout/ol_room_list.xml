@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/ol_room_list"
                 android:layout_toStartOf="@+id/ol_testroom_b"
-                android:background="@drawable/selector_ol_orange"
+                android:background="@color/back"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:keepScreenOn="true"
