@@ -159,12 +159,16 @@ public class ImageLoadUtil {
         Bitmap bitmap = null;
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
             } catch (Exception e) {
                 try {
-                    return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".webp"));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                    return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".jpg"));
+                } catch (Exception e1) {
+                    try {
+                        return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".webp"));
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
+                    }
                 }
             }
         }
@@ -200,13 +204,19 @@ public class ImageLoadUtil {
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             Bitmap bitmap = null;
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
             } catch (Exception ignored) {
             }
             if (bitmap == null) {
                 try {
-                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
                 } catch (Exception ignored) {
+                }
+                if (bitmap == null) {
+                    try {
+                        bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                    } catch (Exception ignored) {
+                    }
                 }
             }
             if (bitmap != null) {
@@ -221,13 +231,19 @@ public class ImageLoadUtil {
         if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
             Bitmap bitmap = null;
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
             } catch (Exception ignored) {
             }
             if (bitmap == null) {
                 try {
-                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
                 } catch (Exception ignored) {
+                }
+                if (bitmap == null) {
+                    try {
+                        bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                    } catch (Exception ignored) {
+                    }
                 }
             }
             if (bitmap != null) {
