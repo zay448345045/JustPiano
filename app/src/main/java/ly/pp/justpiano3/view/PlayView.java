@@ -416,7 +416,6 @@ public final class PlayView extends SurfaceView implements Callback {
         f4771bC = new RectF();
         uploadTimeArray = new byte[uploadTime];
         uploadTouchStatusList = new ArrayList<>();
-
         pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
         pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
         pianoPlay.m3785a(pianoPlay.playKind, false);
@@ -882,8 +881,10 @@ public final class PlayView extends SurfaceView implements Callback {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        screenWidth = w;
-        screenHeight = h;
+        if (w != oldw || h != oldh) {
+            loadParams();
+            ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
+        }
     }
 
     @Override
