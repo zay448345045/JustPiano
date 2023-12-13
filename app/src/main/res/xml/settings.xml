@@ -45,7 +45,7 @@
         <ly.pp.justpiano3.view.preference.FilePickerPreference
             android:defaultValue=""
             android:key="background_pic"
-            android:title="背景图片" />
+            android:title="背景图片(优先于皮肤生效)" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="键盘、声音及MIDI设备">

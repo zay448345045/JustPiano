@@ -22,6 +22,12 @@ object GlobalSetting {
         private set
 
     /**
+     * 背景图
+     */
+    var backgroundPic: String = ""
+        private set
+
+    /**
      * 当前皮肤名称
      */
     var skinName: String = "默认皮肤"
@@ -250,17 +256,12 @@ object GlobalSetting {
         private set
 
     /**
-     * 背景图
-     */
-    var backgroundPic: String = ""
-        private set
-
-    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         allFullScreenShow = sharedPreferences.getBoolean("all_full_screen_show", true)
+        backgroundPic = sharedPreferences.getString("background_pic", "")!!
         skinName = sharedPreferences.getString("skin_list", "original").toString()
         skinName =
             if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)
@@ -316,6 +317,5 @@ object GlobalSetting {
         forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
         waterfallOctaveLine = sharedPreferences.getBoolean("waterfall_octave_line", true)
         waterfallBackgroundPic = sharedPreferences.getString("waterfall_background_pic", "")!!
-        backgroundPic = sharedPreferences.getString("background_pic", "")!!
     }
 }

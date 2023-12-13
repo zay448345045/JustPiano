@@ -184,6 +184,9 @@ public class ImageLoadUtil {
     }
 
     public static Bitmap loadFileImage(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return null;
+        }
         return loadFileImage(new File(filePath));
     }
 
