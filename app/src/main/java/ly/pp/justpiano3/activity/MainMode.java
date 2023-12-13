@@ -150,7 +150,6 @@ public class MainMode extends BaseActivity implements OnClickListener {
         GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
-        ImageLoadUtil.setBackground(this);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean newHelp = sharedPreferences.getBoolean("new_help", true);
         if (newHelp) {

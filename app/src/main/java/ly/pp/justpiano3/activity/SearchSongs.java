@@ -31,7 +31,6 @@ import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class SearchSongs extends BaseActivity implements Callback, OnClickListener {
@@ -173,7 +172,6 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
         jpapplication = (JPApplication) getApplication();
         headType = getIntent().getExtras().getInt("head");
         setContentView(R.layout.ol_search_songs);
-        ImageLoadUtil.setBackground(this);
         layoutinflater = LayoutInflater.from(this);
         keywordsTextView = findViewById(R.id.ol_keywords);
         findViewById(R.id.ol_search_b).setOnClickListener(this);

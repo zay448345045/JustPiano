@@ -62,7 +62,6 @@ public class KeyBoard extends BaseActivity implements View.OnTouchListener, Midi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_keyboard_mode);
-        ImageLoadUtil.setBackground(this);
         firstKeyboardView = findViewById(R.id.keyboard1_view);
         initKeyboardView(firstKeyboardView);
         secondKeyboardView = findViewById(R.id.keyboard2_view);

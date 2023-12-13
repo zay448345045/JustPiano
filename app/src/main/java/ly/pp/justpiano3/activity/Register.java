@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.RegisterTask;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class Register extends BaseActivity implements OnClickListener {
@@ -81,7 +80,6 @@ public class Register extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        ImageLoadUtil.setBackground(this);
         sex = "";
         account = "";
         kitiName = "";

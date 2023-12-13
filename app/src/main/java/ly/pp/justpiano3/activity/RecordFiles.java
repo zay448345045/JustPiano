@@ -20,7 +20,6 @@ import java.util.Map;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class RecordFiles extends BaseActivity {
     private List<Map<String, Object>> dataList;
@@ -86,7 +85,6 @@ public class RecordFiles extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
-        ImageLoadUtil.setBackground(this);
         listView = findViewById(R.id.listFile);
         listView.setCacheColorHint(Color.TRANSPARENT);
         tipsTextView = findViewById(R.id.txt1);

@@ -24,7 +24,6 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
 import ly.pp.justpiano3.task.ShowSongsInfoTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class ShowSongsInfo extends BaseActivity implements OnClickListener {
@@ -130,7 +129,6 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
         head = extras.getString("head");
         keywords = extras.getString("keywords");
         setContentView(R.layout.ol_top_info);
-        ImageLoadUtil.setBackground(this);
         layoutInflater = LayoutInflater.from(this);
         TextView topTitleTextView = findViewById(R.id.ol_top_title);
         findViewById(R.id.ol_top_before).setOnClickListener(this);

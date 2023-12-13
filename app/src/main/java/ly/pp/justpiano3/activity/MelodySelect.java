@@ -340,7 +340,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
         setContentView(layoutInflater.inflate(R.layout.lo_melody_list, null));
-        ImageLoadUtil.setBackground(this);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);

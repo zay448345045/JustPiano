@@ -20,7 +20,6 @@ import java.util.Map;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChatFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class ChatFiles extends BaseActivity {
     public List<Map<String, Object>> dataList = null;
@@ -87,7 +86,6 @@ public class ChatFiles extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
-        ImageLoadUtil.setBackground(this);
         listView = findViewById(R.id.listFile);
         listView.setCacheColorHint(Color.TRANSPARENT);
         tipsTextView = findViewById(R.id.txt1);

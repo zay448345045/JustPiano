@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class PlayModeSelect extends BaseActivity implements OnClickListener {
 
@@ -51,7 +50,6 @@ public class PlayModeSelect extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_play_select);
-        ImageLoadUtil.setBackground(this);
         findViewById(R.id.game_mode).setOnClickListener(this);
         findViewById(R.id.keyboard).setOnClickListener(this);
         findViewById(R.id.freestyle_mode).setOnClickListener(this);

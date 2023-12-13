@@ -205,7 +205,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);
         Bundle extras = getIntent().getExtras();
-        ImageLoadUtil.setBackground(this);
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
         changeServerCheckBox = findViewById(R.id.ol_change_server);

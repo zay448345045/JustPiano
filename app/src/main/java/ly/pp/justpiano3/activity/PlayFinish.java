@@ -16,7 +16,6 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.task.PlayFinishTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -192,7 +191,6 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
                 break;
         }
         setContentView(R.layout.play_finish);
-        ImageLoadUtil.setBackground(this);
         finishButton = findViewById(R.id.ok);
         finishButton.setOnClickListener(this);
         retryButton = findViewById(R.id.retry);

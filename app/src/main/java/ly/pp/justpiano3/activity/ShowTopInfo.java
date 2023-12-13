@@ -29,7 +29,6 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class ShowTopInfo extends BaseActivity implements Callback, OnClickListener {
@@ -130,7 +129,6 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
         super.onCreate(savedInstanceState);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_top_info);
-        ImageLoadUtil.setBackground(this);
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         f4989e = findViewById(R.id.ol_top_list);

@@ -30,7 +30,6 @@ import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -238,7 +237,6 @@ public class SoundDownload extends BaseActivity implements Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skin_list);
-        ImageLoadUtil.setBackground(this);
         intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);

@@ -104,7 +104,6 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
         sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
-        ImageLoadUtil.setBackground(this);
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
         info = findViewById(R.id.infoview);

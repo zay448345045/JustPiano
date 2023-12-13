@@ -40,7 +40,6 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.task.OLMelodySelectTask;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -257,7 +256,6 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
             layoutInflater2 = LayoutInflater.from(this);
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Consts.sortNames).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             setContentView(LayoutInflater.from(this).inflate(R.layout.ol_melody_list, null));
-            ImageLoadUtil.setBackground(this);
             LinearLayout linearLayout = findViewById(R.id.sup_view);
             findViewById(R.id.ol_search_button).setOnClickListener(this);
             ListView f4326o = findViewById(R.id.ol_f_list);

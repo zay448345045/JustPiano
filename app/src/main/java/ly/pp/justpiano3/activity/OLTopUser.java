@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class OLTopUser extends BaseActivity implements OnClickListener {
 
@@ -75,7 +74,6 @@ public class OLTopUser extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_top_user);
-        ImageLoadUtil.setBackground(this);
         findViewById(R.id.ol_level_b).setOnClickListener(this);
         findViewById(R.id.ol_topUsers_b).setOnClickListener(this);
         findViewById(R.id.ol_topScore_b).setOnClickListener(this);

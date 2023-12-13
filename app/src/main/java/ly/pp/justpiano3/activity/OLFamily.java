@@ -344,7 +344,6 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jpapplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_family);
-        ImageLoadUtil.setBackground(this);
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));

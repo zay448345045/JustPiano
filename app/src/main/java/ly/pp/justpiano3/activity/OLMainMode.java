@@ -13,7 +13,6 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.handler.android.OLMainModeHandler;
 import ly.pp.justpiano3.task.SongSyncDialogTask;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
@@ -93,7 +92,6 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
-        ImageLoadUtil.setBackground(this);
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_top_b).setOnClickListener(this);
         findViewById(R.id.ol_users_b).setOnClickListener(this);
