@@ -92,7 +92,7 @@ public class SkinListPreference extends DialogPreference {
             persistString(skinKey);
         }
         if (context instanceof PreferenceActivity) {
-            ImageLoadUtil.setBackground(context, "ground", ((PreferenceActivity) context).getWindow());
+            ImageLoadUtil.setBackground(((PreferenceActivity) context));
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
         setSummary("当前皮肤：" + GlobalSetting.INSTANCE.getSkinName());

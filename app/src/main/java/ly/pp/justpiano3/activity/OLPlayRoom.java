@@ -473,7 +473,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this);
         }
     }
 

@@ -196,7 +196,7 @@ public class SkinDownload extends BaseActivity implements Callback {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "皮肤设置成功!", Toast.LENGTH_SHORT).show();
-                    ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+                    ImageLoadUtil.setBackground(this);
                     break;
             }
         }
@@ -221,7 +221,7 @@ public class SkinDownload extends BaseActivity implements Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skin_list);
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);

@@ -62,6 +62,7 @@ public class KeyBoard extends BaseActivity implements View.OnTouchListener, Midi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lo_keyboard_mode);
+        ImageLoadUtil.setBackground(this);
         firstKeyboardView = findViewById(R.id.keyboard1_view);
         initKeyboardView(firstKeyboardView);
         secondKeyboardView = findViewById(R.id.keyboard2_view);
@@ -274,7 +275,7 @@ public class KeyBoard extends BaseActivity implements View.OnTouchListener, Midi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this);
             firstKeyboardView.changeSkinKeyboardImage(this);
             secondKeyboardView.changeSkinKeyboardImage(this);
             KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];

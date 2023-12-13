@@ -93,7 +93,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         jpapplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_top_b).setOnClickListener(this);
         findViewById(R.id.ol_users_b).setOnClickListener(this);
@@ -114,10 +114,5 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                 dialog.dismiss();
             }).buildAndShowDialog();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

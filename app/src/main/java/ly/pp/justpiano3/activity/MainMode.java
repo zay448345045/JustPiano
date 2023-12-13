@@ -132,16 +132,12 @@ public class MainMode extends BaseActivity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this);
         } else if (requestCode == PERMISSION_REQUEST_CODE) {
-            // Check if storage permission was granted after returning from settings
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (Environment.isExternalStorageManager()) {
-                    // Storage permission granted
                     createDirectories();
                 } else {
-                    // Storage permission not granted
-                    // Handle accordingly
                     Toast.makeText(this, "您未授予文件访问权限，无法使用切换皮肤音源、录音、聊天记录存储等功能", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -154,7 +150,7 @@ public class MainMode extends BaseActivity implements OnClickListener {
         GlobalSetting.INSTANCE.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean newHelp = sharedPreferences.getBoolean("new_help", true);
         if (newHelp) {

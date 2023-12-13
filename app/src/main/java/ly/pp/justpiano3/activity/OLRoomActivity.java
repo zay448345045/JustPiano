@@ -631,7 +631,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         layoutInflater = LayoutInflater.from(this);
         jpapplication = (JPApplication) getApplication();
         getRoomPlayerMap().clear();
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         roomNameView = findViewById(R.id.room_title);
         roomInfoBundle = getIntent().getExtras();
         hallInfoBundle = roomInfoBundle.getBundle("bundle");

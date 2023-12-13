@@ -130,7 +130,7 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
         head = extras.getString("head");
         keywords = extras.getString("keywords");
         setContentView(R.layout.ol_top_info);
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         layoutInflater = LayoutInflater.from(this);
         TextView topTitleTextView = findViewById(R.id.ol_top_title);
         findViewById(R.id.ol_top_before).setOnClickListener(this);

@@ -22,7 +22,7 @@ public final class ChatFilesAdapter extends BaseAdapter {
         chatfiles = chatFiles;
     }
 
-    public void mo3422a(List<Map<String, Object>> list) {
+    public void setDataList(List<Map<String, Object>> list) {
         this.list = list;
     }
 
@@ -46,16 +46,15 @@ public final class ChatFilesAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(chatfiles).inflate(R.layout.chat_record_file_list, null);
         }
-        view.setKeepScreenOn(true);
-        String str = (String) list.get(i).get("filenames");
-        String str2 = (String) list.get(i).get("time");
-        String str3 = (String) list.get(i).get("path");
+        String fileName = (String) list.get(i).get("filenames");
+        String fileTime = (String) list.get(i).get("time");
+        String filePath = (String) list.get(i).get("path");
         ImageView imageView = view.findViewById(R.id.deleteview);
         view.findViewById(R.id.playview).setVisibility(View.INVISIBLE);
-        ((TextView) view.findViewById(R.id.txtview)).setText(str);
-        ((TextView) view.findViewById(R.id.timeview)).setText(str2);
-        view.findViewById(R.id.showtxt).setOnClickListener(v -> chatfiles.play(str3));
-        imageView.setOnClickListener(v -> chatfiles.delete(i, str, str3));
+        ((TextView) view.findViewById(R.id.txtview)).setText(fileName);
+        ((TextView) view.findViewById(R.id.timeview)).setText(fileTime);
+        view.findViewById(R.id.showtxt).setOnClickListener(v -> chatfiles.open(filePath));
+        imageView.setOnClickListener(v -> chatfiles.delete(i, fileName, filePath));
         return view;
     }
 }

@@ -1,12 +1,11 @@
 package ly.pp.justpiano3.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -17,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 
 public class ImageLoadUtil {
@@ -189,68 +189,46 @@ public class ImageLoadUtil {
 
     public static Bitmap loadFileImage(File file) {
         Bitmap bitmap = null;
-        try (FileInputStream fis = new FileInputStream(file)) {
-            bitmap = BitmapFactory.decodeStream(fis);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (file.exists()) {
+            try (FileInputStream fis = new FileInputStream(file)) {
+                bitmap = BitmapFactory.decodeStream(fis);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return bitmap;
     }
 
-    public static void setBackground(Context context, String str, ViewGroup viewGroup) {
-        if (viewGroup == null) {
+    public static void setBackground(Activity activity) {
+        if (activity == null || activity.getWindow() == null) {
             return;
         }
-        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
+        Bitmap backgroundBitmap = loadFileImage(GlobalSetting.INSTANCE.getBackgroundPic());
+        if (backgroundBitmap != null) {
+            activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), backgroundBitmap));
+        } else if (!PreferenceManager.getDefaultSharedPreferences(activity).getString("skin_list", "original").equals("original")) {
             Bitmap bitmap = null;
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
+                bitmap = BitmapFactory.decodeFile(activity.getDir("Skin", Context.MODE_PRIVATE) + "/ground.jpg");
             } catch (Exception ignored) {
             }
             if (bitmap == null) {
                 try {
-                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+                    bitmap = BitmapFactory.decodeFile(activity.getDir("Skin", Context.MODE_PRIVATE) + "/ground.png");
                 } catch (Exception ignored) {
                 }
                 if (bitmap == null) {
                     try {
-                        bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
+                        bitmap = BitmapFactory.decodeFile(activity.getDir("Skin", Context.MODE_PRIVATE) + "/ground.webp");
                     } catch (Exception ignored) {
                     }
                 }
             }
             if (bitmap != null) {
-                viewGroup.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
             }
         } else {
-            viewGroup.setBackgroundResource(R.drawable.ground);
-        }
-    }
-
-    public static void setBackground(Context context, String str, Window window) {
-        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
-            Bitmap bitmap = null;
-            try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".jpg");
-            } catch (Exception ignored) {
-            }
-            if (bitmap == null) {
-                try {
-                    bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
-                } catch (Exception ignored) {
-                }
-                if (bitmap == null) {
-                    try {
-                        bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".webp");
-                    } catch (Exception ignored) {
-                    }
-                }
-            }
-            if (bitmap != null) {
-                window.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
-            }
-        } else {
-            window.setBackgroundDrawableResource(R.drawable.ground);
+            activity.getWindow().setBackgroundDrawableResource(R.drawable.ground);
         }
     }
 }

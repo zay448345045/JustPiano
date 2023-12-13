@@ -75,7 +75,7 @@ public class OLTopUser extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_top_user);
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         findViewById(R.id.ol_level_b).setOnClickListener(this);
         findViewById(R.id.ol_topUsers_b).setOnClickListener(this);
         findViewById(R.id.ol_topScore_b).setOnClickListener(this);

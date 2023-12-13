@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -135,7 +134,7 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this);
         } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);
             if (fileList.size() != 1) {
@@ -340,9 +339,8 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
-        LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.lo_melody_list, null);
-        setContentView(linearLayout);
-        ImageLoadUtil.setBackground(this, "ground", linearLayout);
+        setContentView(layoutInflater.inflate(R.layout.lo_melody_list, null));
+        ImageLoadUtil.setBackground(this);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);

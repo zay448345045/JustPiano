@@ -250,6 +250,12 @@ object GlobalSetting {
         private set
 
     /**
+     * 背景图
+     */
+    var backgroundPic: String = ""
+        private set
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -310,5 +316,6 @@ object GlobalSetting {
         forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
         waterfallOctaveLine = sharedPreferences.getBoolean("waterfall_octave_line", true)
         waterfallBackgroundPic = sharedPreferences.getString("waterfall_background_pic", "")!!
+        backgroundPic = sharedPreferences.getString("background_pic", "")!!
     }
 }

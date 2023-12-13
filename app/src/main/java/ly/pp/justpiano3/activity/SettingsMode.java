@@ -53,7 +53,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImageLoadUtil.setBackground(this, "ground", getWindow());
+        ImageLoadUtil.setBackground(this);
         getWindow().getDecorView().findViewById(android.R.id.content).setBackgroundResource(R.color.black);
         PreferenceFragment preferenceFragment = preferenceFragmentMap.get(getIntent().getDataString());
         getFragmentManager().beginTransaction().replace(android.R.id.content,
@@ -88,6 +88,19 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                     midiDevicePreference.setSummary("启用/禁用MIDI设备");
                     midiDevicePreference.setEnabled(true);
                 }
+            }
+            Preference backgroundPicPreference = findPreference("background_pic");
+            if (backgroundPicPreference != null) {
+                backgroundPicPreference.setSummary(
+                        GlobalSetting.INSTANCE.getBackgroundPic().isEmpty()
+                                ? "默认背景图" : GlobalSetting.INSTANCE.getBackgroundPic());
+                FilePickerPreference filePickerPreference = (FilePickerPreference) (backgroundPicPreference);
+                filePickerPreference.setActivity(getActivity());
+                filePickerPreference.setDefaultButtonClickListener(view -> {
+                    filePickerPreference.persistFilePath("");
+                    filePickerPreference.setSummary("默认背景图");
+                });
+                filePickerPreferenceMap.put(backgroundPicPreference.getKey(), filePickerPreference);
             }
         }
     }

@@ -41,6 +41,11 @@
             android:summaryOff="&lt;关闭&gt;关闭内容沉浸式显示"
             android:summaryOn="&lt;打开&gt;隐藏状态栏与导航栏，开启内容沉浸式显示"
             android:title="全面屏适配开关" />
+
+        <ly.pp.justpiano3.view.preference.FilePickerPreference
+            android:defaultValue=""
+            android:key="background_pic"
+            android:title="背景图片" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="键盘、声音及MIDI设备">

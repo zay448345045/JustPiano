@@ -192,7 +192,7 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
                 break;
         }
         setContentView(R.layout.play_finish);
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         finishButton = findViewById(R.id.ok);
         finishButton.setOnClickListener(this);
         retryButton = findViewById(R.id.retry);

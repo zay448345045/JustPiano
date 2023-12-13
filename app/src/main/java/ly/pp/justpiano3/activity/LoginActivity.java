@@ -205,8 +205,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);
         Bundle extras = getIntent().getExtras();
-        boolean noAuto = extras == null || extras.getBoolean("no_auto");
-        ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+        ImageLoadUtil.setBackground(this);
         Button loginButton = findViewById(R.id.ol_login);
         loginButton.setOnClickListener(this);
         changeServerCheckBox = findViewById(R.id.ol_change_server);
@@ -223,6 +222,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         rememAccount.setChecked(sharedPreferences.getBoolean("remem_account", false));
         autoLogin = findViewById(R.id.chec_autologin);
         autoLogin.setChecked(sharedPreferences.getBoolean("auto_login", false));
+        boolean noAuto = extras == null || extras.getBoolean("no_auto");
         if (noAuto) {
             autoLogin.setChecked(false);
         }

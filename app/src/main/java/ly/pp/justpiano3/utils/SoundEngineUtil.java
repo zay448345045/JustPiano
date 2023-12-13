@@ -105,6 +105,9 @@ public class SoundEngineUtil {
     }
 
     public static void stopPlaySound(byte pitch) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+            return;
+        }
         if (MidiDeviceUtil.getSustainPedalStatus()) {
             sustainNotePitchMap.put(pitch, (byte) 0);
         } else {

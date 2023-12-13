@@ -300,7 +300,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this, "ground", findViewById(R.id.layout));
+            ImageLoadUtil.setBackground(this);
             keyboardView.changeSkinKeyboardImage(this);
             waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
             waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
