@@ -189,6 +189,9 @@ namespace iolib {
         __android_log_print(ANDROID_LOG_INFO, TAG, "setupAudioStream()");
         mChannelCount = channelCount;
         mSampleRate = sampleRate;
+        mReverbModel.setdamp(0.1f);
+        mReverbModel.setroomsize(0.8f);
+        mReverbModel.setdry(0.5f);
         mRecordingIO->init(channelCount, sampleRate);
         openStream();
     }
@@ -260,23 +263,20 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::setSf2Synth(fluid_handle_t *fluidHandle) {
-        this->mFluidHandle = fluidHandle;
+        mFluidHandle = fluidHandle;
     }
 
     void SimpleMultiPlayer::setReverbValue(int32_t reverb) {
-        this->mReverbValue = reverb;
-        this->mReverbModel.setwet((float) reverb / 250);
-        this->mReverbModel.setdamp(0.1f);
-        this->mReverbModel.setroomsize(0.8f);
-        this->mReverbModel.setdry(0.5f);
+        mReverbValue = reverb;
+        mReverbModel.setwet((float) reverb / 320);
     }
 
     int32_t SimpleMultiPlayer::getReverbValue() const {
-        return this->mReverbValue;
+        return mReverbValue;
     }
 
     void SimpleMultiPlayer::setDelayValue(int32_t delay) {
-        this->mDelayValue = delay;
-        this->mDelayVolumeFactor = 2e-3f / ((float) delay * 3 + 50);
+        mDelayValue = delay;
+        mDelayVolumeFactor = 2e-3f / ((float) delay * 3 + 50);
     }
 }
