@@ -24,7 +24,6 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
-import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
@@ -165,27 +164,6 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
-            Preference soundDelayPreference = findPreference("sound_delay");
-            if (soundDelayPreference != null) {
-                soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    SoundEngineUtil.setDelayValue(Integer.parseInt((String) newValue));
-                    return true;
-                });
-            }
-            Preference soundReverbPreference = findPreference("sound_reverb");
-            if (soundReverbPreference != null) {
-                soundReverbPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    SoundEngineUtil.setReverbValue(Integer.parseInt((String) newValue));
-                    return true;
-                });
-            }
-            Preference forceEnableSustainPedalPreference = findPreference("force_enable_sustain_pedal");
-            if (forceEnableSustainPedalPreference != null) {
-                forceEnableSustainPedalPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    GlobalSetting.INSTANCE.setForceEnableSustainPedal((Boolean) newValue);
-                    return true;
-                });
-            }
         }
     }
 

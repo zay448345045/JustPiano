@@ -265,8 +265,10 @@ namespace iolib {
 
     void SimpleMultiPlayer::setReverbValue(int32_t reverb) {
         this->mReverbValue = reverb;
-        this->mReverbModel.setwet((float) reverb / 100);
-        this->mReverbModel.setroomsize((float) reverb / 100);
+        this->mReverbModel.setwet((float) reverb / 250);
+        this->mReverbModel.setdamp(0.1f);
+        this->mReverbModel.setroomsize(0.8f);
+        this->mReverbModel.setdry(0.5f);
     }
 
     int32_t SimpleMultiPlayer::getReverbValue() const {

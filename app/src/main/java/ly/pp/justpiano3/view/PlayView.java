@@ -291,10 +291,6 @@ public final class PlayView extends SurfaceView implements Callback {
         setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         pianoPlay.setContentView(this);
-        ViewUtil.registerViewLayoutObserver(this, () -> {
-            loadParams();
-            ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
-        });
     }
 
     private void loadPm(byte[] bArr) {
@@ -312,10 +308,6 @@ public final class PlayView extends SurfaceView implements Callback {
         setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         pianoPlay.setContentView(this);
-        ViewUtil.registerViewLayoutObserver(this, () -> {
-            loadParams();
-            ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
-        });
     }
 
     private void buildNoteByPmResult(int tune) {
@@ -887,8 +879,10 @@ public final class PlayView extends SurfaceView implements Callback {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w != oldw || h != oldh) {
-            loadParams();
-            ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
+            ViewUtil.registerViewLayoutObserver(this, () -> {
+                loadParams();
+                ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
+            });
         }
     }
 
