@@ -82,7 +82,6 @@ public final class PlayView extends SurfaceView implements Callback {
     public Bitmap nullImage;
     public byte[] noteArray;
     public byte[] volumeArray;
-    public int arrayLength;
     public Bitmap backgroundImage;
     public Bitmap barImage;
     public float positionAdd15AddAnim;
@@ -104,13 +103,10 @@ public final class PlayView extends SurfaceView implements Callback {
     public byte volume0;
     private int score;
     private LoadBackgroundsThread loadBackgroundsThread;
-    private boolean hideNote;
     private PlayNote judgingNote;
     private int pm_2;
     private int position;
-    private float lastPosition;
     private boolean hasTouched;
-    private int tick;
     private int progressBarHight;
     private int progressBarWidth;
     private String songID;
@@ -257,8 +253,7 @@ public final class PlayView extends SurfaceView implements Callback {
         progressBarImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar");
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar_base");
         Bitmap bitmap = noteImage;
-        float noteSize = GlobalSetting.INSTANCE.getNoteSize();
-        matrix.postScale(noteSize, noteSize);
+        matrix.postScale(GlobalSetting.INSTANCE.getNoteSize(), GlobalSetting.INSTANCE.getNoteSize());
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         noteImage = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
@@ -288,8 +283,6 @@ public final class PlayView extends SurfaceView implements Callback {
         rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
-        arrayLength = tickArray.length;
-        lastPosition = 0;
         if (tune != 0) {
             for (int i = 0; i < tickArray.length; i++) {
                 noteArray[i] += tune;
@@ -316,8 +309,6 @@ public final class PlayView extends SurfaceView implements Callback {
         rightHandDegree = pmSongData.getRightHandDegree();
         songsName = pmSongData.getSongName();
         pm_2 = pmSongData.getGlobalSpeed();
-        arrayLength = tickArray.length;
-        lastPosition = 0;
         setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         pianoPlay.setContentView(this);
@@ -328,6 +319,10 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void buildNoteByPmResult(int tune) {
+        notesList.clear();
+        boolean hideNote = false;
+        float lastPosition = 0;
+        int tick = 0;
         long startTime = System.currentTimeMillis();
         int i3 = 0;
         int actualTime;
@@ -335,15 +330,17 @@ public final class PlayView extends SurfaceView implements Callback {
         int length = 0;
         while (true) {
             int i4 = length;
-            if (i4 < arrayLength) {
+            if (i4 < tickArray.length) {
                 tick += tickArray[i4];
                 actualTime = -tick * pm_2;
                 position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
-                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4],
+                            (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
                     hideNote = true;
                 } else if (lastPosition < position) {
-                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4],
+                            (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
                     hideNote = true;
                 } else {
                     if (lastActualTime - actualTime >= 100 || i4 == 0) {
@@ -357,7 +354,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (noteArray[i4] == 110 + tune && volumeArray[i4] == 3) {
                         trackArray[i4] = 2;
                     }
-                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4], (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
+                    notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4],
+                            (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
                     hideNote = true;
                 }
                 length = i4 + 1;
@@ -370,7 +368,7 @@ public final class PlayView extends SurfaceView implements Callback {
                             pianoPlay.jpprogressbar.setCancelable(false);
                         }
                         pianoPlay.jpprogressbar.setText(String.format(Locale.getDefault(),
-                                "弹奏界面正在准备中...%.2f%%", (float) finalLength / arrayLength * 100));
+                                "弹奏界面正在准备中...%.2f%%", (float) finalLength / tickArray.length * 100));
                         if (!pianoPlay.jpprogressbar.isShowing()) {
                             pianoPlay.jpprogressbar.show();
                         }
@@ -416,13 +414,20 @@ public final class PlayView extends SurfaceView implements Callback {
         f4771bC = new RectF();
         uploadTimeArray = new byte[uploadTime];
         uploadTouchStatusList = new ArrayList<>();
+        if (pianoPlay.playKeyBoardView != null) {
+            if (pianoPlay.playKeyBoardView.getParent() != null) {
+                ((ViewGroup) (pianoPlay.playKeyBoardView.getParent())).removeView(pianoPlay.playKeyBoardView);
+            }
+        }
         pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
         pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
-        pianoPlay.m3785a(pianoPlay.playKind, false);
+        pianoPlay.playTypeAndShowHandle(pianoPlay.playKind, false);
         pianoPlay.isPlayingStart = true;
-        surfaceholder = getHolder();
-        surfaceholder.addCallback(this);
-        surfaceholder.setKeepScreenOn(true);
+        if (surfaceholder == null) {
+            surfaceholder = getHolder();
+            surfaceholder.addCallback(this);
+            surfaceholder.setKeepScreenOn(true);
+        }
     }
 
     public List<Rect> getKeyRectArray() {

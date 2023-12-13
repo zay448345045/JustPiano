@@ -39,7 +39,7 @@
             android:defaultValue="true"
             android:key="all_full_screen_show"
             android:summaryOff="&lt;关闭&gt;关闭内容沉浸式显示"
-            android:summaryOn="&lt;打开&gt;隐藏状态栏与导航栏，开启内容沉浸式显示"
+            android:summaryOn="&lt;打开&gt;内容扩展至状态栏与导航栏，沉浸式显示"
             android:title="全面屏适配开关" />
 
         <ly.pp.justpiano3.view.preference.FilePickerPreference

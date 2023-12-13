@@ -37,7 +37,7 @@ public final class PianoPlayHandler extends Handler {
                     }
                     pianoPlay.mo2905a(pianoPlay.horizontalListView, pianoPlay.gradeList);
                     if (message.arg1 == 0) {
-                        pianoPlay.mo2906a(true);
+                        pianoPlay.playStartHandle(true);
                     }
                 });
                 return;
@@ -84,7 +84,7 @@ public final class PianoPlayHandler extends Handler {
                 post(() -> pianoPlay.playKeyBoardView.updateTouchNoteNum());
                 return;
             case 5:
-                post(() -> pianoPlay.mo2906a(true));
+                post(() -> pianoPlay.playStartHandle(true));
                 return;
             case 6:
                 post(() -> {

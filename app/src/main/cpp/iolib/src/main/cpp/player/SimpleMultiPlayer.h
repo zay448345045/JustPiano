@@ -28,8 +28,7 @@
 #include "SampleBuffer.h"
 #include "RecordingIO.h"
 #include "fluidsynth.h"
-#include "CombFilter.h"
-#include "AllPassFilter.h"
+#include "reverb/revmodel.hpp"
 
 namespace iolib {
 
@@ -126,9 +125,7 @@ namespace iolib {
         int32_t mReverbValue{0};
         int32_t mDelayValue{0};
         float mDelayVolumeFactor{4e-5f};
-
-        std::shared_ptr<CombFilter> mCombFilter{std::make_shared<CombFilter>(0.0f, 0)};
-        std::shared_ptr<AllPassFilter> mAllPassFilter{std::make_shared<AllPassFilter>(0.0f, 0)};
+        revmodel mReverbModel;
 
         void handleSf2DelayNoteOff(int32_t numFrames);
     };

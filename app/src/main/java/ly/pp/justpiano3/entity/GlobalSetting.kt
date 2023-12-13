@@ -25,7 +25,6 @@ object GlobalSetting {
      * 背景图
      */
     var backgroundPic: String = ""
-        private set
 
     /**
      * 当前皮肤名称

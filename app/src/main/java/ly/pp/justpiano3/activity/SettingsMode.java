@@ -101,6 +101,8 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (backgroundPicPreference);
                 filePickerPreference.setActivity(getActivity());
                 filePickerPreference.setDefaultButtonClickListener(view -> {
+                    GlobalSetting.INSTANCE.setBackgroundPic("");
+                    ImageLoadUtil.setBackground(SettingsFragment.this.getActivity());
                     filePickerPreference.persistFilePath("");
                     filePickerPreference.setSummary("默认背景图");
                 });
@@ -110,10 +112,10 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
             Preference allFullScreenShowPreference = findPreference("all_full_screen_show");
             if (allFullScreenShowPreference != null) {
                 allFullScreenShowPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
-                        WindowUtil.fullScreenHandle(((Activity) (preference.getContext())).getWindow());
+                    if ((Boolean) newValue) {
+                        WindowUtil.fullScreenHandle((SettingsFragment.this.getActivity()).getWindow());
                     } else {
-                        WindowUtil.exitFullScreenHandle(((Activity) (preference.getContext())).getWindow());
+                        WindowUtil.exitFullScreenHandle((SettingsFragment.this.getActivity()).getWindow());
                     }
                     return true;
                 });
@@ -249,6 +251,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                     break;
             }
             filePickerPreference.persistFilePath(file.getAbsolutePath());
+            GlobalSetting.INSTANCE.setBackgroundPic(file.getAbsolutePath());
             ImageLoadUtil.setBackground(this);
         }
     }
