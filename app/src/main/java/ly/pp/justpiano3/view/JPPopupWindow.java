@@ -27,6 +27,8 @@ public class JPPopupWindow extends PopupWindow {
         super.showAsDropDown(anchor);
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
         }
     }
 
@@ -35,6 +37,8 @@ public class JPPopupWindow extends PopupWindow {
         super.showAsDropDown(anchor, xoff, yoff);
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
         }
     }
 
@@ -43,6 +47,8 @@ public class JPPopupWindow extends PopupWindow {
         super.showAsDropDown(anchor, xoff, yoff, gravity);
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
         }
     }
 
@@ -51,6 +57,8 @@ public class JPPopupWindow extends PopupWindow {
         super.showAtLocation(parent, gravity, x, y);
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
         }
     }
 }

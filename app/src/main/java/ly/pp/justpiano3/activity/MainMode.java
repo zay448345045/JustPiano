@@ -27,6 +27,7 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public class MainMode extends BaseActivity implements OnClickListener {
@@ -133,6 +134,11 @@ public class MainMode extends BaseActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this);
+            if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                WindowUtil.fullScreenHandle(getWindow());
+            } else {
+                WindowUtil.exitFullScreenHandle(getWindow());
+            }
         } else if (requestCode == PERMISSION_REQUEST_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (Environment.isExternalStorageManager()) {

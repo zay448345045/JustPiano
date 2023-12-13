@@ -16,14 +16,20 @@ public class BaseActivity extends ComponentActivity {
         ImageLoadUtil.setBackground(this);
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(getWindow());
         }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && GlobalSetting.INSTANCE.getAllFullScreenShow()) {
-            WindowUtil.fullScreenHandle(getWindow());
+        if (hasFocus) {
+            if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                WindowUtil.fullScreenHandle(getWindow());
+            } else {
+                WindowUtil.exitFullScreenHandle(getWindow());
+            }
         }
     }
 }

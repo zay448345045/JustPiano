@@ -25,7 +25,6 @@ import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
 public class JustPiano extends BaseActivity implements Callback, Runnable {
@@ -153,7 +152,6 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
         justpianoview.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(justpianoview);
-        ViewUtil.registerViewLayoutObserver(justpianoview, () -> justpianoview.init());
         Message obtainMessage = handler.obtainMessage();
         obtainMessage.what = 0;
         handler.sendMessage(obtainMessage);

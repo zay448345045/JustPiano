@@ -87,7 +87,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public ImageButton startPlayButton;
     public PlayView playView;
     public double onlineRightHandDegree;
-    public int score;
+    private int score;
     public View finishView;
     private View miniScoreView;
     public LayoutParams layoutParams2;
@@ -111,7 +111,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     }
 
     public void m3785a(int i, boolean z) {
-        if (z) {  //仅显示对话框就行了，其他不做不分析，用于按下后退键时
+        if (z) {  // 仅显示对话框就行了，其他不做不分析，用于按下后退键时
             if (i == 0) {
                 if (rightHandDegreeTextView == null) {
                     rightHandDegreeTextView = findViewById(R.id.m_nandu);
@@ -138,7 +138,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         startPlayButton = findViewById(R.id.p_start);
         songName.setText(songsName);
         switch (i) {
-            case 0:    //本地
+            case 0:    // 本地
                 startPlayButton.setOnClickListener(v -> {
                     rightHandDegreeTextView.setVisibility(View.GONE);
                     highScoreTextView.setVisibility(View.GONE);
@@ -151,7 +151,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 String str2 = localSongsTime % 60 >= 10 ? "" + localSongsTime % 60 : "0" + localSongsTime % 60;
                 songLengthTextView.setText("曲目时长:" + str1 + ":" + str2);
                 return;
-            case 1:    //在线曲库
+            case 1:    // 在线曲库
                 startPlayButton.setOnClickListener(v -> {
                     rightHandDegreeTextView.setVisibility(View.GONE);
                     highScoreTextView.setVisibility(View.GONE);
@@ -162,7 +162,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 leftHandDegreeTextView.setVisibility(View.GONE);
                 return;
-            case 2:    //联网对战
+            case 2:    // 联网对战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
@@ -187,7 +187,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance());
                 songName.setOnClickListener(v -> sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance()));
                 return;
-            case 3:    //考级
+            case 3:    // 考级
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
@@ -201,7 +201,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 builder.setType(2);
                 sendMsg(OnlineProtocolType.CL_TEST, builder.build());
                 return;
-            case 4:    //挑战
+            case 4:    // 挑战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);

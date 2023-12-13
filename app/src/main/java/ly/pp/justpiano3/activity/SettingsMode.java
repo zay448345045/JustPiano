@@ -24,6 +24,7 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
@@ -60,6 +61,8 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                 preferenceFragment == null ? new SettingsFragment() : preferenceFragment).commit();
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(getWindow());
         }
     }
 
@@ -89,6 +92,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                     midiDevicePreference.setEnabled(true);
                 }
             }
+            // 背景图设置项初始化
             Preference backgroundPicPreference = findPreference("background_pic");
             if (backgroundPicPreference != null) {
                 backgroundPicPreference.setSummary(
@@ -101,6 +105,18 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                     filePickerPreference.setSummary("默认背景图");
                 });
                 filePickerPreferenceMap.put(backgroundPicPreference.getKey(), filePickerPreference);
+            }
+            // 全面屏设置项开关监听
+            Preference allFullScreenShowPreference = findPreference("all_full_screen_show");
+            if (allFullScreenShowPreference != null) {
+                allFullScreenShowPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                        WindowUtil.fullScreenHandle(((Activity) (preference.getContext())).getWindow());
+                    } else {
+                        WindowUtil.exitFullScreenHandle(((Activity) (preference.getContext())).getWindow());
+                    }
+                    return true;
+                });
             }
         }
     }
@@ -147,6 +163,27 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
+            Preference soundDelayPreference = findPreference("sound_delay");
+            if (soundDelayPreference != null) {
+                soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    SoundEngineUtil.setDelayValue(Integer.parseInt((String) newValue));
+                    return true;
+                });
+            }
+            Preference soundReverbPreference = findPreference("sound_reverb");
+            if (soundReverbPreference != null) {
+                soundReverbPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    SoundEngineUtil.setReverbValue(Integer.parseInt((String) newValue));
+                    return true;
+                });
+            }
+            Preference forceEnableSustainPedalPreference = findPreference("force_enable_sustain_pedal");
+            if (forceEnableSustainPedalPreference != null) {
+                forceEnableSustainPedalPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    GlobalSetting.INSTANCE.setForceEnableSustainPedal((Boolean) newValue);
+                    return true;
+                });
+            }
         }
     }
 
@@ -195,6 +232,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
             // 具体的文件选择项的文件格式校验，校验通过后执行存储
             switch (filePickerPreference.getKey()) {
                 case "waterfall_background_pic":
+                case "background_pic":
                     if (!file.exists() || (!file.getName().endsWith(".jpg")
                             && !file.getName().endsWith(".jpeg") && !file.getName().endsWith(".png"))) {
                         Toast.makeText(this, "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
@@ -211,6 +249,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                     break;
             }
             filePickerPreference.persistFilePath(file.getAbsolutePath());
+            ImageLoadUtil.setBackground(this);
         }
     }
 

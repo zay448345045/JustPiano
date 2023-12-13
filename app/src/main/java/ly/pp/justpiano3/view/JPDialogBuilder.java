@@ -222,6 +222,8 @@ public final class JPDialogBuilder {
                 Window window = dialog.getWindow();
                 if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
                     WindowUtil.fullScreenHandle(window);
+                } else {
+                    WindowUtil.exitFullScreenHandle(window);
                 }
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
                 layoutParams.width = UnitConvertUtil.dp2px(context, this.width);

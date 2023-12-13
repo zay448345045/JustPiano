@@ -45,7 +45,7 @@ public class JustPianoView extends View {
         jpapplication = jPApplication;
     }
 
-    public void init() {
+    private void init() {
         allScreenRect = new RectF(0, 0, getWidth(), getHeight());
         try {
             logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.webp"));
@@ -81,8 +81,19 @@ public class JustPianoView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w != oldw || h != oldh) {
+            init();
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (allScreenRect == null) {
+            init();
+        }
         int progressOne = (getWidth() * progress) / 88;
         canvas.drawBitmap(logoBitmap, null, allScreenRect, null);
         canvas.drawBitmap(progressBarBaseBitmap, null, progressBarRect, null);

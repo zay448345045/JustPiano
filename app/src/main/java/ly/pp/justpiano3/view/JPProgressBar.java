@@ -72,6 +72,8 @@ public final class JPProgressBar extends Dialog {
         super.show();
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(getWindow());
         }
         if (!StringUtil.isNullOrEmpty(text)) {
             textView.setText(text);

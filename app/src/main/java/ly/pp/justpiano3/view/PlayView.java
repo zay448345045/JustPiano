@@ -136,7 +136,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private Rect f4769bA;
     private Rect f4770bB;
     private RectF f4771bC;
-    private RectF f4772bD;
+    private RectF scoreRectF;
     private Rect f4773bE;
     private RectF f4774bF;
     private int uploadTime;
@@ -409,7 +409,7 @@ public final class PlayView extends SurfaceView implements Callback {
         progressBarWidth = progressBarImage.getWidth();
         f4801bz = new Rect();
         f4769bA = new Rect();
-        f4772bD = new RectF();
+        scoreRectF = new RectF();
         f4773bE = new Rect();
         f4774bF = new RectF();
         f4770bB = new Rect();
@@ -841,9 +841,9 @@ public final class PlayView extends SurfaceView implements Callback {
         while (true) {
             i5 = e;
             if (i5 >= 6) {
-                f4772bD.set((float) ((getWidth() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
+                scoreRectF.set((float) ((getWidth() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
                         (float) (getWidth() - (i2 * 6) - TOTAL_SCORE_SHOW_OFFSET), scoreImage.getHeight());
-                canvas.drawBitmap(scoreImage, null, f4772bD, null);
+                canvas.drawBitmap(scoreImage, null, scoreRectF, null);
                 return;
             }
             e = currentTotalScoreNumberList.get(i5);
@@ -877,6 +877,13 @@ public final class PlayView extends SurfaceView implements Callback {
     @Override
     public void findViewsWithText(ArrayList<View> outViews, CharSequence searched, int flags) {
         outViews.remove(this);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        screenWidth = w;
+        screenHeight = h;
     }
 
     @Override

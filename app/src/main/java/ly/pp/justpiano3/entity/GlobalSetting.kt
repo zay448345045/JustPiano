@@ -214,7 +214,7 @@ object GlobalSetting {
         private set
 
     /**
-     * 曲谱播放时是否显示通知栏
+     * 曲谱播放时是否显示通知栏，目前未使用
      */
     var showNotification: Boolean = false
         private set
@@ -241,7 +241,6 @@ object GlobalSetting {
      * 是否强制开启延音踏板
      */
     var forceEnableSustainPedal: Boolean = false
-        private set
 
     /**
      * 是否显示瀑布流八度虚线
