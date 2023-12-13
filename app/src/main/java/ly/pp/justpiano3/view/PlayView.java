@@ -107,7 +107,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private int pm_2;
     private int position;
     private boolean hasTouched;
-    private int progressBarHight;
+    private int progressBarHeight;
     private int progressBarWidth;
     private String songID;
     private float perfectStandard;
@@ -157,6 +157,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private Bitmap scoreNumImage;
     private Bitmap xImage;
     private Bitmap maxImage;
+    private int tune;
 
     public PlayView(Context context) {
         super(context);
@@ -176,6 +177,7 @@ public final class PlayView extends SurfaceView implements Callback {
         leftHandDegree = d2;
         score = i;
         songsTime = i5;
+        this.tune = tune;
         try {
             loadPm(context, str, tune);
         } catch (Exception e) {
@@ -395,7 +397,7 @@ public final class PlayView extends SurfaceView implements Callback {
         width5Div8 = getWidth() / 1.6f;
         width6Div8 = getWidth() * 0.75f;
         width8Div8 = getWidth();
-        progressBarHight = progressBarImage.getHeight();
+        progressBarHeight = progressBarImage.getHeight();
         progressBarWidth = progressBarImage.getWidth();
         f4801bz = new Rect();
         f4769bA = new Rect();
@@ -595,10 +597,10 @@ public final class PlayView extends SurfaceView implements Callback {
     public void drawProgressAndFinish(int progress, Canvas canvas) {
         float size = (float) progress / (getHeight() - whiteKeyHeight - position) * getWidth();
         if (canvas != null) {
-            f4773bE.set(0, 0, progressBarWidth, progressBarHight);
-            f4774bF.set(0, 0, (float) getWidth(), (float) progressBarHight);
+            f4773bE.set(0, 0, progressBarWidth, progressBarHeight);
+            f4774bF.set(0, 0, (float) getWidth(), (float) progressBarHeight);
             canvas.drawBitmap(progressBarBaseImage, null, f4774bF, null);
-            f4774bF.set(0, 0, size, (float) progressBarHight);
+            f4774bF.set(0, 0, size, (float) progressBarHeight);
             canvas.drawBitmap(progressBarImage, f4773bE, f4774bF, null);
         }
         if (notesList.size() == 0) {
@@ -823,32 +825,34 @@ public final class PlayView extends SurfaceView implements Callback {
                 e.printStackTrace();
             }
         }
-        int i5 = showScoreAndLevelsThread.levelScore;
-        int i6 = 0;
-        i = scoreImage.getWidth();
-        i2 = scoreNumImage.getWidth() / 10;
-        i3 = scoreNumImage.getHeight();
-        currentTotalScoreNumberList.clear();
-        int e = Math.max(i5, 0);
-        for (i5 = 0; i5 < 6; i5++) {
-            currentTotalScoreNumberList.add(i5, (int) ((((double) e) % Math.pow(10, i5 + 1)) / Math.pow(10, i5)));
-        }
-        e = 0;
-        while (true) {
-            i5 = e;
-            if (i5 >= 6) {
-                scoreRectF.set((float) ((getWidth() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
-                        (float) (getWidth() - (i2 * 6) - TOTAL_SCORE_SHOW_OFFSET), scoreImage.getHeight());
-                canvas.drawBitmap(scoreImage, null, scoreRectF, null);
-                return;
+        if (canvas != null) {
+            int i5 = showScoreAndLevelsThread.levelScore;
+            int i6 = 0;
+            i = scoreImage.getWidth();
+            i2 = scoreNumImage.getWidth() / 10;
+            i3 = scoreNumImage.getHeight();
+            currentTotalScoreNumberList.clear();
+            int e = Math.max(i5, 0);
+            for (i5 = 0; i5 < 6; i5++) {
+                currentTotalScoreNumberList.add(i5, (int) ((((double) e) % Math.pow(10, i5 + 1)) / Math.pow(10, i5)));
             }
-            e = currentTotalScoreNumberList.get(i5);
-            f4801bz.set(e * i2, 0, (e + 1) * i2, i3);
-            f4769bA.set(getWidth() - ((i6 + 1) * i2) - TOTAL_SCORE_SHOW_OFFSET, 0,
-                    getWidth() - (i2 * i6) - TOTAL_SCORE_SHOW_OFFSET, i3);
-            canvas.drawBitmap(scoreNumImage, f4801bz, f4769bA, null);
-            i6++;
-            e = i5 + 1;
+            e = 0;
+            while (true) {
+                i5 = e;
+                if (i5 >= 6) {
+                    scoreRectF.set((float) ((getWidth() - (i2 * 6)) - i - TOTAL_SCORE_SHOW_OFFSET), 0,
+                            (float) (getWidth() - (i2 * 6) - TOTAL_SCORE_SHOW_OFFSET), scoreImage.getHeight());
+                    canvas.drawBitmap(scoreImage, null, scoreRectF, null);
+                    return;
+                }
+                e = currentTotalScoreNumberList.get(i5);
+                f4801bz.set(e * i2, 0, (e + 1) * i2, i3);
+                f4769bA.set(getWidth() - ((i6 + 1) * i2) - TOTAL_SCORE_SHOW_OFFSET, 0,
+                        getWidth() - (i2 * i6) - TOTAL_SCORE_SHOW_OFFSET, i3);
+                canvas.drawBitmap(scoreNumImage, f4801bz, f4769bA, null);
+                i6++;
+                e = i5 + 1;
+            }
         }
     }
 
@@ -881,7 +885,7 @@ public final class PlayView extends SurfaceView implements Callback {
         if (w != oldw || h != oldh) {
             ViewUtil.registerViewLayoutObserver(this, () -> {
                 loadParams();
-                ThreadPoolUtil.execute(() -> buildNoteByPmResult(0));
+                ThreadPoolUtil.execute(() -> buildNoteByPmResult(tune));
             });
         }
     }
