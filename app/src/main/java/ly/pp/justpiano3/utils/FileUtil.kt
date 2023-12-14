@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.utils
 
-import android.annotation.SuppressLint
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
@@ -74,18 +73,8 @@ object FileUtil {
             )
         ) return getDataColumn(context, uri)
 
-        @SuppressLint("ObsoleteSdkInt")
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-
-        // Before 4.4 , API 19 content:// 开头, 比如 content://media/external/images/media/123
-        if (!isKitKat && ContentResolver.SCHEME_CONTENT.equals(uri.scheme, true)) {
-            if (isGooglePhotosUri(uri)) return uri.lastPathSegment
-            return getDataColumn(context, uri)
-        }
-
-        // After 4.4 , API 19
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -99,21 +88,18 @@ object FileUtil {
                     return if (file.exists()) {
                         file.absolutePath
                     } else {
-                        @Suppress("DEPRECATION")
                         Environment.getExternalStorageDirectory()
                             .toString() + File.separator + split[1]
                     }
                 } else if ("home".equals(type, ignoreCase = true)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
                             .toString() + File.separator + "documents" + File.separator + split[1]
                     } else {
-                        @Suppress("DEPRECATION")
-                        return Environment.getExternalStorageDirectory()
+                        Environment.getExternalStorageDirectory()
                             .toString() + File.separator + "documents" + File.separator + split[1]
                     }
                 } else {
-                    @Suppress("DEPRECATION")
                     val sdcardPath =
                         Environment.getExternalStorageDirectory()
                             .toString() + File.separator + "documents" + File.separator + split[1]

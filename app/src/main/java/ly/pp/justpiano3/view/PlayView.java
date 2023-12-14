@@ -357,21 +357,21 @@ public final class PlayView extends SurfaceView implements Callback {
                     startTime = System.currentTimeMillis();
                     int finalLength = length;
                     pianoPlay.runOnUiThread(() -> {
-                        if (pianoPlay.jpprogressbar == null) {
-                            pianoPlay.jpprogressbar = new JPProgressBar(pianoPlay);
-                            pianoPlay.jpprogressbar.setCancelable(false);
+                        if (pianoPlay.jpProgressbar == null) {
+                            pianoPlay.jpProgressbar = new JPProgressBar(pianoPlay);
+                            pianoPlay.jpProgressbar.setCancelable(false);
                         }
-                        pianoPlay.jpprogressbar.setText(String.format(Locale.getDefault(),
+                        pianoPlay.jpProgressbar.setText(String.format(Locale.getDefault(),
                                 "弹奏界面正在准备中...%.2f%%", (float) finalLength / tickArray.length * 100));
-                        if (!pianoPlay.jpprogressbar.isShowing()) {
-                            pianoPlay.jpprogressbar.show();
+                        if (!pianoPlay.jpProgressbar.isShowing()) {
+                            pianoPlay.jpProgressbar.show();
                         }
                     });
                 }
             } else {
                 pianoPlay.runOnUiThread(() -> {
-                    if (pianoPlay.jpprogressbar != null && pianoPlay.jpprogressbar.isShowing()) {
-                        pianoPlay.jpprogressbar.dismiss();
+                    if (pianoPlay.jpProgressbar != null && pianoPlay.jpProgressbar.isShowing()) {
+                        pianoPlay.jpProgressbar.dismiss();
                     }
                 });
                 return;

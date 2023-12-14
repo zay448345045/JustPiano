@@ -105,7 +105,7 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFile
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValue(
         JNIEnv *env, jclass, jint reverbValue) {
     sDTPlayer.setReverbValue(reverbValue);
-    if (handle != nullptr && handle->settings != nullptr) {
+    if (handle != nullptr && handle->settings != nullptr && handle->synth != nullptr) {
         fluid_settings_setnum(handle->settings, "synth.reverb.active", reverbValue == 0 ? 0 : 1);
         fluid_settings_setnum(handle->settings, "synth.reverb.room-size", 0.8f);
         fluid_settings_setnum(handle->settings, "synth.reverb.damping", (float) reverbValue / 100);

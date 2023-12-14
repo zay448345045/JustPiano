@@ -83,7 +83,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public boolean isPlayingStart;
     public boolean isBack;
     public boolean f4620k;
-    public JPProgressBar jpprogressbar;
+    public JPProgressBar jpProgressbar;
     public ImageButton startPlayButton;
     public PlayView playView;
     public double onlineRightHandDegree;
@@ -103,9 +103,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public int playKind;
     private final Map<Byte, Pair<Byte, Long>> playingPitchMap = new ConcurrentHashMap<>();
 
-    private List<Bundle> sortByField(List<Bundle> list, String str) {
+    private List<Bundle> sortByField(List<Bundle> list, String field) {
         if (list != null && !list.isEmpty()) {
-            Collections.sort(list, (o1, o2) -> Integer.valueOf((String) o2.get(str)).compareTo(Integer.valueOf((String) o1.get(str))));
+            Collections.sort(list, (o1, o2) -> Integer.valueOf((String) o2.get(field)).compareTo(Integer.valueOf((String) o1.get(field))));
         }
         return list;
     }
