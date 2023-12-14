@@ -65,9 +65,6 @@ namespace iolib {
                 mRecordingIO->write_buffer(mMixBuffer, numFrames);
             }
         }
-        if (mLatencyTuner != nullptr) {
-            mLatencyTuner->tune();
-        }
         return DataCallbackResult::Continue;
     }
 
@@ -189,9 +186,6 @@ namespace iolib {
             return false;
         }
 
-        // Enable a device specific CPU performance hint.
-        mAudioStream->setPerformanceHintEnabled(true);
-
         // Reduce stream latency by setting the buffer size to a multiple of the burst size
         // Note: this will fail with ErrorUnimplemented if we are using a callback with OpenSL ES
         // See AudioStreamBuffered::setBufferSizeInFrames
@@ -203,8 +197,6 @@ namespace iolib {
                     TAG,
                     "setBufferSizeInFrames failed. Error: %s", convertToText(result));
         }
-        // Create a latency tuner which will automatically tune our buffer size.
-        mLatencyTuner = std::make_unique<oboe::LatencyTuner>(*mAudioStream);
 
         result = mAudioStream->requestStart();
         if (result != Result::OK) {

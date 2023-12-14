@@ -134,7 +134,6 @@ namespace iolib {
         revmodel mReverbModel;
 
         void handleSf2DelayNoteOff(int32_t numFrames);
-        std::unique_ptr<oboe::LatencyTuner> mLatencyTuner;
     };
 }
 #endif //_PLAYER_SIMIPLEMULTIPLAYER_H_
