@@ -65,6 +65,9 @@ namespace iolib {
                 mRecordingIO->write_buffer(mMixBuffer, numFrames);
             }
         }
+        if (mLatencyTuner != nullptr) {
+            mLatencyTuner->tune();
+        }
         return DataCallbackResult::Continue;
     }
 
@@ -127,9 +130,37 @@ namespace iolib {
 
     void SimpleMultiPlayer::onErrorAfterClose(AudioStream *oboeStream, Result error) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "==== onErrorAfterClose() error:%d", error);
+        if (error == Result::ErrorDisconnected) {
+            restartStream();
+        }
+    }
 
-        resetAll();
-        openStream();
+    void SimpleMultiPlayer::restartStream() {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "Restarting stream");
+        if (mRestartingLock.try_lock()) {
+            resetAll();
+            closeOutputStream();
+            openStream();
+            mRestartingLock.unlock();
+        } else {
+            __android_log_print(ANDROID_LOG_WARN, TAG, "Restart stream operation already in progress - ignoring this request");
+            // We were unable to obtain the restarting lock which means the restart operation is currently
+            // active. This is probably because we received successive "stream disconnected" events.
+            // Internal issue b/63087953
+        }
+    }
+
+    void SimpleMultiPlayer::closeOutputStream() {
+        if (mAudioStream != nullptr) {
+            Result result = mAudioStream->requestStop();
+            if (result != Result::OK) {
+                __android_log_print(ANDROID_LOG_ERROR, TAG, "Error stopping output stream. %s", convertToText(result));
+            }
+            result = mAudioStream->close();
+            if (result != Result::OK) {
+                __android_log_print(ANDROID_LOG_ERROR, TAG, "Error closing output stream. %s", convertToText(result));
+            }
+        }
     }
 
     void SimpleMultiPlayer::onErrorBeforeClose(AudioStream *, Result error) {
@@ -144,13 +175,13 @@ namespace iolib {
         builder.setChannelCount(mChannelCount);
         builder.setSampleRate(mSampleRate);
         builder.setCallback(this);
-        builder.setFormat(oboe::AudioFormat::Float);
+        builder.setFormat(AudioFormat::Float);
         builder.setPerformanceMode(PerformanceMode::LowLatency);
         builder.setSharingMode(SharingMode::Exclusive);
         builder.setSampleRateConversionQuality(SampleRateConversionQuality::Medium);
 
         Result result = builder.openStream(mAudioStream);
-        if (result != Result::OK) {
+        if (result != Result::OK || mAudioStream == nullptr) {
             __android_log_print(
                     ANDROID_LOG_ERROR,
                     TAG,
@@ -163,7 +194,7 @@ namespace iolib {
 
         // Reduce stream latency by setting the buffer size to a multiple of the burst size
         // Note: this will fail with ErrorUnimplemented if we are using a callback with OpenSL ES
-        // See oboe::AudioStreamBuffered::setBufferSizeInFrames
+        // See AudioStreamBuffered::setBufferSizeInFrames
         result = mAudioStream->setBufferSizeInFrames(
                 mAudioStream->getFramesPerBurst() * kBufferSizeInBursts);
         if (result != Result::OK) {
@@ -172,6 +203,8 @@ namespace iolib {
                     TAG,
                     "setBufferSizeInFrames failed. Error: %s", convertToText(result));
         }
+        // Create a latency tuner which will automatically tune our buffer size.
+        mLatencyTuner = std::make_unique<oboe::LatencyTuner>(*mAudioStream);
 
         result = mAudioStream->requestStart();
         if (result != Result::OK) {

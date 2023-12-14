@@ -50,6 +50,7 @@ namespace iolib {
 
         ~SimpleMultiPlayer() {
             delete mMixBuffer;
+            closeOutputStream();
         }
 
         // Inherited from oboe::AudioStreamCallback
@@ -64,7 +65,11 @@ namespace iolib {
 
         void teardownAudioStream();
 
+        void closeOutputStream();
+
         bool openStream();
+
+        void restartStream();
 
         // Wave Sample Loading...
         /**
@@ -103,6 +108,7 @@ namespace iolib {
     private:
         // Oboe Audio Stream
         std::shared_ptr<oboe::AudioStream> mAudioStream;
+        std::mutex mRestartingLock;
 
         // Audio attributes
         int32_t mChannelCount;
@@ -128,6 +134,7 @@ namespace iolib {
         revmodel mReverbModel;
 
         void handleSf2DelayNoteOff(int32_t numFrames);
+        std::unique_ptr<oboe::LatencyTuner> mLatencyTuner;
     };
 }
 #endif //_PLAYER_SIMIPLEMULTIPLAYER_H_
