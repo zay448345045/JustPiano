@@ -54,6 +54,7 @@ import ly.pp.justpiano3.task.LocalDataImportExportTask;
 import ly.pp.justpiano3.task.SongSyncTask;
 import ly.pp.justpiano3.thread.SongPlay;
 import ly.pp.justpiano3.utils.FilePickerUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -136,28 +137,28 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this);
         } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            List<File> fileList = FilePickerUtil.getFilesFromIntent(this, data);
-            if (fileList.size() != 1) {
+            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
+            if (uriInfoList.size() != 1) {
                 return;
             }
-            File midiFile = fileList.get(0);
-            if (!midiFile.exists() || !(midiFile.getName().endsWith(".mid") || midiFile.getName().endsWith(".midi"))) {
+            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+            if (uriInfo.getFileName() == null || !(uriInfo.getFileName().endsWith(".mid") || uriInfo.getFileName().endsWith(".midi"))) {
                 Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String songName = midiFile.getName().substring(0, midiFile.getName().indexOf('.'));
+            String songName = uriInfo.getFileName().substring(0, uriInfo.getFileName().indexOf('.'));
             File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
             if (pmFile.exists()) {
                 Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (!pmFile.getParentFile().exists()) {
+            if (pmFile.getParentFile() != null && !pmFile.getParentFile().exists()) {
                 pmFile.getParentFile().mkdirs();
             }
-            if (midiFile.length() > 2 * 1024 * 1024) {
+            if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 2 * 1024 * 1024) {
                 Toast.makeText(this, "不接受大小超过2M的midi文件", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (midiFile.length() > 256 * 1024) {
+            } else if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 256 * 1024) {
                 Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
             }
             jpProgressBar.setCancelable(false);
@@ -165,7 +166,7 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
             ThreadPoolUtil.execute(() -> {
                 String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
                 try {
-                    SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(midiFile, pmFile);
+                    SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(this, uriInfo.getFileName(), uriInfo.getUri(), pmFile);
                     if (!pmFile.exists()) {
                         throw new RuntimeException("导入《" + songName + "》失败，请确认midi文件是否合法");
                     }

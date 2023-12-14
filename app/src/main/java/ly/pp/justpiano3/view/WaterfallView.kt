@@ -10,6 +10,7 @@ import android.graphics.Path
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.RectF
+import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -174,7 +175,7 @@ class WaterfallView @JvmOverloads constructor(
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
-        backgroundImage = ImageLoadUtil.loadFileImage(GlobalSetting.waterfallBackgroundPic)
+        backgroundImage = ImageLoadUtil.loadFileImage(context, Uri.parse(GlobalSetting.waterfallBackgroundPic))
         if (backgroundImage == null) {
             backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
         }

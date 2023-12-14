@@ -50,8 +50,8 @@ public class FilePickerPreference extends Preference {
         this.activity = activity;
     }
 
-    public void persistFilePath(String value) {
-        setSummary(value);
+    public void persist(String showName, String value) {
+        setSummary(showName);
         persistString(value);
     }
 

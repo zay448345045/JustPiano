@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -405,12 +406,10 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (!ChatBlackUserUtil.isUserInChatBlackList(this, message.getData().getString("U"))) {
             msgList.add(message.getData());
         }
-
         // 聊天音效播放
         if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), jpapplication.getKitiName())) {
-            SoundEffectPlayUtil.playSoundEffect(this, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
+            SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
-
         // 聊天记录存储
         if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
             try {

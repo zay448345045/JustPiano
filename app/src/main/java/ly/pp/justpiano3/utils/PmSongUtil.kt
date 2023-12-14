@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.utils
 
 import android.content.Context
+import android.net.Uri
 import ly.pp.justpiano3.entity.OriginalNote
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.SongData
@@ -187,8 +188,8 @@ object PmSongUtil {
      * @param pmFile   pm文件
      * @return 曲谱信息
      */
-    fun midiFileToPmFile(midiFile: File, pmFile: File): SongData {
-        val originalNoteList = parseMidiOriginalNote(midiFile)
+    fun midiFileToPmFile(context: Context, name: String, midiUri: Uri, pmFile: File): SongData {
+        val originalNoteList = parseMidiOriginalNote(context, midiUri)
             .sortedBy { originalNote -> originalNote.playTime }
         // 获取左手和右手的音符列表
         val leftHandNoteList: MutableList<OriginalNote> = ArrayList()
@@ -200,7 +201,7 @@ object PmSongUtil {
                 rightHandNoteList.add(originalNote)
             }
         }
-        val songName = midiFile.name.substring(0, midiFile.name.indexOf('.'))
+        val songName = name.substring(0, name.indexOf('.'))
         val rightHandDegree = calculateDegree(rightHandNoteList)
         val leftHandDegree = calculateDegree(leftHandNoteList)
         return SongData(
@@ -211,8 +212,7 @@ object PmSongUtil {
             0,
             0,
             0,
-            createPmFile(pmFile, songName, rightHandDegree, leftHandDegree, originalNoteList),
-            midiFile
+            createPmFile(pmFile, songName, rightHandDegree, leftHandDegree, originalNoteList)
         )
     }
 
@@ -259,10 +259,11 @@ object PmSongUtil {
     /**
      * 解析midi，输出原始音符列表
      */
-    private fun parseMidiOriginalNote(midiFile: File): List<OriginalNote> {
+    private fun parseMidiOriginalNote(context: Context, midiUri: Uri): List<OriginalNote> {
         val originalNoteList: MutableList<OriginalNote> = ArrayList()
         // midi文件转化为midi序列，相当于解析了
-        val sequence = StandardMidiFileReader().getSequence(midiFile)
+        val sequence =
+            StandardMidiFileReader().getSequence(context.contentResolver.openInputStream(midiUri))
         // 这个缓存就在计算midi中所有的速度变化事件，计算好了之后缓存下来，传入，就不用每次都计算了，提性能用的
         val tempoCache = MidiUtil.TempoCache(sequence)
         // 提取midi的所有音轨，过滤掉无音符的音轨

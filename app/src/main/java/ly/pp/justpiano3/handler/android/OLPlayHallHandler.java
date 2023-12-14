@@ -2,6 +2,7 @@ package ly.pp.justpiano3.handler.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -70,7 +71,7 @@ public final class OLPlayHallHandler extends Handler {
 
                     // 聊天音效播放
                     if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
-                        SoundEffectPlayUtil.playSoundEffect(olPlayHall, new File(GlobalSetting.INSTANCE.getChatsSoundFile()));
+                        SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
                     }
 
                     // 聊天记录存储

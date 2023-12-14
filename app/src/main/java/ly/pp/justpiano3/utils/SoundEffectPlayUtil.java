@@ -6,7 +6,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import java.io.File;
 import java.io.IOException;
 
 public class SoundEffectPlayUtil {
@@ -18,16 +17,14 @@ public class SoundEffectPlayUtil {
     private static MediaPlayer mediaPlayer;
     private static boolean isPlaying = false;
 
-    public static void playSoundEffect(Context context, File soundFile) {
+    public static void playSoundEffect(Context context, Uri soundUri) {
         if (isPlaying) {
             stopPlaySoundEffect();
         }
-
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
         try {
-            mediaPlayer.setDataSource(context, Uri.fromFile(soundFile));
+            mediaPlayer.setDataSource(context, soundUri);
             mediaPlayer.prepare();
             mediaPlayer.start();
             isPlaying = true;
