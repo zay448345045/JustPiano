@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import ly.pp.justpiano3.JPApplication;
@@ -317,7 +316,6 @@ public final class PlayView extends SurfaceView implements Callback {
         boolean hideNote = false;
         float lastPosition = 0;
         int tick = 0;
-        long startTime = System.currentTimeMillis();
         int i3 = 0;
         int actualTime;
         int lastActualTime = 0;
@@ -353,27 +351,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     hideNote = true;
                 }
                 length = i4 + 1;
-                if (System.currentTimeMillis() - startTime > 200) {
-                    startTime = System.currentTimeMillis();
-                    int finalLength = length;
-                    pianoPlay.runOnUiThread(() -> {
-                        if (pianoPlay.jpProgressbar == null) {
-                            pianoPlay.jpProgressbar = new JPProgressBar(pianoPlay);
-                            pianoPlay.jpProgressbar.setCancelable(false);
-                        }
-                        pianoPlay.jpProgressbar.setText(String.format(Locale.getDefault(),
-                                "弹奏界面正在准备中...%.2f%%", (float) finalLength / tickArray.length * 100));
-                        if (!pianoPlay.jpProgressbar.isShowing()) {
-                            pianoPlay.jpProgressbar.show();
-                        }
-                    });
-                }
             } else {
-                pianoPlay.runOnUiThread(() -> {
-                    if (pianoPlay.jpProgressbar != null && pianoPlay.jpProgressbar.isShowing()) {
-                        pianoPlay.jpProgressbar.dismiss();
-                    }
-                });
                 return;
             }
         }

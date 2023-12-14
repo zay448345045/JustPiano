@@ -63,17 +63,14 @@ public final class OLPlayHallHandler extends Handler {
                         time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
                     }
                     message.getData().putString("TIME", time);
-
                     // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
                     if (!ChatBlackUserUtil.isUserInChatBlackList(olPlayHall, message.getData().getString("U"))) {
                         olPlayHall.msgList.add(message.getData());
                     }
-
                     // 聊天音效播放
                     if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
                         SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
                     }
-
                     // 聊天记录存储
                     if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
                         try {

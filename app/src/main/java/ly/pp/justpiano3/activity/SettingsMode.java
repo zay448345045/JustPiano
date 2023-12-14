@@ -266,7 +266,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                     getContentResolver().takePersistableUriPermission(uriInfo.getUri(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 } catch (SecurityException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "您未授予文件访问权限，无法使用选择文件功能", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "读取文件出错，请确保授予了设备的文件访问权限", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 filePickerPreference.persist(uriInfo.getFileName(), uriInfo.getUri().toString());

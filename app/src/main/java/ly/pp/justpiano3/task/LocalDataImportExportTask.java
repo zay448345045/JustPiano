@@ -40,7 +40,7 @@ public final class LocalDataImportExportTask extends AsyncTask<Void, Void, Strin
                     int count = JPApplication.getSongDatabase().songDao().updateSongsInfoByPaths(list);
                     result = "导入成功，更新" + count + "首曲谱数据";
                 } catch (Exception e) {
-                    result = "导入失败 " + e.getMessage();
+                    result = "导入失败，请确保授予了设备的文件访问权限-" + e.getMessage();
                 }
             } else {
                 result = "文件不存在，请确认SD卡\\JustPiano\\local_data.db存在";

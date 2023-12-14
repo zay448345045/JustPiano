@@ -52,7 +52,6 @@ import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.HorizontalListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
-import ly.pp.justpiano3.view.JPProgressBar;
 import ly.pp.justpiano3.view.PlayKeyBoardView;
 import ly.pp.justpiano3.view.PlayView;
 import protobuf.dto.OnlineChallengeDTO;
@@ -83,7 +82,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public boolean isPlayingStart;
     public boolean isBack;
     public boolean f4620k;
-    public JPProgressBar jpProgressbar;
     public ImageButton startPlayButton;
     public PlayView playView;
     public double onlineRightHandDegree;
