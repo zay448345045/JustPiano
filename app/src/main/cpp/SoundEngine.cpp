@@ -134,6 +134,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *, jclass) {
     handle->synth = new_fluid_synth(handle->settings);
     sDTPlayer.setSf2Synth(handle);
     fluid_synth_set_interp_method(handle->synth, -1, FLUID_INTERP_HIGHEST);
+    handle->loading = false;
 }
 
 JNIEXPORT void JNICALL

@@ -48,8 +48,8 @@ namespace iolib {
         if (streamState == StreamState::Disconnected) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
-        if (mMixBuffer == nullptr) {
-            mMixBuffer = new float[mParent->mAudioStream->getBufferSizeInFrames()];
+        if (mParent->mMixBuffer == nullptr) {
+            mParent->mMixBuffer = new float[mParent->mAudioStream->getBufferSizeInFrames()];
         }
         memset(audioData, 0, numFrames * mParent->mChannelCount * sizeof(float));
         if (mParent->mFluidHandle != nullptr && mParent->mFluidHandle->synth != nullptr &&
@@ -58,14 +58,14 @@ namespace iolib {
                 fluid_synth_write_float(mParent->mFluidHandle->synth, numFrames,
                                         (float *) audioData,
                                         0, 2, (float *) audioData, 1, 2);
-                memcpy(mMixBuffer, ((float *) audioData),
+                memcpy(mParent->mMixBuffer, ((float *) audioData),
                        numFrames * mParent->mChannelCount * sizeof(float));
-                handleSf2DelayNoteOff(numFrames);
+                mParent->handleSf2DelayNoteOff(numFrames);
             } else {
-                mixAudioToBuffer((float *) audioData, numFrames);
+                mParent->mixAudioToBuffer((float *) audioData, numFrames);
             }
             if (mParent->mRecord) {
-                mParent->mRecordingIO->write_buffer(mMixBuffer, numFrames);
+                mParent->mRecordingIO->write_buffer(mParent->mMixBuffer, numFrames);
             }
         }
         if (mParent->mLatencyTuner != nullptr) {
@@ -74,16 +74,16 @@ namespace iolib {
         return DataCallbackResult::Continue;
     }
 
-    void SimpleMultiPlayer::DataCallback::handleSf2DelayNoteOff(int32_t numFrames) {
-        for (int32_t index = 0; index < mParent->mNumSampleBuffers; index++) {
-            shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mParent->mSampleSources[index]->getCurFrameIndexVector();
+    void SimpleMultiPlayer::handleSf2DelayNoteOff(int32_t numFrames) {
+        for (int32_t index = 0; index < mNumSampleBuffers; index++) {
+            shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mSampleSources[index]->getCurFrameIndexVector();
             if (!noteVector->empty()) {
                 tuple<int32_t, float, bool> &tuple = noteVector->front();
                 if (get<2>(tuple)) {
-                    if (get<0>(tuple) <= mParent->mDelayValue * 1000) {
+                    if (get<0>(tuple) <= mDelayValue * 1000) {
                         get<0>(tuple) += numFrames;
                     } else {
-                        fluid_synth_noteoff(mParent->mFluidHandle->synth, 0, 108 - index);
+                        fluid_synth_noteoff(mFluidHandle->synth, 0, 108 - index);
                         noteVector->clear();
                     }
                 }
@@ -91,21 +91,21 @@ namespace iolib {
         }
     }
 
-    void SimpleMultiPlayer::DataCallback::mixAudioToBuffer(float *audioData, int32_t numFrames) {
-        memset(mMixBuffer, 0, numFrames * mParent->mChannelCount * sizeof(float));
+    void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
+        memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
         float sampleCount = 0;
-        for (int32_t index = 0; index < mParent->mNumSampleBuffers; index++) {
-            SampleSource *sampleSource = mParent->mSampleSources[index];
-            int32_t numSampleFrames = mParent->mSampleBuffers[index]->getNumSampleFrames();
+        for (int32_t index = 0; index < mNumSampleBuffers; index++) {
+            SampleSource *sampleSource = mSampleSources[index];
+            int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
             shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = sampleSource->getCurFrameIndexVector();
             auto lastIndex = static_cast<int32_t>(noteVector->size() - 1);
             int32_t handledIndex = max(0, lastIndex - 16);
             for (auto i = lastIndex; i >= handledIndex; i--) {
                 tuple<int32_t, float, bool> *noteInfoTuple = &(*noteVector)[i];
-                sampleSource->mixAudio(mMixBuffer, mParent->mChannelCount,
-                                       mParent->mDelayVolumeFactor,
+                sampleSource->mixAudio(mMixBuffer, mChannelCount,
+                                       mDelayVolumeFactor,
                                        numFrames, noteInfoTuple);
-                memcpy(audioData, mMixBuffer, numFrames * mParent->mChannelCount * sizeof(float));
+                memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
                 if (get<0>(*noteInfoTuple) >= numSampleFrames || get<1>(*noteInfoTuple) <= 0) {
                     noteVector->erase(noteVector->begin() + i);
                 } else {
@@ -119,17 +119,17 @@ namespace iolib {
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
-        mParent->mDecayFactor += (logSampleCount - mParent->mDecayFactor) / 64;
-        int32_t frameSampleCount = numFrames * mParent->mChannelCount;
-        for (int32_t i = 0; i < frameSampleCount; i += mParent->mChannelCount) {
-            mMixBuffer[i] /= mParent->mDecayFactor;
+        mDecayFactor += (logSampleCount - mDecayFactor) / 64;
+        int32_t frameSampleCount = numFrames * mChannelCount;
+        for (int32_t i = 0; i < frameSampleCount; i += mChannelCount) {
+            mMixBuffer[i] /= mDecayFactor;
             mMixBuffer[i + 1] = mMixBuffer[i];
         }
-        memcpy(audioData, mMixBuffer, numFrames * mParent->mChannelCount * sizeof(float));
-        if (mParent->mReverbValue != 0) {
-            mParent->mReverbModel.processreplace(audioData, audioData + 1,
-                                                 audioData, audioData + 1,
-                                                 numFrames, mParent->mChannelCount);
+        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+        if (mReverbValue != 0) {
+            mReverbModel.processreplace(audioData, audioData + 1,
+                                        audioData, audioData + 1,
+                                        numFrames, mChannelCount);
         }
     }
 

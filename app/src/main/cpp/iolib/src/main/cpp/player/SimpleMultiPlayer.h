@@ -112,11 +112,6 @@ namespace iolib {
 
         private:
             SimpleMultiPlayer *mParent;
-            float *mMixBuffer;
-
-            void mixAudioToBuffer(float *audioData, int32_t numFrames);
-
-            void handleSf2DelayNoteOff(int32_t numFrames);
         };
 
         class ErrorCallback : public oboe::AudioStreamErrorCallback {
@@ -131,6 +126,10 @@ namespace iolib {
         private:
             SimpleMultiPlayer *mParent;
         };
+
+        void mixAudioToBuffer(float *audioData, int32_t numFrames);
+
+        void handleSf2DelayNoteOff(int32_t numFrames);
 
         // Oboe Audio Stream
         std::shared_ptr<oboe::AudioStream> mAudioStream;
@@ -153,6 +152,7 @@ namespace iolib {
         std::unique_ptr<oboe::LatencyTuner> mLatencyTuner;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
         bool mOutputReset;
+        float *mMixBuffer;
 
         std::shared_ptr<DataCallback> mDataCallback;
         std::shared_ptr<ErrorCallback> mErrorCallback;
