@@ -22,8 +22,7 @@
             android:title="音块大小"
             app:floatNumber="true"
             app:maxValue="1.5"
-            app:minValue="0.5"
-            app:maxSteps="150"/>
+            app:minValue="0.5"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="note_dismiss"

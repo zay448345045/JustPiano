@@ -59,7 +59,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 瀑布流音块下落速率
      */
-    private var noteFallDownSpeed = 0.8f
+    var noteFallDownSpeed = 0.8f
 
     /**
      * 曲谱播放速度
@@ -175,7 +175,8 @@ class WaterfallView @JvmOverloads constructor(
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
-        backgroundImage = ImageLoadUtil.loadFileImage(context, Uri.parse(GlobalSetting.waterfallBackgroundPic))
+        backgroundImage =
+            ImageLoadUtil.loadFileImage(context, Uri.parse(GlobalSetting.waterfallBackgroundPic))
         if (backgroundImage == null) {
             backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
         }
@@ -226,7 +227,8 @@ class WaterfallView @JvmOverloads constructor(
         progressBarRect = RectF(0f, 0f, 0f, progressBarImage!!.height.toFloat())
         // 初始化音块缓冲区绘制范围
         if (width > 0 && height > 0) {
-            drawNotesThread?.notesBufferBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            drawNotesThread?.notesBufferBitmap =
+                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             drawNotesThread?.notesBufferCanvas = Canvas(drawNotesThread?.notesBufferBitmap!!)
         }
     }

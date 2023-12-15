@@ -16,9 +16,8 @@
             android:summary="减小和弦音量可以突出乐谱的主弦弹奏效果"
             android:title="和弦音量"
             app:floatNumber="true"
-            app:maxValue="1.1"
-            app:minValue="0.1"
-            app:maxSteps="140"/>
+            app:maxValue="1.5"
+            app:minValue="0.1"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="keyboard_prefer"
@@ -45,12 +44,12 @@
             android:summaryOff="关闭吊线提示"
             android:summaryOn="打开吊线提示"
             android:title="弹奏提示" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="open_long_key"
-            android:summaryOff="键盘缩略图已关闭"
-            android:summaryOn="键盘缩略图已打开"
-            android:title="键盘缩略图" />
+<!--        <SwitchPreference-->
+<!--            android:defaultValue="false"-->
+<!--            android:key="open_long_key"-->
+<!--            android:summaryOff="键盘缩略图已关闭"-->
+<!--            android:summaryOn="键盘缩略图已打开"-->
+<!--            android:title="键盘缩略图" />-->
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="节拍比率(仅本地模式有效)"

@@ -304,6 +304,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             keyboardView.changeSkinKeyboardImage(this);
             waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
             waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
+            waterfallView.setNoteFallDownSpeed(GlobalSetting.INSTANCE.getWaterfallDownSpeed());
             if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
                 stopNotesSchedule();
             } else {

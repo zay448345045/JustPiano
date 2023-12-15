@@ -22,9 +22,8 @@
             android:summary="设置音块的移动速度，值越小，音块越矮，移动速度越慢"
             android:title="音块移动速度"
             app:floatNumber="true"
-            app:maxValue="1.1"
-            app:minValue="0.1"
-            app:maxSteps="140"/>
+            app:maxValue="1.5"
+            app:minValue="0.1"/>
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="0"
             android:dialogTitle="曲谱播放移调"
