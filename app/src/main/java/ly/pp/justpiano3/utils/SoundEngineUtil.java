@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -97,6 +98,7 @@ public class SoundEngineUtil {
                     Log.i("SoundEngineUtil", "onAudioDevicesAdded: " + addedDevices.length);
                     if (devicesInitialized) {
                         // This is not the initial callback, so devices have changed
+                        Toast.makeText(context, "Added Device", Toast.LENGTH_LONG).show();
                         resetOutput();
                     }
                     devicesInitialized = true;
@@ -105,6 +107,8 @@ public class SoundEngineUtil {
                 @Override
                 public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
                     Log.i("SoundEngineUtil", "onAudioDevicesRemoved: " + removedDevices.length);
+                    Toast.makeText(context, "Removed Device", Toast.LENGTH_LONG).show();
+                    resetOutput();
                 }
 
                 private void resetOutput() {
@@ -114,8 +118,8 @@ public class SoundEngineUtil {
                         clearOutputReset();
                     } else {
                         // give the (native) stream a chance to close it.
-                        // schedule a single event
                         Timer timer = new Timer("stream restart timer", false);
+                        // schedule a single event
                         timer.schedule(new TimerTask() {
                             @Override
                             public void run() {

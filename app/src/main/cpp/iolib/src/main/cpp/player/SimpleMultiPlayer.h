@@ -152,7 +152,7 @@ namespace iolib {
         float mDelayVolumeFactor{4e-5f};
         std::unique_ptr<oboe::LatencyTuner> mLatencyTuner;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
-        bool mOutputReset{};
+        bool mOutputReset;
 
         std::shared_ptr<DataCallback> mDataCallback;
         std::shared_ptr<ErrorCallback> mErrorCallback;

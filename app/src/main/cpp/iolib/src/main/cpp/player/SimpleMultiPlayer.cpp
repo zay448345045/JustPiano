@@ -35,7 +35,7 @@ namespace iolib {
 
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
-    SimpleMultiPlayer::SimpleMultiPlayer() : mChannelCount(0), mSampleRate(0),
+    SimpleMultiPlayer::SimpleMultiPlayer() : mChannelCount(0), mOutputReset(false), mSampleRate(0),
                                              mDecayFactor(1.0f) {}
 
     DataCallbackResult
