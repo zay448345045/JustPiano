@@ -44,22 +44,13 @@ namespace iolib {
     /**
      * A simple streaming player for multiple SampleBuffers.
      */
-    class SimpleMultiPlayer : public oboe::AudioStreamCallback {
+    class SimpleMultiPlayer {
     public:
         SimpleMultiPlayer();
 
         ~SimpleMultiPlayer() {
-            delete mMixBuffer;
             closeStream();
         }
-
-        // Inherited from oboe::AudioStreamCallback
-        oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
-                                              int32_t numFrames) override;
-
-        virtual void onErrorAfterClose(oboe::AudioStream *oboeStream, oboe::Result error) override;
-
-        virtual void onErrorBeforeClose(oboe::AudioStream *oboeStream, oboe::Result error) override;
 
         void setupAudioStream(int32_t channelCount, int32_t sampleRate);
 
@@ -69,7 +60,11 @@ namespace iolib {
 
         bool openStream();
 
-        void restartStream();
+        bool startStream();
+
+        bool getOutputReset() { return mOutputReset; }
+
+        void clearOutputReset() { mOutputReset = false; }
 
         // Wave Sample Loading...
         /**
@@ -106,35 +101,61 @@ namespace iolib {
         void setDelayValue(int32_t delay);
 
     private:
+        class DataCallback : public oboe::AudioStreamDataCallback {
+        public:
+            DataCallback(SimpleMultiPlayer *parent) : mParent(parent) {}
+
+            oboe::DataCallbackResult onAudioReady(
+                    oboe::AudioStream *audioStream,
+                    void *audioData,
+                    int32_t numFrames) override;
+
+        private:
+            SimpleMultiPlayer *mParent;
+            float *mMixBuffer;
+
+            void mixAudioToBuffer(float *audioData, int32_t numFrames);
+
+            void handleSf2DelayNoteOff(int32_t numFrames);
+        };
+
+        class ErrorCallback : public oboe::AudioStreamErrorCallback {
+        public:
+            ErrorCallback(SimpleMultiPlayer *parent) : mParent(parent) {}
+
+            virtual ~ErrorCallback() {
+            }
+
+            void onErrorAfterClose(oboe::AudioStream *oboeStream, oboe::Result error) override;
+
+        private:
+            SimpleMultiPlayer *mParent;
+        };
+
         // Oboe Audio Stream
         std::shared_ptr<oboe::AudioStream> mAudioStream;
-        std::mutex mRestartingLock;
 
         // Audio attributes
         int32_t mChannelCount;
         int32_t mSampleRate;
+        revmodel mReverbModel;
+        bool mRecord{};
+        float mDecayFactor;
 
+        fluid_handle_t *mFluidHandle{nullptr};
         // Sample Data
         int32_t mNumSampleBuffers{};
         std::vector<SampleBuffer *> mSampleBuffers;
         std::vector<SampleSource *> mSampleSources;
-        float *mMixBuffer;
-        float mDecayFactor;
-
-        bool mRecord{};
-
-        std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
-        fluid_handle_t *mFluidHandle{nullptr};
-
-        void mixAudioToBuffer(float *audioData, int32_t numFrames);
-
         int32_t mReverbValue{0};
         int32_t mDelayValue{0};
         float mDelayVolumeFactor{4e-5f};
-        revmodel mReverbModel;
-
-        void handleSf2DelayNoteOff(int32_t numFrames);
         std::unique_ptr<oboe::LatencyTuner> mLatencyTuner;
+        std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
+        bool mOutputReset{};
+
+        std::shared_ptr<DataCallback> mDataCallback;
+        std::shared_ptr<ErrorCallback> mErrorCallback;
     };
 }
 #endif //_PLAYER_SIMIPLEMULTIPLAYER_H_

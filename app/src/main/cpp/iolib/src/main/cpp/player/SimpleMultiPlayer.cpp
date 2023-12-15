@@ -35,11 +35,12 @@ namespace iolib {
 
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
-    SimpleMultiPlayer::SimpleMultiPlayer() : mMixBuffer(nullptr), mChannelCount(0), mSampleRate(0),
+    SimpleMultiPlayer::SimpleMultiPlayer() : mChannelCount(0), mSampleRate(0),
                                              mDecayFactor(1.0f) {}
 
-    DataCallbackResult SimpleMultiPlayer::onAudioReady(AudioStream *oboeStream, void *audioData,
-                                                       int32_t numFrames) {
+    DataCallbackResult
+    SimpleMultiPlayer::DataCallback::onAudioReady(AudioStream *oboeStream, void *audioData,
+                                                  int32_t numFrames) {
         StreamState streamState = oboeStream->getState();
         if (streamState != StreamState::Open && streamState != StreamState::Started) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState:%d", streamState);
@@ -48,39 +49,41 @@ namespace iolib {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
         if (mMixBuffer == nullptr) {
-            mMixBuffer = new float[mAudioStream->getBufferSizeInFrames()];
+            mMixBuffer = new float[mParent->mAudioStream->getBufferSizeInFrames()];
         }
-        memset(audioData, 0, numFrames * mChannelCount * sizeof(float));
-        if (mFluidHandle != nullptr && mFluidHandle->synth != nullptr && !mFluidHandle->loading) {
-            if (mFluidHandle->soundfont_id > 0) {
-                fluid_synth_write_float(mFluidHandle->synth, numFrames, (float *) audioData,
+        memset(audioData, 0, numFrames * mParent->mChannelCount * sizeof(float));
+        if (mParent->mFluidHandle != nullptr && mParent->mFluidHandle->synth != nullptr &&
+            !mParent->mFluidHandle->loading) {
+            if (mParent->mFluidHandle->soundfont_id > 0) {
+                fluid_synth_write_float(mParent->mFluidHandle->synth, numFrames,
+                                        (float *) audioData,
                                         0, 2, (float *) audioData, 1, 2);
                 memcpy(mMixBuffer, ((float *) audioData),
-                       numFrames * mChannelCount * sizeof(float));
+                       numFrames * mParent->mChannelCount * sizeof(float));
                 handleSf2DelayNoteOff(numFrames);
             } else {
                 mixAudioToBuffer((float *) audioData, numFrames);
             }
-            if (mRecord) {
-                mRecordingIO->write_buffer(mMixBuffer, numFrames);
+            if (mParent->mRecord) {
+                mParent->mRecordingIO->write_buffer(mMixBuffer, numFrames);
             }
         }
-        if (mLatencyTuner != nullptr) {
-            mLatencyTuner->tune();
+        if (mParent->mLatencyTuner != nullptr) {
+            mParent->mLatencyTuner->tune();
         }
         return DataCallbackResult::Continue;
     }
 
-    void SimpleMultiPlayer::handleSf2DelayNoteOff(int32_t numFrames) {
-        for (int32_t index = 0; index < mNumSampleBuffers; index++) {
-            shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mSampleSources[index]->getCurFrameIndexVector();
+    void SimpleMultiPlayer::DataCallback::handleSf2DelayNoteOff(int32_t numFrames) {
+        for (int32_t index = 0; index < mParent->mNumSampleBuffers; index++) {
+            shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = mParent->mSampleSources[index]->getCurFrameIndexVector();
             if (!noteVector->empty()) {
                 tuple<int32_t, float, bool> &tuple = noteVector->front();
                 if (get<2>(tuple)) {
-                    if (get<0>(tuple) <= mDelayValue * 1000) {
+                    if (get<0>(tuple) <= mParent->mDelayValue * 1000) {
                         get<0>(tuple) += numFrames;
                     } else {
-                        fluid_synth_noteoff(mFluidHandle->synth, 0, 108 - index);
+                        fluid_synth_noteoff(mParent->mFluidHandle->synth, 0, 108 - index);
                         noteVector->clear();
                     }
                 }
@@ -88,20 +91,21 @@ namespace iolib {
         }
     }
 
-    void SimpleMultiPlayer::mixAudioToBuffer(float *audioData, int32_t numFrames) {
-        memset(mMixBuffer, 0, numFrames * mChannelCount * sizeof(float));
+    void SimpleMultiPlayer::DataCallback::mixAudioToBuffer(float *audioData, int32_t numFrames) {
+        memset(mMixBuffer, 0, numFrames * mParent->mChannelCount * sizeof(float));
         float sampleCount = 0;
-        for (int32_t index = 0; index < mNumSampleBuffers; index++) {
-            SampleSource *sampleSource = mSampleSources[index];
-            int32_t numSampleFrames = mSampleBuffers[index]->getNumSampleFrames();
+        for (int32_t index = 0; index < mParent->mNumSampleBuffers; index++) {
+            SampleSource *sampleSource = mParent->mSampleSources[index];
+            int32_t numSampleFrames = mParent->mSampleBuffers[index]->getNumSampleFrames();
             shared_ptr<vector<tuple<int32_t, float, bool>>> noteVector = sampleSource->getCurFrameIndexVector();
             auto lastIndex = static_cast<int32_t>(noteVector->size() - 1);
             int32_t handledIndex = max(0, lastIndex - 16);
             for (auto i = lastIndex; i >= handledIndex; i--) {
                 tuple<int32_t, float, bool> *noteInfoTuple = &(*noteVector)[i];
-                sampleSource->mixAudio(mMixBuffer, mChannelCount, mDelayVolumeFactor,
+                sampleSource->mixAudio(mMixBuffer, mParent->mChannelCount,
+                                       mParent->mDelayVolumeFactor,
                                        numFrames, noteInfoTuple);
-                memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
+                memcpy(audioData, mMixBuffer, numFrames * mParent->mChannelCount * sizeof(float));
                 if (get<0>(*noteInfoTuple) >= numSampleFrames || get<1>(*noteInfoTuple) <= 0) {
                     noteVector->erase(noteVector->begin() + i);
                 } else {
@@ -115,67 +119,77 @@ namespace iolib {
         // Divide value by the logarithm of the "total number of samples"
         // ensure that the volume is not too high when too many samples
         float logSampleCount = log(sampleCount + (float) exp(2)) - 1;
-        mDecayFactor += (logSampleCount - mDecayFactor) / 64;
-        int32_t frameSampleCount = numFrames * mChannelCount;
-        for (int32_t i = 0; i < frameSampleCount; i += mChannelCount) {
-            mMixBuffer[i] /= mDecayFactor;
+        mParent->mDecayFactor += (logSampleCount - mParent->mDecayFactor) / 64;
+        int32_t frameSampleCount = numFrames * mParent->mChannelCount;
+        for (int32_t i = 0; i < frameSampleCount; i += mParent->mChannelCount) {
+            mMixBuffer[i] /= mParent->mDecayFactor;
             mMixBuffer[i + 1] = mMixBuffer[i];
         }
-        memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
-        if (mReverbValue != 0) {
-            mReverbModel.processreplace(audioData, audioData + 1, audioData, audioData + 1,
-                                        numFrames, mChannelCount);
+        memcpy(audioData, mMixBuffer, numFrames * mParent->mChannelCount * sizeof(float));
+        if (mParent->mReverbValue != 0) {
+            mParent->mReverbModel.processreplace(audioData, audioData + 1,
+                                                 audioData, audioData + 1,
+                                                 numFrames, mParent->mChannelCount);
         }
     }
 
-    void SimpleMultiPlayer::onErrorAfterClose(AudioStream *oboeStream, Result error) {
+    void
+    SimpleMultiPlayer::ErrorCallback::onErrorAfterClose(AudioStream *oboeStream, Result error) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "==== onErrorAfterClose() error:%d", error);
-        if (error == Result::ErrorDisconnected) {
-            restartStream();
+        mParent->resetAll();
+        if (mParent->openStream() && mParent->startStream()) {
+            mParent->mOutputReset = true;
         }
     }
 
-    void SimpleMultiPlayer::restartStream() {
-        __android_log_print(ANDROID_LOG_INFO, TAG, "Restarting stream");
-        if (mRestartingLock.try_lock()) {
-            resetAll();
-            closeStream();
-            openStream();
-            mRestartingLock.unlock();
-        } else {
-            __android_log_print(ANDROID_LOG_WARN, TAG, "Restart stream operation already in progress - ignoring this request");
-            // We were unable to obtain the restarting lock which means the restart operation is currently
-            // active. This is probably because we received successive "stream disconnected" events.
-            // Internal issue b/63087953
+    bool SimpleMultiPlayer::startStream() {
+        int tryCount = 0;
+        while (tryCount < 3) {
+            bool wasOpenSuccessful = true;
+            // Assume that apenStream() was called successfully before startStream() call.
+            if (tryCount > 0) {
+                usleep(20 * 1000); // Sleep between tries to give the system time to settle.
+                wasOpenSuccessful = openStream(); // Try to open the stream again after the first try.
+            }
+            if (wasOpenSuccessful) {
+                Result result = mAudioStream->requestStart();
+                if (result != Result::OK) {
+                    __android_log_print(
+                            ANDROID_LOG_ERROR,
+                            TAG,
+                            "requestStart failed. Error: %s", convertToText(result));
+                    mAudioStream->close();
+                    mAudioStream.reset();
+                } else {
+                    return true;
+                }
+            }
+            tryCount++;
         }
+
+        return false;
     }
 
     void SimpleMultiPlayer::closeStream() {
         if (mAudioStream != nullptr) {
-            Result result = mAudioStream->requestStop();
-            if (result != Result::OK) {
-                __android_log_print(ANDROID_LOG_ERROR, TAG, "Error stopping output stream. %s", convertToText(result));
-            }
-            result = mAudioStream->close();
-            if (result != Result::OK) {
-                __android_log_print(ANDROID_LOG_ERROR, TAG, "Error closing output stream. %s", convertToText(result));
-            }
+            mAudioStream->stop();
+            mAudioStream->close();
+            mAudioStream.reset();
         }
-    }
-
-    void SimpleMultiPlayer::onErrorBeforeClose(AudioStream *, Result error) {
-        __android_log_print(ANDROID_LOG_INFO, TAG, "==== onErrorBeforeClose() error:%d", error);
     }
 
     bool SimpleMultiPlayer::openStream() {
         __android_log_print(ANDROID_LOG_INFO, TAG, "openStream()");
 
+        // Use shared_ptr to prevent use of a deleted callback.
+        mDataCallback = std::make_shared<DataCallback>(this);
+        mErrorCallback = std::make_shared<ErrorCallback>(this);
         // Create an audio stream
         AudioStreamBuilder builder;
         builder.setChannelCount(mChannelCount);
         builder.setSampleRate(mSampleRate);
-        builder.setDataCallback(this);
-        builder.setErrorCallback(this);
+        builder.setDataCallback(mDataCallback);
+        builder.setErrorCallback(mErrorCallback);
         builder.setFormat(AudioFormat::Float);
         builder.setPerformanceMode(PerformanceMode::LowLatency);
         builder.setSharingMode(SharingMode::Exclusive);
