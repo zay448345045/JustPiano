@@ -146,7 +146,7 @@ namespace iolib {
         int tryCount = 0;
         while (tryCount < 3) {
             bool wasOpenSuccessful = true;
-            // Assume that apenStream() was called successfully before startStream() call.
+            // Assume that openStream() was called successfully before startStream() call.
             if (tryCount > 0) {
                 usleep(20 * 1000); // Sleep between tries to give the system time to settle.
                 wasOpenSuccessful = openStream(); // Try to open the stream again after the first try.
@@ -183,6 +183,7 @@ namespace iolib {
         // Use shared_ptr to prevent use of a deleted callback.
         mDataCallback = std::make_shared<DataCallback>(this);
         mErrorCallback = std::make_shared<ErrorCallback>(this);
+
         // Create an audio stream
         AudioStreamBuilder builder;
         builder.setChannelCount(mChannelCount);
@@ -219,16 +220,6 @@ namespace iolib {
         }
         // Create a latency tuner which will automatically tune our buffer size.
         mLatencyTuner = std::make_unique<oboe::LatencyTuner>(*mAudioStream);
-
-        result = mAudioStream->requestStart();
-        if (result != Result::OK) {
-            __android_log_print(
-                    ANDROID_LOG_ERROR,
-                    TAG,
-                    "requestStart failed. Error: %s", convertToText(result));
-            return false;
-        }
-
         return true;
     }
 
