@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -220,7 +221,10 @@ public class ImageLoadUtil {
         if (activity == null || activity.getWindow() == null) {
             return;
         }
-        Bitmap backgroundBitmap = loadFileImage(activity, Uri.parse(GlobalSetting.INSTANCE.getBackgroundPic()));
+        Bitmap backgroundBitmap = null;
+        if (!TextUtils.isEmpty(GlobalSetting.INSTANCE.getBackgroundPic())) {
+            backgroundBitmap = loadFileImage(activity, Uri.parse(GlobalSetting.INSTANCE.getBackgroundPic()));
+        }
         if (backgroundBitmap != null) {
             activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), backgroundBitmap));
         } else if (!PreferenceManager.getDefaultSharedPreferences(activity).getString("skin_list", "original").equals("original")) {
