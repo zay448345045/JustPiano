@@ -53,6 +53,8 @@ public class SoundEngineUtil {
 
     public static native void teardownAudioStreamNative();
 
+    public static native void startAudioStreamNative();
+
     public static native void loadWavAssetNative(byte[] wavByteArray);
 
     public static native void unloadWavAssetsNative();
@@ -199,10 +201,11 @@ public class SoundEngineUtil {
         teardownAudioStreamNative();
         unloadSf2();
         unloadWavAssetsNative();
+        setupAudioStreamNative(2, 44100);
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             loadSoundAssetsNative(context, i);
         }
-        setupAudioStreamNative(2, 44100);
+        startAudioStreamNative();
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
         edit.putString("sound_list", "original");
         edit.apply();

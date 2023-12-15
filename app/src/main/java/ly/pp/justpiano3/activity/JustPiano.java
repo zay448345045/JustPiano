@@ -217,6 +217,7 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
                     "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show());
             System.exit(-1);
         }
+        SoundEngineUtil.setupAudioStreamNative(2, 44100);
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             SoundEngineUtil.loadSoundAssetsNative(getApplicationContext(), i);
             progress++;
@@ -225,8 +226,8 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
             obtainMessage2.what = 0;
             handler.sendMessage(obtainMessage2);
         }
-        SoundEngineUtil.setupAudioStreamNative(2, 44100);
         SoundEngineUtil.openFluidSynth();
+        SoundEngineUtil.startAudioStreamNative();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String soundName = sharedPreferences.getString("sound_list", "original");
         if (soundName.endsWith(".sf2")) {

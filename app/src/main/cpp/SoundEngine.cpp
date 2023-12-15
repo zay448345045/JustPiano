@@ -30,38 +30,33 @@ static fluid_handle_t *handle;
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setupAudioStreamNative(
         JNIEnv *, jclass, jint numChannels, jint sampleRate) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", "init()");
-
-    // we know in this case that the sample buffers are all 1-channel, 41K
     sDTPlayer.setupAudioStream(numChannels, sampleRate);
 }
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_teardownAudioStreamNative(JNIEnv *, jclass) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", "deinit()");
-
-    // we know in this case that the sample buffers are all 1-channel, 44.1K
     sDTPlayer.teardownAudioStream();
+}
+
+JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_startAudioStreamNative(JNIEnv *, jclass) {
+    sDTPlayer.startStream();
 }
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadWavAssetNative(JNIEnv *env, jclass,
                                                                jbyteArray bytearray) {
     int len = env->GetArrayLength(bytearray);
-
     auto *buf = new unsigned char[len];
     env->GetByteArrayRegion(bytearray, 0, len, reinterpret_cast<jbyte *>(buf));
-
     MemInputStream stream(buf, len);
-
     WavStreamReader reader(&stream);
     reader.parse();
-
     auto *sampleBuffer = new SampleBuffer();
     sampleBuffer->loadSampleData(&reader);
-
     auto *source = new OneShotSampleSource(sampleBuffer);
     sDTPlayer.addSampleSource(source, sampleBuffer);
-
     delete[] buf;
 }
 

@@ -166,7 +166,6 @@ namespace iolib {
             }
             tryCount++;
         }
-
         return false;
     }
 
