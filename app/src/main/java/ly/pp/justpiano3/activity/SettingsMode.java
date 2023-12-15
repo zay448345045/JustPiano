@@ -45,6 +45,7 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
         preferenceFragmentMap.put("settings_sound", new SoundSettingsFragment());
         preferenceFragmentMap.put("settings_keyboard", new KeyboardSettingsFragment());
         preferenceFragmentMap.put("settings_online_chat", new OnlineChatSettingsFragment());
+        preferenceFragmentMap.put("settings_easter_egg", new EasterEggFragment());
     }
 
     @Override
@@ -225,6 +226,14 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
                 filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist("默认音效", ""));
                 filePickerPreferenceMap.put(chatSoundFilePreference.getKey(), filePickerPreference);
             }
+        }
+    }
+
+    public static class EasterEggFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_easter_egg);
         }
     }
 

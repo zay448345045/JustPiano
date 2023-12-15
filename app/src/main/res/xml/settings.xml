@@ -113,9 +113,10 @@
         <PreferenceScreen
             android:key="app_version"
             android:title="软件版本">
-            <Preference
-                android:layout_height="match_parent"
-                android:layout="@layout/easter_egg" />
+            <intent
+                android:data="settings_easter_egg"
+                android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
+                android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <Preference
             android:summary="京ICP备2020039885号-3A"
