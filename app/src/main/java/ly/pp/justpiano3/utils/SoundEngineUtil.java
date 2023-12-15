@@ -81,10 +81,6 @@ public class SoundEngineUtil {
 
     public static native void unloadSf2();
 
-    public static native boolean getOutputReset();
-
-    public static native void clearOutputReset();
-
     public static native void restartStream();
 
     private static final long DEVICE_SWITCH_TIME = 500L;
@@ -99,8 +95,7 @@ public class SoundEngineUtil {
                 public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
                     Log.i("SoundEngineUtil", "onAudioDevicesAdded: " + addedDevices.length);
                     if (devicesInitialized) {
-                        // This is not the initial callback, so devices have changed
-                        Toast.makeText(context, "Added Device", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Added Audio Device", Toast.LENGTH_LONG).show();
                         resetOutput();
                     }
                     devicesInitialized = true;
@@ -109,30 +104,19 @@ public class SoundEngineUtil {
                 @Override
                 public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
                     Log.i("SoundEngineUtil", "onAudioDevicesRemoved: " + removedDevices.length);
-                    Toast.makeText(context, "Removed Device", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Removed Audio Device", Toast.LENGTH_LONG).show();
                     resetOutput();
                 }
 
                 private void resetOutput() {
-                    Log.i("SoundEngineUtil", "resetOutput() native reset:" + getOutputReset());
-                    if (getOutputReset()) {
-                        // the (native) stream has been reset by the onErrorAfterClose() callback
-                        clearOutputReset();
-                    } else {
-                        // give the (native) stream a chance to close it.
-                        Timer timer = new Timer("stream restart timer", false);
-                        // schedule a single event
-                        timer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if (!getOutputReset()) {
-                                    // still didn't get reset, so lets do it ourselves
-                                    Log.i("SoundEngineUtil", "restartStream() time:" + new Date());
-                                    restartStream();
-                                }
-                            }
-                        }, DEVICE_SWITCH_TIME);
-                    }
+                    Timer timer = new Timer("stream restart timer", false);
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Log.i("SoundEngineUtil", "restartStream() time:" + new Date());
+                            restartStream();
+                        }
+                    }, DEVICE_SWITCH_TIME);
                 }
             };
             audioManager.registerAudioDeviceCallback(deviceCallback, null);

@@ -35,12 +35,14 @@ namespace iolib {
 
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
-    SimpleMultiPlayer::SimpleMultiPlayer() : mChannelCount(0), mOutputReset(false), mSampleRate(0),
-                                             mDecayFactor(1.0f) {}
+    SimpleMultiPlayer::SimpleMultiPlayer() : mChannelCount(0), mSampleRate(0), mDecayFactor(1.0f) {}
 
     DataCallbackResult
     SimpleMultiPlayer::DataCallback::onAudioReady(AudioStream *oboeStream, void *audioData,
                                                   int32_t numFrames) {
+        if (oboeStream == nullptr) {
+            return DataCallbackResult::Stop;
+        }
         StreamState streamState = oboeStream->getState();
         if (streamState != StreamState::Open && streamState != StreamState::Started) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState:%d", streamState);
@@ -127,19 +129,17 @@ namespace iolib {
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
         if (mReverbValue != 0) {
-            mReverbModel.processreplace(audioData, audioData + 1,
-                                        audioData, audioData + 1,
-                                        numFrames, mChannelCount);
+            mReverbModel.processreplace(audioData, audioData + 1, audioData,
+                                        audioData + 1, numFrames, mChannelCount);
         }
     }
 
-    void
-    SimpleMultiPlayer::ErrorCallback::onErrorAfterClose(AudioStream *oboeStream, Result error) {
+    bool
+    SimpleMultiPlayer::ErrorCallback::onError(AudioStream *oboeStream, Result error) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "==== onErrorAfterClose() error:%d", error);
         mParent->resetAll();
-        if (mParent->openStream() && mParent->startStream()) {
-            mParent->mOutputReset = true;
-        }
+        mParent->closeStream();
+        return true;
     }
 
     bool SimpleMultiPlayer::startStream() {

@@ -118,12 +118,12 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *, jclass) {
     handle = (fluid_handle_t *) malloc(sizeof(fluid_handle_t));
     handle->settings = new_fluid_settings();
     handle->soundfont_id = 0;
+    fluid_settings_setint(handle->settings, "synth.threadsafe-api", 0);
     fluid_settings_setint(handle->settings, "synth.cpu-cores", 4);
     fluid_settings_setint(handle->settings, "audio.realtime-prio", 99);
     fluid_settings_setint(handle->settings, "synth.polyphony", 1024);
     fluid_settings_setnum(handle->settings, "synth.gain", 1);
     fluid_settings_setint(handle->settings, "synth.midi-channels", 1);
-    fluid_settings_setint(handle->settings, "synth.min-note-length", 0);
     fluid_settings_setint(handle->settings, "synth.chorus.active", 0);
     fluid_settings_setnum(handle->settings, "synth.reverb.active",
                           sDTPlayer.getReverbValue() == 0 ? 0 : 1);
@@ -185,19 +185,10 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *, jclass) {
     }
 }
 
-JNIEXPORT jboolean JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_getOutputReset(JNIEnv *, jclass) {
-    return sDTPlayer.getOutputReset();
-}
-
-JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_clearOutputReset(JNIEnv *, jclass) {
-    sDTPlayer.clearOutputReset();
-}
-
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_restartStream(JNIEnv *, jclass) {
     sDTPlayer.resetAll();
+    sDTPlayer.closeStream();
     if (sDTPlayer.openStream() && sDTPlayer.startStream()) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "openStream successful");
     } else {

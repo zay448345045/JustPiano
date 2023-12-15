@@ -62,10 +62,6 @@ namespace iolib {
 
         bool startStream();
 
-        bool getOutputReset() { return mOutputReset; }
-
-        void clearOutputReset() { mOutputReset = false; }
-
         // Wave Sample Loading...
         /**
          * Adds the SampleSource/SampleBuffer pair to the list of source channels.
@@ -121,7 +117,7 @@ namespace iolib {
             virtual ~ErrorCallback() {
             }
 
-            void onErrorAfterClose(oboe::AudioStream *oboeStream, oboe::Result error) override;
+            bool onError(oboe::AudioStream *oboeStream, oboe::Result error) override;
 
         private:
             SimpleMultiPlayer *mParent;
@@ -151,8 +147,7 @@ namespace iolib {
         float mDelayVolumeFactor{4e-5f};
         std::unique_ptr<oboe::LatencyTuner> mLatencyTuner;
         std::shared_ptr<RecordingIO> mRecordingIO{new RecordingIO()};
-        bool mOutputReset;
-        float *mMixBuffer;
+        float *mMixBuffer{};
 
         std::shared_ptr<DataCallback> mDataCallback;
         std::shared_ptr<ErrorCallback> mErrorCallback;
