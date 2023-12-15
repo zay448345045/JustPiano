@@ -14,7 +14,10 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javazoom.jl.converter.Converter;
@@ -75,6 +78,16 @@ public class SoundEngineUtil {
 
     public static native void unloadSf2();
 
+    public static native boolean getOutputReset();
+
+    public static native void clearOutputReset();
+
+    public static native void restartStream();
+
+    private static final long DEVICE_SWITCH_TIME = 500L;
+
+    private static boolean devicesInitialized = false;
+
     public static void init(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -82,15 +95,38 @@ public class SoundEngineUtil {
                 @Override
                 public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
                     Log.i("SoundEngineUtil", "onAudioDevicesAdded: " + addedDevices.length);
-                    teardownAudioStreamNative();
-                    setupAudioStreamNative(2, 44100);
+                    if (devicesInitialized) {
+                        // This is not the initial callback, so devices have changed
+                        resetOutput();
+                    }
+                    devicesInitialized = true;
                 }
 
                 @Override
                 public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
                     Log.i("SoundEngineUtil", "onAudioDevicesRemoved: " + removedDevices.length);
-                    teardownAudioStreamNative();
-                    setupAudioStreamNative(2, 44100);
+                }
+
+                private void resetOutput() {
+                    Log.i("SoundEngineUtil", "resetOutput() native reset:" + getOutputReset());
+                    if (getOutputReset()) {
+                        // the (native) stream has been reset by the onErrorAfterClose() callback
+                        clearOutputReset();
+                    } else {
+                        // give the (native) stream a chance to close it.
+                        // schedule a single event
+                        Timer timer = new Timer("stream restart timer", false);
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (!getOutputReset()) {
+                                    // still didn't get reset, so lets do it ourselves
+                                    Log.i("SoundEngineUtil", "restartStream() time:" + new Date());
+                                    restartStream();
+                                }
+                            }
+                        }, DEVICE_SWITCH_TIME);
+                    }
                 }
             };
             audioManager.registerAudioDeviceCallback(deviceCallback, null);

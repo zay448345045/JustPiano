@@ -28,7 +28,7 @@ static SimpleMultiPlayer sDTPlayer;
 static fluid_handle_t *handle;
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setupAudioStreamNative(
-        JNIEnv *env, jclass, jint numChannels, jint sampleRate) {
+        JNIEnv *, jclass, jint numChannels, jint sampleRate) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", "init()");
 
     // we know in this case that the sample buffers are all 1-channel, 41K
@@ -66,12 +66,12 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadWavAssetNative(JNIEnv *env, jcla
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *, jclass) {
     sDTPlayer.unloadSampleData();
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *env, jclass, jint index,
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *, jclass, jint index,
                                                         jint volume) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
         fluid_synth_noteon(handle->synth, 0, 108 - index, volume);
@@ -82,17 +82,17 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerDown(JNIEnv *env, jclass, jin
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUp(JNIEnv *env, jclass, jint index) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUp(JNIEnv *, jclass, jint index) {
     sDTPlayer.triggerUp(index);
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUpAll(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_triggerUpAll(JNIEnv *, jclass) {
     sDTPlayer.resetAll();
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecord(
-        JNIEnv *env, jclass, jboolean record) {
+        JNIEnv *, jclass, jboolean record) {
     sDTPlayer.setRecord(record);
 }
 
@@ -103,7 +103,7 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setRecordFile
 }
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValue(
-        JNIEnv *env, jclass, jint reverbValue) {
+        JNIEnv *, jclass, jint reverbValue) {
     sDTPlayer.setReverbValue(reverbValue);
     if (handle != nullptr && handle->settings != nullptr && handle->synth != nullptr) {
         fluid_settings_setnum(handle->settings, "synth.reverb.active", reverbValue == 0 ? 0 : 1);
@@ -113,13 +113,13 @@ JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setReverbValu
     }
 }
 
-JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setDelayValue(
-        JNIEnv *env, jclass, jint delayValue) {
+JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_setDelayValue(JNIEnv *, jclass, jint delayValue) {
     sDTPlayer.setDelayValue(delayValue);
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *, jclass) {
     handle = (fluid_handle_t *) malloc(sizeof(fluid_handle_t));
     handle->settings = new_fluid_settings();
     handle->soundfont_id = 0;
@@ -142,7 +142,7 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_openFluidSynth(JNIEnv *env, jclass) 
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_closeFluidSynth(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_closeFluidSynth(JNIEnv *, jclass) {
     if (handle != nullptr) {
         if (handle->synth != nullptr) {
             delete_fluid_synth(handle->synth);
@@ -179,13 +179,33 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring
 }
 
 JNIEXPORT void JNICALL
-Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *env, jclass) {
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadSf2(JNIEnv *, jclass) {
     if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id > 0) {
         handle->loading = true;
         fluid_synth_all_sounds_off(handle->synth, 0);
         fluid_synth_sfunload(handle->synth, handle->soundfont_id, 1);
         handle->soundfont_id = 0;
         handle->loading = false;
+    }
+}
+
+JNIEXPORT jboolean JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_getOutputReset(JNIEnv *, jclass) {
+    return sDTPlayer.getOutputReset();
+}
+
+JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_clearOutputReset(JNIEnv *, jclass) {
+    sDTPlayer.clearOutputReset();
+}
+
+JNIEXPORT void JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_restartStream(JNIEnv *, jclass) {
+    sDTPlayer.resetAll();
+    if (sDTPlayer.openStream() && sDTPlayer.startStream()) {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "openStream successful");
+    } else {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "openStream failed");
     }
 }
 
