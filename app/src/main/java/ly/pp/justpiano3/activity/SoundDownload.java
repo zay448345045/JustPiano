@@ -160,8 +160,8 @@ public class SoundDownload extends BaseActivity implements Callback {
             edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
             edit.apply();
             if (soundFileName.endsWith(".ss")) {
-                SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.teardownAudioStreamNative();
+                SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.unloadWavAssetsNative();
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.loadSoundAssetsNative(this, i);
@@ -170,8 +170,10 @@ public class SoundDownload extends BaseActivity implements Callback {
             } else if (soundFileName.endsWith(".sf2")) {
                 String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(
                         Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
+                SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.loadSf2(newSf2Path);
+                SoundEngineUtil.setupAudioStreamNative(2, 44100);
             }
         } catch (Exception e) {
             e.printStackTrace();

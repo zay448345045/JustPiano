@@ -156,8 +156,8 @@ public class SoundEngineUtil {
                 }
             }
         }
-        unloadSf2();
         teardownAudioStreamNative();
+        unloadSf2();
         unloadWavAssetsNative();
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             loadSoundAssetsNative(context, i);
