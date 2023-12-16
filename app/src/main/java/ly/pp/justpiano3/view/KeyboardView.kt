@@ -25,7 +25,7 @@ class KeyboardView @JvmOverloads constructor(
 
     companion object {
         // 黑键宽度占白键宽度的比例
-        const val BLACK_KEY_WIDTH_FACTOR = 0.607f
+        const val BLACK_KEY_WIDTH_FACTOR = 0.65f
 
         // 黑键高度占白键高度的比例
         const val BLACK_KEY_HEIGHT_FACTOR = 0.57f
@@ -253,7 +253,7 @@ class KeyboardView @JvmOverloads constructor(
             octaveCount++
             // 先添加绘制键盘图的位置坐标，再叠上5个黑键
             keyboardRectList.add(RectF(left, 0f, right, viewHeight))
-            val blackKeyLeft1 = left + blackKeyWidth * 1.15f
+            val blackKeyLeft1 = left + blackKeyWidth * 1.036f
             blackKeyRectList.add(
                 RectF(
                     blackKeyLeft1,
@@ -262,7 +262,7 @@ class KeyboardView @JvmOverloads constructor(
                     blackKeyHeight
                 )
             )
-            val blackKeyLeft2 = left + blackKeyWidth * 2.8f
+            val blackKeyLeft2 = left + blackKeyWidth * 2.575f
             blackKeyRectList.add(
                 RectF(
                     blackKeyLeft2,
@@ -271,7 +271,7 @@ class KeyboardView @JvmOverloads constructor(
                     blackKeyHeight
                 )
             )
-            val blackKeyLeft3 = left + blackKeyWidth * 6.09f
+            val blackKeyLeft3 = left + blackKeyWidth * 5.654f
             blackKeyRectList.add(
                 RectF(
                     blackKeyLeft3,
@@ -280,7 +280,7 @@ class KeyboardView @JvmOverloads constructor(
                     blackKeyHeight
                 )
             )
-            val blackKeyLeft4 = left + blackKeyWidth * 7.74f
+            val blackKeyLeft4 = left + blackKeyWidth * 7.19f
             blackKeyRectList.add(
                 RectF(
                     blackKeyLeft4,
@@ -289,7 +289,7 @@ class KeyboardView @JvmOverloads constructor(
                     blackKeyHeight
                 )
             )
-            val blackKeyLeft5 = left + blackKeyWidth * 9.39f
+            val blackKeyLeft5 = left + blackKeyWidth * 8.73f
             blackKeyRectList.add(
                 RectF(
                     blackKeyLeft5,

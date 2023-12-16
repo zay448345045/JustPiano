@@ -66,7 +66,7 @@ class WaterfallUtil {
         /**
          * 瀑布的宽度占键盘黑键宽度的百分比
          */
-        private const val BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.8f
+        private const val BLACK_KEY_WATERFALL_WIDTH_FACTOR = 0.75f
 
         /**
          * 瀑布流音符最大高度
