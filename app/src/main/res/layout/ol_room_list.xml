@@ -28,7 +28,6 @@
                 android:background="@color/back"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:keepScreenOn="true"
                 android:text="@string/olplayhall_ti"
                 android:textColor="@color/white1"
                 android:textSize="18sp"

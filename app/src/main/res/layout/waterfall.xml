@@ -48,6 +48,7 @@
                 android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="8"
+                android:background="@color/black"
                 android:layout_marginLeft="@dimen/dimen_1dp"
                 android:layout_marginRight="@dimen/dimen_1dp"
                 android:gravity="center">

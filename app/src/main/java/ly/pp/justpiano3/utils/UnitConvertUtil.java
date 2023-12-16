@@ -29,9 +29,4 @@ public class UnitConvertUtil {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
-
-    public static int px2Sp(Context context, float px) {
-        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (px / scaledDensity);
-    }
 }

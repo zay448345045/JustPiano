@@ -50,7 +50,6 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.FamilyListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -568,7 +567,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             tabHost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView titleTextView = findViewById(R.id.ol_playhall_title);
             titleTextView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
-            titleTextView.setTextSize(UnitConvertUtil.px2Sp(this,(displayMetrics.heightPixels * 45f) / 960));
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();

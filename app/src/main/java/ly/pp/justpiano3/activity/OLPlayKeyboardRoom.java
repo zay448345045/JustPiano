@@ -56,7 +56,6 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.utils.ViewUtil;
 import ly.pp.justpiano3.utils.WaterfallUtil;
@@ -388,8 +387,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         tabTitleHeight = (int) ((displayMetrics.heightPixels * 45f) / 480);
         roomNameView.getLayoutParams().height = tabTitleHeight;
         timeTextView.getLayoutParams().height = tabTitleHeight;
-        roomNameView.setTextSize(UnitConvertUtil.px2Sp(this,tabTitleHeight / 2)-2);
-        timeTextView.setTextSize(UnitConvertUtil.px2Sp(this,tabTitleHeight / 4)-1);
         for (int i = 0; i < 4; i++) {
             roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = tabTitleHeight;
             setTabTitleViewLayout(i);

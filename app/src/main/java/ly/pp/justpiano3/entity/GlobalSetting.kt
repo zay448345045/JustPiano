@@ -277,8 +277,8 @@ object GlobalSetting {
         isOpenChord = sharedPreferences.getBoolean("sound_check_box", true)
         chordVolume = sharedPreferences.getString("b_s_vol", "0.8")!!.toFloat()
         // 延音和混响：数值直接更新到C++层即可
-        SoundEngineUtil.setDelayValue(sharedPreferences.getString("sound_delay", "0")!!.toInt())
-        SoundEngineUtil.setReverbValue(sharedPreferences.getString("sound_reverb", "0")!!.toInt())
+        SoundEngineUtil.setDelayValue(sharedPreferences.getString("sound_delay", "10")!!.toInt())
+        SoundEngineUtil.setReverbValue(sharedPreferences.getString("sound_reverb", "10")!!.toInt())
         soundVibration = sharedPreferences.getBoolean("sound_vibration", false)
         soundVibrationTime = sharedPreferences.getString("sound_vibration_time", "10")!!.toInt()
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)

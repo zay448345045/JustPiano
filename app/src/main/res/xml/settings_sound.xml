@@ -9,7 +9,7 @@
             android:summaryOn="&lt;打开&gt;强制开启延音踏板，对于某些sf2音源，松开琴键时无法停止音符，造成声音堆积影响听感，请谨慎选择"
             android:title="强制开启延音踏板" />
         <ly.pp.justpiano3.view.preference.SeekBarPreference
-            android:defaultValue="0"
+            android:defaultValue="10"
             android:dialogTitle="延音强度"
             android:key="sound_delay"
             android:summary="触发停止播放琴键声音时，音符的延音长度"
@@ -18,7 +18,7 @@
             app:maxValue="100"
             app:minValue="0" />
         <ly.pp.justpiano3.view.preference.SeekBarPreference
-            android:defaultValue="0"
+            android:defaultValue="10"
             android:dialogTitle="混响强度"
             android:key="sound_reverb"
             android:summary="播放琴键声音时，混响效果强度"

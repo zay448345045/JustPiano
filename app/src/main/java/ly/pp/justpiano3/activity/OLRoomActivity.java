@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -737,8 +736,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.CHINESE).format(new Date());
             if (timeTextView != null) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                    BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
-                    timeTextView.setText(format + "\n电量:" + batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) + "%");
+                    timeTextView.setText(format);
                 } else {
                     timeTextView.setText(format);
                     timeTextView.setTextSize(20);

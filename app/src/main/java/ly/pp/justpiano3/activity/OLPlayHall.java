@@ -58,7 +58,6 @@ import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
 import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -449,8 +448,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         for (int i = 0; i < 3; i++) {
             tabHost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             playHallTitleView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
-            playHallTitleView.setTextSize(UnitConvertUtil.px2Sp(this,(displayMetrics.heightPixels * 45f) / 960) - 2);
-            timeTextView.setTextSize(UnitConvertUtil.px2Sp(this,(displayMetrics.heightPixels * 45f) / 960) - 6);
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             tv.setTextColor(0xffffffff);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
