@@ -25,7 +25,7 @@ public final class SkinListAdapter extends BaseAdapter {
         this.skinKeyList = skinKeyList;
     }
 
-    public void mo3544a(CharSequence[] skinNameList, CharSequence[] skinKeyList) {
+    public void updateSkinList(CharSequence[] skinNameList, CharSequence[] skinKeyList) {
         this.skinNameList = skinNameList;
         this.skinKeyList = skinKeyList;
     }

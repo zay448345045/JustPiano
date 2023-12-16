@@ -42,8 +42,6 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
         try {
             if (soundFile.getName().endsWith(".ss")) {
                 GZIPUtil.ZIPFileTo(soundFile, dir.toString());
-            }
-            if (soundFile.getName().endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.unloadWavAssetsNative();
@@ -56,7 +54,9 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(soundListPreference.context, soundFile);
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
+                Thread.sleep(100);
                 SoundEngineUtil.setupAudioStreamNative(2, 44100);
+                Thread.sleep(100);
                 SoundEngineUtil.loadSf2(newSf2Path);
                 SoundEngineUtil.startAudioStreamNative();
             }

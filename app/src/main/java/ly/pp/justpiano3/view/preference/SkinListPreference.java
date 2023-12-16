@@ -44,7 +44,7 @@ public class SkinListPreference extends DialogPreference {
         this.context = context;
     }
 
-    private void m3906a() {
+    private void loadSkinList() {
         String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
         List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(str);
         int size = localSkinList.size();
@@ -80,8 +80,8 @@ public class SkinListPreference extends DialogPreference {
                 }
             }
         }
-        m3906a();
-        skinListAdapter.mo3544a(skinNameList, skinKeyList);
+        loadSkinList();
+        skinListAdapter.updateSkinList(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
     }
 
@@ -100,7 +100,7 @@ public class SkinListPreference extends DialogPreference {
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
-        m3906a();
+        loadSkinList();
         jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

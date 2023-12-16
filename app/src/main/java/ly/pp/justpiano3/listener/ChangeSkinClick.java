@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import java.io.File;
+import java.util.Objects;
 
 import ly.pp.justpiano3.activity.SkinDownload;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
@@ -21,22 +22,15 @@ public final class ChangeSkinClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (skinKey) {
-            case "original":
-                skinListAdapter.skinListPreference.skinKey = skinKey;
-                new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
-                break;
-            case "more":
-                Intent intent = new Intent();
-                intent.setFlags(0);
-                intent.setClass(skinListAdapter.context, SkinDownload.class);
-                skinListAdapter.context.startActivity(intent);
-                break;
-            default:
-                skinListAdapter.skinListPreference.skinKey = skinKey;
-                skinListAdapter.skinListPreference.skinFile = new File(skinKey);
-                new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
-                break;
+        if (skinKey.equals("more")) {
+            Intent intent = new Intent();
+            intent.setFlags(0);
+            intent.setClass(skinListAdapter.context, SkinDownload.class);
+            skinListAdapter.context.startActivity(intent);
+        } else {
+            skinListAdapter.skinListPreference.skinKey = skinKey;
+            skinListAdapter.skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : new File(skinKey);
+            new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
         }
     }
 }

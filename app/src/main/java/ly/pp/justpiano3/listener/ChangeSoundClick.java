@@ -21,21 +21,14 @@ public final class ChangeSoundClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (soundKey) {
-            case "original":
-                soundListAdapter.soundListPreference.soundKey = soundKey;
-                new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute("original");
-                break;
-            case "more":
-                Intent intent = new Intent();
-                intent.setFlags(0);
-                intent.setClass(soundListAdapter.context, SoundDownload.class);
-                soundListAdapter.context.startActivity(intent);
-                break;
-            default:
-                soundListAdapter.soundListPreference.soundKey = soundKey;
-                new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(soundKey, String.valueOf(soundListAdapter.soundKeyList[position]));
-                break;
+        if (soundKey.equals("more")) {
+            Intent intent = new Intent();
+            intent.setFlags(0);
+            intent.setClass(soundListAdapter.context, SoundDownload.class);
+            soundListAdapter.context.startActivity(intent);
+        } else {
+            soundListAdapter.soundListPreference.soundKey = soundKey;
+            new SoundListPreferenceTask(soundListAdapter.soundListPreference).execute(soundKey, String.valueOf(soundListAdapter.soundKeyList[position]));
         }
     }
 }
