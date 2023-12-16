@@ -12,6 +12,7 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -175,8 +176,11 @@ class WaterfallView @JvmOverloads constructor(
         // 保持屏幕常亮
         holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
-        backgroundImage =
-            ImageLoadUtil.loadFileImage(context, Uri.parse(GlobalSetting.waterfallBackgroundPic))
+        if (!TextUtils.isEmpty(GlobalSetting.waterfallBackgroundPic)) {
+            backgroundImage = ImageLoadUtil.loadFileImage(
+                context, Uri.parse(GlobalSetting.waterfallBackgroundPic)
+            )
+        }
         if (backgroundImage == null) {
             backgroundImage = ImageLoadUtil.loadSkinImage(context, "waterfall")
         }
