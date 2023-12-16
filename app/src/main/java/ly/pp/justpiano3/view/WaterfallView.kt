@@ -236,7 +236,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 暂停播放
      */
-    fun pausePlay() {
+    private fun pausePlay() {
         if (drawNotesThread != null && drawNotesThread!!.isRunning) {
             // 暂停播放时，停止播放所有音符
             SoundEngineUtil.stopPlayAllSounds()
@@ -247,7 +247,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 继续播放
      */
-    fun resumePlay() {
+    private fun resumePlay() {
         if (drawNotesThread != null && drawNotesThread!!.isRunning) {
             drawNotesThread!!.isPause = false
         }
@@ -506,10 +506,11 @@ class WaterfallView @JvmOverloads constructor(
             val startPlayTime = System.currentTimeMillis()
             // 循环绘制，直到外部有触发终止绘制
             while (isRunning) {
+                val frameStartTime = System.currentTimeMillis()
                 // 根据系统时间，计算距离开始播放的时间点，间隔多长时间
                 // 需要乘以播放速度和音块速率，可整体控制音块的下落速度和音块速率，最后减掉暂停播放后继续播放所带来的时间差
                 var playIntervalTime =
-                    (System.currentTimeMillis() - startPlayTime) * notePlaySpeed * noteFallDownSpeed - progressPauseTime
+                    (frameStartTime - startPlayTime) * notePlaySpeed * noteFallDownSpeed - progressPauseTime
                 // 如果处于暂停状态，则存储当前的播放进度，如果突然继续播放了，则移除存储的播放进度
                 if (isPause && pauseProgress == null) {
                     // 只有第一次监测到isPause为true时才触发这里，重复置isPause为true，不会重复触发，确保进度保存的是第一次触发暂停时的
@@ -559,10 +560,17 @@ class WaterfallView @JvmOverloads constructor(
                 } else {
                     canvasDraw = visibility != VISIBLE || noteCount > 0
                     // 未触发绘制，避免死循环消耗太多CPU，按刷新率60算，整体休眠约一帧的时间
-                    sleep(10)
+                    val sleepTime = 10 - System.currentTimeMillis() + frameStartTime
+                    if (sleepTime > 0) {
+                        sleep(sleepTime)
+                    }
                 }
                 // 避免死循环消耗太多CPU，休眠一个音块的最低声音单位的时间
-                sleep(PmSongUtil.PM_GLOBAL_SPEED.toLong())
+                val sleepTime =
+                    PmSongUtil.PM_GLOBAL_SPEED - System.currentTimeMillis() + frameStartTime
+                if (sleepTime > 0) {
+                    sleep(sleepTime)
+                }
             }
         }
 
