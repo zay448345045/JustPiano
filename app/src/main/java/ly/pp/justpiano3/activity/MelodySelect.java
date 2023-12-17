@@ -430,11 +430,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         while (!firstLoadFocusFinish) {
