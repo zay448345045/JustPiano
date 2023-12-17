@@ -360,7 +360,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             int[] iArr = new int[2];
             changeColorButton.getLocationOnScreen(iArr);
             changeColorPopupWindow.showAtLocation(changeColorButton, Gravity.TOP | Gravity.START,
-                    (int) (iArr[0] * 0.75f), (int) (iArr[0] * 0.75f));
+                    (int) (iArr[0] * 0.75f), (int) (iArr[1] * 0.75f));
         }
     }
 

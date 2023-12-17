@@ -20,6 +20,15 @@
             android:background="@drawable/filled_bar"
             android:orientation="horizontal">
 
+            <GridView
+                android:id="@id/ol_player_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/room_title"
+                android:layout_alignParentEnd="true"
+                android:listSelector="@color/translent"
+                android:numColumns="3" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -38,7 +47,6 @@
                     android:text="@string/olplayroom_begin"
                     android:textColor="@color/white1"
                     android:textSize="14sp" />
-
 
                 <LinearLayout
                     android:id="@+id/LinearLayout01"
@@ -75,15 +83,6 @@
                     android:textColor="@color/white1"
                     android:textSize="15sp" />
             </RelativeLayout>
-
-            <GridView
-                android:id="@id/ol_player_grid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/room_title"
-                android:layout_alignParentEnd="true"
-                android:listSelector="@color/translent"
-                android:numColumns="3" />
 
             <TextView
                 android:id="@id/room_title"
