@@ -8,8 +8,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.handler.android.OLBaseActivityHandler;
@@ -22,9 +22,9 @@ public class OLBaseActivity extends BaseActivity {
     private boolean online = true;
     public JPProgressBar jpProgressBar;
     public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);
-    private final Map<Byte, User> roomPlayerMap = new HashMap<>();
+    private static final Map<Byte, User> roomPlayerMap = new ConcurrentHashMap<>();
 
-    public Map<Byte, User> getRoomPlayerMap() {
+    public static Map<Byte, User> getRoomPlayerMap() {
         return roomPlayerMap;
     }
 

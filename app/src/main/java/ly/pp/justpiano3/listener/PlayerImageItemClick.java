@@ -15,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
@@ -39,7 +40,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        User user = olRoomActivity.getRoomPlayerMap().get((byte) (i + 1));
+        User user = OLBaseActivity.getRoomPlayerMap().get((byte) (i + 1));
         if (user != null) {
             PopupWindow popupWindow = buildPopupWindow(user);
             int[] iArr = new int[2];

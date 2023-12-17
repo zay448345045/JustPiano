@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.activity.OLMainMode;
@@ -509,10 +510,9 @@ public final class ReceiveTasks {
                     buildAndPutUser(olRoomActivity, roomPositionUser);
                 }
                 Bundle bundle = new Bundle();
-                Iterator<User> it = olRoomActivity.getRoomPlayerMap().values().iterator();
+                Iterator<User> it = OLBaseActivity.getRoomPlayerMap().values().iterator();
                 for (int i = 0; it.hasNext(); i++) {
-                    User user = it.next();
-                    fillUserBundle(bundle, i, user);
+                    fillUserBundle(bundle, i, it.next());
                 }
                 bundle.putString("SI", "");
                 bundle.putInt("diao", 0);
@@ -614,7 +614,7 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.MINI_GRADE, (receivedMessage, topActivity, message) -> {
             if (topActivity instanceof PianoPlay) {
                 PianoPlay pianoPlay = (PianoPlay) topActivity;
-                User user = pianoPlay.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
+                User user = OLBaseActivity.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
                 if (user == null) {
                     return;
                 }
@@ -630,7 +630,7 @@ public final class ReceiveTasks {
                 }
                 int i = 0;
                 for (byte b = 1; b <= 6; b++) {
-                    User currentUser = pianoPlay.getRoomPlayerMap().get(b);
+                    User currentUser = OLBaseActivity.getRoomPlayerMap().get(b);
                     if (currentUser == null) {
                         continue;
                     }
@@ -1261,7 +1261,7 @@ public final class ReceiveTasks {
                 roomPositionUser.getHand(),
                 roomPositionUser.getCoupleType(),
                 String.valueOf(roomPositionUser.getFamily()));
-        olRoomActivity.getRoomPlayerMap().put(user.getPosition(), user);
+        OLBaseActivity.getRoomPlayerMap().put(user.getPosition(), user);
         return user;
     }
 

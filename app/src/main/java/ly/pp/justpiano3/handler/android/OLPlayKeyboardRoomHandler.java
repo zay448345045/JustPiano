@@ -6,6 +6,7 @@ import android.os.Message;
 
 import java.lang.ref.WeakReference;
 
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -42,7 +43,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         }
                         // 2.提取键盘音符事件的头信息，根据楼号确定用户
                         int roomPositionSub1 = (byte) (notes[0] & 0xF);
-                        User user = olPlayKeyboardRoom.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
+                        User user = OLBaseActivity.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
                         if (user == null) {
                             return;
                         }
