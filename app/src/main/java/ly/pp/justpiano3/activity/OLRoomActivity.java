@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,11 +16,11 @@ import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -113,8 +114,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public ImageView expressImageView;
     public LayoutInflater layoutInflater;
     public final List<Bundle> playerList = new ArrayList<>();
-    public JPPopupWindow expressWindow;
-    public JPPopupWindow changeColor;
+    public PopupWindow expressPopupWindow;
+    public PopupWindow changeColorPopupWindow;
     public TextView timeTextView;
     public int colorNum = 99;
     public TimeUpdateThread timeUpdateThread;
@@ -305,8 +306,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         } else {
             Toast.makeText(this, "您的等级未达到" + lv + "级，不能使用该颜色!", Toast.LENGTH_SHORT).show();
         }
-        if (changeColor != null) {
-            changeColor.dismiss();
+        if (changeColorPopupWindow != null) {
+            changeColorPopupWindow.dismiss();
         }
     }
 
@@ -355,10 +356,11 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     protected void changeColorClick() {
-        if (changeColor != null) {
+        if (changeColorPopupWindow != null) {
             int[] iArr = new int[2];
             changeColorButton.getLocationOnScreen(iArr);
-            changeColor.showAtLocation(changeColorButton, Gravity.TOP | Gravity.START, iArr[0] / 2 - 30, (int) (iArr[1] * 0.84f));
+            changeColorPopupWindow.showAtLocation(changeColorButton, Gravity.TOP | Gravity.START,
+                    (int) (iArr[0] * 0.75f), (int) (iArr[0] * 0.75f));
         }
     }
 
@@ -550,7 +552,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void handleOffline() {
-        Toast.makeText(this, "您已掉线,请检查您的网络再重新登录!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.setClass(this, OLMainMode.class);
         startActivity(intent);
@@ -662,23 +664,16 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         expressImageView.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         handler = new Handler(this);
-        JPPopupWindow popupWindow = new JPPopupWindow(this);
+        PopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 13));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
-        expressWindow = popupWindow;
-        JPPopupWindow popupWindow3 = new JPPopupWindow(this);
+        expressPopupWindow = popupWindow;
+        PopupWindow popupWindow3 = new JPPopupWindow(this);
         View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
         popupWindow3.setContentView(inflate3);
         popupWindow3.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        popupWindow3.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow3.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         inflate3.findViewById(R.id.white).setOnClickListener(this);
         inflate3.findViewById(R.id.yellow).setOnClickListener(this);
         inflate3.findViewById(R.id.blue).setOnClickListener(this);
@@ -689,10 +684,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         inflate3.findViewById(R.id.gold).setOnClickListener(this);
         inflate3.findViewById(R.id.green).setOnClickListener(this);
         inflate3.findViewById(R.id.black).setOnClickListener(this);
-        popupWindow3.setFocusable(true);
-        popupWindow3.setTouchable(true);
-        popupWindow3.setOutsideTouchable(true);
-        changeColor = popupWindow3;
+        changeColorPopupWindow = popupWindow3;
         roomTabs = findViewById(R.id.tabhost);
         roomTabs.setup();
         TabHost.TabSpec newTabSpec = roomTabs.newTabSpec("tab1");
@@ -736,7 +728,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.CHINESE).format(new Date());
             if (timeTextView != null) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                    timeTextView.setText(format);
+                    BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+                    timeTextView.setText(format + "  " + batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) + "%🔋");
                 } else {
                     timeTextView.setText(format);
                     timeTextView.setTextSize(20);
@@ -762,7 +755,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 sendMessageClick(false);
                 return;
             case R.id.ol_express_b:
-                expressWindow.showAtLocation(expressImageView, Gravity.CENTER, 0, 0);
+                expressPopupWindow.showAtLocation(expressImageView, Gravity.CENTER, 0, 0);
                 return;
             case R.id.ol_changecolor:
                 changeColorClick();

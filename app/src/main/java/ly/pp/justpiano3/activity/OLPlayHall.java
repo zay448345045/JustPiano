@@ -13,11 +13,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -95,7 +95,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     private ImageView imageView;
     private LayoutInflater layoutInflater1;
     private LayoutInflater layoutInflater2;
-    private JPPopupWindow popupWindow = null;
+    private PopupWindow popupWindow = null;
     private ShowTimeThread showTimeThread;
     private TextView timeTextView;
 
@@ -417,17 +417,12 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(Color.TRANSPARENT);
         roomList.clear();
-        JPPopupWindow popupWindow = new JPPopupWindow(this);
+        PopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
                 new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 12));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
         this.popupWindow = popupWindow;
         tabHost = findViewById(R.id.tabhost);
         tabHost.setup();

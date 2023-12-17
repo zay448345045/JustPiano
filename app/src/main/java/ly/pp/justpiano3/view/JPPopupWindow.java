@@ -3,6 +3,7 @@ package ly.pp.justpiano3.view;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -15,11 +16,21 @@ public class JPPopupWindow extends PopupWindow {
     public JPPopupWindow(Context context) {
         super(context);
         this.context = context;
+        init();
     }
 
     public JPPopupWindow(View contentView, int width, int height, boolean focusable) {
         super(contentView, width, height, focusable);
         this.context = contentView.getContext();
+        init();
+    }
+
+    private void init() {
+        setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        setFocusable(true);
+        setTouchable(true);
+        setOutsideTouchable(true);
     }
 
     @Override

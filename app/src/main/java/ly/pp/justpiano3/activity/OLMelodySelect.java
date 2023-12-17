@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -70,7 +71,7 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
     public boolean f4333v = true;
     public boolean f4334w = true;
     public boolean f4335x = true;
-    private JPPopupWindow popupWindow;
+    private PopupWindow popupWindow;
     private final List<String> pageList = new ArrayList<>();
     private boolean firstLoadFocusFinish;
     private List<Map<String, Object>> songList;
@@ -105,7 +106,7 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
     }
 
 
-    public void m3643a(int i) {
+    public void fillPageList(int i) {
         pageList.clear();
         for (int i2 = 1; i2 <= i; i2++) {
             pageList.add(i2 - 1, "第" + i2 + "页");
@@ -306,13 +307,12 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
         while (!firstLoadFocusFinish) {
             Handler handler = new Handler(this);
             int width = pageButton.getWidth() + 40;
-            m3643a(pageNum);
+            fillPageList(pageNum);
             View inflate = getLayoutInflater().inflate(R.layout.options, null);
             ListView listView = inflate.findViewById(R.id.list);
             popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, pageList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
             popupWindow = new JPPopupWindow(inflate, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-            popupWindow.setOutsideTouchable(true);
             popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_face, getTheme()));
             firstLoadFocusFinish = true;
         }

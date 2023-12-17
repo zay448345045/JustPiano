@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -19,7 +20,6 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
-import ly.pp.justpiano3.view.JPPopupWindow;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
     private final List<Map<String, String>> list;
@@ -113,11 +113,11 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
-            JPPopupWindow a = family.loadInfoPopupWindow(name, userPosition);
-            if (a != null) {
+            PopupWindow popupWindow = family.loadInfoPopupWindow(name, userPosition);
+            if (popupWindow != null) {
                 int[] iArr = new int[2];
                 linearLayout.getLocationOnScreen(iArr);
-                a.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
+                popupWindow.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
             }
         });
         return view;

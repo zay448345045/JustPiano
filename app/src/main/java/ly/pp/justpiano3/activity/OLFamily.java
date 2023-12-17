@@ -8,10 +8,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +64,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public byte[] myFamilyPicArray;
     public List<Map<String, String>> peopleList = new ArrayList<>();
     public ListView peopleListView;
-    public JPPopupWindow infoWindow;
+    public PopupWindow infoWindow;
     private LayoutInflater layoutinflater;
     private Button manageFamily;
     private Button inOut;
@@ -112,7 +112,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
-        JPPopupWindow popupWindow = new JPPopupWindow(this);
+        PopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
         Button button = inflate.findViewById(R.id.ol_family_levelup);
         Button button2 = inflate.findViewById(R.id.ol_family_changedecl);
@@ -125,11 +125,6 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         info.setText(b.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
         button2.setOnClickListener(this);
         button.setOnClickListener(this);
         button3.setOnClickListener(this);
@@ -366,8 +361,8 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    public JPPopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
-        JPPopupWindow popupWindow = new JPPopupWindow(this);
+    public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
+        PopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
         Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
         Button mailSendButton = inflate.findViewById(R.id.ol_chat_b);  //私信
@@ -379,11 +374,6 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         inflate.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
         if (position == FamilyPositionEnum.MEMBER || position == FamilyPositionEnum.NOT_IN_FAMILY
                 || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
             kickOutButton.setVisibility(View.GONE);

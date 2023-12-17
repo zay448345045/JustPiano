@@ -47,7 +47,7 @@ public class OLBaseActivity extends BaseActivity {
         progressBarDismissAndReInit();
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("提示");
-        jpDialogBuilder.setMessage("非常抱歉,可能由于网络质量不稳定，服务器未能响应，点击确定回到到联网主界面重新登录");
+        jpDialogBuilder.setMessage("非常抱歉，可能由于网络质量不稳定，服务器未能响应，点击确定回到到联网主界面重新登录");
         jpDialogBuilder.setCancelableFalse();
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
             dialog.dismiss();

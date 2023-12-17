@@ -11,11 +11,11 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -69,11 +69,11 @@ public final class OLPlayRoom extends OLRoomActivity {
     private int tune;
     private Button playSongsModeButton;
     private TextView searchTextView;
-    private JPPopupWindow normalModePopupWindow;
-    private JPPopupWindow moreSongsPopupWindow;
-    private JPPopupWindow groupModePopupWindow;
-    private JPPopupWindow coupleModePopupWindow;
-    private JPPopupWindow playSongsModePopupWindow;
+    private PopupWindow normalModePopupWindow;
+    private PopupWindow moreSongsPopupWindow;
+    private PopupWindow groupModePopupWindow;
+    private PopupWindow coupleModePopupWindow;
+    private PopupWindow playSongsModePopupWindow;
     private RecyclerView songsRecyclerView;
 
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
@@ -89,7 +89,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         }
     }
 
-    public void setGroupOrHand(int i, JPPopupWindow popupWindow) {
+    public void setGroupOrHand(int i, PopupWindow popupWindow) {
         OnlineChangeRoomHandDTO.Builder builder = OnlineChangeRoomHandDTO.newBuilder();
         builder.setHand(i);
         sendMsg(OnlineProtocolType.CHANGE_ROOM_HAND, builder.build());
@@ -410,20 +410,15 @@ public final class OLPlayRoom extends OLRoomActivity {
                 return;
             case R.id.ol_group_b:
                 if (roomMode == RoomModeEnum.NORMAL.getCode()) {
-                    JPPopupWindow popupWindow2 = new JPPopupWindow(this);
+                    PopupWindow popupWindow2 = new JPPopupWindow(this);
                     View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_hand_select, null);
                     popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                    popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                    popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                     inflate2.findViewById(R.id.left_hand).setOnClickListener(this);
                     inflate2.findViewById(R.id.right_hand).setOnClickListener(this);
                     inflate2.findViewById(R.id.shengdiao).setOnClickListener(this);
                     inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
                     inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
                     inflate2.findViewById(R.id.ol_more_settings).setOnClickListener(this);
-                    popupWindow2.setFocusable(true);
-                    popupWindow2.setTouchable(true);
-                    popupWindow2.setOutsideTouchable(true);
                     popupWindow2.setContentView(inflate2);
                     normalModePopupWindow = popupWindow2;
                     popupWindow2.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
@@ -512,7 +507,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         songNameScrollText.setFocusable(true);
         songNameScrollText.setFocusableInTouchMode(true);
         songNameScrollText.setOnClickListener(this);
-        JPPopupWindow popupWindow2 = new JPPopupWindow(this);
+        PopupWindow popupWindow2 = new JPPopupWindow(this);
         View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_song_rand, null);
         popupWindow2.setContentView(inflate2);
         inflate2.findViewById(R.id.rand_all).setOnClickListener(this);
@@ -528,11 +523,6 @@ public final class OLPlayRoom extends OLRoomActivity {
         inflate2.findViewById(R.id.type_e).setOnClickListener(this);
         inflate2.findViewById(R.id.type_h).setOnClickListener(this);
         popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-        popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow2.setFocusable(true);
-        popupWindow2.setTouchable(true);
-        popupWindow2.setOutsideTouchable(true);
         moreSongsPopupWindow = popupWindow2;
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
             case NORMAL:
@@ -544,14 +534,9 @@ public final class OLPlayRoom extends OLRoomActivity {
                 View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
                 popupWindow2.setContentView(inflate3);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                 inflate3.findViewById(R.id.group_1).setOnClickListener(this);
                 inflate3.findViewById(R.id.group_2).setOnClickListener(this);
                 inflate3.findViewById(R.id.group_3).setOnClickListener(this);
-                popupWindow2.setFocusable(true);
-                popupWindow2.setTouchable(true);
-                popupWindow2.setOutsideTouchable(true);
                 groupModePopupWindow = popupWindow2;
                 break;
             case COUPLE:
@@ -559,34 +544,24 @@ public final class OLPlayRoom extends OLRoomActivity {
                 View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
                 popupWindow2.setContentView(inflate4);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
                 inflate4.findViewById(R.id.couple_1).setOnClickListener(this);
                 inflate4.findViewById(R.id.couple_2).setOnClickListener(this);
                 inflate4.findViewById(R.id.couple_3).setOnClickListener(this);
                 inflate4.findViewById(R.id.couple_4).setOnClickListener(this);
                 inflate4.findViewById(R.id.couple_5).setOnClickListener(this);
                 inflate4.findViewById(R.id.couple_6).setOnClickListener(this);
-                popupWindow2.setFocusable(true);
-                popupWindow2.setTouchable(true);
-                popupWindow2.setOutsideTouchable(true);
                 coupleModePopupWindow = popupWindow2;
                 break;
         }
-        JPPopupWindow popupWindow4 = new JPPopupWindow(this);
+        PopupWindow popupWindow4 = new JPPopupWindow(this);
         View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
         popupWindow4.setContentView(inflate4);
         popupWindow4.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-        popupWindow4.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow4.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         inflate4.findViewById(R.id.onetimeplay).setOnClickListener(this);
         inflate4.findViewById(R.id.circulateplay).setOnClickListener(this);
         inflate4.findViewById(R.id.randomplay).setOnClickListener(this);
         inflate4.findViewById(R.id.favorplay).setOnClickListener(this);
         inflate4.findViewById(R.id.favorlist).setOnClickListener(this);
-        popupWindow4.setFocusable(true);
-        popupWindow4.setTouchable(true);
-        popupWindow4.setOutsideTouchable(true);
         playSongsModePopupWindow = popupWindow4;
         TabSpec newTabSpec = roomTabs.newTabSpec("tab3");
         newTabSpec.setContent(R.id.songs_tab);

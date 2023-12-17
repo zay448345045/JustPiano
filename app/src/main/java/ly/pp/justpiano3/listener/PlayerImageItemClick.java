@@ -5,10 +5,10 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -41,15 +41,15 @@ public final class PlayerImageItemClick implements OnItemClickListener {
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
         User user = olRoomActivity.getRoomPlayerMap().get((byte) (i + 1));
         if (user != null) {
-            JPPopupWindow popupWindow = buildPopupWindow(user);
+            PopupWindow popupWindow = buildPopupWindow(user);
             int[] iArr = new int[2];
             view.getLocationOnScreen(iArr);
             popupWindow.showAtLocation(view, Gravity.TOP | Gravity.START, iArr[0] + view.getWidth(), iArr[1]);
         }
     }
 
-    private JPPopupWindow buildPopupWindow(User user) {
-        JPPopupWindow popupWindow = new JPPopupWindow(olRoomActivity);
+    private PopupWindow buildPopupWindow(User user) {
+        PopupWindow popupWindow = new JPPopupWindow(olRoomActivity);
         View inflate = LayoutInflater.from(olRoomActivity).inflate(R.layout.ol_room_user_operation, null);
         Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);
         Button privateChatButton = inflate.findViewById(R.id.ol_chat_b);
@@ -75,11 +75,6 @@ public final class PlayerImageItemClick implements OnItemClickListener {
         }
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olRoomActivity.getResources(), R.drawable._none, olRoomActivity.getTheme()));
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
         if (!user.getPlayerName().equals(JPApplication.kitiName)) {
             if (user.getCpKind() <= 0 || user.getCpKind() > 3) {
                 showCoupleDialogButton.setVisibility(View.GONE);

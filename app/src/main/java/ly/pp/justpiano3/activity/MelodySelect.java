@@ -22,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,8 +79,8 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
     private boolean firstLoadFocusFinish;
     public int orderPosition;
     private int categoryPosition = -1;
-    private JPPopupWindow sortPopupWindow;
-    private JPPopupWindow menuPopupWindow;
+    private PopupWindow sortPopupWindow;
+    private PopupWindow menuPopupWindow;
     private TextView totalSongCountTextView;
     private TextView totalSongScoreTextView;
     private RecyclerView songsListView;
@@ -218,7 +219,7 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
                 sortButton.setEnabled(false);
                 return;
             case R.id.list_sort_b:
-                JPPopupWindow popupWindow1 = new JPPopupWindow(this);
+                PopupWindow popupWindow1 = new JPPopupWindow(this);
                 View inflate1 = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
                 popupWindow1.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
                 popupWindow1.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -233,9 +234,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
                 inflate1.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
                 inflate1.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
                 inflate1.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
-                popupWindow1.setFocusable(true);
-                popupWindow1.setTouchable(true);
-                popupWindow1.setOutsideTouchable(true);
                 popupWindow1.setContentView(inflate1);
                 sortPopupWindow = popupWindow1;
                 popupWindow1.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
@@ -271,7 +269,7 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
                 songsSort(9);
                 return;
             case R.id.menu_list_fast:
-                JPPopupWindow popupWindow2 = new JPPopupWindow(this);
+                PopupWindow popupWindow2 = new JPPopupWindow(this);
                 View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
                 popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
                 popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -280,9 +278,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
                 inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
                 inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
                 inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
-                popupWindow2.setFocusable(true);
-                popupWindow2.setTouchable(true);
-                popupWindow2.setOutsideTouchable(true);
                 popupWindow2.setContentView(inflate2);
                 menuPopupWindow = popupWindow2;
                 popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
@@ -451,7 +446,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
             PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
             listView.setAdapter(popupWindowSelectAdapter);
             sortPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-            sortPopupWindow.setOutsideTouchable(true);
             sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();
             Collections.addAll(menuListNames, Consts.localMenuListNames);
@@ -461,7 +455,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
             listView.setAdapter(popupWindowSelectAdapter);
             listView.setDivider(null);
             menuPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-            menuPopupWindow.setOutsideTouchable(true);
             menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             firstLoadFocusFinish = true;
         }

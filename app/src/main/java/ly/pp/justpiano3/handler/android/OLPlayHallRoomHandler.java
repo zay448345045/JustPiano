@@ -370,7 +370,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                     return;
                 case 21:
                     post(() -> {
-                        Toast.makeText(olPlayHallRoom, "您已掉线,请检查您的网络再重新登录!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(olPlayHallRoom, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(olPlayHallRoom, OLMainMode.class);
                         olPlayHallRoom.startActivity(intent);
