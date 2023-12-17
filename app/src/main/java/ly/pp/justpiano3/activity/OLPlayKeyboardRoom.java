@@ -112,7 +112,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     }
                 }, PmSongUtil.PM_GLOBAL_SPEED);
             }
-        } else {
+        } else if (noteScheduledExecutor != null) {
             notesQueue.offer(new OLNote(System.currentTimeMillis(), pitch, volume));
         }
     }
@@ -583,10 +583,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     }
 
     private void openNotesSchedule() {
-        if (roomPositionSub1 == -1) {
-            // 未初始化楼号，房间未完全加载完成，不开定时器
-            return;
-        }
         if (noteScheduledExecutor == null) {
             noteScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             noteScheduledExecutor.scheduleWithFixedDelay(() -> {

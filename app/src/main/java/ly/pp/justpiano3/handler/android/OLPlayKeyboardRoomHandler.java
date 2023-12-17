@@ -60,7 +60,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         // 4.执行人物形象闪烁
                         olPlayKeyboardRoom.blinkView(roomPositionSub1);
                         // 5.循环计算音符事件的总持续时间，如果总持续时间为0，直接进行播放和琴键按下/抬起处理，否则启动线程进行sleep逐个处理
-                        long totalIntervalTime = 0;
+                        long totalIntervalTime = 0L;
                         for (int i = 1; i < notes.length; i += 3) {
                             totalIntervalTime += notes[i];
                         }
