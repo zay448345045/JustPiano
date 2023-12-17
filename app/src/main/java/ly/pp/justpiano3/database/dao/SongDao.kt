@@ -141,6 +141,9 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE path = :filePath")
     fun getSongByFilePath(filePath: String): List<Song>
 
+    @Query("SELECT * FROM song WHERE path IN (:filePathList)")
+    fun getSongByFilePathList(filePathList: List<String>): List<Song>
+
     @Query("SELECT * FROM song WHERE online = 1 AND diff BETWEEN :startDegree AND :endDegree ORDER BY RANDOM() LIMIT 1")
     fun getSongByRightHandDegreeWithRandom(startDegree: Int, endDegree: Int): List<Song>
 

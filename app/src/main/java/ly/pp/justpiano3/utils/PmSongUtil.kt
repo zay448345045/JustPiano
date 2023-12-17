@@ -63,17 +63,6 @@ object PmSongUtil {
     }
 
     /**
-     * 根据pm文件路径获取曲谱id
-     */
-    fun getPmSongIdByFilePath(filePath: String): Int? {
-        val matcher: Matcher = pattern.matcher(filePath)
-        if (matcher.find()) {
-            return matcher.group(2)?.toInt()
-        }
-        return null
-    }
-
-    /**
      * 根据pm文件路径获取曲谱分类
      */
     fun getPmSongCategoryByFilePath(filePath: String): String? {

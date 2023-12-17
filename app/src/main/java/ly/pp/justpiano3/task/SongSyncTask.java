@@ -13,7 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import io.netty.util.internal.StringUtil;
@@ -78,9 +80,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                                 0, 0, 1, 0, 0, 0));
                     }
                 }
-                // 3.取新增/更新的曲谱文件，解压并准备进行数据库填充
-                List<Song> insertSongList = new ArrayList<>();
-                List<Song> updateSongList = new ArrayList<>();
+
                 byte[] bytes = GZIPUtil.ZIPToArray(jSONObject.getString("S"));
                 // 先解压zip文件，获取里面的所有pm文件
                 File zipFile = new File(weakReference.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
@@ -89,6 +89,23 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                 fileOutputStream.close();
                 List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
+                // 3.按曲谱文件path查询数据库，确认曲谱是否已存在
+                List<String> songPathList = new ArrayList<>();
+                for (File file : files) {
+                    String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
+                    if (item == null) {
+                        continue;
+                    }
+                    songPathList.add("songs/" + item + '/' + file.getName());
+                }
+                List<Song> songList = JPApplication.getSongDatabase().songDao().getSongByFilePathList(songPathList);
+                Map<String, Integer> songIdMap = new HashMap<>();
+                for (Song song : songList) {
+                    songIdMap.put(song.getFilePath(), song.getId());
+                }
+                // 4.取新增/更新的曲谱文件，解压并准备进行数据库填充
+                List<Song> insertSongList = new ArrayList<>();
+                List<Song> updateSongList = new ArrayList<>();
                 for (File file : files) {
                     String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
                     if (item == null) {
@@ -102,21 +119,18 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                     if (pmSongData == null) {
                         continue;
                     }
-                    // 按曲谱id取原pm文件，若原pm文件存在，走更新逻辑
-                    PmSongData oldPmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(weakReference.get(),
-                            "songs/" + item + "/" + file.getName());
-                    if (oldPmSongData != null) {
-                        Integer songId = PmSongUtil.INSTANCE.getPmSongIdByFilePath(file.getAbsolutePath());
-                        if (songId != null) {
-                            updateSongList.add(new Song(songId, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
-                                    "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
-                                    0, 0, 0, pmSongData.getRightHandDegree(), 1,
-                                    pmSongData.getLeftHandDegree(), pmSongData.getSongTime(), 0));
-                        }
+                    // 若数据库中存在此曲谱，走更新逻辑，否则走插入逻辑
+                    String songPath = "songs/" + item + '/' + file.getName();
+                    Integer songId = songIdMap.get(songPath);
+                    if (songId != null && songId > 0) {
+                        updateSongList.add(new Song(songId, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
+                                songPath, 1, 0, 0, "", 0,
+                                0, 0, pmSongData.getRightHandDegree(), 1,
+                                pmSongData.getLeftHandDegree(), pmSongData.getSongTime(), 0));
                     } else {
                         insertSongList.add(new Song(null, pmSongData.getSongName(), Consts.items[item.charAt(0) - 'a' + 1],
-                                "songs/" + item + '/' + file.getName(), 1, 0, 0, "",
-                                0, 0, 0, pmSongData.getRightHandDegree(), 1,
+                                songPath, 1, 0, 0, "", 0,
+                                0, 0, pmSongData.getRightHandDegree(), 1,
                                 pmSongData.getLeftHandDegree(), pmSongData.getSongTime(), 0));
                     }
                     count++;

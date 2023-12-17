@@ -234,7 +234,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         if (OnlineUtil.getConnectionService() != null) {
             OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
-            Toast.makeText(this, "连接已断开", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "连接已断开，请重新登录", Toast.LENGTH_SHORT).show();
         }
     }
 
