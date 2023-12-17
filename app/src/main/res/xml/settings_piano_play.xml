@@ -44,12 +44,6 @@
             android:summaryOff="关闭吊线提示"
             android:summaryOn="打开吊线提示"
             android:title="弹奏提示" />
-<!--        <SwitchPreference-->
-<!--            android:defaultValue="false"-->
-<!--            android:key="open_long_key"-->
-<!--            android:summaryOff="键盘缩略图已关闭"-->
-<!--            android:summaryOn="键盘缩略图已打开"-->
-<!--            android:title="键盘缩略图" />-->
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
             android:dialogTitle="节拍比率(仅本地模式有效)"

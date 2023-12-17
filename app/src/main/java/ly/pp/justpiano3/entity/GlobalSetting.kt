@@ -123,12 +123,6 @@ object GlobalSetting {
         private set
 
     /**
-     * 显示键盘缩略图
-     */
-    var loadLongKeyboard: Boolean = false
-        private set
-
-    /**
      * 按键效果
      */
     var keyboardPrefer: Boolean = true
@@ -284,8 +278,6 @@ object GlobalSetting {
         keyboardPrefer = sharedPreferences.getBoolean("keyboard_prefer", true)
         showTouchNotesLevel = sharedPreferences.getBoolean("tishi_cj", true)
         showLine = sharedPreferences.getBoolean("show_line", true)
-        loadLongKeyboard = false
-//        loadLongKeyboard = sharedPreferences.getBoolean("open_long_key", false)
         roughLine = sharedPreferences.getString("rough_line", "1")!!.toInt()
         midiKeyboardTune = sharedPreferences.getString("midi_keyboard_tune", "0")!!.toInt()
         keyboardSoundTune = sharedPreferences.getString("keyboard_sound_tune", "0")!!.toInt()

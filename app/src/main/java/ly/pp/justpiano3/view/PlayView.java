@@ -721,9 +721,6 @@ public final class PlayView extends SurfaceView implements Callback {
                     volume0 = currentPlayNote.volume;
                     newNote = false;
                 }
-                if (GlobalSetting.INSTANCE.getLoadLongKeyboard() && currentPlayNote.posiAdd15AddAnim < whiteKeyHeight) {
-                    currentNotePitch = currentPlayNote.pitch;
-                }
                 if (gameType > 0) {
                     if (currentPlayNote.onlineNotePlayHandle(canvas) < 0) {
                         break;
