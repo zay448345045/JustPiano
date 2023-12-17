@@ -70,17 +70,6 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                     jSONObject = new JSONObject();
                     e.printStackTrace();
                 }
-                // 2.取已删除的曲谱id列表，准备进行数据库曲谱同步的删除操作
-                List<Song> deleteSongList = new ArrayList<>();
-                String deleteSongIdList = jSONObject.getString("D");
-                if (!StringUtil.isNullOrEmpty(deleteSongIdList)) {
-                    for (String songId : deleteSongIdList.split(",")) {
-                        deleteSongList.add(new Song(Integer.parseInt(songId), "", "", "",
-                                0, 0, 0, "", 0, 0,
-                                0, 0, 1, 0, 0, 0));
-                    }
-                }
-
                 byte[] bytes = GZIPUtil.ZIPToArray(jSONObject.getString("S"));
                 // 先解压zip文件，获取里面的所有pm文件
                 File zipFile = new File(weakReference.get().getFilesDir().getAbsolutePath() + "/Songs/" + System.currentTimeMillis());
@@ -89,8 +78,15 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                 fileOutputStream.close();
                 List<File> files = GZIPUtil.ZIPFileTo(zipFile, zipFile.getParentFile().toString());
                 zipFile.delete();
-                // 3.按曲谱文件path查询数据库，确认曲谱是否已存在
+                // 2.取已删除的曲谱id列表，准备进行数据库曲谱同步的删除操作
                 List<String> songPathList = new ArrayList<>();
+                String deleteSongIdList = jSONObject.getString("D");
+                if (!StringUtil.isNullOrEmpty(deleteSongIdList)) {
+                    for (String songPath : deleteSongIdList.split(",")) {
+                        songPathList.add("songs/" + songPath + ".pm");
+                    }
+                }
+                // 3.按曲谱文件path查询数据库，确认曲谱是否已存在
                 for (File file : files) {
                     String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
                     if (item == null) {
@@ -103,9 +99,21 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                 for (Song song : songList) {
                     songIdMap.put(song.getFilePath(), song.getId());
                 }
-                // 4.取新增/更新的曲谱文件，解压并准备进行数据库填充
                 List<Song> insertSongList = new ArrayList<>();
                 List<Song> updateSongList = new ArrayList<>();
+                List<Song> deleteSongList = new ArrayList<>();
+                if (!StringUtil.isNullOrEmpty(deleteSongIdList)) {
+                    for (String songPath : deleteSongIdList.split(",")) {
+                        Integer songId = songIdMap.get("songs/" + songPath + ".pm");
+                        if (songId != null && songId > 0) {
+                            deleteSongList.add(new Song(songId, "", "", "",
+                                    0, 0, 0, "", 0, 0,
+                                    0, 0, 1, 0, 0, 0));
+                            count++;
+                        }
+                    }
+                }
+                // 4.取新增/更新的曲谱文件，解压并准备进行数据库填充
                 for (File file : files) {
                     String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
                     if (item == null) {
