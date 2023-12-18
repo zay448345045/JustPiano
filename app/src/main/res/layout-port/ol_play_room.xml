@@ -91,6 +91,7 @@
                 android:layout_alignStart="@id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/room_title"
                 android:layout_toEndOf="@id/room_title"
                 android:background="@drawable/selector_list_c"
                 android:gravity="end"
@@ -104,14 +105,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/ol_player_grid"
                 android:layout_alignParentTop="true"
-                android:layout_alignBottom="@+id/time_text"
                 android:background="@drawable/selector_list_c"
                 android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
                 android:textColor="@color/roomtext"
                 android:textSize="20sp" />
-
         </RelativeLayout>
 
         <RelativeLayout
