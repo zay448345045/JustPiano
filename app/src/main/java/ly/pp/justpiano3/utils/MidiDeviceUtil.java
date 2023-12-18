@@ -9,6 +9,7 @@ import android.media.midi.MidiReceiver;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -204,7 +205,7 @@ public class MidiDeviceUtil {
             return null;
         }
         String name = deviceInfo.getProperties().getString(MidiDeviceInfo.PROPERTY_NAME);
-        return deviceInfo.getId() + "-" + (StringUtil.isNullOrEmpty(name) ? "未知设备" : name);
+        return deviceInfo.getId() + "-" + (TextUtils.isEmpty(name) ? "未知设备" : name);
     }
 
     /**

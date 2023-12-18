@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.preference.DialogPreference
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
@@ -58,7 +59,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
         emptyText!!.textSize = 4f
         layout.addView(emptyText, params)
-        if (!message.isNullOrEmpty()) {
+        if (!TextUtils.isEmpty(message)) {
             emptyText = TextView(context)
             emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
             emptyText!!.textSize = 2f

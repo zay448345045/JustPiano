@@ -2,6 +2,7 @@ package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import org.json.JSONObject;
 
@@ -1024,7 +1025,7 @@ public final class ReceiveTasks {
                     bundle.putInt("H", dialog.getHallId());
                     bundle.putInt("R", dialog.getRoomId());
                     bundle.putString("N", dialog.getName());
-                    if (!StringUtil.isNullOrEmpty(dialog.getBizData())) {
+                    if (!TextUtils.isEmpty(dialog.getBizData())) {
                         bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
                     }
                     message.setData(bundle);

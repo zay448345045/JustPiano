@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.text.TextUtils
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -179,10 +180,10 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
             freeStyle = true
         }
         val songPath = intent.extras?.getString("songPath")
-        return if (songPath.isNullOrEmpty()) {
+        return if (TextUtils.isEmpty(songPath)) {
             intent.extras?.getByteArray("songBytes")?.let { PmSongUtil.parsePmDataByBytes(it) }
         } else {
-            PmSongUtil.parsePmDataByFilePath(this, songPath)
+            PmSongUtil.parsePmDataByFilePath(this, songPath!!)
         }
     }
 

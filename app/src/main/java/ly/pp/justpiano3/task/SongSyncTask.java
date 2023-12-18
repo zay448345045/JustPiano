@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MelodySelect;
@@ -81,7 +81,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                 // 2.取已删除的曲谱id列表，准备进行数据库曲谱同步的删除操作
                 List<String> songPathList = new ArrayList<>();
                 String deleteSongIdList = jSONObject.getString("D");
-                if (!StringUtil.isNullOrEmpty(deleteSongIdList)) {
+                if (!TextUtils.isEmpty(deleteSongIdList)) {
                     for (String songPath : deleteSongIdList.split(",")) {
                         songPathList.add("songs/" + songPath + ".pm");
                     }
@@ -102,7 +102,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                 List<Song> insertSongList = new ArrayList<>();
                 List<Song> updateSongList = new ArrayList<>();
                 List<Song> deleteSongList = new ArrayList<>();
-                if (!StringUtil.isNullOrEmpty(deleteSongIdList)) {
+                if (!TextUtils.isEmpty(deleteSongIdList)) {
                     for (String songPath : deleteSongIdList.split(",")) {
                         Integer songId = songIdMap.get("songs/" + songPath + ".pm");
                         if (songId != null && songId > 0) {

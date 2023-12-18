@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 import java.util.Map;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLFamily;
@@ -61,7 +61,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         String loginDate = list.get(i).get("D");
         String contribution = list.get(i).get("C");
         String lv = list.get(i).get("L");
-        if (!StringUtil.isNullOrEmpty(lv)) {
+        if (!TextUtils.isEmpty(lv)) {
             lv = "Lv." + lv;
         }
         TextView positionText = view.findViewById(R.id.ol_family_position);

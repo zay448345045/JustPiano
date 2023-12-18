@@ -2,6 +2,7 @@ package ly.pp.justpiano3.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 
@@ -128,7 +128,7 @@ public class ChatBlackUserUtil {
         List<SimpleUser> chatBlackList = new ArrayList<>();
         try {
             String chatBlackListJson = accountListSharedPreferences.getString(CHAT_BLACK_LIST_STORE_KEY, "");
-            if (!StringUtil.isNullOrEmpty(chatBlackListJson)) {
+            if (!TextUtils.isEmpty(chatBlackListJson)) {
                 JSONArray jsonArray = new JSONArray(chatBlackListJson);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);

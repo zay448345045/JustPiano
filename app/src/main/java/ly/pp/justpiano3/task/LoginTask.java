@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +11,6 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.LoginActivity;
 import ly.pp.justpiano3.utils.EncryptUtil;
@@ -108,7 +108,7 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
                 return;
             case 1:
             case 2:
-                if (!StringUtil.isNullOrEmpty(newVersion)) {
+                if (!TextUtils.isEmpty(newVersion)) {
                     loginActivity.addVersionUpdateDialog(message, newVersion);
                 } else {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);

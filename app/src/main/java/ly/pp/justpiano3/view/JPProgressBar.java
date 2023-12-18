@@ -6,13 +6,13 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.WindowUtil;
@@ -36,7 +36,7 @@ public final class JPProgressBar extends Dialog {
 
     public void setText(String text) {
         this.text = text;
-        if (!StringUtil.isNullOrEmpty(text)) {
+        if (!TextUtils.isEmpty(text)) {
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);
         } else {
@@ -75,7 +75,7 @@ public final class JPProgressBar extends Dialog {
         } else {
             WindowUtil.exitFullScreenHandle(getWindow());
         }
-        if (!StringUtil.isNullOrEmpty(text)) {
+        if (!TextUtils.isEmpty(text)) {
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);
         } else {

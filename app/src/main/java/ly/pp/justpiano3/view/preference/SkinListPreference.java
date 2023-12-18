@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.preference.DialogPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import android.widget.ListView;
 import java.io.File;
 import java.util.List;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -88,7 +88,7 @@ public class SkinListPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
-        if (!StringUtil.isNullOrEmpty(skinKey)) {
+        if (!TextUtils.isEmpty(skinKey)) {
             persistString(skinKey);
         }
         if (context instanceof PreferenceActivity) {

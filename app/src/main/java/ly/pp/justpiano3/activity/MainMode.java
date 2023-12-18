@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -20,7 +21,6 @@ import androidx.core.content.ContextCompat;
 
 import java.io.File;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -115,7 +115,7 @@ public class MainMode extends BaseActivity implements OnClickListener {
                 jpDialogBuilder.setFirstButton("提交", (dialog, which) -> {
                     String userName = textView.getText().toString();
                     String message = textView2.getText().toString();
-                    if (StringUtil.isNullOrEmpty(userName) || StringUtil.isNullOrEmpty(message)) {
+                    if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(message)) {
                         Toast.makeText(this, "昵称及内容不可为空", Toast.LENGTH_SHORT).show();
                         return;
                     }

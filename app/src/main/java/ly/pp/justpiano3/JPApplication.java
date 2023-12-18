@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.os.Process;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 
-import io.netty.util.internal.StringUtil;
 import kotlin.Unit;
 import ly.pp.justpiano3.activity.JustPiano;
 import ly.pp.justpiano3.database.SongDatabase;
@@ -83,7 +83,7 @@ public final class JPApplication extends Application {
     }
 
     public String getKitiName() {
-        if (StringUtil.isNullOrEmpty(kitiName)) {
+        if (TextUtils.isEmpty(kitiName)) {
             kitiName = accountListSharedPreferences.getString("userKitiName", "");
         }
         return kitiName;
@@ -215,7 +215,7 @@ public final class JPApplication extends Application {
             throwable.printStackTrace();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
-                    StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
+                    TextUtils.isEmpty(kitiName) ? "未知用户" : kitiName,
                     DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
             // 关闭网络连接服务，退出进程
             OnlineUtil.outlineConnectionService(JPApplication.this);

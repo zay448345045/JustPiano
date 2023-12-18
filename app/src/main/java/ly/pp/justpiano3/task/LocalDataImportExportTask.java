@@ -3,6 +3,7 @@ package ly.pp.justpiano3.task;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.io.File;
@@ -10,7 +11,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.MelodySelect;
 import ly.pp.justpiano3.database.entity.Song;
@@ -73,7 +73,7 @@ public final class LocalDataImportExportTask extends AsyncTask<Void, Void, Strin
         if (weakReference.get() instanceof MelodySelect) {
             MelodySelect melodySelect = (MelodySelect) weakReference.get();
             melodySelect.jpProgressBar.dismiss();
-            if (!StringUtil.isNullOrEmpty(str)) {
+            if (!TextUtils.isEmpty(str)) {
                 Toast.makeText(melodySelect, str, Toast.LENGTH_LONG).show();
             }
         }

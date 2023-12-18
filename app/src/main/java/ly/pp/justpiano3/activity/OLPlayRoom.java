@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.OLRoomSongsAdapter;
@@ -311,7 +309,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 playSongByDegreeRandom(8, 10);
                 return;
             case R.id.add_favor:
-                if (!StringUtil.isNullOrEmpty(currentPlaySongPath)) {
+                if (!TextUtils.isEmpty(currentPlaySongPath)) {
                     if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(currentPlaySongPath, 1) > 0) {
                         Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollText.getText()), Toast.LENGTH_SHORT).show();
                     }
@@ -439,7 +437,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 }
                 return;
             case R.id.shengdiao:
-                if (playerKind.equals("H") && !StringUtil.isNullOrEmpty(currentPlaySongPath)) {
+                if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
                     tune = Math.min(6, tune + 1);
                     updateNewSongPlay(currentPlaySongPath);
                 } else {
@@ -450,7 +448,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 }
                 return;
             case R.id.jiangdiao:
-                if (playerKind.equals("H") && !StringUtil.isNullOrEmpty(currentPlaySongPath)) {
+                if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
                     tune = Math.max(-6, tune - 1);
                     updateNewSongPlay(currentPlaySongPath);
                 } else {
@@ -479,8 +477,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.ol_play_room);
         initRoomActivity(savedInstanceState);
-        Button olSearchButton = findViewById(R.id.ol_search_b);
-        olSearchButton.setOnClickListener(this);
+        findViewById(R.id.ol_search_b).setOnClickListener(this);
         playButton = findViewById(R.id.ol_ready_b);
         playButton.setOnClickListener(this);
         playSongsModeButton = findViewById(R.id.ol_more_b);
@@ -489,8 +486,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         settingButton.setOnClickListener(this);
         playButton.setText(playerKind.equals("H") ? "开始" : "准备");
         searchTextView = findViewById(R.id.ol_search_text);
-        ImageView soundStopButton = findViewById(R.id.ol_soundstop);
-        soundStopButton.setOnClickListener(this);
+        findViewById(R.id.ol_soundstop).setOnClickListener(this);
         songsRecyclerView = findViewById(R.id.ol_song_list);
         songsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         OLRoomSongsAdapter olRoomSongsAdapter = new OLRoomSongsAdapter(this, songsRecyclerView);
@@ -611,7 +607,7 @@ public final class OLPlayRoom extends OLRoomActivity {
      * 根据曲谱名称进行发消息播放
      */
     public void updateNewSongPlay(String songFilePath) {
-        if (StringUtil.isNullOrEmpty(songFilePath)) {
+        if (TextUtils.isEmpty(songFilePath)) {
             return;
         }
         OnlinePlaySongDTO.Builder playSongBuilder = OnlinePlaySongDTO.newBuilder();

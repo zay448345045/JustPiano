@@ -3,12 +3,12 @@ package ly.pp.justpiano3.task;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -61,7 +61,7 @@ public final class FeedbackTask extends AsyncTask<Void, Void, String> {
                         "反馈内容过长，无法提交", Toast.LENGTH_SHORT).show());
             } else {
                 ((Activity) weakReference.get()).runOnUiThread(() -> Toast.makeText(weakReference.get(),
-                        StringUtil.isNullOrEmpty(responseStr) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
+                        TextUtils.isEmpty(responseStr) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
             }
         }
     }

@@ -2,10 +2,10 @@ package ly.pp.justpiano3.listener;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChangeRoomInfoDTO;
@@ -25,7 +25,7 @@ public final class ChangeRoomNameClick implements OnClickListener {
     public void onClick(DialogInterface dialogInterface, int i) {
         String name = this.name.getText().toString();
         String password = this.password.getText().toString();
-        if (StringUtil.isNullOrEmpty(name)) {
+        if (TextUtils.isEmpty(name)) {
             Toast.makeText(olRoomActivity, "房名不能为空!", Toast.LENGTH_SHORT).show();
         } else if (name.length() > 8 || password.length() > 8) {
             Toast.makeText(olRoomActivity, "房名或密码只能在八个字以下!", Toast.LENGTH_SHORT).show();

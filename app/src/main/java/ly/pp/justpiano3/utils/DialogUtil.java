@@ -1,9 +1,10 @@
 package ly.pp.justpiano3.utils;
 
+import android.text.TextUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.view.GoldConvertView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -31,7 +32,7 @@ public class DialogUtil {
      * 赠送音符消息接收-对话框处理
      */
     public static void handleGoldSend(JPDialogBuilder jpDialogBuilder, int messageType, String userName, String handlingFee) {
-        if (messageType == 2 && !StringUtil.isNullOrEmpty(handlingFee)) {
+        if (messageType == 2 && !TextUtils.isEmpty(handlingFee)) {
             jpDialogBuilder.setVisibleGoldConvertView(true).getGoldConvertView().setGoldValueConvertRule(new GoldConvertView.GoldValueConvertRule() {
                 @Override
                 public BigDecimal convertToShow(BigDecimal actualValue) {

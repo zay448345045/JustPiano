@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,13 +33,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
 import ly.pp.justpiano3.task.LoginTask;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -174,7 +173,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 String string = sharedPreferences.getString("accountList", "");
                 List<String> arrayList = new ArrayList<>();
                 try {
-                    if (!StringUtil.isNullOrEmpty(string)) {
+                    if (!TextUtils.isEmpty(string)) {
                         JSONObject jSONObject = new JSONObject(string);
                         Iterator<String> keys = jSONObject.keys();
                         while (keys.hasNext()) {
