@@ -440,20 +440,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-            openNotesSchedule();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        stopNotesSchedule();
-    }
-
-    @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
         if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {

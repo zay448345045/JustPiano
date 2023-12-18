@@ -49,7 +49,7 @@ public class SoundEngineUtil {
         });
     }
 
-    public static native void setupAudioStreamNative(int numChannels, int sampleRate);
+    public static native void setupAudioStreamNative();
 
     public static native void teardownAudioStreamNative();
 
@@ -58,6 +58,8 @@ public class SoundEngineUtil {
     public static native void loadWavAssetNative(byte[] wavByteArray);
 
     public static native void unloadWavAssetsNative();
+
+    public static native boolean isAudioStreamStart();
 
     private static native void triggerDown(int index, int volume);
 
@@ -185,7 +187,7 @@ public class SoundEngineUtil {
         teardownAudioStreamNative();
         unloadSf2();
         unloadWavAssetsNative();
-        setupAudioStreamNative(2, 44100);
+        setupAudioStreamNative();
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             loadSoundAssetsNative(context, i);
         }

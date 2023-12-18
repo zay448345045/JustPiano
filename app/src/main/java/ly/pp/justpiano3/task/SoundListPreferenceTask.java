@@ -45,7 +45,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.unloadWavAssetsNative();
-                SoundEngineUtil.setupAudioStreamNative(2, 44100);
+                SoundEngineUtil.setupAudioStreamNative();
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.loadSoundAssetsNative(soundListPreference.context, i);
                 }
@@ -55,7 +55,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 Thread.sleep(100);
-                SoundEngineUtil.setupAudioStreamNative(2, 44100);
+                SoundEngineUtil.setupAudioStreamNative();
                 Thread.sleep(100);
                 SoundEngineUtil.loadSf2(newSf2Path);
                 SoundEngineUtil.startAudioStreamNative();

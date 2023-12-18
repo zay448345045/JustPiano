@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity;
 
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 
 public class BaseActivity extends ComponentActivity {
@@ -18,6 +19,15 @@ public class BaseActivity extends ComponentActivity {
             WindowUtil.fullScreenHandle(getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(getWindow());
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!(this instanceof JustPiano) && !(this instanceof SoundDownload)
+                && !SoundEngineUtil.isAudioStreamStart()) {
+            SoundEngineUtil.restartStream();
         }
     }
 

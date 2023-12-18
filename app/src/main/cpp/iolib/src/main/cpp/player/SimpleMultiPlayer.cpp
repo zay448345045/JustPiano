@@ -134,8 +134,7 @@ namespace iolib {
         }
     }
 
-    bool
-    SimpleMultiPlayer::ErrorCallback::onError(AudioStream *oboeStream, Result error) {
+    bool SimpleMultiPlayer::ErrorCallback::onError(AudioStream *oboeStream, Result error) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "==== onErrorAfterClose() error:%d", error);
         mParent->resetAll();
         mParent->closeStream();
@@ -313,5 +312,9 @@ namespace iolib {
     void SimpleMultiPlayer::setDelayValue(int32_t delay) {
         mDelayValue = delay;
         mDelayVolumeFactor = 2e-3f / ((float) delay * 3 + 50);
+    }
+
+    bool SimpleMultiPlayer::isAudioStreamStart() {
+        return mAudioStream->getState() == StreamState::Started;
     }
 }

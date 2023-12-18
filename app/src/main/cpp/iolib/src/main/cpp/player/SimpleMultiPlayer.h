@@ -23,6 +23,7 @@
 #include <cstring>
 
 #include <oboe/Oboe.h>
+#include <jni.h>
 
 #include "OneShotSampleSource.h"
 #include "SampleBuffer.h"
@@ -95,6 +96,8 @@ namespace iolib {
         int32_t getReverbValue() const;
 
         void setDelayValue(int32_t delay);
+
+        bool isAudioStreamStart();
 
     private:
         class DataCallback : public oboe::AudioStreamDataCallback {

@@ -28,9 +28,9 @@ static SimpleMultiPlayer sDTPlayer;
 static fluid_handle_t *handle;
 
 JNIEXPORT void JNICALL Java_ly_pp_justpiano3_utils_SoundEngineUtil_setupAudioStreamNative(
-        JNIEnv *, jclass, jint numChannels, jint sampleRate) {
+        JNIEnv *, jclass) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", "init()");
-    sDTPlayer.setupAudioStream(numChannels, sampleRate);
+    sDTPlayer.setupAudioStream(2, 44100);
 }
 
 JNIEXPORT void JNICALL
@@ -63,6 +63,11 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadWavAssetNative(JNIEnv *env, jcla
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_unloadWavAssetsNative(JNIEnv *, jclass) {
     sDTPlayer.unloadSampleData();
+}
+
+JNIEXPORT jboolean JNICALL
+Java_ly_pp_justpiano3_utils_SoundEngineUtil_isAudioStreamStart(JNIEnv *, jclass) {
+    return sDTPlayer.isAudioStreamStart();
 }
 
 JNIEXPORT void JNICALL

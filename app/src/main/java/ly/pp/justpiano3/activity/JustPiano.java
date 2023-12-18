@@ -217,7 +217,7 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
                     "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show());
             System.exit(-1);
         }
-        SoundEngineUtil.setupAudioStreamNative(2, 44100);
+        SoundEngineUtil.setupAudioStreamNative();
         for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
             SoundEngineUtil.loadSoundAssetsNative(getApplicationContext(), i);
             progress++;
