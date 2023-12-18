@@ -512,8 +512,10 @@ class KeyboardView @JvmOverloads constructor(
 
     private fun onFingerDown(id: Int, x: Float, y: Float) {
         val (pitch: Byte, volume: Byte) = calculatePitchAndVolumeByXY(y, x)
-        fireKeyDownAndHandleListener(pitch, volume, noteOnColor)
-        mFingerMap[id] = pitch
+        if (pitch > 0) {
+            fireKeyDownAndHandleListener(pitch, volume, noteOnColor)
+            mFingerMap[id] = pitch
+        }
     }
 
     private fun onFingerMove(id: Int, x: Float, y: Float) {
@@ -521,7 +523,7 @@ class KeyboardView @JvmOverloads constructor(
         if (previousPitch != null) {
             val (pitch: Byte, volume: Byte) = calculatePitchAndVolumeByXY(y, x)
             // Did we change to a new key.
-            if (pitch >= 0 && pitch != previousPitch) {
+            if (pitch > 0 && pitch != previousPitch) {
                 fireKeyDownAndHandleListener(pitch, volume, noteOnColor)
                 fireKeyUpAndHandleListener(previousPitch)
                 mFingerMap[id] = pitch
@@ -532,13 +534,15 @@ class KeyboardView @JvmOverloads constructor(
     private fun calculatePitchAndVolumeByXY(y: Float, x: Float): Pair<Byte, Byte> {
         var pitch: Byte = -1
         var volume: Byte = -1
-        if (y < blackKeyHeight) {
-            pitch = xyToBlackPitch(x, y)
-            volume = (y / blackKeyHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
-        }
-        if (pitch < 0) {
-            pitch = xToWhitePitch(x)
-            volume = (y / viewHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
+        if (y > 0) {
+            if (y < blackKeyHeight) {
+                pitch = xyToBlackPitch(x, y)
+                volume = (y / blackKeyHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
+            }
+            if (pitch < 0) {
+                pitch = xToWhitePitch(x)
+                volume = (y / viewHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
+            }
         }
         return Pair(pitch, volume)
     }
@@ -569,8 +573,10 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     private fun fireKeyDownAndHandleListener(pitch: Byte, volume: Byte, color: Int?) {
-        keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(Byte.MAX_VALUE))
-        fireKeyDown(pitch, volume.coerceAtMost(Byte.MAX_VALUE), color)
+        if (pitch > 0) {
+            keyboardListener?.onKeyDown(pitch, volume.coerceAtMost(Byte.MAX_VALUE))
+            fireKeyDown(pitch, volume.coerceAtMost(Byte.MAX_VALUE), color)
+        }
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
@@ -612,8 +618,10 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     private fun fireKeyUpAndHandleListener(pitch: Byte) {
-        keyboardListener?.onKeyUp(pitch)
-        fireKeyUp(pitch)
+        if (pitch > 0) {
+            keyboardListener?.onKeyUp(pitch)
+            fireKeyUp(pitch)
+        }
     }
 
     fun fireKeyUp(pitch: Byte) {
