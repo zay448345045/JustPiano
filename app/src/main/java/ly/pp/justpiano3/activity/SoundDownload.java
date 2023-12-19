@@ -17,10 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Locale;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
@@ -28,13 +24,10 @@ import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
-import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class SoundDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
@@ -43,10 +36,8 @@ public class SoundDownload extends BaseActivity implements Callback {
     private Handler handler;
     private ProgressBar progressBar;
     private TextView downloadText;
-    private OutputStream outputStream;
     private LinearLayout linearLayout;
     private int progress = 0;
-    private String detail = "";
     private int intentFlag = 0;
 
     public static void downloadSound(SoundDownload soundDownload, String soundId, String soundName, String soundType) {
@@ -59,43 +50,15 @@ public class SoundDownload extends BaseActivity implements Callback {
         if (soundDownload.handler != null) {
             soundDownload.handler.sendMessage(message);
         }
-        Request request = new Request.Builder().url("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType).build();
-        try (Response response = OkHttpUtil.client().newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                long start = System.currentTimeMillis();
-                long length = response.body().contentLength();
-                // 下面从返回的输入流中读取字节数据并保存为本地文件
-                try (InputStream inputStream = response.body().byteStream();
-                     FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-                    byte[] buf = new byte[100 * 1024];
-                    int sum = 0, len;
-                    while ((len = inputStream.read(buf)) != -1) {
-                        fileOutputStream.write(buf, 0, len);
-                        sum += len;
-                        soundDownload.progress = (int) (sum * 1.0f / length * 100);
-                        soundDownload.detail = String.format(Locale.getDefault(), "%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, soundDownload.progress);
-                        // 回到主线程操纵界面
-                        if (System.currentTimeMillis() - start > 200) {
-                            start = System.currentTimeMillis();
-                            message = Message.obtain(soundDownload.handler);
-                            message.what = 1;
-                            if (soundDownload.handler != null) {
-                                soundDownload.handler.sendMessage(message);
-                            }
-                        }
+        FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType,
+                file, progress -> {
+                    soundDownload.progress = progress;
+                    Message message1 = Message.obtain(soundDownload.handler);
+                    message1.what = 1;
+                    if (soundDownload.handler != null) {
+                        soundDownload.handler.sendMessage(message1);
                     }
-                    downloadSuccessHandle(soundDownload, soundName, soundType);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    downloadFailHandle(soundDownload);
-                }
-            } else {
-                downloadFailHandle(soundDownload);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            downloadFailHandle(soundDownload);
-        }
+                }, () -> downloadSuccessHandle(soundDownload, soundName, soundType), () -> downloadFailHandle(soundDownload));
     }
 
     private static void downloadSuccessHandle(SoundDownload soundDownload, String soundName, String soundType) {
@@ -197,7 +160,7 @@ public class SoundDownload extends BaseActivity implements Callback {
                     break;
                 case 1:
                     progressBar.setProgress(progress);
-                    downloadText.setText(detail + "%");
+                    downloadText.setText(progress + "%");
                     break;
                 case 2:
                     linearLayout.setVisibility(View.GONE);
