@@ -3,6 +3,8 @@ package ly.pp.justpiano3.utils
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import androidx.core.util.Consumer
+import okhttp3.Request
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -87,4 +89,50 @@ object FileUtil {
     }
 
     data class UriInfo(val uri: Uri?, val fileName: String?, val fileSize: Long?)
+
+
+    fun downloadFile(
+        url: String,
+        file: File?,
+        progress: Consumer<Int?>,
+        success: Runnable,
+        fail: Runnable
+    ) {
+        val request: Request = Request.Builder().url(url).build()
+        try {
+            OkHttpUtil.client().newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    var start = System.currentTimeMillis()
+                    val length = response.body!!.contentLength()
+                    // 下面从返回的输入流中读取字节数据并保存为本地文件
+                    try {
+                        response.body!!.byteStream().use { inputStream ->
+                            FileOutputStream(file).use { fileOutputStream ->
+                                val buf = ByteArray(100 * 1024)
+                                var sum = 0
+                                var len: Int
+                                while (inputStream.read(buf).also { len = it } != -1) {
+                                    fileOutputStream.write(buf, 0, len)
+                                    sum += len
+                                    if (System.currentTimeMillis() - start > 200) {
+                                        start = System.currentTimeMillis()
+                                        progress.accept((sum * 1.0f / length * 100).toInt())
+                                    }
+                                }
+                                success.run()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        fail.run()
+                    }
+                } else {
+                    fail.run()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail.run()
+        }
+    }
 }
