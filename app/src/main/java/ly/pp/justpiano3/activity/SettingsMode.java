@@ -80,11 +80,11 @@ public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.M
             }
             Preference skinPreference = findPreference("skin_list");
             if (skinPreference != null) {
-                skinPreference.setSummary("当前皮肤：" + GlobalSetting.INSTANCE.getSkinName());
+                skinPreference.setSummary(GlobalSetting.INSTANCE.getSkinName());
             }
             Preference soundPreference = findPreference("sound_list");
             if (soundPreference != null) {
-                soundPreference.setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
+                soundPreference.setSummary(GlobalSetting.INSTANCE.getSoundName());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M

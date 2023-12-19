@@ -95,7 +95,7 @@ public class SkinListPreference extends DialogPreference {
             ImageLoadUtil.setBackground(((PreferenceActivity) context));
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
-        setSummary("当前皮肤：" + GlobalSetting.INSTANCE.getSkinName());
+        setSummary(GlobalSetting.INSTANCE.getSkinName());
     }
 
     @Override

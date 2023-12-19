@@ -27,6 +27,7 @@
             android:defaultValue=""
             android:key="chats_sound_file"
             android:dependency="chats_sound"
+            android:summary="默认音效"
             android:title="选择聊天音效" />
         <SwitchPreference
             android:defaultValue="false"

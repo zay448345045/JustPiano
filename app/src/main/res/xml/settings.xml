@@ -5,7 +5,7 @@
         <ly.pp.justpiano3.view.preference.SkinListPreference
             android:dialogTitle="设置管理皮肤"
             android:key="skin_list"
-            android:summary="当前皮肤：默认皮肤"
+            android:summary="默认皮肤"
             android:title="皮肤" />
 
         <PreferenceScreen
@@ -45,6 +45,7 @@
         <ly.pp.justpiano3.view.preference.FilePickerPreference
             android:defaultValue=""
             android:key="background_pic"
+            android:summary="默认背景图"
             android:title="背景图片(优先于皮肤生效)" />
     </PreferenceCategory>
 
@@ -52,7 +53,7 @@
         <ly.pp.justpiano3.view.preference.SoundListPreference
             android:dialogTitle="设置管理音源"
             android:key="sound_list"
-            android:summary="当前音源：默认音源"
+            android:summary="默认音源"
             android:title="音源" />
 
         <ly.pp.justpiano3.view.MidiDeviceListPreference

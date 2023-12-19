@@ -88,7 +88,7 @@ public class SoundListPreference extends DialogPreference {
             persistString(soundKey);
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
-        setSummary("当前音源：" + GlobalSetting.INSTANCE.getSoundName());
+        setSummary(GlobalSetting.INSTANCE.getSoundName());
     }
 
     @Override

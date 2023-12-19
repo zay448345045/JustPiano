@@ -5,6 +5,7 @@
         <ly.pp.justpiano3.view.preference.FilePickerPreference
             android:defaultValue=""
             android:key="waterfall_background_pic"
+            android:summary="默认背景图"
             android:title="背景图片" />
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="1"
