@@ -27,10 +27,9 @@ public final class SkinDownloadTask {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void execute(String... strArr) {
+    public void execute() {
         future = executorService.submit(() -> {
             try {
-                skinDownload.get().getLocalSkinList();
                 String url = "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSkinList";
 
                 Request request = new Request.Builder()

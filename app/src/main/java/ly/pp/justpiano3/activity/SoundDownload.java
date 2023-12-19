@@ -18,11 +18,9 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Locale;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SoundDownloadClick;
@@ -30,10 +28,13 @@ import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class SoundDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
@@ -45,73 +46,74 @@ public class SoundDownload extends BaseActivity implements Callback {
     private OutputStream outputStream;
     private LinearLayout linearLayout;
     private int progress = 0;
-    private int length = 0;
+    private String detail = "";
     private int intentFlag = 0;
 
     public static void downloadSound(SoundDownload soundDownload, String soundId, String soundName, String soundType) {
-        Message message = Message.obtain(soundDownload.handler);
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundName + soundType);
         if (file.exists()) {
             file.delete();
         }
+        Message message = Message.obtain(soundDownload.handler);
         message.what = 0;
         if (soundDownload.handler != null) {
             soundDownload.handler.sendMessage(message);
         }
-        InputStream in = null;
-        try {
-            URL url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/Sound" + soundId);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setInstanceFollowRedirects(true);
-            connection.setRequestMethod("POST"); // 设置请求方式
-            connection.setRequestProperty("Accept", "application/text"); // 设置接收数据的格式
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); // 设置发送数据的格式
-            connection.connect();
-            if (connection.getResponseCode() == 200) {
-                in = connection.getInputStream();
-            }
-            Message message2;
-            try {
-                soundDownload.outputStream = new FileOutputStream(file);
-                byte[] buffer = new byte[4096];
-                soundDownload.length = connection.getContentLength();
-                int n;
-                while (-1 != (n = in.read(buffer))) {
-                    soundDownload.outputStream.write(buffer, 0, n);
-                    soundDownload.progress += 4096;
-                    message = Message.obtain(soundDownload.handler);
-                    message.what = 1;
-                    if (soundDownload.handler != null) {
-                        soundDownload.handler.sendMessage(message);
+        Request request = new Request.Builder().url("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType).build();
+        try (Response response = OkHttpUtil.client().newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                long start = System.currentTimeMillis();
+                long length = response.body().contentLength();
+                // 下面从返回的输入流中读取字节数据并保存为本地文件
+                try (InputStream inputStream = response.body().byteStream();
+                     FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                    byte[] buf = new byte[100 * 1024];
+                    int sum = 0, len;
+                    while ((len = inputStream.read(buf)) != -1) {
+                        fileOutputStream.write(buf, 0, len);
+                        sum += len;
+                        soundDownload.progress = (int) (sum * 1.0f / length * 100);
+                        soundDownload.detail = String.format(Locale.getDefault(), "%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, soundDownload.progress);
+                        // 回到主线程操纵界面
+                        if (System.currentTimeMillis() - start > 200) {
+                            start = System.currentTimeMillis();
+                            message = Message.obtain(soundDownload.handler);
+                            message.what = 1;
+                            if (soundDownload.handler != null) {
+                                soundDownload.handler.sendMessage(message);
+                            }
+                        }
                     }
+                    downloadSuccessHandle(soundDownload, soundName, soundType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    downloadFailHandle(soundDownload);
                 }
-                in.close();
-                soundDownload.outputStream.close();
-                message2 = Message.obtain(soundDownload.handler);
-                message2.what = 2;
-                if (soundDownload.handler != null) {
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putString("name", soundName);
-                    bundle2.putString("type", soundType);
-                    message2.setData(bundle2);
-                    soundDownload.handler.sendMessage(message2);
-                }
-            } catch (Exception e3) {
-                e3.printStackTrace();
-                message2 = Message.obtain(soundDownload.handler);
-                message2.what = 3;
-                soundDownload.handler.sendMessage(message2);
-                try {
-                    soundDownload.outputStream.close();
-                } catch (IOException e22) {
-                    e22.printStackTrace();
-                }
+            } else {
+                downloadFailHandle(soundDownload);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            downloadFailHandle(soundDownload);
         }
+    }
+
+    private static void downloadSuccessHandle(SoundDownload soundDownload, String soundName, String soundType) {
+        Message successMessage = Message.obtain(soundDownload.handler);
+        successMessage.what = 2;
+        if (soundDownload.handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("name", soundName);
+            bundle.putString("type", soundType);
+            successMessage.setData(bundle);
+            soundDownload.handler.sendMessage(successMessage);
+        }
+    }
+
+    private static void downloadFailHandle(SoundDownload soundDownload) {
+        Message failMessage = Message.obtain(soundDownload.handler);
+        failMessage.what = 3;
+        soundDownload.handler.sendMessage(failMessage);
     }
 
     public final void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
@@ -194,8 +196,8 @@ public class SoundDownload extends BaseActivity implements Callback {
                     progressBar.setMax(100);
                     break;
                 case 1:
-                    progressBar.setProgress(progress * 45 / length);
-                    downloadText.setText((progress * 45 / length) + "%");
+                    progressBar.setProgress(progress);
+                    downloadText.setText(detail + "%");
                     break;
                 case 2:
                     linearLayout.setVisibility(View.GONE);

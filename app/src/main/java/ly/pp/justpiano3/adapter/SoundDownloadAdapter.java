@@ -76,15 +76,15 @@ public final class SoundDownloadAdapter extends BaseAdapter {
                     // nothing
                 }
                 imageView.setImageResource(R.drawable.icon);
-                imageLoader.bindBitmap("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + soundId, imageView);
+                imageLoader.bindBitmap("http://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + ".jpg", imageView);
                 scrollText.setText(soundName);
                 textView.setText("by:" + soundAuthor);
                 textView3.setText(soundSize + "KB");
-                int i3 = jSONObject.getInt("D");
-                if (i3 > 10000) {
-                    textView2.setText("下载:" + (i3 / 10000) + "万次");
+                int downloadNum = jSONObject.getInt("D");
+                if (downloadNum > 10000) {
+                    textView2.setText("下载:" + (downloadNum / 10000) + "万次");
                 } else {
-                    textView2.setText("下载:" + i3 + "次");
+                    textView2.setText("下载:" + downloadNum + "次");
                 }
                 String finalSoundType = soundType;
                 view.setOnClickListener(v -> soundDownload.handleSound(0, soundName, soundId, soundSize, soundAuthor, finalSoundType));

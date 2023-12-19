@@ -19,127 +19,116 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SkinDownloadClick;
 import ly.pp.justpiano3.task.SkinDownloadTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class SkinDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
-    public List<String> list = new ArrayList<>();
     private Handler handler;
     private ProgressBar progressBar;
     private TextView downloadText;
     private OutputStream outputStream;
     private LinearLayout linearLayout;
     private int progress = 0;
-    private int length = 0;
+    private String detail = "";
     private int intentFlag = 0;
 
-    public static void downloadPS(SkinDownload skinDownload, String str, String str2) {
-        Message message = Message.obtain(skinDownload.handler);
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + str2 + ".ps");
+    public static void downloadPS(SkinDownload skinDownload, String skinId, String skinName) {
+        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName + ".ps");
         if (file.exists()) {
             file.delete();
         }
+        Message message = Message.obtain(skinDownload.handler);
         message.what = 0;
         if (skinDownload.handler != null) {
             skinDownload.handler.sendMessage(message);
         }
-        InputStream in = null;
-        try {
-            URL url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/Skin" + str);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setInstanceFollowRedirects(true);
-            connection.setRequestMethod("POST"); // 设置请求方式
-            connection.setRequestProperty("Accept", "application/text"); // 设置接收数据的格式
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); // 设置发送数据的格式
-            connection.connect();
-            if (connection.getResponseCode() == 200) {
-                in = connection.getInputStream();
-            }
-            Message message2;
-            try {
-                skinDownload.outputStream = new FileOutputStream(file);
-                byte[] buffer = new byte[4096];
-                skinDownload.length = connection.getContentLength();
-                int n;
-                while (-1 != (n = in.read(buffer))) {
-                    skinDownload.outputStream.write(buffer, 0, n);
-                    skinDownload.progress += 4096;
-                    message = Message.obtain(skinDownload.handler);
-                    message.what = 1;
-                    if (skinDownload.handler != null) {
-                        skinDownload.handler.sendMessage(message);
+        Request request = new Request.Builder().url("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".ps").build();
+        try (Response response = OkHttpUtil.client().newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                long start = System.currentTimeMillis();
+                long length = response.body().contentLength();
+                // 下面从返回的输入流中读取字节数据并保存为本地文件
+                try (InputStream inputStream = response.body().byteStream();
+                     FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                    byte[] buf = new byte[100 * 1024];
+                    int sum = 0, len;
+                    while ((len = inputStream.read(buf)) != -1) {
+                        fileOutputStream.write(buf, 0, len);
+                        sum += len;
+                        skinDownload.progress = (int) (sum * 1.0f / length * 100);
+                        skinDownload.detail = String.format(Locale.getDefault(), "%.2fM / %.2fM（%d%%）", sum / 1048576f, length / 1048576f, skinDownload.progress);
+                        // 回到主线程操纵界面
+                        if (System.currentTimeMillis() - start > 200) {
+                            start = System.currentTimeMillis();
+                            message = Message.obtain(skinDownload.handler);
+                            message.what = 1;
+                            if (skinDownload.handler != null) {
+                                skinDownload.handler.sendMessage(message);
+                            }
+                        }
                     }
+                    downloadSuccessHandle(skinDownload, skinName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    downloadFailHandle(skinDownload);
                 }
-                in.close();
-                skinDownload.outputStream.close();
-                message2 = Message.obtain(skinDownload.handler);
-                message2.what = 2;
-                if (skinDownload.handler != null) {
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putString("name", str2);
-                    message2.setData(bundle2);
-                    skinDownload.handler.sendMessage(message2);
-                }
-                skinDownload.list.add(str2);
-            } catch (Exception e3) {
-                e3.printStackTrace();
-                message2 = Message.obtain(skinDownload.handler);
-                message2.what = 3;
-                skinDownload.handler.sendMessage(message2);
-                try {
-                    skinDownload.outputStream.close();
-                } catch (IOException e22) {
-                    e22.printStackTrace();
-                }
+            } else {
+                downloadFailHandle(skinDownload);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            downloadFailHandle(skinDownload);
         }
     }
 
-    public final void getLocalSkinList() {
-        List<File> fileList = SkinAndSoundFileUtil.getLocalSkinList(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
-        for (File file : fileList) {
-            String name = file.getName();
-            list.add(name.substring(0, name.lastIndexOf('.')));
+    private static void downloadSuccessHandle(SkinDownload skinDownload, String skinName) {
+        Message successMessage = Message.obtain(skinDownload.handler);
+        successMessage.what = 2;
+        if (skinDownload.handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("name", skinName);
+            successMessage.setData(bundle);
+            skinDownload.handler.sendMessage(successMessage);
         }
     }
 
-    public final void mo2992a(int i, String str, String str2, int i2, String str3) {
+    private static void downloadFailHandle(SkinDownload skinDownload) {
+        Message failMessage = Message.obtain(skinDownload.handler);
+        failMessage.what = 3;
+        skinDownload.handler.sendMessage(failMessage);
+    }
+
+    public final void handleSkin(int i, String name, String str2, int size, String author) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        String str4 = "使用";
+        String buttonName = "使用";
         jpDialogBuilder.setTitle("提示");
         if (i == 0) {
-            jpDialogBuilder.setMessage("名称:" + str + "\n作者:" + str3 + "\n大小:" + i2 + "KB\n您要下载并使用吗?");
-            str4 = "下载";
+            jpDialogBuilder.setMessage("名称:" + name + "\n作者:" + author + "\n大小:" + size + "KB\n您要下载并使用吗?");
+            buttonName = "下载";
         } else if (i == 1) {
-            jpDialogBuilder.setMessage("[" + str + "]皮肤已下载，是否使用?");
-            str4 = "使用";
+            jpDialogBuilder.setMessage("[" + name + "]皮肤已下载，是否使用?");
+            buttonName = "使用";
         } else if (i == 2) {
             jpDialogBuilder.setMessage("您要还原默认的皮肤吗?");
-            str4 = "使用";
+            buttonName = "使用";
         }
-        jpDialogBuilder.setFirstButton(str4, new SkinDownloadClick(this, i, str2, str));
+        jpDialogBuilder.setFirstButton(buttonName, new SkinDownloadClick(this, i, str2, name));
         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
@@ -175,13 +164,13 @@ public class SkinDownload extends BaseActivity implements Callback {
                     progressBar.setMax(100);
                     break;
                 case 1:
-                    progressBar.setProgress(progress * 45 / length);
-                    downloadText.setText((progress * 45 / length) + "%");
+                    progressBar.setProgress(progress);
+                    downloadText.setText(detail + "%");
                     break;
                 case 2:
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
-                    mo2992a(1, message.getData().getString("name"), "", 0, "");
+                    handleSkin(1, message.getData().getString("name"), "", 0, "");
                     break;
                 case 3:
                     linearLayout.setVisibility(View.GONE);

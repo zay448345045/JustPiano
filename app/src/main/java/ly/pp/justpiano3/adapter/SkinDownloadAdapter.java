@@ -59,27 +59,27 @@ public final class SkinDownloadAdapter extends BaseAdapter {
             textView.setText("还原极品钢琴默认皮肤");
             textView3.setText("");
             textView2.setText("");
-            view.setOnClickListener(v -> skinDownload.mo2992a(2, "还原默认皮肤", "", 0, ""));
+            view.setOnClickListener(v -> skinDownload.handleSkin(2, "还原默认皮肤", "", 0, ""));
         } else {
             try {
                 JSONObject jSONObject = jsonArray.getJSONObject(i - 1);
-                String string = jSONObject.getString("I");
-                imageView.setTag(string);
-                String string2 = jSONObject.getString("N");
-                String string3 = jSONObject.getString("A");
-                int i2 = jSONObject.getInt("S");
+                String skinId = jSONObject.getString("I");
+                imageView.setTag(skinId);
+                String skinName = jSONObject.getString("N");
+                String skinAuthor = jSONObject.getString("A");
+                int size = jSONObject.getInt("S");
                 imageView.setImageResource(R.drawable.icon);
-                imageLoader.bindBitmap("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSkin" + string, imageView);
-                scrollText.setText(string2);
-                textView.setText("by:" + string3);
-                textView3.setText(i2 + "KB");
-                int i3 = jSONObject.getInt("D");
-                if (i3 > 10000) {
-                    textView2.setText("下载:" + (i3 / 10000) + "万次");
+                imageLoader.bindBitmap("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".jpg", imageView);
+                scrollText.setText(skinName);
+                textView.setText("by:" + skinAuthor);
+                textView3.setText(size + "KB");
+                int downloadNum = jSONObject.getInt("D");
+                if (downloadNum > 10000) {
+                    textView2.setText("下载:" + (downloadNum / 10000) + "万次");
                 } else {
-                    textView2.setText("下载:" + i3 + "次");
+                    textView2.setText("下载:" + downloadNum + "次");
                 }
-                view.setOnClickListener(v -> skinDownload.mo2992a(0, string2, string, i2, string3));
+                view.setOnClickListener(v -> skinDownload.handleSkin(0, skinName, skinId, size, skinAuthor));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

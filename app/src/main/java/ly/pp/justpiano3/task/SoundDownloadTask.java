@@ -28,19 +28,19 @@ public class SoundDownloadTask {
         this.soundDownload = new WeakReference<>(soundDownload);
     }
 
-    public void execute(String... strArr) {
+    public void execute() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         onPreExecute();
 
         future = executor.submit(() -> {
-            final String result = doInBackground(strArr);
+            final String result = doInBackground();
 
             new Handler(Looper.getMainLooper()).post(() -> onPostExecute(result));
         });
     }
 
-    private String doInBackground(String... strArr) {
+    private String doInBackground() {
         try {
             Request request = new Request.Builder()
                     .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSoundList")
