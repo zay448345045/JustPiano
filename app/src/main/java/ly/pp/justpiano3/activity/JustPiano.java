@@ -3,7 +3,6 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -171,7 +170,6 @@ public class JustPiano extends BaseActivity implements Runnable {
         if (!file.exists()) {
             file.mkdirs();
         }
-        Message obtainMessage;
         try {
             List<Song> songList = JPApplication.getSongDatabase().songDao().getAllSongs();
             if (songList.isEmpty() || updateSQL) {

@@ -629,9 +629,4 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         }
         return baos.toByteArray();
     }*/
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

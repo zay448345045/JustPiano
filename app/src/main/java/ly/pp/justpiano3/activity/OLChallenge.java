@@ -24,11 +24,9 @@ import java.util.Map;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.ChallengeListAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
 import ly.pp.justpiano3.utils.ColorUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.DrawPrizeView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -48,7 +46,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public Button viewChallenge;
     public ListView scoreListView;
     public List<Map<String, String>> scoreList = new ArrayList<>();
-    private LayoutInflater layoutinflater;
+    public LayoutInflater layoutinflater;
 
     @Override
     public void onBackPressed() {
@@ -170,14 +168,5 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         } else {
             Toast.makeText(this, "连接已断开，请重新登录", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public final void mo2907b(ListView listView, List<Map<String, String>> list) {
-        listView.setAdapter(new ChallengeListAdapter(list, layoutinflater));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

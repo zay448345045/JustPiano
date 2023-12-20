@@ -97,22 +97,22 @@ public class SkinDownload extends BaseActivity implements Callback {
         jpDialogBuilder.buildAndShowDialog();
     }
 
-    public final void changeSkin(String str) {
+    public final void changeSkin(String skinName) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);
         Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        edit.putString("skin_list", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + str);
+        edit.putString("skin_list", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName);
         File dir = getDir("Skin", Context.MODE_PRIVATE);
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
-            if (listFiles != null && listFiles.length > 0) {
+            if (listFiles != null) {
                 for (File delete : listFiles) {
                     delete.delete();
                 }
             }
         }
-        GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + str), dir.toString());
+        GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName), dir.toString());
         edit.apply();
         Message message2 = Message.obtain(handler);
         message2.what = 6;

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.adapter.ChallengeListAdapter;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class ChallengeHandler extends Handler {
@@ -39,7 +40,7 @@ public final class ChallengeHandler extends Handler {
                             hashMap.put("P", String.valueOf(i + 1));
                             challenge.scoreList.add(hashMap);
                         }
-                        challenge.mo2907b(challenge.scoreListView, challenge.scoreList);
+                        challenge.scoreListView.setAdapter(new ChallengeListAdapter(challenge.scoreList, challenge.layoutinflater));
                         StringBuilder sb = new StringBuilder();
                         sb.append("用户名称:").append(challenge.jpapplication.getKitiName())
                                 .append("\n最高分:").append(data.getInt("S"))

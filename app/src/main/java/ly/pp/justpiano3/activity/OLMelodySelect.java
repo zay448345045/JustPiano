@@ -292,11 +292,6 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onResume() {
         songBytes = null;
         super.onResume();
