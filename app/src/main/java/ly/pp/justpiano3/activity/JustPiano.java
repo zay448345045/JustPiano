@@ -3,8 +3,6 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Handler.Callback;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
@@ -27,9 +25,8 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
-public class JustPiano extends BaseActivity implements Callback, Runnable {
+public class JustPiano extends BaseActivity implements Runnable {
     public static boolean updateSQL = false;
-    public Handler handler;
     private boolean isPause;
     private boolean loadFinish;
     private int songCount;
@@ -92,9 +89,7 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
                                         0, 0, "", 0, 0,
                                         originalPmVersion + 1, rightDegree, 1, leftDegree, songTime, 0));
                             }
-                            Message obtainMessage = handler.obtainMessage();
-                            obtainMessage.what = 0;
-                            handler.sendMessage(obtainMessage);
+                            runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
                         }
                     }
                 }
@@ -125,36 +120,13 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
     }
 
     @Override
-    public boolean handleMessage(Message message) {
-        switch (message.what) {
-            case 0:
-                justpianoview.updateProgressAndInfo(progress, info, loading);
-                break;
-            case 1:
-                loadFinish = true;
-                if (!isPause) {
-                    Intent intent = new Intent();
-                    intent.setClass(this, MainMode.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-                }
-                break;
-        }
-        return false;
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new Handler(this);
         justpianoview = new JustPianoView(this, (JPApplication) getApplication());
         justpianoview.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(justpianoview);
-        Message obtainMessage = handler.obtainMessage();
-        obtainMessage.what = 0;
-        handler.sendMessage(obtainMessage);
+        runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
         ThreadPoolUtil.execute(this);
     }
 
@@ -183,11 +155,6 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
         } else {
             isPause = false;
         }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean z) {
-        super.onWindowFocusChanged(z);
     }
 
     @Override
@@ -222,9 +189,7 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
             SoundEngineUtil.loadSoundAssetsNative(getApplicationContext(), i);
             progress++;
             loading = "正在载入声音资源..." + progress + "/88";
-            Message obtainMessage2 = handler.obtainMessage();
-            obtainMessage2.what = 0;
-            handler.sendMessage(obtainMessage2);
+            runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
         }
         SoundEngineUtil.openFluidSynth();
         SoundEngineUtil.startAudioStreamNative();
@@ -232,13 +197,17 @@ public class JustPiano extends BaseActivity implements Callback, Runnable {
         String soundName = sharedPreferences.getString("sound_list", "original");
         if (soundName.endsWith(".sf2")) {
             loading = "正在载入sf2声音资源...";
-            Message obtainMessage2 = handler.obtainMessage();
-            obtainMessage2.what = 0;
-            handler.sendMessage(obtainMessage2);
+            runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
             SoundEngineUtil.loadSf2(FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(soundName)));
         }
-        obtainMessage = handler.obtainMessage();
-        obtainMessage.what = 1;
-        handler.sendMessage(obtainMessage);
+        runOnUiThread(() -> {
+            loadFinish = true;
+            if (!isPause) {
+                Intent intent = new Intent();
+                intent.setClass(this, MainMode.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }
