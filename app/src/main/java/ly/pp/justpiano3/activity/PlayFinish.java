@@ -21,10 +21,10 @@ import ly.pp.justpiano3.view.JPProgressBar;
 
 public class PlayFinish extends BaseActivity implements OnClickListener {
     private int head;
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public String scoreArray = "";
     public JPProgressBar jpprogressBar;
-    public String name = "";
+    private String name = "";
     public String songID;
     private int comboScore;
     private int perfect = 0;
@@ -111,7 +111,7 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         nandu = 0;
         jpprogressBar = new JPProgressBar(this);
         Bundle extras = getIntent().getExtras();

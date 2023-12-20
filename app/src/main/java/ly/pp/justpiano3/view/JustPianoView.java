@@ -13,11 +13,9 @@ import android.view.View;
 
 import java.io.IOException;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class JustPianoView extends View {
-    public JPApplication jpapplication;
     private RectF allScreenRect;
     private RectF progressBarRect;
     private Bitmap logoBitmap;
@@ -40,17 +38,16 @@ public class JustPianoView extends View {
         paint.setTypeface(Typeface.DEFAULT_BOLD);
     }
 
-    public JustPianoView(Context context, JPApplication jPApplication) {
+    public JustPianoView(Context context) {
         super(context);
-        jpapplication = jPApplication;
     }
 
     private void init() {
         allScreenRect = new RectF(0, 0, getWidth(), getHeight());
         try {
             logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.webp"));
-            progressBarBitmap = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar");
-            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(jpapplication, "progress_bar_base");
+            progressBarBitmap = ImageLoadUtil.loadSkinImage(getContext(), "progress_bar");
+            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(getContext(), "progress_bar_base");
         } catch (IOException e) {
             e.printStackTrace();
         }

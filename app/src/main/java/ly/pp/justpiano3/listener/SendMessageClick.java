@@ -39,7 +39,7 @@ public final class SendMessageClick implements OnClickListener {
                 jSONObject.put("F", f5776d);
                 jSONObject.put("M", valueOf);
                 if (!f5775c.isEmpty() && !f5776d.isEmpty()) {
-                    popUserInfo.f4830d = jSONObject.toString();
+                    popUserInfo.keywords = jSONObject.toString();
                     new PopUserInfoTask(popUserInfo).execute();
                 }
             }

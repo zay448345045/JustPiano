@@ -72,7 +72,7 @@ import protobuf.dto.OnlineQuitHallDTO;
 public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
     public String hallName = "";
     public byte hallID = (byte) 0;
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public JPProgressBar jpprogressBar;
     public ListView msgListView;
     public ListView roomListView;
@@ -202,7 +202,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
 
     public void mo2828a(ListView listView, List<Bundle> list) {
         int posi = listView.getFirstVisiblePosition();
-        listView.setAdapter(new ChattingAdapter(jpapplication, list, layoutInflater1));
+        listView.setAdapter(new ChattingAdapter(list, layoutInflater1));
         if (posi > 0) {
             listView.setSelection(posi + 2);
         } else {
@@ -388,7 +388,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         hallID = hallInfoBundle.getByte("hallID");
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_room_list);
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
@@ -421,7 +421,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
-                new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 12));
+                new ExpressAdapter(jpApplication, Consts.expressions, popupWindow, OnlineProtocolType.HALL_CHAT));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         this.popupWindow = popupWindow;
         tabHost = findViewById(R.id.tabhost);
@@ -461,11 +461,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     @Override
     protected void onDestroy() {
         isTimeShowing = false;
-        try {
-            showTimeThread.interrupt();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         roomTitleMap.clear();
         msgList.clear();
         roomList.clear();

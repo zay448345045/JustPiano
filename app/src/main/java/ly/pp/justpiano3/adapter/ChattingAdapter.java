@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayRoom;
@@ -28,11 +27,9 @@ public final class ChattingAdapter extends BaseAdapter {
     public Activity activity;
     private final List<Bundle> msgList;
     private final LayoutInflater layoutInflater;
-    public JPApplication jpapplication;
 
-    public ChattingAdapter(JPApplication jpapplication, List<Bundle> list, LayoutInflater layoutInflater) {
+    public ChattingAdapter(List<Bundle> list, LayoutInflater layoutInflater) {
         msgList = list;
-        this.jpapplication = jpapplication;
         this.layoutInflater = layoutInflater;
         activity = JPStack.top();
     }

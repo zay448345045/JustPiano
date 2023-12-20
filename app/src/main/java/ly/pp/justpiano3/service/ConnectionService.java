@@ -90,8 +90,8 @@ public class ConnectionService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         outLine();
+        super.onDestroy();
     }
 
     /**

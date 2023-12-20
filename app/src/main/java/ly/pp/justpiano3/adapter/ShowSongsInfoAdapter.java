@@ -66,12 +66,12 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
             if (showSongsInfo.keywords.equals("F")) {
                 Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已移出网络收藏夹", Toast.LENGTH_SHORT).show();
                 showSongsInfo.mo2976a(i);
-                new AcceptFavorThread(songId, "U", showSongsInfo.jpapplication.getAccountName()).start();
+                new AcceptFavorThread(songId, "U", showSongsInfo.jpApplication.getAccountName()).start();
                 return;
             }
             Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(songId, "F", showSongsInfo.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", showSongsInfo.jpApplication.getAccountName()).start();
         });
         TextView songName = view.findViewById(R.id.ol_s_n);
         songName.setText(trim);

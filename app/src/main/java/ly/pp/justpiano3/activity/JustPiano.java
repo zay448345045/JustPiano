@@ -121,7 +121,7 @@ public class JustPiano extends BaseActivity implements Runnable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        justpianoview = new JustPianoView(this, (JPApplication) getApplication());
+        justpianoview = new JustPianoView(this);
         justpianoview.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(justpianoview);

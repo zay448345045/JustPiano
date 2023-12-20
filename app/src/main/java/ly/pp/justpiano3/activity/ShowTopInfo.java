@@ -6,20 +6,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,22 +30,22 @@ import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class ShowTopInfo extends BaseActivity implements Callback, OnClickListener {
-    public JPApplication jpapplication;
+public class ShowTopInfo extends BaseActivity implements Handler.Callback, OnClickListener {
+    public JPApplication jpApplication;
     public List<Map<String, Object>> dataList;
     public LayoutInflater layoutInflater;
-    public int f4987c = 0;
-    public String f4988d = "";
-    public ListView f4989e;
+    public int size = 0;
+    public String keywords = "";
+    public ListView listView;
     public JPProgressBar jpprogressBar;
     public int head = 0;
-    public int f4996l = 0;
-    public int f4997m = 0;
-    public String f4999o = "";
+    public int pageNum = 0;
+    public int position = 0;
+    public String address = "";
     public PictureHandle pictureHandle;
     public Handler handler;
-    private TextView f4993i;
-    private final int f4998n = 20;
+    private TextView pageNumTextView;
+    private final int pageSize = 20;
     private Bitmap nailFace = null;
 
     public Bitmap m3874a(Context context) {
@@ -54,7 +53,7 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
             if (nailFace == null) {
                 nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.webp"));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return nailFace;
@@ -69,8 +68,8 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
             e.printStackTrace();
             jSONArray = null;
         }
-        f4987c = jSONArray.length();
-        for (int i = 0; i < f4987c; i++) {
+        size = jSONArray.length();
+        for (int i = 0; i < size; i++) {
             try {
                 Map<String, Object> hashMap = new HashMap<>();
                 hashMap.put("userID", Integer.valueOf(jSONArray.getJSONObject(i).get("I").toString()));
@@ -80,16 +79,11 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
                 hashMap.put("userNuns", Integer.valueOf(jSONArray.getJSONObject(i).get("T").toString()));
                 hashMap.put("userSex", jSONArray.getJSONObject(i).get("X").toString());
                 arrayList.add(hashMap);
-            } catch (JSONException e2) {
+            } catch (Exception e2) {
                 e2.printStackTrace();
             }
         }
         return arrayList;
-    }
-
-    @Override
-    public boolean handleMessage(Message message) {
-        return false;
     }
 
     @Override
@@ -105,19 +99,19 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ol_top_next:
-                f4996l++;
-                f4997m = (f4996l * f4998n) + 1;
-                f4993i.setText("-" + (f4996l + 1) + "-");
+                pageNum++;
+                position = (pageNum * pageSize) + 1;
+                pageNumTextView.setText("-" + (pageNum + 1) + "-");
                 new ShowTopInfoTask(this).execute();
                 return;
             case R.id.ol_top_before:
-                f4996l--;
-                if (f4996l < 0) {
-                    f4996l = 0;
+                pageNum--;
+                if (pageNum < 0) {
+                    pageNum = 0;
                     return;
                 }
-                f4997m = (f4996l * f4998n) + 1;
-                f4993i.setText("-" + (f4996l + 1) + "-");
+                position = (pageNum * pageSize) + 1;
+                pageNumTextView.setText("-" + (pageNum + 1) + "-");
                 new ShowTopInfoTask(this).execute();
                 return;
             default:
@@ -127,60 +121,43 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_top_info);
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
-        f4989e = findViewById(R.id.ol_top_list);
-        TextView f4992h = findViewById(R.id.ol_top_title);
-        Button f4994j = findViewById(R.id.ol_top_before);
-        Button f4995k = findViewById(R.id.ol_top_next);
-        f4997m = (f4996l * f4998n) + 1;
+        listView = findViewById(R.id.ol_top_list);
+        TextView titleTextView = findViewById(R.id.ol_top_title);
+        position = (pageNum * pageSize) + 1;
         Bundle extras = getIntent().getExtras();
         head = extras.getInt("head");
-        f4988d = extras.getString("keywords");
-        if (f4988d.equals("C")) {
-            f4999o = "";
+        keywords = extras.getString("keywords");
+        if (keywords.equals("C")) {
+            address = "";
         } else {
-            f4999o = extras.getString("address");
+            address = extras.getString("address");
         }
-        f4994j.setOnClickListener(this);
-        f4995k.setOnClickListener(this);
-        f4993i = findViewById(R.id.ol_top_page);
-        f4993i.setText("-" + (f4996l + 1) + "-");
+        findViewById(R.id.ol_top_before).setOnClickListener(this);
+        findViewById(R.id.ol_top_next).setOnClickListener(this);
+        pageNumTextView = findViewById(R.id.ol_top_page);
+        pageNumTextView.setText("-" + (pageNum + 1) + "-");
         switch (head) {
             case 0:
-                f4992h.setText("-" + f4999o + "冠军数量榜-");
+                titleTextView.setText("-" + address + "冠军数量榜-");
                 break;
             case 1:
-                f4992h.setText("-" + f4999o + "个人总分榜-");
-                break;
-            case 2:
-                f4992h.setText("-" + f4999o + "达人榜-");
-                break;
-            case 3:
-                f4992h.setText("-" + f4999o + "新秀榜-");
+                titleTextView.setText("-" + address + "个人总分榜-");
                 break;
             case 4:
-                f4992h.setText("-" + f4999o + "个人等级榜-");
-                break;
-            case 5:
-                f4992h.setText("-导出-");
-                f4994j.setVisibility(View.GONE);
-                f4995k.setVisibility(View.GONE);
-                f4993i.setVisibility(View.GONE);
+                titleTextView.setText("-" + address + "个人等级榜-");
                 break;
             case 7:
-                f4992h.setText("-" + f4999o + "搭档祝福榜-");
-                break;
-            case 8:
-                f4992h.setText("-" + f4999o + "总分周榜-");
+                titleTextView.setText("-" + address + "搭档祝福榜-");
                 break;
             case 9:
-                f4992h.setText("-" + f4999o + "家族贡献榜-");
+                titleTextView.setText("-" + address + "家族贡献榜-");
                 break;
             case 10:
-                f4992h.setText("-" + f4999o + "个人考级榜-");
+                titleTextView.setText("-" + address + "个人考级榜-");
                 break;
         }
         new ShowTopInfoTask(this).execute();
@@ -191,8 +168,13 @@ public class ShowTopInfo extends BaseActivity implements Callback, OnClickListen
     @Override
     protected void onDestroy() {
         if (pictureHandle != null) {
-            pictureHandle.mo3026a();
+            pictureHandle.clear();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public boolean handleMessage(@NonNull Message msg) {
+        return false;
     }
 }

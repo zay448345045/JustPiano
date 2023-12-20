@@ -42,7 +42,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", str2)
                     .add("keywords", searchSongs.get().keywords)
-                    .add("user", searchSongs.get().jpapplication.getAccountName())
+                    .add("user", searchSongs.get().jpApplication.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()

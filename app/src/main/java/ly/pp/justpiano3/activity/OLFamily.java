@@ -46,7 +46,7 @@ import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public class OLFamily extends OLBaseActivity implements OnClickListener {
-    public JPApplication jpapplication;
+    private JPApplication jpApplication;
     public JPProgressBar jpprogressBar;
     public FamilyPositionEnum position;
     public TextView declaration;
@@ -337,7 +337,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_family);
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
@@ -378,7 +378,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
             kickOutButton.setVisibility(View.GONE);
         }
-        if (name.equals(jpapplication.getKitiName())) {
+        if (name.equals(jpApplication.getKitiName())) {
             kickOutButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
@@ -436,7 +436,7 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     public final void bindFamilyPeopleListViewAdapter(ListView listView, List<Map<String, String>> list) {
-        listView.setAdapter(new FamilyPeopleAdapter(list, jpapplication, layoutinflater, this));
+        listView.setAdapter(new FamilyPeopleAdapter(list, jpApplication, layoutinflater, this));
     }
 
     public final void sendMsg(int type, MessageLite msg) {

@@ -30,16 +30,16 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String str = "";
-        if (!showTopInfo.get().f4988d.isEmpty()) {
+        if (!showTopInfo.get().keywords.isEmpty()) {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", String.valueOf(showTopInfo.get().head))
                     .add("version", BuildConfig.VERSION_NAME)
-                    .add("keywords", showTopInfo.get().f4988d)
-                    .add("page", String.valueOf(showTopInfo.get().f4996l))
-                    .add("P", showTopInfo.get().f4999o)
+                    .add("keywords", showTopInfo.get().keywords)
+                    .add("page", String.valueOf(showTopInfo.get().pageNum))
+                    .add("P", showTopInfo.get().address)
                     .add("K", JPApplication.kitiName)
-                    .add("N", showTopInfo.get().jpapplication.getAccountName())
+                    .add("N", showTopInfo.get().jpApplication.getAccountName())
                     .build();
             // 创建请求对象
             Request request = new Request.Builder()
@@ -56,7 +56,7 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
                         e.printStackTrace();
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -68,11 +68,11 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
         if (str.length() > 3) {
             try {
                 showTopInfo.get().dataList = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
-                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().dataList);
-                if (showTopInfo.get().f4989e != null) {
-                    showTopInfo.get().f4989e.setAdapter(topUserAdapter);
+                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().size, showTopInfo.get().dataList);
+                if (showTopInfo.get().listView != null) {
+                    showTopInfo.get().listView.setAdapter(topUserAdapter);
                 }
-                showTopInfo.get().f4989e.setCacheColorHint(0x0);
+                showTopInfo.get().listView.setCacheColorHint(0x0);
             } catch (Exception e) {
                 e.printStackTrace();
             }

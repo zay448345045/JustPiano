@@ -16,7 +16,7 @@ public final class UserFaceChangeTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strArr) {
-        return UsersInfo.m3931b(strArr[0], strArr[1], strArr[2]);
+        return UsersInfo.uploadPic(strArr[0], strArr[1], strArr[2]);
     }
 
     @Override

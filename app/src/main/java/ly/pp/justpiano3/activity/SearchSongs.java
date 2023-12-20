@@ -34,7 +34,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class SearchSongs extends BaseActivity implements Callback, OnClickListener {
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public LayoutInflater layoutinflater;
     public int length = 0;
     public String keywords = "";
@@ -169,7 +169,7 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         headType = getIntent().getExtras().getInt("head");
         setContentView(R.layout.ol_search_songs);
         layoutinflater = LayoutInflater.from(this);
@@ -185,7 +185,7 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
     @Override
     protected void onDestroy() {
         if (pictureHandle != null) {
-            pictureHandle.mo3026a();
+            pictureHandle.clear();
         }
         super.onDestroy();
     }

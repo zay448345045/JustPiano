@@ -30,7 +30,7 @@ public final class PopUserInfoTask extends AsyncTask<Void, Void, String> {
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("head", String.valueOf(popUserInfo.get().headType));
             formBuilder.add("version", BuildConfig.VERSION_NAME);
-            formBuilder.add("keywords", popUserInfo.get().f4830d);
+            formBuilder.add("keywords", popUserInfo.get().keywords);
             formBuilder.add("userName", popUserInfo.get().kitiName);
             // 创建Request对象，用于发送请求
             Request request = new Request.Builder()
@@ -50,14 +50,13 @@ public final class PopUserInfoTask extends AsyncTask<Void, Void, String> {
         return str;
     }
 
-
     @Override
     protected void onPostExecute(String str) {
         if (popUserInfo.get().headType != 1) {
             popUserInfo.get().jpprogressBar.cancel();
             Toast.makeText(popUserInfo.get(), "发送成功!", Toast.LENGTH_SHORT).show();
         } else if (str.length() > 3) {
-            PopUserInfo.m3823a(popUserInfo.get(), str);
+            PopUserInfo.showUserInfo(popUserInfo.get(), str);
             popUserInfo.get().jpprogressBar.cancel();
         } else if (str.equals("[]")) {
             popUserInfo.get().jpprogressBar.cancel();

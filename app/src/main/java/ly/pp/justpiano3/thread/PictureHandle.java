@@ -15,10 +15,10 @@ import java.util.Map;
 import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class PictureHandle {
-    public boolean f5083a = true;
-    public Map<String, SoftReference<Bitmap>> map = new HashMap<>();
+    public boolean running = true;
+    public Map<String, SoftReference<Bitmap>> bitmapMap = new HashMap<>();
     public Handler handler;
-    public static final  String JPG_SUFFIX = ".jpg";
+    public static final String JPG_SUFFIX = ".jpg";
     private PictureHandleThread pictureHandleThread;
     private final int picType;
 
@@ -27,7 +27,7 @@ public final class PictureHandle {
         picType = i;
     }
 
-    public Bitmap m3938b(String str) {
+    public Bitmap getBitmapFromRemote(String str) {
         if (!str.endsWith(JPG_SUFFIX)) {
             return null;
         }
@@ -69,30 +69,30 @@ public final class PictureHandle {
         return null;
     }
 
-    public void mo3026a() {
-        if (map != null) {
-            for (Map.Entry<String, SoftReference<Bitmap>> value : map.entrySet()) {
+    public void clear() {
+        if (bitmapMap != null) {
+            for (Map.Entry<String, SoftReference<Bitmap>> value : bitmapMap.entrySet()) {
                 Bitmap bitmap = value.getValue().get();
                 if (bitmap != null) {
                     bitmap.recycle();
                 }
             }
-            map.clear();
+            bitmapMap.clear();
         }
         if (pictureHandleThread != null) {
-            pictureHandleThread.mo3067a();
+            pictureHandleThread.release();
         }
     }
 
-    public void mo3027a(ImageView imageView, Bitmap bitmap) {
+    public void setBitmap(ImageView imageView, Bitmap bitmap) {
         String str = (String) imageView.getTag();
-        if (map.containsKey(str)) {
-            Bitmap bitmap2 = map.get(str).get();
+        if (bitmapMap.containsKey(str)) {
+            Bitmap bitmap2 = bitmapMap.get(str).get();
             if (bitmap2 != null) {
                 imageView.setImageBitmap(bitmap2);
                 return;
             } else {
-                map.remove(str);
+                bitmapMap.remove(str);
             }
         }
         if (bitmap != null) {
@@ -103,6 +103,6 @@ public final class PictureHandle {
             pictureHandleThread.start();
             return;
         }
-        pictureHandleThread.mo3068a(imageView, str);
+        pictureHandleThread.removeCache(imageView, str);
     }
 }

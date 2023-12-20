@@ -9,21 +9,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
+import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineHallChatDTO;
 import protobuf.dto.OnlineRoomChatDTO;
 
 public final class ExpressAdapter extends BaseAdapter {
-    public PopupWindow popupWindow;
-    public int messageType;
+    private final PopupWindow popupWindow;
+    private final int messageType;
     private final Context context;
     private final Integer[] expressSeq;
 
-    public ExpressAdapter(Context context, Integer[] numArr, PopupWindow popupWindow, int b) {
+    public ExpressAdapter(Context context, Integer[] expressSeq, PopupWindow popupWindow, int messageType) {
         this.context = context;
-        expressSeq = numArr;
+        this.expressSeq = expressSeq;
         this.popupWindow = popupWindow;
-        messageType = b;
+        this.messageType = messageType;
     }
 
     @Override
@@ -49,12 +50,12 @@ public final class ExpressAdapter extends BaseAdapter {
             if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
                 if (OnlineUtil.getConnectionService() != null) {
-                    if (messageType == 12) {
+                    if (messageType == OnlineProtocolType.HALL_CHAT) {
                         OnlineHallChatDTO.Builder builder = OnlineHallChatDTO.newBuilder();
                         builder.setMessage("//" + i);
                         builder.setUserName("");
                         OnlineUtil.getConnectionService().writeData(messageType, builder.build());
-                    } else if (messageType == 13) {
+                    } else if (messageType == OnlineProtocolType.ROOM_CHAT) {
                         OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
                         builder.setMessage("//" + i);
                         builder.setUserName("");

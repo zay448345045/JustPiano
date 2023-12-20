@@ -27,8 +27,8 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
     public JPProgressBar jpprogressBar;
     public int headType = 0;
     public String kitiName = "";
-    public String f4830d = "P";
-    public JPApplication jpapplication;
+    public String keywords = "P";
+    private JPApplication jpApplication;
     public String f4839m = "";
     private TextView userKitiName;
     private TextView userPSign;
@@ -38,7 +38,7 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
     private PictureHandle pictureHandle;
     private Handler handler;
 
-    public static void m3823a(PopUserInfo popUserInfo, String str) {
+    public static void showUserInfo(PopUserInfo popUserInfo, String str) {
         JSONObject jSONObject;
         popUserInfo.handler = new Handler(popUserInfo);
         popUserInfo.pictureHandle = new PictureHandle(popUserInfo.handler, 1);
@@ -57,7 +57,7 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
                 popUserInfo.userSex.setText("女");
             }
             popUserInfo.userFace.setTag(jSONObject.getString("faceID"));
-            popUserInfo.pictureHandle.mo3027a(popUserInfo.userFace, null);
+            popUserInfo.pictureHandle.setBitmap(popUserInfo.userFace, null);
             int age = jSONObject.getInt("age");
             Calendar cal = Calendar.getInstance();
             popUserInfo.userAge.setText((cal.get(Calendar.YEAR) - age) + "岁");
@@ -90,10 +90,10 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
                         try {
                             jSONObject.put("H", 0);
                             jSONObject.put("T", kitiName);
-                            jSONObject.put("F", jpapplication.getAccountName());
+                            jSONObject.put("F", jpApplication.getAccountName());
                             jSONObject.put("M", "");
-                            if (!kitiName.isEmpty() && !jpapplication.getAccountName().isEmpty()) {
-                                f4830d = jSONObject.toString();
+                            if (!kitiName.isEmpty() && !jpApplication.getAccountName().isEmpty()) {
+                                keywords = jSONObject.toString();
                                 new PopUserInfoTask(this).execute();
                             }
                             dialog.dismiss();
@@ -110,7 +110,7 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
                 if (!kitiName.equals(JPApplication.kitiName)) {
                     headType = 2;
                     String str = kitiName;
-                    String P = jpapplication.getAccountName();
+                    String P = jpApplication.getAccountName();
                     View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                     TextView textView = inflate.findViewById(R.id.text_1);
                     TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -132,7 +132,7 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_pop_user_info);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         userKitiName = findViewById(R.id.user_kitiname);
         userSex = findViewById(R.id.user_sex);
         userPSign = findViewById(R.id.user_msg);

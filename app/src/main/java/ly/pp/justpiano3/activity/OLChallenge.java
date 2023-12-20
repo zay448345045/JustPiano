@@ -34,14 +34,13 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChallengeDTO;
 
 public class OLChallenge extends OLBaseActivity implements OnClickListener {
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public byte hallID;
     public String hallName;
     public int remainTimes;
     public JPProgressBar jpprogressBar;
     public ChallengeHandler challengeHandler;
     public TextView info;
-    public Button start;
     public Button drawPrize;
     public Button viewChallenge;
     public ListView scoreListView;
@@ -97,7 +96,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         Bundle bundle = getIntent().getExtras();
         hallID = bundle.getByte("hallID");
         hallName = bundle.getString("hallName");
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_challenge);
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);
@@ -105,8 +104,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         TextView title = findViewById(R.id.challengetitle);
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
         info = findViewById(R.id.infoview);
-        start = findViewById(R.id.startchallenge);
-        start.setOnClickListener(this);
+        findViewById(R.id.startchallenge).setOnClickListener(this);
         drawPrize = findViewById(R.id.drawPrize);
         drawPrize.setOnClickListener(this);
         viewChallenge = findViewById(R.id.viewChallenge);

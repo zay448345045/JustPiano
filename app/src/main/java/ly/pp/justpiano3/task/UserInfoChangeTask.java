@@ -41,7 +41,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 .add("head", "0")
                 .add("version", BuildConfig.VERSION_NAME)
                 .add("keywords", strArr[0])
-                .add("userName", usersInfo.get().jpapplication.getAccountName());
+                .add("userName", usersInfo.get().jpApplication.getAccountName());
         if (strArr[1] == null || strArr[2] == null) {
             bodyBuilder.add("msg", usersInfo.get().pSign)
                     .add("age", String.valueOf(usersInfo.get().age));
@@ -85,7 +85,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 Toast.makeText(usersInfo.get(), "密码修改成功!", Toast.LENGTH_LONG).show();
                 Editor edit = JPApplication.accountListSharedPreferences.edit();
                 if (usersInfo.get().rememberNewPassword) {
-                    edit.putString("name", usersInfo.get().jpapplication.getAccountName());
+                    edit.putString("name", usersInfo.get().jpApplication.getAccountName());
                     edit.putString("password", "");
                     edit.putString("current_password", null);
                     edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);

@@ -59,7 +59,7 @@ public final class OLMelodySelectAdapter extends BaseAdapter {
         imageButton.setOnClickListener(v -> {
             Toast.makeText(olMelodySelect.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(songId, "F", olMelodySelect.jpapplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", olMelodySelect.jpApplication.getAccountName()).start();
         });
         TextView songName = view.findViewById(R.id.ol_s_n);
         songName.setText(trim);

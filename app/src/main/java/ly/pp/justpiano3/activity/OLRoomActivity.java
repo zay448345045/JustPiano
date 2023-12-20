@@ -105,7 +105,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public int roomMode;
     public TextView roomNameView;
     public String roomName;
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public String playerKind = "";
     public Bundle roomInfoBundle;
     public Bundle hallInfoBundle;
@@ -366,7 +366,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     private void bindMsgListView() {
         int position = msgListView.getFirstVisiblePosition();
-        msgListView.setAdapter(new ChattingAdapter(jpapplication, msgList, layoutInflater));
+        msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
         if (position > 0) {
             msgListView.setSelection(position + 2);
         } else {
@@ -408,7 +408,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             msgList.add(message.getData());
         }
         // 聊天音效播放
-        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), jpapplication.getKitiName())) {
+        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), jpApplication.getKitiName())) {
             SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
         // 聊天记录存储
@@ -629,7 +629,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     protected void initRoomActivity(Bundle savedInstanceState) {
         layoutInflater = LayoutInflater.from(this);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         getRoomPlayerMap().clear();
         roomNameView = findViewById(R.id.room_title);
         roomInfoBundle = getIntent().getExtras();
@@ -667,7 +667,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         PopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(new ExpressAdapter(jpapplication, Consts.expressions, popupWindow, 13));
+        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
+                new ExpressAdapter(this, Consts.expressions, popupWindow, OnlineProtocolType.ROOM_CHAT));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         expressPopupWindow = popupWindow;
         PopupWindow popupWindow3 = new JPPopupWindow(this);
@@ -806,11 +807,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     @Override
     protected void onDestroy() {
         timeUpdateRunning = false;
-        try {
-            timeUpdateThread.interrupt();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         msgList.clear();
         playerList.clear();
         invitePlayerList.clear();

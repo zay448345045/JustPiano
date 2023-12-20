@@ -42,7 +42,7 @@ public final class ChallengeHandler extends Handler {
                         }
                         challenge.scoreListView.setAdapter(new ChallengeListAdapter(challenge.scoreList, challenge.layoutinflater));
                         StringBuilder sb = new StringBuilder();
-                        sb.append("用户名称:").append(challenge.jpapplication.getKitiName())
+                        sb.append("用户名称:").append(challenge.jpApplication.getKitiName())
                                 .append("\n最高分:").append(data.getInt("S"))
                                 .append("\n今日名次:").append(data.getString("P"))
                                 .append("\n昨日名次:").append(data.getString("Z"))

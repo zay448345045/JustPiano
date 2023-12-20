@@ -27,7 +27,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public class ShowSongsInfo extends BaseActivity implements OnClickListener {
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public LayoutInflater layoutInflater;
     public String keywords = "";
     public String songName = "";
@@ -124,7 +124,7 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         Bundle extras = getIntent().getExtras();
         head = extras.getString("head");
         keywords = extras.getString("keywords");

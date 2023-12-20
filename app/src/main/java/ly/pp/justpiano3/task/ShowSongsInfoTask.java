@@ -30,7 +30,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", showSongsInfo.get().head)
                     .add("keywords", showSongsInfo.get().keywords)
-                    .add("user", showSongsInfo.get().jpapplication.getAccountName())
+                    .add("user", showSongsInfo.get().jpApplication.getAccountName())
                     .add("page", String.valueOf(showSongsInfo.get().page))
                     .build();
             // 创建一个Request对象，设置请求URL和请求体

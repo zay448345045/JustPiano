@@ -23,13 +23,13 @@ public final class UsersInfoGetTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String str = "";
-        if (!userInfo.get().jpapplication.getAccountName().isEmpty()) {
+        if (!userInfo.get().jpApplication.getAccountName().isEmpty()) {
             // 创建FormBody对象，添加请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", "0")
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("keywords", "0")
-                    .add("userName", userInfo.get().jpapplication.getAccountName())
+                    .add("userName", userInfo.get().jpApplication.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()
@@ -52,7 +52,7 @@ public final class UsersInfoGetTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
-            UsersInfo.m3930a(userInfo.get(), str);
+            UsersInfo.updateUserInfo(userInfo.get(), str);
             userInfo.get().jpprogressBar.cancel();
         } else if (str.equals("{}")) {
             userInfo.get().jpprogressBar.cancel();

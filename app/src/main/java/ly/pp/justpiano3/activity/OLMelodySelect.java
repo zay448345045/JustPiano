@@ -47,7 +47,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 public class OLMelodySelect extends BaseActivity implements Callback, OnClickListener {
     public static byte[] songBytes;
     public static String songID;
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public double degree;
     public int topScore;
     public Button pageButton;
@@ -249,7 +249,7 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         try {
             GlobalSetting.INSTANCE.loadSettings(this, true);

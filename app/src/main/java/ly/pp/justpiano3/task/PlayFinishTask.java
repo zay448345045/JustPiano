@@ -26,7 +26,7 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String str = "";
-        if (!playFinish.get().jpapplication.getAccountName().isEmpty()) {
+        if (!playFinish.get().jpApplication.getAccountName().isEmpty()) {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
                     .host(OnlineUtil.server)
@@ -38,7 +38,7 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
             RequestBody body = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("songID", playFinish.get().songID)
-                    .add("userName", playFinish.get().jpapplication.getAccountName())
+                    .add("userName", playFinish.get().jpApplication.getAccountName())
                     .add("scoreArray", playFinish.get().scoreArray)
                     .build();
             Request request = new Request.Builder()

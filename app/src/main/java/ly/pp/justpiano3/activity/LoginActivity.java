@@ -48,7 +48,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
-    public JPApplication jpapplication;
+    public JPApplication jpApplication;
     public String password;
     public String kitiName = "";
     public String accountX = "";
@@ -94,9 +94,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        jpapplication.setKitiName(kitiName);
-        jpapplication.setAccountName(accountX);
-        jpapplication.setPassword(password);
+        jpApplication.setKitiName(kitiName);
+        jpApplication.setAccountName(accountX);
+        jpApplication.setPassword(password);
         switch (i) {
             case 0:
                 if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
@@ -198,7 +198,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpapplication = (JPApplication) getApplication();
+        jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         JPStack.clear();
         layoutInflater = LayoutInflater.from(this);

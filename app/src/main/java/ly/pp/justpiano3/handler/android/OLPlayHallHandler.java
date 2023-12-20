@@ -68,7 +68,7 @@ public final class OLPlayHallHandler extends Handler {
                         olPlayHall.msgList.add(message.getData());
                     }
                     // 聊天音效播放
-                    if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(olPlayHall.jpapplication.getKitiName())) {
+                    if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(olPlayHall.jpApplication.getKitiName())) {
                         SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
                     }
                     // 聊天记录存储
