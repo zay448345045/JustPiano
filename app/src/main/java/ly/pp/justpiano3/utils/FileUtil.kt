@@ -5,12 +5,14 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import androidx.core.util.Consumer
+import androidx.documentfile.provider.DocumentFile
 import okhttp3.Request
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.OutputStream
 
 object FileUtil {
 
@@ -67,6 +69,34 @@ object FileUtil {
             src.delete()
         }
         return true
+    }
+
+    fun moveFileToUri(context: Context, sourceFile: File, destinationUri: Uri?): Boolean {
+        if (destinationUri == null) {
+            return false
+        }
+        var input: FileInputStream? = null
+        var output: OutputStream? = null
+        var moveSuccess = false
+        try {
+            val contentResolver = context.contentResolver
+            input = FileInputStream(sourceFile)
+            output = contentResolver.openOutputStream(destinationUri, "w")
+            output?.let { outStream ->
+                input.copyTo(outStream)
+            }
+            moveSuccess = sourceFile.delete()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                input?.close()
+                output?.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return moveSuccess
     }
 
     fun getUriInfo(context: Context, uri: Uri): UriInfo {
@@ -152,5 +182,90 @@ object FileUtil {
             e.printStackTrace()
             fail.run()
         }
+    }
+
+    fun getOrCreateFileByUriFolder(
+        context: Context,
+        directoryUriString: String?,
+        fileName: String
+    ): Uri? {
+        if (directoryUriString.isNullOrEmpty()) {
+            // 目录URI字符串为空，直接使用应用的外部文件目录
+            return getOrCreateFileInAppExternalDir(context, fileName)?.uri
+        }
+        return try {
+            // 尝试用原始URI操作
+            val directoryUri = Uri.parse(directoryUriString)
+            getOrCreateDocumentFile(context, directoryUri, fileName)?.uri
+        } catch (e: Exception) {
+            // URI失效或其它异常，使用应用的外部文件目录
+            getOrCreateFileInAppExternalDir(context, fileName)?.uri
+        }
+    }
+
+    private fun getOrCreateFileInAppExternalDir(
+        context: Context,
+        fileName: String
+    ): DocumentFile? {
+        val filesDir = context.getExternalFilesDir(null)
+        val newFile = File(filesDir, fileName)
+        return if (newFile.exists()) {
+            DocumentFile.fromFile(newFile)
+        } else {
+            try {
+                if (newFile.createNewFile()) {
+                    DocumentFile.fromFile(newFile)
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+
+    private fun getOrCreateDocumentFile(
+        context: Context,
+        directoryUri: Uri,
+        fileName: String
+    ): DocumentFile? {
+        val directoryDocumentFile = DocumentFile.fromTreeUri(context, directoryUri)
+        val fileDocument = directoryDocumentFile?.findFile(fileName)
+        return when {
+            fileDocument != null && fileDocument.isFile -> fileDocument
+            directoryDocumentFile?.canWrite() == true -> {
+                directoryDocumentFile.createFile("*/*", fileName)
+            }
+
+            else -> null
+        }
+    }
+
+    fun getDirectoryUri(
+        context: Context,
+        directoryUriString: String?
+    ): Uri? {
+        if (directoryUriString.isNullOrEmpty()) {
+            // 目录URI字符串为空，直接使用应用的外部文件目录
+            return getExternalFilesDirUri(context)
+        }
+        return try {
+            // 尝试用原始URI操作
+            val directoryUri = Uri.parse(directoryUriString)
+            val directoryDocumentFile = DocumentFile.fromTreeUri(context, directoryUri)
+            if (directoryDocumentFile != null && directoryDocumentFile.exists() && directoryDocumentFile.isDirectory) {
+                directoryUri // 原始目录URI有效
+            } else {
+                getExternalFilesDirUri(context) // 原始目录URI无效或不存在
+            }
+        } catch (e: Exception) {
+            // 解析URI异常或其它错误，使用应用的外部文件目录
+            getExternalFilesDirUri(context)
+        }
+    }
+
+    private fun getExternalFilesDirUri(context: Context): Uri? {
+        val filesDir = context.getExternalFilesDir(null)
+        return filesDir?.let { Uri.fromFile(it) }
     }
 }

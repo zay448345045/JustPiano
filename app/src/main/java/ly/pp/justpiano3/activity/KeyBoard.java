@@ -3,9 +3,9 @@ package ly.pp.justpiano3.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -122,8 +122,9 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
             SoundEngineUtil.setRecord(false);
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-            File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-            FileUtil.INSTANCE.moveFile(srcFile, desFile);
+            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                    GlobalSetting.INSTANCE.getRecordsSavePath(), recordFileName);
+            FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri);
             Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
         }
         SoundEngineUtil.stopPlayAllSounds();
@@ -316,8 +317,9 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                         SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                        File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-                        if (FileUtil.INSTANCE.moveFile(srcFile, desFile)) {
+                        Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                                GlobalSetting.INSTANCE.getRecordsSavePath(), recordFileName);
+                        if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
                             Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();

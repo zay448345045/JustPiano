@@ -5,9 +5,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -280,8 +280,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             isOpenRecord = false;
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
-            File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
-            if (FileUtil.INSTANCE.moveFile(srcFile, desFile)) {
+            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                    GlobalSetting.INSTANCE.getRecordsSavePath(), songsName + ".wav");
+            if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();

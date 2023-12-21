@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.midi.MidiDeviceInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
@@ -278,8 +278,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                         SoundEngineUtil.setRecord(false);
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                        File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-                        if (FileUtil.INSTANCE.moveFile(srcFile, desFile)) {
+                        Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                                GlobalSetting.INSTANCE.getRecordsSavePath(), recordFileName);
+                        if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
                             Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
@@ -426,8 +427,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             SoundEngineUtil.setRecord(false);
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-            File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
-            FileUtil.INSTANCE.moveFile(srcFile, desFile);
+            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                    GlobalSetting.INSTANCE.getRecordsSavePath(), recordFileName);
+            FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri);
             Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
         }
         SoundEngineUtil.stopPlayAllSounds();

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,10 +17,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 
 public final class RecordFiles extends BaseActivity {
     private List<Map<String, Object>> dataList;
@@ -27,9 +31,9 @@ public final class RecordFiles extends BaseActivity {
     private TextView tipsTextView;
     private RecordFilesAdapter recordFilesAdapter;
 
-    private void loadRecordFiles(File file) {
+    private void loadRecordFiles(Uri directoryUri) {
         File[] recordFiles = file.listFiles();
-        tipsTextView.setText("录音文件目录为:SD卡\\JustPiano\\Records");
+        tipsTextView.setText("录音文件默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)：");
         tipsTextView.setTextSize(20);
         dataList = new ArrayList<>();
         int i = 0;
@@ -88,6 +92,7 @@ public final class RecordFiles extends BaseActivity {
         listView = findViewById(R.id.listFile);
         listView.setCacheColorHint(Color.TRANSPARENT);
         tipsTextView = findViewById(R.id.txt1);
-        loadRecordFiles(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/"));
+        Uri directoryUri = FileUtil.INSTANCE.getDirectoryUri(this, GlobalSetting.INSTANCE.getRecordsSavePath());
+        loadRecordFiles(directoryUri);
     }
 }
