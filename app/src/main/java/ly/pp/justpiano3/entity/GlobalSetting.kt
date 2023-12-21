@@ -195,6 +195,18 @@ object GlobalSetting {
         private set
 
     /**
+     * 聊天记录存储路径
+     */
+    var chatsSavePath: String = ""
+        private set
+
+    /**
+     * 录音文件存储路径
+     */
+    var recordsSavePath: String = ""
+        private set
+
+    /**
      * 聊天是否展示时间
      */
     var showChatTime: Boolean = false
@@ -298,6 +310,8 @@ object GlobalSetting {
         waterfallFreeStyleColor =
             sharedPreferences.getInt("waterfall_free_style_color", 0xFFFFFF00.toInt())
         saveChatRecord = sharedPreferences.getBoolean("save_chats", false)
+        chatsSavePath = sharedPreferences.getString("chats_save_path", "")!!
+        recordsSavePath = sharedPreferences.getString("records_save_path", "")!!
         showChatTime = sharedPreferences.getBoolean("chats_time_show", false)
         showChatTimeModes = sharedPreferences.getString("chats_time_show_modes", "HH:mm")!!
         showNotification = sharedPreferences.getBoolean("show_notification", false)

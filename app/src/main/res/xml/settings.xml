@@ -7,7 +7,6 @@
             android:key="skin_list"
             android:summary="默认皮肤"
             android:title="皮肤" />
-
         <PreferenceScreen
             android:summary="和弦音量、按键效果、吊线判断线等"
             android:title="弹奏设置">
@@ -16,7 +15,6 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
-
         <PreferenceScreen
             android:summary="音块速率、大小、音块变色等"
             android:title="音块设置">
@@ -25,7 +23,6 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
-
         <PreferenceScreen
             android:summary="瀑布流音块移动速度、音块颜色等"
             android:title="瀑布流设置">
@@ -34,14 +31,12 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
-
         <SwitchPreference
             android:defaultValue="true"
             android:key="all_full_screen_show"
             android:summaryOff="&lt;关闭&gt;关闭内容沉浸式显示"
             android:summaryOn="&lt;打开&gt;内容扩展至状态栏与导航栏，沉浸式显示"
             android:title="全面屏适配开关" />
-
         <ly.pp.justpiano3.view.preference.FilePickerPreference
             android:defaultValue=""
             android:key="background_pic"
@@ -55,14 +50,12 @@
             android:key="sound_list"
             android:summary="默认音源"
             android:title="音源" />
-
         <ly.pp.justpiano3.view.MidiDeviceListPreference
             android:dialogTitle="管理MIDI设备"
             android:enabled="false"
             android:key="midi_device_list"
             android:summary="您的安卓设备不支持连接MIDI设备"
             android:title="MIDI设备" />
-
         <PreferenceScreen
             android:summary="踏板、延音、按键震动等"
             android:title="声音效果设置">
@@ -71,7 +64,6 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
-
         <PreferenceScreen
             android:summary="键盘标签展示、移调等"
             android:title="钢琴键盘设置">
@@ -80,6 +72,11 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
+        <ly.pp.justpiano3.view.preference.FilePickerPreference
+            android:defaultValue=""
+            android:key="records_save_path"
+            android:summary="默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)"
+            android:title="录音文件存储路径" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="联网模式">
@@ -91,14 +88,12 @@
                 android:targetClass="ly.pp.justpiano3.activity.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
-
         <SwitchPreference
             android:defaultValue="true"
             android:key="keyboard_realtime"
             android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有按键操作统一广播，缺乏实时性，低能耗，单人独奏更流畅"
             android:summaryOn="&lt;打开&gt;检测到每个按键操作时，立即广播数据，低延迟，高能耗，适合多人合奏"
             android:title="联网键盘协奏模式" />
-
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="100"
             android:dialogTitle="联网模式瀑布流背景透明度"

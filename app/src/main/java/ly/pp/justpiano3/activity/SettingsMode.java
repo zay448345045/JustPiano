@@ -96,25 +96,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 }
             }
             // 背景图设置项初始化
-            Preference backgroundPicPreference = findPreference("background_pic");
-            if (backgroundPicPreference != null) {
-                if (GlobalSetting.INSTANCE.getBackgroundPic().isEmpty()) {
-                    backgroundPicPreference.setSummary("默认背景图");
-                } else {
-                    FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(
-                            getActivity(), Uri.parse(GlobalSetting.INSTANCE.getBackgroundPic()));
-                    backgroundPicPreference.setSummary(
-                            uriInfo.getDisplayName() == null ? "默认背景图" : uriInfo.getDisplayName());
-                }
-                FilePickerPreference filePickerPreference = (FilePickerPreference) (backgroundPicPreference);
-                filePickerPreference.setActivity(getActivity());
-                filePickerPreference.setDefaultButtonClickListener(view -> {
-                    GlobalSetting.INSTANCE.setBackgroundPic("");
-                    ImageLoadUtil.setBackground(SettingsFragment.this.getActivity());
-                    filePickerPreference.persist("默认背景图", "");
-                });
-                filePickerPreferenceMap.put(backgroundPicPreference.getKey(), filePickerPreference);
-            }
+            registerFilePickerPreference(this, "background_pic",
+                    "默认背景图", GlobalSetting.INSTANCE.getBackgroundPic());
             // 全面屏设置项开关监听
             Preference allFullScreenShowPreference = findPreference("all_full_screen_show");
             if (allFullScreenShowPreference != null) {
@@ -151,21 +134,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_waterfall);
-            Preference waterfallBackgroundPicPreference = findPreference("waterfall_background_pic");
-            if (waterfallBackgroundPicPreference != null) {
-                if (GlobalSetting.INSTANCE.getWaterfallBackgroundPic().isEmpty()) {
-                    waterfallBackgroundPicPreference.setSummary("默认背景图");
-                } else {
-                    FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(
-                            getActivity(), Uri.parse(GlobalSetting.INSTANCE.getWaterfallBackgroundPic()));
-                    waterfallBackgroundPicPreference.setSummary(
-                            uriInfo.getDisplayName() == null ? "默认背景图" : uriInfo.getDisplayName());
-                }
-                FilePickerPreference filePickerPreference = (FilePickerPreference) (waterfallBackgroundPicPreference);
-                filePickerPreference.setActivity(getActivity());
-                filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist("默认背景图", ""));
-                filePickerPreferenceMap.put(waterfallBackgroundPicPreference.getKey(), filePickerPreference);
-            }
+            registerFilePickerPreference(this, "waterfall_background_pic",
+                    "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic());
         }
     }
 
@@ -174,6 +144,9 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
+            registerFilePickerPreference(this, "records_save_path",
+                    "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
+                    GlobalSetting.INSTANCE.getRecordsSavePath());
             Preference soundDelayPreference = findPreference("sound_delay");
             if (soundDelayPreference != null) {
                 soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -211,21 +184,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
-            Preference chatSoundFilePreference = findPreference("chats_sound_file");
-            if (chatSoundFilePreference != null) {
-                if (GlobalSetting.INSTANCE.getChatsSoundFile().isEmpty()) {
-                    chatSoundFilePreference.setSummary("默认音效");
-                } else {
-                    FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(
-                            getActivity(), Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
-                    chatSoundFilePreference.setSummary(
-                            uriInfo.getDisplayName() == null ? "默认音效" : uriInfo.getDisplayName());
-                }
-                FilePickerPreference filePickerPreference = (FilePickerPreference) (chatSoundFilePreference);
-                filePickerPreference.setActivity(getActivity());
-                filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist("默认音效", ""));
-                filePickerPreferenceMap.put(chatSoundFilePreference.getKey(), filePickerPreference);
-            }
+            registerFilePickerPreference(this, "chats_sound_file",
+                    "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile());
+            registerFilePickerPreference(this, "chats_save_path",
+                    "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Chats)",
+                    GlobalSetting.INSTANCE.getChatsSavePath());
         }
     }
 
@@ -234,6 +197,25 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_easter_egg);
+        }
+    }
+
+    /**
+     * 注册filePickerPreference行为
+     */
+    private static void registerFilePickerPreference(PreferenceFragment preferenceFragment, String key, String defaultSummary, String uri) {
+        Preference preference = preferenceFragment.findPreference(key);
+        if (preference != null) {
+            if (uri.isEmpty()) {
+                preference.setSummary(defaultSummary);
+            } else {
+                FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
+                preference.setSummary(uriInfo.getDisplayName() == null ? defaultSummary : uriInfo.getDisplayName());
+            }
+            FilePickerPreference filePickerPreference = (FilePickerPreference) (preference);
+            filePickerPreference.setActivity(preferenceFragment.getActivity());
+            filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist(defaultSummary, ""));
+            filePickerPreferenceMap.put(preference.getKey(), filePickerPreference);
         }
     }
 

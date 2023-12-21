@@ -35,6 +35,12 @@
             android:summaryOff="&lt;关闭&gt; 不保存任何聊天记录"
             android:summaryOn="&lt;打开&gt; 在线聊天记录会保存至文件"
             android:title="存储聊天记录" />
+        <ly.pp.justpiano3.view.preference.FilePickerPreference
+            android:defaultValue=""
+            android:dependency="save_chats"
+            android:key="chats_save_path"
+            android:summary="默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Chats)"
+            android:title="聊天记录存储路径" />
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="15"
             android:dialogTitle="聊天字体大小"
