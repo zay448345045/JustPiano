@@ -5,16 +5,12 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import androidx.core.util.Consumer
-import androidx.documentfile.provider.DocumentFile
 import okhttp3.Request
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.OutputStream
-
 
 object FileUtil {
 
@@ -77,7 +73,11 @@ object FileUtil {
         val contentResolver = context.contentResolver
         val queryCursor = contentResolver.query(
             uri,
-            arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, DocumentsContract.Document.COLUMN_MIME_TYPE),
+            arrayOf(
+                OpenableColumns.DISPLAY_NAME,
+                OpenableColumns.SIZE,
+                DocumentsContract.Document.COLUMN_MIME_TYPE
+            ),
             null,
             null,
             null
@@ -88,12 +88,16 @@ object FileUtil {
             if (cursor != null && cursor.moveToFirst()) {
                 val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                val mimeTypeIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
+                val mimeTypeIndex =
+                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
                 if (nameIndex != -1) {
                     displayName = cursor.getString(nameIndex)
                 }
                 // Check if the document is a directory by MIME type
-                if (mimeTypeIndex != -1 && DocumentsContract.Document.MIME_TYPE_DIR == cursor.getString(mimeTypeIndex)) {
+                if (mimeTypeIndex != -1 && DocumentsContract.Document.MIME_TYPE_DIR == cursor.getString(
+                        mimeTypeIndex
+                    )
+                ) {
                     fileSize = 0L
                 } else if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
                     fileSize = cursor.getLong(sizeIndex)
@@ -147,26 +151,6 @@ object FileUtil {
         } catch (e: Exception) {
             e.printStackTrace()
             fail.run()
-        }
-    }
-
-    fun getFileOutputStream(context: Context, dirUri: Uri?, fileName: String?): OutputStream? {
-        // 获取DocumentFile引用，它代表dirUri指向的目录
-        val directory = DocumentFile.fromTreeUri(context, dirUri!!)
-        if (directory == null || !directory.exists()) {
-            return null
-        }
-        // 在目录中查找现有文件
-        var file = directory.findFile(fileName!!)
-        // 如果文件不存在，尝试创建新文件
-        if (file == null || !file.exists()) {
-            file = directory.createFile("*/*", fileName)
-        }
-        // 如果文件创建成功，或已经存在，则获取并返回输出流
-        return if (file != null && file.exists()) {
-            context.contentResolver.openOutputStream(file.uri)
-        } else {
-            return null
         }
     }
 }

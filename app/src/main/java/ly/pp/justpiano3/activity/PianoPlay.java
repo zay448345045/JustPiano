@@ -282,9 +282,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + songsName + ".wav");
             if (FileUtil.INSTANCE.moveFile(srcFile, desFile)) {
-                Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "录音文件存储失败，请检查是否授予APP文件存储权限", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
             }
             recordStart = false;
         }

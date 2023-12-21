@@ -4,12 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,8 +15,6 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import java.io.File;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -31,7 +26,6 @@ import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class MainMode extends BaseActivity implements OnClickListener {
-    private static final int PERMISSION_REQUEST_CODE = 120;
     private boolean pressAgain;
 
     @Override
@@ -139,14 +133,6 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             } else {
                 WindowUtil.exitFullScreenHandle(getWindow());
             }
-        } else if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    createDirectories();
-                } else {
-                    Toast.makeText(this, "您未授予文件访问权限，无法使用切换皮肤音源、录音、聊天记录存储等功能", Toast.LENGTH_SHORT).show();
-                }
-            }
         }
     }
 
@@ -175,17 +161,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
     }
 
     private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, PERMISSION_REQUEST_CODE);
-                } catch (Exception e) {
-                    Toast.makeText(this, "引导授予文件访问权限失败，请在手动授予app的文件存储权限", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
@@ -201,25 +177,6 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
             }
-        }
-    }
-
-    private void createDirectories() {
-        try {
-            File file1 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins");
-            File file2 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-            File file3 = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records");
-            if (!file1.exists()) {
-                file1.mkdirs();
-            }
-            if (!file2.exists()) {
-                file2.mkdirs();
-            }
-            if (!file3.exists()) {
-                file3.mkdirs();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

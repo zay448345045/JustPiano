@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import ly.pp.justpiano3.utils.FilePickerUtil;
 
-public class FilePickerPreference extends Preference {
+public final class FilePickerPreference extends Preference {
     private Activity activity;
 
     /**

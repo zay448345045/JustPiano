@@ -25,7 +25,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SkinListPreference extends DialogPreference {
+public final class SkinListPreference extends DialogPreference {
     public File skinFile;
     public String skinKey = "";
     public Context context;
@@ -61,7 +61,7 @@ public class SkinListPreference extends DialogPreference {
         skinKeyList[size + 1] = "more";
     }
 
-    public final void deleteFiles(String str) {
+    public void deleteFiles(String str) {
         int i = 0;
         File file = new File(str);
         if (file.exists()) {

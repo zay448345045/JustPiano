@@ -329,7 +329,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setCheckMessageUrl(false).setWidth(500).setTitle("数据导入导出");
                 jpDialogBuilder.setVisibleRadioGroup(true).setMessage(
-                        "此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
+                        "此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，导入操作会覆盖当前本地收藏及所有弹奏分数，请谨慎操作");
                 RadioButton radioButton = new RadioButton(this);
                 radioButton.setText("选择文件夹进行数据导出，导出数据文件名：" + LocalDataImportExportTask.EXPORT_FILE_NAME);
                 radioButton.setTextSize(13);
@@ -337,7 +337,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
                 radioButton.setHeight(150);
                 jpDialogBuilder.addRadioButton(radioButton);
                 radioButton = new RadioButton(this);
-                radioButton.setText("【此操作会清空当前数据】选择文件，导入数据至APP");
+                radioButton.setText("【此操作会覆盖当前数据】选择文件，导入数据至APP");
                 radioButton.setTextSize(13);
                 radioButton.setTag(2);
                 radioButton.setHeight(150);
@@ -392,7 +392,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         isRecord = findViewById(R.id.check_record);
         isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件，请确保您授予了app的文件存储权限", 0);
+                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件", 0);
             }
         });
         isLeftHand = findViewById(R.id.check_hand);

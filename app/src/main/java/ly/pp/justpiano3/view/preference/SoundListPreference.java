@@ -23,7 +23,7 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SoundListPreference extends DialogPreference {
+public final class SoundListPreference extends DialogPreference {
     public Context context;
     public String soundKey = "";
     public JPProgressBar jpProgressBar;
@@ -58,7 +58,7 @@ public class SoundListPreference extends DialogPreference {
         soundKeyList[size + 1] = "more";
     }
 
-    public final void deleteFiles(String str) {
+    public void deleteFiles(String str) {
         File file = new File(str);
         if (file.exists()) {
             file.delete();

@@ -138,7 +138,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
                     break;
                 case 3:
                     linearLayout.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "网络连接错误或您未授予文件读取权限!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "网络连接错误!", Toast.LENGTH_LONG).show();
                     break;
                 case 5:
                     linearLayout.setVisibility(View.GONE);

@@ -255,7 +255,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     if (!recordStart) {
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                         jpDialogBuilder.setTitle("提示");
-                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，请确保您授予了app的文件存储权限");
+                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
                         jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
@@ -280,9 +280,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                         File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
                         if (FileUtil.INSTANCE.moveFile(srcFile, desFile)) {
-                            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(this, "录音文件存储失败，请检查是否授予APP文件存储权限", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
@@ -428,7 +428,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             File desFile = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Records/" + recordFileName);
             FileUtil.INSTANCE.moveFile(srcFile, desFile);
-            Toast.makeText(this, "录音完毕，文件已存储至SD卡\\JustPiano\\Records中", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
         }
         SoundEngineUtil.stopPlayAllSounds();
         waterfallView.stopPlay();

@@ -269,13 +269,12 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 default:
                     break;
             }
-            // 取得持久化 URI 权限
             if (uriInfo.getUri() != null) {
                 try {
                     getContentResolver().takePersistableUriPermission(uriInfo.getUri(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 } catch (SecurityException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "读取文件出错，请确保授予了设备的文件访问权限", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "读取文件出错", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());

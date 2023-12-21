@@ -350,13 +350,13 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // 区别于 FLAG_GRANT_READ_URI_PERMISSION 跟 FLAG_GRANT_WRITE_URI_PERMISSION， URI权限会持久存在即使重启，直到明确的用 revokeUriPermission(Uri, int) 撤销。
+            // 区别于FLAG_GRANT_READ_URI_PERMISSION和FLAG_GRANT_WRITE_URI_PERMISSION
+            // URI权限会持久存在即使重启，直到明确的用revokeUriPermission(Uri, int)撤销。
             // 这个flag只提供可能持久授权。但是接收的应用必须调用ContentResolver的takePersistableUriPermission(Uri, int)方法实现
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         }
         Uri fileUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // 确保authority 与AndroidManifest.xml中android:authorities="包名.fileProvider"所有字符一致
             fileUri = FileProvider.getUriForFile(context, getPackageName() + ".fileProvider", appFile);
             intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
         } else {
