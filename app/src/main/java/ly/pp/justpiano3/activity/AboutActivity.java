@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import ly.pp.justpiano3.R;
 
-public class AboutActivity extends BaseActivity {
+public final class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

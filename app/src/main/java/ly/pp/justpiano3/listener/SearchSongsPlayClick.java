@@ -12,7 +12,7 @@ public final class SearchSongsPlayClick implements OnClickListener {
 
     private final SearchSongsAdapter searchSongsAdapter;
     private String f5865b;
-    private String songID;
+    private final String songID;
     private int f5867d;
     private double f5868e;
     private final Intent intent;

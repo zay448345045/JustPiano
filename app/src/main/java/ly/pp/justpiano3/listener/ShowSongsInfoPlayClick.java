@@ -12,7 +12,7 @@ public final class ShowSongsInfoPlayClick implements OnClickListener {
 
     private final ShowSongsInfoAdapter showSongsInfoAdapter;
     private String f5892b;
-    private String songID;
+    private final String songID;
     private int f5894d;
     private double f5895e;
     private final Intent intent;

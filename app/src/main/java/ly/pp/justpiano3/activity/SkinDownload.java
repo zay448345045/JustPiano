@@ -29,7 +29,7 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SkinDownload extends BaseActivity implements Callback {
+public final class SkinDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
@@ -37,10 +37,10 @@ public class SkinDownload extends BaseActivity implements Callback {
     private ProgressBar progressBar;
     private TextView downloadText;
     private LinearLayout linearLayout;
-    private int progress = 0;
-    private int intentFlag = 0;
+    private int progress;
+    private int intentFlag;
 
-    public static void downloadPS(SkinDownload skinDownload, String skinId, String skinName) {
+    public static void downloadSkin(SkinDownload skinDownload, String skinId, String skinName) {
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName + ".ps");
         if (file.exists()) {
             file.delete();
@@ -78,7 +78,7 @@ public class SkinDownload extends BaseActivity implements Callback {
         skinDownload.handler.sendMessage(failMessage);
     }
 
-    public final void handleSkin(int i, String name, String str2, int size, String author) {
+    public void handleSkin(int i, String name, String str2, int size, String author) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String buttonName = "使用";
         jpDialogBuilder.setTitle("提示");
@@ -97,7 +97,7 @@ public class SkinDownload extends BaseActivity implements Callback {
         jpDialogBuilder.buildAndShowDialog();
     }
 
-    public final void changeSkin(String skinName) {
+    public void changeSkin(String skinName) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);

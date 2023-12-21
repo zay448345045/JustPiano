@@ -44,37 +44,33 @@ import ly.pp.justpiano3.task.OLMelodySelectTask;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class OLMelodySelect extends BaseActivity implements Callback, OnClickListener {
+public final class OLMelodySelect extends BaseActivity implements Callback, OnClickListener {
     public static byte[] songBytes;
     public static String songID;
     public JPApplication jpApplication;
     public double degree;
     public int topScore;
-    public Button pageButton;
+    private Button pageButton;
     public int index;
     public int pageNum = 1;
     public PopupWindowSelectAdapter popupWindowSelectAdapter;
-    public int f4314a;
-    public String f4315b = "";
-    public int f4316c;
-    public String f4317e = "";
+    public int orderByType;
+    public String type = "";
     public String songName = "";
     public JPProgressBar jpprogressBar;
-    public int f4322k;
+    public int songCount;
     public LayoutInflater layoutInflater1;
     public LayoutInflater layoutInflater2;
-    public ListView f4327p;
-    public TextView f4328q;
-    public boolean f4330s = true;
-    public boolean f4331t = true;
-    public boolean f4332u = true;
-    public boolean f4333v = true;
-    public boolean f4334w = true;
-    public boolean f4335x = true;
+    public ListView itemListView;
+    private boolean updateOrderByReverse = true;
+    private boolean degreeOrderByReverse = true;
+    private boolean songNameOrderByReverse = true;
+    private boolean itemOrderByReverse = true;
+    private boolean playCountOrderByReverse = true;
     private PopupWindow popupWindow;
     private final List<String> pageList = new ArrayList<>();
     private boolean firstLoadFocusFinish;
-    private List<Map<String, Object>> songList;
+    public List<Map<String, Object>> songList;
 
     public static final class SongsComparator implements Comparator<Map<String, Object>> {
         private final OLMelodySelect olMelodySelect;
@@ -90,15 +86,15 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
         public int compare(Map<String, Object> obj, Map<String, Object> obj2) {
             switch (type) {
                 case 0:
-                    return olMelodySelect.f4331t ? 0 - ((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));
+                    return olMelodySelect.updateOrderByReverse ? -((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));
                 case 1:
-                    return olMelodySelect.f4332u ? ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree")) : 0 - ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree"));
+                    return olMelodySelect.degreeOrderByReverse ? ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree")) : -((Double) obj.get("degree")).compareTo((Double) obj2.get("degree"));
                 case 2:
-                    return olMelodySelect.f4333v ? comparator.compare(obj.get("songName"), obj2.get("songName")) : 0 - comparator.compare(obj.get("songName"), obj2.get("songName"));
+                    return olMelodySelect.songNameOrderByReverse ? comparator.compare(obj.get("songName"), obj2.get("songName")) : -comparator.compare(obj.get("songName"), obj2.get("songName"));
                 case 3:
-                    return olMelodySelect.f4334w ? comparator.compare(obj.get("items"), obj2.get("items")) : 0 - comparator.compare(obj.get("items"), obj2.get("items"));
+                    return olMelodySelect.itemOrderByReverse ? comparator.compare(obj.get("items"), obj2.get("items")) : -comparator.compare(obj.get("items"), obj2.get("items"));
                 case 4:
-                    return olMelodySelect.f4335x ? 0 - comparator.compare(obj.get("playCount"), obj2.get("playCount")) : comparator.compare(obj.get("playCount"), obj2.get("playCount"));
+                    return olMelodySelect.playCountOrderByReverse ? -comparator.compare(obj.get("playCount"), obj2.get("playCount")) : comparator.compare(obj.get("playCount"), obj2.get("playCount"));
                 default:
                     return 0;
             }
@@ -113,7 +109,7 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
         }
     }
 
-    private List<Map<String, Object>> m3648b(String str) {
+    public List<Map<String, Object>> songListHandle(String str) {
         JSONArray jSONArray;
         List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
@@ -122,8 +118,8 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
             e.printStackTrace();
             return arrayList;
         }
-        f4322k = jSONArray.length();
-        for (int i = 0; i < f4322k; i++) {
+        songCount = jSONArray.length();
+        for (int i = 0; i < songCount; i++) {
             try {
                 Map<String, Object> songInfoMap = new HashMap<>();
                 songInfoMap.put("songID", jSONArray.getJSONObject(i).get("SI").toString());
@@ -143,16 +139,12 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
         return arrayList;
     }
 
-    public final void mo2808a(ListView listView, int i, int i2) {
+    public void bindAdapter(ListView listView, int i, int i2) {
         List<Map<String, Object>> list = songList;
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, new SongsComparator(this, i));
         }
         listView.setAdapter(new OLMelodySelectAdapter(this, i2, list));
-    }
-
-    public final void mo2809a(String str) {
-        songList = m3648b(str);
     }
 
     @Override
@@ -189,45 +181,44 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
         boolean z2 = true;
         switch (view.getId()) {
             case R.id.ol_date_b:
-                if (f4331t) {
+                if (updateOrderByReverse) {
                     z2 = false;
                 }
-                f4331t = z2;
-                f4316c = 0;
-                mo2808a(f4327p, f4316c, f4322k);
+                updateOrderByReverse = z2;
+                orderByType = 0;
+                bindAdapter(itemListView, orderByType, songCount);
                 return;
             case R.id.ol_degree_b:
-                if (!f4332u) {
+                if (!degreeOrderByReverse) {
                     z = true;
                 }
-                f4332u = z;
-                f4316c = 1;
-                mo2808a(f4327p, f4316c, f4322k);
+                degreeOrderByReverse = z;
+                orderByType = 1;
+                bindAdapter(itemListView, orderByType, songCount);
                 return;
             case R.id.ol_name_b:
-                if (!f4333v) {
+                if (!songNameOrderByReverse) {
                     z = true;
                 }
-                f4333v = z;
-                f4316c = 2;
-                mo2808a(f4327p, f4316c, f4322k);
+                songNameOrderByReverse = z;
+                orderByType = 2;
+                bindAdapter(itemListView, orderByType, songCount);
                 return;
             case R.id.ol_items_b:
-                if (!f4334w) {
+                if (!itemOrderByReverse) {
                     z = true;
                 }
-                f4334w = z;
-                f4316c = 3;
-                mo2808a(f4327p, f4316c, f4322k);
+                itemOrderByReverse = z;
+                orderByType = 3;
+                bindAdapter(itemListView, orderByType, songCount);
                 return;
             case R.id.ol_hot_b:
-                if (!f4335x) {
+                if (!playCountOrderByReverse) {
                     z = true;
                 }
-                f4335x = z;
-                f4316c = 3;
-                f4316c = 4;
-                mo2808a(f4327p, f4316c, f4322k);
+                playCountOrderByReverse = z;
+                orderByType = 4;
+                bindAdapter(itemListView, orderByType, songCount);
                 return;
             case R.id.ol_search_button:
                 Intent intent = new Intent();
@@ -260,19 +251,18 @@ public class OLMelodySelect extends BaseActivity implements Callback, OnClickLis
             LinearLayout linearLayout = findViewById(R.id.sup_view);
             findViewById(R.id.ol_search_button).setOnClickListener(this);
             ListView f4326o = findViewById(R.id.ol_f_list);
-            f4327p = findViewById(R.id.ol_c_list);
+            itemListView = findViewById(R.id.ol_c_list);
             f4326o.setAdapter(new OLMelodySelectTypeAdapter(this));
             f4326o.setCacheColorHint(Color.TRANSPARENT);
             f4326o.setOnItemClickListener((parent, view, position, id) -> {
                 linearLayout.setVisibility(View.GONE);
-                f4314a = position;
-                f4315b = Consts.items[position + 1];
-                f4317e = Consts.items[position + 1];
+                type = Consts.items[position + 1];
                 index = 0;
                 pageButton.setText(" 第1页 ");
                 new OLMelodySelectTask(OLMelodySelect.this).execute();
             });
-            f4328q = findViewById(R.id.title_bar);
+            TextView f4328q = findViewById(R.id.title_bar);
+            boolean f4330s = true;
             if (!f4330s) {
                 f4328q.setVisibility(View.VISIBLE);
             }

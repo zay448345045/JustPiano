@@ -555,7 +555,7 @@ class WaterfallView @JvmOverloads constructor(
                 handleWaterfallNoteListener()
                 // 先在缓冲区执行绘制所有音块
                 val noteCount = if (this::notesBufferCanvas.isInitialized)
-                    drawNotesOnBufferBitmap(notesBufferCanvas, notePaint    ) else 0
+                    drawNotesOnBufferBitmap(notesBufferCanvas, notePaint) else 0
                 // 判断有音块，且view为显示状态，且瀑布流未暂停也未滑动时才实际执行绘制
                 // 如果第一次发现无音块时，或第一次发现view被显示时，也绘制且只绘制一帧，进行补帧，随后停止
                 if (canvasDraw || isPressed || (noteCount > 0 && visibility == VISIBLE && (isScrolling || !isPause))) {

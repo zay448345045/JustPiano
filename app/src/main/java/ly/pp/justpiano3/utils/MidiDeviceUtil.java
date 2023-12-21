@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.entity.GlobalSetting;
 
 public class MidiDeviceUtil {

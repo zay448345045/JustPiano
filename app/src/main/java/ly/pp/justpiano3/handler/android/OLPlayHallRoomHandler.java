@@ -138,9 +138,9 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                         FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
                         if (familyAdapter == null) {
-                            olPlayHallRoom.mo2907b(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                            olPlayHallRoom.bindAdapter(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                         } else {
-                            olPlayHallRoom.mo2905a(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                            olPlayHallRoom.updateFamilyListShow(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                         }
                         olPlayHallRoom.myFamilyPosition.setText(data.getString("P"));
                         olPlayHallRoom.myFamilyName.setText(data.getString("N"));
@@ -182,7 +182,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                             for (int i = 0; i < size; i++) {
                                 olPlayHallRoom.friendList.add(data.getBundle(String.valueOf(i)));
                             }
-                            olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
+                            olPlayHallRoom.updateUserListShow(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                         }
                         olPlayHallRoom.pageIsEnd = size < 20;
                     });
@@ -217,8 +217,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                             e.printStackTrace();
                         }
                         if (olPlayHallRoom.mailList.size() > 0) {
-                            olPlayHallRoom.mo2848c();
-                            olPlayHallRoom.mo2849c(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
+                            olPlayHallRoom.saveMailToLocal();
+                            olPlayHallRoom.updateMailListShow(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
                         }
                     });
                     return;
@@ -250,7 +250,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                     });
                     return;
                 case 6:
-                    post(() -> olPlayHallRoom.mo2842a(message.getData()));
+                    post(() -> olPlayHallRoom.setBroadcast(message.getData()));
                     return;
                 case 7:
                     post(() -> {
@@ -260,7 +260,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         builder.setName(data.getString("F"));
                         olPlayHallRoom.friendList.remove(message.arg1);
                         olPlayHallRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
-                        olPlayHallRoom.mo2846b(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
+                        olPlayHallRoom.updateUserListShow(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     });
                     return;
                 case 8:

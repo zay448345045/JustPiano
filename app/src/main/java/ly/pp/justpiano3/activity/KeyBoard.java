@@ -35,13 +35,13 @@ import ly.pp.justpiano3.utils.VibrationUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.KeyboardView;
 
-public class KeyBoard extends BaseActivity implements View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener, View.OnClickListener {
-    public KeyboardView firstKeyboardView;
-    public KeyboardView secondKeyboardView;
-    public LinearLayout keyboard1Layout;
-    public LinearLayout keyboard2Layout;
-    public ScheduledExecutorService scheduledExecutor;
-    public SharedPreferences sharedPreferences;
+public final class KeyBoard extends BaseActivity implements View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener, View.OnClickListener {
+    private KeyboardView firstKeyboardView;
+    private KeyboardView secondKeyboardView;
+    private LinearLayout keyboard1Layout;
+    private LinearLayout keyboard2Layout;
+    private ScheduledExecutorService scheduledExecutor;
+    private SharedPreferences sharedPreferences;
     // 用于记录上次的移动
     private boolean reSize;
     // 记录目前是否在走动画，不能重复走
@@ -81,15 +81,11 @@ public class KeyBoard extends BaseActivity implements View.OnTouchListener, Midi
         findViewById(R.id.keyboard_setting).setOnClickListener(this);
         findViewById(R.id.keyboard_record).setOnClickListener(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int keyboard1WhiteKeyNum = sharedPreferences.getInt("keyboard1_white_key_num", 8);
-        int keyboard2WhiteKeyNum = sharedPreferences.getInt("keyboard2_white_key_num", 8);
-        int keyboard1WhiteKeyOffset = sharedPreferences.getInt("keyboard1_white_key_offset", 28);
-        int keyboard2WhiteKeyOffset = sharedPreferences.getInt("keyboard2_white_key_offset", 21);
         float keyboardWeight = sharedPreferences.getFloat("keyboard_weight", 0.5f);
-        firstKeyboardView.setWhiteKeyNum(keyboard1WhiteKeyNum);
-        secondKeyboardView.setWhiteKeyNum(keyboard2WhiteKeyNum);
-        firstKeyboardView.setWhiteKeyOffset(keyboard1WhiteKeyOffset);
-        secondKeyboardView.setWhiteKeyOffset(keyboard2WhiteKeyOffset);
+        firstKeyboardView.setWhiteKeyNum(sharedPreferences.getInt("keyboard1_white_key_num", 8));
+        secondKeyboardView.setWhiteKeyNum(sharedPreferences.getInt("keyboard2_white_key_num", 8));
+        firstKeyboardView.setWhiteKeyOffset(sharedPreferences.getInt("keyboard1_white_key_offset", 28));
+        secondKeyboardView.setWhiteKeyOffset(sharedPreferences.getInt("keyboard2_white_key_offset", 21));
         keyboard1Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(

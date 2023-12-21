@@ -304,7 +304,7 @@ public final class MainGameAdapter extends BaseAdapter {
                     ((TextView) view.findViewById(R.id.ol_mail_time)).setText(to);
                     sendButton.setOnClickListener(new OLSendMailClick(this, mailMessage, from));
                     buttonX.setOnClickListener(new OLSendMailClick(this, "0", from));
-                    mailDeleteButton.setOnClickListener(v -> ((OLPlayHallRoom) activity).mo2840a(i));
+                    mailDeleteButton.setOnClickListener(v -> ((OLPlayHallRoom) activity).updateMailListShow(i));
                     break;
                 }
                 break;

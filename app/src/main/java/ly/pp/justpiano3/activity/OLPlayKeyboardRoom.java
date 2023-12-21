@@ -15,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
@@ -66,9 +65,9 @@ import protobuf.dto.OnlineKeyboardNoteDTO;
 import protobuf.dto.OnlineLoadRoomPositionDTO;
 
 public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener {
-    public static final int NOTES_SEND_INTERVAL = 120;
+    private static final int NOTES_SEND_INTERVAL = 120;
     // 当前用户楼号 - 1
-    public byte roomPositionSub1 = -1;
+    private byte roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
     public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
@@ -76,13 +75,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     private final OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();
     private final Map<Long, Long> olNoteCacheDataMap = new ConcurrentHashMap<>();
     public OLPlayKeyboardRoomHandler olPlayKeyboardRoomHandler = new OLPlayKeyboardRoomHandler(this);
-    public LinearLayout playerLayout;
-    public LinearLayout keyboardLayout;
+    private LinearLayout playerLayout;
+    private LinearLayout keyboardLayout;
     public WaterfallView waterfallView;
     public KeyboardView keyboardView;
-    public ScheduledExecutorService keyboardScheduledExecutor;
-    public ScheduledExecutorService noteScheduledExecutor;
-    public ImageView keyboardSetting;
+    private ScheduledExecutorService keyboardScheduledExecutor;
+    private ScheduledExecutorService noteScheduledExecutor;
     // 用于记录上次的移动
     private boolean reSize;
     // 记录目前是否在走动画，不能重复走
@@ -333,8 +331,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         findViewById(R.id.keyboard_move_left).setOnTouchListener(this);
         findViewById(R.id.keyboard_move_right).setOnTouchListener(this);
         findViewById(R.id.keyboard_resize).setOnTouchListener(this);
-        keyboardSetting = findViewById(R.id.keyboard_setting);
-        keyboardSetting.setOnClickListener(this);
+        findViewById(R.id.keyboard_setting).setOnClickListener(this);
         findViewById(R.id.keyboard_record).setOnClickListener(this);
         for (int i = 0; i < olKeyboardStates.length; i++) {
             olKeyboardStates[i] = new OLKeyboardState(false, false, false);

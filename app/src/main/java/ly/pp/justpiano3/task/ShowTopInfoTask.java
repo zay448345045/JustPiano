@@ -30,35 +30,32 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String str = "";
-        if (!showTopInfo.get().keywords.isEmpty()) {
-            // 创建请求参数
-            FormBody formBody = new FormBody.Builder()
-                    .add("head", String.valueOf(showTopInfo.get().head))
-                    .add("version", BuildConfig.VERSION_NAME)
-                    .add("keywords", showTopInfo.get().keywords)
-                    .add("page", String.valueOf(showTopInfo.get().pageNum))
-                    .add("P", showTopInfo.get().address)
-                    .add("K", JPApplication.kitiName)
-                    .add("N", showTopInfo.get().jpApplication.getAccountName())
-                    .build();
-            // 创建请求对象
-            Request request = new Request.Builder()
-                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetTopListByKeywords")
-                    .post(formBody) // 设置请求方式为POST
-                    .build();
-            try {
-                // 发送请求并获取响应
-                Response response = OkHttpUtil.client().newCall(request).execute();
-                if (response.isSuccessful()) { // 判断响应是否成功
-                    try {
-                        str = response.body().string(); // 获取响应内容
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("head", String.valueOf(showTopInfo.get().head))
+                .add("version", BuildConfig.VERSION_NAME)
+                .add("keywords", "C")
+                .add("page", String.valueOf(showTopInfo.get().pageNum))
+                .add("K", JPApplication.kitiName)
+                .add("N", showTopInfo.get().jpApplication.getAccountName())
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetTopListByKeywords")
+                .post(formBody) // 设置请求方式为POST
+                .build();
+        try {
+            // 发送请求并获取响应
+            Response response = OkHttpUtil.client().newCall(request).execute();
+            if (response.isSuccessful()) { // 判断响应是否成功
+                try {
+                    str = response.body().string(); // 获取响应内容
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return str;
     }
@@ -67,7 +64,7 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             try {
-                showTopInfo.get().dataList = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+                showTopInfo.get().dataList = showTopInfo.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
                 ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().size, showTopInfo.get().dataList);
                 if (showTopInfo.get().listView != null) {
                     showTopInfo.get().listView.setAdapter(topUserAdapter);

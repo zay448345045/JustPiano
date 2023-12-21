@@ -3,7 +3,7 @@ package ly.pp.justpiano3.entity
 /**
  * 记录在线键盘模式用户状态
  */
-data class OLKeyboardState (
+data class OLKeyboardState(
     /**
      * 是否静音
      */

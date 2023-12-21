@@ -537,11 +537,14 @@ class KeyboardView @JvmOverloads constructor(
         if (y > 0) {
             if (y < blackKeyHeight) {
                 pitch = xyToBlackPitch(x, y)
-                volume = (y / blackKeyHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
+                volume = (y / blackKeyHeight * Byte.MAX_VALUE).toInt()
+                    .coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
             }
             if (pitch < 0) {
                 pitch = xToWhitePitch(x)
-                volume = (y / viewHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt()).toByte()
+                volume =
+                    (y / viewHeight * Byte.MAX_VALUE).toInt().coerceAtMost(Byte.MAX_VALUE.toInt())
+                        .toByte()
             }
         }
         return Pair(pitch, volume)

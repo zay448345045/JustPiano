@@ -12,7 +12,7 @@ import ly.pp.justpiano3.entity.LocalSongData
 interface SongDao {
 
     companion object {
-        const val PAGE_SIZE = 100;
+        const val PAGE_SIZE = 100
     }
 
     @Query("SELECT * FROM song WHERE online = 1")
@@ -39,10 +39,15 @@ interface SongDao {
         NAME_ASC, NAME_DESC, IS_NEW_ASC, DATE_DESC, DEGREE_ASC, DEGREE_DESC, SCORE_ASC, SCORE_DESC, LENGTH_ASC, LENGTH_DESC
     }
 
-    fun getLocalSongsWithDataSource(categoryIndex: Int, orderByIndex: Int): DataSource.Factory<Int, Song> {
+    fun getLocalSongsWithDataSource(
+        categoryIndex: Int,
+        orderByIndex: Int
+    ): DataSource.Factory<Int, Song> {
         val categoryEnum = enumValues<Category>().find { it.code == categoryIndex }
         val isFavorite = if (categoryIndex == 0) arrayOf(1) else arrayOf(0, 1)
-        val category = categoryEnum?.let { arrayOf(it.desc) } ?: enumValues<Category>().map { it.desc }.toTypedArray()
+        val category =
+            categoryEnum?.let { arrayOf(it.desc) } ?: enumValues<Category>().map { it.desc }
+                .toTypedArray()
         return when (orderByIndex) {
             // room库不支持直接拼接order by字段，只能分别走调用
             Order.NAME_ASC.ordinal -> getNameAscSongsWithDataSource(isFavorite, category)
@@ -60,34 +65,64 @@ interface SongDao {
     }
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name ASC")
-    fun getNameAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getNameAscSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY name DESC")
-    fun getNameDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getNameDescSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY isnew ASC")
-    fun getIsNewAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getIsNewAscSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY date DESC")
-    fun getDateDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getDateDescSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff ASC")
-    fun getDegreeAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getDegreeAscSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY diff DESC")
-    fun getDegreeDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getDegreeDescSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score ASC")
-    fun getScoreAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getScoreAscSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY score DESC")
-    fun getScoreDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getScoreDescSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length ASC")
-    fun getLengthAscSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getLengthAscSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo IN (:isFavorite) AND item IN (:category) ORDER BY length DESC")
-    fun getLengthDescSongsWithDataSource(isFavorite: Array<Int>, category: Array<String>): DataSource.Factory<Int, Song>
+    fun getLengthDescSongsWithDataSource(
+        isFavorite: Array<Int>,
+        category: Array<String>
+    ): DataSource.Factory<Int, Song>
 
     @Query("SELECT * FROM song WHERE online = 1 AND isfavo = 1")
     fun getFavoriteSongs(): List<Song>
@@ -124,13 +159,23 @@ interface SongDao {
     fun deleteSongs(deleteSongs: List<Song>)
 
     @Query("UPDATE song SET isfavo = :isFavorite, score = :rightHandHighScore, Lscore = :leftHandHeightScore WHERE online = 1 AND path = :path")
-    fun updateSongInfoByPath(isFavorite: Int, rightHandHighScore: Int, leftHandHeightScore: Int, path: String): Int
+    fun updateSongInfoByPath(
+        isFavorite: Int,
+        rightHandHighScore: Int,
+        leftHandHeightScore: Int,
+        path: String
+    ): Int
 
     @Transaction
-    fun updateSongsInfoByPaths(localSongDataList: List<LocalSongData>) : Int {
+    fun updateSongsInfoByPaths(localSongDataList: List<LocalSongData>): Int {
         var count = 0
         for (localSongData in localSongDataList) {
-            count += updateSongInfoByPath(localSongData.isfavo, localSongData.score, localSongData.lScore, localSongData.path)
+            count += updateSongInfoByPath(
+                localSongData.isfavo,
+                localSongData.score,
+                localSongData.lScore,
+                localSongData.path
+            )
         }
         return count
     }
@@ -154,7 +199,8 @@ interface SongDao {
     fun updateFavoriteSong(filePath: String, isFavorite: Int): Int
 
     private val _config: PagedList.Config
-        get() = PagedList.Config.Builder().setPageSize(PAGE_SIZE).setEnablePlaceholders(false).build()
+        get() = PagedList.Config.Builder().setPageSize(PAGE_SIZE).setEnablePlaceholders(false)
+            .build()
 
     fun getPageListByDatasourceFactory(dataSourceFactory: DataSource.Factory<Int, Song>): LiveData<PagedList<Song>> {
         return LivePagedListBuilder(dataSourceFactory, _config).build()

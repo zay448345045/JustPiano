@@ -70,7 +70,13 @@ object FileUtil {
 
     fun getUriInfo(context: Context, uri: Uri): UriInfo {
         val contentResolver = context.contentResolver
-        val queryCursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+        val queryCursor = contentResolver.query(
+            uri,
+            arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE),
+            null,
+            null,
+            null
+        )
         var displayName: String? = null
         var fileSize: Long? = null
         queryCursor.use { cursor ->

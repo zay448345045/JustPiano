@@ -66,12 +66,12 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             if (searchSongs.get().headType < 2) {
-                searchSongs.get().mo2963a(str, searchSongs.get().songsListView);
+                searchSongs.get().bindAdapter(str, searchSongs.get().songsListView);
                 searchSongs.get().songsListView.setCacheColorHint(0x00000000);
             } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
-                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().m3841b(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
+                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
                         searchSongs.get().songsListView.setCacheColorHint(0x00000000);
                     }
                 } catch (Exception e) {

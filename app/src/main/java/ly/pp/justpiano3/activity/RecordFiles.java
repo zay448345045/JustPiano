@@ -21,7 +21,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.RecordFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
 
-public class RecordFiles extends BaseActivity {
+public final class RecordFiles extends BaseActivity {
     private List<Map<String, Object>> dataList;
     private ListView listView;
     private TextView tipsTextView;
@@ -51,7 +51,7 @@ public class RecordFiles extends BaseActivity {
         listView.setAdapter(recordFilesAdapter);
     }
 
-    public final void remove(int index, String fileName) {
+    public void remove(int index, String fileName) {
         File file = new File(fileName);
         if (file.exists()) {
             file.delete();
@@ -61,7 +61,7 @@ public class RecordFiles extends BaseActivity {
         recordFilesAdapter.notifyDataSetChanged();
     }
 
-    public final void delete(int index, String fileName, String filePath) {
+    public void delete(int index, String fileName, String filePath) {
         Builder builder = new Builder(this);
         builder.setMessage("确认删除[" + fileName + "]吗?");
         builder.setTitle("提示");
@@ -73,7 +73,7 @@ public class RecordFiles extends BaseActivity {
         builder.create().show();
     }
 
-    public final void play(String str) {
+    public void play(String str) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);

@@ -44,8 +44,8 @@ public final class LoadBackgroundsThread extends Thread {
         while (pianoPlay.isPlayingStart) {
             // 时间计算部分：和瀑布流原理相同，具体解释详见瀑布流
             int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.INSTANCE.getNotesDownSpeed() - progressPauseTime);
-            boolean isPause = !pianoPlay.playView.startFirstNoteTouching ||
-                    (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !pianoPlay.playView.isTouchRightNote);
+            boolean isPause = !playView.startFirstNoteTouching ||
+                    (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !playView.isTouchRightNote);
             if (isPause && pauseProgress == null) {
                 pauseProgress = playIntervalTime;
             } else if (!isPause && pauseProgress != null) {

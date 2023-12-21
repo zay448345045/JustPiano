@@ -79,7 +79,8 @@ object SongPlay {
                     }
                     // 执行播放当前音符，并把当前音符也加入到正在播放的音符之中，用于之后的清理（按音轨停止）
                     val pitch = (it.pitchArray[i] + tune).toByte()
-                    SoundEngineUtil.playSound(pitch,
+                    SoundEngineUtil.playSound(
+                        pitch,
                         (it.volumeArray[i] * Byte.MAX_VALUE / 100f).toInt().toByte()
                     )
                     playingPitchMap[pitch] = it.trackArray[i]

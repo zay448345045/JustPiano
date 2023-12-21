@@ -43,7 +43,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 .add("keywords", strArr[0])
                 .add("userName", usersInfo.get().jpApplication.getAccountName());
         if (strArr[1] == null || strArr[2] == null) {
-            bodyBuilder.add("msg", usersInfo.get().pSign)
+            bodyBuilder.add("msg", usersInfo.get().signature)
                     .add("age", String.valueOf(usersInfo.get().age));
         } else {
             bodyBuilder.add("oldPass", strArr[1]).add("newPass", strArr[2]);

@@ -25,6 +25,7 @@ import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.RoomModeEnum;
@@ -51,7 +52,7 @@ public final class OLPlayHallHandler extends Handler {
         switch (message.what) {
             case 1:
                 post(() -> {
-                    if (olPlayHall.msgList.size() > 100) {
+                    if (olPlayHall.msgList.size() > Consts.MAX_CHAT_SAVE_COUNT) {
                         olPlayHall.msgList.remove(0);
                     }
                     File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");

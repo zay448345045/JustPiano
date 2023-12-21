@@ -35,7 +35,7 @@ public final class PianoPlayHandler extends Handler {
                         bundle.putString("M", data.getBundle(String.valueOf(i)).getString("M"));
                         pianoPlay.gradeList.add(bundle);
                     }
-                    pianoPlay.mo2905a(pianoPlay.horizontalListView, pianoPlay.gradeList);
+                    pianoPlay.updateMiniScore(pianoPlay.horizontalListView, pianoPlay.gradeList);
                     if (message.arg1 == 0) {
                         pianoPlay.playStartHandle(true);
                     }
@@ -54,7 +54,7 @@ public final class PianoPlayHandler extends Handler {
                         bundle.putString("S", data.getBundle(String.valueOf(i)).getString("T"));
                         pianoPlay.gradeList.add(bundle);
                     }
-                    pianoPlay.mo2905a(pianoPlay.horizontalListView, pianoPlay.gradeList);
+                    pianoPlay.updateMiniScore(pianoPlay.horizontalListView, pianoPlay.gradeList);
                 });
                 return;
             case 3:
@@ -77,7 +77,7 @@ public final class PianoPlayHandler extends Handler {
                         bundle.putString("GR", data.getBundle(String.valueOf(i)).getString("GR"));
                         pianoPlay.gradeList.add(bundle);
                     }
-                    pianoPlay.mo2907b(pianoPlay.gradeListView, pianoPlay.gradeList);
+                    pianoPlay.bindAdapter(pianoPlay.gradeListView, pianoPlay.gradeList);
                 });
                 return;
             case 4:

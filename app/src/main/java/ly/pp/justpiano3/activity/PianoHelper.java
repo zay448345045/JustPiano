@@ -15,9 +15,9 @@ import android.widget.ViewFlipper;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 
-public class PianoHelper extends BaseActivity implements OnGestureListener {
-    private GestureDetector gestureDetector = null;
-    private ViewFlipper viewFlipper = null;
+public final class PianoHelper extends BaseActivity implements OnGestureListener {
+    private GestureDetector gestureDetector;
+    private ViewFlipper viewFlipper;
 
     @Override
     public void onBackPressed() {

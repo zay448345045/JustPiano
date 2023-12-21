@@ -45,7 +45,7 @@ import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
 
-public class OLFamily extends OLBaseActivity implements OnClickListener {
+public final class OLFamily extends OLBaseActivity implements OnClickListener {
     private JPApplication jpApplication;
     public JPProgressBar jpprogressBar;
     public FamilyPositionEnum position;
@@ -53,15 +53,15 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     public TextView info;
     public FamilyHandler familyHandler;
     public String familyID;
-    public String peopleNow;  // 目前选择人的名字
-    public List<Map<String, Object>> familyList;
-    public int familyPageNum;
-    public String myFamilyPosition;
-    public String myFamilyContribution;
-    public String myFamilyCount;
-    public String myFamilyName;
-    public int listPosition;
-    public byte[] myFamilyPicArray;
+    private String peopleNow;  // 目前选择人的名字
+    private List<Map<String, Object>> familyList;
+    private int familyPageNum;
+    private String myFamilyPosition;
+    private String myFamilyContribution;
+    private String myFamilyCount;
+    private String myFamilyName;
+    private int listPosition;
+    private byte[] myFamilyPicArray;
     public List<Map<String, String>> peopleList = new ArrayList<>();
     public ListView peopleListView;
     public PopupWindow infoWindow;
@@ -112,23 +112,20 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     public void loadManageFamilyPopupWindow(Bundle b) {
-        PopupWindow popupWindow = new JPPopupWindow(this);
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
         Button button = inflate.findViewById(R.id.ol_family_levelup);
-        Button button2 = inflate.findViewById(R.id.ol_family_changedecl);
-        Button button3 = inflate.findViewById(R.id.ol_family_changepic);
-        Button button4 = inflate.findViewById(R.id.ol_family_changetest);
         if (b.getInt("R", 0) == 1) {
             button.setEnabled(true);
         }
         TextView info = inflate.findViewById(R.id.ol_family_levelup_info);
         info.setText(b.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
+        PopupWindow popupWindow = new JPPopupWindow(this);
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-        button2.setOnClickListener(this);
+        inflate.findViewById(R.id.ol_family_changedecl).setOnClickListener(this);
         button.setOnClickListener(this);
-        button3.setOnClickListener(this);
-        button4.setOnClickListener(this);
+        inflate.findViewById(R.id.ol_family_changepic).setOnClickListener(this);
+        inflate.findViewById(R.id.ol_family_changetest).setOnClickListener(this);
         popupWindow.showAtLocation(manageFamily, Gravity.CENTER, 0, 0);
     }
 
@@ -435,11 +432,11 @@ public class OLFamily extends OLBaseActivity implements OnClickListener {
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public final void bindFamilyPeopleListViewAdapter(ListView listView, List<Map<String, String>> list) {
+    public void bindFamilyPeopleListViewAdapter(ListView listView, List<Map<String, String>> list) {
         listView.setAdapter(new FamilyPeopleAdapter(list, jpApplication, layoutinflater, this));
     }
 
-    public final void sendMsg(int type, MessageLite msg) {
+    public void sendMsg(int type, MessageLite msg) {
         if (OnlineUtil.getConnectionService() != null) {
             OnlineUtil.getConnectionService().writeData(type, msg);
         } else {

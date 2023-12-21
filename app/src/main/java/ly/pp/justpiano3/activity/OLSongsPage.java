@@ -8,9 +8,8 @@ import android.view.View.OnClickListener;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
-public class OLSongsPage extends BaseActivity implements OnClickListener {
+public final class OLSongsPage extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {

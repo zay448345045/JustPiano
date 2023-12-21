@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -198,28 +197,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        JPStack.clear();
         jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
-        JPStack.clear();
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);
-        Bundle extras = getIntent().getExtras();
-        Button loginButton = findViewById(R.id.ol_login);
-        loginButton.setOnClickListener(this);
+        findViewById(R.id.ol_login).setOnClickListener(this);
         changeServerCheckBox = findViewById(R.id.ol_change_server);
         changeServerCheckBox.setChecked(OnlineUtil.server.equals(OnlineUtil.TEST_ONLINE_SERVER_URL));
-        Button registerButton = findViewById(R.id.ol_register);
-        registerButton.setOnClickListener(this);
-        Button changeAccountButton = findViewById(R.id.ol_change_account);
-        changeAccountButton.setOnClickListener(this);
-        TextView appVersionTextView = findViewById(R.id.app_version);
-        appVersionTextView.setText(BuildConfig.VERSION_NAME);
+        findViewById(R.id.ol_register).setOnClickListener(this);
+        findViewById(R.id.ol_change_account).setOnClickListener(this);
+        ((TextView) (findViewById(R.id.app_version))).setText(BuildConfig.VERSION_NAME);
         accountTextView = findViewById(R.id.username);
         passwordTextView = findViewById(R.id.password);
         rememAccount = findViewById(R.id.chec_name);
         rememAccount.setChecked(sharedPreferences.getBoolean("remem_account", false));
         autoLogin = findViewById(R.id.chec_autologin);
         autoLogin.setChecked(sharedPreferences.getBoolean("auto_login", false));
+        Bundle extras = getIntent().getExtras();
         boolean noAuto = extras == null || extras.getBoolean("no_auto");
         if (noAuto) {
             autoLogin.setChecked(false);

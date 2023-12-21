@@ -19,7 +19,7 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ShareUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class PlayFinish extends BaseActivity implements OnClickListener {
+public final class PlayFinish extends BaseActivity implements OnClickListener {
     private int head;
     public JPApplication jpApplication;
     public String scoreArray = "";
@@ -27,13 +27,13 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
     private String name = "";
     public String songID;
     private int comboScore;
-    private int perfect = 0;
-    private int cool = 0;
-    private int great = 0;
-    private int bad = 0;
-    private int miss = 0;
-    private int clickNum = 0;
-    private int combo = 0;
+    private int perfect;
+    private int cool;
+    private int great;
+    private int bad;
+    private int miss;
+    private int clickNum;
+    private int combo;
     private double nandu;
     private double leftNandu;
     private int hand;
@@ -42,7 +42,7 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
     private ImageButton finishButton;
     private ImageButton retryButton;
     private Button shareButton;
-    private boolean isWinner = false;
+    private boolean isWinner;
     private int topScore;
     private int totalScore;
     private int perfectScore;
@@ -62,7 +62,7 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(this, PianoPlay.class);
-        int i = Math.max(topScore, totalScore);
+        int topScore = Math.max(this.topScore, totalScore);
         if (view == finishButton) {
             OLMelodySelect.songBytes = null;
             setResult(-1, intent);
@@ -81,7 +81,7 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
                     intent.putExtra("leftnandu", leftNandu);
                     intent.putExtra("songstime", songsTime);
                     intent.putExtra("isrecord", false);
-                    intent.putExtra("score", i);
+                    intent.putExtra("score", topScore);
                     startActivity(intent);
                     finish();
                     return;
@@ -95,7 +95,7 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
                         intent.putExtra("degree", nandu);
                         intent.putExtra("songBytes", OLMelodySelect.songBytes);
                         intent.putExtra("songID", songID);
-                        intent.putExtra("topScore", i);
+                        intent.putExtra("topScore", topScore);
                         startActivity(intent);
                         finish();
                         return;
@@ -112,12 +112,10 @@ public class PlayFinish extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpApplication = (JPApplication) getApplication();
-        nandu = 0;
         jpprogressBar = new JPProgressBar(this);
         Bundle extras = getIntent().getExtras();
-        int i = extras.getInt("head");
-        head = i;
-        switch (i) {
+        head = extras.getInt("head");
+        switch (head) {
             case 0:
                 perfect = extras.getInt("perf");
                 cool = extras.getInt("cool");

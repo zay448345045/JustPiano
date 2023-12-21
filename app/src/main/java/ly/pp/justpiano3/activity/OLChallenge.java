@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,8 +40,6 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPProgressBar jpprogressBar;
     public ChallengeHandler challengeHandler;
     public TextView info;
-    public Button drawPrize;
-    public Button viewChallenge;
     public ListView scoreListView;
     public List<Map<String, String>> scoreList = new ArrayList<>();
     public LayoutInflater layoutinflater;
@@ -105,10 +102,8 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         title.setText("每日挑战 (" + DateFormat.getDateInstance().format(new Date()) + ")");
         info = findViewById(R.id.infoview);
         findViewById(R.id.startchallenge).setOnClickListener(this);
-        drawPrize = findViewById(R.id.drawPrize);
-        drawPrize.setOnClickListener(this);
-        viewChallenge = findViewById(R.id.viewChallenge);
-        viewChallenge.setOnClickListener(this);
+        findViewById(R.id.drawPrize).setOnClickListener(this);
+        findViewById(R.id.viewChallenge).setOnClickListener(this);
         scoreListView = findViewById(R.id.challenge_score_view);
         scoreListView.setCacheColorHint(Color.TRANSPARENT);
     }

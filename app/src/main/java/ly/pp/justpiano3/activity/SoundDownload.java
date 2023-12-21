@@ -29,7 +29,7 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SoundDownload extends BaseActivity implements Callback {
+public final class SoundDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
@@ -37,8 +37,8 @@ public class SoundDownload extends BaseActivity implements Callback {
     private ProgressBar progressBar;
     private TextView downloadText;
     private LinearLayout linearLayout;
-    private int progress = 0;
-    private int intentFlag = 0;
+    private int progress;
+    private int intentFlag;
 
     public static void downloadSound(SoundDownload soundDownload, String soundId, String soundName, String soundType) {
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundName + soundType);
@@ -79,7 +79,7 @@ public class SoundDownload extends BaseActivity implements Callback {
         soundDownload.handler.sendMessage(failMessage);
     }
 
-    public final void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
+    public void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String buttonText = "使用";
         jpDialogBuilder.setTitle("提示");
@@ -102,7 +102,7 @@ public class SoundDownload extends BaseActivity implements Callback {
         jpDialogBuilder.buildAndShowDialog();
     }
 
-    public final void changeSound(String soundFileName) {
+    public void changeSound(String soundFileName) {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);

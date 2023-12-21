@@ -12,9 +12,9 @@ import ly.pp.justpiano3.adapter.UserListPageAdapter;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class UserListPage extends BaseActivity {
+public final class UserListPage extends BaseActivity {
     public ListView listView;
-    public JPProgressBar jpProgressBar;
+    private JPProgressBar jpProgressBar;
 
     @Override
     public void onBackPressed() {
@@ -31,8 +31,7 @@ public class UserListPage extends BaseActivity {
         setContentView(R.layout.ol_user_list);
         listView = findViewById(R.id.list_view);
         listView.setCacheColorHint(Color.TRANSPARENT);
-        TextView textView = findViewById(R.id.ol_top_title);
-        textView.setText("聊天屏蔽用户名单");
+        ((TextView) (findViewById(R.id.ol_top_title))).setText("聊天屏蔽用户名单");
         TextView descTextView = findViewById(R.id.ol_top_tips);
         descTextView.setVisibility(View.VISIBLE);
         descTextView.setText("此列表下的用户，在接收到Ta的聊天消息时会自动屏蔽，对方无感知。\n屏蔽聊天列表添加用户方法：在房间聊天界面点击人物形象，在小弹窗中选择屏蔽聊天。");

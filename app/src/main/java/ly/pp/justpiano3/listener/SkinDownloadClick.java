@@ -31,7 +31,7 @@ public final class SkinDownloadClick implements OnClickListener {
         dialogInterface.dismiss();
         switch (type) {
             case 0:
-                ThreadPoolUtil.execute(() -> SkinDownload.downloadPS(skinDownload, url, name));
+                ThreadPoolUtil.execute(() -> SkinDownload.downloadSkin(skinDownload, url, name));
                 break;
             case 1:
                 ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));

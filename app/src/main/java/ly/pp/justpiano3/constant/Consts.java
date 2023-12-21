@@ -50,6 +50,11 @@ public interface Consts {
      */
     int MAX_MESSAGE_COUNT = 500;
 
+    /**
+     * 聊天框中的聊天记录最大条目数
+     */
+    int MAX_CHAT_SAVE_COUNT = 100;
+
     DiffUtil.ItemCallback<Song> SONG_DIFF_UTIL = new DiffUtil.ItemCallback<Song>() {
         @Override
         public boolean areItemsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {

@@ -26,7 +26,7 @@ public final class PopUserInfoTask extends AsyncTask<Void, Void, String> {
         String str = "";
         if (!popUserInfo.get().kitiName.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/" + popUserInfo.get().f4839m).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetUserInfo").newBuilder();
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("head", String.valueOf(popUserInfo.get().headType));
             formBuilder.add("version", BuildConfig.VERSION_NAME);

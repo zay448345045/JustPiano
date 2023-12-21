@@ -75,8 +75,8 @@ public final class ChangeBlessingClick implements OnClickListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            olPlayHallRoom.mo2848c();
-            olPlayHallRoom.mo2849c(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
+            olPlayHallRoom.saveMailToLocal();
+            olPlayHallRoom.updateMailListShow(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
         } else if (f5459c == 1) {
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(4);

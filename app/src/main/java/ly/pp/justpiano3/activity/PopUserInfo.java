@@ -6,9 +6,10 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,13 +24,12 @@ import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class PopUserInfo extends BaseActivity implements Callback, OnClickListener {
+public final class PopUserInfo extends BaseActivity implements Callback, OnClickListener {
     public JPProgressBar jpprogressBar;
-    public int headType = 0;
+    public int headType;
     public String kitiName = "";
     public String keywords = "P";
     private JPApplication jpApplication;
-    public String f4839m = "";
     private TextView userKitiName;
     private TextView userPSign;
     private TextView userSex;
@@ -72,7 +72,7 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
     }
 
     @Override
-    public boolean handleMessage(Message message) {
+    public boolean handleMessage(@NonNull Message message) {
         return false;
     }
 
@@ -138,18 +138,12 @@ public class PopUserInfo extends BaseActivity implements Callback, OnClickListen
         userPSign = findViewById(R.id.user_msg);
         userFace = findViewById(R.id.user_face);
         userAge = findViewById(R.id.user_age);
-        Button f4840n = findViewById(R.id.add_friend);
-        f4840n.setOnClickListener(this);
+        findViewById(R.id.add_friend).setOnClickListener(this);
         findViewById(R.id.send_mail).setOnClickListener(this);
         Bundle extras = getIntent().getExtras();
         headType = extras.getInt("head");
-        if (headType == 2) {
-            headType = 1;
-            f4840n.setVisibility(View.INVISIBLE);
-        }
         kitiName = extras.getString("userKitiName");
         jpprogressBar = new JPProgressBar(this);
-        f4839m = "GetUserInfo";
         new PopUserInfoTask(this).execute();
     }
 }

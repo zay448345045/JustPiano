@@ -22,7 +22,7 @@ import ly.pp.justpiano3.adapter.ChatFilesAdapter;
 import ly.pp.justpiano3.utils.DateUtil;
 
 public class ChatFiles extends BaseActivity {
-    public List<Map<String, Object>> dataList = null;
+    private List<Map<String, Object>> dataList;
     private ListView listView;
     private TextView tipsTextView;
     private ChatFilesAdapter chatFilesAdapter;

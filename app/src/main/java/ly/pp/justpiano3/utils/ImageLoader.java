@@ -338,7 +338,7 @@ public class ImageLoader {
             Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 try (InputStream inputStream = response.body().byteStream();
-                    OutputStream out = new BufferedOutputStream(outputStream, 8 * 1024)) {
+                     OutputStream out = new BufferedOutputStream(outputStream, 8 * 1024)) {
                     byte[] buf = new byte[100 * 1024];
                     int len;
                     while ((len = inputStream.read(buf)) != -1) {

@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,10 +35,10 @@ import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class SearchSongs extends BaseActivity implements Callback, OnClickListener {
+public final class SearchSongs extends BaseActivity implements Callback, OnClickListener {
     public JPApplication jpApplication;
     public LayoutInflater layoutinflater;
-    public int length = 0;
+    private int length;
     public String keywords = "";
     public String songName = "";
     public String songID;
@@ -44,11 +46,11 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
     public JPProgressBar jpprogressBar;
     public double degree;
     public int topScore;
-    public int headType = 0;
+    public int headType;
     public PictureHandle pictureHandle;
     public Handler searchSongsHandler;
     private TextView keywordsTextView;
-    private Bitmap nailFace = null;
+    private Bitmap nailFace;
 
     public Bitmap loadNailFace(Context context) {
         try {
@@ -61,7 +63,7 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
         return nailFace;
     }
 
-    private List<Map<String, Object>> m3834a(String str) {
+    private List<Map<String, Object>> songListHandle(String str) {
         JSONArray jSONArray;
         List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
@@ -91,7 +93,7 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
         return arrayList;
     }
 
-    public List<Map<String, Object>> m3841b(String str) {
+    public List<Map<String, Object>> userListHandle(String str) {
         JSONArray jSONArray;
         List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
@@ -118,9 +120,9 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
         return arrayList;
     }
 
-    public final void mo2963a(String str, ListView listView) {
+    public void bindAdapter(String str, ListView listView) {
         try {
-            List<Map<String, Object>> songsList = m3834a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+            List<Map<String, Object>> songsList = songListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
             if (listView != null) {
                 SearchSongsAdapter searchSongsAdapter = new SearchSongsAdapter(this, length, songsList);
                 listView.setAdapter(searchSongsAdapter);
@@ -131,7 +133,7 @@ public class SearchSongs extends BaseActivity implements Callback, OnClickListen
     }
 
     @Override
-    public boolean handleMessage(Message message) {
+    public boolean handleMessage(@NonNull Message message) {
         return false;
     }
 

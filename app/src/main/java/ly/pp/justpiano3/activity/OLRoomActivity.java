@@ -82,43 +82,42 @@ import protobuf.dto.OnlineSetUserInfoDTO;
  */
 public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, View.OnClickListener, View.OnLongClickListener {
     // 防止横竖屏切换时前后台状态错误
-    public boolean isChangeScreen;
+    private boolean isChangeScreen;
     public int lv;
     public int cl;
     public Handler handler;
     public byte hallId;
     public String hallName;
-    public List<Bundle> friendPlayerList = new ArrayList<>();
-    public boolean canNotNextPage;
-    public EditText sendTextView;
-    public List<Bundle> msgList = new ArrayList<>();
-    public int maxListValue = 100;
+    private final List<Bundle> friendPlayerList = new ArrayList<>();
+    private boolean canNotNextPage;
+    private EditText sendTextView;
+    private List<Bundle> msgList = new ArrayList<>();
     public GridView playerGrid;
-    public List<Bundle> invitePlayerList = new ArrayList<>();
+    private final List<Bundle> invitePlayerList = new ArrayList<>();
     public TabHost roomTabs;
     public boolean onStart = true;
-    public String userTo = "";
-    public ListView playerListView;
-    public ListView friendsListView;
+    private String userTo = "";
+    private ListView playerListView;
+    private ListView friendsListView;
     public int page;
     public byte roomId;
     public int roomMode;
     public TextView roomNameView;
     public String roomName;
-    public JPApplication jpApplication;
+    protected JPApplication jpApplication;
     public String playerKind = "";
     public Bundle roomInfoBundle;
     public Bundle hallInfoBundle;
-    public boolean timeUpdateRunning;
+    private boolean timeUpdateRunning;
     public ListView msgListView;
-    public ImageView expressImageView;
-    public LayoutInflater layoutInflater;
+    private ImageView expressImageView;
+    private LayoutInflater layoutInflater;
     public final List<Bundle> playerList = new ArrayList<>();
-    public PopupWindow expressPopupWindow;
-    public PopupWindow changeColorPopupWindow;
-    public TextView timeTextView;
-    public int colorNum = 99;
-    public ImageView changeColorButton;
+    private PopupWindow expressPopupWindow;
+    private PopupWindow changeColorPopupWindow;
+    protected TextView timeTextView;
+    private int colorNum = 99;
+    private ImageView changeColorButton;
 
     protected void showCpDialog(String str, String str2) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
@@ -394,7 +393,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (isIntercept) {
             return;
         }
-        if (msgList.size() > maxListValue) {
+        if (msgList.size() > Consts.MAX_CHAT_SAVE_COUNT) {
             msgList.remove(0);
         }
         String time = "";

@@ -16,7 +16,10 @@ import ly.pp.justpiano3.activity.OLPlayRoom
 import ly.pp.justpiano3.constant.Consts
 import ly.pp.justpiano3.database.entity.Song
 
-class OLRoomSongsAdapter(private val olPlayRoom: OLPlayRoom, private val songsListView: RecyclerView) :
+class OLRoomSongsAdapter(
+    private val olPlayRoom: OLPlayRoom,
+    private val songsListView: RecyclerView
+) :
     PagedListAdapter<Song, OLRoomSongsAdapter.SongViewHolder>(Consts.SONG_DIFF_UTIL) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -30,7 +33,10 @@ class OLRoomSongsAdapter(private val olPlayRoom: OLPlayRoom, private val songsLi
         getItem(position)?.let { holder.bindData(it) }
     }
 
-    override fun onCurrentListChanged(previousList: PagedList<Song>?, currentList: PagedList<Song>?) {
+    override fun onCurrentListChanged(
+        previousList: PagedList<Song>?,
+        currentList: PagedList<Song>?
+    ) {
         super.onCurrentListChanged(previousList, currentList)
         // 当数据列表发生更改时，滚动到第一个位置
         songsListView.scrollToPosition(0)
@@ -59,7 +65,8 @@ class OLRoomSongsAdapter(private val olPlayRoom: OLPlayRoom, private val songsLi
                 val favoriteSongList = songDao.getFavoriteSongsWithDataSource()
                 olPlayRoom.pagedListLiveData.removeObservers(olPlayRoom)
                 songDao.updateFavoriteSong(song.filePath, if (song.isFavorite == 0) 1 else 0)
-                olPlayRoom.pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList)
+                olPlayRoom.pagedListLiveData =
+                    songDao.getPageListByDatasourceFactory(favoriteSongList)
                 olPlayRoom.pagedListLiveData.observe(olPlayRoom) { pagedList: PagedList<Song>? ->
                     this@OLRoomSongsAdapter.submitList(
                         pagedList

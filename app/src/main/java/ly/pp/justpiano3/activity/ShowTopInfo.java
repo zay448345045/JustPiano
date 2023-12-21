@@ -30,23 +30,21 @@ import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class ShowTopInfo extends BaseActivity implements Handler.Callback, OnClickListener {
+public final class ShowTopInfo extends BaseActivity implements Handler.Callback, OnClickListener {
     public JPApplication jpApplication;
     public List<Map<String, Object>> dataList;
     public LayoutInflater layoutInflater;
-    public int size = 0;
-    public String keywords = "";
+    public int size;
     public ListView listView;
     public JPProgressBar jpprogressBar;
-    public int head = 0;
-    public int pageNum = 0;
-    public int position = 0;
-    public String address = "";
+    public int head;
+    public int pageNum;
+    public int position;
     public PictureHandle pictureHandle;
     public Handler handler;
     private TextView pageNumTextView;
     private final int pageSize = 20;
-    private Bitmap nailFace = null;
+    private Bitmap nailFace;
 
     public Bitmap setDefaultAvatar(Context context) {
         try {
@@ -59,7 +57,7 @@ public class ShowTopInfo extends BaseActivity implements Handler.Callback, OnCli
         return nailFace;
     }
 
-    public List<Map<String, Object>> m3877a(String str) {
+    public List<Map<String, Object>> userListHandle(String str) {
         JSONArray jSONArray;
         List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
@@ -126,38 +124,31 @@ public class ShowTopInfo extends BaseActivity implements Handler.Callback, OnCli
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);
         listView = findViewById(R.id.ol_top_list);
-        TextView titleTextView = findViewById(R.id.ol_top_title);
         position = (pageNum * pageSize) + 1;
-        Bundle extras = getIntent().getExtras();
-        head = extras.getInt("head");
-        keywords = extras.getString("keywords");
-        if (keywords.equals("C")) {
-            address = "";
-        } else {
-            address = extras.getString("address");
-        }
+        head = getIntent().getExtras().getInt("head");
         findViewById(R.id.ol_top_before).setOnClickListener(this);
         findViewById(R.id.ol_top_next).setOnClickListener(this);
         pageNumTextView = findViewById(R.id.ol_top_page);
         pageNumTextView.setText("-" + (pageNum + 1) + "-");
+        TextView titleTextView = findViewById(R.id.ol_top_title);
         switch (head) {
             case 0:
-                titleTextView.setText("-" + address + "冠军数量榜-");
+                titleTextView.setText("-冠军数量榜-");
                 break;
             case 1:
-                titleTextView.setText("-" + address + "个人总分榜-");
+                titleTextView.setText("-个人总分榜-");
                 break;
             case 4:
-                titleTextView.setText("-" + address + "个人等级榜-");
+                titleTextView.setText("-个人等级榜-");
                 break;
             case 7:
-                titleTextView.setText("-" + address + "搭档祝福榜-");
+                titleTextView.setText("-搭档祝福榜-");
                 break;
             case 9:
-                titleTextView.setText("-" + address + "家族贡献榜-");
+                titleTextView.setText("-家族贡献榜-");
                 break;
             case 10:
-                titleTextView.setText("-" + address + "个人考级榜-");
+                titleTextView.setText("-个人考级榜-");
                 break;
         }
         new ShowTopInfoTask(this).execute();

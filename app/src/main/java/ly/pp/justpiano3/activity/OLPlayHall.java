@@ -70,7 +70,7 @@ import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineQuitHallDTO;
 
 public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
-    public String hallName = "";
+    private String hallName = "";
     public byte hallID = (byte) 0;
     public JPApplication jpApplication;
     public JPProgressBar jpprogressBar;

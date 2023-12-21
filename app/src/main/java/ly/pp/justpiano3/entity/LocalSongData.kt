@@ -5,7 +5,8 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
 
-data class LocalSongData(var path: String, var isfavo: Int, var score: Int, var lScore: Int) : Serializable {
+data class LocalSongData(var path: String, var isfavo: Int, var score: Int, var lScore: Int) :
+    Serializable {
     @Throws(IOException::class)
     private fun writeObject(oos: ObjectOutputStream) {
         oos.writeObject(path)

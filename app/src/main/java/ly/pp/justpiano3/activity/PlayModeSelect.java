@@ -9,7 +9,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 
-public class PlayModeSelect extends BaseActivity implements OnClickListener {
+public final class PlayModeSelect extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {

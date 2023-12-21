@@ -85,19 +85,24 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
         seekBar!!.setOnSeekBarChangeListener(this)
         layout.addView(
             seekBar,
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
         )
         if (shouldPersist()) {
             value = getPersistedString(defaultValue)
         }
         valueText!!.text = if (value == defaultValue) "$value (默认)" else value
-        seekBar!!.progress = ((value!!.toFloat() - minValue) / (maxValue - minValue) * 100).roundToInt()
+        seekBar!!.progress =
+            ((value!!.toFloat() - minValue) / (maxValue - minValue) * 100).roundToInt()
         return layout
     }
 
     override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
-        seekBar!!.progress = ((value!!.toFloat() - minValue) / (maxValue - minValue) * 100).roundToInt()
+        seekBar!!.progress =
+            ((value!!.toFloat() - minValue) / (maxValue - minValue) * 100).roundToInt()
     }
 
     override fun onSetInitialValue(restore: Boolean, defaultValue: Any?) {
@@ -121,10 +126,13 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
 
     override fun onProgressChanged(seekBar: SeekBar, value: Int, fromTouch: Boolean) {
         val floatValue = minValue + value / 100f * (maxValue - minValue)
-        val showValue = if (floatNumber) String.format("%.2f", floatValue) else floatValue.roundToInt().toString()
+        val showValue =
+            if (floatNumber) String.format("%.2f", floatValue) else floatValue.roundToInt()
+                .toString()
         val showText = if (suffix == null) showValue else showValue + suffix
         // 标记默认值
-        valueText!!.text = if (showValue.toFloat() == defaultValue.toFloat()) "$showText (默认)" else if (showValue.toFloat() >= critValue) "$showText (不建议)" else showText
+        valueText!!.text =
+            if (showValue.toFloat() == defaultValue.toFloat()) "$showText (默认)" else if (showValue.toFloat() >= critValue) "$showText (不建议)" else showText
         valueText!!.setTextColor(if (showValue.toFloat() >= critValue) 0xfff05189.toInt() else 0xffffffff.toInt())
         if (shouldPersist()) {
             persistString(showValue)

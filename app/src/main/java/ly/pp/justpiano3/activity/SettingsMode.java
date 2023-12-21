@@ -31,7 +31,7 @@ import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
 
-public class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.MidiDeviceListener {
+public final class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.MidiDeviceListener {
 
     public static final int SETTING_MODE_CODE = 122;
 

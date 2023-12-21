@@ -42,12 +42,12 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class UsersInfo extends BaseActivity implements Callback, OnClickListener {
+public final class UsersInfo extends BaseActivity implements Callback, OnClickListener {
     public JPApplication jpApplication;
-    public boolean autoLogin = false;
-    public boolean rememberNewPassword = false;
+    public boolean autoLogin;
+    public boolean rememberNewPassword;
     public JPProgressBar jpprogressBar;
-    public String pSign;
+    public String signature;
     public int age;
     private PictureHandle pictureHandle;
     private String name = "";
@@ -95,11 +95,11 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
             usersInfo.winnerNumText.setText(usersInfo.winner);
             usersInfo.score = jsonObject.get("sc").toString();
             usersInfo.scoreText.setText(usersInfo.score);
-            usersInfo.pSign = jsonObject.get("ms").toString();
-            if (usersInfo.pSign.isEmpty()) {
+            usersInfo.signature = jsonObject.get("ms").toString();
+            if (usersInfo.signature.isEmpty()) {
                 usersInfo.pSignText.setText("未设置签名!");
             } else {
-                usersInfo.pSignText.setText(usersInfo.pSign);
+                usersInfo.pSignText.setText(usersInfo.signature);
             }
         } catch (JSONException e2) {
             e2.printStackTrace();
@@ -110,7 +110,6 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
         String str4 = "\r\n";
         String str5 = "--";
         String str6 = "*****";
-        String str7 = "0";
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(str).openConnection();
             httpURLConnection.setDoInput(true);
@@ -143,7 +142,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                 int read2 = inputStream.read();
                 if (read2 == -1) {
                     dataOutputStream.close();
-                    return str7;
+                    return "0";
                 }
                 stringBuffer.append((char) read2);
             }
@@ -250,7 +249,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                 return;
             case R.id.modify_button:
                 String charSequence = ageText.getText().toString();
-                pSign = pSignText.getText().toString();
+                signature = pSignText.getText().toString();
                 if (charSequence.startsWith("0")) {
                     Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
                     return;
@@ -263,7 +262,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                 if (age < 1900 || age > 2020) {
                     Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
                     return;
-                } else if (pSign.length() > Consts.MAX_MESSAGE_COUNT) {
+                } else if (signature.length() > Consts.MAX_MESSAGE_COUNT) {
                     Toast.makeText(this, "确定字数在五百字之内!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {

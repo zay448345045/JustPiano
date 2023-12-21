@@ -63,17 +63,16 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class MelodySelect extends BaseActivity implements Callback, OnClickListener {
-    public SharedPreferences sharedPreferences;
+public final class MelodySelect extends BaseActivity implements Callback, OnClickListener {
+    private SharedPreferences sharedPreferences;
     public LayoutInflater layoutInflater1;
-    public LayoutInflater layoutInflater2;
     public JPProgressBar jpProgressBar;
     public String songsPath = "";
     public CheckBox isRecord;
     public CheckBox isLeftHand;
     public CheckBox isAutoPlayNext;
     public CheckBox isPractise;
-    public EditText songSearchEditText;
+    private EditText songSearchEditText;
     private Button sortButton;
     private ImageView menuListButton;
     private boolean firstLoadFocusFinish;
@@ -89,7 +88,7 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
     public int songsPositionInListView;
 
-    protected final void buildDoNotShowDialogAndShow(String message, int i) {
+    private void buildDoNotShowDialogAndShow(String message, int i) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("提示");
         jpDialogBuilder.setMessage(message);
@@ -194,16 +193,13 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
 
     @Override
     public void onBackPressed() {
-        Intent intent;
+        Intent intent = new Intent();
         if (getIntent().getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
-            intent = new Intent();
             intent.setClass(this, MainMode.class);
-            startActivity(intent);
         } else {
-            intent = new Intent();
             intent.setClass(this, PlayModeSelect.class);
-            startActivity(intent);
         }
+        startActivity(intent);
         finish();
     }
 
@@ -219,24 +215,24 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
                 sortButton.setEnabled(false);
                 return;
             case R.id.list_sort_b:
-                PopupWindow popupWindow1 = new JPPopupWindow(this);
-                View inflate1 = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
-                popupWindow1.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-                popupWindow1.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                popupWindow1.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                inflate1.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
-                inflate1.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
-                popupWindow1.setContentView(inflate1);
-                sortPopupWindow = popupWindow1;
-                popupWindow1.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
+                PopupWindow popupWindow = new JPPopupWindow(this);
+                View inflate = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
+                popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+                popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+                popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                inflate.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
+                inflate.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
+                popupWindow.setContentView(inflate);
+                sortPopupWindow = popupWindow;
+                popupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
                 return;
             case R.id.lo_songs_order_name_asc:
                 songsSort(0);
@@ -334,14 +330,12 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
         jpProgressBar = new JPProgressBar(this);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater1 = LayoutInflater.from(this);
-        layoutInflater2 = LayoutInflater.from(this);
         setContentView(layoutInflater.inflate(R.layout.lo_melody_list, null));
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);
         totalSongScoreTextView = findViewById(R.id.total_score_all);
-        ImageView searchFastButton = findViewById(R.id.search_fast);
-        searchFastButton.setOnClickListener(this);
+        findViewById(R.id.search_fast).setOnClickListener(this);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
         List<SongDao.TotalSongInfo> allSongsCountAndScore = songDao.getAllSongsCountAndScore();
         totalSongInfoMutableLiveData.setValue(allSongsCountAndScore.get(0));
@@ -366,7 +360,6 @@ public class MelodySelect extends BaseActivity implements Callback, OnClickListe
                 buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件，请确保您授予了app的文件存储权限", 0);
             }
         });
-
         isLeftHand = findViewById(R.id.check_hand);
         isLeftHand.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && sharedPreferences.getBoolean("hand_dialog", true)) {

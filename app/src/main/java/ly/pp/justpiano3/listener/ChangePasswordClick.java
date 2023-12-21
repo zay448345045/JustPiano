@@ -18,7 +18,7 @@ public final class ChangePasswordClick implements OnClickListener {
     private final CheckBox remNewPasswordCheckBox;
 
     public ChangePasswordClick(UsersInfo userInfo, TextView originalPasswordTextView, TextView newPasswordTextView,
-                        TextView confirmPasswordTextView, CheckBox autoLoginCheckBox, CheckBox remNewPasswordCheckBox) {
+                               TextView confirmPasswordTextView, CheckBox autoLoginCheckBox, CheckBox remNewPasswordCheckBox) {
         this.userInfo = userInfo;
         this.originalPasswordTextView = originalPasswordTextView;
         this.newPasswordTextView = newPasswordTextView;

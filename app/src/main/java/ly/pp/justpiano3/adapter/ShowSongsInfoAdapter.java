@@ -65,7 +65,7 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         imageButton.setOnClickListener(v -> {
             if (showSongsInfo.keywords.equals("F")) {
                 Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已移出网络收藏夹", Toast.LENGTH_SHORT).show();
-                showSongsInfo.mo2976a(i);
+                showSongsInfo.updateSongInfo(i);
                 new AcceptFavorThread(songId, "U", showSongsInfo.jpApplication.getAccountName()).start();
                 return;
             }

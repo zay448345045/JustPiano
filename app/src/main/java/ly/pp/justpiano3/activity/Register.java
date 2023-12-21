@@ -16,14 +16,14 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.RegisterTask;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class Register extends BaseActivity implements OnClickListener {
+public final class Register extends BaseActivity implements OnClickListener {
     public String sex;
-    public String account;
-    public String kitiName;
+    public String account = "";
+    public String kitiName = "";
     public String password;
     public JPProgressBar jpprogressBar;
-    public RadioButton sexF;
-    public RadioButton sexM;
+    private RadioButton sexF;
+    private RadioButton sexM;
     private TextView accountTextView;
     private TextView password1TextView;
     private TextView password2TextView;
@@ -80,17 +80,13 @@ public class Register extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        sex = "";
-        account = "";
-        kitiName = "";
         accountTextView = findViewById(R.id.rg_name);
         kitiNameTextView = findViewById(R.id.rg_kiti);
         password1TextView = findViewById(R.id.rg_psw_1);
         password2TextView = findViewById(R.id.rg_psw_2);
         sexF = findViewById(R.id.f_radio);
         sexM = findViewById(R.id.m_radio);
-        RadioGroup f4937k = findViewById(R.id.rg_sex);
-        f4937k.setOnCheckedChangeListener((group, checkedId) -> {
+        ((RadioGroup) (findViewById(R.id.rg_sex))).setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == sexF.getId()) {
                 sex = "f";
             } else if (checkedId == sexM.getId()) {

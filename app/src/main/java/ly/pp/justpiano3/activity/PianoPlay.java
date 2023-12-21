@@ -60,11 +60,9 @@ import protobuf.dto.OnlineLoadPlayUserDTO;
 import protobuf.dto.OnlineQuitRoomDTO;
 
 public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.MidiDeviceListener {
-    public TextView leftHandDegreeTextView;
-    public TextView songLengthTextView;
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
-    public boolean isOpenRecord;
+    private boolean isOpenRecord;
     public PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     public View pausedPlay;
     public int times;
@@ -75,16 +73,16 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public ListView gradeListView;
     public TextView finishSongName;
     public List<Bundle> gradeList = new ArrayList<>();
-    public LayoutInflater layoutinflater;
+    private LayoutInflater layoutinflater;
     public PlayKeyBoardView playKeyBoardView;
     public boolean isShowingSongsInfo;
     public Bundle roomBundle;
     public boolean isPlayingStart;
     public boolean isBack;
-    public boolean f4620k;
+    public boolean isPlaying;
     public ImageButton startPlayButton;
     public PlayView playView;
-    public double onlineRightHandDegree;
+    private double onlineRightHandDegree;
     private int score;
     public View finishView;
     private View miniScoreView;
@@ -93,7 +91,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     private Bundle hallBundle;
     private boolean recordStart;
     private String recordWavPath;
-    private int roomMode = 0;
+    private int roomMode;
     private LayoutParams layoutparams;
     private double localRightHandDegree;
     private double localLeftHandDegree;
@@ -132,8 +130,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         songName = findViewById(R.id.m_name);
         progressbar = findViewById(R.id.m_progress);
         rightHandDegreeTextView = findViewById(R.id.m_nandu);
-        leftHandDegreeTextView = findViewById(R.id.l_nandu);
-        songLengthTextView = findViewById(R.id.time_mid);
+        TextView leftHandDegreeTextView = findViewById(R.id.l_nandu);
+        TextView songLengthTextView = findViewById(R.id.time_mid);
         highScoreTextView = findViewById(R.id.m_score);
         highScoreTextView.setText("最高纪录:" + score);
         startPlayButton = findViewById(R.id.p_start);
@@ -238,7 +236,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         }
     }
 
-    public void mo2905a(HorizontalListView listView, List<Bundle> list) {
+    public void updateMiniScore(HorizontalListView listView, List<Bundle> list) {
         MiniScoreAdapter miniScoreAdapter = (MiniScoreAdapter) listView.getAdapter();
         List<Bundle> bundleList = sortByField(list, "M");
         if (miniScoreAdapter == null) {
@@ -269,7 +267,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         }
     }
 
-    public void mo2907b(ListView listView, List<Bundle> list) {
+    public void bindAdapter(ListView listView, List<Bundle> list) {
         String str = "SC";
         if (roomMode > 0) {
             str = "E";
@@ -453,7 +451,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             case 4:    //挑战
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
-                String songBytes = extras.getString("songBytes");
                 songsName = extras.getString("name");
                 times = extras.getInt("times");
                 hand = extras.getInt("hand");
@@ -463,6 +460,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 showHideGrade.setText("");
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
+                String songBytes = extras.getString("songBytes");
                 playView = new PlayView(this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
                 break;
         }
@@ -509,13 +507,13 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     playView.startFirstNoteTouching = false;
                 }
                 isPlayingStart = false;
-                if (!f4620k) {
+                if (!isPlaying) {
                     finish();
                     return;
                 }
                 return;
             case 2:
-                if (!f4620k) {
+                if (!isPlaying) {
                     isShowingSongsInfo = false;
                     if (playView != null) {
                         playView.startFirstNoteTouching = false;
@@ -585,7 +583,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         if (isBack) {
             isBack = false;
             isPlayingStart = false;
-            f4620k = false;
+            isPlaying = false;
             finish();
         }
     }

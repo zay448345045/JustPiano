@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,10 +42,10 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChangeClothesDTO;
 import protobuf.dto.OnlineShopDTO;
 
-public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
+public final class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public String sex = "f";
     public Bitmap none;
-    public TabHost tabhost;
+    private TabHost tabhost;
     public OLPlayDressRoomHandler olPlayDressRoomHandler;
     public ImageView trousersImage;
     public ImageView jacketImage;
@@ -79,7 +78,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
     public JPProgressBar jpprogressBar;
     public int hairNow = -1;
     public int eyeNow = -1;
-    public int level = 0;
     public int jacketNow = -1;
     public int trousersNow = -1;
     public int shoesNow = -1;
@@ -100,7 +98,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         gridView.setAdapter(new DressAdapter(arrayList, this, type));
     }
 
-    public final void sendMsg(int type, MessageLite msg) {
+    public void sendMsg(int type, MessageLite msg) {
         if (OnlineUtil.getConnectionService() != null) {
             OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
@@ -108,7 +106,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    public final void handleUnlockClothes(byte[] bytes) {
+    public void handleUnlockClothes(byte[] bytes) {
         if (bytes != null) {
             for (int i = 0; i < bytes.length; i += 2) {
                 List<Integer> list = null;
@@ -134,7 +132,7 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    public final void handleBuyClothes(int type, int id) {
+    public void handleBuyClothes(int type, int id) {
         List<Integer> list = null;
         List<Integer> tryList = null;
         switch (type) {
@@ -208,14 +206,11 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
         eyeNow = extras.getInt("E");
         jacketNow = extras.getInt("J");
         trousersNow = extras.getInt("T");
-        level = extras.getInt("Lv");
         shoesNow = extras.getInt("O");
         sex = extras.getString("S");
         setContentView(R.layout.ol_dressroom);
-        Button dressOK = findViewById(R.id.ol_dress_ok);
-        Button dressCancel = findViewById(R.id.ol_dress_cancel);
-        dressOK.setOnClickListener(this);
-        dressCancel.setOnClickListener(this);
+        findViewById(R.id.ol_dress_ok).setOnClickListener(this);
+        findViewById(R.id.ol_dress_cancel).setOnClickListener(this);
         tabhost = findViewById(R.id.tabhost);
         tabhost.setup();
         TabSpec newTabSpec = tabhost.newTabSpec("tab1");
@@ -298,7 +293,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
                 e.printStackTrace();
             }
         } while (bitmap != null && bitmap.getByteCount() > 0);
-
         count = 0;
         do {
             try {
@@ -351,7 +345,6 @@ public class OLPlayDressRoom extends OLBaseActivity implements OnClickListener {
                 e.printStackTrace();
             }
         } while (bitmap != null && bitmap.getByteCount() > 0);
-
         hairGridView = findViewById(R.id.ol_hair_grid);
         eyeGridView = findViewById(R.id.ol_eye_grid);
         jacketGridView = findViewById(R.id.ol_jacket_grid);

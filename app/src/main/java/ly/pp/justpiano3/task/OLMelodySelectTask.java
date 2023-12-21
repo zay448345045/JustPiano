@@ -29,12 +29,12 @@ public final class OLMelodySelectTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String string = "";
-        if (!olMelodySelect.get().f4317e.isEmpty()) {
+        if (!olMelodySelect.get().type.isEmpty()) {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("page", String.valueOf(olMelodySelect.get().index))
-                    .add("type", olMelodySelect.get().f4317e)
+                    .add("type", olMelodySelect.get().type)
                     .build();
             // 创建请求对象
             Request request = new Request.Builder()
@@ -73,9 +73,9 @@ public final class OLMelodySelectTask extends AsyncTask<Void, Void, String> {
         if (str.length() > 4) {
             olMelodySelect.get().fillPageList(olMelodySelect.get().pageNum);
             olMelodySelect.get().popupWindowSelectAdapter.notifyDataSetChanged();
-            olMelodySelect.get().mo2809a(str);
-            olMelodySelect.get().mo2808a(olMelodySelect.get().f4327p, olMelodySelect.get().f4316c, olMelodySelect.get().f4322k);
-            olMelodySelect.get().f4327p.setCacheColorHint(Color.TRANSPARENT);
+            olMelodySelect.get().songList = olMelodySelect.get().songListHandle(str);
+            olMelodySelect.get().bindAdapter(olMelodySelect.get().itemListView, olMelodySelect.get().orderByType, olMelodySelect.get().songCount);
+            olMelodySelect.get().itemListView.setCacheColorHint(Color.TRANSPARENT);
             olMelodySelect.get().jpprogressBar.cancel();
             return;
         }

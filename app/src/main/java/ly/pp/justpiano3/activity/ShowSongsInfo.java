@@ -26,7 +26,7 @@ import ly.pp.justpiano3.task.ShowSongsInfoTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
-public class ShowSongsInfo extends BaseActivity implements OnClickListener {
+public final class ShowSongsInfo extends BaseActivity implements OnClickListener {
     public JPApplication jpApplication;
     public LayoutInflater layoutInflater;
     public String keywords = "";
@@ -42,7 +42,7 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
     private ShowSongsInfoAdapter showSongsInfoAdapter;
     private List<Map<String, Object>> songsList;
 
-    private List<Map<String, Object>> m3857a(String str) {
+    private List<Map<String, Object>> songListHandle(String str) {
         JSONArray jSONArray;
         List<Map<String, Object>> arrayList = new ArrayList<>();
         try {
@@ -71,7 +71,7 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
         return arrayList;
     }
 
-    public final void mo2976a(int i) {
+    public void updateSongInfo(int i) {
         if (showSongsInfoAdapter != null && songsList != null) {
             songsList.remove(i);
             showSongsInfoAdapter.mo3500a(songsList);
@@ -79,9 +79,9 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
         }
     }
 
-    public final void handleResultAndBindAdapter(String str, ListView listView) {
+    public void handleResultAndBindAdapter(String str, ListView listView) {
         try {
-            songsList = m3857a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+            songsList = songListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
             showSongsInfoAdapter = new ShowSongsInfoAdapter(this, songsList);
             if (listView != null) {
                 listView.setAdapter(showSongsInfoAdapter);
@@ -130,13 +130,13 @@ public class ShowSongsInfo extends BaseActivity implements OnClickListener {
         keywords = extras.getString("keywords");
         setContentView(R.layout.ol_top_info);
         layoutInflater = LayoutInflater.from(this);
-        TextView topTitleTextView = findViewById(R.id.ol_top_title);
         findViewById(R.id.ol_top_before).setOnClickListener(this);
         findViewById(R.id.ol_top_next).setOnClickListener(this);
         pageText = findViewById(R.id.ol_top_page);
         pageText.setText("-" + (page + 1) + "-");
         songsListView = findViewById(R.id.ol_top_list);
         jpprogressBar = new JPProgressBar(this);
+        TextView topTitleTextView = findViewById(R.id.ol_top_title);
         switch (keywords) {
             case "N":
                 topTitleTextView.setText("-最新曲目-");

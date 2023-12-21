@@ -24,7 +24,7 @@ import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
-public class JustPiano extends BaseActivity implements Runnable {
+public final class JustPiano extends BaseActivity implements Runnable {
     public static boolean updateSQL = false;
     private boolean isPause;
     private boolean loadFinish;

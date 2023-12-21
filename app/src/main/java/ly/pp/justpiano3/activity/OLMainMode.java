@@ -17,7 +17,6 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public class OLMainMode extends OLBaseActivity implements OnClickListener {
-    final OLMainMode context = this;
     public JPApplication jpApplication;
     public OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
 
@@ -55,7 +54,7 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
                 return;
             case R.id.ol_playhall_b:
                 if (jpApplication.getAccountName().isEmpty()) {
-                    Toast.makeText(context, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 new SongSyncDialogTask(this).execute();

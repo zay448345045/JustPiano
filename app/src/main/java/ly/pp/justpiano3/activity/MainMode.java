@@ -30,7 +30,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
-public class MainMode extends BaseActivity implements OnClickListener {
+public final class MainMode extends BaseActivity implements OnClickListener {
     private static final int PERMISSION_REQUEST_CODE = 120;
     private boolean pressAgain;
 

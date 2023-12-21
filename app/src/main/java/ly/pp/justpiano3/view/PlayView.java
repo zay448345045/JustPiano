@@ -584,7 +584,7 @@ public final class PlayView extends SurfaceView implements Callback {
         if (notesList.size() == 0) {
             pianoPlay.isPlayingStart = false;
             startFirstNoteTouching = false;
-            pianoPlay.f4620k = true;
+            pianoPlay.isPlaying = true;
             int size2;
             byte[] bArr;
             Message message;

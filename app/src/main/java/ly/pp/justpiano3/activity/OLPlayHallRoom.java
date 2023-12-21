@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -60,7 +59,7 @@ import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
-    public int cl = 0;
+    public int cl;
     public int lv = 1;
     public TabHost tabHost;
     public TextView userName;
@@ -70,7 +69,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public TextView userClassNameView;
     public TextView userExpView;
     public JPProgressBar jpprogressBar;
-    public SharedPreferences sharedPreferences = null;
+    public SharedPreferences sharedPreferences;
     public ImageView coupleView;
     public ImageView familyView;
     public TextView coupleNameView;
@@ -93,10 +92,10 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public FamilyListView familyListView;
     public int familyPageNum;
     public int cp;
-    public boolean pageIsEnd = false;
+    public boolean pageIsEnd;
     public OLPlayHallRoomHandler olPlayHallRoomHandler = new OLPlayHallRoomHandler(this);
-    public int pageNum = 0;
-    public JPApplication jpApplication;
+    public int pageNum;
+    private JPApplication jpApplication;
     public ListView hallListView;
     public List<Bundle> hallList = new ArrayList<>();
     public List<Bundle> mailList = new ArrayList<>();
@@ -113,9 +112,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public int userEyeIndex;
     public int userShoesIndex;
     public String userSex = "f";
-    private MainGameAdapter mailListAdapter = null;
-    private MainGameAdapter hallListAdapter = null;
-    private MainGameAdapter userListAdapter = null;
+    private MainGameAdapter mailListAdapter;
+    private MainGameAdapter hallListAdapter;
+    private MainGameAdapter userListAdapter;
     public ImageView coupleModView;
     public ImageView coupleTrousersView;
     public ImageView coupleJacketView;
@@ -165,21 +164,21 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         }
     }
 
-    public void mo2907b(ListView listView, List<Map<String, Object>> list) {
+    public void bindAdapter(ListView listView, List<Map<String, Object>> list) {
         listView.setAdapter(new FamilyAdapter(list, layoutinflater, this));
     }
 
-    public void mo2905a(FamilyAdapter familyAdapter, FamilyListView listView, List<Map<String, Object>> list) {
+    public void updateFamilyListShow(FamilyAdapter familyAdapter, FamilyListView listView, List<Map<String, Object>> list) {
         familyAdapter.upDateList(list);
         familyAdapter.notifyDataSetChanged();
         listView.loadComplete();
     }
 
-    public void mo2840a(int i) {
+    public void updateMailListShow(int i) {
         mailList.remove(i);
         mailListAdapter.updateList(mailList);
         mailListAdapter.notifyDataSetChanged();
-        mo2848c();
+        saveMailToLocal();
     }
 
     public void mo2841a(int i, String str, String str2) {
@@ -193,7 +192,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         jpDialogBuilder.buildAndShowDialog();
     }
 
-    public void mo2842a(Bundle bundle) {
+    public void setBroadcast(Bundle bundle) {
 //        int i = bundle.getInt("C");
 //        int i2 = bundle.getInt("D");
 //        systemTextView.setText(bundle.getString("U"));
@@ -239,7 +238,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void mo2846b(ListView listView, List<Bundle> list) {
+    public void updateUserListShow(ListView listView, List<Bundle> list) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
@@ -252,16 +251,16 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         userListAdapter.notifyDataSetChanged();
     }
 
-    public void mo2848c() {
+    public void saveMailToLocal() {
         JSONArray jSONArray = new JSONArray();
-        for (Bundle aF4473x : mailList) {
+        for (Bundle bundle : mailList) {
             JSONObject jSONObject = new JSONObject();
             try {
-                jSONObject.put("F", aF4473x.getString("F"));
-                jSONObject.put("M", aF4473x.getString("M"));
-                jSONObject.put("T", aF4473x.getString("T"));
-                if (aF4473x.containsKey("type")) {
-                    jSONObject.put("type", aF4473x.getInt("type"));
+                jSONObject.put("F", bundle.getString("F"));
+                jSONObject.put("M", bundle.getString("M"));
+                jSONObject.put("T", bundle.getString("T"));
+                if (bundle.containsKey("type")) {
+                    jSONObject.put("type", bundle.getInt("type"));
                 }
                 jSONArray.put(jSONObject);
             } catch (JSONException e) {
@@ -273,7 +272,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         editor.apply();
     }
 
-    public void mo2849c(ListView listView, List<Bundle> list) {
+    public void updateMailListShow(ListView listView, List<Bundle> list) {
         if (mailListAdapter == null) {
             mailListAdapter = new MainGameAdapter(list, 2);
             listView.setAdapter(mailListAdapter);
@@ -486,10 +485,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         tabHost.addTab(newTabSpec);
         userName = findViewById(R.id.ol_player_name);
         userName.setText("");
-        Button dressChangeButton = findViewById(R.id.ol_dress_button);
-        dressChangeButton.setOnClickListener(this);
-        Button bonusButton = findViewById(R.id.ol_bonus_button);
-        bonusButton.setOnClickListener(this);
+        findViewById(R.id.ol_dress_button).setOnClickListener(this);
+        findViewById(R.id.ol_bonus_button).setOnClickListener(this);
         userLevelView = findViewById(R.id.ol_player_level);
         userExpView = findViewById(R.id.user_exp);
         userLevelView.setText("");
@@ -514,12 +511,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         myFamilyPosition = findViewById(R.id.ol_myfamily_position);
         coupleView = findViewById(R.id.ol_player_couple);
         familyView = findViewById(R.id.ol_player_family);
-        Button preButton = findViewById(R.id.pre_button);
-        Button nextButton = findViewById(R.id.next_button);
-        Button onlineButton = findViewById(R.id.online_button);
-        preButton.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
-        onlineButton.setOnClickListener(this);
+        findViewById(R.id.pre_button).setOnClickListener(this);
+        findViewById(R.id.next_button).setOnClickListener(this);
+        findViewById(R.id.online_button).setOnClickListener(this);
         newTabSpec = tabHost.newTabSpec("tab3");
         newTabSpec.setContent(R.id.couple_tab);
         newTabSpec.setIndicator("搭档");
@@ -536,15 +530,13 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         coupleNameView.setText("岛村抱月");
         Button breakUpCpButton = findViewById(R.id.ol_breakup_button);
         breakUpCpButton.setText("解除搭档");
+        breakUpCpButton.setOnClickListener(this);
         Button setBlessingButton = findViewById(R.id.ol_setblessing_button);
         setBlessingButton.setText("设置祝语");
         setBlessingButton.setHint(new SpannableString("输入新祝语"));
-        breakUpCpButton.setOnClickListener(this);
         setBlessingButton.setOnClickListener(this);
-        Button createFamily = findViewById(R.id.create_family);
-        createFamily.setOnClickListener(this);
-        LinearLayout myFamilyButton = findViewById(R.id.ol_myfamily_button);
-        myFamilyButton.setOnClickListener(this);
+        findViewById(R.id.create_family).setOnClickListener(this);
+        findViewById(R.id.ol_myfamily_button).setOnClickListener(this);
         coupleLvView = findViewById(R.id.ol_couple_level);
         coupleLvView.setText("LV.25");
         couplePointsView = findViewById(R.id.couple_points);
@@ -596,7 +588,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 }
                 familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
                 tabHost.setCurrentTab(4);
-                mo2907b(familyListView, familyList);
+                bindAdapter(familyListView, familyList);
                 try {
                     Thread.sleep(320);
                 } catch (InterruptedException e) {
