@@ -9,23 +9,23 @@ import ly.pp.justpiano3.activity.PianoPlay;
 
 public final class StartPlayTimerTask extends TimerTask {
     private final PianoPlay pianoPlay;
-    private final Message msg;
-    private final Timer timer0;
+    private final Message message;
+    private final Timer timer;
     private int seconds = 3;
 
     public StartPlayTimerTask(PianoPlay pianoPlay, Message message, Timer timer) {
         this.pianoPlay = pianoPlay;
-        msg = message;
-        timer0 = timer;
+        this.message = message;
+        this.timer = timer;
     }
 
     @Override
     public void run() {
-        msg.arg1 = seconds;
-        pianoPlay.pianoPlayHandler.handleMessage(msg);
+        message.arg1 = seconds;
+        pianoPlay.pianoPlayHandler.handleMessage(message);
         if (seconds == 0) {
             cancel();
-            timer0.cancel();
+            timer.cancel();
             return;
         }
         seconds--;

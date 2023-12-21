@@ -32,6 +32,7 @@ import java.net.URL;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.listener.ChangePasswordClick;
 import ly.pp.justpiano3.task.UserFaceChangeTask;
 import ly.pp.justpiano3.task.UserInfoChangeTask;
@@ -262,7 +263,7 @@ public class UsersInfo extends BaseActivity implements Callback, OnClickListener
                 if (age < 1900 || age > 2020) {
                     Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
                     return;
-                } else if (pSign.length() > 500) {
+                } else if (pSign.length() > Consts.MAX_MESSAGE_COUNT) {
                     Toast.makeText(this, "确定字数在五百字之内!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {

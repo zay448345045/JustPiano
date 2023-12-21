@@ -55,9 +55,9 @@ import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.CreateRoomClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
-import ly.pp.justpiano3.thread.ShowTimeThread;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -96,7 +96,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     private LayoutInflater layoutInflater1;
     private LayoutInflater layoutInflater2;
     private PopupWindow popupWindow = null;
-    private ShowTimeThread showTimeThread;
     private TextView timeTextView;
 
     public void loadInRoomUserInfo(byte b) {
@@ -454,8 +453,18 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         OnlineLoadRoomListDTO.Builder builder = OnlineLoadRoomListDTO.newBuilder();
         sendMsg(OnlineProtocolType.LOAD_ROOM_LIST, builder.build());
         isTimeShowing = true;
-        showTimeThread = new ShowTimeThread(this);
-        showTimeThread.start();
+        ThreadPoolUtil.execute(() -> {
+            do {
+                try {
+                    Message message = Message.obtain(showTimeHandler);
+                    message.what = 3;
+                    showTimeHandler.sendMessage(message);
+                    Thread.sleep(60000);
+                } catch (Exception e) {
+                    isTimeShowing = false;
+                }
+            } while (isTimeShowing);
+        });
     }
 
     @Override

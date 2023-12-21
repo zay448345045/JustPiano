@@ -48,7 +48,7 @@ public class ShowTopInfo extends BaseActivity implements Handler.Callback, OnCli
     private final int pageSize = 20;
     private Bitmap nailFace = null;
 
-    public Bitmap m3874a(Context context) {
+    public Bitmap setDefaultAvatar(Context context) {
         try {
             if (nailFace == null) {
                 nailFace = BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/nailface.webp"));
@@ -174,7 +174,7 @@ public class ShowTopInfo extends BaseActivity implements Handler.Callback, OnCli
     }
 
     @Override
-    public boolean handleMessage(@NonNull Message msg) {
+    public boolean handleMessage(@NonNull Message message) {
         return false;
     }
 }

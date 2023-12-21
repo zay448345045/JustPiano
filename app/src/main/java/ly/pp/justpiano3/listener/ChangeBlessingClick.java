@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSendMailDTO;
@@ -40,7 +41,7 @@ public final class ChangeBlessingClick implements OnClickListener {
         String valueOf = String.valueOf(f5458b.getText());
         if (valueOf.isEmpty() || valueOf.equals("'")) {
             Toast.makeText(olPlayHallRoom, "请输入内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > 500) {
+        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(olPlayHallRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else if (f5459c == 0 && !f5460d.isEmpty()) {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();

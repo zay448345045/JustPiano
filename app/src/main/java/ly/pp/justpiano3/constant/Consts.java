@@ -45,6 +45,11 @@ public interface Consts {
     int[] sex = new int[]{R.drawable.m, R.drawable.f, R.drawable.none, R.drawable._none};
     int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v7_name};
 
+    /**
+     * 私信等，限制字数
+     */
+    int MAX_MESSAGE_COUNT = 500;
+
     DiffUtil.ItemCallback<Song> SONG_DIFF_UTIL = new DiffUtil.ItemCallback<Song>() {
         @Override
         public boolean areItemsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {

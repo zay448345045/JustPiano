@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.task.PopUserInfoTask;
 
 public final class SendMessageClick implements OnClickListener {
@@ -31,7 +32,7 @@ public final class SendMessageClick implements OnClickListener {
         try {
             if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(popUserInfo, "请输入消息内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 500) {
+            } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
                 Toast.makeText(popUserInfo, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 jSONObject.put("H", 0);

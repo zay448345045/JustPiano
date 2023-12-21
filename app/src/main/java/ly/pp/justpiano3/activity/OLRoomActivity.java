@@ -60,7 +60,6 @@ import ly.pp.justpiano3.listener.PlayerImageItemClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.thread.TimeUpdateThread;
 import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
@@ -68,6 +67,7 @@ import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
@@ -118,7 +118,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public PopupWindow changeColorPopupWindow;
     public TextView timeTextView;
     public int colorNum = 99;
-    public TimeUpdateThread timeUpdateThread;
     public ImageView changeColorButton;
 
     protected void showCpDialog(String str, String str2) {
@@ -698,8 +697,18 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         roomTabs.addTab(newTabSpec);
         roomTabs.setOnTabChangedListener(new PlayRoomTabChange(this));
         timeUpdateRunning = true;
-        timeUpdateThread = new TimeUpdateThread(this);
-        timeUpdateThread.start();
+        ThreadPoolUtil.execute(() -> {
+            do {
+                try {
+                    Message message = Message.obtain(handler);
+                    message.what = 3;
+                    handler.sendMessage(message);
+                    Thread.sleep(60000);
+                } catch (Exception e) {
+                    timeUpdateRunning = false;
+                }
+            } while (timeUpdateRunning);
+        });
         if (savedInstanceState != null) {
             msgList = savedInstanceState.getParcelableArrayList("msgList");
             bindMsgListView();

@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
 import protobuf.dto.OnlineSendMailDTO;
@@ -30,7 +31,7 @@ public final class ChangeDeclarationClick implements OnClickListener {
         String valueOf = String.valueOf(f5458b.getText());
         if (TextUtils.isEmpty(valueOf) || "'".equals(valueOf)) {
             Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > 500) {
+        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(family, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else if (f5459c == 0) {
             dialogInterface.dismiss();

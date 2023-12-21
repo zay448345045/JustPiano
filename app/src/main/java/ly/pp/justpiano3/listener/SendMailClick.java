@@ -6,6 +6,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSendMailDTO;
@@ -26,7 +27,7 @@ public final class SendMailClick implements OnClickListener {
         String valueOf = String.valueOf(textView.getText());
         if (valueOf.isEmpty() || valueOf.equals("'")) {
             Toast.makeText(context, "请输入信件内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > 500) {
+        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(context, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
