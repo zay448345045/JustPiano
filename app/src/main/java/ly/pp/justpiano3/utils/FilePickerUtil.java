@@ -11,9 +11,11 @@ public class FilePickerUtil {
 
     public static final int PICK_FILE_REQUEST_CODE = 110;
 
+    public static final int PICK_FOLDER_REQUEST_CODE = 111;
+
     public static String extra;
 
-    public static void openFileManager(Activity activity, boolean allowMultipleFiles, String extra) {
+    public static void openFilePicker(Activity activity, boolean allowMultipleFiles, String extra) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
@@ -34,6 +36,14 @@ public class FilePickerUtil {
         }
         FilePickerUtil.extra = extra;
         activity.startActivityForResult(chooserIntent, PICK_FILE_REQUEST_CODE);
+    }
+
+    public static void openFolderPicker(Activity activity, String extra) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        FilePickerUtil.extra = extra;
+        activity.startActivityForResult(intent, PICK_FOLDER_REQUEST_CODE);
     }
 
     public static List<FileUtil.UriInfo> getUriFromIntent(Context context, Intent intent) {

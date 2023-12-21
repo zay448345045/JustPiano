@@ -104,7 +104,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(
                             getActivity(), Uri.parse(GlobalSetting.INSTANCE.getBackgroundPic()));
                     backgroundPicPreference.setSummary(
-                            uriInfo.getFileName() == null ? "默认背景图" : uriInfo.getFileName());
+                            uriInfo.getDisplayName() == null ? "默认背景图" : uriInfo.getDisplayName());
                 }
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (backgroundPicPreference);
                 filePickerPreference.setActivity(getActivity());
@@ -159,7 +159,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(
                             getActivity(), Uri.parse(GlobalSetting.INSTANCE.getWaterfallBackgroundPic()));
                     waterfallBackgroundPicPreference.setSummary(
-                            uriInfo.getFileName() == null ? "默认背景图" : uriInfo.getFileName());
+                            uriInfo.getDisplayName() == null ? "默认背景图" : uriInfo.getDisplayName());
                 }
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (waterfallBackgroundPicPreference);
                 filePickerPreference.setActivity(getActivity());
@@ -219,7 +219,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(
                             getActivity(), Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
                     chatSoundFilePreference.setSummary(
-                            uriInfo.getFileName() == null ? "默认音效" : uriInfo.getFileName());
+                            uriInfo.getDisplayName() == null ? "默认音效" : uriInfo.getDisplayName());
                 }
                 FilePickerPreference filePickerPreference = (FilePickerPreference) (chatSoundFilePreference);
                 filePickerPreference.setActivity(getActivity());
@@ -247,21 +247,21 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
             FileUtil.UriInfo uriInfo = uriInfoList.get(0);
             FilePickerPreference filePickerPreference = filePickerPreferenceMap.get(FilePickerUtil.extra);
-            if (filePickerPreference == null || uriInfo == null || uriInfo.getFileName() == null) {
+            if (filePickerPreference == null || uriInfo == null || uriInfo.getDisplayName() == null) {
                 return;
             }
             // 具体的文件选择项的文件格式校验，校验通过后执行存储
             switch (filePickerPreference.getKey()) {
                 case "waterfall_background_pic":
                 case "background_pic":
-                    if (uriInfo.getFileName() == null || (!uriInfo.getFileName().endsWith(".jpg")
-                            && !uriInfo.getFileName().endsWith(".jpeg") && !uriInfo.getFileName().endsWith(".png"))) {
+                    if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
+                            && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
                         Toast.makeText(this, "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     break;
                 case "chats_sound_file":
-                    if (uriInfo.getFileName() == null || (!uriInfo.getFileName().endsWith(".wav") && !uriInfo.getFileName().endsWith(".mp3"))) {
+                    if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {
                         Toast.makeText(this, "请选择合法的wav或mp3格式文件", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -278,7 +278,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     Toast.makeText(this, "读取文件出错，请确保授予了设备的文件访问权限", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                filePickerPreference.persist(uriInfo.getFileName(), uriInfo.getUri().toString());
+                filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
                 if (Objects.equals(filePickerPreference.getKey(), "background_pic")) {
                     GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
                     ImageLoadUtil.setBackground(this);

@@ -1,8 +1,8 @@
 package ly.pp.justpiano3.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import android.content.Context;
+import android.net.Uri;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,9 +15,9 @@ public class StreamUtil {
     /**
      * 序列化,List
      */
-    public static <T> boolean writeObject(List<T> list, File file) {
+    public static <T> boolean writeObject(List<T> list, Context context, Uri uri) {
         T[] array = (T[]) list.toArray();
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(context.getContentResolver().openOutputStream(uri))) {
             out.writeObject(array);
             out.flush();
             return true;
@@ -30,9 +30,9 @@ public class StreamUtil {
     /**
      * 反序列化,List
      */
-    public static <E> List<E> readObjectForList(File file) {
+    public static <E> List<E> readObjectForList(Context context, Uri uri) {
         E[] object;
-        try (ObjectInputStream out = new ObjectInputStream(new FileInputStream(file))) {
+        try (ObjectInputStream out = new ObjectInputStream(context.getContentResolver().openInputStream(uri))) {
             object = (E[]) out.readObject();
             return Arrays.asList(object);
         } catch (IOException | ClassNotFoundException e) {

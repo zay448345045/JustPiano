@@ -136,17 +136,18 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this);
-        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK
+                && Objects.equals(FilePickerUtil.extra, "midi_import")) {
             List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
             if (uriInfoList.size() != 1) {
                 return;
             }
             FileUtil.UriInfo uriInfo = uriInfoList.get(0);
-            if (uriInfo.getFileName() == null || !(uriInfo.getFileName().endsWith(".mid") || uriInfo.getFileName().endsWith(".midi"))) {
+            if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !(uriInfo.getDisplayName().endsWith(".mid") || uriInfo.getDisplayName().endsWith(".midi"))) {
                 Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String songName = uriInfo.getFileName().substring(0, uriInfo.getFileName().indexOf('.'));
+            String songName = uriInfo.getDisplayName().substring(0, uriInfo.getDisplayName().indexOf('.'));
             File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
             if (pmFile.exists()) {
                 Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
@@ -163,30 +164,60 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             }
             jpProgressBar.setCancelable(false);
             jpProgressBar.show();
-            ThreadPoolUtil.execute(() -> {
-                String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
-                try {
-                    SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(this, uriInfo.getFileName(), uriInfo.getUri(), pmFile);
-                    if (!pmFile.exists()) {
-                        throw new RuntimeException("导入《" + songName + "》失败，请确认midi文件是否合法");
-                    }
-                    List<Song> insertSongList = Collections.singletonList(new Song(null, songName, Consts.items[Consts.items.length - 1],
-                            "songs/p/" + pmFile.getName(), 1, 0, 0, "",
-                            0, 0, 0, songData.getRightHandDegree() / 10f, 0,
-                            songData.getLeftHandDegree() / 10f, songData.getLength(), 0));
-                    JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
-                } catch (Exception e) {
-                    message = e.getMessage();
-                    e.printStackTrace();
-                } finally {
-                    String finalMessage = message;
-                    runOnUiThread(() -> {
-                        jpProgressBar.dismiss();
-                        Toast.makeText(this, finalMessage, Toast.LENGTH_SHORT).show();
-                        categoryListView.performItemClick(categoryListView.getAdapter().getView(Consts.items.length - 1, null, null),
-                                Consts.items.length - 1, categoryListView.getItemIdAtPosition(Consts.items.length - 1));
-                    });
-                }
+            ThreadPoolUtil.execute(() -> importMidi(this, uriInfo, songName, pmFile));
+        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK
+                && Objects.equals(FilePickerUtil.extra, "db_import")) {
+            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
+            if (uriInfoList.size() != 1) {
+                return;
+            }
+            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+            if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".db")) {
+                Toast.makeText(this, "请选择合法的db格式文件", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            new LocalDataImportExportTask(this, uriInfo.getUri(), false).execute();
+        } else if (requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK
+                && Objects.equals(FilePickerUtil.extra, "db_export")) {
+            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
+            if (uriInfoList.size() != 1) {
+                return;
+            }
+            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+            if (uriInfo.getUri() == null) {
+                Toast.makeText(this, "导出错误，请提交反馈或联系开发者", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            new LocalDataImportExportTask(this, uriInfo.getUri(), true).execute();
+        }
+    }
+
+    private static void importMidi(MelodySelect melodySelect, FileUtil.UriInfo uriInfo, String songName, File pmFile) {
+        if (uriInfo.getDisplayName() == null || uriInfo.getUri() == null) {
+            return;
+        }
+        String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
+        try {
+            SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(melodySelect, uriInfo.getDisplayName(), uriInfo.getUri(), pmFile);
+            if (!pmFile.exists()) {
+                throw new RuntimeException("导入《" + songName + "》失败，请确认midi文件是否合法");
+            }
+            List<Song> insertSongList = Collections.singletonList(new Song(null, songName, Consts.items[Consts.items.length - 1],
+                    "songs/p/" + pmFile.getName(), 1, 0, 0, "",
+                    0, 0, 0, songData.getRightHandDegree() / 10f, 0,
+                    songData.getLeftHandDegree() / 10f, songData.getLength(), 0));
+            JPApplication.getSongDatabase().songDao().insertSongs(insertSongList);
+        } catch (Exception e) {
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            String finalMessage = message;
+            melodySelect.runOnUiThread(() -> {
+                melodySelect.jpProgressBar.dismiss();
+                Toast.makeText(melodySelect, finalMessage, Toast.LENGTH_SHORT).show();
+                melodySelect.categoryListView.performItemClick(melodySelect.categoryListView.getAdapter()
+                                .getView(Consts.items.length - 1, null, null),
+                        Consts.items.length - 1, melodySelect.categoryListView.getItemIdAtPosition(Consts.items.length - 1));
             });
         }
     }
@@ -278,41 +309,45 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
                 menuPopupWindow = popupWindow2;
                 popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
                 return;
-            case R.id.lo_extra_func_settings:  // 参数设置
+            case R.id.lo_extra_func_settings:
                 menuPopupWindow.dismiss();
                 SongPlay.INSTANCE.stopPlay();
                 Intent intent = new Intent();
                 intent.setClass(this, SettingsMode.class);
                 startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
                 return;
-            case R.id.lo_extra_func_sync:  // 曲库同步
+            case R.id.lo_extra_func_sync:
                 menuPopupWindow.dismiss();
                 new SongSyncTask(this).execute();
                 return;
-            case R.id.lo_extra_func_midi_import:  // midi导入
+            case R.id.lo_extra_func_midi_import:
                 menuPopupWindow.dismiss();
-                FilePickerUtil.openFileManager(this, false, null);
+                FilePickerUtil.openFilePicker(this, false, "midi_import");
                 return;
-            case R.id.lo_extra_func_data_export: // 数据导出
+            case R.id.lo_extra_func_data_export:
                 menuPopupWindow.dismiss();
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setCheckMessageUrl(false).setWidth(500).setTitle("数据导入导出");
-                jpDialogBuilder.setVisibleRadioGroup(true).setMessage("此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，" +
-                        "导出路径为SD卡\\JustPiano\\local_data.db，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
+                jpDialogBuilder.setVisibleRadioGroup(true).setMessage(
+                        "此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，导入操作会清空当前本地收藏及所有弹奏分数，请谨慎操作");
                 RadioButton radioButton = new RadioButton(this);
-                radioButton.setText("APP本地数据导出至SD卡\\JustPiano\\local_data.db");
+                radioButton.setText("选择文件夹进行数据导出，导出数据文件名：" + LocalDataImportExportTask.EXPORT_FILE_NAME);
                 radioButton.setTextSize(13);
                 radioButton.setTag(1);
                 radioButton.setHeight(150);
                 jpDialogBuilder.addRadioButton(radioButton);
                 radioButton = new RadioButton(this);
-                radioButton.setText("清空当前数据，导入SD卡\\JustPiano\\local_data.db数据至APP");
+                radioButton.setText("【此操作会清空当前数据】选择文件，导入数据至APP");
                 radioButton.setTextSize(13);
                 radioButton.setTag(2);
                 radioButton.setHeight(150);
                 jpDialogBuilder.addRadioButton(radioButton).setFirstButton("执行", (dialog, which) -> {
                     dialog.dismiss();
-                    new LocalDataImportExportTask(this, jpDialogBuilder.getRadioGroupCheckedId()).execute();
+                    if (jpDialogBuilder.getRadioGroupCheckedId() == 2) {
+                        FilePickerUtil.openFilePicker(this, false, "db_import");
+                    } else if (jpDialogBuilder.getRadioGroupCheckedId() == 1) {
+                        FilePickerUtil.openFolderPicker(this, "db_export");
+                    }
                 });
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();

@@ -41,7 +41,7 @@ public class FilePickerPreference extends Preference {
         layout.addView(defaultButton, params);
         layout.setOnClickListener(v -> {
             if (activity != null) {
-                FilePickerUtil.openFileManager(activity, false, getKey());
+                FilePickerUtil.openFilePicker(activity, false, getKey());
             }
         });
     }
