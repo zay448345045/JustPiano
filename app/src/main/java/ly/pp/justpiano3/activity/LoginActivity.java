@@ -7,7 +7,6 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LoginActivity extends BaseActivity implements OnClickListener {
+public final class LoginActivity extends BaseActivity implements OnClickListener {
     public JPApplication jpApplication;
     public String password;
     public String kitiName = "";
@@ -63,7 +62,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     private String account;
     private EditText debugIpEditText;
 
-    public final void loginSuccess(int i, String message, String title) {
+    public void loginSuccess(int i, String message, String title) {
         Intent intent = new Intent();
         intent.setClass(this, OLMainMode.class);
         String string = sharedPreferences.getString("accountList", "");
@@ -256,7 +255,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    public final void addVersionUpdateDialog(String str3, String newVersion) {
+    public void addVersionUpdateDialog(String str3, String newVersion) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("版本更新");
         jpDialogBuilder.setMessage(str3);
@@ -277,7 +276,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     }
 
     public void downloadApk(String version) {
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/" + getApkFileName(version));
+        File file = new File(getFilesDir(), getApkFileName(version));
         if (file.exists()) {
             file.delete();
         }
@@ -287,7 +286,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             jpProgressBar.show();
             Toast.makeText(LoginActivity.this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
         });
-
         Request request = new Request.Builder().url(getApkUrlByVersion(version)).build();
         try (Response response = OkHttpUtil.client().newCall(request).execute()) {
             if (response.isSuccessful()) {
