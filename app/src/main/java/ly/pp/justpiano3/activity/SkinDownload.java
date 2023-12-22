@@ -2,7 +2,6 @@ package ly.pp.justpiano3.activity;
 
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -38,7 +37,8 @@ public final class SkinDownload extends BaseActivity implements Callback {
     private int progress;
 
     public void downloadSkin(String skinId, String skinName) {
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName + ".ps");
+        File skinsDir = new File(getExternalFilesDir(null), "Skins");
+        File file = new File(skinsDir, skinName + ".ps");
         if (file.exists()) {
             file.delete();
         }
@@ -55,7 +55,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
                     if (handler != null) {
                         handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(skinName), () -> downloadFailHandle());
+                }, () -> downloadSuccessHandle(skinName), this::downloadFailHandle);
     }
 
     private void downloadSuccessHandle(String skinName) {
@@ -98,8 +98,6 @@ public final class SkinDownload extends BaseActivity implements Callback {
         Message message = Message.obtain(handler);
         message.what = 5;
         handler.sendMessage(message);
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        edit.putString("skin_select", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName);
         File dir = new File(getFilesDir(), "Skins");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
@@ -109,8 +107,12 @@ public final class SkinDownload extends BaseActivity implements Callback {
                 }
             }
         }
-        GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName), dir.toString());
+        File skinsDir = new File(getExternalFilesDir(null), "Skins");
+        File skinFile = new File(skinsDir, skinName);
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        edit.putString("skin_select", skinFile.toURI().toString());
         edit.apply();
+        GZIPUtil.ZIPFileTo(skinFile, dir.toString());
         Message message2 = Message.obtain(handler);
         message2.what = 6;
         handler.sendMessage(message2);

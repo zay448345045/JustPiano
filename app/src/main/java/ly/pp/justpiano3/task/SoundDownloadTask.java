@@ -30,9 +30,7 @@ public class SoundDownloadTask {
 
     public void execute() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
         onPreExecute();
-
         future = executor.submit(() -> {
             final String result = doInBackground();
 
@@ -63,8 +61,9 @@ public class SoundDownloadTask {
             soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            soundDownload.get().jpProgressBar.dismiss();
         }
-        soundDownload.get().jpProgressBar.dismiss();
     }
 
     private void onPreExecute() {

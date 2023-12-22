@@ -31,12 +31,10 @@ public final class SkinDownloadTask {
         future = executorService.submit(() -> {
             try {
                 String url = "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSkinList";
-
                 Request request = new Request.Builder()
                         .url(url)
                         .post(new FormBody.Builder().build())
                         .build();
-
                 try (Response response = OkHttpUtil.client().newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         return response.body().string();
@@ -48,18 +46,6 @@ public final class SkinDownloadTask {
                 return "err001";
             }
         });
-
-        // Handle the result in onPostExecute
-        handleResult();
-    }
-
-    public void cancel() {
-        if (future != null) {
-            future.cancel(true);
-        }
-    }
-
-    private void handleResult() {
         skinDownload.get().runOnUiThread(() -> {
             skinDownload.get().gridView.setAdapter(new SkinDownloadAdapter(skinDownload.get(), new JSONArray()));
             try {
@@ -67,8 +53,9 @@ public final class SkinDownloadTask {
                 skinDownload.get().gridView.setAdapter(new SkinDownloadAdapter(skinDownload.get(), new JSONArray(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                skinDownload.get().jpProgressBar.dismiss();
             }
-            skinDownload.get().jpProgressBar.dismiss();
         });
     }
 }

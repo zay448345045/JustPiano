@@ -1,9 +1,7 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -15,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 
@@ -40,7 +40,8 @@ public final class SoundDownload extends BaseActivity implements Callback {
     private int progress;
 
     public void downloadSound(String soundId, String soundName, String soundType) {
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundName + soundType);
+        File soundsDir = new File(getExternalFilesDir(null), "Sounds");
+        File file = new File(soundsDir, soundName + soundType);
         if (file.exists()) {
             file.delete();
         }
@@ -57,7 +58,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                     if (handler != null) {
                         handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(soundName, soundType), () -> downloadFailHandle());
+                }, () -> downloadSuccessHandle(soundName, soundType), this::downloadFailHandle);
     }
 
     private void downloadSuccessHandle(String soundName, String soundType) {
@@ -115,30 +116,38 @@ public final class SoundDownload extends BaseActivity implements Callback {
                     }
                 }
             }
-
+            File soundsDir = new File(getExternalFilesDir(null), "Sounds");
+            File soundFile = new File(soundsDir, soundFileName);
             if (soundFileName.endsWith(".ss")) {
-                GZIPUtil.ZIPFileTo(new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName), file.toString());
+                GZIPUtil.ZIPFileTo(soundFile, file.toString());
             }
-
             Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            edit.putString("sound_select", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
+            edit.putString("sound_select", soundFile.toURI().toString());
             edit.apply();
             if (soundFileName.endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
+                Thread.sleep(20);
                 SoundEngineUtil.unloadSf2();
+                Thread.sleep(20);
                 SoundEngineUtil.unloadWavAssetsNative();
+                Thread.sleep(20);
                 SoundEngineUtil.setupAudioStreamNative();
+                Thread.sleep(20);
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.loadSoundAssetsNative(this, i);
                 }
+                Thread.sleep(20);
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFileName.endsWith(".sf2")) {
-                String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, new File(
-                        Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
+                String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, DocumentFile.fromFile(soundFile));
                 SoundEngineUtil.teardownAudioStreamNative();
+                Thread.sleep(20);
                 SoundEngineUtil.unloadSf2();
+                Thread.sleep(20);
                 SoundEngineUtil.setupAudioStreamNative();
+                Thread.sleep(20);
                 SoundEngineUtil.loadSf2(newSf2Path);
+                Thread.sleep(20);
                 SoundEngineUtil.startAudioStreamNative();
             }
         } catch (Exception e) {

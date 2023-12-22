@@ -47,7 +47,6 @@ public final class SkinDownloadAdapter extends BaseAdapter {
         if (view == null) {
             view = skinDownload.layoutInflater.inflate(R.layout.skin_view, null);
         }
-        view.setKeepScreenOn(true);
         ScrollText scrollText = view.findViewById(R.id.skin_name);
         TextView textView = view.findViewById(R.id.skin_author);
         TextView textView2 = view.findViewById(R.id.download_count);
