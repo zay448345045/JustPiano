@@ -37,40 +37,6 @@ object FileUtil {
         return cacheFile.absolutePath
     }
 
-    /**
-     * 移动文件到新文件的位置（拷贝流）
-     *
-     * @param src 源文件对象
-     * @param des 目标文件对象
-     */
-    fun moveFile(src: File, des: File): Boolean {
-        if (!src.exists()) {
-            return false
-        }
-        if (des.exists()) {
-            des.delete()
-        }
-        try {
-            BufferedInputStream(FileInputStream(src)).use { reader ->
-                BufferedOutputStream(
-                    FileOutputStream(des)
-                ).use { writer ->
-                    val buffer = ByteArray(1024)
-                    var length: Int
-                    while (reader.read(buffer).also { length = it } != -1) {
-                        writer.write(buffer, 0, length)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false
-        } finally {
-            src.delete()
-        }
-        return true
-    }
-
     fun moveFileToUri(context: Context, sourceFile: File, destinationUri: Uri?): Boolean {
         if (destinationUri == null) {
             return false

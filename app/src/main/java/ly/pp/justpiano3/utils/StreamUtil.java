@@ -17,7 +17,7 @@ public class StreamUtil {
      */
     public static <T> boolean writeObject(List<T> list, Context context, Uri uri) {
         T[] array = (T[]) list.toArray();
-        try (ObjectOutputStream out = new ObjectOutputStream(context.getContentResolver().openOutputStream(uri))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(context.getContentResolver().openOutputStream(uri, "w"))) {
             out.writeObject(array);
             out.flush();
             return true;

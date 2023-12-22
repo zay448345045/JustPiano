@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Selection;
@@ -33,9 +32,7 @@ import com.google.protobuf.MessageLite;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,6 +61,7 @@ import ly.pp.justpiano3.utils.ChatBlackUserUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
@@ -412,36 +410,26 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         // 聊天记录存储
         if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
             try {
-                File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
                 String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
-                file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats/" + date + ".txt");
-                if (!file.exists()) {
-                    file.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    fileOutputStream.write((date + ":\n").getBytes());
-                    fileOutputStream.close();
-                }
-                FileWriter writer = new FileWriter(file, true);
-                String str = message.getData().getString("M");
-                if (str.startsWith("//")) {
-                    writer.close();
-                    bindMsgListView();
-                    return;
-                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
-                    writer.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
-                    writer.close();
-                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
-                    writer.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
-                    writer.close();
-                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
-                    writer.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
-                    writer.close();
-                } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
-                    writer.write((time + "[荐]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n'));
-                    writer.close();
+                Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                        GlobalSetting.INSTANCE.getChatsSavePath(), date + ".txt");
+                try (OutputStream outputStream = getContentResolver().openOutputStream(fileUri, "w")) {
+                    outputStream.write((date + ":\n").getBytes());
+                    String str = message.getData().getString("M");
+                    if (str.startsWith("//")) {
+                        bindMsgListView();
+                        return;
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
+                        outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
+                        outputStream.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
+                        outputStream.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
+                        outputStream.write((time + "[荐]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

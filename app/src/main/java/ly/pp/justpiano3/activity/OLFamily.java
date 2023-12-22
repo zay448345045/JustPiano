@@ -444,186 +444,20 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent i) {
-        super.onActivityResult(requestCode, resultCode, i);
-        if (i != null && requestCode == 2 && resultCode == Activity.RESULT_OK) {
-            try {
-                String filePath = getFileFromUri(i.getData(), this);
-                if (filePath != null) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                    byte[] pic = compressScale(bitmap);
-                    JSONObject jSONObject = new JSONObject();
-                    jSONObject.put("K", 11);
-                    jSONObject.put("J", GZIP.arrayToZIP(pic));
-                    sendMsg((byte) 18, (byte) 0, jSONObject.toString());
-                } else {
-                    Toast.makeText(this, "上传出现错误!", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (data != null && requestCode == 2 && resultCode == Activity.RESULT_OK) {
+//            try {
+//                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                byte[] pic = ImageResizerUtil.compressScale(bitmap);
+//                JSONObject jSONObject = new JSONObject();
+//                jSONObject.put("K", 11);
+//                jSONObject.put("J", GZIPUtil.arrayToZIP(pic));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
-
-    private String getFileFromUri(Uri uri, Context context) {
-        if (uri == null) {
-            return null;
-        }
-        switch (uri.getScheme()) {
-            case "content":
-                int sdkVersion = Build.VERSION.SDK_INT;
-                if (sdkVersion < 11) return getRealPathFromUri_BelowApi11(context, uri);
-                if (sdkVersion < 19) return getRealPathFromUri_Api11To18(context, uri);
-                else return getRealPathFromUri_AboveApi19(context, uri);
-            case "file":
-                return uri.getPath();
-            default:
-                return null;
-        }
-    }
-
-    private static String getRealPathFromUri_AboveApi19(Context context, Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (DocumentsContract.isDocumentUri(context, uri)) {
-                if (isExternalStorageDocument(uri)) {
-                    final String docId = DocumentsContract.getDocumentId(uri);
-                    final String[] split = docId.split(":");
-                    final String type = split[0];
-                    if ("primary".equalsIgnoreCase(type)) {
-                        return Environment.getExternalStorageDirectory() + "/" + split[1];
-                    }
-                } else if (isDownloadsDocument(uri)) {
-                    final String id = DocumentsContract.getDocumentId(uri);
-                    final Uri contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                    return getDataColumn(context, contentUri, null, null);
-                } else if (isMediaDocument(uri)) {
-                    final String docId = DocumentsContract.getDocumentId(uri);
-                    final String[] split = docId.split(":");
-                    final String type = split[0];
-                    Uri contentUri;
-                    if ("image".equals(type)) {
-                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("video".equals(type)) {
-                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("audio".equals(type)) {
-                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                    } else {
-                        contentUri = MediaStore.Files.getContentUri("external");
-                    }
-                    final String selection = "_id=?";
-                    final String[] selectionArgs = new String[]{split[1]};
-                    return getDataColumn(context, contentUri, selection, selectionArgs);
-                }
-            } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-                return getDataColumn(context, uri, null, null);
-            } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-                return uri.getPath();
-            }
-        }
-        return null;
-    }
-
-    private static String getRealPathFromUri_Api11To18(Context context, Uri uri) {
-        String filePath = null;
-        String[] projection = {MediaStore.Images.Media.DATA};
-        //这个有两个包不知道是哪个。。。。不过这个复杂版一般用不到
-        CursorLoader loader = new CursorLoader(context, uri, projection, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        if (cursor != null) {
-            cursor.moveToFirst();
-            filePath = cursor.getString(cursor.getColumnIndex(projection[0]));
-            cursor.close();
-        }
-        return filePath;
-    }
-
-    private static String getRealPathFromUri_BelowApi11(Context context, Uri uri) {
-        String filePath = null;
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            filePath = cursor.getString(cursor.getColumnIndex(projection[0]));
-            cursor.close();
-        }
-        return filePath;
-    }
-
-    private static String getDataColumn(Context context, Uri uri, String selection,
-                                        String[] selectionArgs) {
-        Cursor cursor = null;
-        String column = MediaStore.MediaColumns.DATA;
-        String[] projection = {column};
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    private static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    private byte[] compressScale(Bitmap image) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        // 判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
-        if (baos.toByteArray().length / 1024 > 1024) {
-            baos.reset();// 重置baos即清空baos
-            image.compress(Bitmap.CompressFormat.JPEG, 80, baos);// 这里压缩50%，把压缩后的数据存放到baos中
-        }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        float hh = 32f;
-        int be = 1;// be=1表示不缩放
-        if (w > h && w > hh) {// 如果宽度大的话根据宽度固定大小缩放
-            be = (int) (newOpts.outWidth / hh);
-        } else if (w < h && h > hh) { // 如果高度高的话根据高度固定大小缩放
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0) be = 1;
-        newOpts.inSampleSize = be; // 设置缩放比例
-        newOpts.inPreferredConfig = Bitmap.Config.RGB_565;//降低图片从ARGB888到RGB565
-        // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        isBm = new ByteArrayInputStream(baos.toByteArray());
-        bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
-    }
-
-    private byte[] compressImage(Bitmap image) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        int options = 90;
-        while (baos.toByteArray().length / 1024 > 100) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
-            baos.reset(); // 重置baos即清空baos
-            image.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
-            options -= 10;// 每次都减少10
-        }
-        return baos.toByteArray();
-    }*/
 }
