@@ -7,14 +7,21 @@ import android.provider.OpenableColumns
 import androidx.core.util.Consumer
 import androidx.documentfile.provider.DocumentFile
 import okhttp3.Request
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
 
+
 object FileUtil {
+
+    data class UriInfo(
+        val uri: Uri?,
+        val displayName: String?,
+        val fileSize: Long?,
+        val modifiedTime: Long?
+    )
 
     /**
      * 复制文件到应用目录
@@ -37,7 +44,6 @@ object FileUtil {
         }
         return cacheFile.absolutePath
     }
-
 
     fun moveFileToUri(context: Context, sourceFile: File, destinationUri: Uri?): Boolean {
         if (destinationUri == null) {
@@ -112,12 +118,46 @@ object FileUtil {
         return UriInfo(uri, displayName, fileSize, modifiedTime)
     }
 
-    data class UriInfo(
-        val uri: Uri?,
-        val displayName: String?,
-        val fileSize: Long?,
-        val modifiedTime: Long?
-    )
+    fun getFolderUriInfo(context: Context, uri: Uri): UriInfo {
+        val contentResolver = context.contentResolver
+        val queryCursor = contentResolver.query(
+            uri,
+            arrayOf(
+                DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+                DocumentsContract.Document.COLUMN_LAST_MODIFIED,
+                DocumentsContract.Document.COLUMN_MIME_TYPE
+            ),
+            null,
+            null,
+            null
+        )
+        var displayName: String? = null
+        var modifiedTime: Long? = null
+        var mimeType: String? = null
+        queryCursor.use { cursor ->
+            if (cursor != null && cursor.moveToFirst()) {
+                val nameIndex =
+                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+                val modifiedIndex =
+                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
+                val mimeTypeIndex =
+                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
+
+                if (nameIndex != -1) {
+                    displayName = cursor.getString(nameIndex)
+                }
+                if (modifiedIndex != -1) {
+                    modifiedTime = cursor.getLong(modifiedIndex)
+                }
+                if (mimeTypeIndex != -1) {
+                    mimeType = cursor.getString(mimeTypeIndex)
+                }
+            }
+        }
+        val isDirectory = mimeType == DocumentsContract.Document.MIME_TYPE_DIR
+        val fileSize: Long? = if (isDirectory) null else 0
+        return UriInfo(uri, displayName, fileSize, modifiedTime)
+    }
 
     fun downloadFile(
         url: String,
@@ -134,6 +174,10 @@ object FileUtil {
                     val length = response.body!!.contentLength()
                     // 下面从返回的输入流中读取字节数据并保存为本地文件
                     try {
+                        if (file == null || (!file.exists() && !file.createNewFile())) {
+                            fail.run()
+                            return
+                        }
                         response.body!!.byteStream().use { inputStream ->
                             FileOutputStream(file).use { fileOutputStream ->
                                 val buf = ByteArray(100 * 1024)
@@ -247,8 +291,32 @@ object FileUtil {
 
     private fun getExternalFilesDir(context: Context): DocumentFile? {
         val filesDir = context.getExternalFilesDir(null)
-        return filesDir?.let {
-            DocumentFile.fromTreeUri(context, Uri.fromFile(it))
+        return filesDir?.let { DocumentFile.fromFile(it) }
+    }
+
+    fun deleteFileUsingUri(context: Context, uri: Uri): Boolean {
+        return when (uri.scheme) {
+            "file" -> {
+                // 如果是file:// URI，使用File API删除文件
+                val file = uri.path?.let { File(it) }
+                file?.delete() ?: false
+            }
+
+            "content" -> {
+                // 如果是content:// URI，通过ContentResolver来删除文件
+                try {
+                    val contentResolver = context.contentResolver
+                    DocumentsContract.deleteDocument(contentResolver, uri)
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                    false
+                }
+            }
+
+            else -> {
+                // 如果是其他类型的URI，则无法处理
+                false
+            }
         }
     }
 }

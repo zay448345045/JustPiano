@@ -16,7 +16,6 @@ import androidx.annotation.RequiresApi;
 import androidx.core.util.Pair;
 import androidx.core.util.Predicate;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,7 +252,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             if (uri.isEmpty()) {
                 preference.setSummary(defaultSummary);
             } else {
-                FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
+                FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.INSTANCE.getFolderUriInfo(preferenceFragment.getActivity(), Uri.parse(uri))
+                        : FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
                 preference.setSummary(uriInfo.getDisplayName() == null ? defaultSummary : uriInfo.getDisplayName());
             }
             if (preference instanceof FilePickerPreference) {

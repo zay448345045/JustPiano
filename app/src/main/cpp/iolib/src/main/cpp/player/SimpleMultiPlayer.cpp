@@ -315,6 +315,6 @@ namespace iolib {
     }
 
     bool SimpleMultiPlayer::isAudioStreamStart() {
-        return mAudioStream->getState() == StreamState::Started;
+        return mAudioStream != nullptr && mAudioStream->getState() == StreamState::Started;
     }
 }

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +42,9 @@ public final class SoundDownload extends BaseActivity implements Callback {
 
     public void downloadSound(String soundId, String soundName, String soundType) {
         File soundsDir = new File(getExternalFilesDir(null), "Sounds");
+        if (!soundsDir.exists()) {
+            soundsDir.mkdirs();
+        }
         File file = new File(soundsDir, soundName + soundType);
         if (file.exists()) {
             file.delete();
@@ -117,6 +121,9 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 }
             }
             File soundsDir = new File(getExternalFilesDir(null), "Sounds");
+            if (!soundsDir.exists()) {
+                soundsDir.mkdirs();
+            }
             File soundFile = new File(soundsDir, soundFileName);
             if (soundFileName.endsWith(".ss")) {
                 GZIPUtil.ZIPFileTo(soundFile, file.toString());
@@ -201,6 +208,11 @@ public final class SoundDownload extends BaseActivity implements Callback {
         super.onBackPressed();
         if (jpProgressBar.isShowing()) {
             jpProgressBar.dismiss();
+        }
+        if (getIntent().getFlags() == Intent.FLAG_GRANT_READ_URI_PERMISSION) {
+            Intent intent = new Intent();
+            intent.setClass(this, MainMode.class);
+            startActivity(intent);
         }
         finish();
     }

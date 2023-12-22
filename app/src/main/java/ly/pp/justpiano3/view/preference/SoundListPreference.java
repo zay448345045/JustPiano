@@ -14,15 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
-import androidx.documentfile.provider.DocumentFile;
-
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SoundListAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SoundListPreference extends DialogPreference {
@@ -48,7 +47,7 @@ public final class SoundListPreference extends DialogPreference {
         if (!soundsDir.exists()) {
             soundsDir.mkdirs();
         }
-        List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(soundsDir);
+        List<File> localSoundList = getLocalSoundList(soundsDir);
         int size = localSoundList.size();
         soundNameList = new CharSequence[size + 3];
         soundKeyList = new CharSequence[size + 3];
@@ -65,12 +64,21 @@ public final class SoundListPreference extends DialogPreference {
         soundKeyList[size + 2] = "more";
     }
 
-    public void deleteFiles(String str) {
-        Uri uri = Uri.parse(str);
-        DocumentFile documentFile = DocumentFile.fromSingleUri(context, uri);
-        if (documentFile != null && documentFile.exists()) {
-            documentFile.delete();
+    private List<File> getLocalSoundList(File file) {
+        List<File> linkedList = new LinkedList<>();
+        File[] listFiles = file.listFiles();
+        if (listFiles != null) {
+            for (File listFile : listFiles) {
+                if (listFile.isFile() && (listFile.getName().endsWith(".ss") || listFile.getName().endsWith(".sf2"))) {
+                    linkedList.add(listFile);
+                }
+            }
         }
+        return linkedList;
+    }
+
+    public void deleteFiles(String str) {
+        FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         // 如果正在使用这个音源，则删除这个音源解压后的文件
         if (sharedPreferences.getString("sound_select", "original").equals(str)) {

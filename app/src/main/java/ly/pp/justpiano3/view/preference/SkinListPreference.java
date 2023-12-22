@@ -15,16 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
-import androidx.documentfile.provider.DocumentFile;
-
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SkinListPreference extends DialogPreference {
@@ -51,7 +50,7 @@ public final class SkinListPreference extends DialogPreference {
         if (!skinsDir.exists()) {
             skinsDir.mkdirs();
         }
-        List<File> localSkinList = SkinAndSoundFileUtil.getLocalSoundList(skinsDir);
+        List<File> localSkinList = getLocalSkinList(skinsDir);
         int size = localSkinList.size();
         skinNameList = new CharSequence[size + 3];
         skinKeyList = new CharSequence[size + 3];
@@ -68,12 +67,21 @@ public final class SkinListPreference extends DialogPreference {
         skinKeyList[size + 2] = "more";
     }
 
-    public void deleteFiles(String str) {
-        Uri uri = Uri.parse(str);
-        DocumentFile documentFile = DocumentFile.fromSingleUri(context, uri);
-        if (documentFile != null && documentFile.exists()) {
-            documentFile.delete();
+    private List<File> getLocalSkinList(File file) {
+        List<File> linkedList = new LinkedList<>();
+        File[] listFiles = file.listFiles();
+        if (listFiles != null) {
+            for (File listFile : listFiles) {
+                if (listFile.isFile() && listFile.getName().endsWith(".ps")) {
+                    linkedList.add(listFile);
+                }
+            }
         }
+        return linkedList;
+    }
+
+    public void deleteFiles(String str) {
+        FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (!"original".equals(str) && sharedPreferences.getString("skin_select", "original").equals(str)) {
             File skinDir = new File(context.getFilesDir(), "Skins");

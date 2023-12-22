@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,9 @@ public final class SkinDownload extends BaseActivity implements Callback {
 
     public void downloadSkin(String skinId, String skinName) {
         File skinsDir = new File(getExternalFilesDir(null), "Skins");
+        if (!skinsDir.exists()) {
+            skinsDir.mkdirs();
+        }
         File file = new File(skinsDir, skinName + ".ps");
         if (file.exists()) {
             file.delete();
@@ -108,6 +112,9 @@ public final class SkinDownload extends BaseActivity implements Callback {
             }
         }
         File skinsDir = new File(getExternalFilesDir(null), "Skins");
+        if (!skinsDir.exists()) {
+            skinsDir.mkdirs();
+        }
         File skinFile = new File(skinsDir, skinName);
         Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
         edit.putString("skin_select", skinFile.toURI().toString());
@@ -160,6 +167,11 @@ public final class SkinDownload extends BaseActivity implements Callback {
         super.onBackPressed();
         if (jpProgressBar.isShowing()) {
             jpProgressBar.dismiss();
+        }
+        if (getIntent().getFlags() == Intent.FLAG_GRANT_READ_URI_PERMISSION) {
+            Intent intent = new Intent();
+            intent.setClass(this, MainMode.class);
+            startActivity(intent);
         }
         finish();
     }
