@@ -31,14 +31,13 @@ public final class RecordFiles extends BaseActivity {
 
     private void loadRecordFiles(String recordsSaveUri) {
         Pair<DocumentFile, String> documentFile = FileUtil.INSTANCE.getDirectoryDocumentFile(this,
-                recordsSaveUri, "SD卡/Android/data/ly.pp.justpiano3/files/Records");
+                recordsSaveUri, "Records", "SD卡/Android/data/ly.pp.justpiano3/files/Records");
         DocumentFile[] recordFiles = documentFile.component1().listFiles();
-        tipsTextView.setText("录音文件存储位置：" + documentFile.component2());
-        tipsTextView.setTextSize(18);
+        tipsTextView.setText("录音文件存储文件夹：" + documentFile.component2());
         dataList = new ArrayList<>();
         for (DocumentFile recordFile : recordFiles) {
             Map<String, Object> hashMap = new HashMap<>();
-            if (recordFile.isFile() && recordFile.getName().endsWith(".txt")) {
+            if (recordFile.isFile() && recordFile.getName().endsWith(".wav")) {
                 hashMap.put("path", recordFile);
                 hashMap.put("filenames", recordFile.getName());
                 hashMap.put("time", DateUtil.format(new Date(recordFile.lastModified())));
@@ -73,6 +72,9 @@ public final class RecordFiles extends BaseActivity {
     }
 
     public void play(DocumentFile documentFile) {
+        if (documentFile == null) {
+            return;
+        }
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);

@@ -388,7 +388,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         isRecord = findViewById(R.id.check_record);
         isRecord.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && sharedPreferences.getBoolean("record_dialog", true)) {
-                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件", 0);
+                buildDoNotShowDialogAndShow("选择后软件将在开始弹奏时启动内部录音(不含环境音)，弹奏完成时结束录音并存储至文件，存储位置可在设置中指定", 0);
             }
         });
         isLeftHand = findViewById(R.id.check_hand);

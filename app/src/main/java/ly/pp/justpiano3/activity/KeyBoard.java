@@ -294,7 +294,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                     if (!recordStart) {
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                         jpDialogBuilder.setTitle("提示");
-                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件");
+                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，存储位置可在设置中指定");
                         jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
                             String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);

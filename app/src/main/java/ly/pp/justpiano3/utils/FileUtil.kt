@@ -260,11 +260,12 @@ object FileUtil {
     fun getDirectoryDocumentFile(
         context: Context,
         directoryUriString: String?,
-        defaultPath: String?
+        defaultFolder: String,
+        defaultPath: String
     ): Pair<DocumentFile?, String?> {
         if (directoryUriString.isNullOrEmpty()) {
             // 目录URI字符串为空，直接使用应用的外部文件目录
-            return Pair(getExternalFilesDir(context), defaultPath)
+            return Pair(getExternalFilesDir(context, defaultFolder), defaultPath)
         }
         return try {
             // 尝试用原始URI操作
@@ -273,17 +274,17 @@ object FileUtil {
             if (directoryDocumentFile != null && directoryDocumentFile.exists() && directoryDocumentFile.isDirectory) {
                 Pair(directoryDocumentFile, directoryDocumentFile.name)
             } else {
-                Pair(getExternalFilesDir(context), defaultPath)
+                Pair(getExternalFilesDir(context, defaultFolder), defaultPath)
             }
         } catch (e: Exception) {
             // 解析URI异常或其它错误，使用应用的外部文件目录
-            Pair(getExternalFilesDir(context), defaultPath)
+            Pair(getExternalFilesDir(context, defaultFolder), defaultPath)
         }
     }
 
-    private fun getExternalFilesDir(context: Context): DocumentFile? {
+    private fun getExternalFilesDir(context: Context, defaultFolder: String): DocumentFile? {
         val filesDir = context.getExternalFilesDir(null)
-        return filesDir?.let { DocumentFile.fromFile(it) }
+        return filesDir?.let { DocumentFile.fromFile(File(it, defaultFolder)) }
     }
 
     fun deleteFileUsingUri(context: Context, uri: Uri): Boolean {

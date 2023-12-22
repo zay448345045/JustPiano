@@ -31,10 +31,9 @@ public class ChatFiles extends BaseActivity {
 
     private void loadChatFiles(String chatsSaveUri) {
         Pair<DocumentFile, String> documentFile = FileUtil.INSTANCE.getDirectoryDocumentFile(this,
-                chatsSaveUri, "SD卡/Android/data/ly.pp.justpiano3/files/Chats");
+                chatsSaveUri, "Chats", "SD卡/Android/data/ly.pp.justpiano3/files/Chats");
         DocumentFile[] chatFiles = documentFile.component1().listFiles();
-        tipsTextView.setText("聊天记录存储位置：" + documentFile.component2());
-        tipsTextView.setTextSize(20);
+        tipsTextView.setText("聊天记录存储文件夹：" + documentFile.component2());
         dataList = new ArrayList<>();
         for (DocumentFile chatFile : chatFiles) {
             Map<String, Object> hashMap = new HashMap<>();
@@ -73,6 +72,9 @@ public class ChatFiles extends BaseActivity {
     }
 
     public final void open(DocumentFile documentFile) {
+        if (documentFile == null) {
+            return;
+        }
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
