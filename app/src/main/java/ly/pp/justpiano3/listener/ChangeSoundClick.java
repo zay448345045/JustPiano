@@ -24,7 +24,7 @@ public final class ChangeSoundClick implements OnClickListener {
         if (soundKey.equals("more")) {
             Intent intent = new Intent();
             intent.setClass(soundListAdapter.context, SoundDownload.class);
-            soundListAdapter.context.startActivity(intent);
+            ((Activity) (soundListAdapter.context)).startActivityForResult(intent, SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE);
         } else if (soundKey.equals("select")) {
             FilePickerUtil.openFilePicker((Activity) soundListAdapter.context, false, "sound_select");
         } else {

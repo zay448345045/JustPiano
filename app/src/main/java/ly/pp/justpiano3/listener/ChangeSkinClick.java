@@ -27,7 +27,7 @@ public final class ChangeSkinClick implements OnClickListener {
         if (skinKey.equals("more")) {
             Intent intent = new Intent();
             intent.setClass(skinListAdapter.context, SkinDownload.class);
-            skinListAdapter.context.startActivity(intent);
+            ((Activity) (skinListAdapter.context)).startActivityForResult(intent, SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE);
         } else if (skinKey.equals("select")) {
             FilePickerUtil.openFilePicker((Activity) skinListAdapter.context, false, "skin_select");
         } else {

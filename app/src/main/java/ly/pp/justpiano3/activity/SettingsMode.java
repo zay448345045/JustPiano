@@ -305,6 +305,16 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
                 ImageLoadUtil.setBackground(this);
             }
+        } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("skin_select");
+            if (value != null && value.first instanceof SkinListPreference) {
+                ((SkinListPreference) value.first).loadSkinList();
+            }
+        } else if (requestCode == SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("sound_select");
+            if (value != null && value.first instanceof SoundListPreference) {
+                ((SoundListPreference) value.first).loadSoundList();
+            }
         }
     }
 

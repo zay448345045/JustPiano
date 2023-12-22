@@ -28,6 +28,7 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SkinDownload extends BaseActivity implements Callback {
+    public static final int SKIN_DOWNLOAD_REQUEST_CODE = 99;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;

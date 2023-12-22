@@ -105,7 +105,7 @@ public final class SoundListPreference extends DialogPreference {
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
         FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(soundKey));
-        setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
+        setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());
     }
 
     @Override
