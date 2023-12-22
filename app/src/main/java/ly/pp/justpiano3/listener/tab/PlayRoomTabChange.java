@@ -2,7 +2,6 @@ package ly.pp.justpiano3.listener.tab;
 
 import android.view.View;
 import android.widget.TabHost.OnTabChangeListener;
-
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.OLRoomActivity;
@@ -37,13 +36,13 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                 break;
             case "tab2":
                 if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
-                    olRoomActivity.msgListView.setSelection(olRoomActivity.msgListView.getAdapter().getCount() - 1);
+                    olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
                 }
                 break;
             case "tab3":
                 if (olRoomActivity instanceof OLPlayKeyboardRoom) {
                     if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
-                        olRoomActivity.msgListView.setSelection(olRoomActivity.msgListView.getAdapter().getCount() - 1);
+                        olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
                     }
                     ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.VISIBLE);
                     ((OLPlayKeyboardRoom) olRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
