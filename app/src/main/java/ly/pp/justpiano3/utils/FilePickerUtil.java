@@ -20,20 +20,25 @@ public class FilePickerUtil {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultipleFiles);
-
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         // special intent for Samsung file manager
         Intent sIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
         // if you want any file type, you can skip next line
         sIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
+        sIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        sIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        sIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         Intent chooserIntent;
         if (activity.getPackageManager().resolveActivity(sIntent, 0) != null) {
             // it is device with Samsung file manager
-            chooserIntent = Intent.createChooser(sIntent, "Open file");
+            chooserIntent = Intent.createChooser(sIntent, "选择文件");
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intent});
         } else {
-            chooserIntent = Intent.createChooser(intent, "Open file");
+            chooserIntent = Intent.createChooser(intent, "选择文件");
         }
+
         FilePickerUtil.extra = extra;
         activity.startActivityForResult(chooserIntent, PICK_FILE_REQUEST_CODE);
     }
@@ -41,6 +46,7 @@ public class FilePickerUtil {
     public static void openFolderPicker(Activity activity, String extra) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         FilePickerUtil.extra = extra;
         activity.startActivityForResult(intent, PICK_FOLDER_REQUEST_CODE);

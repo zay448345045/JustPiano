@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +50,7 @@ public final class RecordFilesAdapter extends BaseAdapter {
         }
         String fileName = (String) list.get(index).get("filenames");
         String fileTime = (String) list.get(index).get("time");
-        String filePath = (String) list.get(index).get("path");
+        DocumentFile filePath = (DocumentFile) list.get(index).get("path");
         ImageView imageView = view.findViewById(R.id.deleteview);
         view.findViewById(R.id.showtxt).setVisibility(View.GONE);
         ((TextView) view.findViewById(R.id.txtview)).setText(fileName);

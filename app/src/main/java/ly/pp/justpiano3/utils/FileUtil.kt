@@ -106,7 +106,8 @@ object FileUtil {
             arrayOf(
                 OpenableColumns.DISPLAY_NAME,
                 OpenableColumns.SIZE,
-                DocumentsContract.Document.COLUMN_MIME_TYPE
+                DocumentsContract.Document.COLUMN_MIME_TYPE,
+                DocumentsContract.Document.COLUMN_LAST_MODIFIED
             ),
             null,
             null,
@@ -114,6 +115,7 @@ object FileUtil {
         )
         var displayName: String? = null
         var fileSize: Long? = null
+        var modifiedTime: Long? = null
         queryCursor.use { cursor ->
             if (cursor != null && cursor.moveToFirst()) {
                 val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -132,12 +134,22 @@ object FileUtil {
                 } else if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
                     fileSize = cursor.getLong(sizeIndex)
                 }
+                val modifiedIndex =
+                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
+                if (modifiedIndex != -1) {
+                    modifiedTime = cursor.getLong(modifiedIndex)
+                }
             }
         }
-        return UriInfo(uri, displayName, fileSize)
+        return UriInfo(uri, displayName, fileSize, modifiedTime)
     }
 
-    data class UriInfo(val uri: Uri?, val displayName: String?, val fileSize: Long?)
+    data class UriInfo(
+        val uri: Uri?,
+        val displayName: String?,
+        val fileSize: Long?,
+        val modifiedTime: Long?
+    )
 
     fun downloadFile(
         url: String,
@@ -241,31 +253,34 @@ object FileUtil {
         }
     }
 
-    fun getDirectoryUri(
+    fun getDirectoryDocumentFile(
         context: Context,
-        directoryUriString: String?
-    ): Uri? {
+        directoryUriString: String?,
+        defaultPath: String?
+    ): Pair<DocumentFile?, String?> {
         if (directoryUriString.isNullOrEmpty()) {
             // 目录URI字符串为空，直接使用应用的外部文件目录
-            return getExternalFilesDirUri(context)
+            return Pair(getExternalFilesDir(context), defaultPath)
         }
         return try {
             // 尝试用原始URI操作
             val directoryUri = Uri.parse(directoryUriString)
             val directoryDocumentFile = DocumentFile.fromTreeUri(context, directoryUri)
             if (directoryDocumentFile != null && directoryDocumentFile.exists() && directoryDocumentFile.isDirectory) {
-                directoryUri // 原始目录URI有效
+                Pair(directoryDocumentFile, directoryDocumentFile.name)
             } else {
-                getExternalFilesDirUri(context) // 原始目录URI无效或不存在
+                Pair(getExternalFilesDir(context), defaultPath)
             }
         } catch (e: Exception) {
             // 解析URI异常或其它错误，使用应用的外部文件目录
-            getExternalFilesDirUri(context)
+            Pair(getExternalFilesDir(context), defaultPath)
         }
     }
 
-    private fun getExternalFilesDirUri(context: Context): Uri? {
+    private fun getExternalFilesDir(context: Context): DocumentFile? {
         val filesDir = context.getExternalFilesDir(null)
-        return filesDir?.let { Uri.fromFile(it) }
+        return filesDir?.let {
+            DocumentFile.fromTreeUri(context, Uri.fromFile(it))
+        }
     }
 }

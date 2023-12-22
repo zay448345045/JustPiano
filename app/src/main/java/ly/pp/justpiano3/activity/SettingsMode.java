@@ -13,6 +13,8 @@ import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.util.Pair;
+import androidx.core.util.Predicate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
     public static final int SETTING_MODE_CODE = 122;
 
     private static final Map<String, PreferenceFragment> preferenceFragmentMap = new HashMap<>();
-    private static final Map<String, FilePickerPreference> filePickerPreferenceMap = new HashMap<>();
+    private static final Map<String, Pair<FilePickerPreference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
 
     static {
         preferenceFragmentMap.put("settings_piano_play", new PianoPlaySettingsFragment());
@@ -97,7 +99,14 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
             // 背景图设置项初始化
             registerFilePickerPreference(this, "background_pic",
-                    "默认背景图", GlobalSetting.INSTANCE.getBackgroundPic());
+                    "默认背景图", GlobalSetting.INSTANCE.getBackgroundPic(), uriInfo -> {
+                        if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
+                                && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
+                            Toast.makeText(getActivity(), "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        return true;
+                    });
             // 全面屏设置项开关监听
             Preference allFullScreenShowPreference = findPreference("all_full_screen_show");
             if (allFullScreenShowPreference != null) {
@@ -135,7 +144,14 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_waterfall);
             registerFilePickerPreference(this, "waterfall_background_pic",
-                    "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic());
+                    "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic(), uriInfo -> {
+                        if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
+                                && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
+                            Toast.makeText(getActivity(), "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        return true;
+                    });
         }
     }
 
@@ -146,7 +162,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             addPreferencesFromResource(R.xml.settings_sound);
             registerFilePickerPreference(this, "records_save_path",
                     "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
-                    GlobalSetting.INSTANCE.getRecordsSavePath());
+                    GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
             Preference soundDelayPreference = findPreference("sound_delay");
             if (soundDelayPreference != null) {
                 soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -185,10 +201,16 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
             registerFilePickerPreference(this, "chats_sound_file",
-                    "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile());
+                    "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile(), uriInfo -> {
+                        if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {
+                            Toast.makeText(getActivity(), "请选择合法的wav或mp3格式文件", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        return true;
+                    });
             registerFilePickerPreference(this, "chats_save_path",
                     "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Chats)",
-                    GlobalSetting.INSTANCE.getChatsSavePath());
+                    GlobalSetting.INSTANCE.getChatsSavePath(), uriInfo -> true);
         }
     }
 
@@ -203,7 +225,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
     /**
      * 注册filePickerPreference行为
      */
-    private static void registerFilePickerPreference(PreferenceFragment preferenceFragment, String key, String defaultSummary, String uri) {
+    private static void registerFilePickerPreference(PreferenceFragment preferenceFragment, String key,
+                                                     String defaultSummary, String uri, Predicate<FileUtil.UriInfo> predicate) {
         Preference preference = preferenceFragment.findPreference(key);
         if (preference != null) {
             if (uri.isEmpty()) {
@@ -215,7 +238,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             FilePickerPreference filePickerPreference = (FilePickerPreference) (preference);
             filePickerPreference.setActivity(preferenceFragment.getActivity());
             filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist(defaultSummary, ""));
-            filePickerPreferenceMap.put(preference.getKey(), filePickerPreference);
+            filePickerPreferenceMap.put(preference.getKey(), Pair.create(filePickerPreference, predicate));
         }
     }
 
@@ -228,42 +251,21 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 return;
             }
             FileUtil.UriInfo uriInfo = uriInfoList.get(0);
-            FilePickerPreference filePickerPreference = filePickerPreferenceMap.get(FilePickerUtil.extra);
-            if (filePickerPreference == null || uriInfo == null || uriInfo.getDisplayName() == null) {
+            Pair<FilePickerPreference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
+            if (value == null || uriInfo == null || uriInfo.getUri() != null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
                 return;
             }
-            // 具体的文件选择项的文件格式校验，校验通过后执行存储
-            switch (filePickerPreference.getKey()) {
-                case "waterfall_background_pic":
-                case "background_pic":
-                    if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
-                            && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
-                        Toast.makeText(this, "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-                case "chats_sound_file":
-                    if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {
-                        Toast.makeText(this, "请选择合法的wav或mp3格式文件", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-                default:
-                    break;
+            try {
+                getContentResolver().takePersistableUriPermission(uriInfo.getUri(), data.getFlags());
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "持久化文件权限出错", Toast.LENGTH_SHORT).show();
+                return;
             }
-            if (uriInfo.getUri() != null) {
-                try {
-                    getContentResolver().takePersistableUriPermission(uriInfo.getUri(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "读取文件出错", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
-                if (Objects.equals(filePickerPreference.getKey(), "background_pic")) {
-                    GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
-                    ImageLoadUtil.setBackground(this);
-                }
+            value.first.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
+            if (Objects.equals(value.first.getKey(), "background_pic")) {
+                GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
+                ImageLoadUtil.setBackground(this);
             }
         }
     }

@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import java.util.List;
 import java.util.Map;
 
@@ -48,13 +50,13 @@ public final class ChatFilesAdapter extends BaseAdapter {
         }
         String fileName = (String) list.get(i).get("filenames");
         String fileTime = (String) list.get(i).get("time");
-        String filePath = (String) list.get(i).get("path");
+        DocumentFile documentFile = (DocumentFile) list.get(i).get("path");
         ImageView imageView = view.findViewById(R.id.deleteview);
         view.findViewById(R.id.playview).setVisibility(View.INVISIBLE);
         ((TextView) view.findViewById(R.id.txtview)).setText(fileName);
         ((TextView) view.findViewById(R.id.timeview)).setText(fileTime);
-        view.findViewById(R.id.showtxt).setOnClickListener(v -> chatfiles.open(filePath));
-        imageView.setOnClickListener(v -> chatfiles.delete(i, fileName, filePath));
+        view.findViewById(R.id.showtxt).setOnClickListener(v -> chatfiles.open(documentFile));
+        imageView.setOnClickListener(v -> chatfiles.delete(i, fileName, documentFile));
         return view;
     }
 }
