@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.listener;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
@@ -31,16 +30,16 @@ public final class SkinDownloadClick implements OnClickListener {
         dialogInterface.dismiss();
         switch (type) {
             case 0:
-                ThreadPoolUtil.execute(() -> SkinDownload.downloadSkin(skinDownload, url, name));
+                ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(url, name));
                 break;
             case 1:
                 ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
                 break;
             case 2:
                 Editor edit = PreferenceManager.getDefaultSharedPreferences(skinDownload).edit();
-                edit.putString("skin_list", "original");
+                edit.putString("skin_select", "original");
                 edit.apply();
-                File dir = skinDownload.getDir("Skin", Context.MODE_PRIVATE);
+                File dir = new File(skinDownload.getFilesDir(), "Skins");
                 if (dir.isDirectory()) {
                     File[] listFiles = dir.listFiles();
                     if (listFiles != null && listFiles.length > 0) {

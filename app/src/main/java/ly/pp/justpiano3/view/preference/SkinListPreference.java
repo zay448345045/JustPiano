@@ -3,7 +3,7 @@ package ly.pp.justpiano3.view.preference;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
+import android.net.Uri;
 import android.preference.DialogPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.util.List;
@@ -26,7 +28,7 @@ import ly.pp.justpiano3.utils.SkinAndSoundFileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SkinListPreference extends DialogPreference {
-    public File skinFile;
+    public Uri skinFile;
     public String skinKey = "";
     public Context context;
     public JPProgressBar jpProgressBar;
@@ -45,37 +47,41 @@ public final class SkinListPreference extends DialogPreference {
     }
 
     private void loadSkinList() {
-        String str = Environment.getExternalStorageDirectory() + "/JustPiano/Skins";
-        List<File> localSkinList = SkinAndSoundFileUtil.getLocalSkinList(str);
+        File skinsDir = new File(context.getExternalFilesDir(null), "Skins");
+        if (!skinsDir.exists()) {
+            skinsDir.mkdirs();
+        }
+        List<File> localSkinList = SkinAndSoundFileUtil.getLocalSoundList(skinsDir);
         int size = localSkinList.size();
-        skinNameList = new CharSequence[size + 2];
-        skinKeyList = new CharSequence[size + 2];
+        skinNameList = new CharSequence[size + 3];
+        skinKeyList = new CharSequence[size + 3];
         for (int i = 0; i < size; i++) {
-            str = localSkinList.get(i).getName();
-            skinNameList[i] = str.subSequence(0, str.lastIndexOf('.'));
-            skinKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + localSkinList.get(i).getName();
+            String skinName = localSkinList.get(i).getName();
+            skinNameList[i] = skinName.subSequence(0, skinName.lastIndexOf('.'));
+            skinKeyList[i] = localSkinList.get(i).toURI().toString();
         }
         skinNameList[size] = "默认皮肤";
         skinKeyList[size] = "original";
-        skinNameList[size + 1] = "更多皮肤...";
-        skinKeyList[size + 1] = "more";
+        skinNameList[size + 1] = "选择皮肤...";
+        skinKeyList[size + 1] = "select";
+        skinNameList[size + 2] = "更多皮肤...";
+        skinKeyList[size + 2] = "more";
     }
 
     public void deleteFiles(String str) {
-        int i = 0;
-        File file = new File(str);
-        if (file.exists()) {
-            file.delete();
+        Uri uri = Uri.parse(str);
+        DocumentFile documentFile = DocumentFile.fromSingleUri(context, uri);
+        if (documentFile != null && documentFile.exists()) {
+            documentFile.delete();
         }
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!str.equals("original") && sharedPreferences.getString("skin_list", "original").equals(str)) {
-            file = context.getDir("Skin", Context.MODE_PRIVATE);
-            if (file.isDirectory()) {
-                File[] listFiles = file.listFiles();
-                if (listFiles != null && listFiles.length > 0) {
-                    while (i < listFiles.length) {
-                        listFiles[i].delete();
-                        i++;
+        if (!"original".equals(str) && sharedPreferences.getString("skin_select", "original").equals(str)) {
+            File skinDir = new File(context.getFilesDir(), "Skins");
+            if (skinDir.isDirectory()) {
+                File[] listFiles = skinDir.listFiles();
+                if (listFiles != null) {
+                    for (File file : listFiles) {
+                        file.delete();
                     }
                 }
             }

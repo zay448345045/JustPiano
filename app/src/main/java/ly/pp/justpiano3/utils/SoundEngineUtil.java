@@ -152,6 +152,7 @@ public class SoundEngineUtil {
             Converter converter = new Converter();
             converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             loadWavInputStreamByIndex(context, i);
+            Thread.sleep(2);
         } catch (Exception e1) {
             try {
                 AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");
@@ -193,7 +194,7 @@ public class SoundEngineUtil {
         }
         startAudioStreamNative();
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString("sound_list", "original");
+        edit.putString("sound_select", "original");
         edit.apply();
     }
 }

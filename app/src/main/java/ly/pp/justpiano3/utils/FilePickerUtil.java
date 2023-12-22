@@ -25,7 +25,6 @@ public class FilePickerUtil {
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         // special intent for Samsung file manager
         Intent sIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        // if you want any file type, you can skip next line
         sIntent.addCategory(Intent.CATEGORY_DEFAULT);
         sIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         sIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -38,7 +37,6 @@ public class FilePickerUtil {
         } else {
             chooserIntent = Intent.createChooser(intent, "选择文件");
         }
-
         FilePickerUtil.extra = extra;
         activity.startActivityForResult(chooserIntent, PICK_FILE_REQUEST_CODE);
     }

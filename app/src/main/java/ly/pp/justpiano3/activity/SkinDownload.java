@@ -1,7 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,44 +36,43 @@ public final class SkinDownload extends BaseActivity implements Callback {
     private TextView downloadText;
     private LinearLayout linearLayout;
     private int progress;
-    private int intentFlag;
 
-    public static void downloadSkin(SkinDownload skinDownload, String skinId, String skinName) {
+    public void downloadSkin(String skinId, String skinName) {
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName + ".ps");
         if (file.exists()) {
             file.delete();
         }
-        Message message = Message.obtain(skinDownload.handler);
+        Message message = Message.obtain(handler);
         message.what = 0;
-        if (skinDownload.handler != null) {
-            skinDownload.handler.sendMessage(message);
+        if (handler != null) {
+            handler.sendMessage(message);
         }
         FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".ps",
                 file, progress -> {
-                    skinDownload.progress = progress;
-                    Message message1 = Message.obtain(skinDownload.handler);
+                    this.progress = progress;
+                    Message message1 = Message.obtain(handler);
                     message1.what = 1;
-                    if (skinDownload.handler != null) {
-                        skinDownload.handler.sendMessage(message1);
+                    if (handler != null) {
+                        handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(skinDownload, skinName), () -> downloadFailHandle(skinDownload));
+                }, () -> downloadSuccessHandle(skinName), () -> downloadFailHandle());
     }
 
-    private static void downloadSuccessHandle(SkinDownload skinDownload, String skinName) {
-        Message successMessage = Message.obtain(skinDownload.handler);
+    private void downloadSuccessHandle(String skinName) {
+        Message successMessage = Message.obtain(handler);
         successMessage.what = 2;
-        if (skinDownload.handler != null) {
+        if (handler != null) {
             Bundle bundle = new Bundle();
             bundle.putString("name", skinName);
             successMessage.setData(bundle);
-            skinDownload.handler.sendMessage(successMessage);
+            handler.sendMessage(successMessage);
         }
     }
 
-    private static void downloadFailHandle(SkinDownload skinDownload) {
-        Message failMessage = Message.obtain(skinDownload.handler);
+    private void downloadFailHandle() {
+        Message failMessage = Message.obtain(handler);
         failMessage.what = 3;
-        skinDownload.handler.sendMessage(failMessage);
+        handler.sendMessage(failMessage);
     }
 
     public void handleSkin(int i, String name, String str2, int size, String author) {
@@ -102,8 +99,8 @@ public final class SkinDownload extends BaseActivity implements Callback {
         message.what = 5;
         handler.sendMessage(message);
         Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        edit.putString("skin_list", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName);
-        File dir = getDir("Skin", Context.MODE_PRIVATE);
+        edit.putString("skin_select", Environment.getExternalStorageDirectory() + "/JustPiano/Skins/" + skinName);
+        File dir = new File(getFilesDir(), "Skins");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
             if (listFiles != null) {
@@ -162,11 +159,6 @@ public final class SkinDownload extends BaseActivity implements Callback {
         if (jpProgressBar.isShowing()) {
             jpProgressBar.dismiss();
         }
-        if (intentFlag == Intent.FILL_IN_ACTION) {
-            Intent intent = new Intent();
-            intent.setClass(this, MainMode.class);
-            startActivity(intent);
-        }
         finish();
     }
 
@@ -174,7 +166,6 @@ public final class SkinDownload extends BaseActivity implements Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skin_list);
-        intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);
         handler = new Handler(this);

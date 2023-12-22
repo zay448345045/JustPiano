@@ -27,7 +27,7 @@ public final class SoundDownloadClick implements OnClickListener {
         dialogInterface.dismiss();
         switch (type) {
             case 0:
-                ThreadPoolUtil.execute(() -> SoundDownload.downloadSound(soundDownload, soundId, name, soundType));
+                ThreadPoolUtil.execute(() -> soundDownload.downloadSound(soundId, name, soundType));
                 break;
             case 1:
                 ThreadPoolUtil.execute(() -> soundDownload.changeSound(name + soundType));

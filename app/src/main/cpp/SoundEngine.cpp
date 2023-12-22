@@ -160,7 +160,8 @@ Java_ly_pp_justpiano3_utils_SoundEngineUtil_closeFluidSynth(JNIEnv *, jclass) {
 
 JNIEXPORT void JNICALL
 Java_ly_pp_justpiano3_utils_SoundEngineUtil_loadSf2(JNIEnv *env, jclass, jstring filePath) {
-    if (handle != nullptr && handle->synth != nullptr && handle->soundfont_id <= 0) {
+    if (handle != nullptr && handle->synth != nullptr
+        && handle->soundfont_id <= 0 && filePath != nullptr) {
         const char *path = env->GetStringUTFChars(filePath, nullptr);
         handle->loading = true;
         handle->soundfont_id = fluid_synth_sfload(handle->synth, path, 1);

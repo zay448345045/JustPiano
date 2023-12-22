@@ -1,15 +1,17 @@
 package ly.pp.justpiano3.listener;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import java.io.File;
 import java.util.Objects;
 
 import ly.pp.justpiano3.activity.SkinDownload;
 import ly.pp.justpiano3.adapter.SkinListAdapter;
 import ly.pp.justpiano3.task.SkinListPreferenceTask;
+import ly.pp.justpiano3.utils.FilePickerUtil;
 
 public final class ChangeSkinClick implements OnClickListener {
     private final SkinListAdapter skinListAdapter;
@@ -24,12 +26,13 @@ public final class ChangeSkinClick implements OnClickListener {
     public void onClick(View view) {
         if (skinKey.equals("more")) {
             Intent intent = new Intent();
-            intent.setFlags(0);
             intent.setClass(skinListAdapter.context, SkinDownload.class);
             skinListAdapter.context.startActivity(intent);
+        } else if (skinKey.equals("select")) {
+            FilePickerUtil.openFilePicker((Activity) skinListAdapter.context, false, "skin_select");
         } else {
             skinListAdapter.skinListPreference.skinKey = skinKey;
-            skinListAdapter.skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : new File(skinKey);
+            skinListAdapter.skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : Uri.parse(skinKey);
             new SkinListPreferenceTask(skinListAdapter.skinListPreference).execute(skinKey);
         }
     }

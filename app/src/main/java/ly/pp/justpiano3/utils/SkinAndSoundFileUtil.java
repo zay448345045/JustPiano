@@ -6,9 +6,9 @@ import java.util.List;
 
 public final class SkinAndSoundFileUtil {
 
-    public static List<File> getLocalSkinList(String str) {
+    public static List<File> getLocalSkinList(File file) {
         List<File> linkedList = new LinkedList<>();
-        File[] listFiles = new File(str).listFiles();
+        File[] listFiles = file.listFiles();
         if (listFiles != null) {
             int i = 0;
             while (i < listFiles.length) {
@@ -21,9 +21,9 @@ public final class SkinAndSoundFileUtil {
         return linkedList;
     }
 
-    public static List<File> getLocalSoundList(String str) {
+    public static List<File> getLocalSoundList(File file) {
         List<File> linkedList = new LinkedList<>();
-        File[] listFiles = new File(str).listFiles();
+        File[] listFiles = file.listFiles();
         if (listFiles != null) {
             int i = 0;
             while (i < listFiles.length) {

@@ -13,7 +13,6 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
@@ -51,7 +50,7 @@
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".activity.InfoShowActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />

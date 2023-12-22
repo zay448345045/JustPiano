@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Selection;
@@ -12,7 +11,6 @@ import android.text.Spannable;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -55,10 +53,6 @@ public final class OLPlayHallHandler extends Handler {
                     if (olPlayHall.msgList.size() > Consts.MAX_CHAT_SAVE_COUNT) {
                         olPlayHall.msgList.remove(0);
                     }
-                    File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Chats");
-                    if (!file.exists()) {
-                        file.mkdirs();
-                    }
                     String time = "";
                     if (GlobalSetting.INSTANCE.getShowChatTime()) {
                         time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
@@ -69,7 +63,7 @@ public final class OLPlayHallHandler extends Handler {
                         olPlayHall.msgList.add(message.getData());
                     }
                     // 聊天音效播放
-                    if (GlobalSetting.INSTANCE.getChatsSound() && !message.getData().getString("U").equals(olPlayHall.jpApplication.getKitiName())) {
+                    if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), olPlayHall.jpApplication.getKitiName())) {
                         SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
                     }
                     // 聊天记录存储

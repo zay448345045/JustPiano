@@ -13,6 +13,10 @@ import ly.pp.justpiano3.utils.FilePickerUtil;
 
 public final class FilePickerPreference extends Preference {
     private Activity activity;
+    /**
+     * 是否是目录选择，默认false
+     */
+    private boolean folderPicker;
 
     /**
      * 恢复默认按钮
@@ -41,13 +45,21 @@ public final class FilePickerPreference extends Preference {
         layout.addView(defaultButton, params);
         layout.setOnClickListener(v -> {
             if (activity != null) {
-                FilePickerUtil.openFilePicker(activity, false, getKey());
+                if (folderPicker) {
+                    FilePickerUtil.openFolderPicker(activity, getKey());
+                } else {
+                    FilePickerUtil.openFilePicker(activity, false, getKey());
+                }
             }
         });
     }
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    public void setFolderPicker(boolean folderPicker) {
+        this.folderPicker = folderPicker;
     }
 
     public void persist(String showName, String value) {

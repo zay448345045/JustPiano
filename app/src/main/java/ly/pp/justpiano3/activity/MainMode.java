@@ -55,19 +55,19 @@ public final class MainMode extends BaseActivity implements OnClickListener {
                 finish();
                 return;
             case R.id.sounds:
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setClass(this, SoundDownload.class);
                 startActivity(intent);
                 finish();
                 return;
             case R.id.skins:
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setClass(this, SkinDownload.class);
                 startActivity(intent);
                 finish();
                 return;
             case R.id.about_game:
-                intent.setClass(this, AboutActivity.class);
+                intent.setClass(this, InfoShowActivity.class);
+                intent.putExtra("title", R.string.update_log);
+                intent.putExtra("info", R.string.about);
                 startActivityForResult(intent, 0);
                 return;
             case R.id.listen:

@@ -1,5 +1,9 @@
 package ly.pp.justpiano3.utils;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,6 +20,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public final class GZIPUtil {
 
@@ -78,6 +83,56 @@ public final class GZIPUtil {
             e.printStackTrace();
         }
         return unZipFileList;
+    }
+
+    public static List<File> unzipFromUri(Context context, Uri zipFileUri, String outputDirPath) {
+        List<File> unzippedFileList = new ArrayList<>();
+        File outputDir = new File(outputDirPath);
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        ZipInputStream zipInputStream = null;
+        try {
+            ContentResolver resolver = context.getContentResolver();
+            InputStream inputStream = resolver.openInputStream(zipFileUri);
+            if (inputStream == null) {
+                return unzippedFileList;
+            }
+            zipInputStream = new ZipInputStream(inputStream);
+
+            ZipEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                String zipEntryName = new String(zipEntry.getName().getBytes(StandardCharsets.ISO_8859_1), "GBK");
+                File outputFile = new File(outputDir, zipEntryName);
+                if (zipEntry.isDirectory()) {
+                    outputFile.mkdirs();
+                } else {
+                    if (!outputFile.getParentFile().exists()) {
+                        outputFile.getParentFile().mkdirs();
+                    }
+                    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
+                        byte[] buffer = new byte[1024];
+                        int count;
+                        while ((count = zipInputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, count);
+                        }
+                    }
+                }
+                zipInputStream.closeEntry();
+                unzippedFileList.add(outputFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (zipInputStream != null) {
+                try {
+                    zipInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return unzippedFileList;
     }
 
     public static String ZIPTo(String str) {

@@ -3,7 +3,7 @@ package ly.pp.justpiano3.view.preference;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
+import android.net.Uri;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.util.List;
@@ -42,31 +44,37 @@ public final class SoundListPreference extends DialogPreference {
     }
 
     private void loadSoundList() {
-        List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(
-                Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
+        File soundsDir = new File(context.getExternalFilesDir(null), "Sounds");
+        if (!soundsDir.exists()) {
+            soundsDir.mkdirs();
+        }
+        List<File> localSoundList = SkinAndSoundFileUtil.getLocalSoundList(soundsDir);
         int size = localSoundList.size();
-        soundNameList = new CharSequence[size + 2];
-        soundKeyList = new CharSequence[size + 2];
+        soundNameList = new CharSequence[size + 3];
+        soundKeyList = new CharSequence[size + 3];
         for (int i = 0; i < size; i++) {
             String soundName = localSoundList.get(i).getName();
             soundNameList[i] = soundName.subSequence(0, soundName.lastIndexOf('.'));
-            soundKeyList[i] = Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + localSoundList.get(i).getName();
+            soundKeyList[i] = localSoundList.get(i).toURI().toString();
         }
         soundNameList[size] = "默认音源";
         soundKeyList[size] = "original";
-        soundNameList[size + 1] = "更多音源...";
-        soundKeyList[size + 1] = "more";
+        soundNameList[size + 1] = "选择音源...";
+        soundKeyList[size + 1] = "select";
+        soundNameList[size + 2] = "更多音源...";
+        soundKeyList[size + 2] = "more";
     }
 
     public void deleteFiles(String str) {
-        File file = new File(str);
-        if (file.exists()) {
-            file.delete();
+        Uri uri = Uri.parse(str);
+        DocumentFile documentFile = DocumentFile.fromSingleUri(context, uri);
+        if (documentFile != null && documentFile.exists()) {
+            documentFile.delete();
         }
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         // 如果正在使用这个音源，则删除这个音源解压后的文件
-        if (sharedPreferences.getString("sound_list", "original").equals(str)) {
-            file = new File(context.getFilesDir().getAbsolutePath() + "/Sounds");
+        if (sharedPreferences.getString("sound_select", "original").equals(str)) {
+            File file = new File(context.getFilesDir().getAbsolutePath() + "/Sounds");
             if (file.isDirectory()) {
                 File[] listFiles = file.listFiles();
                 if (listFiles != null) {

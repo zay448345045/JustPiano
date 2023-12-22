@@ -1,9 +1,6 @@
 package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,9 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -34,11 +29,9 @@ import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.listener.ChangePasswordClick;
-import ly.pp.justpiano3.task.UserFaceChangeTask;
 import ly.pp.justpiano3.task.UserInfoChangeTask;
 import ly.pp.justpiano3.task.UsersInfoGetTask;
 import ly.pp.justpiano3.thread.PictureHandle;
-import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -151,10 +144,6 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
         }
     }
 
-    public Uri getUri() {
-        return Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/JustPiano", accountJpg));
-    }
-
     private void cropPicture(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -185,25 +174,24 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
                     if (!Environment.getExternalStorageState().equals("mounted")) {
                         Toast.makeText(this, "未找到存储卡，无法存储照片!", Toast.LENGTH_LONG).show();
                     } else {
-                        cropPicture(getUri());
+//                        cropPicture(getUri());
                     }
                     break;
                 case 2:
-                    if (intent != null) {
-                        Bundle extras = intent.getExtras();
-                        if (extras != null) {
-                            Bitmap bitmap = extras.getParcelable("data");
-                            faceImage.setImageDrawable(new BitmapDrawable(bitmap));
-                            String filePath = Environment.getExternalStorageDirectory() + "/JustPiano/" + accountJpg;
-                            try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
-                                bitmap.compress(CompressFormat.JPEG, 80, fileOutputStream);
-                                new UserFaceChangeTask(this).execute(
-                                        "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UploadFace", filePath, accountJpg);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+//                    if (intent != null) {
+//                        Bundle extras = intent.getExtras();
+//                        if (extras != null) {
+//                            Bitmap bitmap = extras.getParcelable("data");
+//                            faceImage.setImageDrawable(new BitmapDrawable(bitmap));
+//                            try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+//                                bitmap.compress(CompressFormat.JPEG, 80, fileOutputStream);
+//                                new UserFaceChangeTask(this).execute(
+//                                        "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UploadFace", filePath, accountJpg);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
             }
             super.onActivityResult(i, i2, intent);
         }

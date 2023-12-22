@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.task;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
 
     @Override
     protected Void doInBackground(String... objects) {
-        File dir = skinListPreference.context.getDir("Skin", Context.MODE_PRIVATE);
+        File dir = new File(skinListPreference.context.getFilesDir(), "Skins");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
             if (listFiles != null) {
@@ -29,7 +28,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
             }
         }
         if (!Objects.equals(objects[0], "original")) {
-            GZIPUtil.ZIPFileTo(skinListPreference.skinFile, dir.toString());
+            GZIPUtil.unzipFromUri(skinListPreference.context, skinListPreference.skinFile, dir.toString());
         }
         return null;
     }

@@ -53,7 +53,7 @@ public final class SkinListAdapter extends BaseAdapter {
         String skinKey = String.valueOf(skinKeyList[i]);
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(skinNameList[i]);
         Button button = view.findViewById(R.id.skin_dele);
-        if (skinKey.equals("original") || skinKey.equals("more")) {
+        if (skinKey.equals("original") || skinKey.equals("more") || skinKey.equals("select")) {
             button.setVisibility(View.INVISIBLE);
         } else {
             button.setVisibility(View.VISIBLE);
@@ -62,6 +62,8 @@ public final class SkinListAdapter extends BaseAdapter {
         button = view.findViewById(R.id.set_skin);
         if (skinKey.equals("more")) {
             button.setText("点击获取更多皮肤");
+        } else if (skinKey.equals("select")) {
+            button.setText("点击选择皮肤");
         } else {
             button.setText("设置皮肤");
         }

@@ -53,7 +53,7 @@ public final class SoundListAdapter extends BaseAdapter {
         String soundKey = String.valueOf(soundKeyList[i]);
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(soundNameList[i]);
         Button button = view.findViewById(R.id.skin_dele);
-        if (soundKey.equals("original") || soundKey.equals("more")) {
+        if (soundKey.equals("original") || soundKey.equals("more") || soundKey.equals("select")) {
             button.setVisibility(View.INVISIBLE);
         } else {
             button.setVisibility(View.VISIBLE);
@@ -62,10 +62,12 @@ public final class SoundListAdapter extends BaseAdapter {
         button = view.findViewById(R.id.set_skin);
         if (soundKey.equals("more")) {
             button.setText("点击获取更多音源");
+        } else if (soundKey.equals("select")) {
+            button.setText("点击选择音源");
         } else {
             button.setText("设置音源");
         }
-        button.setOnClickListener(new ChangeSoundClick(this, soundKey, i));
+        button.setOnClickListener(new ChangeSoundClick(this, soundKey));
         return view;
     }
 }

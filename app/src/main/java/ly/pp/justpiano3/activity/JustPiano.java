@@ -2,10 +2,13 @@ package ly.pp.justpiano3.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -192,11 +195,12 @@ public final class JustPiano extends BaseActivity implements Runnable {
         SoundEngineUtil.openFluidSynth();
         SoundEngineUtil.startAudioStreamNative();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String soundName = sharedPreferences.getString("sound_list", "original");
-        if (soundName.endsWith(".sf2")) {
+        String soundUri = sharedPreferences.getString("sound_select", "original");
+        DocumentFile soundFile = DocumentFile.fromSingleUri(this, Uri.parse(soundUri));
+        if (soundFile != null && soundFile.getName() != null && soundFile.getName().endsWith(".sf2")) {
             loading = "正在载入sf2声音资源...";
             runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
-            SoundEngineUtil.loadSf2(FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(soundName)));
+            SoundEngineUtil.loadSf2(FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, soundFile));
         }
         runOnUiThread(() -> {
             loadFinish = true;

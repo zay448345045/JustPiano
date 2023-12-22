@@ -266,10 +266,10 @@ object GlobalSetting {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         allFullScreenShow = sharedPreferences.getBoolean("all_full_screen_show", true)
         backgroundPic = sharedPreferences.getString("background_pic", "")!!
-        skinName = sharedPreferences.getString("skin_list", "original").toString()
+        skinName = sharedPreferences.getString("skin_select", "original").toString()
         skinName =
             if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)
-        soundName = sharedPreferences.getString("sound_list", "original").toString()
+        soundName = sharedPreferences.getString("sound_select", "original").toString()
         soundName = if (soundName == "original") "默认音源" else soundName.substring(
             soundName.lastIndexOf('/') + 1
         )

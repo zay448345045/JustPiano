@@ -159,9 +159,9 @@ public class ImageLoadUtil {
 
     public static Bitmap loadSkinImage(Context context, String str) {
         Bitmap bitmap = null;
-        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_list", "original").equals("original")) {
+        if (!PreferenceManager.getDefaultSharedPreferences(context).getString("skin_select", "original").equals("original")) {
             try {
-                bitmap = BitmapFactory.decodeFile(context.getDir("Skin", Context.MODE_PRIVATE) + "/" + str + ".png");
+                bitmap = BitmapFactory.decodeFile(context.getFilesDir() + "/Skins/" + str + ".png");
             } catch (Exception e) {
                 try {
                     return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".jpg"));
@@ -227,20 +227,20 @@ public class ImageLoadUtil {
         }
         if (backgroundBitmap != null) {
             activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), backgroundBitmap));
-        } else if (!PreferenceManager.getDefaultSharedPreferences(activity).getString("skin_list", "original").equals("original")) {
+        } else if (!PreferenceManager.getDefaultSharedPreferences(activity).getString("skin_select", "original").equals("original")) {
             Bitmap bitmap = null;
             try {
-                bitmap = BitmapFactory.decodeFile(activity.getDir("Skin", Context.MODE_PRIVATE) + "/ground.jpg");
+                bitmap = BitmapFactory.decodeFile(activity.getFilesDir() + "/Skins/ground.jpg");
             } catch (Exception ignored) {
             }
             if (bitmap == null) {
                 try {
-                    bitmap = BitmapFactory.decodeFile(activity.getDir("Skin", Context.MODE_PRIVATE) + "/ground.png");
+                    bitmap = BitmapFactory.decodeFile(activity.getFilesDir() + "/Skins/ground.png");
                 } catch (Exception ignored) {
                 }
                 if (bitmap == null) {
                     try {
-                        bitmap = BitmapFactory.decodeFile(activity.getDir("Skin", Context.MODE_PRIVATE) + "/ground.webp");
+                        bitmap = BitmapFactory.decodeFile(activity.getFilesDir() + "/Skins/ground.webp");
                     } catch (Exception ignored) {
                     }
                 }

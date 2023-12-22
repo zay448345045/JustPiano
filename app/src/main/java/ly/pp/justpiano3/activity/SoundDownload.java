@@ -38,45 +38,44 @@ public final class SoundDownload extends BaseActivity implements Callback {
     private TextView downloadText;
     private LinearLayout linearLayout;
     private int progress;
-    private int intentFlag;
 
-    public static void downloadSound(SoundDownload soundDownload, String soundId, String soundName, String soundType) {
+    public void downloadSound(String soundId, String soundName, String soundType) {
         File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundName + soundType);
         if (file.exists()) {
             file.delete();
         }
-        Message message = Message.obtain(soundDownload.handler);
+        Message message = Message.obtain(handler);
         message.what = 0;
-        if (soundDownload.handler != null) {
-            soundDownload.handler.sendMessage(message);
+        if (handler != null) {
+            handler.sendMessage(message);
         }
         FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType,
                 file, progress -> {
-                    soundDownload.progress = progress;
-                    Message message1 = Message.obtain(soundDownload.handler);
+                    this.progress = progress;
+                    Message message1 = Message.obtain(handler);
                     message1.what = 1;
-                    if (soundDownload.handler != null) {
-                        soundDownload.handler.sendMessage(message1);
+                    if (handler != null) {
+                        handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(soundDownload, soundName, soundType), () -> downloadFailHandle(soundDownload));
+                }, () -> downloadSuccessHandle(soundName, soundType), () -> downloadFailHandle());
     }
 
-    private static void downloadSuccessHandle(SoundDownload soundDownload, String soundName, String soundType) {
-        Message successMessage = Message.obtain(soundDownload.handler);
+    private void downloadSuccessHandle(String soundName, String soundType) {
+        Message successMessage = Message.obtain(handler);
         successMessage.what = 2;
-        if (soundDownload.handler != null) {
+        if (handler != null) {
             Bundle bundle = new Bundle();
             bundle.putString("name", soundName);
             bundle.putString("type", soundType);
             successMessage.setData(bundle);
-            soundDownload.handler.sendMessage(successMessage);
+            handler.sendMessage(successMessage);
         }
     }
 
-    private static void downloadFailHandle(SoundDownload soundDownload) {
-        Message failMessage = Message.obtain(soundDownload.handler);
+    private void downloadFailHandle() {
+        Message failMessage = Message.obtain(handler);
         failMessage.what = 3;
-        soundDownload.handler.sendMessage(failMessage);
+        handler.sendMessage(failMessage);
     }
 
     public void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
@@ -122,7 +121,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
             }
 
             Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            edit.putString("sound_list", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
+            edit.putString("sound_select", Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName);
             edit.apply();
             if (soundFileName.endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
@@ -134,7 +133,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 }
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFileName.endsWith(".sf2")) {
-                String newSf2Path = FileUtil.INSTANCE.copyFileToAppFilesDir(this, new File(
+                String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, new File(
                         Environment.getExternalStorageDirectory() + "/JustPiano/Sounds/" + soundFileName));
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
@@ -194,11 +193,6 @@ public final class SoundDownload extends BaseActivity implements Callback {
         if (jpProgressBar.isShowing()) {
             jpProgressBar.dismiss();
         }
-        if (intentFlag == Intent.FILL_IN_ACTION) {
-            Intent intent = new Intent();
-            intent.setClass(this, MainMode.class);
-            startActivity(intent);
-        }
         finish();
     }
 
@@ -206,7 +200,6 @@ public final class SoundDownload extends BaseActivity implements Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skin_list);
-        intentFlag = getIntent().getFlags();
         layoutInflater = getLayoutInflater();
         jpProgressBar = new JPProgressBar(this);
         handler = new Handler(this);

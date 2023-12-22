@@ -236,7 +236,7 @@
     <public name="room_info" id="2130903103" type="layout" />
     <public name="searchsongs" id="2130903104" type="layout" />
     <public name="showtopinfo" id="2130903105" type="layout" />
-    <public name="skin_list" id="2130903106" type="layout" />
+    <public name="skin_select" id="2130903106" type="layout" />
     <public name="skin_view" id="2130903107" type="layout" />
     <public name="song_view" id="2130903108" type="layout" />
     <public name="user_info" id="2130903148" type="layout" />

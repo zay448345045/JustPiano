@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
@@ -27,7 +26,6 @@ import com.babyte.breakpad.BaByteBreakpad;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
 
 import kotlin.Unit;
@@ -158,24 +156,8 @@ public final class JPApplication extends Application {
             editor.putString("note_size", "1");
             editor.putString("b_s_vol", "0.8");
             editor.putString("temp_speed", "1.0");
-            editor.putString("sound_list", "original");
+            editor.putString("sound_select", "original");
             editor.apply();
-
-            // 4.33版本的音源为wav格式，不兼容后续的mp3格式，需要删掉4.33版本存储的音源
-            File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-            if (file.isDirectory()) {
-                File[] files = file.listFiles(pathname -> {
-                    String filename = pathname.getName().toLowerCase();
-                    return filename.endsWith(".ss");
-                });
-                if (files != null) {
-                    for (File fileTemp : files) {
-                        if (fileTemp.exists()) {
-                            fileTemp.delete();
-                        }
-                    }
-                }
-            }
         }
         // 4.6版本 数据库版本号为44
         // 4.7版本后，数据库的版本号为app的versionCode
