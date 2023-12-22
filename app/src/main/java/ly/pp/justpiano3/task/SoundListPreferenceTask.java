@@ -90,6 +90,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
             Toast.makeText(soundListPreference.context, Objects.equals("error", result)
                     ? "音源设置失败!" : "音源设置成功!", Toast.LENGTH_SHORT).show();
         }
+        soundListPreference.closeDialog();
     }
 
     @Override

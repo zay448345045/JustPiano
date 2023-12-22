@@ -45,7 +45,7 @@ public final class SkinListPreference extends DialogPreference {
         this.context = context;
     }
 
-    private void loadSkinList() {
+    public void loadSkinList() {
         File skinsDir = new File(context.getExternalFilesDir(null), "Skins");
         if (!skinsDir.exists()) {
             skinsDir.mkdirs();
@@ -61,9 +61,9 @@ public final class SkinListPreference extends DialogPreference {
         }
         skinNameList[size] = "默认皮肤";
         skinKeyList[size] = "original";
-        skinNameList[size + 1] = "选择皮肤...";
+        skinNameList[size + 1] = "选择本地皮肤...";
         skinKeyList[size + 1] = "select";
-        skinNameList[size + 2] = "更多皮肤...";
+        skinNameList[size + 2] = "下载更多皮肤...";
         skinKeyList[size + 2] = "more";
     }
 
@@ -109,7 +109,8 @@ public final class SkinListPreference extends DialogPreference {
             ImageLoadUtil.setBackground(((PreferenceActivity) context));
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
-        setSummary(GlobalSetting.INSTANCE.getSkinName());
+        FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(skinKey));
+        setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
     }
 
     @Override
@@ -128,5 +129,11 @@ public final class SkinListPreference extends DialogPreference {
         skinListView.setAdapter(skinListAdapter);
         linearLayout.addView(skinListView);
         builder.setView(linearLayout);
+    }
+
+    public void closeDialog() {
+        if (getDialog() != null && getDialog().isShowing()) {
+            getDialog().dismiss();
+        }
     }
 }

@@ -74,6 +74,24 @@ object FileUtil {
     }
 
     fun getUriInfo(context: Context, uri: Uri): UriInfo {
+        return if ("content".equals(uri.scheme, ignoreCase = true)) {
+            getUriInfoFromContent(context, uri)
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            getUriInfoFromFile(uri)
+        } else {
+            UriInfo(uri, null, null, null)
+        }
+    }
+
+    private fun getUriInfoFromFile(uri: Uri): UriInfo {
+        val file = File(uri.path!!)
+        val displayName = file.name
+        val fileSize = if (file.isFile) file.length() else null
+        val modifiedTime = if (file.isFile) file.lastModified() else null
+        return UriInfo(uri, displayName, fileSize, modifiedTime)
+    }
+
+    private fun getUriInfoFromContent(context: Context, uri: Uri): UriInfo {
         val contentResolver = context.contentResolver
         val queryCursor = contentResolver.query(
             uri,

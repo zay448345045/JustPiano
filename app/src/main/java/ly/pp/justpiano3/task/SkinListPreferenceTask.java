@@ -39,6 +39,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
             skinListPreference.jpProgressBar.cancel();
         }
         Toast.makeText(skinListPreference.context, "皮肤设置成功!", Toast.LENGTH_SHORT).show();
+        skinListPreference.closeDialog();
     }
 
     @Override

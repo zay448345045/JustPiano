@@ -29,13 +29,13 @@ object GlobalSetting {
     /**
      * 当前皮肤名称
      */
-    var skinName: String = "默认皮肤"
+    var skin: String = "original"
         private set
 
     /**
      * 当前音源名称
      */
-    var soundName: String = "默认音源"
+    var sound: String = "original"
         private set
 
     /**
@@ -266,13 +266,8 @@ object GlobalSetting {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         allFullScreenShow = sharedPreferences.getBoolean("all_full_screen_show", true)
         backgroundPic = sharedPreferences.getString("background_pic", "")!!
-        skinName = sharedPreferences.getString("skin_select", "original").toString()
-        skinName =
-            if (skinName == "original") "默认皮肤" else skinName.substring(skinName.lastIndexOf('/') + 1)
-        soundName = sharedPreferences.getString("sound_select", "original").toString()
-        soundName = if (soundName == "original") "默认音源" else soundName.substring(
-            soundName.lastIndexOf('/') + 1
-        )
+        skin = sharedPreferences.getString("skin_select", "original").toString()
+        sound = sharedPreferences.getString("sound_select", "original").toString()
         if (online) {
             tempSpeed = 1f
             autoPlay = true

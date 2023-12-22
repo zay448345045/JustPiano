@@ -42,7 +42,7 @@ public final class SoundListPreference extends DialogPreference {
         this.context = context;
     }
 
-    private void loadSoundList() {
+    public void loadSoundList() {
         File soundsDir = new File(context.getExternalFilesDir(null), "Sounds");
         if (!soundsDir.exists()) {
             soundsDir.mkdirs();
@@ -58,9 +58,9 @@ public final class SoundListPreference extends DialogPreference {
         }
         soundNameList[size] = "默认音源";
         soundKeyList[size] = "original";
-        soundNameList[size + 1] = "选择音源...";
+        soundNameList[size + 1] = "选择本地音源...";
         soundKeyList[size + 1] = "select";
-        soundNameList[size + 2] = "更多音源...";
+        soundNameList[size + 2] = "下载更多音源...";
         soundKeyList[size + 2] = "more";
     }
 
@@ -104,7 +104,8 @@ public final class SoundListPreference extends DialogPreference {
             persistString(soundKey);
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
-        setSummary(GlobalSetting.INSTANCE.getSoundName());
+        FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(soundKey));
+        setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
     }
 
     @Override
@@ -123,5 +124,11 @@ public final class SoundListPreference extends DialogPreference {
         listView.setAdapter(soundListAdapter);
         linearLayout.addView(listView);
         builder.setView(linearLayout);
+    }
+
+    public void closeDialog() {
+        if (getDialog() != null && getDialog().isShowing()) {
+            getDialog().dismiss();
+        }
     }
 }

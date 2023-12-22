@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -25,6 +26,7 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.SkinListPreferenceTask;
+import ly.pp.justpiano3.task.SoundListPreferenceTask;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -34,6 +36,7 @@ import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
+import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.MidiDeviceListener {
 
@@ -84,11 +87,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
             Preference skinPreference = findPreference("skin_select");
             if (skinPreference != null) {
-                skinPreference.setSummary(GlobalSetting.INSTANCE.getSkinName());
+                skinPreference.setSummary(GlobalSetting.INSTANCE.getSkin());
             }
             Preference soundPreference = findPreference("sound_select");
             if (soundPreference != null) {
-                soundPreference.setSummary(GlobalSetting.INSTANCE.getSoundName());
+                soundPreference.setSummary(GlobalSetting.INSTANCE.getSound());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -123,15 +126,15 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
             // 皮肤、音源选择器初始化
             registerFilePickerPreference(this, "skin_select", false,
-                    "默认皮肤", GlobalSetting.INSTANCE.getBackgroundPic(), uriInfo -> {
-                        if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".ps"))) {
+                    "默认皮肤", GlobalSetting.INSTANCE.getSkin(), uriInfo -> {
+                        if (uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".ps")) {
                             Toast.makeText(getActivity(), "请选择合法的ps格式文件", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         return true;
                     });
             registerFilePickerPreference(this, "sound_select", false,
-                    "默认音源", GlobalSetting.INSTANCE.getBackgroundPic(), uriInfo -> {
+                    "默认音源", GlobalSetting.INSTANCE.getSound(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".ss")
                                 && !uriInfo.getDisplayName().endsWith(".sf2"))) {
                             Toast.makeText(getActivity(), "请选择合法的ss或sf2格式文件", Toast.LENGTH_SHORT).show();
@@ -249,12 +252,12 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                                                      String defaultSummary, String uri, Predicate<FileUtil.UriInfo> predicate) {
         Preference preference = preferenceFragment.findPreference(key);
         if (preference != null) {
-            if (uri.isEmpty()) {
+            if (TextUtils.isEmpty(uri)) {
                 preference.setSummary(defaultSummary);
             } else {
                 FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.INSTANCE.getFolderUriInfo(preferenceFragment.getActivity(), Uri.parse(uri))
                         : FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
-                preference.setSummary(uriInfo.getDisplayName() == null ? defaultSummary : uriInfo.getDisplayName());
+                preference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? defaultSummary : uriInfo.getDisplayName());
             }
             if (preference instanceof FilePickerPreference) {
                 FilePickerPreference filePickerPreference = (FilePickerPreference) preference;
@@ -277,12 +280,13 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
             FileUtil.UriInfo uriInfo = uriInfoList.get(0);
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
-            if (value == null || uriInfo == null || uriInfo.getUri() != null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
+            if (value == null || uriInfo == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
                 return;
             }
             try {
-                getContentResolver().takePersistableUriPermission(uriInfo.getUri(), data.getFlags());
-            } catch (SecurityException e) {
+                int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                getContentResolver().takePersistableUriPermission(uriInfo.getUri(), takeFlags);
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "持久化文件权限出错", Toast.LENGTH_SHORT).show();
                 return;
@@ -293,6 +297,9 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 ((SkinListPreference) value.first).skinKey = uriInfo.getUri().toString();
                 ((SkinListPreference) value.first).skinFile = uriInfo.getUri();
                 new SkinListPreferenceTask(((SkinListPreference) value.first)).execute(uriInfo.getUri().toString());
+            } else if (value.first instanceof SoundListPreference) {
+                ((SoundListPreference) value.first).soundKey = uriInfo.getUri().toString();
+                new SoundListPreferenceTask(((SoundListPreference) value.first)).execute(uriInfo.getUri().toString());
             }
             if (Objects.equals(value.first.getKey(), "background_pic")) {
                 GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
