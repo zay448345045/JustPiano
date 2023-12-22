@@ -6,12 +6,14 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import ly.pp.justpiano3.utils.FilePickerUtil;
 
 public final class FilePickerPreference extends Preference {
+    private static final int BUTTON_ID = View.generateViewId();
     private Activity activity;
     /**
      * 是否是目录选择，默认false
@@ -26,32 +28,31 @@ public final class FilePickerPreference extends Preference {
     public FilePickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         defaultButton = new Button(context);
+        defaultButton.setFocusable(false);
         defaultButton.setText("恢复默认");
     }
 
     @Override
     protected void onBindView(View view) {
         super.onBindView(view);
-        // 检查按钮是否已经添加过（有父级），防止每次调用onBindView时重复添加
-        if (defaultButton.getParent() != null) {
+        if (view.findViewById(BUTTON_ID) != null) {
             return;
+        }
+        // 检查按钮是否已经添加到一个父视图，如果是，先从父视图移除
+        if (defaultButton.getParent() != null) {
+            ((ViewGroup) defaultButton.getParent()).removeView(defaultButton);
         }
         LinearLayout layout = (LinearLayout) view;
         layout.setOrientation(LinearLayout.HORIZONTAL);
+        layout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
-        layout.addView(defaultButton, params);
-        layout.setOnClickListener(v -> {
-            if (activity != null) {
-                if (folderPicker) {
-                    FilePickerUtil.openFolderPicker(activity, getKey());
-                } else {
-                    FilePickerUtil.openFilePicker(activity, false, getKey());
-                }
-            }
-        });
+        if (defaultButton.getParent() == null) {
+            defaultButton.setId(BUTTON_ID);
+            layout.addView(defaultButton, params);
+        }
     }
 
     public void setActivity(Activity activity) {
@@ -69,5 +70,17 @@ public final class FilePickerPreference extends Preference {
 
     public void setDefaultButtonClickListener(View.OnClickListener onClickListener) {
         defaultButton.setOnClickListener(onClickListener);
+    }
+
+    @Override
+    protected void onClick() {
+        super.onClick();
+        if (activity != null) {
+            if (folderPicker) {
+                FilePickerUtil.openFolderPicker(activity, getKey());
+            } else {
+                FilePickerUtil.openFilePicker(activity, false, getKey());
+            }
+        }
     }
 }

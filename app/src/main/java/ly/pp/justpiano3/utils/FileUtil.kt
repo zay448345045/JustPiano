@@ -73,8 +73,10 @@ object FileUtil {
         return moveSuccess
     }
 
-    fun getUriInfo(context: Context, uri: Uri): UriInfo {
-        return if ("content".equals(uri.scheme, ignoreCase = true)) {
+    fun getUriInfo(context: Context, uri: Uri?): UriInfo {
+        return if (uri == null) {
+            UriInfo(null, null, null, null)
+        } else if ("content".equals(uri.scheme, ignoreCase = true)) {
             getUriInfoFromContent(context, uri)
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
             getUriInfoFromFile(uri)
@@ -136,45 +138,17 @@ object FileUtil {
         return UriInfo(uri, displayName, fileSize, modifiedTime)
     }
 
-    fun getFolderUriInfo(context: Context, uri: Uri): UriInfo {
-        val contentResolver = context.contentResolver
-        val queryCursor = contentResolver.query(
-            uri,
-            arrayOf(
-                DocumentsContract.Document.COLUMN_DISPLAY_NAME,
-                DocumentsContract.Document.COLUMN_LAST_MODIFIED,
-                DocumentsContract.Document.COLUMN_MIME_TYPE
-            ),
-            null,
-            null,
-            null
-        )
-        var displayName: String? = null
-        var modifiedTime: Long? = null
-        var mimeType: String? = null
-        queryCursor.use { cursor ->
-            if (cursor != null && cursor.moveToFirst()) {
-                val nameIndex =
-                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
-                val modifiedIndex =
-                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
-                val mimeTypeIndex =
-                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
-
-                if (nameIndex != -1) {
-                    displayName = cursor.getString(nameIndex)
-                }
-                if (modifiedIndex != -1) {
-                    modifiedTime = cursor.getLong(modifiedIndex)
-                }
-                if (mimeTypeIndex != -1) {
-                    mimeType = cursor.getString(mimeTypeIndex)
-                }
-            }
+    fun getFolderUriInfo(context: Context, uri: Uri?): UriInfo {
+        if (uri == null) {
+            return UriInfo(null, null, null, null)
         }
-        val isDirectory = mimeType == DocumentsContract.Document.MIME_TYPE_DIR
-        val fileSize: Long? = if (isDirectory) null else 0
-        return UriInfo(uri, displayName, fileSize, modifiedTime)
+        val documentFile = DocumentFile.fromTreeUri(context, uri)
+        if (documentFile != null && documentFile.isDirectory) {
+            val displayName = documentFile.name
+            val modifiedTime = documentFile.lastModified()
+            return UriInfo(uri, displayName, 0L, modifiedTime)
+        }
+        return UriInfo(null, null, null, null)
     }
 
     fun downloadFile(

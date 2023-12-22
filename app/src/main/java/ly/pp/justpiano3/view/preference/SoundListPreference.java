@@ -93,6 +93,10 @@ public final class SoundListPreference extends DialogPreference {
             }
         }
         loadSoundList();
+        updateSoundList();
+    }
+
+    public void updateSoundList() {
         soundListAdapter.updateSoundList(soundNameList, soundKeyList);
         soundListAdapter.notifyDataSetChanged();
     }

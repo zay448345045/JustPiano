@@ -95,6 +95,10 @@ public final class SkinListPreference extends DialogPreference {
             }
         }
         loadSkinList();
+        updateSkinList();
+    }
+
+    public void updateSkinList() {
         skinListAdapter.updateSkinList(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
     }

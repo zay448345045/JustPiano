@@ -18,7 +18,6 @@ import androidx.core.util.Pair;
 import androidx.core.util.Predicate;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -142,6 +141,9 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                         }
                         return true;
                     });
+            registerFilePickerPreference(this, "records_save_path", true,
+                    "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
+                    GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
         }
     }
 
@@ -183,9 +185,6 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
-            registerFilePickerPreference(this, "records_save_path", true,
-                    "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
             Preference soundDelayPreference = findPreference("sound_delay");
             if (soundDelayPreference != null) {
                 soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -274,13 +273,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE || requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE)
                 && resultCode == Activity.RESULT_OK) {
-            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
-            if (uriInfoList.size() != 1) {
-                return;
-            }
-            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+            FileUtil.UriInfo uriInfo = requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE
+                    ? FileUtil.INSTANCE.getFolderUriInfo(this, data.getData())
+                    : FileUtil.INSTANCE.getUriInfo(this, data.getData());
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
-            if (value == null || uriInfo == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
+            if (value == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
                 return;
             }
             try {
@@ -305,16 +302,20 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
                 ImageLoadUtil.setBackground(this);
             }
-        } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE) {
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("skin_select");
             if (value != null && value.first instanceof SkinListPreference) {
                 ((SkinListPreference) value.first).loadSkinList();
+                ((SkinListPreference) value.first).updateSkinList();
             }
-        } else if (requestCode == SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            ImageLoadUtil.setBackground(this);
+        } else if (requestCode == SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE) {
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("sound_select");
             if (value != null && value.first instanceof SoundListPreference) {
                 ((SoundListPreference) value.first).loadSoundList();
+                ((SoundListPreference) value.first).updateSoundList();
             }
+            ImageLoadUtil.setBackground(this);
         }
     }
 
