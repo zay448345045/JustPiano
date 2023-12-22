@@ -37,7 +37,7 @@ public final class JPDialogBuilder {
     private View inflate;
     private int width = 360;
     private final Context context;
-    private OnClickListener listener2;
+    private OnClickListener firstButtonOnClickListener;
     private String title;
     private String message;
     private String positiveText;
@@ -69,7 +69,7 @@ public final class JPDialogBuilder {
 
     public JPDialogBuilder setFirstButton(String str, OnClickListener onClickListener) {
         positiveText = str;
-        listener2 = onClickListener;
+        firstButtonOnClickListener = onClickListener;
         return this;
     }
 
@@ -99,8 +99,8 @@ public final class JPDialogBuilder {
         if (positiveText != null) {
             ((Button) inflate.findViewById(R.id.positiveButton)).setText(positiveText);
             inflate.findViewById(R.id.positiveButton).setEnabled(!positiveButtonDisabled);
-            if (listener2 != null) {
-                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(jpDialog, DialogInterface.BUTTON_POSITIVE));
+            if (firstButtonOnClickListener != null) {
+                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> firstButtonOnClickListener.onClick(jpDialog, DialogInterface.BUTTON_POSITIVE));
             }
         } else {
             inflate.findViewById(R.id.positiveButton).setVisibility(View.GONE);

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -70,7 +71,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
                 intent.setClass(this, InfoShowActivity.class);
                 intent.putExtra("title", R.string.update_log);
                 intent.putExtra("info", R.string.about);
-                startActivityForResult(intent, 0);
+                startActivity(intent);
                 return;
             case R.id.listen:
                 intent.setClass(this, RecordFiles.class);
@@ -149,6 +150,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         if (newHelp) {
             findViewById(R.id.new_help).setVisibility(View.VISIBLE);
         }
+        newVersionFirstTimeDialogShowHandle(sharedPreferences);
         findViewById(R.id.local_game).setOnClickListener(this);
         findViewById(R.id.online_game).setOnClickListener(this);
         findViewById(R.id.settings).setOnClickListener(this);
@@ -169,6 +171,26 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
             }
+        }
+    }
+
+    private void newVersionFirstTimeDialogShowHandle(SharedPreferences sharedPreferences) {
+        int newVersionFirstTime = sharedPreferences.getInt("new_version_first_time", 0);
+        if (newVersionFirstTime < BuildConfig.VERSION_CODE) {
+            sharedPreferences.edit().putInt("new_version_first_time", BuildConfig.VERSION_CODE).apply();
+            new JPDialogBuilder(this)
+                    .setTitle(BuildConfig.VERSION_NAME + "版本新功能引导")
+                    .setMessage("1、存储权限移除，停止读取SD卡的JustPiano目录\n2、xxxx待补充")
+                    .setFirstButton("更新日志", ((dialog, which) -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent();
+                        intent.setClass(this, InfoShowActivity.class);
+                        intent.putExtra("title", R.string.update_log);
+                        intent.putExtra("info", R.string.about);
+                        startActivity(intent);
+                    }))
+                    .setSecondButton("确定", (dialog, which) -> dialog.dismiss())
+                    .buildAndShowDialog();
         }
     }
 }
