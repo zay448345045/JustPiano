@@ -130,34 +130,34 @@ public final class SkinDownload extends BaseActivity implements Callback {
     public boolean handleMessage(Message message) {
         if (!Thread.currentThread().isInterrupted()) {
             switch (message.what) {
-                case 0:
+                case 0 -> {
                     linearLayout.setVisibility(View.VISIBLE);
                     progressBar.setMax(100);
-                    break;
-                case 1:
+                }
+                case 1 -> {
                     progressBar.setProgress(progress);
                     downloadText.setText(progress + "%");
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
                     handleSkin(1, message.getData().getString("name"), "", 0, "");
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     linearLayout.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "网络连接错误!", Toast.LENGTH_LONG).show();
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.show();
                     jpProgressBar.setCancelable(false);
-                    break;
-                case 6:
+                }
+                case 6 -> {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "皮肤设置成功!", Toast.LENGTH_SHORT).show();
                     ImageLoadUtil.setBackground(this);
-                    break;
+                }
             }
         }
         return false;

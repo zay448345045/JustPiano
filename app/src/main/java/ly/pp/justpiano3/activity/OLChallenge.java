@@ -61,24 +61,21 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.startchallenge:
-                jpprogressBar.show();
-                OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
-                builder.setType(2);
-                sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
-                return;
-            case R.id.drawPrize:
-                builder = OnlineChallengeDTO.newBuilder();
-                builder.setType(5);
-                sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
-                return;
-            case R.id.viewChallenge:
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://" + OnlineUtil.WEBSITE_URL + "/pages/challenge.html"));
-                startActivity(intent);
-                return;
-            default:
+        int id = view.getId();
+        if (id == R.id.startchallenge) {
+            jpprogressBar.show();
+            OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
+            builder.setType(2);
+            sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
+        } else if (id == R.id.drawPrize) {
+            OnlineChallengeDTO.Builder builder;
+            builder = OnlineChallengeDTO.newBuilder();
+            builder.setType(5);
+            sendMsg(OnlineProtocolType.CHALLENGE, builder.build());
+        } else if (id == R.id.viewChallenge) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://" + OnlineUtil.WEBSITE_URL + "/pages/challenge.html"));
+            startActivity(intent);
         }
     }
 

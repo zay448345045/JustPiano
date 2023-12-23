@@ -82,15 +82,9 @@ public class NettyUtil {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case NETTY_INIT:
-                        handleNettyInit();
-                        break;
-                    case NETTY_CONNECT:
-                        handleConnect();
-                        break;
-                    case NETTY_SEND_MESSAGE:
-                        handleSendMessage(msg.obj);
-                        break;
+                    case NETTY_INIT -> handleNettyInit();
+                    case NETTY_CONNECT -> handleConnect();
+                    case NETTY_SEND_MESSAGE -> handleSendMessage(msg.obj);
                 }
             }
         };

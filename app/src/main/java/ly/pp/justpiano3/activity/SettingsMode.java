@@ -258,8 +258,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                         : FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
                 preference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? defaultSummary : uriInfo.getDisplayName());
             }
-            if (preference instanceof FilePickerPreference) {
-                FilePickerPreference filePickerPreference = (FilePickerPreference) preference;
+            if (preference instanceof FilePickerPreference filePickerPreference) {
                 filePickerPreference.setActivity(preferenceFragment.getActivity());
                 filePickerPreference.setFolderPicker(folderPicker);
                 filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist(defaultSummary, ""));

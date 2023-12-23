@@ -59,24 +59,18 @@ public final class ChattingAdapter extends BaseAdapter {
         TextView msgText = view.findViewById(R.id.ol_msg_text);
         String string = bundle.getString("U");
         switch (i2) {
-            case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE:
-                handleRecommendationMessage(view, userText, msgText, bundle, i);
-                break;
-            case OnlineProtocolType.MsgType.PUBLIC_MESSAGE:
-                handlePublicMessage(view, userText, msgText, bundle);
-                break;
-            case OnlineProtocolType.MsgType.PRIVATE_MESSAGE:
-                handlePrivateMessage(view, userText, msgText, bundle);
-                break;
-            case OnlineProtocolType.MsgType.SYSTEM_MESSAGE:
-                handleSystemMessage(view, userText, msgText, bundle);
-                break;
-            case OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE:
-                handleServerMessage(view, userText, msgText, bundle);
-                break;
-            case OnlineProtocolType.MsgType.STREAM_MESSAGE:
-                handleStreamMessage(view, userText, msgText, bundle);
-                break;
+            case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE ->
+                    handleRecommendationMessage(view, userText, msgText, bundle, i);
+            case OnlineProtocolType.MsgType.PUBLIC_MESSAGE ->
+                    handlePublicMessage(view, userText, msgText, bundle);
+            case OnlineProtocolType.MsgType.PRIVATE_MESSAGE ->
+                    handlePrivateMessage(view, userText, msgText, bundle);
+            case OnlineProtocolType.MsgType.SYSTEM_MESSAGE ->
+                    handleSystemMessage(view, userText, msgText, bundle);
+            case OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE ->
+                    handleServerMessage(view, userText, msgText, bundle);
+            case OnlineProtocolType.MsgType.STREAM_MESSAGE ->
+                    handleStreamMessage(view, userText, msgText, bundle);
         }
         // 投递通知到房间内处理
         if (i2 != 3 && userText != null) {
@@ -137,52 +131,52 @@ public final class ChattingAdapter extends BaseAdapter {
             TextView textView2 = view.findViewById(R.id.ol_user_mao);
             if (activity instanceof OLRoomActivity) {
                 switch (id) {
-                    case 1:
+                    case 1 -> {
                         textView.setTextColor(0xffFFFACD);
                         textView2.setTextColor(0xffFFFACD);
                         textView3.setTextColor(0xffFFFACD);
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         textView.setTextColor(0xff00ffff);
                         textView2.setTextColor(0xff00ffff);
                         textView3.setTextColor(0xff00ffff);
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         textView.setTextColor(0xffFF6666);
                         textView2.setTextColor(0xffFF6666);
                         textView3.setTextColor(0xffFF6666);
-                        break;
-                    case 4:
+                    }
+                    case 4 -> {
                         textView.setTextColor(0xffFFA500);
                         textView2.setTextColor(0xffFFA500);
                         textView3.setTextColor(0xffFFA500);
-                        break;
-                    case 5:
+                    }
+                    case 5 -> {
                         textView.setTextColor(0xffBA55D3);
                         textView2.setTextColor(0xffBA55D3);
                         textView3.setTextColor(0xffBA55D3);
-                        break;
-                    case 6:
+                    }
+                    case 6 -> {
                         textView.setTextColor(0xfffa60ea);
                         textView2.setTextColor(0xfffa60ea);
                         textView3.setTextColor(0xfffa60ea);
-                        break;
-                    case 7:
+                    }
+                    case 7 -> {
                         textView.setTextColor(0xffFFD700);
                         textView2.setTextColor(0xffFFD700);
                         textView3.setTextColor(0xffFFD700);
-                        break;
-                    case 8:
+                    }
+                    case 8 -> {
                         textView.setTextColor(0xffb7ff72);
                         textView2.setTextColor(0xffb7ff72);
                         textView3.setTextColor(0xffb7ff72);
-                        break;
-                    case 9:
+                    }
+                    case 9 -> {
                         textView.setTextColor(0xff000000);
                         textView2.setTextColor(0xff000000);
                         textView3.setTextColor(0xff000000);
-                        break;
-                    default:
+                    }
+                    default -> {
                         if (string.equals("琴娘")) {
                             textView.setTextColor(0xffffd8ec);
                             textView2.setTextColor(0xffffd8ec);
@@ -192,7 +186,7 @@ public final class ChattingAdapter extends BaseAdapter {
                             textView2.setTextColor(0xffffffff);
                             textView3.setTextColor(0xffffffff);
                         }
-                        break;
+                    }
                 }
             } else if (activity instanceof OLPlayHall) {
                 textView.setTextColor(0xffFFFACD);
@@ -207,101 +201,72 @@ public final class ChattingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
                 switch (string2) {
-                    case "//dalao0":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
-                        break;
-                    case "//7yxg":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.qiyexingguo);
-                        break;
-                    case "//family":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.family);
-                        break;
-                    case "//redheart":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_1);
-                        break;
-                    case "//greenheart":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_2);
-                        break;
-                    case "//purpleheart":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_3);
-                        break;
-                    case "//crawl":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.pazou);
-                        break;
-                    case "//greencircle":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.greenlight);
-                        break;
-                    case "//jpgq":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.icon);
-                        break;
-                    case "//soundstop":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.stop);
-                        break;
-                    case "//greensquare":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_down);
-                        break;
-                    case "//blacksquare":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_up);
-                        break;
-                    case "//rightarrow":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.for_arrow);
-                        break;
-                    case "//leftarrow":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.back_arrow);
-                        break;
-                    case "//music":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.music);
-                        break;
-                    case "//bluecircle":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.redlight);
-                        break;
-                    case "//jpgq1":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.jpgq1);
-                        break;
-                    case "//huaji":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.huaji);
-                        break;
-                    case "//bugaoxing":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bugaoxing);
-                        break;
-                    case "//yingyingying":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.yingyingying);
-                        break;
-                    case "//...":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.shenglve);
-                        break;
-                    case "//momotou":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.momotou);
-                        break;
-                    case "//heguozhi":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.heguozhi);
-                        break;
-                    case "//hen6":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.hen6);
-                        break;
-                    case "//buyaozheyang":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.buyaozheyang);
-                        break;
-                    case "//chigua":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.chigua);
-                        break;
-                    case "//waku":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.waku);
-                        break;
-                    case "//sleep":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.sleep);
-                        break;
-                    case "//bailan":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bailan);
-                        break;
-                    case "//duili":
-                        ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.duili);
-                        break;
-                    default:
+                    case "//dalao0" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
+                    case "//7yxg" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.qiyexingguo);
+                    case "//family" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.family);
+                    case "//redheart" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_1);
+                    case "//greenheart" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_2);
+                    case "//purpleheart" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_3);
+                    case "//crawl" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.pazou);
+                    case "//greencircle" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.greenlight);
+                    case "//jpgq" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.icon);
+                    case "//soundstop" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.stop);
+                    case "//greensquare" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_down);
+                    case "//blacksquare" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_up);
+                    case "//rightarrow" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.for_arrow);
+                    case "//leftarrow" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.back_arrow);
+                    case "//music" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.music);
+                    case "//bluecircle" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.redlight);
+                    case "//jpgq1" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.jpgq1);
+                    case "//huaji" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.huaji);
+                    case "//bugaoxing" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bugaoxing);
+                    case "//yingyingying" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.yingyingying);
+                    case "//..." ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.shenglve);
+                    case "//momotou" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.momotou);
+                    case "//heguozhi" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.heguozhi);
+                    case "//hen6" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.hen6);
+                    case "//buyaozheyang" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.buyaozheyang);
+                    case "//chigua" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.chigua);
+                    case "//waku" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.waku);
+                    case "//sleep" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.sleep);
+                    case "//bailan" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bailan);
+                    case "//duili" ->
+                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.duili);
+                    default -> {
                         textView.setTextColor(0xffffffff);
                         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffffff);
                         ((TextView) view.findViewById(R.id.ol_msg_text)).setTextColor(0xffffffff);
                         ((TextView) view.findViewById(R.id.ol_msg_text)).setText(string2);
+                    }
                 }
             }
         }

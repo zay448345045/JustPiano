@@ -32,24 +32,15 @@ public final class PictureHandle {
             return null;
         }
         try {
-            URL url;
-            switch (picType) {
-                case 0:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/file/NailImage/" + str);
-                    break;
-                case 1:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/file/Image/" + str);
-                    break;
-                case 2:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSkin" + str);
-                    break;
-                case 3:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + str);
-                    break;
-                default:
-                    url = null;
-                    break;
-            }
+            URL url = switch (picType) {
+                case 0 -> new URL("http://" + OnlineUtil.server + ":8910/file/NailImage/" + str);
+                case 1 -> new URL("http://" + OnlineUtil.server + ":8910/file/Image/" + str);
+                case 2 ->
+                        new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSkin" + str);
+                case 3 ->
+                        new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + str);
+                default -> null;
+            };
             if (url == null) {
                 return null;
             }

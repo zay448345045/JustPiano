@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Objects;
 
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
@@ -28,7 +29,7 @@ public final class FamilyHandler extends Handler {
         final OLFamily family = (OLFamily) weakReference.get();
         try {
             switch (message.what) {
-                case 1:
+                case 1 -> {
                     post(() -> {
                         family.peopleList.clear();
                         Bundle data = message.getData();
@@ -62,24 +63,17 @@ public final class FamilyHandler extends Handler {
                                 + "\n家族成立日期:" + data.getString("T")
                                 + "\n族长:" + data.getString("Z")
                                 + "\n家族总贡献:" + data.getString("C"));
-                        switch (data.getString("P")) {
-                            case "族长":
-                                family.position = FamilyPositionEnum.LEADER;
-                                break;
-                            case "副族长":
-                                family.position = FamilyPositionEnum.VICE_LEADER;
-                                break;
-                            case "族员":
-                                family.position = FamilyPositionEnum.MEMBER;
-                                break;
-                            default:
-                                family.position = FamilyPositionEnum.NOT_IN_FAMILY;
-                                break;
+                        switch (Objects.requireNonNull(data.getString("P"))) {
+                            case "族长" -> family.position = FamilyPositionEnum.LEADER;
+                            case "副族长" -> family.position = FamilyPositionEnum.VICE_LEADER;
+                            case "族员" -> family.position = FamilyPositionEnum.MEMBER;
+                            default -> family.position = FamilyPositionEnum.NOT_IN_FAMILY;
                         }
                         family.positionHandle();
                     });
                     return;
-                case 5:
+                }
+                case 5 -> {
                     post(() -> {
                         family.jpprogressBar.dismiss();
                         String info = message.getData().getString("I");
@@ -103,16 +97,20 @@ public final class FamilyHandler extends Handler {
                         }
                     });
                     return;
-                case 8:
+                }
+                case 8 -> {
                     post(() -> {
                         family.jpprogressBar.dismiss();
                         family.loadManageFamilyPopupWindow(message.getData());
                     });
                     return;
-                case 23:
+                }
+                case 23 -> {
                     post(() -> family.showInfoDialog(message.getData()));
                     return;
-                default:
+                }
+                default -> {
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

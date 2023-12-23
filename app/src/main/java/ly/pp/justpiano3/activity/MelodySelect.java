@@ -96,18 +96,10 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         jpDialogBuilder.setSecondButton("不再提示", (dialog, which) -> {
             SharedPreferences.Editor edit = sharedPreferences.edit();
             switch (i) {
-                case 0:
-                    edit.putBoolean("record_dialog", false);
-                    break;
-                case 1:
-                    edit.putBoolean("hand_dialog", false);
-                    break;
-                case 2:
-                    edit.putBoolean("auto_play_next_dialog", false);
-                    break;
-                case 3:
-                    edit.putBoolean("practise_dialog", false);
-                    break;
+                case 0 -> edit.putBoolean("record_dialog", false);
+                case 1 -> edit.putBoolean("hand_dialog", false);
+                case 2 -> edit.putBoolean("auto_play_next_dialog", false);
+                case 3 -> edit.putBoolean("practise_dialog", false);
             }
             edit.apply();
             dialog.dismiss();
@@ -232,123 +224,105 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.search_fast:
-                SongDao songDao = JPApplication.getSongDatabase().songDao();
-                DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(songSearchEditText.getText().toString());
-                pagedListLiveData.removeObservers(this);
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
-                pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
-                sortButton.setEnabled(false);
-                return;
-            case R.id.list_sort_b:
-                PopupWindow popupWindow = new JPPopupWindow(this);
-                View inflate = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
-                popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-                popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                inflate.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
-                inflate.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
-                popupWindow.setContentView(inflate);
-                sortPopupWindow = popupWindow;
-                popupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
-                return;
-            case R.id.lo_songs_order_name_asc:
-                songsSort(0);
-                return;
-            case R.id.lo_songs_order_name_des:
-                songsSort(1);
-                return;
-            case R.id.lo_songs_order_new:
-                songsSort(2);
-                return;
-            case R.id.lo_songs_order_recent:
-                songsSort(3);
-                return;
-            case R.id.lo_songs_order_diff_asc:
-                songsSort(4);
-                return;
-            case R.id.lo_songs_order_diff_des:
-                songsSort(5);
-                return;
-            case R.id.lo_songs_order_score_asc:
-                songsSort(6);
-                return;
-            case R.id.lo_songs_order_score_des:
-                songsSort(7);
-                return;
-            case R.id.lo_songs_order_length_asc:
-                songsSort(8);
-                return;
-            case R.id.lo_songs_order_length_des:
-                songsSort(9);
-                return;
-            case R.id.menu_list_fast:
-                PopupWindow popupWindow2 = new JPPopupWindow(this);
-                View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
-                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-                popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
-                inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
-                inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
-                inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
-                popupWindow2.setContentView(inflate2);
-                menuPopupWindow = popupWindow2;
-                popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
-                return;
-            case R.id.lo_extra_func_settings:
-                menuPopupWindow.dismiss();
-                SongPlay.INSTANCE.stopPlay();
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
-                return;
-            case R.id.lo_extra_func_sync:
-                menuPopupWindow.dismiss();
-                new SongSyncTask(this).execute();
-                return;
-            case R.id.lo_extra_func_midi_import:
-                menuPopupWindow.dismiss();
-                FilePickerUtil.openFilePicker(this, false, "midi_import");
-                return;
-            case R.id.lo_extra_func_data_export:
-                menuPopupWindow.dismiss();
-                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setCheckMessageUrl(false).setWidth(500).setTitle("数据导入导出");
-                jpDialogBuilder.setVisibleRadioGroup(true).setMessage(
-                        "此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，导入操作会覆盖当前本地收藏及所有弹奏分数，请谨慎操作");
-                RadioButton radioButton = new RadioButton(this);
-                radioButton.setText("选择文件夹进行数据导出，导出数据文件名：" + LocalDataImportExportTask.EXPORT_FILE_NAME);
-                radioButton.setTextSize(13);
-                radioButton.setTag(1);
-                radioButton.setHeight(150);
-                jpDialogBuilder.addRadioButton(radioButton);
-                radioButton = new RadioButton(this);
-                radioButton.setText("【此操作会覆盖当前数据】选择文件，导入数据至APP");
-                radioButton.setTextSize(13);
-                radioButton.setTag(2);
-                radioButton.setHeight(150);
-                jpDialogBuilder.addRadioButton(radioButton).setFirstButton("执行", (dialog, which) -> {
-                    dialog.dismiss();
-                    if (jpDialogBuilder.getRadioGroupCheckedId() == 2) {
-                        FilePickerUtil.openFilePicker(this, false, "db_import");
-                    } else if (jpDialogBuilder.getRadioGroupCheckedId() == 1) {
-                        FilePickerUtil.openFolderPicker(this, "db_export");
-                    }
-                });
-                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
-                jpDialogBuilder.buildAndShowDialog();
-                return;
-            default:
+        int id = view.getId();
+        if (id == R.id.search_fast) {
+            SongDao songDao = JPApplication.getSongDatabase().songDao();
+            DataSource.Factory<Integer, Song> dataSource = songDao.getSongsByNameKeywordsWithDataSource(songSearchEditText.getText().toString());
+            pagedListLiveData.removeObservers(this);
+            pagedListLiveData = songDao.getPageListByDatasourceFactory(dataSource);
+            pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
+            sortButton.setEnabled(false);
+        } else if (id == R.id.list_sort_b) {
+            PopupWindow popupWindow = new JPPopupWindow(this);
+            View inflate = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
+            popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+            popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            inflate.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
+            inflate.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
+            popupWindow.setContentView(inflate);
+            sortPopupWindow = popupWindow;
+            popupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
+        } else if (id == R.id.lo_songs_order_name_asc) {
+            songsSort(0);
+        } else if (id == R.id.lo_songs_order_name_des) {
+            songsSort(1);
+        } else if (id == R.id.lo_songs_order_new) {
+            songsSort(2);
+        } else if (id == R.id.lo_songs_order_recent) {
+            songsSort(3);
+        } else if (id == R.id.lo_songs_order_diff_asc) {
+            songsSort(4);
+        } else if (id == R.id.lo_songs_order_diff_des) {
+            songsSort(5);
+        } else if (id == R.id.lo_songs_order_score_asc) {
+            songsSort(6);
+        } else if (id == R.id.lo_songs_order_score_des) {
+            songsSort(7);
+        } else if (id == R.id.lo_songs_order_length_asc) {
+            songsSort(8);
+        } else if (id == R.id.lo_songs_order_length_des) {
+            songsSort(9);
+        } else if (id == R.id.menu_list_fast) {
+            PopupWindow popupWindow2 = new JPPopupWindow(this);
+            View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
+            popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+            popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
+            inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
+            inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
+            inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
+            popupWindow2.setContentView(inflate2);
+            menuPopupWindow = popupWindow2;
+            popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
+        } else if (id == R.id.lo_extra_func_settings) {
+            menuPopupWindow.dismiss();
+            SongPlay.INSTANCE.stopPlay();
+            Intent intent = new Intent();
+            intent.setClass(this, SettingsMode.class);
+            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+        } else if (id == R.id.lo_extra_func_sync) {
+            menuPopupWindow.dismiss();
+            new SongSyncTask(this).execute();
+        } else if (id == R.id.lo_extra_func_midi_import) {
+            menuPopupWindow.dismiss();
+            FilePickerUtil.openFilePicker(this, false, "midi_import");
+        } else if (id == R.id.lo_extra_func_data_export) {
+            menuPopupWindow.dismiss();
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setCheckMessageUrl(false).setWidth(500).setTitle("数据导入导出");
+            jpDialogBuilder.setVisibleRadioGroup(true).setMessage(
+                    "此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，导入操作会覆盖当前本地收藏及所有弹奏分数，请谨慎操作");
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setText("选择文件夹进行数据导出，导出数据文件名：" + LocalDataImportExportTask.EXPORT_FILE_NAME);
+            radioButton.setTextSize(13);
+            radioButton.setTag(1);
+            radioButton.setHeight(150);
+            jpDialogBuilder.addRadioButton(radioButton);
+            radioButton = new RadioButton(this);
+            radioButton.setText("【此操作会覆盖当前数据】选择文件，导入数据至APP");
+            radioButton.setTextSize(13);
+            radioButton.setTag(2);
+            radioButton.setHeight(150);
+            jpDialogBuilder.addRadioButton(radioButton).setFirstButton("执行", (dialog, which) -> {
+                dialog.dismiss();
+                if (jpDialogBuilder.getRadioGroupCheckedId() == 2) {
+                    FilePickerUtil.openFilePicker(this, false, "db_import");
+                } else if (jpDialogBuilder.getRadioGroupCheckedId() == 1) {
+                    FilePickerUtil.openFolderPicker(this, "db_export");
+                }
+            });
+            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+            jpDialogBuilder.buildAndShowDialog();
         }
     }
 

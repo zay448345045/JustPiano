@@ -3,16 +3,21 @@ plugins {
     id 'com.android.application'
     id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.android'
+    id 'img-optimizer'
 }
 
 android {
-    compileSdkVersion 33
-    ndkVersion "25.2.9519653"
-    buildToolsVersion '30.0.2'
+    compileSdk 34
+    namespace "ly.pp.justpiano3"
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
     defaultConfig {
         applicationId "ly.pp.justpiano3"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 52
         versionName "4.8"
         externalNativeBuild {
@@ -26,9 +31,19 @@ android {
         multiDexEnabled true
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     packagingOptions {
-        exclude 'META-INF/INDEX.LIST'
-        exclude 'META-INF/io.netty.versions.properties'
+        resources {
+            excludes += ['META-INF/INDEX.LIST', 'META-INF/io.netty.versions.properties']
+        }
     }
 
     signingConfigs {
@@ -47,6 +62,24 @@ android {
         }
     }
 
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs += ['src/main/java', 'build/generated/source/proto']
+            }
+            proto {
+                srcDir 'src/main/protobuf'
+                include '**/*.proto'
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -59,66 +92,49 @@ android {
             signingConfig signingConfigs.debug
             debuggable true
         }
+    }
 
-        externalNativeBuild {
-            cmake {
-                path "src/main/cpp/CMakeLists.txt"
-            }
-        }
-
-        lintOptions {
-            checkReleaseBuilds false
-            abortOnError false
-        }
-
-        sourceSets {
-            main {
-                java {
-                    srcDirs += ['src/main/java', 'build/generated/source/proto']
-                }
-                proto {
-                    srcDir 'src/main/protobuf'
-                    include '**/*.proto'
-                }
-            }
-        }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
-
-apply plugin: 'img-optimizer'
 
 optimizerOptions {
     triggerSize 5
     type "lossy"
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.annotation:annotation:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     // jlayer，用于解码mp3音源
     implementation 'javazoom:jlayer:1.0.1'
     // netty
-    implementation 'io.netty:netty-all:4.1.100.Final'
+    implementation 'io.netty:netty-all:4.1.104.Final'
     // protobuf，版本号最好和服务端保持一致，降低序列化问题风险
     implementation 'com.google.protobuf:protobuf-java:3.23.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     // okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.21"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.21"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0'
     // sqlite、Room库
-    implementation 'androidx.sqlite:sqlite:2.1.0'
-    implementation 'androidx.room:room-runtime:2.4.0'
-    implementation 'androidx.paging:paging-runtime:2.1.2'
-    annotationProcessor 'androidx.room:room-compiler:2.4.0'
-    implementation 'androidx.room:room-ktx:2.4.0'
-    kapt "androidx.room:room-compiler:2.4.0"
+    implementation 'androidx.sqlite:sqlite-ktx:2.4.0'
+    implementation 'androidx.room:room-runtime:2.6.1'
+    implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+    kapt 'androidx.room:room-compiler:2.6.1'
+    implementation 'androidx.room:room-ktx:2.6.1'
     // native-crash 用于上报C++异常闪退日志
     implementation 'io.github.BAByte:native-crash:1.0.6@aar'
     implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'

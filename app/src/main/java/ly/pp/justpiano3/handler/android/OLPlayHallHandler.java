@@ -46,7 +46,7 @@ public final class OLPlayHallHandler extends Handler {
     public void handleMessage(Message message) {
         OLPlayHall olPlayHall = (OLPlayHall) weakReference.get();
         switch (message.what) {
-            case 1:
+            case 1 -> {
                 post(() -> {
                     if (olPlayHall.msgList.size() > Consts.MAX_CHAT_SAVE_COUNT) {
                         olPlayHall.msgList.remove(0);
@@ -69,7 +69,8 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
                 });
                 return;
-            case 2:
+            }
+            case 2 -> {
                 Bundle data = message.getData();
                 data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
@@ -79,7 +80,8 @@ public final class OLPlayHallHandler extends Handler {
                 olPlayHall.startActivity(intent);
                 olPlayHall.finish();
                 return;
-            case 3:
+            }
+            case 3 -> {
                 post(() -> {
                     olPlayHall.roomList.clear();
                     Bundle data1 = message.getData();
@@ -90,10 +92,12 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.mo2831b(olPlayHall.roomListView, olPlayHall.roomList);
                 });
                 return;
-            case 4:
+            }
+            case 4 -> {
                 post(() -> Toast.makeText(olPlayHall, message.getData().getString("result"), Toast.LENGTH_SHORT).show());
                 return;
-            case 5:
+            }
+            case 5 -> {
                 post(() -> {
                     olPlayHall.friendList.clear();
                     Bundle data16 = message.getData();
@@ -107,7 +111,8 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.pageIsEnd = size < 20;
                 });
                 return;
-            case 6:
+            }
+            case 6 -> {
                 post(() -> {
                     olPlayHall.tabHost.setCurrentTab(1);
                     String string = message.getData().getString("U");
@@ -121,7 +126,8 @@ public final class OLPlayHallHandler extends Handler {
                     }
                 });
                 return;
-            case 7:
+            }
+            case 7 -> {
                 post(() -> {
                     olPlayHall.userInHallList.clear();
                     Bundle data13 = message.getData();
@@ -134,11 +140,12 @@ public final class OLPlayHallHandler extends Handler {
                     }
                 });
                 return;
-            case 8:
+            }
+            case 8 -> {
                 post(() -> {
                     String string = message.getData().getString("F");
                     switch (message.getData().getInt("T")) {
-                        case 0:
+                        case 0 -> {
                             if (!string.isEmpty()) {
                                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
                                 jpDialogBuilder.setTitle("好友请求");
@@ -163,35 +170,34 @@ public final class OLPlayHallHandler extends Handler {
                                 jpDialogBuilder.buildAndShowDialog();
                             }
                             return;
-                        case 1:
+                        }
+                        case 1 -> {
                             DialogUtil.setShowDialog(false);
                             string = message.getData().getString("F");
                             int i = message.getData().getInt("I");
                             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
                             jpDialogBuilder.setTitle("请求结果");
                             switch (i) {
-                                case 0:
-                                    jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
-                                    break;
-                                case 1:
-                                    jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
-                                    break;
-                                case 2:
-                                    jpDialogBuilder.setMessage("对方已经是你的好友!");
-                                    break;
-                                case 3:
+                                case 0 ->
+                                        jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
+                                case 1 -> jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
+                                case 2 -> jpDialogBuilder.setMessage("对方已经是你的好友!");
+                                case 3 -> {
                                     jpDialogBuilder.setTitle(message.getData().getString("title"));
                                     jpDialogBuilder.setMessage(message.getData().getString("Message"));
-                                    break;
+                                }
                             }
                             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                             jpDialogBuilder.buildAndShowDialog();
                             return;
-                        default:
+                        }
+                        default -> {
+                        }
                     }
                 });
                 return;
-            case 9:
+            }
+            case 9 -> {
                 post(() -> {
                     if (!DialogUtil.isShowDialog()) {
                         Bundle data14 = message.getData();
@@ -235,7 +241,8 @@ public final class OLPlayHallHandler extends Handler {
                     }
                 });
                 return;
-            case 10:
+            }
+            case 10 -> {
                 post(() -> {
                     Bundle data12 = message.getData();
                     OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
@@ -246,21 +253,18 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                 });
                 return;
-            case 11:
+            }
+            case 11 -> {
                 post(() -> {
                     Bundle data15 = message.getData();
                     int i = data15.getInt("result");
                     String[] msg = data15.getString("info").split("\n");
                     String str = "提示";
-                    String str2 = null;
-                    switch (i) {
-                        case 0:
-                            str2 = "确定";
-                            break;
-                        case 1:
-                            str2 = "开始考级";
-                            break;
-                    }
+                    String str2 = switch (i) {
+                        case 0 -> "确定";
+                        case 1 -> "开始考级";
+                        default -> null;
+                    };
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
                     if (msg.length > 1) {
                         jpDialogBuilder.setVisibleRadioGroup(true);
@@ -296,10 +300,12 @@ public final class OLPlayHallHandler extends Handler {
                     jpDialogBuilder.buildAndShowDialog();
                 });
                 return;
-            case 12:
+            }
+            case 12 -> {
                 post(() -> olPlayHall.mo2827a(message.getData()));
                 return;
-            case 13:
+            }
+            case 13 -> {
                 post(() -> {
                     Bundle data15 = message.getData();
                     Intent intent12 = new Intent(olPlayHall, PianoPlay.class);
@@ -314,7 +320,8 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.finish();
                 });
                 return;
-            case 21:
+            }
+            case 21 -> {
                 post(() -> {
                     Toast.makeText(olPlayHall, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
                     Intent intent1 = new Intent();
@@ -323,10 +330,13 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.finish();
                 });
                 return;
-            case 23:
+            }
+            case 23 -> {
                 post(() -> olPlayHall.showInfoDialog(message.getData()));
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 }

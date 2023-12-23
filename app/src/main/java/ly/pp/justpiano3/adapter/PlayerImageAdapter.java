@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
@@ -121,15 +122,9 @@ public final class PlayerImageAdapter extends BaseAdapter {
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;
             switch (RoomModeEnum.ofCode(olPlayRoom.getMode(), RoomModeEnum.NORMAL)) {
-                case COUPLE:
-                    olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;
-                    break;
-                case TEAM:
-                    olPlayRoom.currentHand = 0;
-                    break;
-                case NORMAL:
-                    olPlayRoom.currentHand = playerList.get(i).getInt("GR");
-                    break;
+                case COUPLE -> olPlayRoom.currentHand = (playerList.get(i).getInt("GR") + 12) % 2;
+                case TEAM -> olPlayRoom.currentHand = 0;
+                case NORMAL -> olPlayRoom.currentHand = playerList.get(i).getInt("GR");
             }
             if ("H".equals(olPlayRoom.playerKind)) {
                 olPlayRoom.playButton.setText("开始");
@@ -157,21 +152,21 @@ public final class PlayerImageAdapter extends BaseAdapter {
             textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.exit));
         }
         autoConnectWaitView.setVisibility("W".equals(string3) ? View.VISIBLE : View.INVISIBLE);
-        switch (string3) {
-            case "P":
+        switch (Objects.requireNonNull(string3)) {
+            case "P" -> {
                 textView2.setText("弹奏中");
                 textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.online));
-                break;
-            case "F":
+            }
+            case "F" -> {
                 textView2.setText("查看成绩");
                 textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.online));
-                break;
-            case "B":
+            }
+            case "B" -> {
                 textView2.setText("后台");
                 textView2.setBackgroundColor(ContextCompat.getColor(olPlayRoom, R.color.green_y));
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         int i6 = playerList.get(i).getInt("TR");
         int i7 = playerList.get(i).getInt("JA");
@@ -194,18 +189,18 @@ public final class PlayerImageAdapter extends BaseAdapter {
         textView2.setText(string);
         textView = view.findViewById(R.id.ol_player_hand);
         switch (RoomModeEnum.ofCode(olPlayRoom.getMode(), RoomModeEnum.NORMAL)) {
-            case NORMAL:
+            case NORMAL -> {
                 textView.setBackgroundResource(Consts.groupModeColor[0]);
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") + 12) % 2]);
-                break;
-            case TEAM:
+            }
+            case TEAM -> {
                 textView.setText(Consts.groups[(playerList.get(i).getInt("GR")) - 1]);
                 textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR")) - 1]);
-                break;
-            case COUPLE:
+            }
+            case COUPLE -> {
                 textView.setText(Consts.hand[(playerList.get(i).getInt("GR") % 2)]);
                 textView.setBackgroundResource(Consts.groupModeColor[(playerList.get(i).getInt("GR") - 1) / 2]);
-                break;
+            }
         }
         textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.userColor[i2]);
         imageView.setBackgroundResource(ColorUtil.filledUserColor[i2]);

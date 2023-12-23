@@ -68,19 +68,19 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         switch (str) {
-            case "0":
+            case "0" -> {
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "资料修改成功!", Toast.LENGTH_LONG).show();
-                break;
-            case "4":
+            }
+            case "4" -> {
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "密码中含有无法识别的特殊符号!", Toast.LENGTH_SHORT).show();
-                break;
-            case "5":
+            }
+            case "5" -> {
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "原密码有错!请再试一遍", Toast.LENGTH_SHORT).show();
-                break;
-            case "6":
+            }
+            case "6" -> {
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "密码修改成功!", Toast.LENGTH_LONG).show();
                 Editor edit = JPApplication.accountListSharedPreferences.edit();
@@ -98,11 +98,11 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 }
                 edit.apply();
                 OLBaseActivity.returnMainMode(usersInfo.get());
-                break;
-            default:
+            }
+            default -> {
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
-                break;
+            }
         }
     }
 

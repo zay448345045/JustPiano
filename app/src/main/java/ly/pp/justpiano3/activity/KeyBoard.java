@@ -140,7 +140,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
         int id = view.getId();
         if (id == R.id.keyboard1_layout || id == R.id.keyboard2_layout) {
             switch (action) {
-                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_DOWN -> {
                     if (id == R.id.keyboard1_layout) {
                         if (view.getHeight() - event.getY() < 30) {
                             reSize = true;
@@ -150,8 +150,8 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                             reSize = true;
                         }
                     }
-                    break;
-                case MotionEvent.ACTION_MOVE:
+                }
+                case MotionEvent.ACTION_MOVE -> {
                     float weight = event.getRawY() / (keyboard1Layout.getHeight() + keyboard2Layout.getHeight());
                     if (reSize && weight > 0.15f && weight < 0.85f) {
                         keyboard1Layout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -159,18 +159,17 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - weight));
                     }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
+                }
+                case MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) keyboard1Layout.getLayoutParams();
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putFloat("keyboard_weight", layoutParams.weight);
                     edit.apply();
                     reSize = false;
                     view.performClick();
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
         } else {
             if (action == MotionEvent.ACTION_DOWN) {
@@ -210,49 +209,38 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
         @Override
         public boolean handleMessage(Message msg) {
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            switch (msg.what) {
-                case R.id.keyboard1_count_down:
-                    firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() - 1);
-                    edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
-                    edit.apply();
-                    break;
-                case R.id.keyboard2_count_down:
-                    secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() - 1);
-                    edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
-                    edit.apply();
-                    break;
-                case R.id.keyboard1_count_up:
-                    firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() + 1);
-                    edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
-                    edit.apply();
-                    break;
-                case R.id.keyboard2_count_up:
-                    secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() + 1);
-                    edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
-                    edit.apply();
-                    break;
-                case R.id.keyboard1_move_left:
-                    firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() - 1);
-                    edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
-                    edit.apply();
-                    break;
-                case R.id.keyboard2_move_left:
-                    secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() - 1);
-                    edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
-                    edit.apply();
-                    break;
-                case R.id.keyboard1_move_right:
-                    firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() + 1);
-                    edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
-                    edit.apply();
-                    break;
-                case R.id.keyboard2_move_right:
-                    secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() + 1);
-                    edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
-                    edit.apply();
-                    break;
-                default:
-                    break;
+            if (msg.what == R.id.keyboard1_count_down) {
+                firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() - 1);
+                edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard2_count_down) {
+                secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() - 1);
+                edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard1_count_up) {
+                firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() + 1);
+                edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard2_count_up) {
+                secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() + 1);
+                edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard1_move_left) {
+                firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() - 1);
+                edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard2_move_left) {
+                secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() - 1);
+                edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard1_move_right) {
+                firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() + 1);
+                edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
+                edit.apply();
+            } else if (msg.what == R.id.keyboard2_move_right) {
+                secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() + 1);
+                edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
+                edit.apply();
             }
             return false;
         }
@@ -285,55 +273,51 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.keyboard_setting:
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
-                break;
-            case R.id.keyboard_record:
-                try {
-                    Button recordButton = (Button) view;
-                    if (!recordStart) {
-                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                        jpDialogBuilder.setTitle("提示");
-                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，存储位置可在设置中指定");
-                        jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
-                            dialogInterface.dismiss();
-                            String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
-                            recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
-                            recordFileName = date + "录音.wav";
-                            SoundEngineUtil.setRecordFilePath(recordFilePath);
-                            SoundEngineUtil.setRecord(true);
-                            recordStart = true;
-                            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
-                            recordButton.setText("■");
-                            recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
-                            recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
-                        });
-                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
-                        jpDialogBuilder.buildAndShowDialog();
+        int id = view.getId();
+        if (id == R.id.keyboard_setting) {
+            Intent intent = new Intent();
+            intent.setClass(this, SettingsMode.class);
+            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+        } else if (id == R.id.keyboard_record) {
+            try {
+                Button recordButton = (Button) view;
+                if (!recordStart) {
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("提示");
+                    jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，存储位置可在设置中指定");
+                    jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
+                        recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
+                        recordFileName = date + "录音.wav";
+                        SoundEngineUtil.setRecordFilePath(recordFilePath);
+                        SoundEngineUtil.setRecord(true);
+                        recordStart = true;
+                        Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
+                        recordButton.setText("■");
+                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
+                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
+                    });
+                    jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                    jpDialogBuilder.buildAndShowDialog();
+                } else {
+                    recordButton.setText("●");
+                    recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
+                    recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
+                    recordStart = false;
+                    SoundEngineUtil.setRecord(false);
+                    File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
+                    Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                            GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
+                    if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+                        Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                     } else {
-                        recordButton.setText("●");
-                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
-                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
-                        recordStart = false;
-                        SoundEngineUtil.setRecord(false);
-                        File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                        Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                                GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-                        if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
-                            Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-                break;
-            default:
-                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

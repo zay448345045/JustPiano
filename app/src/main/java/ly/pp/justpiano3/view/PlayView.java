@@ -84,7 +84,6 @@ public final class PlayView extends SurfaceView implements Callback {
     public Bitmap backgroundImage;
     public Bitmap barImage;
     public float positionAdd15AddAnim;
-    public int currentNotePitch;
     public Bitmap missImage;
     public Bitmap perfectImage;
     public Bitmap coolImage;
@@ -241,15 +240,9 @@ public final class PlayView extends SurfaceView implements Callback {
         longKeyboardImage = ImageLoadUtil.loadSkinImage(pianoPlay, "keyboard_long");
         nullImage = ImageLoadUtil.loadSkinImage(pianoPlay, "null");
         switch (GlobalSetting.INSTANCE.getRoughLine()) {
-            case 1:
-                roughLineImage = nullImage;
-                break;
-            case 2:
-                roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line1");
-                break;
-            case 3:
-                roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line");
-                break;
+            case 1 -> roughLineImage = nullImage;
+            case 2 -> roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line1");
+            case 3 -> roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line");
         }
         progressBarImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar");
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar_base");
@@ -547,22 +540,30 @@ public final class PlayView extends SurfaceView implements Callback {
                 while (i < 9) {
                     if (f >= ((float) (i - 1)) * widthDiv8 && f < ((float) i) * widthDiv8) {
                         switch (i) {
-                            case 1:
+                            case 1 -> {
                                 return 0;
-                            case 2:
+                            }
+                            case 2 -> {
                                 return 2;
-                            case 3:
+                            }
+                            case 3 -> {
                                 return 4;
-                            case 4:
+                            }
+                            case 4 -> {
                                 return 5;
-                            case 5:
+                            }
+                            case 5 -> {
                                 return 7;
-                            case 6:
+                            }
+                            case 6 -> {
                                 return 9;
-                            case 7:
+                            }
+                            case 7 -> {
                                 return 11;
-                            case 8:
+                            }
+                            case 8 -> {
                                 return 12;
+                            }
                         }
                     }
                     i++;
@@ -590,7 +591,7 @@ public final class PlayView extends SurfaceView implements Callback {
             Message message;
             long serialID = 2825651233768L;
             switch (gameType) {
-                case 4:
+                case 4 -> {
                     size2 = uploadTouchStatusList.size();
                     bArr = new byte[size2];
                     for (int i = 0; i < size2; i++) {
@@ -604,8 +605,8 @@ public final class PlayView extends SurfaceView implements Callback {
                     long crypt = (time >>> 12 | time << 52) ^ x;
                     builder1.setCode(crypt);
                     pianoPlay.sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     size2 = uploadTouchStatusList.size();
                     bArr = new byte[size2];
                     for (int i = 0; i < size2; i++) {
@@ -614,13 +615,13 @@ public final class PlayView extends SurfaceView implements Callback {
                     OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                     builder.setType(3);
                     builder.setStatusArray(GZIPUtil.toZIP(new String(bArr, StandardCharsets.UTF_8)));
-                    x = pianoPlay.times * serialID;
-                    time = EncryptUtil.getServerTime();
-                    crypt = (time >>> 12 | time << 52) ^ x;
+                    long x = pianoPlay.times * serialID;
+                    long time = EncryptUtil.getServerTime();
+                    long crypt = (time >>> 12 | time << 52) ^ x;
                     builder.setCode(crypt);
                     pianoPlay.sendMsg(OnlineProtocolType.CL_TEST, builder.build());
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     // 增加弹奏结果到本地数据库
                     ThreadPoolUtil.execute(() -> {
                         List<Song> songByPath = JPApplication.getSongDatabase().songDao().getSongByFilePath(songsPath);
@@ -648,13 +649,13 @@ public final class PlayView extends SurfaceView implements Callback {
                     }
                     OnlinePlayFinishDTO.Builder builder2 = OnlinePlayFinishDTO.newBuilder();
                     builder2.setStatusArray(GZIPUtil.arrayToZIP(bArr));
-                    x = pianoPlay.roomBundle.getByte("ID") * serialID;
-                    time = EncryptUtil.getServerTime();
-                    crypt = (time >>> 12 | time << 52) ^ x;
+                    long x = pianoPlay.roomBundle.getByte("ID") * serialID;
+                    long time = EncryptUtil.getServerTime();
+                    long crypt = (time >>> 12 | time << 52) ^ x;
                     builder2.setCode(crypt);
                     pianoPlay.sendMsg(OnlineProtocolType.PLAY_FINISH, builder2.build());
-                    break;
-                default:
+                }
+                default -> {
                     Intent intent = new Intent();
                     intent.setClass(pianoPlay, PlayFinish.class);
                     intent.putExtra("head", gameType);
@@ -681,7 +682,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
                     pianoPlay.startActivityForResult(intent, size2);
-                    break;
+                }
             }
         }
     }

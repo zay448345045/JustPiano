@@ -19,20 +19,19 @@ public final class OLSendMailClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (!(mainGameAdapter.activity instanceof OLPlayHallRoom)) {
+        if (!(mainGameAdapter.activity instanceof OLPlayHallRoom olPlayHallRoom)) {
             return;
         }
-        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) mainGameAdapter.activity;
         switch (message) {
-            case "":
+            case "" -> {
                 olPlayHallRoom.addFriends(to);
                 return;
-            case "'":
+            }
+            case "'" -> {
                 olPlayHallRoom.deleteCp(true);
                 return;
-            case "''":
-                olPlayHallRoom.letInFamily(to);
-                break;
+            }
+            case "''" -> olPlayHallRoom.letInFamily(to);
         }
         olPlayHallRoom.sendMail(to, 0);
     }

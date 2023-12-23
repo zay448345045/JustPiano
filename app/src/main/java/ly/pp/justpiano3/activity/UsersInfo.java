@@ -211,53 +211,48 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.user_face:
-                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("提示");
-                jpDialogBuilder.setMessage("当前版本暂不支持上传头像");
-                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
-                jpDialogBuilder.buildAndShowDialog();
+        int id = view.getId();
+        if (id == R.id.user_face) {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("提示");
+            jpDialogBuilder.setMessage("当前版本暂不支持上传头像");
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+            jpDialogBuilder.buildAndShowDialog();
+        } else if (id == R.id.password_button) {
+            JPDialogBuilder jpDialogBuilder;
+            View inflate = getLayoutInflater().inflate(R.layout.password_change, findViewById(R.id.dialog));
+            TextView originalPasswordTextView = inflate.findViewById(R.id.original_password);
+            TextView newPasswordTextView = inflate.findViewById(R.id.new_password);
+            TextView confirmPasswordTextView = inflate.findViewById(R.id.confirm_password);
+            CheckBox autoLoginCheckBox = inflate.findViewById(R.id.auto_login);
+            autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
+            CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
+            remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
+            jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("修改密码").loadInflate(inflate)
+                    .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
+                            newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
+                    .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
+                    .buildAndShowDialog();
+        } else if (id == R.id.modify_button) {
+            String charSequence = ageText.getText().toString();
+            signature = pSignText.getText().toString();
+            if (charSequence.startsWith("0")) {
+                Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
                 return;
-            case R.id.password_button:
-                View inflate = getLayoutInflater().inflate(R.layout.password_change, findViewById(R.id.dialog));
-                TextView originalPasswordTextView = inflate.findViewById(R.id.original_password);
-                TextView newPasswordTextView = inflate.findViewById(R.id.new_password);
-                TextView confirmPasswordTextView = inflate.findViewById(R.id.confirm_password);
-                CheckBox autoLoginCheckBox = inflate.findViewById(R.id.auto_login);
-                autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
-                CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
-                remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
-                jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("修改密码").loadInflate(inflate)
-                        .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
-                                newPasswordTextView, confirmPasswordTextView, autoLoginCheckBox, remNewPasswordCheckBox))
-                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
-                        .buildAndShowDialog();
-                return;
-            case R.id.modify_button:
-                String charSequence = ageText.getText().toString();
-                signature = pSignText.getText().toString();
-                if (charSequence.startsWith("0")) {
-                    Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                try {
-                    age = Integer.parseInt(charSequence);
-                } catch (Exception e) {
-                    age = 0;
-                }
-                if (age < 1900 || age > 2020) {
-                    Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
-                    return;
-                } else if (signature.length() > Consts.MAX_MESSAGE_COUNT) {
-                    Toast.makeText(this, "确定字数在五百字之内!", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    new UserInfoChangeTask(this).execute("M", null, null);
-                    return;
-                }
-            default:
+            }
+            try {
+                age = Integer.parseInt(charSequence);
+            } catch (Exception e) {
+                age = 0;
+            }
+            if (age < 1900 || age > 2020) {
+                Toast.makeText(this, "请输入正确的生年格式:1900-2020", Toast.LENGTH_LONG).show();
+            } else if (signature.length() > Consts.MAX_MESSAGE_COUNT) {
+                Toast.makeText(this, "确定字数在五百字之内!", Toast.LENGTH_SHORT).show();
+            } else {
+                new UserInfoChangeTask(this).execute("M", null, null);
+            }
         }
     }
 

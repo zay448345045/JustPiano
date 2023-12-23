@@ -96,7 +96,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
         jpApplication.setAccountName(accountX);
         jpApplication.setPassword(password);
         switch (i) {
-            case 0:
+            case 0 -> {
                 if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
                     Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -105,7 +105,8 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
                 startActivity(intent);
                 finish();
                 return;
-            case 4:
+            }
+            case 4 -> {
                 new JPDialogBuilder(this).setWidth(400).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
                     dialog.dismiss();
                     if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
@@ -117,11 +118,14 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
                     finish();
                 }).buildAndShowDialog();
                 return;
-            case 5:
+            }
+            case 5 -> {
                 new JPDialogBuilder(this).setTitle(title).setMessage(message)
                         .setFirstButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 
@@ -147,49 +151,45 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ol_login:
-                account = accountTextView.getText().toString();
-                password = passwordTextView.getText().toString();
-                if (account.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                OnlineUtil.server = changeServerCheckBox.isChecked() ? OnlineUtil.TEST_ONLINE_SERVER_URL : OnlineUtil.ONLINE_SERVER_URL;
-                if (BuildConfig.DEBUG && debugIpEditText != null && !debugIpEditText.getText().toString().isEmpty()) {
-                    OnlineUtil.server = debugIpEditText.getText().toString();
-                }
-                new LoginTask(this).execute();
+        int id = view.getId();
+        if (id == R.id.ol_login) {
+            account = accountTextView.getText().toString();
+            password = passwordTextView.getText().toString();
+            if (account.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
                 return;
-            case R.id.ol_register:
-                Intent intent = new Intent();
-                intent.setClass(this, Register.class);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.ol_change_account:
-                String string = sharedPreferences.getString("accountList", "");
-                List<String> arrayList = new ArrayList<>();
-                try {
-                    if (!TextUtils.isEmpty(string)) {
-                        JSONObject jSONObject = new JSONObject(string);
-                        Iterator<String> keys = jSONObject.keys();
-                        while (keys.hasNext()) {
-                            string = keys.next();
-                            arrayList.add(string);
-                        }
-                        View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
-                        ListView listView = inflate.findViewById(R.id.account_list);
-                        JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
-                                .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
-                        listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
-                        b.show();
+            }
+            OnlineUtil.server = changeServerCheckBox.isChecked() ? OnlineUtil.TEST_ONLINE_SERVER_URL : OnlineUtil.ONLINE_SERVER_URL;
+            if (BuildConfig.DEBUG && debugIpEditText != null && !debugIpEditText.getText().toString().isEmpty()) {
+                OnlineUtil.server = debugIpEditText.getText().toString();
+            }
+            new LoginTask(this).execute();
+        } else if (id == R.id.ol_register) {
+            Intent intent = new Intent();
+            intent.setClass(this, Register.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.ol_change_account) {
+            String string = sharedPreferences.getString("accountList", "");
+            List<String> arrayList = new ArrayList<>();
+            try {
+                if (!TextUtils.isEmpty(string)) {
+                    JSONObject jSONObject = new JSONObject(string);
+                    Iterator<String> keys = jSONObject.keys();
+                    while (keys.hasNext()) {
+                        string = keys.next();
+                        arrayList.add(string);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    View inflate = getLayoutInflater().inflate(R.layout.account_list, findViewById(R.id.dialog));
+                    ListView listView = inflate.findViewById(R.id.account_list);
+                    JPDialogBuilder.JPDialog b = new JPDialogBuilder(this).setTitle("切换账号").loadInflate(inflate)
+                            .setFirstButton("取消", (dialog, which) -> dialog.dismiss()).createJPDialog();
+                    listView.setAdapter(new ChangeAccountAdapter(arrayList, layoutInflater, this, b, jSONObject));
+                    b.show();
                 }
-                return;
-            default:
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

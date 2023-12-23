@@ -78,53 +78,48 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.add_friend:
-                if (!kitiName.equals(JPApplication.kitiName)) {
-                    headType = 2;
-                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                    jpDialogBuilder.setTitle("好友请求");
-                    jpDialogBuilder.setMessage("添加[" + kitiName + "]为好友,确定吗?");
-                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
-                        JSONObject jSONObject = new JSONObject();
-                        try {
-                            jSONObject.put("H", 0);
-                            jSONObject.put("T", kitiName);
-                            jSONObject.put("F", jpApplication.getAccountName());
-                            jSONObject.put("M", "");
-                            if (!kitiName.isEmpty() && !jpApplication.getAccountName().isEmpty()) {
-                                keywords = jSONObject.toString();
-                                new PopUserInfoTask(this).execute();
-                            }
-                            dialog.dismiss();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        int id = view.getId();
+        if (id == R.id.add_friend) {
+            if (!kitiName.equals(JPApplication.kitiName)) {
+                headType = 2;
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("好友请求");
+                jpDialogBuilder.setMessage("添加[" + kitiName + "]为好友,确定吗?");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                    JSONObject jSONObject = new JSONObject();
+                    try {
+                        jSONObject.put("H", 0);
+                        jSONObject.put("T", kitiName);
+                        jSONObject.put("F", jpApplication.getAccountName());
+                        jSONObject.put("M", "");
+                        if (!kitiName.isEmpty() && !jpApplication.getAccountName().isEmpty()) {
+                            keywords = jSONObject.toString();
+                            new PopUserInfoTask(this).execute();
                         }
-                    });
-                    jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
-                    jpDialogBuilder.buildAndShowDialog();
-                    return;
-                }
-                return;
-            case R.id.send_mail:
-                if (!kitiName.equals(JPApplication.kitiName)) {
-                    headType = 2;
-                    String str = kitiName;
-                    String P = jpApplication.getAccountName();
-                    View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
-                    TextView textView = inflate.findViewById(R.id.text_1);
-                    TextView textView2 = inflate.findViewById(R.id.title_1);
-                    TextView textView3 = inflate.findViewById(R.id.title_2);
-                    inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
-                    textView3.setVisibility(View.GONE);
-                    textView2.setText("消息:");
-                    new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate)
-                            .setFirstButton("发送", new SendMessageClick(this, textView, str, P))
-                            .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
-                    return;
-                }
-                return;
-            default:
+                        dialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
+                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+            }
+        } else if (id == R.id.send_mail) {
+            if (!kitiName.equals(JPApplication.kitiName)) {
+                headType = 2;
+                String str = kitiName;
+                String P = jpApplication.getAccountName();
+                View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
+                TextView textView = inflate.findViewById(R.id.text_1);
+                TextView textView2 = inflate.findViewById(R.id.title_1);
+                TextView textView3 = inflate.findViewById(R.id.title_2);
+                inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
+                textView3.setVisibility(View.GONE);
+                textView2.setText("消息:");
+                new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate)
+                        .setFirstButton("发送", new SendMessageClick(this, textView, str, P))
+                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+            }
         }
     }
 

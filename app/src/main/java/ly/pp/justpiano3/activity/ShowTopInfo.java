@@ -95,24 +95,21 @@ public final class ShowTopInfo extends BaseActivity implements Handler.Callback,
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ol_top_next:
-                pageNum++;
-                position = (pageNum * pageSize) + 1;
-                pageNumTextView.setText("-" + (pageNum + 1) + "-");
-                new ShowTopInfoTask(this).execute();
+        int id = view.getId();
+        if (id == R.id.ol_top_next) {
+            pageNum++;
+            position = (pageNum * pageSize) + 1;
+            pageNumTextView.setText("-" + (pageNum + 1) + "-");
+            new ShowTopInfoTask(this).execute();
+        } else if (id == R.id.ol_top_before) {
+            pageNum--;
+            if (pageNum < 0) {
+                pageNum = 0;
                 return;
-            case R.id.ol_top_before:
-                pageNum--;
-                if (pageNum < 0) {
-                    pageNum = 0;
-                    return;
-                }
-                position = (pageNum * pageSize) + 1;
-                pageNumTextView.setText("-" + (pageNum + 1) + "-");
-                new ShowTopInfoTask(this).execute();
-                return;
-            default:
+            }
+            position = (pageNum * pageSize) + 1;
+            pageNumTextView.setText("-" + (pageNum + 1) + "-");
+            new ShowTopInfoTask(this).execute();
         }
     }
 
@@ -132,24 +129,12 @@ public final class ShowTopInfo extends BaseActivity implements Handler.Callback,
         pageNumTextView.setText("-" + (pageNum + 1) + "-");
         TextView titleTextView = findViewById(R.id.ol_top_title);
         switch (head) {
-            case 0:
-                titleTextView.setText("-冠军数量榜-");
-                break;
-            case 1:
-                titleTextView.setText("-个人总分榜-");
-                break;
-            case 4:
-                titleTextView.setText("-个人等级榜-");
-                break;
-            case 7:
-                titleTextView.setText("-搭档祝福榜-");
-                break;
-            case 9:
-                titleTextView.setText("-家族贡献榜-");
-                break;
-            case 10:
-                titleTextView.setText("-个人考级榜-");
-                break;
+            case 0 -> titleTextView.setText("-冠军数量榜-");
+            case 1 -> titleTextView.setText("-个人总分榜-");
+            case 4 -> titleTextView.setText("-个人等级榜-");
+            case 7 -> titleTextView.setText("-搭档祝福榜-");
+            case 9 -> titleTextView.setText("-家族贡献榜-");
+            case 10 -> titleTextView.setText("-个人考级榜-");
         }
         new ShowTopInfoTask(this).execute();
         DisplayMetrics displayMetrics = new DisplayMetrics();

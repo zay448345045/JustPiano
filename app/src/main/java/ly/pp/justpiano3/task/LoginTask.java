@@ -101,13 +101,11 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
             loginActivity.jpProgressBar.dismiss();
         }
         switch (i) {
-            case 0:
-            case 4:
-            case 5:
+            case 0, 4, 5 -> {
                 loginActivity.loginSuccess(i, message, title);
                 return;
-            case 1:
-            case 2:
+            }
+            case 1, 2 -> {
                 if (!TextUtils.isEmpty(newVersion)) {
                     loginActivity.addVersionUpdateDialog(message, newVersion);
                 } else {
@@ -118,14 +116,17 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
                     jpDialogBuilder.buildAndShowDialog();
                 }
                 return;
-            case 3:
+            }
+            case 3 -> {
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);
                 jpDialogBuilder.setTitle("提示");
                 jpDialogBuilder.setMessage("网络错误!");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 

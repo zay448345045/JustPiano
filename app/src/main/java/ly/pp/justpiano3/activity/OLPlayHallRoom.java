@@ -334,90 +334,79 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
-        switch (view.getId()) {
-            case R.id.ol_player_mod:
-            case R.id.ol_dress_button:
-                if (lv < 8) {
-                    Toast.makeText(this, "您的等级未达到8级，不能进入换衣间", Toast.LENGTH_SHORT).show();
-                    return;
+        int id = view.getId();
+        if (id == R.id.ol_player_mod || id == R.id.ol_dress_button) {
+            if (lv < 8) {
+                Toast.makeText(this, "您的等级未达到8级，不能进入换衣间", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            intent.setClass(this, OLPlayDressRoom.class);
+            intent.putExtra("T", userTrousersIndex - 1);
+            intent.putExtra("J", userJacketIndex - 1);
+            intent.putExtra("H", userHairIndex - 1);
+            intent.putExtra("E", userEyeIndex - 1);
+            intent.putExtra("S", userSex);
+            intent.putExtra("Lv", lv);
+            intent.putExtra("O", userShoesIndex - 1);
+            startActivityForResult(intent, 0);
+        } else if (id == R.id.ol_bonus_button) {
+            jpprogressBar.show();
+            OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();
+            builder2.setType(1);
+            sendMsg(OnlineProtocolType.DAILY, builder2.build());
+        } else if (id == R.id.create_family) {
+            OnlineFamilyDTO.Builder builder1 = OnlineFamilyDTO.newBuilder();
+            builder1.setType(3);
+            sendMsg(OnlineProtocolType.FAMILY, builder1.build());
+        } else if (id == R.id.pre_button) {
+            pageNum -= 20;
+            if (pageNum < 0) {
+                pageNum = 0;
+                return;
+            }
+            OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
+            builder.setType(1);
+            builder.setPage(pageNum);
+            sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
+        } else if (id == R.id.online_button) {
+            OnlineLoadUserInfoDTO.Builder builder;
+            builder = OnlineLoadUserInfoDTO.newBuilder();
+            builder.setType(1);
+            builder.setPage(-1);
+            sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
+        } else if (id == R.id.next_button) {
+            OnlineLoadUserInfoDTO.Builder builder;
+            if (!pageIsEnd) {
+                pageNum += 20;
+                if (pageNum >= 0) {
+                    builder = OnlineLoadUserInfoDTO.newBuilder();
+                    builder.setType(1);
+                    builder.setPage(pageNum);
+                    sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                 }
-                intent.setClass(this, OLPlayDressRoom.class);
-                intent.putExtra("T", userTrousersIndex - 1);
-                intent.putExtra("J", userJacketIndex - 1);
-                intent.putExtra("H", userHairIndex - 1);
-                intent.putExtra("E", userEyeIndex - 1);
-                intent.putExtra("S", userSex);
-                intent.putExtra("Lv", lv);
-                intent.putExtra("O", userShoesIndex - 1);
-                startActivityForResult(intent, 0);
-                return;
-            case R.id.ol_bonus_button:
-                jpprogressBar.show();
-                OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();
-                builder2.setType(1);
-                sendMsg(OnlineProtocolType.DAILY, builder2.build());
-                return;
-            case R.id.create_family:
-                OnlineFamilyDTO.Builder builder1 = OnlineFamilyDTO.newBuilder();
-                builder1.setType(3);
-                sendMsg(OnlineProtocolType.FAMILY, builder1.build());
-                return;
-            case R.id.pre_button:
-                pageNum -= 20;
-                if (pageNum < 0) {
-                    pageNum = 0;
-                    return;
-                }
-                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
-                builder.setType(1);
-                builder.setPage(pageNum);
-                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                return;
-            case R.id.online_button:
-                builder = OnlineLoadUserInfoDTO.newBuilder();
-                builder.setType(1);
-                builder.setPage(-1);
-                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                return;
-            case R.id.next_button:
-                if (!pageIsEnd) {
-                    pageNum += 20;
-                    if (pageNum >= 0) {
-                        builder = OnlineLoadUserInfoDTO.newBuilder();
-                        builder.setType(1);
-                        builder.setPage(pageNum);
-                        sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                    }
-                    return;
-                }
-                return;
-            case R.id.ol_breakup_button:
-                deleteCp(false);
-                return;
-            case R.id.ol_setblessing_button:
-                if (cp > 0) {
-                    sendMail("", 1);
-                    return;
-                }
-                return;
-            case R.id.ol_myfamily_button:
-                if (familyID != null && !familyID.equals("0")) {
-                    intent = new Intent();
-                    intent.setClass(this, OLFamily.class);
-                    intent.putExtra("familyID", familyID);
-                    intent.putExtra("pageNum", familyPageNum);
-                    intent.putExtra("position", 0);
-                    intent.putExtra("myFamilyPosition", myFamilyPosition.getText().toString());
-                    intent.putExtra("myFamilyContribution", myFamilyContribution.getText().toString());
-                    intent.putExtra("myFamilyCount", myFamilyCount.getText().toString());
-                    intent.putExtra("myFamilyName", myFamilyName.getText().toString());
-                    intent.putExtra("myFamilyPicArray", myFamilyPicArray);
-                    intent.putExtra("familyList", (Serializable) familyList);
-                    startActivity(intent);
-                    finish();
-                }
-                return;
-            default:
+            }
+        } else if (id == R.id.ol_breakup_button) {
+            deleteCp(false);
+        } else if (id == R.id.ol_setblessing_button) {
+            if (cp > 0) {
+                sendMail("", 1);
+            }
+        } else if (id == R.id.ol_myfamily_button) {
+            if (familyID != null && !familyID.equals("0")) {
+                intent = new Intent();
+                intent.setClass(this, OLFamily.class);
+                intent.putExtra("familyID", familyID);
+                intent.putExtra("pageNum", familyPageNum);
+                intent.putExtra("position", 0);
+                intent.putExtra("myFamilyPosition", myFamilyPosition.getText().toString());
+                intent.putExtra("myFamilyContribution", myFamilyContribution.getText().toString());
+                intent.putExtra("myFamilyCount", myFamilyCount.getText().toString());
+                intent.putExtra("myFamilyName", myFamilyName.getText().toString());
+                intent.putExtra("myFamilyPicArray", myFamilyPicArray);
+                intent.putExtra("familyList", (Serializable) familyList);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -568,10 +557,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         tabHost.setOnTabChangedListener(new PlayHallRoomTabChange(this));
         tabHost.setCurrentTab(1);
         switch (getIntent().getIntExtra("HEAD", 0)) {
-            case 5:
-                Toast.makeText(this, "您的账号重复登录……", Toast.LENGTH_SHORT).show();
-                break;
-            case 16:
+            case 5 -> Toast.makeText(this, "您的账号重复登录……", Toast.LENGTH_SHORT).show();
+            case 16 -> {
                 // 从家族中心返回，则去加载家族
                 Bundle b = getIntent().getExtras();
                 familyPageNum = b.getInt("pageNum");
@@ -594,7 +581,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                break;
+            }
         }
         sendMsg(OnlineProtocolType.LOAD_USER, OnlineLoadUserDTO.getDefaultInstance());
     }

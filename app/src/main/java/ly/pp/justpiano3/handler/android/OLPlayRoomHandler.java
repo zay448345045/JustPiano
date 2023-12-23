@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import androidx.annotation.NonNull;
+
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.activity.OLPlayHall;
@@ -25,11 +27,11 @@ public final class OLPlayRoomHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(Message message) {
+    public void handleMessage(@NonNull Message message) {
         OLPlayRoom olPlayRoom = (OLPlayRoom) weakReference.get();
         try {
             switch (message.what) {
-                case 1:
+                case 1 -> {
                     post(() -> {
                         olPlayRoom.updatePlayerList(olPlayRoom.playerGrid, message.getData());
                         String songFilePath = message.getData().getString("SI");
@@ -66,11 +68,12 @@ public final class OLPlayRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 2:
-                case 4:
+                }
+                case 2, 4 -> {
                     post(() -> olPlayRoom.handleChat(message));
                     return;
-                case 3:
+                }
+                case 3 -> {
                     post(() -> {
                         String songFilePath = message.getData().getString("song_path");
                         int tune = message.getData().getInt("diao");
@@ -95,7 +98,8 @@ public final class OLPlayRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 5:
+                }
+                case 5 -> {
                     post(() -> {
                         SongPlay.INSTANCE.stopPlay();
                         String songFilePath = message.getData().getString("S");
@@ -129,7 +133,8 @@ public final class OLPlayRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 6:
+                }
+                case 6 -> {
                     post(() -> {
                         if (olPlayRoom.playButton != null) {
                             olPlayRoom.playButton.setText("取消准备");
@@ -137,16 +142,20 @@ public final class OLPlayRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 7:
+                }
+                case 7 -> {
                     post(() -> olPlayRoom.updatePlayerList(olPlayRoom.playerGrid, message.getData()));
                     return;
-                case 8:
+                }
+                case 8 -> {
                     post(olPlayRoom::handleKicked);
                     return;
-                case 9:
+                }
+                case 9 -> {
                     post(() -> olPlayRoom.handleFriendRequest(message));
                     return;
-                case 10:
+                }
+                case 10 -> {
                     post(() -> {
                         String name = message.getData().getString("R");
                         olPlayRoom.getIntent().putExtra("R", name);
@@ -155,28 +164,36 @@ public final class OLPlayRoomHandler extends Handler {
                         olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomId + "]" + olPlayRoom.roomName);
                     });
                     return;
-                case 11:
+                }
+                case 11 -> {
                     post(() -> olPlayRoom.handleRefreshFriendList(message));
                     return;
-                case 12:
+                }
+                case 12 -> {
                     post(() -> olPlayRoom.handlePrivateChat(message));
                     return;
-                case 13:
+                }
+                case 13 -> {
                     post(() -> olPlayRoom.handleRefreshFriendListWithoutPage(message));
                     return;
-                case 14:
+                }
+                case 14 -> {
                     post(() -> olPlayRoom.handleDialog(message));
                     return;
-                case 15:
+                }
+                case 15 -> {
                     post(() -> olPlayRoom.handleInvitePlayerList(message));
                     return;
-                case 16:
+                }
+                case 16 -> {
                     post(() -> olPlayRoom.handleSetUserInfo(message));
                     return;
-                case 21:
+                }
+                case 21 -> {
                     post(olPlayRoom::handleOffline);
                     return;
-                case 22:
+                }
+                case 22 -> {
                     post(() -> {
                         int i = message.getData().getInt("MSG_T");
                         int i2 = message.getData().getInt("MSG_CT");
@@ -187,10 +204,13 @@ public final class OLPlayRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 23:
+                }
+                case 23 -> {
                     post(() -> olPlayRoom.showInfoDialog(message.getData()));
                     return;
-                default:
+                }
+                default -> {
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -84,18 +84,10 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
 
         FamilyPositionEnum userPosition = FamilyPositionEnum.ofCode(list.get(i).get("P"), FamilyPositionEnum.NOT_IN_FAMILY);
         switch (userPosition) {
-            case LEADER:
-                positionText.setText("族长");
-                break;
-            case VICE_LEADER:
-                positionText.setText("副族长");
-                break;
-            case MEMBER:
-                positionText.setText("族员");
-                break;
-            default:
-                positionText.setText("");
-                break;
+            case LEADER -> positionText.setText("族长");
+            case VICE_LEADER -> positionText.setText("副族长");
+            case MEMBER -> positionText.setText("族员");
+            default -> positionText.setText("");
         }
         if (list.get(i).get("O").equals("0")) {
             nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));

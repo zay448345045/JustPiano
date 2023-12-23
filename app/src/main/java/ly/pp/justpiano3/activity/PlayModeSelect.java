@@ -22,27 +22,23 @@ public final class PlayModeSelect extends BaseActivity implements OnClickListene
     @Override
     public void onClick(View view) {
         Intent intent;
-        switch (view.getId()) {
-            case R.id.game_mode:
-                intent = new Intent();
-                intent.setClass(this, MelodySelect.class);
-                GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.freestyle_mode:
-                intent = new Intent();
-                intent.setClass(this, WaterfallActivity.class);
-                intent.putExtra("freeStyle", true);
-                startActivity(intent);
-                return;
-            case R.id.keyboard:
-                intent = new Intent();
-                intent.setClass(this, KeyBoard.class);
-                startActivity(intent);
-                finish();
-                return;
-            default:
+        int id = view.getId();
+        if (id == R.id.game_mode) {
+            intent = new Intent();
+            intent.setClass(this, MelodySelect.class);
+            GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.freestyle_mode) {
+            intent = new Intent();
+            intent.setClass(this, WaterfallActivity.class);
+            intent.putExtra("freeStyle", true);
+            startActivity(intent);
+        } else if (id == R.id.keyboard) {
+            intent = new Intent();
+            intent.setClass(this, KeyBoard.class);
+            startActivity(intent);
+            finish();
         }
     }
 

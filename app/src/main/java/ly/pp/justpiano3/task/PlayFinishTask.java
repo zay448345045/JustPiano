@@ -60,14 +60,11 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         switch (str) {
-            case "0":
-            case "1":
-                playFinish.get().jpprogressBar.dismiss();
-                break;
-            case "2":
+            case "0", "1" -> playFinish.get().jpprogressBar.dismiss();
+            case "2" -> {
                 playFinish.get().jpprogressBar.dismiss();
                 Toast.makeText(playFinish.get(), "该版本无法上传成绩，请更新版本!", Toast.LENGTH_SHORT).show();
-                break;
+            }
         }
     }
 

@@ -49,7 +49,7 @@ public final class DressAdapter extends BaseAdapter {
         ((ImageView) view.findViewById(R.id.ol_dress_img)).setImageBitmap(list.get(i));
         boolean isFemale = "f".equals(olPlayDressRoom.sex);
         switch (type) {
-            case 0:
+            case 0 -> {
                 if (olPlayDressRoom.hairUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -63,8 +63,8 @@ public final class DressAdapter extends BaseAdapter {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                     }
                 }
-                break;
-            case 1:
+            }
+            case 1 -> {
                 if (olPlayDressRoom.eyeUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -78,8 +78,8 @@ public final class DressAdapter extends BaseAdapter {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                     }
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 if (olPlayDressRoom.jacketUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -93,8 +93,8 @@ public final class DressAdapter extends BaseAdapter {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                     }
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 if (olPlayDressRoom.trousersUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -108,8 +108,8 @@ public final class DressAdapter extends BaseAdapter {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                     }
                 }
-                break;
-            case 4:
+            }
+            case 4 -> {
                 if (olPlayDressRoom.shoesUnlock.contains(i) || i == 0) {
                     view.findViewById(R.id.ol_dress_price).setVisibility(View.INVISIBLE);
                     view.findViewById(R.id.ol_dress_gold_image).setVisibility(View.INVISIBLE);
@@ -123,7 +123,7 @@ public final class DressAdapter extends BaseAdapter {
                         view.findViewById(R.id.ol_dress_img).setBackgroundResource(R.drawable.filled_bar);
                     }
                 }
-                break;
+            }
         }
         return view;
     }

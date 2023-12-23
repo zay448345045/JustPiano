@@ -58,7 +58,7 @@ public final class OLPlayHallRoomHandler extends Handler {
         OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) weakReference.get();
         if (olPlayHallRoom != null) {
             switch (message.what) {
-                case 0:
+                case 0 -> {
                     post(() -> {
                         int i;
                         olPlayHallRoom.hallList.clear();
@@ -104,7 +104,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 1:
+                }
+                case 1 -> {
                     post(() -> {
                         Bundle data = message.getData();
                         if (data.getInt("T") == 0) {
@@ -117,7 +118,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.mo2841a(data.getInt("T"), data.getString("N"), data.getString("I"));
                     });
                     return;
-                case 2:
+                }
+                case 2 -> {
                     post(() -> {
                         Bundle data = message.getData();
                         int size = data.size() - 7;
@@ -172,7 +174,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 3:
+                }
+                case 3 -> {
                     post(() -> {
                         olPlayHallRoom.friendList.clear();
                         olPlayHallRoom.jpprogressBar.dismiss();
@@ -187,7 +190,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.pageIsEnd = size < 20;
                     });
                     return;
-                case 4:
+                }
+                case 4 -> {
                     post(() -> {
                         int i;
                         int i2 = 0;
@@ -222,7 +226,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 5:
+                }
+                case 5 -> {
                     post(() -> {
                         olPlayHallRoom.jpprogressBar.dismiss();
                         Bundle data = message.getData();
@@ -249,10 +254,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                         jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
-                case 6:
+                }
+                case 6 -> {
                     post(() -> olPlayHallRoom.setBroadcast(message.getData()));
                     return;
-                case 7:
+                }
+                case 7 -> {
                     post(() -> {
                         Bundle data = message.getData();
                         OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
@@ -263,10 +270,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.updateUserListShow(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     });
                     return;
-                case 8:
+                }
+                case 8 -> {
                     post(() -> olPlayHallRoom.tabHost.setCurrentTab(4));
                     return;
-                case 9:
+                }
+                case 9 -> {
                     post(() -> {
                         Bundle data = message.getData();
                         byte b = (byte) data.getInt("R");
@@ -297,11 +306,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                         jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
-                case 10:
+                }
+                case 10 -> {
                     post(() -> {
                         int result = message.getData().getInt("R");
                         switch (result) {
-                            case 0:
+                            case 0 -> {
                                 Toast.makeText(olPlayHallRoom, "家族创建成功!", Toast.LENGTH_SHORT).show();
                                 OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                                 builder.setType(2);
@@ -309,17 +319,16 @@ public final class OLPlayHallRoomHandler extends Handler {
                                 olPlayHallRoom.familyPageNum = 0;
                                 olPlayHallRoom.familyList.clear();
                                 olPlayHallRoom.sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                                break;
-                            case 1:
-                                Toast.makeText(olPlayHallRoom, "家族创建失败!", Toast.LENGTH_SHORT).show();
-                                break;
-                            case 4:
-                                Toast.makeText(olPlayHallRoom, "家族名称已存在，请重试!", Toast.LENGTH_SHORT).show();
-                                break;
+                            }
+                            case 1 ->
+                                    Toast.makeText(olPlayHallRoom, "家族创建失败!", Toast.LENGTH_SHORT).show();
+                            case 4 ->
+                                    Toast.makeText(olPlayHallRoom, "家族名称已存在，请重试!", Toast.LENGTH_SHORT).show();
                         }
                     });
                     return;
-                case 11:
+                }
+                case 11 -> {
                     post(() -> {
                         List<Map<String, String>> list = new ArrayList<>();
                         Bundle data = message.getData();
@@ -362,13 +371,15 @@ public final class OLPlayHallRoomHandler extends Handler {
                         jpDialogBuilder.buildAndShowDialog();
                     });
                     return;
-                case 12:
+                }
+                case 12 -> {
                     post(() -> {
                         String info = message.getData().getString("M");
                         Toast.makeText(olPlayHallRoom, info, Toast.LENGTH_SHORT).show();
                     });
                     return;
-                case 21:
+                }
+                case 21 -> {
                     post(() -> {
                         Toast.makeText(olPlayHallRoom, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
@@ -377,7 +388,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.finish();
                     });
                     return;
-                case 22:
+                }
+                case 22 -> {
                     post(() -> {
                         Bundle data = message.getData();
                         olPlayHallRoom.coupleBlessView.setText(data.getString("IN"));
@@ -396,10 +408,13 @@ public final class OLPlayHallRoomHandler extends Handler {
                                 olPlayHallRoom.coupleHairView, olPlayHallRoom.coupleEyeView, olPlayHallRoom.coupleShoesView);
                     });
                     return;
-                case 23:
+                }
+                case 23 -> {
                     post(() -> olPlayHallRoom.showInfoDialog(message.getData()));
                     return;
-                default:
+                }
+                default -> {
+                }
             }
         }
     }

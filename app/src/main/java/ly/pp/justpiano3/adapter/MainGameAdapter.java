@@ -89,7 +89,7 @@ public final class MainGameAdapter extends BaseAdapter {
         Button sendButton;
         int i4;
         switch (type) {
-            case 0:
+            case 0 -> {
                 // 大厅列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_hall_view, null);
@@ -117,8 +117,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         OnlineUtil.getConnectionService().writeData(OnlineProtocolType.ENTER_HALL, builder.build());
                     }
                 });
-                break;
-            case 1:
+            }
+            case 1 -> {
                 // 好友列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
@@ -253,8 +253,8 @@ public final class MainGameAdapter extends BaseAdapter {
                         ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                     }
                 });
-                break;
-            case 2:
+            }
+            case 2 -> {
                 // 私信列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_mail_view, null);
@@ -283,32 +283,31 @@ public final class MainGameAdapter extends BaseAdapter {
                     ((TextView) view.findViewById(R.id.ol_from_user)).setText(from);
                     TextView mailMessageTextView = view.findViewById(R.id.ol_mail_msg);
                     switch (Objects.requireNonNull(mailMessage)) {
-                        case "":
+                        case "" -> {
                             mailMessageTextView.setText(from + " 请求加你为好友");
                             sendButton.setText("同意");
-                            break;
-                        case "'":
+                        }
+                        case "'" -> {
                             mailMessageTextView.setText(from + " 请求与你解除搭档关系");
                             sendButton.setText("解除");
-                            break;
-                        case "''":
+                        }
+                        case "''" -> {
                             mailMessageTextView.setText(from + " 请求加入您所在的家族，是否批准?");
                             sendButton.setText("批准");
-                            break;
-                        default:
+                        }
+                        default -> {
                             mailMessageTextView.setText(mailMessage);
                             sendButton.setText("回复");
                             buttonX.setVisibility(View.GONE);
-                            break;
+                        }
                     }
                     ((TextView) view.findViewById(R.id.ol_mail_time)).setText(to);
                     sendButton.setOnClickListener(new OLSendMailClick(this, mailMessage, from));
                     buttonX.setOnClickListener(new OLSendMailClick(this, "0", from));
                     mailDeleteButton.setOnClickListener(v -> ((OLPlayHallRoom) activity).updateMailListShow(i));
-                    break;
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 // 大厅用户列表
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
@@ -317,8 +316,8 @@ public final class MainGameAdapter extends BaseAdapter {
                     return view;
                 }
                 view.setKeepScreenOn(true);
-                userName = list.get(i).getString("U");
-                gender = list.get(i).getString("S");
+                String userName = list.get(i).getString("U");
+                String gender = list.get(i).getString("S");
                 i4 = list.get(i).getInt("R");
                 relativeLayout = view.findViewById(R.id.ol_friend_bar);
                 relativeLayout2 = view.findViewById(R.id.ol_friend_drop);
@@ -333,18 +332,10 @@ public final class MainGameAdapter extends BaseAdapter {
                 });
                 fromToTextView = view.findViewById(R.id.ol_friend_room);
                 switch (i4) {
-                    case 0:
-                        fromToTextView.setText("大厅");
-                        break;
-                    case -1:
-                        fromToTextView.setText("考级");
-                        break;
-                    case -2:
-                        fromToTextView.setText("挑战");
-                        break;
-                    default:
-                        fromToTextView.setText(i4 + "房");
-                        break;
+                    case 0 -> fromToTextView.setText("大厅");
+                    case -1 -> fromToTextView.setText("考级");
+                    case -2 -> fromToTextView.setText("挑战");
+                    default -> fromToTextView.setText(i4 + "房");
                 }
                 sendButton = view.findViewById(R.id.ol_friend_chat);
                 ImageView imageView2 = view.findViewById(R.id.ol_friend_sex);
@@ -418,7 +409,7 @@ public final class MainGameAdapter extends BaseAdapter {
                         OnlineUtil.getConnectionService().writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
                     }
                 });
-                break;
+            }
         }
         return view;
     }

@@ -35,53 +35,45 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
-        switch (view.getId()) {
-            case R.id.ol_web_b:
-                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("提示");
-                jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址" + OnlineUtil.INSIDE_WEBSITE_URL + "\n" +
-                        "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
-                jpDialogBuilder.setFirstButton("访问官网", (dialog, which) -> {
-                    dialog.dismiss();
-                    startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL)));
-                });
-                jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+        int id = view.getId();
+        if (id == R.id.ol_web_b) {
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("提示");
+            jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址" + OnlineUtil.INSIDE_WEBSITE_URL + "\n" +
+                    "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
+            jpDialogBuilder.setFirstButton("访问官网", (dialog, which) -> {
+                dialog.dismiss();
+                startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://" + OnlineUtil.INSIDE_WEBSITE_URL)));
+            });
+            jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+        } else if (id == R.id.ol_songs_b) {
+            intent.setClass(this, OLSongsPage.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.ol_playhall_b) {
+            if (jpApplication.getAccountName().isEmpty()) {
+                Toast.makeText(this, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                 return;
-            case R.id.ol_songs_b:
-                intent.setClass(this, OLSongsPage.class);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.ol_playhall_b:
-                if (jpApplication.getAccountName().isEmpty()) {
-                    Toast.makeText(this, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                new SongSyncDialogTask(this).execute();
-                return;
-            case R.id.ol_top_b:
-                intent.setClass(this, OLTopUser.class);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.ol_users_b:
-                intent.putExtra("head", 0);
-                intent.setClass(this, UsersInfo.class);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.ol_chatblack_b:
-                intent.setClass(this, UserListPage.class);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.ol_finduser_b:
-                intent.putExtra("head", 6);
-                intent.setClass(this, SearchSongs.class);
-                startActivity(intent);
-                finish();
-                return;
-            default:
+            }
+            new SongSyncDialogTask(this).execute();
+        } else if (id == R.id.ol_top_b) {
+            intent.setClass(this, OLTopUser.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.ol_users_b) {
+            intent.putExtra("head", 0);
+            intent.setClass(this, UsersInfo.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.ol_chatblack_b) {
+            intent.setClass(this, UserListPage.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.ol_finduser_b) {
+            intent.putExtra("head", 6);
+            intent.setClass(this, SearchSongs.class);
+            startActivity(intent);
+            finish();
         }
     }
 

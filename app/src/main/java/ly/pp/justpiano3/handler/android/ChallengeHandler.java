@@ -59,15 +59,11 @@ public final class ChallengeHandler extends Handler {
                         String string = data.getString("I");
                         String string2 = data.getString("P");
                         String str = "提示";
-                        String str2 = null;
-                        switch (i) {
-                            case 0:
-                                str2 = "确定";
-                                break;
-                            case 1:
-                                str2 = "开始挑战";
-                                break;
-                        }
+                        String str2 = switch (i) {
+                            case 0 -> "确定";
+                            case 1 -> "开始挑战";
+                            default -> null;
+                        };
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(challenge);
                         jpDialogBuilder.setTitle(str);
                         jpDialogBuilder.setMessage(string);

@@ -142,15 +142,9 @@ public final class SearchSongs extends BaseActivity implements Callback, OnClick
         jpprogressBar.dismiss();
         Intent intent = new Intent();
         switch (headType) {
-            case 0:
-                intent.setClass(this, OLSongsPage.class);
-                break;
-            case 1:
-                intent.setClass(this, OLMelodySelect.class);
-                break;
-            case 6:
-                intent.setClass(this, OLMainMode.class);
-                break;
+            case 0 -> intent.setClass(this, OLSongsPage.class);
+            case 1 -> intent.setClass(this, OLMelodySelect.class);
+            case 6 -> intent.setClass(this, OLMainMode.class);
         }
         startActivity(intent);
         finish();

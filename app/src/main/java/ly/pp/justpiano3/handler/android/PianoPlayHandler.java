@@ -23,7 +23,7 @@ public final class PianoPlayHandler extends Handler {
     public void handleMessage(final Message message) {
         final PianoPlay pianoPlay = (PianoPlay) weakReference.get();
         switch (message.what) {
-            case 1:
+            case 1 -> {
                 post(() -> {
                     pianoPlay.gradeList.clear();
                     Bundle data = message.getData();
@@ -41,7 +41,8 @@ public final class PianoPlayHandler extends Handler {
                     }
                 });
                 return;
-            case 2:
+            }
+            case 2 -> {
                 post(() -> {
                     pianoPlay.gradeList.clear();
                     Bundle data = message.getData();
@@ -57,7 +58,8 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.updateMiniScore(pianoPlay.horizontalListView, pianoPlay.gradeList);
                 });
                 return;
-            case 3:
+            }
+            case 3 -> {
                 post(() -> {
                     pianoPlay.gradeList.clear();
                     Bundle data = message.getData();
@@ -80,13 +82,16 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.bindAdapter(pianoPlay.gradeListView, pianoPlay.gradeList);
                 });
                 return;
-            case 4:
+            }
+            case 4 -> {
                 post(() -> pianoPlay.playKeyBoardView.updateTouchNoteNum());
                 return;
-            case 5:
+            }
+            case 5 -> {
                 post(() -> pianoPlay.playStartHandle(true));
                 return;
-            case 6:
+            }
+            case 6 -> {
                 post(() -> {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(pianoPlay);
                     jpDialogBuilder.setTitle("考级结果");
@@ -97,15 +102,10 @@ public final class PianoPlayHandler extends Handler {
                     stringBuffer.append("合格分数:").append(data.getInt("G")).append("\n");
                     stringBuffer.append("获得经验:").append(data.getString("E")).append("\n");
                     switch (i) {
-                        case 0:
-                            stringBuffer.append("很遗憾,您未通过该首曲目,请再接再厉!\n");
-                            break;
-                        case 1:
-                            stringBuffer.append("恭喜您,您已通过该首曲目,请再接再厉!\n");
-                            break;
-                        case 2:
-                            stringBuffer.append("恭喜您,您已通过该阶段的全部曲目,晋升一级!\n");
-                            break;
+                        case 0 -> stringBuffer.append("很遗憾,您未通过该首曲目,请再接再厉!\n");
+                        case 1 -> stringBuffer.append("恭喜您,您已通过该首曲目,请再接再厉!\n");
+                        case 2 ->
+                                stringBuffer.append("恭喜您,您已通过该阶段的全部曲目,晋升一级!\n");
                     }
                     jpDialogBuilder.setMessage(stringBuffer.toString());
                     jpDialogBuilder.setCancelableFalse();
@@ -116,7 +116,8 @@ public final class PianoPlayHandler extends Handler {
                     jpDialogBuilder.buildAndShowDialog();
                 });
                 return;
-            case 7:
+            }
+            case 7 -> {
                 post(() -> {
                     if (message.arg1 == 0) {  //本地模式或联网模式计时完成后开始
                         if (pianoPlay.pausedPlay != null) {
@@ -135,13 +136,15 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.songName.setEnabled(false);
                 });
                 return;
-            case 8:
+            }
+            case 8 -> {
                 post(() -> {
                     pianoPlay.finishView.setVisibility(View.VISIBLE);
                     pianoPlay.finishSongName.setText(pianoPlay.songsName);
                 });
                 return;
-            case 9:
+            }
+            case 9 -> {
                 post(() -> {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(pianoPlay);
                     jpDialogBuilder.setTitle("挑战结束");
@@ -154,14 +157,17 @@ public final class PianoPlayHandler extends Handler {
                     jpDialogBuilder.buildAndShowDialog();
                 });
                 return;
-            case 21:
+            }
+            case 21 -> {
                 post(() -> {
                     Toast.makeText(pianoPlay, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
                     pianoPlay.setOnline(false);
                     pianoPlay.finish();
                 });
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 }

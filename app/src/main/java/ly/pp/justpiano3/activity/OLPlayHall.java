@@ -150,13 +150,14 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
 
     public void enterRoomHandle(int type, byte roomId) {
         switch (type) {
-            case 0:
+            case 0 -> {
                 OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
                 builder.setRoomId(roomId);
                 builder.setPassword("");
                 sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                 return;
-            case 1:
+            }
+            case 1 -> {
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.text_2);
                 TextView textView1 = inflate.findViewById(R.id.text_1);
@@ -174,7 +175,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                         })
                         .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 
@@ -276,80 +279,72 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ol_createroom_b:
-                View inflate = getLayoutInflater().inflate(R.layout.ol_create_room, findViewById(R.id.dialog));
-                TextView textView = inflate.findViewById(R.id.room_name);
-                TextView textView2 = inflate.findViewById(R.id.room_password);
-                RadioGroup radioGroup = inflate.findViewById(R.id.room_mode);
-                CharSequence stringBuilder;
-                if (String.valueOf(JPApplication.kitiName).length() == 8) {
-                    stringBuilder = String.valueOf(JPApplication.kitiName);
-                } else if (String.valueOf(JPApplication.kitiName).length() == 7) {
-                    stringBuilder = JPApplication.kitiName + "房";
-                } else if (String.valueOf(JPApplication.kitiName).length() == 6) {
-                    stringBuilder = JPApplication.kitiName + "琴房";
-                } else {
-                    stringBuilder = JPApplication.kitiName + "的琴房";
-                }
-                textView.setText(stringBuilder);
-                textView.setSingleLine(true);
-                textView2.setSingleLine(true);
-                new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate)
-                        .setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup))
-                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+        int id = view.getId();
+        if (id == R.id.ol_createroom_b) {
+            View inflate = getLayoutInflater().inflate(R.layout.ol_create_room, findViewById(R.id.dialog));
+            TextView textView = inflate.findViewById(R.id.room_name);
+            TextView textView2 = inflate.findViewById(R.id.room_password);
+            RadioGroup radioGroup = inflate.findViewById(R.id.room_mode);
+            CharSequence stringBuilder;
+            if (String.valueOf(JPApplication.kitiName).length() == 8) {
+                stringBuilder = String.valueOf(JPApplication.kitiName);
+            } else if (String.valueOf(JPApplication.kitiName).length() == 7) {
+                stringBuilder = JPApplication.kitiName + "房";
+            } else if (String.valueOf(JPApplication.kitiName).length() == 6) {
+                stringBuilder = JPApplication.kitiName + "琴房";
+            } else {
+                stringBuilder = JPApplication.kitiName + "的琴房";
+            }
+            textView.setText(stringBuilder);
+            textView.setSingleLine(true);
+            textView2.setSingleLine(true);
+            new JPDialogBuilder(this).setTitle("创建房间").loadInflate(inflate)
+                    .setFirstButton("确定", new CreateRoomClick(this, textView, textView2, radioGroup))
+                    .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+        } else if (id == R.id.ol_testroom_b) {
+            OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
+            builder2.setType(0);
+            jpprogressBar.show();
+            sendMsg(OnlineProtocolType.CL_TEST, builder2.build());
+        } else if (id == R.id.ol_challenge_b) {
+            Intent intent = new Intent();
+            intent.setClass(this, OLChallenge.class);
+            intent.putExtra("hallID", hallID);
+            intent.putExtra("hallName", hallName);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.pre_button) {
+            pageNum -= 20;
+            if (pageNum < 0) {
+                pageNum = 0;
                 return;
-            case R.id.ol_testroom_b:
-                OnlineClTestDTO.Builder builder2 = OnlineClTestDTO.newBuilder();
-                builder2.setType(0);
-                jpprogressBar.show();
-                sendMsg(OnlineProtocolType.CL_TEST, builder2.build());
-                return;
-            case R.id.ol_challenge_b:
-                Intent intent = new Intent();
-                intent.setClass(this, OLChallenge.class);
-                intent.putExtra("hallID", hallID);
-                intent.putExtra("hallName", hallName);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.pre_button:
-                pageNum -= 20;
-                if (pageNum < 0) {
-                    pageNum = 0;
+            }
+            OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
+            builder.setType(1);
+            builder.setPage(pageNum);
+            sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
+        } else if (id == R.id.online_button) {
+            OnlineLoadUserInfoDTO.Builder builder;
+            builder = OnlineLoadUserInfoDTO.newBuilder();
+            builder.setType(1);
+            builder.setPage(-1);
+            sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
+        } else if (id == R.id.next_button) {
+            OnlineLoadUserInfoDTO.Builder builder;
+            if (!pageIsEnd) {
+                pageNum += 20;
+                if (pageNum >= 0) {
+                    builder = OnlineLoadUserInfoDTO.newBuilder();
+                    builder.setType(1);
+                    builder.setPage(pageNum);
+                    sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
                     return;
                 }
-                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
-                builder.setType(1);
-                builder.setPage(pageNum);
-                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                return;
-            case R.id.online_button:
-                builder = OnlineLoadUserInfoDTO.newBuilder();
-                builder.setType(1);
-                builder.setPage(-1);
-                sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                return;
-            case R.id.next_button:
-                if (!pageIsEnd) {
-                    pageNum += 20;
-                    if (pageNum >= 0) {
-                        builder = OnlineLoadUserInfoDTO.newBuilder();
-                        builder.setType(1);
-                        builder.setPage(pageNum);
-                        sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                        return;
-                    }
-                    return;
-                }
-                return;
-            case R.id.ol_send_b:
-                sendHallChat(false);
-                return;
-            case R.id.ol_express_b:
-                popupWindow.showAtLocation(imageView, Gravity.CENTER, 0, 0);
-                return;
-            default:
+            }
+        } else if (id == R.id.ol_send_b) {
+            sendHallChat(false);
+        } else if (id == R.id.ol_express_b) {
+            popupWindow.showAtLocation(imageView, Gravity.CENTER, 0, 0);
         }
     }
 

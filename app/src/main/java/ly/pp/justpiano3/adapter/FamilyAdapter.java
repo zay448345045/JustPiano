@@ -119,29 +119,30 @@ public final class FamilyAdapter extends BaseAdapter {
             });
         }
         switch (i) {
-            case 0:
+            case 0 -> {
                 nameText.setTextColor(0xFFFFD700);
                 contributionText.setTextColor(0xFFFFD700);
                 countText.setTextColor(0xFFFFD700);
                 positionText.setTextColor(0xFFFFD700);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 nameText.setTextColor(0xFFC0C0C0);
                 contributionText.setTextColor(0xFFC0C0C0);
                 countText.setTextColor(0xFFC0C0C0);
                 positionText.setTextColor(0xFFC0C0C0);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 nameText.setTextColor(0xFFD2B48C);
                 contributionText.setTextColor(0xFFD2B48C);
                 countText.setTextColor(0xFFD2B48C);
                 positionText.setTextColor(0xFFD2B48C);
-                break;
-            default:
+            }
+            default -> {
                 nameText.setTextColor(0xFFFFFFFF);
                 contributionText.setTextColor(0xFFFFFFFF);
                 countText.setTextColor(0xFFFFFFFF);
                 positionText.setTextColor(0xFFFFFFFF);
+            }
         }
         return view;
     }

@@ -429,7 +429,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         Bundle data = message.getData();
         int type = data.getInt("T");
         switch (type) {
-            case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE:
+            case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE -> {
                 String item = data.getString("I");
                 String songName = null;
                 String songDifficulty = null;
@@ -443,8 +443,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 }
                 data.putString("M", data.getString("M") + songName + "[难度:" + songDifficulty + "]");
                 message.setData(data);
-                break;
-            case OnlineProtocolType.MsgType.STREAM_MESSAGE:
+            }
+            case OnlineProtocolType.MsgType.STREAM_MESSAGE -> {
                 String streamId = message.getData().getString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID);
                 if (streamId != null && !streamId.isEmpty()) {
                     for (Bundle bundle : msgList) {
@@ -458,7 +458,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                         }
                     }
                 }
-                break;
+            }
         }
         return false;
     }
@@ -466,7 +466,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public void handleFriendRequest(Message message) {
         String string = message.getData().getString("F");
         switch (message.getData().getInt("T")) {
-            case 0:
+            case 0 -> {
                 if (!string.isEmpty()) {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                     jpDialogBuilder.setTitle("好友请求");
@@ -491,31 +491,28 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                     jpDialogBuilder.buildAndShowDialog();
                 }
                 return;
-            case 1:
+            }
+            case 1 -> {
                 DialogUtil.setShowDialog(false);
                 string = message.getData().getString("F");
                 int i = message.getData().getInt("I");
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("请求结果");
                 switch (i) {
-                    case 0:
-                        jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
-                        break;
-                    case 1:
-                        jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
-                        break;
-                    case 2:
-                        jpDialogBuilder.setMessage("对方已经是你的好友!");
-                        break;
-                    case 3:
+                    case 0 -> jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
+                    case 1 -> jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
+                    case 2 -> jpDialogBuilder.setMessage("对方已经是你的好友!");
+                    case 3 -> {
                         jpDialogBuilder.setTitle(message.getData().getString("title"));
                         jpDialogBuilder.setMessage(message.getData().getString("Message"));
-                        break;
+                    }
                 }
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 
@@ -720,59 +717,41 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.pre_button:
-                preFriendPageClick();
-                return;
-            case R.id.online_button:
-                onlineFriendListClick();
-                return;
-            case R.id.next_button:
-                nextFriendPageClick();
-                return;
-            case R.id.ol_send_b:
-                sendMessageClick(false);
-                return;
-            case R.id.ol_express_b:
-                expressPopupWindow.showAtLocation(expressImageView, Gravity.CENTER, 0, 0);
-                return;
-            case R.id.ol_changecolor:
-                changeColorClick();
-                return;
-            case R.id.white:
-                changeChatColor(0, 48, 0xffffffff);
-                return;
-            case R.id.yellow:
-                changeChatColor(10, 1, 0xFFFFFACD);
-                return;
-            case R.id.blue:
-                changeChatColor(14, 2, 0xFF00FFFF);
-                return;
-            case R.id.red:
-                changeChatColor(18, 3, 0xFFFF6666);
-                return;
-            case R.id.orange:
-                changeChatColor(22, 4, 0xFFFFA500);
-                return;
-            case R.id.purple:
-                changeChatColor(25, 5, 0xFFBA55D3);
-                return;
-            case R.id.pink:
-                changeChatColor(30, 6, 0xFFFA60EA);
-                return;
-            case R.id.gold:
-                changeChatColor(35, 7, 0xFFFFD700);
-                return;
-            case R.id.green:
-                changeChatColor(40, 8, 0xFFB7FF72);
-                return;
-            case R.id.black:
-                changeChatColor(50, 9, 0xFF000000);
-                return;
-            case R.id.room_title:
-                changeRoomTitleClick();
-                return;
-            default:
+        int id = view.getId();
+        if (id == R.id.pre_button) {
+            preFriendPageClick();
+        } else if (id == R.id.online_button) {
+            onlineFriendListClick();
+        } else if (id == R.id.next_button) {
+            nextFriendPageClick();
+        } else if (id == R.id.ol_send_b) {
+            sendMessageClick(false);
+        } else if (id == R.id.ol_express_b) {
+            expressPopupWindow.showAtLocation(expressImageView, Gravity.CENTER, 0, 0);
+        } else if (id == R.id.ol_changecolor) {
+            changeColorClick();
+        } else if (id == R.id.white) {
+            changeChatColor(0, 48, 0xffffffff);
+        } else if (id == R.id.yellow) {
+            changeChatColor(10, 1, 0xFFFFFACD);
+        } else if (id == R.id.blue) {
+            changeChatColor(14, 2, 0xFF00FFFF);
+        } else if (id == R.id.red) {
+            changeChatColor(18, 3, 0xFFFF6666);
+        } else if (id == R.id.orange) {
+            changeChatColor(22, 4, 0xFFFFA500);
+        } else if (id == R.id.purple) {
+            changeChatColor(25, 5, 0xFFBA55D3);
+        } else if (id == R.id.pink) {
+            changeChatColor(30, 6, 0xFFFA60EA);
+        } else if (id == R.id.gold) {
+            changeChatColor(35, 7, 0xFFFFD700);
+        } else if (id == R.id.green) {
+            changeChatColor(40, 8, 0xFFB7FF72);
+        } else if (id == R.id.black) {
+            changeChatColor(50, 9, 0xFF000000);
+        } else if (id == R.id.room_title) {
+            changeRoomTitleClick();
         }
     }
 

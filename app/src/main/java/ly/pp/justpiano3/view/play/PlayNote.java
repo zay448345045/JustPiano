@@ -45,55 +45,68 @@ public final class PlayNote {
             return;
         }
         switch (pitch % 12) {
-            case 0:
+            case 0 -> {
                 positionX = width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            case 1:
+            }
+            case 1 -> {
                 positionX = 2 * width - halfWidthPixels;
                 image = playView.blackNoteImage;
                 return;
-            case 2:
+            }
+            case 2 -> {
                 positionX = 3 * width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            case 3:
+            }
+            case 3 -> {
                 positionX = 4 * width - halfWidthPixels;
                 image = playView.blackNoteImage;
                 return;
-            case 4:
+            }
+            case 4 -> {
                 positionX = 5 * width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            case 5:
+            }
+            case 5 -> {
                 positionX = 7 * width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            case 6:
+            }
+            case 6 -> {
                 positionX = 8 * width - halfWidthPixels;
                 image = playView.blackNoteImage;
                 return;
-            case 7:
+            }
+            case 7 -> {
                 positionX = 9 * width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            case 8:
+            }
+            case 8 -> {
                 positionX = 10 * width - halfWidthPixels;
                 image = playView.blackNoteImage;
                 return;
-            case 9:
+            }
+            case 9 -> {
                 positionX = 11 * width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            case 10:
+            }
+            case 10 -> {
                 positionX = 12 * width - halfWidthPixels;
                 image = playView.blackNoteImage;
                 return;
-            case 11:
+            }
+            case 11 -> {
                 positionX = 13 * width - halfWidthPixels;
                 image = playView.noteImage;
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 

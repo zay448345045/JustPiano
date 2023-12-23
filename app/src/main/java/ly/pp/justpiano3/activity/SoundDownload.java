@@ -89,18 +89,18 @@ public final class SoundDownload extends BaseActivity implements Callback {
         String buttonText = "使用";
         jpDialogBuilder.setTitle("提示");
         switch (eventType) {
-            case 0:
+            case 0 -> {
                 jpDialogBuilder.setMessage("名称:" + soundFileName + "\n作者:" + soundAuthor + "\n大小:" + soundSize + "KB\n您要下载并使用吗?");
                 buttonText = "下载";
-                break;
-            case 1:
+            }
+            case 1 -> {
                 jpDialogBuilder.setMessage("[" + soundFileName + "]音源已下载，是否使用?");
                 buttonText = "使用";
-                break;
-            case 2:
+            }
+            case 2 -> {
                 jpDialogBuilder.setMessage("您要还原极品钢琴的默认音源吗?");
                 buttonText = "确定";
-                break;
+            }
         }
         jpDialogBuilder.setFirstButton(buttonText, new SoundDownloadClick(this, eventType, soundId, soundFileName, soundType));
         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
@@ -170,35 +170,35 @@ public final class SoundDownload extends BaseActivity implements Callback {
     public boolean handleMessage(Message message) {
         if (!Thread.currentThread().isInterrupted()) {
             switch (message.what) {
-                case 0:
+                case 0 -> {
                     linearLayout.setVisibility(View.VISIBLE);
                     progressBar.setMax(100);
-                    break;
-                case 1:
+                }
+                case 1 -> {
                     progressBar.setProgress(progress);
                     downloadText.setText(progress + "%");
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
                     handleSound(1, message.getData().getString("name"), "",
                             0, "", message.getData().getString("type"));
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     linearLayout.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "网络连接错误!", Toast.LENGTH_LONG).show();
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.show();
                     jpProgressBar.setCancelable(false);
                     Toast.makeText(getApplicationContext(), "正在载入音源,请稍后。。。", Toast.LENGTH_SHORT).show();
-                    break;
-                case 6:
+                }
+                case 6 -> {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "音源载入成功!", Toast.LENGTH_SHORT).show();
-                    break;
+                }
             }
         }
         return false;

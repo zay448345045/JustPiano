@@ -122,17 +122,12 @@ public final class OLPlayRoom extends OLRoomActivity {
         String str4 = "";
         String str5 = "情意绵绵的情侣";
         switch (i2) {
-            case 0:
+            case 0 -> {
                 return;
-            case 1:
-                str5 = "情意绵绵的情侣";
-                break;
-            case 2:
-                str5 = "基情四射的基友";
-                break;
-            case 3:
-                str5 = "百年好合的百合";
-                break;
+            }
+            case 1 -> str5 = "情意绵绵的情侣";
+            case 2 -> str5 = "基情四射的基友";
+            case 3 -> str5 = "百年好合的百合";
         }
         if (i == 1) {
             str3 = "搭档请求";
@@ -234,231 +229,189 @@ public final class OLPlayRoom extends OLRoomActivity {
     public void onClick(View view) {
         super.onClick(view);
         SongDao songDao = JPApplication.getSongDatabase().songDao();
-        switch (view.getId()) {
-            case R.id.favor:
-                roomTabs.setCurrentTab(2);
-                DataSource.Factory<Integer, Song> favoriteSongList = songDao.getFavoriteSongsWithDataSource();
-                pagedListLiveData.removeObservers(this);
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
-                pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
-                moreSongsPopupWindow.dismiss();
-                return;
-            case R.id.couple_1:
-                setGroupOrHand(1, coupleModePopupWindow);
-                return;
-            case R.id.couple_2:
-                setGroupOrHand(2, coupleModePopupWindow);
-                return;
-            case R.id.couple_6:
-                setGroupOrHand(6, coupleModePopupWindow);
-                return;
-            case R.id.couple_4:
-                setGroupOrHand(4, coupleModePopupWindow);
-                return;
-            case R.id.couple_5:
-                setGroupOrHand(5, coupleModePopupWindow);
-                return;
-            case R.id.couple_3:
-                setGroupOrHand(3, coupleModePopupWindow);
-                return;
-            case R.id.group_1:
-                setGroupOrHand(1, groupModePopupWindow);
-                return;
-            case R.id.group_2:
-                setGroupOrHand(2, groupModePopupWindow);
-                return;
-            case R.id.group_3:
-                setGroupOrHand(3, groupModePopupWindow);
-                return;
-            case R.id.left_hand:
-                currentHand = 1;
-                setGroupOrHand(1, normalModePopupWindow);
-                this.roomInfoBundle.putInt("myHand", currentHand);
-                settingButton.setText("左" + settingButton.getText().toString().substring(1));
-                return;
-            case R.id.right_hand:
-                currentHand = 0;
-                setGroupOrHand(0, normalModePopupWindow);
-                this.roomInfoBundle.putInt("myHand", currentHand);
-                settingButton.setText("右" + settingButton.getText().toString().substring(1));
-                return;
-            case R.id.changeScreenOrientation:
-                changeScreenOrientation();
-                return;
-            case R.id.ol_more_settings:
-                if (normalModePopupWindow != null) {
-                    normalModePopupWindow.dismiss();
+        int id = view.getId();
+        if (id == R.id.favor) {
+            roomTabs.setCurrentTab(2);
+            DataSource.Factory<Integer, Song> favoriteSongList = songDao.getFavoriteSongsWithDataSource();
+            pagedListLiveData.removeObservers(this);
+            pagedListLiveData = songDao.getPageListByDatasourceFactory(favoriteSongList);
+            pagedListLiveData.observe(this, ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter())))::submitList);
+            moreSongsPopupWindow.dismiss();
+        } else if (id == R.id.couple_1) {
+            setGroupOrHand(1, coupleModePopupWindow);
+        } else if (id == R.id.couple_2) {
+            setGroupOrHand(2, coupleModePopupWindow);
+        } else if (id == R.id.couple_6) {
+            setGroupOrHand(6, coupleModePopupWindow);
+        } else if (id == R.id.couple_4) {
+            setGroupOrHand(4, coupleModePopupWindow);
+        } else if (id == R.id.couple_5) {
+            setGroupOrHand(5, coupleModePopupWindow);
+        } else if (id == R.id.couple_3) {
+            setGroupOrHand(3, coupleModePopupWindow);
+        } else if (id == R.id.group_1) {
+            setGroupOrHand(1, groupModePopupWindow);
+        } else if (id == R.id.group_2) {
+            setGroupOrHand(2, groupModePopupWindow);
+        } else if (id == R.id.group_3) {
+            setGroupOrHand(3, groupModePopupWindow);
+        } else if (id == R.id.left_hand) {
+            currentHand = 1;
+            setGroupOrHand(1, normalModePopupWindow);
+            this.roomInfoBundle.putInt("myHand", currentHand);
+            settingButton.setText("左" + settingButton.getText().toString().substring(1));
+        } else if (id == R.id.right_hand) {
+            currentHand = 0;
+            setGroupOrHand(0, normalModePopupWindow);
+            this.roomInfoBundle.putInt("myHand", currentHand);
+            settingButton.setText("右" + settingButton.getText().toString().substring(1));
+        } else if (id == R.id.changeScreenOrientation) {
+            changeScreenOrientation();
+        } else if (id == R.id.ol_more_settings) {
+            if (normalModePopupWindow != null) {
+                normalModePopupWindow.dismiss();
+            }
+            Intent intent = new Intent();
+            intent.setClass(this, SettingsMode.class);
+            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+        } else if (id == R.id.rand_0) {
+            playSongByDegreeRandom(2, 4);
+        } else if (id == R.id.rand_all) {
+            playSongByDegreeRandom(0, 2);
+        } else if (id == R.id.rand_5) {
+            playSongByDegreeRandom(6, 8);
+        } else if (id == R.id.rand_3) {
+            playSongByDegreeRandom(4, 6);
+        } else if (id == R.id.rand_7) {
+            playSongByDegreeRandom(8, 10);
+        } else if (id == R.id.add_favor) {
+            if (!TextUtils.isEmpty(currentPlaySongPath)) {
+                if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(currentPlaySongPath, 1) > 0) {
+                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollText.getText()), Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            }
+            moreSongsPopupWindow.dismiss();
+        } else if (id == R.id.type_l) {
+            randomSongBetweenTwoDegree(1, 2);
+        } else if (id == R.id.type_j) {
+            randomSongWithDegree(0);
+        } else if (id == R.id.type_e) {
+            randomSongBetweenTwoDegree(3, 6);
+        } else if (id == R.id.type_d) {
+            randomSongBetweenTwoDegree(4, 5);
+        } else if (id == R.id.type_h) {
+            randomSongWithDegree(7);
+        } else if (id == R.id.ol_search_b) {
+            String keywords = String.valueOf(searchTextView.getText());
+            if (keywords.isEmpty()) {
                 return;
-            case R.id.rand_0:
-                playSongByDegreeRandom(2, 4);
-                return;
-            case R.id.rand_all:
-                playSongByDegreeRandom(0, 2);
-                return;
-            case R.id.rand_5:
-                playSongByDegreeRandom(6, 8);
-                return;
-            case R.id.rand_3:
-                playSongByDegreeRandom(4, 6);
-                return;
-            case R.id.rand_7:
-                playSongByDegreeRandom(8, 10);
-                return;
-            case R.id.add_favor:
-                if (!TextUtils.isEmpty(currentPlaySongPath)) {
-                    if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(currentPlaySongPath, 1) > 0) {
-                        Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollText.getText()), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                moreSongsPopupWindow.dismiss();
-                return;
-            case R.id.type_l:
-                randomSongBetweenTwoDegree(1, 2);
-                return;
-            case R.id.type_j:
-                randomSongWithDegree(0);
-                return;
-            case R.id.type_e:
-                randomSongBetweenTwoDegree(3, 6);
-                return;
-            case R.id.type_d:
-                randomSongBetweenTwoDegree(4, 5);
-                return;
-            case R.id.type_h:
-                randomSongWithDegree(7);
-                return;
-            case R.id.ol_search_b:
-                String keywords = String.valueOf(searchTextView.getText());
-                if (keywords.isEmpty()) {
-                    return;
-                }
-                searchTextView.setText("");
-                DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
-                pagedListLiveData.removeObservers(this);
-                pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
-                pagedListLiveData.observe(this, (pagedList) -> {
-                    Toast.makeText(this, "搜索到" +
-                            (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
-                            + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
-                    ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter()))).submitList(pagedList);
-                });
-                return;
-            case R.id.ol_soundstop:
-                SongPlay.INSTANCE.stopPlay();
-                return;
-            case R.id.onetimeplay:
-                if (playerKind.equals("H")) {
-                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
-                    Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
-                }
-                playSongsModePopupWindow.dismiss();
-                return;
-            case R.id.circulateplay:
-                if (playerKind.equals("H")) {
-                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
-                    Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
-                }
-                playSongsModePopupWindow.dismiss();
-                return;
-            case R.id.randomplay:
-                if (playerKind.equals("H")) {
-                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
-                    Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
-                }
-                playSongsModePopupWindow.dismiss();
-                return;
-            case R.id.favorplay:
-                if (playerKind.equals("H")) {
-                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
-                    Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
-                }
-                playSongsModePopupWindow.dismiss();
-                return;
-            case R.id.favorlist:
-                if (playerKind.equals("H")) {
-                    SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
-                    Toast.makeText(this, PlaySongsModeEnum.FAVOR.getDesc(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
-                }
-                playSongsModePopupWindow.dismiss();
-                return;
-            case R.id.ol_ready_b:
-                if (playerKind.equals("G")) {
-                    String status = Objects.equals("准备", playButton.getText().toString()) ? "N" : "R";
-                    sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus(status).build());
-                } else {
-                    sendMsg(OnlineProtocolType.PLAY_START, OnlinePlayStartDTO.getDefaultInstance());
-                }
-                return;
-            case R.id.ol_songlist_b:
-                moreSongsPopupWindow.showAtLocation(playSongsModeButton, Gravity.CENTER, 0, 0);
-                return;
-            case R.id.ol_group_b:
-                if (roomMode == RoomModeEnum.NORMAL.getCode()) {
-                    PopupWindow popupWindow2 = new JPPopupWindow(this);
-                    View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_hand_select, null);
-                    popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                    inflate2.findViewById(R.id.left_hand).setOnClickListener(this);
-                    inflate2.findViewById(R.id.right_hand).setOnClickListener(this);
-                    inflate2.findViewById(R.id.shengdiao).setOnClickListener(this);
-                    inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
-                    inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
-                    inflate2.findViewById(R.id.ol_more_settings).setOnClickListener(this);
-                    popupWindow2.setContentView(inflate2);
-                    normalModePopupWindow = popupWindow2;
-                    popupWindow2.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
-                    return;
-                } else if (roomMode == RoomModeEnum.TEAM.getCode() && groupModePopupWindow != null) {
-                    groupModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
-                    return;
-                } else if (roomMode == RoomModeEnum.COUPLE.getCode() && coupleModePopupWindow != null) {
-                    coupleModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
-                    return;
-                }
-                return;
-            case R.id.ol_more_b:
-                if (playSongsModePopupWindow != null) {
-                    int[] iArr = new int[2];
-                    playSongsModeButton.getLocationOnScreen(iArr);
-                    playSongsModePopupWindow.showAtLocation(songNameScrollText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
-                }
-                return;
-            case R.id.shengdiao:
-                if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
-                    tune = Math.min(6, tune + 1);
-                    updateNewSongPlay(currentPlaySongPath);
-                } else {
-                    Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
-                }
-                if (normalModePopupWindow != null) {
-                    normalModePopupWindow.dismiss();
-                }
-                return;
-            case R.id.jiangdiao:
-                if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
-                    tune = Math.max(-6, tune - 1);
-                    updateNewSongPlay(currentPlaySongPath);
-                } else {
-                    Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
-                }
-                if (normalModePopupWindow != null) {
-                    normalModePopupWindow.dismiss();
-                }
-                return;
-            default:
+            }
+            searchTextView.setText("");
+            DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
+            pagedListLiveData.removeObservers(this);
+            pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
+            pagedListLiveData.observe(this, (pagedList) -> {
+                Toast.makeText(this, "搜索到" +
+                        (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
+                        + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+                ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter()))).submitList(pagedList);
+            });
+        } else if (id == R.id.ol_soundstop) {
+            SongPlay.INSTANCE.stopPlay();
+        } else if (id == R.id.onetimeplay) {
+            if (playerKind.equals("H")) {
+                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+                Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
+            }
+            playSongsModePopupWindow.dismiss();
+        } else if (id == R.id.circulateplay) {
+            if (playerKind.equals("H")) {
+                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
+                Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
+            }
+            playSongsModePopupWindow.dismiss();
+        } else if (id == R.id.randomplay) {
+            if (playerKind.equals("H")) {
+                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
+                Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
+            }
+            playSongsModePopupWindow.dismiss();
+        } else if (id == R.id.favorplay) {
+            if (playerKind.equals("H")) {
+                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
+                Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
+            }
+            playSongsModePopupWindow.dismiss();
+        } else if (id == R.id.favorlist) {
+            if (playerKind.equals("H")) {
+                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
+                Toast.makeText(this, PlaySongsModeEnum.FAVOR.getDesc(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
+            }
+            playSongsModePopupWindow.dismiss();
+        } else if (id == R.id.ol_ready_b) {
+            if (playerKind.equals("G")) {
+                String status = Objects.equals("准备", playButton.getText().toString()) ? "N" : "R";
+                sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus(status).build());
+            } else {
+                sendMsg(OnlineProtocolType.PLAY_START, OnlinePlayStartDTO.getDefaultInstance());
+            }
+        } else if (id == R.id.ol_songlist_b) {
+            moreSongsPopupWindow.showAtLocation(playSongsModeButton, Gravity.CENTER, 0, 0);
+        } else if (id == R.id.ol_group_b) {
+            if (roomMode == RoomModeEnum.NORMAL.getCode()) {
+                PopupWindow popupWindow2 = new JPPopupWindow(this);
+                View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_hand_select, null);
+                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+                inflate2.findViewById(R.id.left_hand).setOnClickListener(this);
+                inflate2.findViewById(R.id.right_hand).setOnClickListener(this);
+                inflate2.findViewById(R.id.shengdiao).setOnClickListener(this);
+                inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
+                inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
+                inflate2.findViewById(R.id.ol_more_settings).setOnClickListener(this);
+                popupWindow2.setContentView(inflate2);
+                normalModePopupWindow = popupWindow2;
+                popupWindow2.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
+            } else if (roomMode == RoomModeEnum.TEAM.getCode() && groupModePopupWindow != null) {
+                groupModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
+            } else if (roomMode == RoomModeEnum.COUPLE.getCode() && coupleModePopupWindow != null) {
+                coupleModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
+            }
+        } else if (id == R.id.ol_more_b) {
+            if (playSongsModePopupWindow != null) {
+                int[] iArr = new int[2];
+                playSongsModeButton.getLocationOnScreen(iArr);
+                playSongsModePopupWindow.showAtLocation(songNameScrollText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
+            }
+        } else if (id == R.id.shengdiao) {
+            if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
+                tune = Math.min(6, tune + 1);
+                updateNewSongPlay(currentPlaySongPath);
+            } else {
+                Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
+            }
+            if (normalModePopupWindow != null) {
+                normalModePopupWindow.dismiss();
+            }
+        } else if (id == R.id.jiangdiao) {
+            if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
+                tune = Math.max(-6, tune - 1);
+                updateNewSongPlay(currentPlaySongPath);
+            } else {
+                Toast.makeText(this, "您不是房主或您未选择曲目，操作无效!", Toast.LENGTH_LONG).show();
+            }
+            if (normalModePopupWindow != null) {
+                normalModePopupWindow.dismiss();
+            }
         }
     }
 
@@ -521,11 +474,11 @@ public final class OLPlayRoom extends OLRoomActivity {
         popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         moreSongsPopupWindow = popupWindow2;
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
-            case NORMAL:
+            case NORMAL -> {
                 currentHand = this.roomInfoBundle.getInt("myHand");
                 settingButton.setText((currentHand == 0 ? "右" : "左") + "00");
-                break;
-            case TEAM:
+            }
+            case TEAM -> {
                 popupWindow2 = new JPPopupWindow(this);
                 View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
                 popupWindow2.setContentView(inflate3);
@@ -534,8 +487,8 @@ public final class OLPlayRoom extends OLRoomActivity {
                 inflate3.findViewById(R.id.group_2).setOnClickListener(this);
                 inflate3.findViewById(R.id.group_3).setOnClickListener(this);
                 groupModePopupWindow = popupWindow2;
-                break;
-            case COUPLE:
+            }
+            case COUPLE -> {
                 popupWindow2 = new JPPopupWindow(this);
                 View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
                 popupWindow2.setContentView(inflate4);
@@ -547,7 +500,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 inflate4.findViewById(R.id.couple_5).setOnClickListener(this);
                 inflate4.findViewById(R.id.couple_6).setOnClickListener(this);
                 coupleModePopupWindow = popupWindow2;
-                break;
+            }
         }
         PopupWindow popupWindow4 = new JPPopupWindow(this);
         View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);

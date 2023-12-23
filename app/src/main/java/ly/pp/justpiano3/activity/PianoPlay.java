@@ -137,7 +137,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         startPlayButton = findViewById(R.id.p_start);
         songName.setText(songsName);
         switch (i) {
-            case 0:    // 本地
+            case 0 -> {    // 本地
                 startPlayButton.setOnClickListener(v -> {
                     rightHandDegreeTextView.setVisibility(View.GONE);
                     highScoreTextView.setVisibility(View.GONE);
@@ -150,7 +150,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 String str2 = localSongsTime % 60 >= 10 ? "" + localSongsTime % 60 : "0" + localSongsTime % 60;
                 songLengthTextView.setText("曲目时长:" + str1 + ":" + str2);
                 return;
-            case 1:    // 在线曲库
+            }
+            case 1 -> {    // 在线曲库
                 startPlayButton.setOnClickListener(v -> {
                     rightHandDegreeTextView.setVisibility(View.GONE);
                     highScoreTextView.setVisibility(View.GONE);
@@ -161,7 +162,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 leftHandDegreeTextView.setVisibility(View.GONE);
                 return;
-            case 2:    // 联网对战
+            }
+            case 2 -> {    // 联网对战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
@@ -190,7 +192,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance());
                 songName.setOnClickListener(v -> sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance()));
                 return;
-            case 3:    // 考级
+            }
+            case 3 -> {    // 考级
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
@@ -207,7 +210,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 builder.setType(2);
                 sendMsg(OnlineProtocolType.CL_TEST, builder.build());
                 return;
-            case 4:    // 挑战
+            }
+            case 4 -> {    // 挑战
                 songName.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
@@ -224,7 +228,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 builder1.setType(3);
                 sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 
@@ -306,7 +312,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public void onBackPressed() {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         switch (playKind) {
-            case 0:
+            case 0 -> {
                 playTypeAndShowHandle(playKind, true);
                 if (!isShowingSongsInfo) {
                     playView.startFirstNoteTouching = false;
@@ -322,7 +328,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     finish();
                 }
                 return;
-            case 1:
+            }
+            case 1 -> {
                 playTypeAndShowHandle(playKind, true);
                 if (!isShowingSongsInfo) {
                     playView.startFirstNoteTouching = false;
@@ -337,7 +344,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     finish();
                 }
                 return;
-            case 2:
+            }
+            case 2 -> {
                 jpDialogBuilder.setTitle("提示");
                 jpDialogBuilder.setMessage("退出弹奏并返回大厅?");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
@@ -352,7 +360,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
                 return;
-            case 3:
+            }
+            case 3 -> {
                 jpDialogBuilder.setTitle("提示");
                 jpDialogBuilder.setMessage("退出考级并返回大厅?");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
@@ -367,7 +376,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
                 return;
-            case 4:
+            }
+            case 4 -> {
                 jpDialogBuilder.setTitle("提示");
                 jpDialogBuilder.setMessage("您将损失一次挑战机会!退出挑战并返回大厅?");
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
@@ -382,7 +392,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 
@@ -404,7 +416,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         Bundle extras = getIntent().getExtras();
         playKind = extras.getInt("head");
         switch (playKind) {
-            case 0:    //本地模式
+            case 0 -> {    //本地模式
                 String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
                 localRightHandDegree = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
@@ -414,22 +426,22 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 isOpenRecord = extras.getBoolean("isrecord");
                 int hand = extras.getInt("hand");
                 playView = new PlayView(this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playKind, hand, 30, localSongsTime, 0);
-                break;
-            case 1:    //在线曲库
+            }
+            case 1 -> {    //在线曲库
                 songsName = extras.getString("songName");
                 onlineRightHandDegree = BigDecimal.valueOf(extras.getDouble("degree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 score = extras.getInt("topScore");
                 String songId = extras.getString("songID");
                 byte[] byteArray = extras.getByteArray("songBytes");
                 playView = new PlayView(this, byteArray, this, onlineRightHandDegree, score, 1, 0, songId);
-                break;
-            case 2:    //房间对战
+            }
+            case 2 -> {    //房间对战
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
-                songsPath = extras.getString("path");
+                String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
                 int tune = extras.getInt("diao");
-                hand = extras.getInt("hand");
+                int hand = extras.getInt("hand");
                 roomMode = extras.getInt("roomMode");
                 miniScoreView = layoutinflater.inflate(R.layout.ol_play_score_ranking, null);
                 horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
@@ -447,14 +459,13 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(Color.TRANSPARENT);
                 playView = new PlayView(this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
-                break;
-            case 3:    //大厅考级
-            case 4:    //挑战
+            }    //大厅考级
+            case 3, 4 -> {    //挑战
                 roomBundle = extras.getBundle("bundle");
                 hallBundle = extras.getBundle("bundleHall");
                 songsName = extras.getString("name");
                 times = extras.getInt("times");
-                hand = extras.getInt("hand");
+                int hand = extras.getInt("hand");
                 miniScoreView = layoutinflater.inflate(R.layout.ol_play_score_ranking, null);
                 horizontalListView = miniScoreView.findViewById(R.id.ol_score_list);
                 showHideGrade = miniScoreView.findViewById(R.id.ol_score_button);
@@ -463,7 +474,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 gradeList.clear();
                 String songBytes = extras.getString("songBytes");
                 playView = new PlayView(this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
-                break;
+            }
         }
         if (isOpenRecord) {
             recordWavPath = getFilesDir().getAbsolutePath() + "/Records/" + songsName + ".raw";
@@ -501,8 +512,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         Bundle bundle = new Bundle();
         Intent intent;
         switch (playKind) {
-            case 0:
-            case 1:
+            case 0, 1 -> {
                 isShowingSongsInfo = false;
                 if (playView != null) {
                     playView.startFirstNoteTouching = false;
@@ -513,7 +523,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     return;
                 }
                 return;
-            case 2:
+            }
+            case 2 -> {
                 if (!isPlaying) {
                     isShowingSongsInfo = false;
                     if (playView != null) {
@@ -533,7 +544,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     return;
                 }
                 return;
-            case 3:
+            }
+            case 3 -> {
                 isShowingSongsInfo = false;
                 if (playView != null) {
                     playView.startFirstNoteTouching = false;
@@ -549,7 +561,8 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     return;
                 }
                 return;
-            case 4:
+            }
+            case 4 -> {
                 isShowingSongsInfo = false;
                 if (playView != null) {
                     playView.startFirstNoteTouching = false;
@@ -565,7 +578,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     return;
                 }
                 return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 

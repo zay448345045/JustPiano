@@ -26,15 +26,15 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
         OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) weakReference.get();
         try {
             switch (message.what) {
-                case 1:
-                case 7:
+                case 1, 7 -> {
                     post(() -> olPlayKeyboardRoom.initPlayer(olPlayKeyboardRoom.playerGrid, message.getData()));
                     return;
-                case 2:
-                case 4:
+                }
+                case 2, 4 -> {
                     post(() -> olPlayKeyboardRoom.handleChat(message));
                     return;
-                case 5:
+                }
+                case 5 -> {
                     post(() -> {
                         // 1.读取键盘音符事件信息，为空或长度为零则直接结束
                         long[] notes = message.getData().getLongArray("NOTES");
@@ -91,40 +91,51 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 8:
+                }
+                case 8 -> {
                     post(olPlayKeyboardRoom::handleKicked);
                     return;
-                case 9:
+                }
+                case 9 -> {
                     post(() -> olPlayKeyboardRoom.handleFriendRequest(message));
                     return;
-                case 10:
+                }
+                case 10 -> {
                     post(() -> {
                         String name = message.getData().getString("R");
                         olPlayKeyboardRoom.roomNameView.setText("[" + olPlayKeyboardRoom.roomId + "]" + name);
                     });
                     return;
-                case 11:
+                }
+                case 11 -> {
                     post(() -> olPlayKeyboardRoom.handleRefreshFriendList(message));
                     return;
-                case 12:
+                }
+                case 12 -> {
                     post(() -> olPlayKeyboardRoom.handlePrivateChat(message));
                     return;
-                case 13:
+                }
+                case 13 -> {
                     post(() -> olPlayKeyboardRoom.handleRefreshFriendListWithoutPage(message));
                     return;
-                case 14:
+                }
+                case 14 -> {
                     post(() -> olPlayKeyboardRoom.handleDialog(message));
                     return;
-                case 15:
+                }
+                case 15 -> {
                     post(() -> olPlayKeyboardRoom.handleInvitePlayerList(message));
                     return;
-                case 16:
+                }
+                case 16 -> {
                     post(() -> olPlayKeyboardRoom.handleSetUserInfo(message));
                     return;
-                case 21:
+                }
+                case 21 -> {
                     post(olPlayKeyboardRoom::handleOffline);
                     return;
-                case 22:
+                }
+                case 22 -> {
                     post(() -> {
                         int i = message.getData().getInt("MSG_T");
                         int i2 = message.getData().getInt("MSG_CT");
@@ -134,10 +145,13 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                         }
                     });
                     return;
-                case 23:
+                }
+                case 23 -> {
                     post(() -> olPlayKeyboardRoom.showInfoDialog(message.getData()));
                     return;
-                default:
+                }
+                default -> {
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

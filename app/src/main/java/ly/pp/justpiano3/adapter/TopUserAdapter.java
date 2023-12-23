@@ -67,30 +67,30 @@ public final class TopUserAdapter extends BaseAdapter {
         int intValue = (Integer) peopleList.get(i).get("userScore");
         textView3.setTextColor(0xffff0000);
         switch (showTopInfo.head) {
-            case 0:
+            case 0 -> {
                 textView3.setText("冠军:" + peopleList.get(i).get("userNuns"));
                 textView4.setText("总分:" + intValue);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 textView3.setText("总分:" + intValue);
                 textView4.setText("冠军:" + peopleList.get(i).get("userNuns"));
-                break;
-            case 4:
+            }
+            case 4 -> {
                 textView3.setText("等级:" + peopleList.get(i).get("userNuns"));
                 textView4.setText("经验:" + intValue);
-                break;
-            case 7:
+            }
+            case 7 -> {
                 textView3.setText("祝福:" + intValue);
                 textView4.setVisibility(View.GONE);
-                break;
-            case 9:
+            }
+            case 9 -> {
                 textView3.setText("贡献:" + intValue / 10);
                 textView4.setText("等级:" + peopleList.get(i).get("userNuns"));
-                break;
-            case 10:
+            }
+            case 10 -> {
                 textView4.setText("等级:" + peopleList.get(i).get("userNuns"));
                 textView3.setText("" + intValue / 10 + "级" + ((intValue % 10)) + "阶");
-                break;
+            }
         }
         view.setOnClickListener(v -> {
             Intent intent = new Intent();

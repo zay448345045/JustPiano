@@ -36,16 +36,13 @@ public final class CreateRoomClick implements OnClickListener {
             Toast.makeText(olPlayHall, "确定字数在8个字之内!", Toast.LENGTH_SHORT).show();
         } else {
             if (TextUtils.isEmpty(password) || password.length() <= 8) {
-                switch (roomModeRadioGroup.getCheckedRadioButtonId()) {
-                    case R.id.group:
-                        i2 = 1;
-                        break;
-                    case R.id.couple:
-                        i2 = 2;
-                        break;
-                    case R.id.keyboard:
-                        i2 = 3;
-                        break;
+                int checkedRadioButtonId = roomModeRadioGroup.getCheckedRadioButtonId();
+                if (checkedRadioButtonId == R.id.group) {
+                    i2 = 1;
+                } else if (checkedRadioButtonId == R.id.couple) {
+                    i2 = 2;
+                } else if (checkedRadioButtonId == R.id.keyboard) {
+                    i2 = 3;
                 }
                 OnlineCreateRoomDTO.Builder builder = OnlineCreateRoomDTO.newBuilder();
                 builder.setRoomName(roomName);

@@ -84,20 +84,19 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
 
         @Override
         public int compare(Map<String, Object> obj, Map<String, Object> obj2) {
-            switch (type) {
-                case 0:
-                    return olMelodySelect.updateOrderByReverse ? -((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));
-                case 1:
-                    return olMelodySelect.degreeOrderByReverse ? ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree")) : -((Double) obj.get("degree")).compareTo((Double) obj2.get("degree"));
-                case 2:
-                    return olMelodySelect.songNameOrderByReverse ? comparator.compare(obj.get("songName"), obj2.get("songName")) : -comparator.compare(obj.get("songName"), obj2.get("songName"));
-                case 3:
-                    return olMelodySelect.itemOrderByReverse ? comparator.compare(obj.get("items"), obj2.get("items")) : -comparator.compare(obj.get("items"), obj2.get("items"));
-                case 4:
-                    return olMelodySelect.playCountOrderByReverse ? -comparator.compare(obj.get("playCount"), obj2.get("playCount")) : comparator.compare(obj.get("playCount"), obj2.get("playCount"));
-                default:
-                    return 0;
-            }
+            return switch (type) {
+                case 0 ->
+                        olMelodySelect.updateOrderByReverse ? -((String) obj.get("update")).compareTo((String) obj2.get("update")) : ((String) obj.get("update")).compareTo((String) obj2.get("update"));
+                case 1 ->
+                        olMelodySelect.degreeOrderByReverse ? ((Double) obj.get("degree")).compareTo((Double) obj2.get("degree")) : -((Double) obj.get("degree")).compareTo((Double) obj2.get("degree"));
+                case 2 ->
+                        olMelodySelect.songNameOrderByReverse ? comparator.compare(obj.get("songName"), obj2.get("songName")) : -comparator.compare(obj.get("songName"), obj2.get("songName"));
+                case 3 ->
+                        olMelodySelect.itemOrderByReverse ? comparator.compare(obj.get("items"), obj2.get("items")) : -comparator.compare(obj.get("items"), obj2.get("items"));
+                case 4 ->
+                        olMelodySelect.playCountOrderByReverse ? -comparator.compare(obj.get("playCount"), obj2.get("playCount")) : comparator.compare(obj.get("playCount"), obj2.get("playCount"));
+                default -> 0;
+            };
         }
     }
 
@@ -151,17 +150,17 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     public boolean handleMessage(Message message) {
         Bundle data = message.getData();
         switch (message.what) {
-            case 1:
+            case 1 -> {
                 int i = data.getInt("selIndex");
                 pageButton.setText(" " + pageList.get(i) + " ");
                 index = i;
                 popupWindow.dismiss();
                 new OLMelodySelectTask(this).execute();
-                break;
-            case 2:
+            }
+            case 2 -> {
                 pageList.remove(data.getInt("delIndex"));
                 popupWindowSelectAdapter.notifyDataSetChanged();
-                break;
+            }
         }
         return false;
     }
@@ -179,61 +178,53 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     public void onClick(View view) {
         boolean z = false;
         boolean z2 = true;
-        switch (view.getId()) {
-            case R.id.ol_date_b:
-                if (updateOrderByReverse) {
-                    z2 = false;
-                }
-                updateOrderByReverse = z2;
-                orderByType = 0;
-                bindAdapter(itemListView, orderByType, songCount);
+        int id = view.getId();
+        if (id == R.id.ol_date_b) {
+            if (updateOrderByReverse) {
+                z2 = false;
+            }
+            updateOrderByReverse = z2;
+            orderByType = 0;
+            bindAdapter(itemListView, orderByType, songCount);
+        } else if (id == R.id.ol_degree_b) {
+            if (!degreeOrderByReverse) {
+                z = true;
+            }
+            degreeOrderByReverse = z;
+            orderByType = 1;
+            bindAdapter(itemListView, orderByType, songCount);
+        } else if (id == R.id.ol_name_b) {
+            if (!songNameOrderByReverse) {
+                z = true;
+            }
+            songNameOrderByReverse = z;
+            orderByType = 2;
+            bindAdapter(itemListView, orderByType, songCount);
+        } else if (id == R.id.ol_items_b) {
+            if (!itemOrderByReverse) {
+                z = true;
+            }
+            itemOrderByReverse = z;
+            orderByType = 3;
+            bindAdapter(itemListView, orderByType, songCount);
+        } else if (id == R.id.ol_hot_b) {
+            if (!playCountOrderByReverse) {
+                z = true;
+            }
+            playCountOrderByReverse = z;
+            orderByType = 4;
+            bindAdapter(itemListView, orderByType, songCount);
+        } else if (id == R.id.ol_search_button) {
+            Intent intent = new Intent();
+            intent.putExtra("head", 1);
+            intent.setClass(this, SearchSongs.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.ol_top_next) {
+            if (firstLoadFocusFinish) {
+                popupWindow.showAsDropDown(pageButton);
                 return;
-            case R.id.ol_degree_b:
-                if (!degreeOrderByReverse) {
-                    z = true;
-                }
-                degreeOrderByReverse = z;
-                orderByType = 1;
-                bindAdapter(itemListView, orderByType, songCount);
-                return;
-            case R.id.ol_name_b:
-                if (!songNameOrderByReverse) {
-                    z = true;
-                }
-                songNameOrderByReverse = z;
-                orderByType = 2;
-                bindAdapter(itemListView, orderByType, songCount);
-                return;
-            case R.id.ol_items_b:
-                if (!itemOrderByReverse) {
-                    z = true;
-                }
-                itemOrderByReverse = z;
-                orderByType = 3;
-                bindAdapter(itemListView, orderByType, songCount);
-                return;
-            case R.id.ol_hot_b:
-                if (!playCountOrderByReverse) {
-                    z = true;
-                }
-                playCountOrderByReverse = z;
-                orderByType = 4;
-                bindAdapter(itemListView, orderByType, songCount);
-                return;
-            case R.id.ol_search_button:
-                Intent intent = new Intent();
-                intent.putExtra("head", 1);
-                intent.setClass(this, SearchSongs.class);
-                startActivity(intent);
-                finish();
-                return;
-            case R.id.ol_top_next:
-                if (firstLoadFocusFinish) {
-                    popupWindow.showAsDropDown(pageButton);
-                    return;
-                }
-                return;
-            default:
+            }
         }
     }
 

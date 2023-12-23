@@ -124,17 +124,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public void buildAndShowCpDialog(int i, String str, int i2) {
         String str5 = "情意绵绵的情侣";
         switch (i2) {
-            case 0:
+            case 0 -> {
                 return;
-            case 1:
-                str5 = "情意绵绵的情侣";
-                break;
-            case 2:
-                str5 = "基情四射的基友";
-                break;
-            case 3:
-                str5 = "百年好合的百合";
-                break;
+            }
+            case 1 -> str5 = "情意绵绵的情侣";
+            case 2 -> str5 = "基情四射的基友";
+            case 3 -> str5 = "百年好合的百合";
         }
         if (i == 4) {
             showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
@@ -195,29 +190,22 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public boolean handleMessage(Message message) {
         super.handleMessage(message);
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        switch (message.what) {
-            case R.id.keyboard_count_down:
-                keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() - 1);
-                edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
-                edit.apply();
-                break;
-            case R.id.keyboard_count_up:
-                keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() + 1);
-                edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
-                edit.apply();
-                break;
-            case R.id.keyboard_move_left:
-                keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() - 1);
-                edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
-                edit.apply();
-                break;
-            case R.id.keyboard_move_right:
-                keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() + 1);
-                edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
-                edit.apply();
-                break;
-            default:
-                break;
+        if (message.what == R.id.keyboard_count_down) {
+            keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() - 1);
+            edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
+            edit.apply();
+        } else if (message.what == R.id.keyboard_count_up) {
+            keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() + 1);
+            edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
+            edit.apply();
+        } else if (message.what == R.id.keyboard_move_left) {
+            keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() - 1);
+            edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
+            edit.apply();
+        } else if (message.what == R.id.keyboard_move_right) {
+            keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() + 1);
+            edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
+            edit.apply();
         }
         onlineWaterfallViewNoteWidthUpdateHandle();
         return false;
@@ -243,54 +231,51 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        switch (view.getId()) {
-            case R.id.keyboard_setting:
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsMode.class);
-                startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
-                return;
-            case R.id.keyboard_record:
-                try {
-                    Button recordButton = (Button) view;
-                    if (!recordStart) {
-                        JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                        jpDialogBuilder.setTitle("提示");
-                        jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，存储位置可在设置中指定");
-                        jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
-                            dialogInterface.dismiss();
-                            String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
-                            recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
-                            recordFileName = date + "录音.wav";
-                            SoundEngineUtil.setRecordFilePath(recordFilePath);
-                            SoundEngineUtil.setRecord(true);
-                            recordStart = true;
-                            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
-                            recordButton.setText("■");
-                            recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
-                            recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
-                        });
-                        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
-                        jpDialogBuilder.buildAndShowDialog();
+        int id = view.getId();
+        if (id == R.id.keyboard_setting) {
+            Intent intent = new Intent();
+            intent.setClass(this, SettingsMode.class);
+            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+        } else if (id == R.id.keyboard_record) {
+            try {
+                Button recordButton = (Button) view;
+                if (!recordStart) {
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                    jpDialogBuilder.setTitle("提示");
+                    jpDialogBuilder.setMessage("点击确定按钮开始录音，录音将在点击停止按钮后保存至录音文件，存储位置可在设置中指定");
+                    jpDialogBuilder.setFirstButton("确定", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        String date = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE);
+                        recordFilePath = getFilesDir().getAbsolutePath() + "/Records/" + date + ".raw";
+                        recordFileName = date + "录音.wav";
+                        SoundEngineUtil.setRecordFilePath(recordFilePath);
+                        SoundEngineUtil.setRecord(true);
+                        recordStart = true;
+                        Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show();
+                        recordButton.setText("■");
+                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.dark));
+                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_orange, getTheme()));
+                    });
+                    jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+                    jpDialogBuilder.buildAndShowDialog();
+                } else {
+                    recordButton.setText("●");
+                    recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
+                    recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
+                    recordStart = false;
+                    SoundEngineUtil.setRecord(false);
+                    File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
+                    Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                            GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
+                    if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+                        Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                     } else {
-                        recordButton.setText("●");
-                        recordButton.setTextColor(ContextCompat.getColor(this, R.color.v3));
-                        recordButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector_ol_button, getTheme()));
-                        recordStart = false;
-                        SoundEngineUtil.setRecord(false);
-                        File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                        Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                                GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-                        if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
-                            Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-                return;
-            default:
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -504,12 +489,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         int id = view.getId();
         if (id == R.id.keyboard_resize) {
             switch (action) {
-                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_DOWN -> {
                     reSize = true;
                     view.setPressed(true);
                     waterfallView.setPressed(true);
-                    break;
-                case MotionEvent.ACTION_MOVE:
+                }
+                case MotionEvent.ACTION_MOVE -> {
                     float weight = event.getRawY() / (playerLayout.getHeight() + keyboardLayout.getHeight());
                     if (reSize && weight > 0.65f && weight < 0.92f) {
                         playerLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -522,9 +507,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                             waterfallView.setLayoutParams(waterfallViewLayoutParams);
                         });
                     }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
+                }
+                case MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     reSize = false;
                     view.setPressed(false);
                     waterfallView.setPressed(false);
@@ -532,9 +516,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     edit.putFloat("ol_keyboard_weight", layoutParams.weight);
                     edit.apply();
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
         } else {
             if (action == MotionEvent.ACTION_DOWN) {

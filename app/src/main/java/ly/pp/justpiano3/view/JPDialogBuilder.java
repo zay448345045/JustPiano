@@ -25,6 +25,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
@@ -122,7 +124,7 @@ public final class JPDialogBuilder {
                 messageTextView.setLinkTextColor(Color.YELLOW);
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override
-                    public void onClick(View textView) {
+                    public void onClick(@NonNull View textView) {
                         // 获取点击的URL链接
                         TextView tv = (TextView) textView;
                         Spanned spanned = (Spanned) tv.getText();

@@ -109,24 +109,14 @@ public final class OLPlayDressRoom extends OLBaseActivity implements OnClickList
     public void handleUnlockClothes(byte[] bytes) {
         if (bytes != null) {
             for (int i = 0; i < bytes.length; i += 2) {
-                List<Integer> list = null;
-                switch (bytes[i]) {
-                    case 0:
-                        list = hairUnlock;
-                        break;
-                    case 1:
-                        list = eyeUnlock;
-                        break;
-                    case 2:
-                        list = jacketUnlock;
-                        break;
-                    case 3:
-                        list = trousersUnlock;
-                        break;
-                    case 4:
-                        list = shoesUnlock;
-                        break;
-                }
+                List<Integer> list = switch (bytes[i]) {
+                    case 0 -> hairUnlock;
+                    case 1 -> eyeUnlock;
+                    case 2 -> jacketUnlock;
+                    case 3 -> trousersUnlock;
+                    case 4 -> shoesUnlock;
+                    default -> null;
+                };
                 list.add((int) bytes[i + 1] - Byte.MIN_VALUE);
             }
         }
@@ -136,26 +126,26 @@ public final class OLPlayDressRoom extends OLBaseActivity implements OnClickList
         List<Integer> list = null;
         List<Integer> tryList = null;
         switch (type) {
-            case 0:
+            case 0 -> {
                 list = hairUnlock;
                 tryList = hairTry;
-                break;
-            case 1:
+            }
+            case 1 -> {
                 list = eyeUnlock;
                 tryList = eyeTry;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 list = jacketUnlock;
                 tryList = jacketTry;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 list = trousersUnlock;
                 tryList = trousersTry;
-                break;
-            case 4:
+            }
+            case 4 -> {
                 list = shoesUnlock;
                 tryList = shoesTry;
-                break;
+            }
         }
         tryList.remove((Integer) id);
         list.add(id);
@@ -163,36 +153,34 @@ public final class OLPlayDressRoom extends OLBaseActivity implements OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ol_dress_ok:
-                if (hairTry.isEmpty() && eyeTry.isEmpty() && jacketTry.isEmpty() && trousersTry.isEmpty() && shoesTry.isEmpty()) {
-                    OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
-                    builder.setType(0);
-                    builder.setHair(hairNow + 1);
-                    builder.setEye(eyeNow + 1);
-                    builder.setJacket(jacketNow + 1);
-                    builder.setTrousers(trousersNow + 1);
-                    builder.setShoes(shoesNow + 1);
-                    sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
-                    Intent intent = new Intent(this, OLPlayHallRoom.class);
-                    intent.putExtra("T", trousersNow + 1);
-                    intent.putExtra("J", jacketNow + 1);
-                    intent.putExtra("H", hairNow + 1);
-                    intent.putExtra("E", eyeNow + 1);
-                    intent.putExtra("O", shoesNow + 1);
-                    intent.putExtra("S", sex);
-                    setResult(-1, intent);
-                } else {
-                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                    jpDialogBuilder.setTitle("提示");
-                    jpDialogBuilder.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
-                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
-                    jpDialogBuilder.buildAndShowDialog();
-                }
-                break;
-            case R.id.ol_dress_cancel:
-                finish();
-                break;
+        int id = view.getId();
+        if (id == R.id.ol_dress_ok) {
+            if (hairTry.isEmpty() && eyeTry.isEmpty() && jacketTry.isEmpty() && trousersTry.isEmpty() && shoesTry.isEmpty()) {
+                OnlineChangeClothesDTO.Builder builder = OnlineChangeClothesDTO.newBuilder();
+                builder.setType(0);
+                builder.setHair(hairNow + 1);
+                builder.setEye(eyeNow + 1);
+                builder.setJacket(jacketNow + 1);
+                builder.setTrousers(trousersNow + 1);
+                builder.setShoes(shoesNow + 1);
+                sendMsg(OnlineProtocolType.CHANGE_CLOTHES, builder.build());
+                Intent intent = new Intent(this, OLPlayHallRoom.class);
+                intent.putExtra("T", trousersNow + 1);
+                intent.putExtra("J", jacketNow + 1);
+                intent.putExtra("H", hairNow + 1);
+                intent.putExtra("E", eyeNow + 1);
+                intent.putExtra("O", shoesNow + 1);
+                intent.putExtra("S", sex);
+                setResult(-1, intent);
+            } else {
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("您有正在试穿的服装，请取消试穿所有服装后保存");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+            }
+        } else if (id == R.id.ol_dress_cancel) {
+            finish();
         }
     }
 

@@ -71,17 +71,12 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
 
     public void positionHandle() {
         switch (position) {
-            case LEADER:
+            case LEADER -> {
                 manageFamily.setEnabled(true);
                 inOut.setText("解散家族");
-                break;
-            case VICE_LEADER:
-            case MEMBER:
-                inOut.setText("退出家族");
-                break;
-            case NOT_IN_FAMILY:
-                inOut.setText("申请加入");
-                break;
+            }
+            case VICE_LEADER, MEMBER -> inOut.setText("退出家族");
+            case NOT_IN_FAMILY -> inOut.setText("申请加入");
         }
     }
 
@@ -89,16 +84,9 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("提示");
         switch (position) {
-            case LEADER:
-                jpDialogBuilder.setMessage("确定要解散你的家族吗?");
-                break;
-            case VICE_LEADER:
-            case MEMBER:
-                jpDialogBuilder.setMessage("确定要退出家族吗?");
-                break;
-            case NOT_IN_FAMILY:
-                jpDialogBuilder.setMessage("申请加入家族需要族长或副族长的批准!");
-                break;
+            case LEADER -> jpDialogBuilder.setMessage("确定要解散你的家族吗?");
+            case VICE_LEADER, MEMBER -> jpDialogBuilder.setMessage("确定要退出家族吗?");
+            case NOT_IN_FAMILY -> jpDialogBuilder.setMessage("申请加入家族需要族长或副族长的批准!");
         }
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
@@ -198,121 +186,107 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.manage_family:
-                jpprogressBar.show();
-                OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
-                builder.setType(8);
-                builder.setFamilyId(Integer.parseInt(familyID));
-                sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                break;
-            case R.id.in_out:
-                if (infoWindow != null && infoWindow.isShowing()) {
-                    infoWindow.dismiss();
-                }
-                inOutFamily();
-                break;
-            case R.id.ol_chat_b:
-                if (infoWindow != null && infoWindow.isShowing()) {
-                    infoWindow.dismiss();
-                }
-                showSendDialog(peopleNow, 0);
-                break;
-            case R.id.ol_kickout_b:
-                if (infoWindow != null && infoWindow.isShowing()) {
-                    infoWindow.dismiss();
-                }
-                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("提示");
-                jpDialogBuilder.setMessage("确定要将Ta移出家族吗?");
-                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
-                            OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
-                            familyBuilder.setType(6);
-                            familyBuilder.setUserName(peopleNow);
-                            familyBuilder.setStatus(1);
-                            sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
-                            dialog.dismiss();
-                            jpprogressBar.show();
-                        })
-                        .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
-                break;
-            case R.id.ol_showinfo_b:
-                if (infoWindow != null && infoWindow.isShowing()) {
-                    infoWindow.dismiss();
-                }
-                if (OnlineUtil.getConnectionService() != null) {
-                    OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
-                    builder1.setName(peopleNow);
-                    sendMsg(OnlineProtocolType.USER_INFO_DIALOG, builder1.build());
-                }
-                break;
-            case R.id.ol_couple_b:  //提升/撤职副族长
-                if (infoWindow != null && infoWindow.isShowing()) {
-                    infoWindow.dismiss();
-                }
-                jpprogressBar.show();
-                builder = OnlineFamilyDTO.newBuilder();
-                builder.setType(7);
-                builder.setUserName(peopleNow);
-                sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                break;
-            case R.id.ol_family_changedecl:
-                showSendDialog(" ", 1);
-                break;
-            case R.id.ol_family_changepic:
-                jpDialogBuilder = new JPDialogBuilder(this);
-                jpDialogBuilder.setTitle("提示");
-                jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，请至官网上传");
-                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
-                jpDialogBuilder.buildAndShowDialog();
+        int id = view.getId();
+        if (id == R.id.manage_family) {
+            jpprogressBar.show();
+            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+            builder.setType(8);
+            builder.setFamilyId(Integer.parseInt(familyID));
+            sendMsg(OnlineProtocolType.FAMILY, builder.build());
+        } else if (id == R.id.in_out) {
+            if (infoWindow != null && infoWindow.isShowing()) {
+                infoWindow.dismiss();
+            }
+            inOutFamily();
+        } else if (id == R.id.ol_chat_b) {
+            if (infoWindow != null && infoWindow.isShowing()) {
+                infoWindow.dismiss();
+            }
+            showSendDialog(peopleNow, 0);
+        } else if (id == R.id.ol_kickout_b) {
+            if (infoWindow != null && infoWindow.isShowing()) {
+                infoWindow.dismiss();
+            }
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("提示");
+            jpDialogBuilder.setMessage("确定要将Ta移出家族吗?");
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                        OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
+                        familyBuilder.setType(6);
+                        familyBuilder.setUserName(peopleNow);
+                        familyBuilder.setStatus(1);
+                        sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
+                        dialog.dismiss();
+                        jpprogressBar.show();
+                    })
+                    .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
+        } else if (id == R.id.ol_showinfo_b) {
+            if (infoWindow != null && infoWindow.isShowing()) {
+                infoWindow.dismiss();
+            }
+            if (OnlineUtil.getConnectionService() != null) {
+                OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
+                builder1.setName(peopleNow);
+                sendMsg(OnlineProtocolType.USER_INFO_DIALOG, builder1.build());
+            }
+        } else if (id == R.id.ol_couple_b) {  //提升/撤职副族长
+            OnlineFamilyDTO.Builder builder;
+            if (infoWindow != null && infoWindow.isShowing()) {
+                infoWindow.dismiss();
+            }
+            jpprogressBar.show();
+            builder = OnlineFamilyDTO.newBuilder();
+            builder.setType(7);
+            builder.setUserName(peopleNow);
+            sendMsg(OnlineProtocolType.FAMILY, builder.build());
+        } else if (id == R.id.ol_family_changedecl) {
+            showSendDialog(" ", 1);
+        } else if (id == R.id.ol_family_changepic) {
+            JPDialogBuilder jpDialogBuilder;
+            jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("提示");
+            jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，请至官网上传");
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+            jpDialogBuilder.buildAndShowDialog();
 //                Intent intent = new Intent("android.intent.action.GET_CONTENT");
 //                intent.addCategory("android.intent.category.OPENABLE");
 //                intent.setType("image/*");
 //                startActivityForResult(intent, 2);
-                break;
-            case R.id.ol_family_changetest:
-                break;
-            case R.id.ol_family_levelup:
-                builder = OnlineFamilyDTO.newBuilder();
-                builder.setType(10);
-                sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                break;
-            case R.id.column_position:
-                Collections.sort(peopleList, (map1, map2) -> map1.get("P").compareTo(map2.get("P")));
-                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
-                break;
-            case R.id.column_family_name:
-                Collections.sort(peopleList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
-                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
-                break;
-            case R.id.column_last_login_time:
-                Collections.sort(peopleList, new Comparator<Map<String, String>>() {
-                    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        } else if (id == R.id.ol_family_changetest) {
+        } else if (id == R.id.ol_family_levelup) {
+            OnlineFamilyDTO.Builder builder;
+            builder = OnlineFamilyDTO.newBuilder();
+            builder.setType(10);
+            sendMsg(OnlineProtocolType.FAMILY, builder.build());
+        } else if (id == R.id.column_position) {
+            Collections.sort(peopleList, (map1, map2) -> map1.get("P").compareTo(map2.get("P")));
+            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+        } else if (id == R.id.column_family_name) {
+            Collections.sort(peopleList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
+            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+        } else if (id == R.id.column_last_login_time) {
+            Collections.sort(peopleList, new Comparator<Map<String, String>>() {
+                private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-                    @Override
-                    public int compare(Map<String, String> map1, Map<String, String> map2) {
-                        try {
-                            return dateFormat.parse(map2.get("D")).compareTo(dateFormat.parse(map1.get("D")));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return 0;
+                @Override
+                public int compare(Map<String, String> map1, Map<String, String> map2) {
+                    try {
+                        return dateFormat.parse(map2.get("D")).compareTo(dateFormat.parse(map1.get("D")));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
-                break;
-            case R.id.column_level:
-                Collections.sort(peopleList, (map1, map2) -> Integer.compare(
-                        Integer.parseInt(map2.get("L")), Integer.parseInt(map1.get("L"))));
-                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
-                break;
-            case R.id.column_contribution:
-                Collections.sort(peopleList, (map1, map2) -> Integer.compare(
-                        Integer.parseInt(map2.get("C")), Integer.parseInt(map1.get("C"))));
-                bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
-                break;
-            default:
-                break;
+                    return 0;
+                }
+            });
+            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+        } else if (id == R.id.column_level) {
+            Collections.sort(peopleList, (map1, map2) -> Integer.compare(
+                    Integer.parseInt(map2.get("L")), Integer.parseInt(map1.get("L"))));
+            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+        } else if (id == R.id.column_contribution) {
+            Collections.sort(peopleList, (map1, map2) -> Integer.compare(
+                    Integer.parseInt(map2.get("C")), Integer.parseInt(map1.get("C"))));
+            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
         }
     }
 
@@ -383,15 +357,9 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             positionChangeButton.setVisibility(View.GONE);
         } else {
             switch (userPosition) {
-                case VICE_LEADER:
-                    positionChangeButton.setText("撤职副族长");
-                    break;
-                case MEMBER:
-                    positionChangeButton.setText("晋升副族长");
-                    break;
-                default:
-                    positionChangeButton.setVisibility(View.GONE);
-                    break;
+                case VICE_LEADER -> positionChangeButton.setText("撤职副族长");
+                case MEMBER -> positionChangeButton.setText("晋升副族长");
+                default -> positionChangeButton.setVisibility(View.GONE);
             }
             positionChangeButton.setOnClickListener(this);
         }

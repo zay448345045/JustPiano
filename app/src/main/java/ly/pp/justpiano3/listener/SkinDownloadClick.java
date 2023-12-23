@@ -29,13 +29,9 @@ public final class SkinDownloadClick implements OnClickListener {
         int i2 = 0;
         dialogInterface.dismiss();
         switch (type) {
-            case 0:
-                ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(url, name));
-                break;
-            case 1:
-                ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
-                break;
-            case 2:
+            case 0 -> ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(url, name));
+            case 1 -> ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
+            case 2 -> {
                 Editor edit = PreferenceManager.getDefaultSharedPreferences(skinDownload).edit();
                 edit.putString("skin_select", "original");
                 edit.apply();
@@ -50,7 +46,7 @@ public final class SkinDownloadClick implements OnClickListener {
                     }
                 }
                 ImageLoadUtil.setBackground(skinDownload);
-                break;
+            }
         }
     }
 }

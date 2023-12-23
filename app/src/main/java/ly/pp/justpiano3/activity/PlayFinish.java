@@ -69,7 +69,7 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
             finish();
         } else if (view == retryButton) {
             switch (head) {
-                case 0:
+                case 0 -> {
                     setResult(-1, intent);
                     intent = new Intent();
                     intent.setClass(this, PianoPlay.class);
@@ -84,8 +84,8 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                     intent.putExtra("score", topScore);
                     startActivity(intent);
                     finish();
-                    return;
-                case 1:
+                }
+                case 1 -> {
                     if (OLMelodySelect.songBytes != null) {
                         setResult(-1, intent);
                         intent = new Intent();
@@ -98,10 +98,10 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                         intent.putExtra("topScore", topScore);
                         startActivity(intent);
                         finish();
-                        return;
                     }
-                    return;
-                default:
+                }
+                default -> {
+                }
             }
         } else if (view == shareButton) {
             ShareUtil.share(this);
@@ -116,7 +116,7 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
         Bundle extras = getIntent().getExtras();
         head = extras.getInt("head");
         switch (head) {
-            case 0:
+            case 0 -> {
                 perfect = extras.getInt("perf");
                 cool = extras.getInt("cool");
                 great = extras.getInt("great");
@@ -154,8 +154,8 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                         isWinner = false;
                     }
                 }
-                break;
-            case 1:
+            }
+            case 1 -> {
                 topScore = extras.getInt("topScore");
                 perfect = extras.getInt("perf");
                 cool = extras.getInt("cool");
@@ -186,7 +186,7 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                 if (score > 0) {
                     new PlayFinishTask(this).execute();
                 }
-                break;
+            }
         }
         setContentView(R.layout.play_finish);
         finishButton = findViewById(R.id.ok);
