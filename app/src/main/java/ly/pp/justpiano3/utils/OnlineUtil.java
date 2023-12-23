@@ -226,8 +226,7 @@ public class OnlineUtil {
                 + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
         outlineConnectionService(jpApplication);
         Activity topActivity = JPStack.top();
-        if (topActivity instanceof OLBaseActivity) {
-            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+        if (topActivity instanceof OLBaseActivity olBaseActivity) {
             Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
             message.what = 0;
             olBaseActivity.olBaseActivityHandler.handleMessage(message);
@@ -243,8 +242,7 @@ public class OnlineUtil {
 
     public static void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
         Activity topActivity = JPStack.top();
-        if (topActivity instanceof OLBaseActivity) {
-            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
+        if (topActivity instanceof OLBaseActivity olBaseActivity) {
             olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
         }
     }

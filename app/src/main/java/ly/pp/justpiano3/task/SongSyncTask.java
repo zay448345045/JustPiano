@@ -193,13 +193,11 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        if (weakReference.get() instanceof OLMainMode) {
-            OLMainMode olMainMode = (OLMainMode) weakReference.get();
+        if (weakReference.get() instanceof OLMainMode olMainMode) {
             Toast.makeText(olMainMode, "曲库同步中...", Toast.LENGTH_SHORT).show();
             olMainMode.jpProgressBar.setCancelable(false);
             olMainMode.jpProgressBar.show();
-        } else if (weakReference.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) weakReference.get();
+        } else if (weakReference.get() instanceof MelodySelect melodySelect) {
             Toast.makeText(melodySelect, "曲库同步中...", Toast.LENGTH_SHORT).show();
             melodySelect.jpProgressBar.setCancelable(false);
             melodySelect.jpProgressBar.show();

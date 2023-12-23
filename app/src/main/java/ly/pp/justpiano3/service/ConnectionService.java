@@ -139,8 +139,7 @@ public class ConnectionService extends Service {
 
                             @Override
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
-                                if (obj instanceof IdleStateEvent) {
-                                    IdleStateEvent event = (IdleStateEvent) obj;
+                                if (obj instanceof IdleStateEvent event) {
                                     if (!OnlineUtil.autoReconnecting() && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
                                         writeData(OnlineProtocolType.HEART_BEAT, OnlineHeartBeatDTO.getDefaultInstance());
                                     }

@@ -101,9 +101,7 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
             loginActivity.jpProgressBar.dismiss();
         }
         switch (i) {
-            case 0, 4, 5 -> {
-                loginActivity.loginSuccess(i, message, title);
-            }
+            case 0, 4, 5 -> loginActivity.loginSuccess(i, message, title);
             case 1, 2 -> {
                 if (!TextUtils.isEmpty(newVersion)) {
                     loginActivity.addVersionUpdateDialog(message, newVersion);

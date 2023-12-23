@@ -28,18 +28,18 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
             ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.INVISIBLE);
         }
         switch (str) {
-            case "tab1":
+            case "tab1" -> {
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
                 builder.setPage(olRoomActivity.page);
                 olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab2":
+            }
+            case "tab2" -> {
                 if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
                     olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
                 }
-                break;
-            case "tab3":
+            }
+            case "tab3" -> {
                 if (olRoomActivity instanceof OLPlayKeyboardRoom) {
                     if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
                         olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
@@ -47,10 +47,9 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                     ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.VISIBLE);
                     ((OLPlayKeyboardRoom) olRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
                 }
-                break;
-            case "tab4":
-                olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
-                break;
+            }
+            case "tab4" ->
+                    olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
         }
     }
 }

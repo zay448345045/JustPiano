@@ -40,11 +40,9 @@ public final class TouchNotes implements OnTouchListener {
             x = Math.max(x, 0.0f);
             y = Math.max(y, 0.0f);
             switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    onFingerDown(id, x, y);
-                    break;
-                case MotionEvent.ACTION_MOVE:
+                case MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN ->
+                        onFingerDown(id, x, y);
+                case MotionEvent.ACTION_MOVE -> {
                     int pointerCount = event.getPointerCount();
                     for (int i = 0; i < pointerCount; i++) {
                         id = event.getPointerId(i);
@@ -54,16 +52,11 @@ public final class TouchNotes implements OnTouchListener {
                         y = Math.max(y, 0.0f);
                         onFingerMove(id, x, y);
                     }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_POINTER_UP:
-                    onFingerUp(id, x, y);
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    onAllFingersUp();
-                    break;
-                default:
-                    break;
+                }
+                case MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> onFingerUp(id, x, y);
+                case MotionEvent.ACTION_CANCEL -> onAllFingersUp();
+                default -> {
+                }
             }
         }
         return true;

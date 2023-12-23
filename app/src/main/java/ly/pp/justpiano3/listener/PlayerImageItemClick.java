@@ -59,8 +59,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
         Button showCoupleDialogButton = inflate.findViewById(R.id.ol_couple_b);
         Button chatBlackButton = inflate.findViewById(R.id.ol_chat_black);
         Button chatBlackCancelButton = inflate.findViewById(R.id.ol_chat_black_cancel);
-        if (olRoomActivity instanceof OLPlayKeyboardRoom) {
-            OLPlayKeyboardRoom olPlayKeyboardRoom = ((OLPlayKeyboardRoom) olRoomActivity);
+        if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
             Button soundMuteButton = inflate.findViewById(R.id.ol_sound_b);
             soundMuteButton.setVisibility(View.VISIBLE);
             soundMuteButton.setText(olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].getMuted() ? "取消静音" : "静音");

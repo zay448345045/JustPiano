@@ -51,8 +51,7 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(@NonNull ChannelHandlerContext ctx, @NonNull Object msg) throws Exception {
-        if (msg instanceof ByteBuf) {
-            ByteBuf byteBuf = (ByteBuf) msg;
+        if (msg instanceof ByteBuf byteBuf) {
             if (!byteBuf.isReadable()) {
                 // byteBuf不可读，直接释放byteBuf
                 byteBuf.release();

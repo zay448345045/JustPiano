@@ -26,25 +26,25 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
             olPlayHallRoom.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
                     intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
+        OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
         switch (str) {
-            case "tab1":
-                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
+            case "tab1" -> {
                 builder.setType(1);
                 builder.setPage(olPlayHallRoom.pageNum);
                 olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab4":
+            }
+            case "tab4" -> {
                 olPlayHallRoom.mailCountsView.setText("");
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(2);
                 olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab3":
+            }
+            case "tab3" -> {
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(3);
                 olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab5":
+            }
+            case "tab5" -> {
                 if (olPlayHallRoom.familyList == null) {
                     olPlayHallRoom.familyList = new ArrayList<>();
                 }
@@ -63,7 +63,7 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
                     }
                     olPlayHallRoom.familyListView.post(() -> olPlayHallRoom.familyListView.setSelection(olPlayHallRoom.familyListPosition));
                 }
-                break;
+            }
         }
     }
 }
