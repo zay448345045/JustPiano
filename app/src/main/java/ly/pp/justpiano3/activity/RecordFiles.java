@@ -79,9 +79,9 @@ public final class RecordFiles extends BaseActivity {
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // 授予临时读取权限
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(documentFile.getUri(), "audio/*"); // 使用通配符匹配所有音频文件类型
+            intent.setDataAndType(documentFile.getUri(), "audio/*");
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "设备无支持的应用，无法打开文件", Toast.LENGTH_SHORT).show();
