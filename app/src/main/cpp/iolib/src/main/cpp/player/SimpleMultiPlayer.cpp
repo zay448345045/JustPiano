@@ -129,8 +129,9 @@ namespace iolib {
         }
         memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
         if (mReverbValue != 0) {
-            mReverbModel.processreplace(audioData, audioData + 1, audioData,
-                                        audioData + 1, numFrames, mChannelCount);
+            mReverbModel.processreplace(mMixBuffer, mMixBuffer + 1, mMixBuffer,
+                                        mMixBuffer + 1, numFrames, mChannelCount);
+            memcpy(audioData, mMixBuffer, numFrames * mChannelCount * sizeof(float));
         }
     }
 
