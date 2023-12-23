@@ -299,7 +299,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         } else if (id == R.id.lo_extra_func_data_export) {
             menuPopupWindow.dismiss();
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setCheckMessageUrl(false).setWidth(500).setTitle("数据导入导出");
+            jpDialogBuilder.setWidth(500).setTitle("数据导入导出");
             jpDialogBuilder.setVisibleRadioGroup(true).setMessage(
                     "此功能可将本地收藏曲目及所有弹奏分数数据进行导入导出，导入操作会覆盖当前本地收藏及所有弹奏分数，请谨慎操作");
             RadioButton radioButton = new RadioButton(this);

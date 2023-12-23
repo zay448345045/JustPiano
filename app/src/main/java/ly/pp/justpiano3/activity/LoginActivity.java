@@ -104,10 +104,10 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
                 }
                 startActivity(intent);
                 finish();
-                return;
             }
             case 4 -> {
-                new JPDialogBuilder(this).setWidth(400).setTitle(title).setMessage(message).setFirstButton("知道了", (dialog, i1) -> {
+                new JPDialogBuilder(this).setWidth(400).setTitle(title).setMessage(message)
+                        .setCheckMessageUrl(true).setFirstButton("知道了", (dialog, i1) -> {
                     dialog.dismiss();
                     if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
                         Toast.makeText(this, "登录成功!欢迎回来:" + kitiName + "!", Toast.LENGTH_SHORT).show();
@@ -117,12 +117,10 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
                     startActivity(intent);
                     finish();
                 }).buildAndShowDialog();
-                return;
             }
             case 5 -> {
-                new JPDialogBuilder(this).setTitle(title).setMessage(message)
+                new JPDialogBuilder(this).setTitle(title).setMessage(message).setCheckMessageUrl(true)
                         .setFirstButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
-                return;
             }
             default -> {
             }

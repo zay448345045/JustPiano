@@ -47,7 +47,7 @@ public final class JPDialogBuilder {
     private boolean positiveButtonDisabled;
     private View view;
     private boolean cancelable = true;
-    private boolean checkMessageUrl = true;
+    private boolean checkMessageUrl;
     private OnClickListener listener;
 
     public JPDialogBuilder(Context context) {

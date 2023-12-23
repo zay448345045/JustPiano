@@ -38,8 +38,8 @@ public class OLMainMode extends OLBaseActivity implements OnClickListener {
         int id = view.getId();
         if (id == R.id.ol_web_b) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setTitle("提示");
-            jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址" + OnlineUtil.INSIDE_WEBSITE_URL + "\n" +
+            jpDialogBuilder.setCheckMessageUrl(true).setTitle("提示");
+            jpDialogBuilder.setMessage("官网访问方式：在浏览器中输入网址https://" + OnlineUtil.INSIDE_WEBSITE_URL + "\n" +
                     "官网功能包括最新极品钢琴软件下载、通知公告、曲谱上传、皮肤音源上传、族徽上传、问题反馈等");
             jpDialogBuilder.setFirstButton("访问官网", (dialog, which) -> {
                 dialog.dismiss();

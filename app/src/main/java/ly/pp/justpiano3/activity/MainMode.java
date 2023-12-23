@@ -151,7 +151,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         int newVersionFirstTime = sharedPreferences.getInt("new_version_first_time", 0);
         if (newVersionFirstTime < BuildConfig.VERSION_CODE) {
             sharedPreferences.edit().putInt("new_version_first_time", BuildConfig.VERSION_CODE).apply();
-            new JPDialogBuilder(this)
+            new JPDialogBuilder(this).setCheckMessageUrl(true)
                     .setTitle(BuildConfig.VERSION_NAME + "版本资源存储位置变更提示")
                     .setMessage("为响应APP合规要求，保护用户隐私，4.9版本已移除SD卡完全访问存储权限，原JustPiano目录下的所有资源默认不会再进行读取。" +
                             "用户可在设置中查看/设定存储目录或手动选择指定文件（默认存储路径为应用的私有目录）\n" +
