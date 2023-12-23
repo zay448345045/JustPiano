@@ -23,7 +23,7 @@ import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPPopupWindow;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
@@ -168,7 +168,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             }
 
             // 屏蔽聊天按钮处理
-            ChatBlackUserUtil.chatBlackButtonHandle(olRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
+            ChatUtil.chatBlackButtonHandle(olRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
         } else {
             if (user.getCpKind() > 0 && user.getCpKind() <= 3) {
                 showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);

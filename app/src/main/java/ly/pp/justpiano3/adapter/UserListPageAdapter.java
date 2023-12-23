@@ -12,7 +12,7 @@ import java.util.List;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
@@ -62,8 +62,8 @@ public final class UserListPageAdapter extends BaseAdapter {
                 .setTitle("删除用户")
                 .setMessage("从聊天屏蔽名单中刪除用户[" + simpleUser.getName() + "]?")
                 .setFirstButton("确定", (dialogInterface, i1) -> {
-                    ChatBlackUserUtil.chatBlackListRemoveUser(userListPage, simpleUser.getName());
-                    userListPage.listView.setAdapter(new UserListPageAdapter(userListPage, ChatBlackUserUtil.getChatBlackList(userListPage)));
+                    ChatUtil.chatBlackListRemoveUser(userListPage, simpleUser.getName());
+                    userListPage.listView.setAdapter(new UserListPageAdapter(userListPage, ChatUtil.getChatBlackList(userListPage)));
                     dialogInterface.dismiss();
                 })
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog());

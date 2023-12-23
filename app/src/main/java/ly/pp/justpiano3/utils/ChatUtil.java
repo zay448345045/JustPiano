@@ -2,27 +2,36 @@ package ly.pp.justpiano3.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.Toast;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.entity.User;
 
 /**
- * 屏蔽聊天处理
+ * 聊天处理
  *
  * @author as
  */
-public class ChatBlackUserUtil {
+public class ChatUtil {
 
     public static final String CHAT_BLACK_LIST_STORE_KEY = "chatBlackList";
 
@@ -30,22 +39,22 @@ public class ChatBlackUserUtil {
 
     public static List<SimpleUser> getChatBlackList(Context context) {
         if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+            chatBlackList = ChatUtil.getStoredChatBlackList(context);
         }
         return chatBlackList;
     }
 
     public static void chatBlackListAddUser(Context context, SimpleUser simpleUser) {
         if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+            chatBlackList = ChatUtil.getStoredChatBlackList(context);
         }
         chatBlackList.add(simpleUser);
-        ChatBlackUserUtil.saveChatBlackList(context);
+        ChatUtil.saveChatBlackList(context);
     }
 
     public static void chatBlackListRemoveUser(Context context, String userName) {
         if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+            chatBlackList = ChatUtil.getStoredChatBlackList(context);
         }
         List<SimpleUser> simpleUserList = new ArrayList<>();
         for (SimpleUser simpleUser : chatBlackList) {
@@ -54,7 +63,7 @@ public class ChatBlackUserUtil {
             }
         }
         chatBlackList = simpleUserList;
-        ChatBlackUserUtil.saveChatBlackList(context);
+        ChatUtil.saveChatBlackList(context);
     }
 
     /**
@@ -88,7 +97,7 @@ public class ChatBlackUserUtil {
      */
     public static boolean isUserInChatBlackList(Context context, String userName) {
         if (chatBlackList == null) {
-            chatBlackList = ChatBlackUserUtil.getStoredChatBlackList(context);
+            chatBlackList = ChatUtil.getStoredChatBlackList(context);
         }
         for (SimpleUser simpleUser : chatBlackList) {
             if (Objects.equals(simpleUser.getName(), userName)) {
@@ -141,5 +150,50 @@ public class ChatBlackUserUtil {
             e.printStackTrace();
         }
         return chatBlackList;
+    }
+
+    /**
+     * 聊天记录存储
+     */
+    public static void chatsSaveHandle(Message message, Context context, String time) {
+        if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
+            String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
+            Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(context,
+                    GlobalSetting.INSTANCE.getChatsSavePath(), "Chats", date + ".txt");
+            if (fileUri == null) {
+                Toast.makeText(context, "聊天记录文件获取失败", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            DocumentFile documentFile = FileUtil.INSTANCE.uriToDocumentFile(context, fileUri);
+            if (documentFile != null && documentFile.exists()) {
+                try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "wa")) {
+                    writeMessageContent(message, time, outputStream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "w")) {
+                    outputStream.write((date + ":\n").getBytes());
+                    writeMessageContent(message, time, outputStream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static void writeMessageContent(Message message, String time, OutputStream outputStream) throws IOException {
+        String msg = message.getData().getString("M");
+        if (msg != null && !msg.startsWith("//")) {
+            if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
+                outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
+                outputStream.write((time + "[公]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
+                outputStream.write((time + "[全服消息]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
+                outputStream.write((time + "[荐]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+            }
+        }
     }
 }

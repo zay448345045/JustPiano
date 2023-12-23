@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.UserListPageAdapter;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class UserListPage extends BaseActivity {
@@ -36,6 +36,6 @@ public final class UserListPage extends BaseActivity {
         descTextView.setVisibility(View.VISIBLE);
         descTextView.setText("此列表下的用户，在接收到Ta的聊天消息时会自动屏蔽，对方无感知。\n屏蔽聊天列表添加用户方法：在房间聊天界面点击人物形象，在小弹窗中选择屏蔽聊天。");
         jpProgressBar = new JPProgressBar(this);
-        listView.setAdapter(new UserListPageAdapter(this, ChatBlackUserUtil.getChatBlackList(this)));
+        listView.setAdapter(new UserListPageAdapter(this, ChatUtil.getChatBlackList(this)));
     }
 }

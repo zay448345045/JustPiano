@@ -32,7 +32,6 @@ import com.google.protobuf.MessageLite;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,11 +56,10 @@ import ly.pp.justpiano3.listener.PlayerImageItemClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
@@ -410,7 +408,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         }
         message.getData().putString("TIME", time);
         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
-        if (!ChatBlackUserUtil.isUserInChatBlackList(this, message.getData().getString("U"))) {
+        if (!ChatUtil.isUserInChatBlackList(this, message.getData().getString("U"))) {
             msgList.add(message.getData());
         }
         // 聊天音效播放
@@ -418,33 +416,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
         // 聊天记录存储
-        if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
-            try {
-                String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
-                Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                        GlobalSetting.INSTANCE.getChatsSavePath(), "Chats", date + ".txt");
-                try (OutputStream outputStream = getContentResolver().openOutputStream(fileUri, "w")) {
-                    outputStream.write((date + ":\n").getBytes());
-                    String str = message.getData().getString("M");
-                    if (str.startsWith("//")) {
-                        bindMsgListView();
-                        return;
-                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
-                        outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
-                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
-                        outputStream.write((time + "[公]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
-                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
-                        outputStream.write((time + "[全服消息]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
-                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
-                        outputStream.write((time + "[荐]" + message.getData().getString("U") + ":" + (message.getData().getString("M")) + '\n').getBytes());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        ChatUtil.chatsSaveHandle(message, this, time);
         bindMsgListView();
     }
 
