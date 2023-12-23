@@ -278,6 +278,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public void recordFinish() {
         if (recordStart) {
             isOpenRecord = false;
+            recordStart = false;
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
@@ -287,7 +288,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
             }
-            recordStart = false;
         }
     }
 

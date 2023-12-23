@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.documentfile.provider.DocumentFile;
 
@@ -75,11 +76,16 @@ public final class RecordFiles extends BaseActivity {
         if (documentFile == null) {
             return;
         }
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(documentFile.getUri(), "audio");
-        startActivity(intent);
+        try {
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(documentFile.getUri(), "audio");
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "设备无支持的应用，无法打开文件", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     @Override

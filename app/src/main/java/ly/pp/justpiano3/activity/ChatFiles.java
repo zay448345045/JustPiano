@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.documentfile.provider.DocumentFile;
 
@@ -75,11 +76,16 @@ public class ChatFiles extends BaseActivity {
         if (documentFile == null) {
             return;
         }
-        Intent intent = new Intent("android.intent.action.VIEW");
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(documentFile.getUri(), "text/plain");
-        startActivity(intent);
+        try {
+            Intent intent = new Intent("android.intent.action.VIEW");
+            intent.addCategory("android.intent.category.DEFAULT");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(documentFile.getUri(), "text/plain");
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "设备无支持的应用，无法打开文件", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     @Override
