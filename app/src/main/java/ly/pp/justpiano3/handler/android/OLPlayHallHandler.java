@@ -71,7 +71,7 @@ public final class OLPlayHallHandler extends Handler {
                         try {
                             String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
                             Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(olPlayHall,
-                                    GlobalSetting.INSTANCE.getChatsSavePath(), date + ".txt");
+                                    GlobalSetting.INSTANCE.getChatsSavePath(), "Chats", date + ".txt");
                             try (OutputStream outputStream = olPlayHall.getContentResolver().openOutputStream(fileUri, "w")) {
                                 outputStream.write((date + ":\n").getBytes());
                                 String str = message.getData().getString("M");

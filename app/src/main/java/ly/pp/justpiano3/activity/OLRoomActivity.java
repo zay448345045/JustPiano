@@ -5,15 +5,42 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.*;
+import android.os.BatteryManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.protobuf.MessageLite;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
@@ -30,16 +57,23 @@ import ly.pp.justpiano3.listener.PlayerImageItemClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
-import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.DialogUtil;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.FileUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-import protobuf.dto.*;
-
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import protobuf.dto.OnlineChangeRoomUserStatusDTO;
+import protobuf.dto.OnlineCoupleDTO;
+import protobuf.dto.OnlineLoadUserInfoDTO;
+import protobuf.dto.OnlineQuitRoomDTO;
+import protobuf.dto.OnlineRoomChatDTO;
+import protobuf.dto.OnlineSetUserInfoDTO;
 
 /**
  * 房间
@@ -388,7 +422,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             try {
                 String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
                 Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                        GlobalSetting.INSTANCE.getChatsSavePath(), date + ".txt");
+                        GlobalSetting.INSTANCE.getChatsSavePath(), "Chats", date + ".txt");
                 try (OutputStream outputStream = getContentResolver().openOutputStream(fileUri, "w")) {
                     outputStream.write((date + ":\n").getBytes());
                     String str = message.getData().getString("M");

@@ -279,7 +279,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                         recordStart = false;
                         File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                         Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                                GlobalSetting.INSTANCE.getRecordsSavePath(), recordFileName);
+                                GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
                         if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
                             Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                         } else {
@@ -428,7 +428,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             recordStart = false;
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), recordFileName);
+                    GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
             FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri);
             Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
         }
