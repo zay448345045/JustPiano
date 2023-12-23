@@ -43,3 +43,28 @@ java.lang.Object readResolve();
  *;
 }
 -keepattributes InnerClasses
+
+-dontwarn com.aayushatharva.brotli4j.**
+-dontwarn com.barchart.udt.**
+-dontwarn com.fasterxml.aalto.**
+-dontwarn com.github.luben.zstd.**
+-dontwarn com.google.protobuf.nano.**
+-dontwarn com.jcraft.jzlib.**
+-dontwarn com.ning.compress.**
+-dontwarn com.oracle.svm.core.annotate.**
+-dontwarn com.sun.nio.sctp.**
+-dontwarn gnu.io.**
+-dontwarn io.netty.internal.tcnative.**
+-dontwarn javax.naming.**
+-dontwarn javax.xml.stream.**
+-dontwarn lzma.sdk.**
+-dontwarn net.jpountz.lz4.**
+-dontwarn net.jpountz.xxhash.**
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.logging.log4j.**
+-dontwarn org.eclipse.jetty.alpn.**
+-dontwarn org.eclipse.jetty.npn.**
+-dontwarn org.jboss.marshalling.**
+-dontwarn org.slf4j.**
+-dontwarn reactor.blockhound.**
+-dontwarn sun.security.x509.**
