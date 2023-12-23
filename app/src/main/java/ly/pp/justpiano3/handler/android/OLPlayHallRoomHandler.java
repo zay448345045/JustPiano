@@ -103,7 +103,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                             olPlayHallRoom.mailCountsView.setText(String.valueOf(i));
                         }
                     });
-                    return;
                 }
                 case 1 -> {
                     post(() -> {
@@ -117,7 +116,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                         olPlayHallRoom.mo2841a(data.getInt("T"), data.getString("N"), data.getString("I"));
                     });
-                    return;
                 }
                 case 2 -> {
                     post(() -> {
@@ -173,7 +171,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                             });
                         }
                     });
-                    return;
                 }
                 case 3 -> {
                     post(() -> {
@@ -189,7 +186,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                         olPlayHallRoom.pageIsEnd = size < 20;
                     });
-                    return;
                 }
                 case 4 -> {
                     post(() -> {
@@ -225,7 +221,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                             olPlayHallRoom.updateMailListShow(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
                         }
                     });
-                    return;
                 }
                 case 5 -> {
                     post(() -> {
@@ -253,11 +248,9 @@ public final class OLPlayHallRoomHandler extends Handler {
                         DialogUtil.handleGoldSend(jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
                         jpDialogBuilder.buildAndShowDialog();
                     });
-                    return;
                 }
                 case 6 -> {
                     post(() -> olPlayHallRoom.setBroadcast(message.getData()));
-                    return;
                 }
                 case 7 -> {
                     post(() -> {
@@ -269,11 +262,9 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                         olPlayHallRoom.updateUserListShow(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     });
-                    return;
                 }
                 case 8 -> {
                     post(() -> olPlayHallRoom.tabHost.setCurrentTab(4));
-                    return;
                 }
                 case 9 -> {
                     post(() -> {
@@ -305,7 +296,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                         }
                         jpDialogBuilder.buildAndShowDialog();
                     });
-                    return;
                 }
                 case 10 -> {
                     post(() -> {
@@ -326,7 +316,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                                     Toast.makeText(olPlayHallRoom, "家族名称已存在，请重试!", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    return;
                 }
                 case 11 -> {
                     post(() -> {
@@ -370,14 +359,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                         listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
                         jpDialogBuilder.buildAndShowDialog();
                     });
-                    return;
                 }
                 case 12 -> {
                     post(() -> {
                         String info = message.getData().getString("M");
                         Toast.makeText(olPlayHallRoom, info, Toast.LENGTH_SHORT).show();
                     });
-                    return;
                 }
                 case 21 -> {
                     post(() -> {
@@ -387,7 +374,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.startActivity(intent);
                         olPlayHallRoom.finish();
                     });
-                    return;
                 }
                 case 22 -> {
                     post(() -> {
@@ -407,11 +393,9 @@ public final class OLPlayHallRoomHandler extends Handler {
                                 olPlayHallRoom.coupleModView, olPlayHallRoom.coupleTrousersView, olPlayHallRoom.coupleJacketView,
                                 olPlayHallRoom.coupleHairView, olPlayHallRoom.coupleEyeView, olPlayHallRoom.coupleShoesView);
                     });
-                    return;
                 }
                 case 23 -> {
                     post(() -> olPlayHallRoom.showInfoDialog(message.getData()));
-                    return;
                 }
                 default -> {
                 }

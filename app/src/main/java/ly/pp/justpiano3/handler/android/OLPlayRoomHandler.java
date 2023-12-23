@@ -49,7 +49,7 @@ public final class OLPlayRoomHandler extends Handler {
                                     if (tune > 0) {
                                         olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "+" + tune);
                                     } else if (tune < 0) {
-                                        olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "" + tune);
+                                        olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + String.valueOf(tune));
                                     } else {
                                         olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "0" + tune);
                                     }
@@ -67,11 +67,9 @@ public final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.mo2860a(i, string, i2, b);
                         }
                     });
-                    return;
                 }
                 case 2, 4 -> {
                     post(() -> olPlayRoom.handleChat(message));
-                    return;
                 }
                 case 3 -> {
                     post(() -> {
@@ -88,7 +86,7 @@ public final class OLPlayRoomHandler extends Handler {
                                 if (tune > 0) {
                                     olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "+" + tune);
                                 } else if (tune < 0) {
-                                    olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "" + tune);
+                                    olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + String.valueOf(tune));
                                 } else {
                                     olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "0" + tune);
                                 }
@@ -97,7 +95,6 @@ public final class OLPlayRoomHandler extends Handler {
                             }
                         }
                     });
-                    return;
                 }
                 case 5 -> {
                     post(() -> {
@@ -132,7 +129,6 @@ public final class OLPlayRoomHandler extends Handler {
                             }
                         }
                     });
-                    return;
                 }
                 case 6 -> {
                     post(() -> {
@@ -141,19 +137,15 @@ public final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.playButton.setTextSize(14);
                         }
                     });
-                    return;
                 }
                 case 7 -> {
                     post(() -> olPlayRoom.updatePlayerList(olPlayRoom.playerGrid, message.getData()));
-                    return;
                 }
                 case 8 -> {
                     post(olPlayRoom::handleKicked);
-                    return;
                 }
                 case 9 -> {
                     post(() -> olPlayRoom.handleFriendRequest(message));
-                    return;
                 }
                 case 10 -> {
                     post(() -> {
@@ -163,35 +155,27 @@ public final class OLPlayRoomHandler extends Handler {
                         olPlayRoom.roomName = name;
                         olPlayRoom.roomNameView.setText("[" + olPlayRoom.roomId + "]" + olPlayRoom.roomName);
                     });
-                    return;
                 }
                 case 11 -> {
                     post(() -> olPlayRoom.handleRefreshFriendList(message));
-                    return;
                 }
                 case 12 -> {
                     post(() -> olPlayRoom.handlePrivateChat(message));
-                    return;
                 }
                 case 13 -> {
                     post(() -> olPlayRoom.handleRefreshFriendListWithoutPage(message));
-                    return;
                 }
                 case 14 -> {
                     post(() -> olPlayRoom.handleDialog(message));
-                    return;
                 }
                 case 15 -> {
                     post(() -> olPlayRoom.handleInvitePlayerList(message));
-                    return;
                 }
                 case 16 -> {
                     post(() -> olPlayRoom.handleSetUserInfo(message));
-                    return;
                 }
                 case 21 -> {
                     post(olPlayRoom::handleOffline);
-                    return;
                 }
                 case 22 -> {
                     post(() -> {
@@ -203,11 +187,9 @@ public final class OLPlayRoomHandler extends Handler {
                             olPlayRoom.mo2860a(i, string, i2, b);
                         }
                     });
-                    return;
                 }
                 case 23 -> {
                     post(() -> olPlayRoom.showInfoDialog(message.getData()));
-                    return;
                 }
                 default -> {
                 }

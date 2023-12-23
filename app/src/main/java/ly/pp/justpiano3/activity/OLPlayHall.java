@@ -155,7 +155,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 builder.setRoomId(roomId);
                 builder.setPassword("");
                 sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
-                return;
             }
             case 1 -> {
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
@@ -174,7 +173,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                             dialog.dismiss();
                         })
                         .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
-                return;
             }
             default -> {
             }
@@ -338,7 +336,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                     builder.setType(1);
                     builder.setPage(pageNum);
                     sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                    return;
                 }
             }
         } else if (id == R.id.ol_send_b) {

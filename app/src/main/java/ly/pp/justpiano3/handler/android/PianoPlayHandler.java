@@ -40,7 +40,6 @@ public final class PianoPlayHandler extends Handler {
                         pianoPlay.playStartHandle(true);
                     }
                 });
-                return;
             }
             case 2 -> {
                 post(() -> {
@@ -57,7 +56,6 @@ public final class PianoPlayHandler extends Handler {
                     }
                     pianoPlay.updateMiniScore(pianoPlay.horizontalListView, pianoPlay.gradeList);
                 });
-                return;
             }
             case 3 -> {
                 post(() -> {
@@ -81,15 +79,12 @@ public final class PianoPlayHandler extends Handler {
                     }
                     pianoPlay.bindAdapter(pianoPlay.gradeListView, pianoPlay.gradeList);
                 });
-                return;
             }
             case 4 -> {
                 post(() -> pianoPlay.playKeyBoardView.updateTouchNoteNum());
-                return;
             }
             case 5 -> {
                 post(() -> pianoPlay.playStartHandle(true));
-                return;
             }
             case 6 -> {
                 post(() -> {
@@ -115,7 +110,6 @@ public final class PianoPlayHandler extends Handler {
                     });
                     jpDialogBuilder.buildAndShowDialog();
                 });
-                return;
             }
             case 7 -> {
                 post(() -> {
@@ -135,14 +129,12 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.songName.setText(String.valueOf(message.arg1));
                     pianoPlay.songName.setEnabled(false);
                 });
-                return;
             }
             case 8 -> {
                 post(() -> {
                     pianoPlay.finishView.setVisibility(View.VISIBLE);
                     pianoPlay.finishSongName.setText(pianoPlay.songsName);
                 });
-                return;
             }
             case 9 -> {
                 post(() -> {
@@ -156,7 +148,6 @@ public final class PianoPlayHandler extends Handler {
                     });
                     jpDialogBuilder.buildAndShowDialog();
                 });
-                return;
             }
             case 21 -> {
                 post(() -> {
@@ -164,7 +155,6 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.setOnline(false);
                     pianoPlay.finish();
                 });
-                return;
             }
             default -> {
             }

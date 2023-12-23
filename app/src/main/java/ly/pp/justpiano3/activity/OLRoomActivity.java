@@ -490,7 +490,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                     });
                     jpDialogBuilder.buildAndShowDialog();
                 }
-                return;
             }
             case 1 -> {
                 DialogUtil.setShowDialog(false);
@@ -509,7 +508,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 }
                 jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.buildAndShowDialog();
-                return;
             }
             default -> {
             }

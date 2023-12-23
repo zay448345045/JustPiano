@@ -68,7 +68,6 @@ public final class OLPlayHallHandler extends Handler {
                     ChatUtil.chatsSaveHandle(message, olPlayHall, time);
                     olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
                 });
-                return;
             }
             case 2 -> {
                 Bundle data = message.getData();
@@ -79,7 +78,6 @@ public final class OLPlayHallHandler extends Handler {
                 intent.putExtras(data);
                 olPlayHall.startActivity(intent);
                 olPlayHall.finish();
-                return;
             }
             case 3 -> {
                 post(() -> {
@@ -91,11 +89,9 @@ public final class OLPlayHallHandler extends Handler {
                     }
                     olPlayHall.mo2831b(olPlayHall.roomListView, olPlayHall.roomList);
                 });
-                return;
             }
             case 4 -> {
                 post(() -> Toast.makeText(olPlayHall, message.getData().getString("result"), Toast.LENGTH_SHORT).show());
-                return;
             }
             case 5 -> {
                 post(() -> {
@@ -110,7 +106,6 @@ public final class OLPlayHallHandler extends Handler {
                     }
                     olPlayHall.pageIsEnd = size < 20;
                 });
-                return;
             }
             case 6 -> {
                 post(() -> {
@@ -125,7 +120,6 @@ public final class OLPlayHallHandler extends Handler {
                         }
                     }
                 });
-                return;
             }
             case 7 -> {
                 post(() -> {
@@ -139,7 +133,6 @@ public final class OLPlayHallHandler extends Handler {
                         olPlayHall.mo2829a(olPlayHall.userInHallListView, olPlayHall.userInHallList, 3, true);
                     }
                 });
-                return;
             }
             case 8 -> {
                 post(() -> {
@@ -169,7 +162,6 @@ public final class OLPlayHallHandler extends Handler {
                                 });
                                 jpDialogBuilder.buildAndShowDialog();
                             }
-                            return;
                         }
                         case 1 -> {
                             DialogUtil.setShowDialog(false);
@@ -189,13 +181,11 @@ public final class OLPlayHallHandler extends Handler {
                             }
                             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                             jpDialogBuilder.buildAndShowDialog();
-                            return;
                         }
                         default -> {
                         }
                     }
                 });
-                return;
             }
             case 9 -> {
                 post(() -> {
@@ -240,7 +230,6 @@ public final class OLPlayHallHandler extends Handler {
                         DialogUtil.setShowDialog(true);
                     }
                 });
-                return;
             }
             case 10 -> {
                 post(() -> {
@@ -252,7 +241,6 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                     olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                 });
-                return;
             }
             case 11 -> {
                 post(() -> {
@@ -299,11 +287,9 @@ public final class OLPlayHallHandler extends Handler {
                     }
                     jpDialogBuilder.buildAndShowDialog();
                 });
-                return;
             }
             case 12 -> {
                 post(() -> olPlayHall.mo2827a(message.getData()));
-                return;
             }
             case 13 -> {
                 post(() -> {
@@ -319,7 +305,6 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.startActivity(intent12);
                     olPlayHall.finish();
                 });
-                return;
             }
             case 21 -> {
                 post(() -> {
@@ -329,11 +314,9 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.startActivity(intent1);
                     olPlayHall.finish();
                 });
-                return;
             }
             case 23 -> {
                 post(() -> olPlayHall.showInfoDialog(message.getData()));
-                return;
             }
             default -> {
             }

@@ -146,10 +146,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 });
                 rightHandDegreeTextView.setText("右手难度:" + localRightHandDegree);
                 leftHandDegreeTextView.setText("左手难度:" + localLeftHandDegree);
-                String str1 = localSongsTime / 60 >= 10 ? "" + localSongsTime / 60 : "0" + localSongsTime / 60;
-                String str2 = localSongsTime % 60 >= 10 ? "" + localSongsTime % 60 : "0" + localSongsTime % 60;
+                String str1 = localSongsTime / 60 >= 10 ? String.valueOf(localSongsTime / 60) : "0" + localSongsTime / 60;
+                String str2 = localSongsTime % 60 >= 10 ? String.valueOf(localSongsTime % 60) : "0" + localSongsTime % 60;
                 songLengthTextView.setText("曲目时长:" + str1 + ":" + str2);
-                return;
             }
             case 1 -> {    // 在线曲库
                 startPlayButton.setOnClickListener(v -> {
@@ -161,7 +160,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 songLengthTextView.setText("难度:" + onlineRightHandDegree);
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 leftHandDegreeTextView.setVisibility(View.GONE);
-                return;
             }
             case 2 -> {    // 联网对战
                 songName.setText("请稍后...");
@@ -191,7 +189,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 finishView.setVisibility(View.GONE);
                 sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance());
                 songName.setOnClickListener(v -> sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance()));
-                return;
             }
             case 3 -> {    // 考级
                 songName.setText("请稍后...");
@@ -209,7 +206,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
                 builder.setType(2);
                 sendMsg(OnlineProtocolType.CL_TEST, builder.build());
-                return;
             }
             case 4 -> {    // 挑战
                 songName.setText("请稍后...");
@@ -227,7 +223,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
                 builder1.setType(3);
                 sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
-                return;
             }
             default -> {
             }
@@ -327,7 +322,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     isBack = true;
                     finish();
                 }
-                return;
             }
             case 1 -> {
                 playTypeAndShowHandle(playKind, true);
@@ -343,7 +337,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     isBack = true;
                     finish();
                 }
-                return;
             }
             case 2 -> {
                 jpDialogBuilder.setTitle("提示");
@@ -359,7 +352,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
-                return;
             }
             case 3 -> {
                 jpDialogBuilder.setTitle("提示");
@@ -375,7 +367,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
-                return;
             }
             case 4 -> {
                 jpDialogBuilder.setTitle("提示");
@@ -391,7 +382,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                 jpDialogBuilder.setCancelableFalse();
                 jpDialogBuilder.buildAndShowDialog();
-                return;
             }
             default -> {
             }
@@ -522,7 +512,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     finish();
                     return;
                 }
-                return;
             }
             case 2 -> {
                 if (!isPlaying) {
@@ -543,7 +532,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     }
                     return;
                 }
-                return;
             }
             case 3 -> {
                 isShowingSongsInfo = false;
@@ -560,7 +548,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     startActivity(intent);
                     return;
                 }
-                return;
             }
             case 4 -> {
                 isShowingSongsInfo = false;
@@ -577,7 +564,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     startActivity(intent);
                     return;
                 }
-                return;
             }
             default -> {
             }

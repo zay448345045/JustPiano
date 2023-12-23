@@ -28,11 +28,9 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
             switch (message.what) {
                 case 1, 7 -> {
                     post(() -> olPlayKeyboardRoom.initPlayer(olPlayKeyboardRoom.playerGrid, message.getData()));
-                    return;
                 }
                 case 2, 4 -> {
                     post(() -> olPlayKeyboardRoom.handleChat(message));
-                    return;
                 }
                 case 5 -> {
                     post(() -> {
@@ -90,50 +88,39 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             });
                         }
                     });
-                    return;
                 }
                 case 8 -> {
                     post(olPlayKeyboardRoom::handleKicked);
-                    return;
                 }
                 case 9 -> {
                     post(() -> olPlayKeyboardRoom.handleFriendRequest(message));
-                    return;
                 }
                 case 10 -> {
                     post(() -> {
                         String name = message.getData().getString("R");
                         olPlayKeyboardRoom.roomNameView.setText("[" + olPlayKeyboardRoom.roomId + "]" + name);
                     });
-                    return;
                 }
                 case 11 -> {
                     post(() -> olPlayKeyboardRoom.handleRefreshFriendList(message));
-                    return;
                 }
                 case 12 -> {
                     post(() -> olPlayKeyboardRoom.handlePrivateChat(message));
-                    return;
                 }
                 case 13 -> {
                     post(() -> olPlayKeyboardRoom.handleRefreshFriendListWithoutPage(message));
-                    return;
                 }
                 case 14 -> {
                     post(() -> olPlayKeyboardRoom.handleDialog(message));
-                    return;
                 }
                 case 15 -> {
                     post(() -> olPlayKeyboardRoom.handleInvitePlayerList(message));
-                    return;
                 }
                 case 16 -> {
                     post(() -> olPlayKeyboardRoom.handleSetUserInfo(message));
-                    return;
                 }
                 case 21 -> {
                     post(olPlayKeyboardRoom::handleOffline);
-                    return;
                 }
                 case 22 -> {
                     post(() -> {
@@ -144,11 +131,9 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                             olPlayKeyboardRoom.buildAndShowCpDialog(i, string, i2);
                         }
                     });
-                    return;
                 }
                 case 23 -> {
                     post(() -> olPlayKeyboardRoom.showInfoDialog(message.getData()));
-                    return;
                 }
                 default -> {
                 }

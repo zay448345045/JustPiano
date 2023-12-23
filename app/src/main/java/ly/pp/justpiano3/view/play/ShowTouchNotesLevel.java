@@ -19,23 +19,18 @@ public final class ShowTouchNotesLevel {
         switch (i) {
             case -1 -> {
                 levelImage = playView.missImage;
-                return;
             }
             case 1 -> {
                 levelImage = playView.perfectImage;
-                return;
             }
             case 2 -> {
                 levelImage = playView.coolImage;
-                return;
             }
             case 3 -> {
                 levelImage = playView.greatImage;
-                return;
             }
             case 5 -> {
                 levelImage = playView.badImage;
-                return;
             }
             default -> {
             }

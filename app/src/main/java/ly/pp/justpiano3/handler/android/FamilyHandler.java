@@ -71,7 +71,6 @@ public final class FamilyHandler extends Handler {
                         }
                         family.positionHandle();
                     });
-                    return;
                 }
                 case 5 -> {
                     post(() -> {
@@ -96,18 +95,15 @@ public final class FamilyHandler extends Handler {
                             family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
                         }
                     });
-                    return;
                 }
                 case 8 -> {
                     post(() -> {
                         family.jpprogressBar.dismiss();
                         family.loadManageFamilyPopupWindow(message.getData());
                     });
-                    return;
                 }
                 case 23 -> {
                     post(() -> family.showInfoDialog(message.getData()));
-                    return;
                 }
                 default -> {
                 }

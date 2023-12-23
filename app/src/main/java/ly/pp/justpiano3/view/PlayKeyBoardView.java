@@ -51,22 +51,18 @@ public class PlayKeyBoardView extends View {
             case 0, 12, 5 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.whiteKeyRightImage, null, rect2, null);
-                return;
             }
             case 1, 10, 8, 6, 3 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.blackKeyImage, null, rect2, null);
-                return;
             }
             case 2, 9, 7 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.whiteKeyMiddleImage, null, rect2, null);
-                return;
             }
             case 4, 11 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.whiteKeyLeftImage, null, rect2, null);
-                return;
             }
             default -> {
             }

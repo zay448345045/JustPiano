@@ -306,12 +306,10 @@ public final class ReceiveTasks {
                         bundle.putString("Z", challenge.getChallengeEnter().getYesterdayPosition());
                         message.setData(bundle);
                         ((OLChallenge) topActivity).challengeHandler.handleMessage(message);
-                        return;
                     }
                 }
                 case 2 -> {
-                    if (topActivity instanceof OLChallenge) {
-                        OLChallenge olChallenge = (OLChallenge) topActivity;
+                    if (topActivity instanceof OLChallenge olChallenge) {
                         olChallenge.jpprogressBar.dismiss();
                         message.what = 2;
                         Bundle bundle = new Bundle();
@@ -327,7 +325,6 @@ public final class ReceiveTasks {
                         message.setData(new Bundle());
                         message.what = 5;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
-                        return;
                     }
                 }
                 case 4 -> {
@@ -337,7 +334,6 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 9;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
-                        return;
                     }
                 }
                 case 5 -> {
@@ -391,8 +387,7 @@ public final class ReceiveTasks {
                     }
                 }
                 case 2 -> {
-                    if (topActivity instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
+                    if (topActivity instanceof OLPlayHallRoom olPlayHallRoom) {
                         message.what = 2;
                         olPlayHallRoom.jpprogressBar.dismiss();
                         for (int i = 0; i < family.getFamilyList().getFamilyInfoList().size(); i++) {
@@ -424,7 +419,6 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 9;
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                        return;
                     }
                 }
                 case 4 -> {
@@ -433,7 +427,6 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 10;
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                        return;
                     }
                 }
                 case 5, 6, 7, 10 -> {
@@ -442,7 +435,6 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 5;
                         ((OLFamily) topActivity).familyHandler.handleMessage(message);
-                        return;
                     }
                 }
                 case 8 -> {
@@ -456,18 +448,16 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 8;
                         ((OLFamily) topActivity).familyHandler.handleMessage(message);
-                        return;
                     }
                 }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_LIST, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayHall) {
+            if (topActivity instanceof OLPlayHall olPlayHall) {
                 Bundle bundle = new Bundle();
                 message.what = 3;
                 OnlineLoadRoomListVO loadRoomList = receivedMessage.getLoadRoomList();
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 for (int i = 0; i < loadRoomList.getRoomList().size(); i++) {
                     OnlineRoomVO roomRaw = loadRoomList.getRoomList().get(i);
                     Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
@@ -491,10 +481,9 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLRoomActivity) {
+            if (topActivity instanceof OLRoomActivity olRoomActivity) {
                 OnlineChangeRoomPositionVO changeRoomPosition = receivedMessage.getChangeRoomPosition();
                 message.what = 1;
-                OLRoomActivity olRoomActivity = (OLRoomActivity) topActivity;
                 for (OnlineRoomPositionUserVO roomPositionUser : changeRoomPosition.getRoomPositionUserList()) {
                     buildAndPutUser(olRoomActivity, roomPositionUser);
                 }
@@ -519,8 +508,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLRoomActivity) {
-                OLRoomActivity olRoomActivity = (OLRoomActivity) topActivity;
+            if (topActivity instanceof OLRoomActivity olRoomActivity) {
                 OnlineLoadRoomPositionVO loadRoomPosition = receivedMessage.getLoadRoomPosition();
                 message.what = 1;
                 Bundle bundle = new Bundle();
@@ -548,10 +536,9 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_LIST, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayHall) {
+            if (topActivity instanceof OLPlayHall olPlayHall) {
                 Bundle bundle = new Bundle();
                 message.what = 3;
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 OnlineRoomVO roomRaw = receivedMessage.getChangeRoomList();
                 Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                         roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
@@ -601,8 +588,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.MINI_GRADE, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof PianoPlay) {
-                PianoPlay pianoPlay = (PianoPlay) topActivity;
+            if (topActivity instanceof PianoPlay pianoPlay) {
                 User user = OLBaseActivity.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
                 if (user == null) {
                     return;
@@ -628,7 +614,7 @@ public final class ReceiveTasks {
                         innerBundle.putString("G", String.valueOf(currentUser.getHand()));
                         innerBundle.putString("U", currentUser.getPlayerName());
                         innerBundle.putString("M", String.valueOf(currentUser.getScore()));
-                        innerBundle.putString("T", currentUser.getCombo() + "");
+                        innerBundle.putString("T", String.valueOf(currentUser.getCombo()));
                         bundle.putBundle(String.valueOf(i), innerBundle);
                         i++;
                     }
@@ -874,35 +860,27 @@ public final class ReceiveTasks {
                                 message.what = 11;
                                 message.setData(bundle);
                                 ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-                                return;
                             } else if (topActivity instanceof OLPlayKeyboardRoom) {
                                 message.what = 11;
                                 message.setData(bundle);
                                 ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
-                                return;
                             }
-                            return;
                         }
                         case 1 -> {
                             message.what = 5;
                             message.setData(bundle);
                             if (topActivity instanceof OLPlayHall) {
                                 ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
-                                return;
                             }
-                            return;
                         }
                         case 2 -> {
                             message.what = 3;
                             message.setData(bundle);
                             if (topActivity instanceof OLPlayHallRoom) {
                                 ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                                return;
                             }
-                            return;
                         }
                         default -> {
-                            return;
                         }
                     }
                 }
@@ -920,9 +898,7 @@ public final class ReceiveTasks {
                     message.setData(bundle);
                     if (topActivity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                        return;
                     }
-                    return;
                 }
                 case 3 -> {
                     OnlineLoadUserCoupleVO loadUserCouple = loadUserInfo.getLoadUserCouple();
@@ -942,7 +918,6 @@ public final class ReceiveTasks {
                     if (topActivity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
                     }
-                    return;
                 }
                 default -> {
                 }
@@ -1092,13 +1067,10 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 11;
                         olPlayHall.olPlayHallHandler.handleMessage(message);
-                        return;
                     }
-                    return;
                 }
                 case 1 -> {
-                    if (topActivity instanceof OLPlayHall) {
-                        OLPlayHall olPlayHall = (OLPlayHall) topActivity;
+                    if (topActivity instanceof OLPlayHall olPlayHall) {
                         olPlayHall.jpprogressBar.dismiss();
                         bundle.putInt("songsID", clTest.getClTestSong().getCl());
                         bundle.putString("songBytes", GZIPUtil.ZIPTo(clTest.getClTestSong().getSongContent()));
@@ -1106,18 +1078,14 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 13;
                         olPlayHall.olPlayHallHandler.handleMessage(message);
-                        return;
                     }
-                    return;
                 }
                 case 2 -> {
                     if (topActivity instanceof PianoPlay) {
                         message.setData(bundle);
                         message.what = 5;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
-                        return;
                     }
-                    return;
                 }
                 case 3 -> {
                     if (topActivity instanceof PianoPlay) {
