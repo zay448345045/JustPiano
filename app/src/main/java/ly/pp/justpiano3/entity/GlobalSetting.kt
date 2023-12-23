@@ -195,13 +195,13 @@ object GlobalSetting {
         private set
 
     /**
-     * 聊天记录存储路径
+     * 聊天记录存储位置
      */
     var chatsSavePath: String = ""
         private set
 
     /**
-     * 录音文件存储路径
+     * 录音文件存储位置
      */
     var recordsSavePath: String = ""
         private set

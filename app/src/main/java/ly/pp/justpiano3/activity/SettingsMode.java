@@ -142,7 +142,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                         return true;
                     });
             registerFilePickerPreference(this, "records_save_path", true,
-                    "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
+                    "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
                     GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
         }
     }
@@ -231,7 +231,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                         return true;
                     });
             registerFilePickerPreference(this, "chats_save_path", true,
-                    "默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Chats)",
+                    "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Chats)",
                     GlobalSetting.INSTANCE.getChatsSavePath(), uriInfo -> true);
         }
     }

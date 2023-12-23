@@ -39,8 +39,8 @@
             android:defaultValue=""
             android:dependency="save_chats"
             android:key="chats_save_path"
-            android:summary="默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Chats)"
-            android:title="聊天记录存储路径" />
+            android:summary="默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Chats)"
+            android:title="聊天记录存储位置" />
         <ly.pp.justpiano3.view.preference.SeekBarPreference
             android:defaultValue="15"
             android:dialogTitle="聊天字体大小"

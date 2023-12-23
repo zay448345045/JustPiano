@@ -127,7 +127,7 @@ public final class SoundListPreference extends DialogPreference {
         TextView textView = new TextView(context);
         textView.setTextSize(14);
         textView.setTextColor(Color.BLACK);
-        textView.setText("下载音源存储路径：SD卡/Android/data/ly.pp.justpiano3/files/Sounds，卸载APP时将删除所有文件");
+        textView.setText("下载音源存储位置：SD卡/Android/data/ly.pp.justpiano3/files/Sounds，卸载APP时将删除所有文件");
         linearLayout.addView(textView);
         ListView listView = new ListView(context);
         listView.setDivider(null);

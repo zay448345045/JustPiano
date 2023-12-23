@@ -75,8 +75,8 @@
         <ly.pp.justpiano3.view.preference.FilePickerPreference
             android:defaultValue=""
             android:key="records_save_path"
-            android:summary="默认存储路径(SD卡/Android/data/ly.pp.justpiano3/files/Records)"
-            android:title="录音文件存储路径" />
+            android:summary="默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Records)"
+            android:title="录音文件存储位置" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="联网模式">
