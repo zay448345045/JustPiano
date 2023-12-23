@@ -312,4 +312,23 @@ object FileUtil {
             }
         }
     }
+
+    fun uriToDocumentFile(context: Context, uri: Uri): DocumentFile? {
+        return when (uri.scheme) {
+            "content" -> {
+                DocumentFile.fromSingleUri(context, uri)
+            }
+
+            "file" -> {
+                val file = File(uri.path ?: return null)
+                if (file.exists()) {
+                    DocumentFile.fromFile(file)
+                } else {
+                    null
+                }
+            }
+
+            else -> null
+        }
+    }
 }

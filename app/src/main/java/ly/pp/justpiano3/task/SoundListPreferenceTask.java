@@ -37,7 +37,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 }
             }
         }
-        DocumentFile soundFile = DocumentFile.fromSingleUri(soundListPreference.context, Uri.parse(objects[0]));
+        DocumentFile soundFile = FileUtil.INSTANCE.uriToDocumentFile(soundListPreference.context, Uri.parse(objects[0]));
         if (soundFile == null || soundFile.getName() == null || soundFile.length() > 1024 * 1024 * 1024) {
             return "invalid";
         }

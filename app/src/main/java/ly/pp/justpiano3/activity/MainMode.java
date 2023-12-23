@@ -1,10 +1,7 @@
 package ly.pp.justpiano3.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -12,9 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
@@ -101,7 +95,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
                 TextView textViewTitle = inflate.findViewById(R.id.title_1);
                 TextView messageView = inflate.findViewById(R.id.message_view);
                 inflate.findViewById(R.id.message_view).setVisibility(View.VISIBLE);
-                messageView.setText("问题将直接反馈至开发者，感谢您的支持和宝贵意见（若昵称填写准确，您可能会收到私信回复问题处理结果）");
+                messageView.setText("如果您遇到应用崩溃、体验优化等问题，或想举报用户、联系开发者，可在此提交反馈，感谢您的支持和建议（若昵称填写准确，您可能会收到私信回复问题处理结果）");
                 textViewTitle.setText("昵称:");
                 TextView textView2 = inflate.findViewById(R.id.text_2);
                 TextView textView2Title = inflate.findViewById(R.id.title_2);
@@ -161,17 +155,6 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         findViewById(R.id.piano_help).setOnClickListener(this);
         findViewById(R.id.listen).setOnClickListener(this);
         findViewById(R.id.feed_back).setOnClickListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.KILL_BACKGROUND_PROCESSES) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.KILL_BACKGROUND_PROCESSES}, 1);
-            }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
-            }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BIND_MIDI_DEVICE_SERVICE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BIND_MIDI_DEVICE_SERVICE}, 1);
-            }
-        }
     }
 
     private void newVersionFirstTimeDialogShowHandle(SharedPreferences sharedPreferences) {

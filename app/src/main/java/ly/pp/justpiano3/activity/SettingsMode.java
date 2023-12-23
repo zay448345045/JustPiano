@@ -106,7 +106,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     "默认背景图", GlobalSetting.INSTANCE.getBackgroundPic(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
                                 && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
-                            Toast.makeText(getActivity(), "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "请选择合法的jpg或png格式图片文件", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         return true;
@@ -127,7 +127,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             registerFilePickerPreference(this, "skin_select", false,
                     "默认皮肤", GlobalSetting.INSTANCE.getSkin(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".ps")) {
-                            Toast.makeText(getActivity(), "请选择合法的ps格式文件", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "请选择合法的ps格式皮肤文件", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         return true;
@@ -136,7 +136,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     "默认音源", GlobalSetting.INSTANCE.getSound(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".ss")
                                 && !uriInfo.getDisplayName().endsWith(".sf2"))) {
-                            Toast.makeText(getActivity(), "请选择合法的ss或sf2格式文件", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "请选择合法的ss或sf2格式音源文件", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         return true;
@@ -172,7 +172,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
                                 && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
-                            Toast.makeText(getActivity(), "请选择合法的jpg或png格式文件", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "请选择合法的jpg或png格式图片文件", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         return true;
@@ -225,7 +225,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             registerFilePickerPreference(this, "chats_sound_file", false,
                     "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {
-                            Toast.makeText(getActivity(), "请选择合法的wav或mp3格式文件", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "请选择合法的wav或mp3格式音频文件", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         return true;
@@ -285,7 +285,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 getContentResolver().takePersistableUriPermission(uriInfo.getUri(), takeFlags);
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, "持久化文件权限出错", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (value.first instanceof FilePickerPreference) {
