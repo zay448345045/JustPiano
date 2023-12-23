@@ -281,8 +281,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 return;
             }
             try {
-                int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                getContentResolver().takePersistableUriPermission(uriInfo.getUri(), takeFlags);
+                getContentResolver().takePersistableUriPermission(uriInfo.getUri(),
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();

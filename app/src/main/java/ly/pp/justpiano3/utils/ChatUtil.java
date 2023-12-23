@@ -10,12 +10,9 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import androidx.documentfile.provider.DocumentFile;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,35 +161,21 @@ public class ChatUtil {
                 Toast.makeText(context, "聊天记录文件获取失败", Toast.LENGTH_SHORT).show();
                 return;
             }
-            DocumentFile documentFile = FileUtil.INSTANCE.uriToDocumentFile(context, fileUri);
-            if (documentFile != null && documentFile.exists()) {
-                try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "wa")) {
-                    writeMessageContent(message, time, outputStream);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "wa")) {
+                String msg = message.getData().getString("M");
+                if (msg != null && !msg.startsWith("//")) {
+                    if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
+                        outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
+                        outputStream.write((time + "[公]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
+                        outputStream.write((time + "[全服消息]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                    } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
+                        outputStream.write((time + "[荐]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                    }
                 }
-            } else {
-                try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "w")) {
-                    outputStream.write((date + ":\n").getBytes());
-                    writeMessageContent(message, time, outputStream);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static void writeMessageContent(Message message, String time, OutputStream outputStream) throws IOException {
-        String msg = message.getData().getString("M");
-        if (msg != null && !msg.startsWith("//")) {
-            if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
-                outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
-            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
-                outputStream.write((time + "[公]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
-            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
-                outputStream.write((time + "[全服消息]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
-            } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
-                outputStream.write((time + "[荐]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -77,9 +77,10 @@ public class ChatFiles extends BaseActivity {
             return;
         }
         try {
-            Intent intent = new Intent("android.intent.action.VIEW");
-            intent.addCategory("android.intent.category.DEFAULT");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // 授予临时读取权限
             intent.setDataAndType(documentFile.getUri(), "text/plain");
             startActivity(intent);
         } catch (Exception e) {
