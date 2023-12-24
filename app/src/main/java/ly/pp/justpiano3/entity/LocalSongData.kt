@@ -7,6 +7,11 @@ import java.io.Serializable
 
 data class LocalSongData(var path: String, var isfavo: Int, var score: Int, var lScore: Int) :
     Serializable {
+
+    companion object {
+        const val serialVersionUID = 6964277903686951933L
+    }
+
     @Throws(IOException::class)
     private fun writeObject(oos: ObjectOutputStream) {
         oos.writeObject(path)

@@ -13,7 +13,7 @@ import java.util.List;
 public class StreamUtil {
 
     /**
-     * 序列化,List
+     * 序列化List
      */
     public static <T> boolean writeObject(List<T> list, Context context, Uri uri) {
         T[] array = (T[]) list.toArray();
@@ -28,12 +28,12 @@ public class StreamUtil {
     }
 
     /**
-     * 反序列化,List
+     * 反序列化List
      */
-    public static <E> List<E> readObjectForList(Context context, Uri uri) {
-        E[] object;
+    public static <T> List<T> readObjectForList(Context context, Uri uri) {
+        T[] object;
         try (ObjectInputStream out = new ObjectInputStream(context.getContentResolver().openInputStream(uri))) {
-            object = (E[]) out.readObject();
+            object = (T[]) out.readObject();
             return Arrays.asList(object);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
