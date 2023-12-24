@@ -2,12 +2,10 @@ package ly.pp.justpiano3.view.preference;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.preference.DialogPreference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -84,7 +82,6 @@ public final class SkinListPreference extends DialogPreference {
 
     public void deleteFiles(String str) {
         FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         loadSkinList();
         skinListAdapter.updateSkinList(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
@@ -125,6 +122,10 @@ public final class SkinListPreference extends DialogPreference {
         skinListView.setAdapter(skinListAdapter);
         linearLayout.addView(skinListView);
         builder.setView(linearLayout);
+    }
+
+    public String getPersistedString() {
+        return getPersistedString("original");
     }
 
     public void closeDialog() {

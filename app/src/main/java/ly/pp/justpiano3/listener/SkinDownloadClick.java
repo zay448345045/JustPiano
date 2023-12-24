@@ -38,10 +38,9 @@ public final class SkinDownloadClick implements OnClickListener {
                 File dir = new File(skinDownload.getFilesDir(), "Skins");
                 if (dir.isDirectory()) {
                     File[] listFiles = dir.listFiles();
-                    if (listFiles != null && listFiles.length > 0) {
-                        while (i2 < listFiles.length) {
-                            listFiles[i2].delete();
-                            i2++;
+                    if (listFiles != null) {
+                        for (File file : listFiles) {
+                            file.delete();
                         }
                     }
                 }
