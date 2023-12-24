@@ -427,6 +427,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.ol_play_room);
         initRoomActivity(savedInstanceState);

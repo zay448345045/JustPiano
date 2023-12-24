@@ -26,7 +26,6 @@ private:
     std::vector<std::thread> workers;
     // the task queue
     std::queue<std::function<void()> > tasks;
-
     // synchronization
     std::mutex queue_mutex;
     std::condition_variable condition;
@@ -41,7 +40,6 @@ inline ThreadPool::ThreadPool(size_t threads)
                 [this] {
                     for (;;) {
                         std::function<void()> task;
-
                         {
                             std::unique_lock<std::mutex> lock(this->queue_mutex);
                             this->condition.wait(lock,
@@ -68,11 +66,9 @@ auto ThreadPool::enqueue(F &&f, Args &&... args)
     auto task = std::make_shared<std::packaged_task<return_type()> >(
             std::bind(std::forward<F>(f), std::forward<Args>(args)...)
     );
-
     std::future<return_type> res = task->get_future();
     {
         std::unique_lock<std::mutex> lock(queue_mutex);
-
         // don't allow enqueueing after stopping the pool
         if (stop)
             throw std::runtime_error("enqueue on stopped ThreadPool");
