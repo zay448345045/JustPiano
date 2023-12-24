@@ -12,6 +12,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.net.URLDecoder
 
 
 object FileUtil {
@@ -144,9 +145,7 @@ object FileUtil {
         }
         val documentFile = DocumentFile.fromTreeUri(context, uri)
         if (documentFile != null && documentFile.isDirectory) {
-            val displayName = documentFile.name
-            val modifiedTime = documentFile.lastModified()
-            return UriInfo(uri, displayName, 0L, modifiedTime)
+            return UriInfo(uri, getRelativePath(context, uri), 0L, documentFile.lastModified())
         }
         return UriInfo(null, null, null, null)
     }
@@ -277,7 +276,7 @@ object FileUtil {
             val directoryUri = Uri.parse(directoryUriString)
             val directoryDocumentFile = DocumentFile.fromTreeUri(context, directoryUri)
             if (directoryDocumentFile != null && directoryDocumentFile.exists() && directoryDocumentFile.isDirectory) {
-                Pair(directoryDocumentFile, directoryDocumentFile.name)
+                Pair(directoryDocumentFile, getRelativePath(context, directoryUri))
             } else {
                 Pair(getExternalFilesDir(context, defaultFolder), defaultShow)
             }
@@ -285,6 +284,26 @@ object FileUtil {
             // 解析URI异常或其它错误，使用应用的外部文件目录
             Pair(getExternalFilesDir(context, defaultFolder), defaultShow)
         }
+    }
+
+    private fun getRelativePath(context: Context?, uri: Uri): String? {
+        // 尝试解析URI以获取相对路径
+        val pathSegment = uri.lastPathSegment
+        if (pathSegment != null) {
+            try {
+                val decodedPathSegment = URLDecoder.decode(pathSegment, "UTF-8")
+                if (decodedPathSegment.startsWith("primary:")) {
+                    return "SD卡/" + decodedPathSegment.substring("primary:".length)
+                }
+            } catch (e: Exception) {
+                // nothing
+            }
+        }
+        // 作为备选方案，使用`DocumentFile`的`getName()`
+        val documentFile = DocumentFile.fromTreeUri(context!!, uri)
+        return if (documentFile != null && documentFile.name != null) {
+            documentFile.name
+        } else null
     }
 
     private fun getExternalFilesDir(context: Context, defaultFolder: String): DocumentFile? {

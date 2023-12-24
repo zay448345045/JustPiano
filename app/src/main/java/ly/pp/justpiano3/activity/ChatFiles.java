@@ -32,9 +32,9 @@ public class ChatFiles extends BaseActivity {
 
     private void loadChatFiles(String chatsSaveUri) {
         Pair<DocumentFile, String> documentFile = FileUtil.INSTANCE.getDirectoryDocumentFile(this,
-                chatsSaveUri, "Chats", "（默认）SD卡/Android/data/ly.pp.justpiano3/files/Chats");
+                chatsSaveUri, "Chats", "（默认）SD卡/Android/data/ly.pp.justpiano3/files/Chats\n【警告】您未设置其他存储位置，使用默认位置存储的文件将在APP卸载时删除");
         DocumentFile[] chatFiles = documentFile.component1().listFiles();
-        tipsTextView.setText("聊天记录存储文件夹：" + documentFile.component2() + "\n【警告】若您未设置其他存储位置，则所有使用默认位置存储的文件将在APP卸载时删除");
+        tipsTextView.setText("聊天记录存储文件夹：" + documentFile.component2());
         dataList = new ArrayList<>();
         for (DocumentFile chatFile : chatFiles) {
             Map<String, Object> hashMap = new HashMap<>();

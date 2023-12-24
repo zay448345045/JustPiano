@@ -134,28 +134,19 @@ public final class SoundDownload extends BaseActivity implements Callback {
             edit.apply();
             if (soundFileName.endsWith(".ss")) {
                 SoundEngineUtil.teardownAudioStreamNative();
-                Thread.sleep(20);
                 SoundEngineUtil.unloadSf2();
-                Thread.sleep(20);
                 SoundEngineUtil.unloadWavAssetsNative();
-                Thread.sleep(20);
                 SoundEngineUtil.setupAudioStreamNative();
-                Thread.sleep(20);
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.loadSoundAssetsNative(this, i);
                 }
-                Thread.sleep(20);
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFileName.endsWith(".sf2")) {
                 String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, DocumentFile.fromFile(soundFile));
                 SoundEngineUtil.teardownAudioStreamNative();
-                Thread.sleep(20);
                 SoundEngineUtil.unloadSf2();
-                Thread.sleep(20);
                 SoundEngineUtil.setupAudioStreamNative();
-                Thread.sleep(20);
                 SoundEngineUtil.loadSf2(newSf2Path);
-                Thread.sleep(20);
                 SoundEngineUtil.startAudioStreamNative();
             }
         } catch (Exception e) {

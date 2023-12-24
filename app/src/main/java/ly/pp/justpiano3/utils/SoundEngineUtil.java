@@ -9,13 +9,10 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Process;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -95,9 +92,7 @@ public class SoundEngineUtil {
             AudioDeviceCallback deviceCallback = new AudioDeviceCallback() {
                 @Override
                 public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
-                    Log.i("SoundEngineUtil", "onAudioDevicesAdded: " + addedDevices.length);
                     if (devicesInitialized) {
-                        Toast.makeText(context, "Added Audio Device", Toast.LENGTH_LONG).show();
                         resetOutput();
                     }
                     devicesInitialized = true;
@@ -105,17 +100,13 @@ public class SoundEngineUtil {
 
                 @Override
                 public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
-                    Log.i("SoundEngineUtil", "onAudioDevicesRemoved: " + removedDevices.length);
-                    Toast.makeText(context, "Removed Audio Device", Toast.LENGTH_LONG).show();
                     resetOutput();
                 }
 
                 private void resetOutput() {
-                    Timer timer = new Timer("stream restart timer", false);
-                    timer.schedule(new TimerTask() {
+                    new Timer(false).schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            Log.i("SoundEngineUtil", "restartStream() time:" + new Date());
                             restartStream();
                         }
                     }, DEVICE_SWITCH_TIME);
@@ -152,7 +143,6 @@ public class SoundEngineUtil {
             Converter converter = new Converter();
             converter.convert(context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".mp3", context.getFilesDir().getAbsolutePath() + "/Sounds/" + i + ".wav");
             loadWavInputStreamByIndex(context, i);
-            Thread.sleep(2);
         } catch (Exception e1) {
             try {
                 AssetFileDescriptor assetFD = context.getResources().getAssets().openFd("sound/" + i + ".mp3");

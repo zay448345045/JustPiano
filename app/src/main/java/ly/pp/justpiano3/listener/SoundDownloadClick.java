@@ -26,11 +26,11 @@ public final class SoundDownloadClick implements OnClickListener {
     public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         switch (type) {
-            case 0 ->
-                    ThreadPoolUtil.execute(() -> soundDownload.downloadSound(soundId, name, soundType));
+            case 0 -> ThreadPoolUtil.execute(() ->
+                    soundDownload.downloadSound(soundId, name, soundType));
             case 1 -> ThreadPoolUtil.execute(() -> soundDownload.changeSound(name + soundType));
-            case 2 ->
-                    ThreadPoolUtil.execute(() -> SoundEngineUtil.reLoadOriginalSounds(soundDownload.getApplicationContext()));
+            case 2 -> ThreadPoolUtil.execute(() ->
+                    SoundEngineUtil.reLoadOriginalSounds(soundDownload.getApplicationContext()));
         }
     }
 }

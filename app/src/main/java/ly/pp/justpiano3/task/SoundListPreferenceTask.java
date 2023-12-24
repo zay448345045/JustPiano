@@ -45,17 +45,12 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
             if (soundFile.getName().endsWith(".ss")) {
                 GZIPUtil.unzipFromUri(soundListPreference.context, soundFile.getUri(), dir.toString());
                 SoundEngineUtil.teardownAudioStreamNative();
-                Thread.sleep(20);
                 SoundEngineUtil.unloadSf2();
-                Thread.sleep(20);
                 SoundEngineUtil.unloadWavAssetsNative();
-                Thread.sleep(20);
                 SoundEngineUtil.setupAudioStreamNative();
-                Thread.sleep(20);
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
                     SoundEngineUtil.loadSoundAssetsNative(soundListPreference.context, i);
                 }
-                Thread.sleep(20);
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFile.getName().endsWith(".sf2")) {
                 String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(soundListPreference.context, soundFile);
@@ -63,13 +58,9 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                     return "invalid";
                 }
                 SoundEngineUtil.teardownAudioStreamNative();
-                Thread.sleep(20);
                 SoundEngineUtil.unloadSf2();
-                Thread.sleep(20);
                 SoundEngineUtil.setupAudioStreamNative();
-                Thread.sleep(20);
                 SoundEngineUtil.loadSf2(newSf2Path);
-                Thread.sleep(20);
                 SoundEngineUtil.startAudioStreamNative();
             }
         } catch (Exception e) {
