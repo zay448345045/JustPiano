@@ -47,7 +47,7 @@ public final class SkinListPreference extends DialogPreference {
         this.context = context;
     }
 
-    public void loadSkinList() {
+    private void loadSkinList() {
         File skinsDir = new File(context.getExternalFilesDir(null), "Skins");
         if (!skinsDir.exists()) {
             skinsDir.mkdirs();
@@ -85,22 +85,7 @@ public final class SkinListPreference extends DialogPreference {
     public void deleteFiles(String str) {
         FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!"original".equals(str) && sharedPreferences.getString("skin_select", "original").equals(str)) {
-            File skinDir = new File(context.getFilesDir(), "Skins");
-            if (skinDir.isDirectory()) {
-                File[] listFiles = skinDir.listFiles();
-                if (listFiles != null) {
-                    for (File file : listFiles) {
-                        file.delete();
-                    }
-                }
-            }
-        }
         loadSkinList();
-        updateSkinList();
-    }
-
-    public void updateSkinList() {
         skinListAdapter.updateSkinList(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
     }

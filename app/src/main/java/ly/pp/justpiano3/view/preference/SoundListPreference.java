@@ -44,7 +44,7 @@ public final class SoundListPreference extends DialogPreference {
         this.context = context;
     }
 
-    public void loadSoundList() {
+    private void loadSoundList() {
         File soundsDir = new File(context.getExternalFilesDir(null), "Sounds");
         if (!soundsDir.exists()) {
             soundsDir.mkdirs();
@@ -82,23 +82,7 @@ public final class SoundListPreference extends DialogPreference {
     public void deleteFiles(String str) {
         FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        // 如果正在使用这个音源，则删除这个音源解压后的文件
-        if (sharedPreferences.getString("sound_select", "original").equals(str)) {
-            File file = new File(context.getFilesDir().getAbsolutePath() + "/Sounds");
-            if (file.isDirectory()) {
-                File[] listFiles = file.listFiles();
-                if (listFiles != null) {
-                    for (File delete : listFiles) {
-                        delete.delete();
-                    }
-                }
-            }
-        }
         loadSoundList();
-        updateSoundList();
-    }
-
-    public void updateSoundList() {
         soundListAdapter.updateSoundList(soundNameList, soundKeyList);
         soundListAdapter.notifyDataSetChanged();
     }

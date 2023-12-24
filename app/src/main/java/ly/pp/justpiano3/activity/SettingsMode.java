@@ -304,15 +304,13 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE) {
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("skin_select");
             if (value != null && value.first instanceof SkinListPreference) {
-                ((SkinListPreference) value.first).loadSkinList();
-                ((SkinListPreference) value.first).updateSkinList();
+                ((SkinListPreference) value.first).closeDialog();
             }
             ImageLoadUtil.setBackground(this);
         } else if (requestCode == SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE) {
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("sound_select");
             if (value != null && value.first instanceof SoundListPreference) {
-                ((SoundListPreference) value.first).loadSoundList();
-                ((SoundListPreference) value.first).updateSoundList();
+                ((SoundListPreference) value.first).closeDialog();
             }
             ImageLoadUtil.setBackground(this);
         }
