@@ -147,7 +147,7 @@ namespace iolib {
         while (tryCount < 3) {
             bool wasOpenSuccessful = true;
             // Assume that openStream() was called successfully before startStream() call.
-            if (tryCount > 0) {
+            if (tryCount > 0 || mAudioStream == nullptr) {
                 usleep(20 * 1000); // Sleep between tries to give the system time to settle.
                 wasOpenSuccessful = openStream(); // Try to open the stream again after the first try.
             }
