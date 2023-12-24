@@ -12,6 +12,8 @@ import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.OLKeyboardState;
+import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
@@ -44,8 +46,9 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                     }
                     // 3.继续读头信息，根据midi键盘是否开启，更新midi键盘图标显示
                     boolean midiKeyboardOn = ((notes[0] >> 4) & 1) == 1;
-                    if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMidiKeyboardOn() != midiKeyboardOn) {
-                        olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
+                    OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(roomPositionSub1);
+                    if (olKeyboardState != null && olKeyboardState.getMidiKeyboardOn() != midiKeyboardOn) {
+                        olKeyboardState.setMidiKeyboardOn(midiKeyboardOn);
                         if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
                             ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                         } else {
@@ -117,13 +120,14 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
 
     private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, int roomPositionSub1,
                                     long[] notes, User user, int i, boolean sustainPedalOn) {
-        if (i + 2 >= notes.length || roomPositionSub1 < 0 || roomPositionSub1 >= olPlayKeyboardRoom.olKeyboardStates.length) {
+        OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(roomPositionSub1);
+        if (i + 2 >= notes.length || roomPositionSub1 < 0 || roomPositionSub1 >= Room.CAPACITY || olKeyboardState == null) {
             return;
         }
         byte pitch = (byte) notes[i + 1];
         byte volume = (byte) notes[i + 2];
         if (volume > 0) {
-            if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMuted()) {
+            if (!olKeyboardState.getMuted()) {
                 SoundEngineUtil.playSound(pitch, volume);
             }
             Integer color = user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor());
@@ -131,7 +135,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
             olPlayKeyboardRoom.onlineWaterfallKeyDownHandle(pitch, volume, color == null ?
                     GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : color);
         } else {
-            if (!sustainPedalOn && !olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].getMuted()) {
+            if (!sustainPedalOn && !olKeyboardState.getMuted()) {
                 SoundEngineUtil.stopPlaySound(pitch);
             }
             olPlayKeyboardRoom.keyboardView.fireKeyUp(pitch);

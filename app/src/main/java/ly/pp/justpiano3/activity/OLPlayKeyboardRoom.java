@@ -67,9 +67,9 @@ import protobuf.dto.OnlineLoadRoomPositionDTO;
 public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnTouchListener, MidiDeviceUtil.MidiDeviceListener {
     private static final int NOTES_SEND_INTERVAL = 120;
     // 当前用户楼号 - 1
-    private byte roomPositionSub1 = -1;
+    private int roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
-    public OLKeyboardState[] olKeyboardStates = new OLKeyboardState[Room.CAPACITY];
+    public Map<Integer, OLKeyboardState> olKeyboardStates = new HashMap<>(Room.CAPACITY);
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long realTimeLastMessageSendTime;
     private final OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();
@@ -161,20 +161,21 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 Bundle bundle1 = bundle.getBundle(String.valueOf(i));
                 String name = bundle1.getString("N");
                 int positionSub1 = bundle1.getByte("PI") - 1;
-                if (positionSub1 >= 0 && positionSub1 < olKeyboardStates.length) {
+                OLKeyboardState olKeyboardState = olKeyboardStates.get(positionSub1);
+                if (positionSub1 >= 0 && positionSub1 < Room.CAPACITY && olKeyboardState != null) {
                     // 判定位置是否有人，忽略琴娘
                     boolean hasUser = !name.isEmpty() && !name.equals("琴娘");
-                    olKeyboardStates[positionSub1].setHasUser(hasUser);
+                    olKeyboardState.setHasUser(hasUser);
                     if (!hasUser) {
-                        olKeyboardStates[positionSub1].setMidiKeyboardOn(false);
+                        olKeyboardState.setMidiKeyboardOn(false);
                     }
                 }
-                if (Objects.equals(name, jpApplication.getKitiName())) {
+                if (Objects.equals(name, jpApplication.getKitiName()) && olKeyboardState != null) {
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
                     int colorIndex = bundle1.getInt("IV");
                     keyboardView.setNoteOnColor(colorIndex == 0 ? null : ColorUtil.getUserColorByUserColorIndex(this, colorIndex));
-                    olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(MidiDeviceUtil.hasMidiDeviceConnected());
+                    olKeyboardState.setMidiKeyboardOn(MidiDeviceUtil.hasMidiDeviceConnected());
                 }
                 playerList.add(bundle1);
             }
@@ -319,16 +320,17 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         findViewById(R.id.keyboard_resize).setOnTouchListener(this);
         findViewById(R.id.keyboard_setting).setOnClickListener(this);
         findViewById(R.id.keyboard_record).setOnClickListener(this);
-        for (int i = 0; i < olKeyboardStates.length; i++) {
-            olKeyboardStates[i] = new OLKeyboardState(false, false, false);
+        for (int i = 0; i < Room.CAPACITY; i++) {
+            olKeyboardStates.put(i, new OLKeyboardState(false, false, false));
         }
         keyboardView = findViewById(R.id.keyboard_view);
         keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
-                if (roomPositionSub1 >= 0) {
-                    if (!olKeyboardStates[roomPositionSub1].getMuted()) {
+                OLKeyboardState olKeyboardState = olKeyboardStates.get(roomPositionSub1);
+                if (roomPositionSub1 >= 0 && olKeyboardState != null) {
+                    if (!olKeyboardState.getMuted()) {
                         SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
                     }
                     if (GlobalSetting.INSTANCE.getSoundVibration()) {
@@ -429,8 +431,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
-        if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {
-            olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(true);
+        OLKeyboardState olKeyboardState = olKeyboardStates.get(roomPositionSub1);
+        if (roomPositionSub1 >= 0 && roomPositionSub1 < Room.CAPACITY && olKeyboardState != null) {
+            olKeyboardState.setMidiKeyboardOn(true);
         }
         if (playerGrid.getAdapter() != null) {
             ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
@@ -442,8 +445,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
-        if (roomPositionSub1 >= 0 && roomPositionSub1 < olKeyboardStates.length) {
-            olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(false);
+        OLKeyboardState olKeyboardState = olKeyboardStates.get(roomPositionSub1);
+        if (roomPositionSub1 >= 0 && roomPositionSub1 < Room.CAPACITY && olKeyboardState != null) {
+            olKeyboardState.setMidiKeyboardOn(false);
         }
         if (playerGrid.getAdapter() != null) {
             ((KeyboardPlayerImageAdapter) (playerGrid.getAdapter())).notifyDataSetChanged();
@@ -455,9 +459,10 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiMessageReceive(byte pitch, byte volume) {
+        OLKeyboardState olKeyboardState = olKeyboardStates.get(roomPositionSub1);
         if (volume > 0) {
-            if (roomPositionSub1 >= 0) {
-                if (!olKeyboardStates[roomPositionSub1].getMuted()) {
+            if (roomPositionSub1 >= 0 && roomPositionSub1 < Room.CAPACITY && olKeyboardState != null) {
+                if (!olKeyboardState.getMuted()) {
                     SoundEngineUtil.playSound(pitch, volume);
                 }
                 blinkView(roomPositionSub1);
@@ -469,8 +474,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             onlineWaterfallKeyDownHandle(pitch, volume, keyboardView.getNoteOnColor() == null ?
                     GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
         } else {
-            if (roomPositionSub1 >= 0) {
-                if (!olKeyboardStates[roomPositionSub1].getMuted()) {
+            if (roomPositionSub1 >= 0 && roomPositionSub1 < Room.CAPACITY && olKeyboardState != null) {
+                if (!olKeyboardState.getMuted()) {
                     SoundEngineUtil.stopPlaySound(pitch);
                 }
                 blinkView(roomPositionSub1);
@@ -591,8 +596,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     }
 
     private boolean hasAnotherUser() {
-        for (int i = 0; i < olKeyboardStates.length; i++) {
-            if (i != roomPositionSub1 && olKeyboardStates[i].getHasUser()) {
+        for (Map.Entry<Integer, OLKeyboardState> entry : olKeyboardStates.entrySet()) {
+            if (entry.getKey() != roomPositionSub1 && entry.getValue().getHasUser()) {
                 return true;
             }
         }

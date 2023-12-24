@@ -22,6 +22,8 @@ import ly.pp.justpiano3.activity.OLRoomActivity;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.OLKeyboardState;
+import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -62,16 +64,19 @@ public final class PlayerImageItemClick implements OnItemClickListener {
         if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
             Button soundMuteButton = inflate.findViewById(R.id.ol_sound_b);
             soundMuteButton.setVisibility(View.VISIBLE);
-            soundMuteButton.setText(olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].getMuted() ? "取消静音" : "静音");
-            soundMuteButton.setOnClickListener(v -> {
-                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].getMuted());
-                if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
-                    ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
-                }
-                if (popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                }
-            });
+            OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(user.getPosition() - 1);
+            if (olKeyboardState != null) {
+                soundMuteButton.setText(olKeyboardState.getMuted() ? "取消静音" : "静音");
+                soundMuteButton.setOnClickListener(v -> {
+                    olKeyboardState.setMuted(!olKeyboardState.getMuted());
+                    if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                    }
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                });
+            }
         }
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olRoomActivity.getResources(), R.drawable._none, olRoomActivity.getTheme()));
@@ -157,15 +162,17 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                                 builder.setRoomPosition(user.getPosition());
                                 OnlineUtil.getConnectionService().writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
                                 if (olRoomActivity instanceof OLPlayKeyboardRoom && user.getPosition() > 0
-                                        && user.getPosition() - 1 < ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates.length) {
-                                    ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
+                                        && user.getPosition() - 1 < Room.CAPACITY) {
+                                    OLKeyboardState olKeyboardState = ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates.get(user.getPosition() - 1);
+                                    if (olKeyboardState != null) {
+                                        olKeyboardState.setMidiKeyboardOn(false);
+                                    }
                                 }
                             }
                         }
                     }
                 });
             }
-
             // 屏蔽聊天按钮处理
             ChatUtil.chatBlackButtonHandle(olRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
         } else {
