@@ -69,7 +69,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     // 当前用户楼号 - 1
     private int roomPositionSub1 = -1;
     public ExecutorService receiveThreadPool = Executors.newSingleThreadExecutor();
-    public Map<Integer, OLKeyboardState> olKeyboardStates = new HashMap<>(Room.CAPACITY);
+    public Map<Integer, OLKeyboardState> olKeyboardStates = new ConcurrentHashMap<>(Room.CAPACITY);
     private final Queue<OLNote> notesQueue = new ConcurrentLinkedQueue<>();
     private long realTimeLastMessageSendTime;
     private final OnlineKeyboardNoteDTO.Builder onlineKeyboardNoteDtoBuilder = OnlineKeyboardNoteDTO.newBuilder();

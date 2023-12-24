@@ -82,11 +82,10 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
 
     private void inOutFamily() {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        jpDialogBuilder.setTitle("提示");
         switch (position) {
-            case LEADER -> jpDialogBuilder.setMessage("确定要解散你的家族吗?");
-            case VICE_LEADER, MEMBER -> jpDialogBuilder.setMessage("确定要退出家族吗?");
-            case NOT_IN_FAMILY -> jpDialogBuilder.setMessage("申请加入家族需要族长或副族长的批准!");
+            case LEADER -> jpDialogBuilder.setTitle("警告").setMessage("确定要解散家族吗?");
+            case VICE_LEADER, MEMBER -> jpDialogBuilder.setTitle("警告").setMessage("确定要退出家族吗?");
+            case NOT_IN_FAMILY -> jpDialogBuilder.setTitle("提示").setMessage("申请加入家族需要族长或副族长的批准!");
         }
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();

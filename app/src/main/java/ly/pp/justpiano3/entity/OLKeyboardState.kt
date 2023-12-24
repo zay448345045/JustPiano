@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.entity
 
+import java.io.Serializable
+
 /**
  * 记录在线键盘模式用户状态
  */
@@ -18,4 +20,4 @@ data class OLKeyboardState(
      * 此位置是否有人
      */
     var hasUser: Boolean,
-)
+) : Serializable {}
