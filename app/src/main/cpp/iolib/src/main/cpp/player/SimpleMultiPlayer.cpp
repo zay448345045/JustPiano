@@ -136,9 +136,11 @@ namespace iolib {
     }
 
     bool SimpleMultiPlayer::ErrorCallback::onError(AudioStream *oboeStream, Result error) {
-        __android_log_print(ANDROID_LOG_INFO, TAG, "==== onErrorAfterClose() error:%d", error);
-        mParent->resetAll();
-        mParent->closeStream();
+        __android_log_print(ANDROID_LOG_INFO, TAG, "==== onError() error:%d", error);
+        if (mParent != nullptr) {
+            mParent->resetAll();
+            mParent->closeStream();
+        }
         return true;
     }
 
