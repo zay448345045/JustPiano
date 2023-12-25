@@ -21,7 +21,7 @@ import ly.pp.justpiano3.adapter.MidiDeviceListAdapter;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class MidiDeviceListPreference extends DialogPreference {
+public final class MidiDeviceListPreference extends DialogPreference {
     public Context context;
     public JPProgressBar jpProgressBar;
     private MidiDeviceInfo[] midiDeviceInfoList;

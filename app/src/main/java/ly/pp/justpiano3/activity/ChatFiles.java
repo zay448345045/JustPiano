@@ -24,7 +24,7 @@ import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
-public class ChatFiles extends BaseActivity {
+public final class ChatFiles extends BaseActivity {
     private List<Map<String, Object>> dataList;
     private ListView listView;
     private TextView tipsTextView;
@@ -51,7 +51,7 @@ public class ChatFiles extends BaseActivity {
         listView.setAdapter(chatFilesAdapter);
     }
 
-    public final void remove(int index, DocumentFile documentFile) {
+    public void remove(int index, DocumentFile documentFile) {
         if (documentFile.exists()) {
             documentFile.delete();
         }
@@ -60,7 +60,7 @@ public class ChatFiles extends BaseActivity {
         chatFilesAdapter.notifyDataSetChanged();
     }
 
-    public final void delete(int index, String fileName, DocumentFile documentFile) {
+    public void delete(int index, String fileName, DocumentFile documentFile) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setMessage("确认删除[" + fileName + "]吗?");
         jpDialogBuilder.setTitle("提示");
@@ -72,7 +72,7 @@ public class ChatFiles extends BaseActivity {
         jpDialogBuilder.buildAndShowDialog();
     }
 
-    public final void open(DocumentFile documentFile) {
+    public void open(DocumentFile documentFile) {
         if (documentFile == null) {
             return;
         }

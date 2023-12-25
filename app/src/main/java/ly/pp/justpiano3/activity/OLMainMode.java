@@ -16,7 +16,7 @@ import ly.pp.justpiano3.task.SongSyncDialogTask;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
-public class OLMainMode extends OLBaseActivity implements OnClickListener {
+public final class OLMainMode extends OLBaseActivity implements OnClickListener {
     public JPApplication jpApplication;
     public OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
 

@@ -43,7 +43,7 @@ import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
 
-public class ConnectionService extends Service {
+public final class ConnectionService extends Service {
 
     private final JPBinder jpBinder = new JPBinder(this);
     private NettyUtil nettyUtil;

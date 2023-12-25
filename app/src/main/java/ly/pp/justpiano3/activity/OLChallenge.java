@@ -32,7 +32,7 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChallengeDTO;
 
-public class OLChallenge extends OLBaseActivity implements OnClickListener {
+public final class OLChallenge extends OLBaseActivity implements OnClickListener {
     public JPApplication jpApplication;
     public byte hallID;
     public String hallName;
@@ -105,7 +105,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         scoreListView.setCacheColorHint(Color.TRANSPARENT);
     }
 
-    public final void showDrawPrizeDialog(Bundle bundle) {
+    public void showDrawPrizeDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_challenge_draw_prize, findViewById(R.id.dialog));
         TextView prizeResultTextView = inflate.findViewById(R.id.ol_prize_result);
         ImageView prizePointerImageView = inflate.findViewById(R.id.ol_prize_pointer);
@@ -152,7 +152,7 @@ public class OLChallenge extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    public final void sendMsg(int type, MessageLite msg) {
+    public void sendMsg(int type, MessageLite msg) {
         if (OnlineUtil.getConnectionService() != null) {
             OnlineUtil.getConnectionService().writeData(type, msg);
         } else {
