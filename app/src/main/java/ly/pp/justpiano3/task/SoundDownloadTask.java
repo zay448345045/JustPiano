@@ -33,7 +33,6 @@ public final class SoundDownloadTask {
         onPreExecute();
         future = executor.submit(() -> {
             final String result = doInBackground();
-
             new Handler(Looper.getMainLooper()).post(() -> onPostExecute(result));
         });
     }
