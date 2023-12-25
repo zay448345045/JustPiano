@@ -67,7 +67,7 @@ void RecordingIO::write_buffer(float *sourceData, size_t numSamples) {
         ongoing_flush_completed = false;
         copy(mRecordData.begin(), mRecordData.end(), mRecordBuff);
         size_t writeSize = mRecordData.size() * sizeof(float);
-        mThreadPool.enqueue([&]() {
+        mThreadPool.enqueue([this, writeSize]() {
             if (mRecordingFile == -1) {
                 mRecordingFile = open(mRecordingFilePath, O_CREAT | O_APPEND | O_RDWR, S_IRWXU);
             }
