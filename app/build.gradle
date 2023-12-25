@@ -28,7 +28,6 @@ android {
             }
         }
         buildConfigField("String", "BUILD_TIME", "\"" + new Date().format('yyyyMMddHHmmss') + "\"")
-        multiDexEnabled true
     }
 
     buildFeatures {
@@ -121,7 +120,6 @@ dependencies {
     implementation 'io.netty:netty-all:4.1.104.Final'
     // protobuf，版本号最好和服务端保持一致，降低序列化问题风险
     implementation 'com.google.protobuf:protobuf-java:3.23.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
     // okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     // kotlin

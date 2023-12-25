@@ -1,7 +1,6 @@
 package ly.pp.justpiano3;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -16,7 +15,6 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
@@ -224,12 +222,6 @@ public final class JPApplication extends Application {
         OnlineUtil.outlineConnectionService(this);
         // 关闭fluidsynth
         SoundEngineUtil.closeFluidSynth();
-    }
-
-    @Override
-    protected void attachBaseContext(Context context) {
-        super.attachBaseContext(context);
-        MultiDex.install(this);
     }
 
     /**
