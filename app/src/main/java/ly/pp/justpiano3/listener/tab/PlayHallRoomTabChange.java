@@ -5,7 +5,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import java.util.ArrayList;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;

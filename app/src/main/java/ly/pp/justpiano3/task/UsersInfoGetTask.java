@@ -6,8 +6,8 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.UsersInfo;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;

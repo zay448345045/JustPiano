@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.OLKeyboardState;

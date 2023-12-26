@@ -11,8 +11,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Objects;
 
-import ly.pp.justpiano3.activity.OLFamily;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLFamily;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import protobuf.dto.OnlineFamilyDTO;

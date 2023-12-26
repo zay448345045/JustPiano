@@ -3,9 +3,9 @@ package ly.pp.justpiano3.listener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.activity.OLRoomActivity;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSetUserInfoDTO;

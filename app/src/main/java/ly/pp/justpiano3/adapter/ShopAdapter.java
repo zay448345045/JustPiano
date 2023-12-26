@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.activity.online.OLPlayDressRoom;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.ShopProduct;
 import ly.pp.justpiano3.view.JPDialogBuilder;

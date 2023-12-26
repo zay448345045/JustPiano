@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.UserListPage;
+import ly.pp.justpiano3.activity.online.UserListPage;
 import ly.pp.justpiano3.entity.SimpleUser;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;

@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.activity.online.OLPlayDressRoom;
 import ly.pp.justpiano3.adapter.DressAdapter;
 import ly.pp.justpiano3.adapter.ShopAdapter;
 import ly.pp.justpiano3.entity.ShopProduct;

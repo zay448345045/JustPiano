@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.ChatFiles;
+import ly.pp.justpiano3.activity.local.ChatFiles;
 
 public final class ChatFilesAdapter extends BaseAdapter {
     private List<Map<String, Object>> list;

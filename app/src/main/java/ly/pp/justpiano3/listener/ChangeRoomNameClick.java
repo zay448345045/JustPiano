@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.activity.OLRoomActivity;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineChangeRoomInfoDTO;
 

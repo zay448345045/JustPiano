@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.activity.online.OLFamily;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;

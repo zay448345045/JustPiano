@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.Objects;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.activity.local.SkinDownload;
 import ly.pp.justpiano3.task.SkinListPreferenceTask;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.view.preference.SkinListPreference;

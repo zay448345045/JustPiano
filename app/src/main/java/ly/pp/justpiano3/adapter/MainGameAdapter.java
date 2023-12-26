@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Objects;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLRoomActivity;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.listener.OLSendMailClick;
 import ly.pp.justpiano3.utils.JPStack;

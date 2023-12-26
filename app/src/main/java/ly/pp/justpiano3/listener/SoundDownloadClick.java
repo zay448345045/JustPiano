@@ -3,7 +3,7 @@ package ly.pp.justpiano3.listener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 

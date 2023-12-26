@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;

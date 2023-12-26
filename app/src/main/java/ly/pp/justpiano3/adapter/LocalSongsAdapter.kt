@@ -14,8 +14,8 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ly.pp.justpiano3.JPApplication
 import ly.pp.justpiano3.R
-import ly.pp.justpiano3.activity.MelodySelect
-import ly.pp.justpiano3.activity.WaterfallActivity
+import ly.pp.justpiano3.activity.local.MelodySelect
+import ly.pp.justpiano3.activity.local.WaterfallActivity
 import ly.pp.justpiano3.constant.Consts
 import ly.pp.justpiano3.database.entity.Song
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick

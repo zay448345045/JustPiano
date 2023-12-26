@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.thread.SongPlay;

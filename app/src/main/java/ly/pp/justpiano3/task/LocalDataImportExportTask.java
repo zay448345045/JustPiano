@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.local.MelodySelect;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.LocalSongData;
 import ly.pp.justpiano3.utils.StreamUtil;

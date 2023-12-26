@@ -8,7 +8,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.activity.online.PopUserInfo;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.task.PopUserInfoTask;
 

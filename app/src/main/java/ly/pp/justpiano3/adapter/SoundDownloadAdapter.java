@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.utils.ImageLoader;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.ScrollText;

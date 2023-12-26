@@ -14,8 +14,8 @@ import java.util.UUID;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLMainMode;
 import ly.pp.justpiano3.service.ConnectionService;
 
 /**

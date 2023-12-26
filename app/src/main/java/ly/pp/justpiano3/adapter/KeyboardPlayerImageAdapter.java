@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.utils.ColorUtil;

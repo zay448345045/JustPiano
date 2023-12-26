@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayDressRoom;
+import ly.pp.justpiano3.activity.online.OLPlayDressRoom;
 
 public final class DressAdapter extends BaseAdapter {
     private final List<Bitmap> list;

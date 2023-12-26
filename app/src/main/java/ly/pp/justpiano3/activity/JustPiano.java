@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.local.MainMode;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;

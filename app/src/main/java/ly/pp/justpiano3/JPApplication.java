@@ -28,7 +28,7 @@ import java.io.PrintStream;
 
 import kotlin.Unit;
 import ly.pp.justpiano3.activity.JustPiano;
-import ly.pp.justpiano3.activity.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;

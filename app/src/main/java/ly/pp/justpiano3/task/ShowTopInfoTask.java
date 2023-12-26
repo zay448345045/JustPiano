@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.ShowTopInfo;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.ShowTopInfo;
 import ly.pp.justpiano3.adapter.TopUserAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;

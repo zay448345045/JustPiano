@@ -3,7 +3,7 @@ package ly.pp.justpiano3.listener;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 
 public final class OLSendMailClick implements OnClickListener {

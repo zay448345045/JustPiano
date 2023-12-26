@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.activity.local.SkinDownload;
 import ly.pp.justpiano3.adapter.SkinDownloadAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;

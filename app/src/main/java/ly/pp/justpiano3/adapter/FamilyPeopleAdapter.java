@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.activity.online.OLFamily;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {

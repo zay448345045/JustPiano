@@ -28,7 +28,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;

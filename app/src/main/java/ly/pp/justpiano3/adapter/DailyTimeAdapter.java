@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 
 public final class DailyTimeAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;

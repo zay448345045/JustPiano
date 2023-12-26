@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceHolder;
 
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.view.PlayView;

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsPlayTask;
 

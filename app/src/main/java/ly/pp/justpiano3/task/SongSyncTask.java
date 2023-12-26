@@ -21,8 +21,8 @@ import java.util.Objects;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.MelodySelect;
-import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.local.MelodySelect;
+import ly.pp.justpiano3.activity.online.OLMainMode;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.PopUserInfo;
-import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.activity.online.PopUserInfo;
+import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.thread.PictureHandle;
 
 public final class SearchPeopleAdapter extends BaseAdapter {

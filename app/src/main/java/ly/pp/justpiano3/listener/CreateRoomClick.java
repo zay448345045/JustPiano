@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineCreateRoomDTO;
 

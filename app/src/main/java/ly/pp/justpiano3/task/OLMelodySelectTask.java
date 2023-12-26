@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;

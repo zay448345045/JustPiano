@@ -12,7 +12,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ly.pp.justpiano3.JPApplication
 import ly.pp.justpiano3.R
-import ly.pp.justpiano3.activity.OLPlayRoom
+import ly.pp.justpiano3.activity.online.OLPlayRoom
 import ly.pp.justpiano3.constant.Consts
 import ly.pp.justpiano3.database.entity.Song
 

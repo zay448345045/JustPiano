@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 import java.io.File;
 
-import ly.pp.justpiano3.activity.SkinDownload;
+import ly.pp.justpiano3.activity.local.SkinDownload;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 

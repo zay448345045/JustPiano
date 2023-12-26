@@ -8,8 +8,8 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;

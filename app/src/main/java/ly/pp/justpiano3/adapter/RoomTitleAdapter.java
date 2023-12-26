@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ColorUtil;

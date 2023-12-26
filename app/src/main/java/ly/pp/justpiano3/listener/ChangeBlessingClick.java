@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.utils.OnlineUtil;

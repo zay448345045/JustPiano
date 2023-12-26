@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Objects;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLPlayRoom;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ColorUtil;

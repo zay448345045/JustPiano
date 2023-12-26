@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.PopUserInfo;
-import ly.pp.justpiano3.activity.SearchSongs;
-import ly.pp.justpiano3.activity.WaterfallActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.PopUserInfo;
+import ly.pp.justpiano3.activity.online.SearchSongs;
+import ly.pp.justpiano3.activity.local.WaterfallActivity;
 import ly.pp.justpiano3.listener.SearchSongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
 

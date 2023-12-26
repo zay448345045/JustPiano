@@ -10,9 +10,9 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLChallenge;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLChallenge;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 

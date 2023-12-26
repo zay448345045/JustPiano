@@ -15,12 +15,12 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.Objects;
 
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLMainMode;
-import ly.pp.justpiano3.activity.OLPlayHall;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLMainMode;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;

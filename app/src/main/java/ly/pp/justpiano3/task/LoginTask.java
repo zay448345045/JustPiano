@@ -12,8 +12,8 @@ import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.activity.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.LoginActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;

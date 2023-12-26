@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.PianoPlay;
-import ly.pp.justpiano3.activity.PlayFinish;
+import ly.pp.justpiano3.activity.local.PianoPlay;
+import ly.pp.justpiano3.activity.local.PlayFinish;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;

@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.OLMainMode;
+import ly.pp.justpiano3.activity.online.OLMainMode;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;

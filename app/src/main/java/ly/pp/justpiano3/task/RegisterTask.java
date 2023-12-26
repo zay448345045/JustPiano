@@ -9,8 +9,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.LoginActivity;
-import ly.pp.justpiano3.activity.Register;
+import ly.pp.justpiano3.activity.online.LoginActivity;
+import ly.pp.justpiano3.activity.online.Register;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;

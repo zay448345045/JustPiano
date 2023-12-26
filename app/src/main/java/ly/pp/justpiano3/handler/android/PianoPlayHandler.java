@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class PianoPlayHandler extends Handler {

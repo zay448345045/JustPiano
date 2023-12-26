@@ -14,10 +14,10 @@ import android.widget.Toast;
 import androidx.core.content.res.ResourcesCompat;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLRoomActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;

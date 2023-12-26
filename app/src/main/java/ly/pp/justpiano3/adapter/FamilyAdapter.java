@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLFamily;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLFamily;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 

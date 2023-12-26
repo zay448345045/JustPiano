@@ -5,7 +5,7 @@ import android.os.Message;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 
 public final class StartPlayTimerTask extends TimerTask {
     private final PianoPlay pianoPlay;
