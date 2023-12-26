@@ -85,7 +85,7 @@ public final class ChatFiles extends BaseActivity {
             intent.setDataAndType(documentFile.getUri(), "text/plain");
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, "设备无支持的应用，无法打开文件", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "打开文件失败，请使用系统文件管理器打开", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
