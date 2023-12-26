@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.OLMelodySelectAdapter;
 import ly.pp.justpiano3.adapter.OLMelodySelectTypeAdapter;
@@ -47,7 +46,6 @@ import ly.pp.justpiano3.view.JPProgressBar;
 public final class OLMelodySelect extends BaseActivity implements Callback, OnClickListener {
     public static byte[] songBytes;
     public static String songID;
-    public JPApplication jpApplication;
     public double degree;
     public int topScore;
     private Button pageButton;
@@ -231,7 +229,6 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         try {
             GlobalSetting.INSTANCE.loadSettings(this, true);

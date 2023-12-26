@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -46,7 +45,6 @@ import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class OLFamily extends OLBaseActivity implements OnClickListener {
-    private JPApplication jpApplication;
     public JPProgressBar jpprogressBar;
     public FamilyPositionEnum position;
     public TextView declaration;
@@ -307,7 +305,6 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_family);
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);
@@ -348,7 +345,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                 || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
             kickOutButton.setVisibility(View.GONE);
         }
-        if (name.equals(jpApplication.getKitiName())) {
+        if (name.equals(OLBaseActivity.getKitiName())) {
             kickOutButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
@@ -400,7 +397,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
     }
 
     public void bindFamilyPeopleListViewAdapter(ListView listView, List<Map<String, String>> list) {
-        listView.setAdapter(new FamilyPeopleAdapter(list, jpApplication, layoutinflater, this));
+        listView.setAdapter(new FamilyPeopleAdapter(list, layoutinflater, this));
     }
 
     public void sendMsg(int type, MessageLite msg) {

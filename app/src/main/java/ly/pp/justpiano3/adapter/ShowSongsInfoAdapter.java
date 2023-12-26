@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.ShowSongsInfo;
 import ly.pp.justpiano3.activity.WaterfallActivity;
@@ -66,12 +67,12 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
             if (showSongsInfo.keywords.equals("F")) {
                 Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已移出网络收藏夹", Toast.LENGTH_SHORT).show();
                 showSongsInfo.updateSongInfo(i);
-                new AcceptFavorThread(songId, "U", showSongsInfo.jpApplication.getAccountName()).start();
+                new AcceptFavorThread(songId, "U", OLBaseActivity.getAccountName()).start();
                 return;
             }
             Toast.makeText(showSongsInfo.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(songId, "F", showSongsInfo.jpApplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", OLBaseActivity.getAccountName()).start();
         });
         TextView songName = view.findViewById(R.id.ol_s_n);
         songName.setText(trim);

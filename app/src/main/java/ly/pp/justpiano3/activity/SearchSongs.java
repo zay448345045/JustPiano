@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsTask;
@@ -36,7 +35,6 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SearchSongs extends BaseActivity implements Callback, OnClickListener {
-    public JPApplication jpApplication;
     public LayoutInflater layoutinflater;
     private int length;
     public String keywords = "";
@@ -165,7 +163,6 @@ public final class SearchSongs extends BaseActivity implements Callback, OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         headType = getIntent().getExtras().getInt("head");
         setContentView(R.layout.ol_search_songs);
         layoutinflater = LayoutInflater.from(this);

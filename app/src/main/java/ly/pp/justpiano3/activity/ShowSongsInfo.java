@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
 import ly.pp.justpiano3.task.ShowSongsInfoTask;
@@ -27,7 +26,6 @@ import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class ShowSongsInfo extends BaseActivity implements OnClickListener {
-    public JPApplication jpApplication;
     public LayoutInflater layoutInflater;
     public String keywords = "";
     public String songName = "";
@@ -122,7 +120,6 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         Bundle extras = getIntent().getExtras();
         head = extras.getString("head");
         keywords = extras.getString("keywords");

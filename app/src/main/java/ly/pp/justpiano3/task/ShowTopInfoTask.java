@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.ShowTopInfo;
 import ly.pp.justpiano3.adapter.TopUserAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -36,8 +36,8 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
                 .add("version", BuildConfig.VERSION_NAME)
                 .add("keywords", "C")
                 .add("page", String.valueOf(showTopInfo.get().pageNum))
-                .add("K", JPApplication.kitiName)
-                .add("N", showTopInfo.get().jpApplication.getAccountName())
+                .add("K", OLBaseActivity.kitiName)
+                .add("N", OLBaseActivity.getAccountName())
                 .build();
         // 创建请求对象
         Request request = new Request.Builder()

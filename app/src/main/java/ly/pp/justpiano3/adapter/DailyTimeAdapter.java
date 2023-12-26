@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
 
 public final class DailyTimeAdapter extends BaseAdapter {
@@ -70,7 +70,7 @@ public final class DailyTimeAdapter extends BaseAdapter {
             bonusGetText.setText("已领");
             bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.online));
         }
-        if (JPApplication.kitiName.equals(name)) {
+        if (OLBaseActivity.kitiName.equals(name)) {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_a);
         } else {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_c);

@@ -6,6 +6,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -23,13 +24,13 @@ public final class UsersInfoGetTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String str = "";
-        if (!userInfo.get().jpApplication.getAccountName().isEmpty()) {
+        if (!OLBaseActivity.getAccountName().isEmpty()) {
             // 创建FormBody对象，添加请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", "0")
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("keywords", "0")
-                    .add("userName", userInfo.get().jpApplication.getAccountName())
+                    .add("userName", OLBaseActivity.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()

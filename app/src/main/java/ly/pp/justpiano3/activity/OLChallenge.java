@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.android.ChallengeHandler;
@@ -33,7 +32,6 @@ import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineChallengeDTO;
 
 public final class OLChallenge extends OLBaseActivity implements OnClickListener {
-    public JPApplication jpApplication;
     public byte hallID;
     public String hallName;
     public int remainTimes;
@@ -90,7 +88,6 @@ public final class OLChallenge extends OLBaseActivity implements OnClickListener
         Bundle bundle = getIntent().getExtras();
         hallID = bundle.getByte("hallID");
         hallName = bundle.getString("hallName");
-        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_challenge);
         OnlineChallengeDTO.Builder builder = OnlineChallengeDTO.newBuilder();
         builder.setType(1);

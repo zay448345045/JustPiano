@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -89,8 +90,8 @@ public final class LoginTask extends AsyncTask<Void, Void, Void> {
                 message = jSONObject.getString("msg");
                 loginActivity.kitiName = jSONObject.getString("ukn");
                 title = jSONObject.getString("title");
-                loginActivity.jpApplication.loginResultTitle = jSONObject.getString("T1");
-                loginActivity.jpApplication.loginResultMessage = jSONObject.getString("M1");
+                OLBaseActivity.loginResultTitle = jSONObject.getString("T1");
+                OLBaseActivity.loginResultMessage = jSONObject.getString("M1");
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }

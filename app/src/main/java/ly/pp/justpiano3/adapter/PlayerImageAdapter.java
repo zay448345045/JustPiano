@@ -15,8 +15,8 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 import java.util.Objects;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.enums.RoomModeEnum;
@@ -117,7 +117,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         }
         int i3 = playerList.get(i).getInt("LV");
         int i4 = playerList.get(i).getInt("CL");
-        if (JPApplication.kitiName.equals(string)) {
+        if (OLBaseActivity.kitiName.equals(string)) {
             olPlayRoom.lv = i3;
             olPlayRoom.cl = i4;
             olPlayRoom.playerKind = string4;

@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.listener.SendMessageClick;
 import ly.pp.justpiano3.task.PopUserInfoTask;
@@ -29,7 +28,6 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
     public int headType;
     public String kitiName = "";
     public String keywords = "P";
-    private JPApplication jpApplication;
     private TextView userKitiName;
     private TextView userPSign;
     private TextView userSex;
@@ -80,7 +78,7 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.add_friend) {
-            if (!kitiName.equals(JPApplication.kitiName)) {
+            if (!kitiName.equals(OLBaseActivity.kitiName)) {
                 headType = 2;
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("好友请求");
@@ -90,9 +88,9 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
                     try {
                         jSONObject.put("H", 0);
                         jSONObject.put("T", kitiName);
-                        jSONObject.put("F", jpApplication.getAccountName());
+                        jSONObject.put("F", OLBaseActivity.getAccountName());
                         jSONObject.put("M", "");
-                        if (!kitiName.isEmpty() && !jpApplication.getAccountName().isEmpty()) {
+                        if (!kitiName.isEmpty() && !OLBaseActivity.getAccountName().isEmpty()) {
                             keywords = jSONObject.toString();
                             new PopUserInfoTask(this).execute();
                         }
@@ -105,10 +103,10 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
                 jpDialogBuilder.buildAndShowDialog();
             }
         } else if (id == R.id.send_mail) {
-            if (!kitiName.equals(JPApplication.kitiName)) {
+            if (!kitiName.equals(OLBaseActivity.kitiName)) {
                 headType = 2;
                 String str = kitiName;
-                String P = jpApplication.getAccountName();
+                String P = OLBaseActivity.getAccountName();
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.text_1);
                 TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -127,7 +125,6 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ol_pop_user_info);
-        jpApplication = (JPApplication) getApplication();
         userKitiName = findViewById(R.id.user_kitiname);
         userSex = findViewById(R.id.user_sex);
         userPSign = findViewById(R.id.user_msg);

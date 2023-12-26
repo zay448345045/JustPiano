@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -41,7 +40,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
                 .add("head", "0")
                 .add("version", BuildConfig.VERSION_NAME)
                 .add("keywords", strArr[0])
-                .add("userName", usersInfo.get().jpApplication.getAccountName());
+                .add("userName", OLBaseActivity.getAccountName());
         if (strArr[1] == null || strArr[2] == null) {
             bodyBuilder.add("msg", usersInfo.get().signature)
                     .add("age", String.valueOf(usersInfo.get().age));
@@ -83,9 +82,9 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
             case "6" -> {
                 usersInfo.get().jpprogressBar.cancel();
                 Toast.makeText(usersInfo.get(), "密码修改成功!", Toast.LENGTH_LONG).show();
-                Editor edit = JPApplication.accountListSharedPreferences.edit();
+                Editor edit = OLBaseActivity.accountListSharedPreferences.edit();
                 if (usersInfo.get().rememberNewPassword) {
-                    edit.putString("name", usersInfo.get().jpApplication.getAccountName());
+                    edit.putString("name", OLBaseActivity.getAccountName());
                     edit.putString("password", "");
                     edit.putString("current_password", null);
                     edit.putBoolean("chec_psw", usersInfo.get().rememberNewPassword);

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -42,7 +43,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", str2)
                     .add("keywords", searchSongs.get().keywords)
-                    .add("user", searchSongs.get().jpApplication.getAccountName())
+                    .add("user", OLBaseActivity.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()

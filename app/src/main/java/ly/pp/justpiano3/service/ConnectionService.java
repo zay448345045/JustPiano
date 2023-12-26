@@ -28,6 +28,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;
@@ -47,7 +48,6 @@ public final class ConnectionService extends Service {
 
     private final JPBinder jpBinder = new JPBinder(this);
     private NettyUtil nettyUtil;
-    private JPApplication jpApplication;
 
     public static class JPBinder extends Binder {
         private final ConnectionService connectionService;
@@ -77,14 +77,13 @@ public final class ConnectionService extends Service {
                 nettyUtil.sendMessage(builder);
             }
         } else {
-            OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+            OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
         }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        jpApplication = (JPApplication) getApplication();
         initNetty();
     }
 
@@ -98,7 +97,7 @@ public final class ConnectionService extends Service {
      * 初始化Netty
      */
     public void initNetty() {
-        nettyUtil = new NettyUtil(new ChannelInitializer<SocketChannel>() {
+        nettyUtil = new NettyUtil(new ChannelInitializer<>() {
             @Override
             protected void initChannel(@NonNull SocketChannel socketChannel) throws Exception {
                 // 添加相关编码器，解码器，处理器等
@@ -134,7 +133,7 @@ public final class ConnectionService extends Service {
                                 super.exceptionCaught(ctx, cause);
                                 cause.printStackTrace();
                                 ctx.close();
-                                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+                                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
                             }
 
                             @Override
@@ -157,16 +156,16 @@ public final class ConnectionService extends Service {
                     OnlineUtil.onlineSessionId = UUID.randomUUID().toString().replace("-", "");
                 }
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
-                builder.setAccount(jpApplication.getAccountName());
-                builder.setPassword(jpApplication.getPassword());
+                builder.setAccount(OLBaseActivity.getAccountName());
+                builder.setPassword(OLBaseActivity.getPassword());
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
-                builder.setPackageName(jpApplication.getPackageName());
+                builder.setPackageName(getApplication().getPackageName());
                 builder.setOnlineSessionId(OnlineUtil.onlineSessionId);
                 builder.setAutoReconnect(OnlineUtil.autoReconnecting());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
-                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpApplication));
+                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(getApplication()));
                 deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
                 deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
@@ -176,14 +175,14 @@ public final class ConnectionService extends Service {
             @Override
             public void onFailed() {
                 // 连接失败
-                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
             }
 
             @Override
             public void onError(Exception e) {
                 // 连接异常
                 e.printStackTrace();
-                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
             }
         });
         nettyUtil.setOnSendMessageListener(new NettyUtil.OnSendMessageListener() {
@@ -192,7 +191,7 @@ public final class ConnectionService extends Service {
                 // 发送消息的回调
                 if (!success) {
                     Log.e(getClass().getSimpleName(), "autoReconnect! onSendMessage" + msg.toString());
-                    OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+                    OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
                 }
             }
 
@@ -200,7 +199,7 @@ public final class ConnectionService extends Service {
             public void onException(Throwable e) {
                 // 异常
                 e.printStackTrace();
-                OnlineUtil.outLineAndDialogWithAutoReconnect(jpApplication);
+                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
             }
         });
         nettyUtil.connect(OnlineUtil.server, OnlineUtil.ONLINE_PORT);

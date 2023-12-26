@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.listener.ChangePasswordClick;
@@ -36,7 +35,6 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class UsersInfo extends BaseActivity implements Callback, OnClickListener {
-    public JPApplication jpApplication;
     public boolean autoLogin;
     public boolean rememberNewPassword;
     public JPProgressBar jpprogressBar;
@@ -56,7 +54,6 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
     private TextView scoreText;
     private TextView pSignText;
     private ImageView faceImage;
-    private String accountJpg = "";
 
     public static void updateUserInfo(UsersInfo usersInfo, String str) {
         JSONObject jsonObject = null;
@@ -66,8 +63,7 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
             e.printStackTrace();
         }
         try {
-            usersInfo.accountText.setText(usersInfo.jpApplication.getAccountName());
-            usersInfo.accountJpg = usersInfo.jpApplication.getAccountName() + ".webp";
+            usersInfo.accountText.setText(OLBaseActivity.getAccountName());
             usersInfo.name = jsonObject.getString("uk");
             usersInfo.nameText.setText(usersInfo.name);
             usersInfo.face = jsonObject.getString("fi");
@@ -225,9 +221,9 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
             TextView newPasswordTextView = inflate.findViewById(R.id.new_password);
             TextView confirmPasswordTextView = inflate.findViewById(R.id.confirm_password);
             CheckBox autoLoginCheckBox = inflate.findViewById(R.id.auto_login);
-            autoLoginCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_autologin", false));
+            autoLoginCheckBox.setChecked(OLBaseActivity.accountListSharedPreferences.getBoolean("chec_autologin", false));
             CheckBox remNewPasswordCheckBox = inflate.findViewById(R.id.re_password);
-            remNewPasswordCheckBox.setChecked(JPApplication.accountListSharedPreferences.getBoolean("chec_psw", false));
+            remNewPasswordCheckBox.setChecked(OLBaseActivity.accountListSharedPreferences.getBoolean("chec_psw", false));
             jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setTitle("修改密码").loadInflate(inflate)
                     .setFirstButton("确定", new ChangePasswordClick(this, originalPasswordTextView,
@@ -259,7 +255,6 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_user_info);
         accountText = findViewById(R.id.user_name);
         findViewById(R.id.modify_button).setOnClickListener(this);

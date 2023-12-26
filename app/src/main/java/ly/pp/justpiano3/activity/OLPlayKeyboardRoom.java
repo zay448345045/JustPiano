@@ -170,7 +170,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                         olKeyboardState.setMidiKeyboardOn(false);
                     }
                 }
-                if (Objects.equals(name, jpApplication.getKitiName()) && olKeyboardState != null) {
+                if (Objects.equals(name, OLBaseActivity.getKitiName()) && olKeyboardState != null) {
                     // 存储当前用户楼号，用于发弹奏音符
                     roomPositionSub1 = (byte) positionSub1;
                     int colorIndex = bundle1.getInt("IV");

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.PopUserInfo;
 import ly.pp.justpiano3.activity.SearchSongs;
 import ly.pp.justpiano3.activity.WaterfallActivity;
@@ -56,7 +57,7 @@ public final class SearchSongsAdapter extends BaseAdapter {
         imageButton.setOnClickListener(v -> {
             Toast.makeText(searchSongs.getBaseContext(), "《" + trim + "》已加入网络收藏夹", Toast.LENGTH_SHORT).show();
             imageButton.setImageResource(R.drawable.favor);
-            new AcceptFavorThread(songId, "F", searchSongs.jpApplication.getAccountName()).start();
+            new AcceptFavorThread(songId, "F", OLBaseActivity.getAccountName()).start();
         });
         ((TextView) view.findViewById(R.id.ol_s_n)).setText(trim);
         ((TextView) view.findViewById(R.id.ol_nandu)).setText("难度:" + songsList.get(i).get("degree"));

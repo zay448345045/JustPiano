@@ -32,7 +32,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChangeAccountAdapter;
 import ly.pp.justpiano3.task.LoginTask;
@@ -46,7 +45,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class LoginActivity extends BaseActivity implements OnClickListener {
-    public JPApplication jpApplication;
     public String password;
     public String kitiName = "";
     public String accountX = "";
@@ -92,9 +90,9 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        jpApplication.setKitiName(kitiName);
-        jpApplication.setAccountName(accountX);
-        jpApplication.setPassword(password);
+        OLBaseActivity.setKitiName(kitiName);
+        OLBaseActivity.setAccountName(accountX);
+        OLBaseActivity.setPassword(password);
         switch (i) {
             case 0 -> {
                 if (Objects.equals(OnlineUtil.server, OnlineUtil.ONLINE_SERVER_URL)) {
@@ -191,7 +189,6 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JPStack.clear();
-        jpApplication = (JPApplication) getApplication();
         sharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         layoutInflater = LayoutInflater.from(this);
         setContentView(R.layout.login);

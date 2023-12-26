@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.ChattingAdapter;
 import ly.pp.justpiano3.adapter.ExpressAdapter;
@@ -71,8 +70,7 @@ import protobuf.dto.OnlineQuitHallDTO;
 
 public final class OLPlayHall extends OLBaseActivity implements Callback, OnClickListener, View.OnLongClickListener {
     private String hallName = "";
-    public byte hallID = (byte) 0;
-    public JPApplication jpApplication;
+    public byte hallID;
     public JPProgressBar jpprogressBar;
     public ListView msgListView;
     public ListView roomListView;
@@ -82,20 +80,20 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     public Bundle hallInfoBundle;
     public ListView friendListView;
     public boolean isTimeShowing;
-    public boolean pageIsEnd = false;
+    public boolean pageIsEnd;
     public Map<Byte, Room> roomTitleMap = new HashMap<>();
     public List<Bundle> msgList = new ArrayList<>();
     public ListView userInHallListView;
     public List<Bundle> userInHallList = new ArrayList<>();
     public List<Bundle> friendList = new ArrayList<>();
     public Handler showTimeHandler;
-    public int pageNum = 0;
+    public int pageNum;
     public OLPlayHallHandler olPlayHallHandler = new OLPlayHallHandler(this);
     public EditText sendTextView;
     private ImageView imageView;
     private LayoutInflater layoutInflater1;
     private LayoutInflater layoutInflater2;
-    private PopupWindow popupWindow = null;
+    private PopupWindow popupWindow;
     private TextView timeTextView;
 
     public void loadInRoomUserInfo(byte b) {
@@ -179,7 +177,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         }
     }
 
-    public void mo2827a(Bundle bundle) {
+    public void showRoomInfo(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.room_info, findViewById(R.id.dialog));
         ListView listView = inflate.findViewById(R.id.playerlist);
         Bundle bundle2 = bundle.getBundle("L");
@@ -189,7 +187,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             for (int i = 0; i < size; i++) {
                 arrayList.add(bundle2.getBundle(String.valueOf(i)));
             }
-            mo2829a(listView, arrayList, 3, false);
+            bindMainGameAdapter(listView, arrayList, 3, false);
         }
         listView.setCacheColorHint(Color.TRANSPARENT);
         listView.setAlwaysDrawnWithCacheEnabled(true);
@@ -200,7 +198,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         }).setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void mo2828a(ListView listView, List<Bundle> list) {
+    public void bindChatAdapter(ListView listView, List<Bundle> list) {
         int posi = listView.getFirstVisiblePosition();
         listView.setAdapter(new ChattingAdapter(list, layoutInflater1));
         if (posi > 0) {
@@ -210,7 +208,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         }
     }
 
-    public void mo2829a(ListView listView, List<Bundle> list, int i, boolean z) {
+    public void bindMainGameAdapter(ListView listView, List<Bundle> list, int i, boolean z) {
         if (z && list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o2.getInt("O"), o1.getInt("O")));
         }
@@ -230,7 +228,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void mo2831b(ListView listView, List<Bundle> list) {
+    public void bindAdapter(ListView listView, List<Bundle> list) {
         if (list != null && !list.isEmpty()) {
             Collections.sort(list, (o1, o2) -> Integer.compare(o1.getByte("I"), o2.getByte("I")));
         }
@@ -245,7 +243,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
 
     public void setPrivateChatUserName(String userName) {
         sendTo = "@" + userName + ":";
-        if (!userName.isEmpty() && !userName.equals(JPApplication.kitiName)) {
+        if (!userName.isEmpty() && !userName.equals(OLBaseActivity.kitiName)) {
             sendTextView.setText(sendTo);
         }
         Spannable text = sendTextView.getText();
@@ -284,14 +282,14 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             TextView textView2 = inflate.findViewById(R.id.room_password);
             RadioGroup radioGroup = inflate.findViewById(R.id.room_mode);
             CharSequence stringBuilder;
-            if (String.valueOf(JPApplication.kitiName).length() == 8) {
-                stringBuilder = String.valueOf(JPApplication.kitiName);
-            } else if (String.valueOf(JPApplication.kitiName).length() == 7) {
-                stringBuilder = JPApplication.kitiName + "房";
-            } else if (String.valueOf(JPApplication.kitiName).length() == 6) {
-                stringBuilder = JPApplication.kitiName + "琴房";
+            if (String.valueOf(OLBaseActivity.kitiName).length() == 8) {
+                stringBuilder = String.valueOf(OLBaseActivity.kitiName);
+            } else if (String.valueOf(OLBaseActivity.kitiName).length() == 7) {
+                stringBuilder = OLBaseActivity.kitiName + "房";
+            } else if (String.valueOf(OLBaseActivity.kitiName).length() == 6) {
+                stringBuilder = OLBaseActivity.kitiName + "琴房";
             } else {
-                stringBuilder = JPApplication.kitiName + "的琴房";
+                stringBuilder = OLBaseActivity.kitiName + "的琴房";
             }
             textView.setText(stringBuilder);
             textView.setSingleLine(true);
@@ -379,7 +377,6 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         hallID = hallInfoBundle.getByte("hallID");
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
-        jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_room_list);
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
@@ -412,7 +409,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
         popupWindow.setContentView(inflate);
         ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
-                new ExpressAdapter(jpApplication, Consts.expressions, popupWindow, OnlineProtocolType.HALL_CHAT));
+                new ExpressAdapter(this, Consts.expressions, popupWindow, OnlineProtocolType.HALL_CHAT));
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         this.popupWindow = popupWindow;
         tabHost = findViewById(R.id.tabhost);

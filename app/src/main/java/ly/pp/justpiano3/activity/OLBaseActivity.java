@@ -2,9 +2,11 @@ package ly.pp.justpiano3.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
@@ -23,6 +25,14 @@ public class OLBaseActivity extends BaseActivity {
     public JPProgressBar jpProgressBar;
     public OLBaseActivityHandler olBaseActivityHandler = new OLBaseActivityHandler(this);
     private static final Map<Byte, User> roomPlayerMap = new ConcurrentHashMap<>();
+
+    public static String kitiName = "";
+    public static SharedPreferences accountListSharedPreferences;
+
+    public static String loginResultTitle = "";
+    public static String loginResultMessage = "";
+    private static String accountName = "";
+    private static String password = "";
 
     public static Map<Byte, User> getRoomPlayerMap() {
         return roomPlayerMap;
@@ -96,5 +106,38 @@ public class OLBaseActivity extends BaseActivity {
 
     public boolean isOnline() {
         return online;
+    }
+
+    public static String getAccountName() {
+        if (accountName.isEmpty()) {
+            accountName = accountListSharedPreferences.getString("name", "");
+        }
+        return accountName;
+    }
+
+    public static void setAccountName(String str) {
+        accountName = str;
+    }
+
+    public static String getPassword() {
+        if (password.isEmpty()) {
+            password = accountListSharedPreferences.getString("password", "");
+        }
+        return password;
+    }
+
+    public static void setPassword(String str) {
+        password = str;
+    }
+
+    public static String getKitiName() {
+        if (TextUtils.isEmpty(kitiName)) {
+            kitiName = accountListSharedPreferences.getString("userKitiName", "");
+        }
+        return kitiName;
+    }
+
+    public static void setKitiName(String str) {
+        kitiName = str;
     }
 }

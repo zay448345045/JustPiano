@@ -80,8 +80,8 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         } else if (id == R.id.feed_back) {
             View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
             TextView textView = inflate.findViewById(R.id.text_1);
-            if (JPApplication.kitiName != null) {
-                textView.setText(JPApplication.kitiName);
+            if (OLBaseActivity.kitiName != null) {
+                textView.setText(OLBaseActivity.kitiName);
             }
             TextView textViewTitle = inflate.findViewById(R.id.title_1);
             TextView messageView = inflate.findViewById(R.id.message_view);

@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
@@ -95,7 +94,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public boolean pageIsEnd;
     public OLPlayHallRoomHandler olPlayHallRoomHandler = new OLPlayHallRoomHandler(this);
     public int pageNum;
-    private JPApplication jpApplication;
     public ListView hallListView;
     public List<Bundle> hallList = new ArrayList<>();
     public List<Bundle> mailList = new ArrayList<>();
@@ -293,7 +291,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 try {
                     jSONObject.put("H", 1);
                     jSONObject.put("T", str);
-                    jSONObject.put("F", jpApplication.getAccountName());
+                    jSONObject.put("F", OLBaseActivity.getAccountName());
                     new OLPlayHallRoomTask(this).execute(jSONObject.toString(), "");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -439,8 +437,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         super.onCreate(savedInstanceState);
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
-        jpApplication = (JPApplication) getApplication();
-        sharedPreferences = getSharedPreferences("mails_" + jpApplication.getAccountName(), MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("mails_" + OLBaseActivity.getAccountName(), MODE_PRIVATE);
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_hall_list);
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);

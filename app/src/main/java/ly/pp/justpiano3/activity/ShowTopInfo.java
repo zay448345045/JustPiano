@@ -24,14 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class ShowTopInfo extends BaseActivity implements Handler.Callback, OnClickListener {
-    public JPApplication jpApplication;
     public List<Map<String, Object>> dataList;
     public LayoutInflater layoutInflater;
     public int size;
@@ -116,7 +114,6 @@ public final class ShowTopInfo extends BaseActivity implements Handler.Callback,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         setContentView(R.layout.ol_top_info);
         layoutInflater = LayoutInflater.from(this);
         jpprogressBar = new JPProgressBar(this);

@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.entity.OLKeyboardState;
@@ -86,7 +86,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         ImageView imageView7 = view.findViewById(R.id.ol_player_family);
         int lv = playerList.get(i).getInt("LV");
         int cl = playerList.get(i).getInt("CL");
-        if (JPApplication.kitiName.equals(userName)) {
+        if (OLBaseActivity.kitiName.equals(userName)) {
             olPlayKeyboardRoom.lv = lv;
             olPlayKeyboardRoom.cl = cl;
             olPlayKeyboardRoom.playerKind = string4;

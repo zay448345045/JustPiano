@@ -16,22 +16,19 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLFamily;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
     private final List<Map<String, String>> list;
-    private final JPApplication jpApplication;
     private final LayoutInflater layoutInflater;
-    private final OLFamily family;
+    private final OLFamily olFamily;
 
-    public FamilyPeopleAdapter(List<Map<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
-        this.jpApplication = jpApplication;
+    public FamilyPeopleAdapter(List<Map<String, String>> list, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.list = list;
         this.layoutInflater = layoutInflater;
-        family = olFamily;
+        this.olFamily = olFamily;
     }
 
     @Override
@@ -90,27 +87,25 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
             default -> positionText.setText("");
         }
         if (list.get(i).get("O").equals("0")) {
-            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            nameText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            positionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            contributionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            lvText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            dateText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
         } else {
-            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            nameText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            positionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            contributionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            lvText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            dateText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
         }
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
-            PopupWindow popupWindow = family.loadInfoPopupWindow(name, userPosition);
-            if (popupWindow != null) {
-                int[] iArr = new int[2];
-                linearLayout.getLocationOnScreen(iArr);
-                popupWindow.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
-            }
+            PopupWindow popupWindow = olFamily.loadInfoPopupWindow(name, userPosition);
+            int[] iArr = new int[2];
+            linearLayout.getLocationOnScreen(iArr);
+            popupWindow.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
         });
         return view;
     }

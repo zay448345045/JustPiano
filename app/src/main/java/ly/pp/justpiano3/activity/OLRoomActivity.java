@@ -100,7 +100,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public int roomMode;
     public TextView roomNameView;
     public String roomName;
-    protected JPApplication jpApplication;
     public String playerKind = "";
     public Bundle roomInfoBundle;
     public Bundle hallInfoBundle;
@@ -242,7 +241,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     public void setPrivateChatUserName(String str) {
         userTo = "@" + str + ":";
-        if (!str.isEmpty() && !str.equals(JPApplication.kitiName)) {
+        if (!str.isEmpty() && !str.equals(OLBaseActivity.kitiName)) {
             sendTextView.setText(userTo);
         }
         Spannable text = sendTextView.getText();
@@ -412,7 +411,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             msgList.add(message.getData());
         }
         // 聊天音效播放
-        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), jpApplication.getKitiName())) {
+        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
             SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
         }
         // 聊天记录存储
@@ -539,7 +538,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public void handlePrivateChat(Message message) {
         roomTabs.setCurrentTab(1);
         String string = message.getData().getString("U");
-        if (string != null && !string.equals(JPApplication.kitiName)) {
+        if (string != null && !string.equals(OLBaseActivity.kitiName)) {
             userTo = "@" + string + ":";
             sendTextView.setText(userTo);
             Spannable text = sendTextView.getText();
@@ -592,7 +591,6 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     protected void initRoomActivity(Bundle savedInstanceState) {
         layoutInflater = LayoutInflater.from(this);
-        jpApplication = (JPApplication) getApplication();
         getRoomPlayerMap().clear();
         roomNameView = findViewById(R.id.room_title);
         roomInfoBundle = getIntent().getExtras();

@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
@@ -80,7 +79,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
         }
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olRoomActivity.getResources(), R.drawable._none, olRoomActivity.getTheme()));
-        if (!user.getPlayerName().equals(JPApplication.kitiName)) {
+        if (!user.getPlayerName().equals(OLBaseActivity.kitiName)) {
             if (user.getCpKind() <= 0 || user.getCpKind() > 3) {
                 showCoupleDialogButton.setVisibility(View.GONE);
             } else {

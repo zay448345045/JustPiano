@@ -28,6 +28,7 @@ import java.io.PrintStream;
 
 import kotlin.Unit;
 import ly.pp.justpiano3.activity.JustPiano;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.database.SongDatabase;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;
@@ -47,47 +48,7 @@ public final class JPApplication extends Application {
 
     private static SongDatabase songDatabase;
 
-    public static String kitiName = "";
-    public static SharedPreferences accountListSharedPreferences;
-
-    public String loginResultTitle = "";
-    public String loginResultMessage = "";
-    private String accountName = "";
-    private String password = "";
     private boolean appInException;
-
-    public String getAccountName() {
-        if (accountName.isEmpty()) {
-            accountName = accountListSharedPreferences.getString("name", "");
-        }
-        return accountName;
-    }
-
-    public void setAccountName(String str) {
-        accountName = str;
-    }
-
-    public String getPassword() {
-        if (password.isEmpty()) {
-            password = accountListSharedPreferences.getString("password", "");
-        }
-        return password;
-    }
-
-    public void setPassword(String str) {
-        password = str;
-    }
-
-    public String getKitiName() {
-        if (TextUtils.isEmpty(kitiName)) {
-            kitiName = accountListSharedPreferences.getString("userKitiName", "");
-        }
-        return kitiName;
-    }
-
-    public void setKitiName(String str) {
-        kitiName = str;
-    }
 
     @Override
     public void onCreate() {
@@ -104,7 +65,7 @@ public final class JPApplication extends Application {
         // 初始化一些图像缓存
         ImageLoadUtil.init(this);
         // 从app应用数据中加载账号信息
-        accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
+        OLBaseActivity.accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         // 初始化数据库
         songDatabase = Room.databaseBuilder(this, SongDatabase.class, "data")
                 .addMigrations(generateMigrations()).allowMainThreadQueries().build();
@@ -195,14 +156,14 @@ public final class JPApplication extends Application {
             throwable.printStackTrace();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
-                    TextUtils.isEmpty(kitiName) ? "未知用户" : kitiName,
+                    TextUtils.isEmpty(OLBaseActivity.kitiName) ? "未知用户" : OLBaseActivity.kitiName,
                     DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
             // 关闭网络连接服务，退出进程
             OnlineUtil.outlineConnectionService(JPApplication.this);
             // 关闭fluidsynth
             SoundEngineUtil.closeFluidSynth();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

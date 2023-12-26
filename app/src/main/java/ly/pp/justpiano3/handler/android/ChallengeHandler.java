@@ -10,6 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLChallenge;
 import ly.pp.justpiano3.activity.PianoPlay;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
@@ -42,7 +43,7 @@ public final class ChallengeHandler extends Handler {
                         }
                         challenge.scoreListView.setAdapter(new ChallengeListAdapter(challenge.scoreList, challenge.layoutinflater));
                         StringBuilder sb = new StringBuilder();
-                        sb.append("用户名称:").append(challenge.jpApplication.getKitiName())
+                        sb.append("用户名称:").append(OLBaseActivity.getKitiName())
                                 .append("\n最高分:").append(data.getInt("S"))
                                 .append("\n今日名次:").append(data.getString("P"))
                                 .append("\n昨日名次:").append(data.getString("Z"))

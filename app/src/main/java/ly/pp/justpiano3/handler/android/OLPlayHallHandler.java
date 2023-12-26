@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.Objects;
 
-import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
@@ -60,12 +60,12 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.msgList.add(message.getData());
                 }
                 // 聊天音效播放
-                if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), olPlayHall.jpApplication.getKitiName())) {
+                if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
                     SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
                 }
                 // 聊天记录存储
                 ChatUtil.chatsSaveHandle(message, olPlayHall, time);
-                olPlayHall.mo2828a(olPlayHall.msgListView, olPlayHall.msgList);
+                olPlayHall.bindChatAdapter(olPlayHall.msgListView, olPlayHall.msgList);
             });
             case 2 -> {
                 Bundle data = message.getData();
@@ -84,7 +84,7 @@ public final class OLPlayHallHandler extends Handler {
                 for (int i = 0; i < size; i++) {
                     olPlayHall.roomList.add(data1.getBundle(String.valueOf(i)));
                 }
-                olPlayHall.mo2831b(olPlayHall.roomListView, olPlayHall.roomList);
+                olPlayHall.bindAdapter(olPlayHall.roomListView, olPlayHall.roomList);
             });
             case 4 -> post(() -> Toast.makeText(olPlayHall, message.getData().getString("result"), Toast.LENGTH_SHORT).show());
             case 5 -> post(() -> {
@@ -95,14 +95,14 @@ public final class OLPlayHallHandler extends Handler {
                     for (int i = 0; i < size; i++) {
                         olPlayHall.friendList.add(data16.getBundle(String.valueOf(i)));
                     }
-                    olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
+                    olPlayHall.bindMainGameAdapter(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
                 }
                 olPlayHall.pageIsEnd = size < 20;
             });
             case 6 -> post(() -> {
                 olPlayHall.tabHost.setCurrentTab(1);
                 String string = message.getData().getString("U");
-                if (!Objects.equals(string, JPApplication.kitiName)) {
+                if (!Objects.equals(string, OLBaseActivity.kitiName)) {
                     olPlayHall.sendTo = "@" + string + ":";
                     olPlayHall.sendTextView.setText(olPlayHall.sendTo);
                     Spannable text = olPlayHall.sendTextView.getText();
@@ -119,7 +119,7 @@ public final class OLPlayHallHandler extends Handler {
                     for (int i = 0; i < size; i++) {
                         olPlayHall.userInHallList.add(data13.getBundle(String.valueOf(i)));
                     }
-                    olPlayHall.mo2829a(olPlayHall.userInHallListView, olPlayHall.userInHallList, 3, true);
+                    olPlayHall.bindMainGameAdapter(olPlayHall.userInHallListView, olPlayHall.userInHallList, 3, true);
                 }
             });
             case 8 -> post(() -> {
@@ -222,7 +222,7 @@ public final class OLPlayHallHandler extends Handler {
                 builder.setName(data12.getString("F"));
                 olPlayHall.friendList.remove(message.arg1);
                 olPlayHall.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
-                olPlayHall.mo2829a(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
+                olPlayHall.bindMainGameAdapter(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
             });
             case 11 -> post(() -> {
                 Bundle data15 = message.getData();
@@ -268,7 +268,7 @@ public final class OLPlayHallHandler extends Handler {
                 }
                 jpDialogBuilder.buildAndShowDialog();
             });
-            case 12 -> post(() -> olPlayHall.mo2827a(message.getData()));
+            case 12 -> post(() -> olPlayHall.showRoomInfo(message.getData()));
             case 13 -> post(() -> {
                 Bundle data15 = message.getData();
                 Intent intent12 = new Intent(olPlayHall, PianoPlay.class);

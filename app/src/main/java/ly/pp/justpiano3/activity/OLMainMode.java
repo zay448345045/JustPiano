@@ -17,7 +17,6 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class OLMainMode extends OLBaseActivity implements OnClickListener {
-    public JPApplication jpApplication;
     public OLMainModeHandler olMainModeHandler = new OLMainModeHandler(this);
 
     @Override
@@ -51,7 +50,7 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
             startActivity(intent);
             finish();
         } else if (id == R.id.ol_playhall_b) {
-            if (jpApplication.getAccountName().isEmpty()) {
+            if (OLBaseActivity.getAccountName().isEmpty()) {
                 Toast.makeText(this, "您已经掉线请返回重新登陆!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -80,7 +79,6 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jpApplication = (JPApplication) getApplication();
         GlobalSetting.INSTANCE.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
         GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
@@ -91,15 +89,15 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
         findViewById(R.id.ol_web_b).setOnClickListener(this);
         findViewById(R.id.ol_chatblack_b).setOnClickListener(this);
         findViewById(R.id.ol_finduser_b).setOnClickListener(this);
-        OnlineUtil.outlineConnectionService(jpApplication);
-        if (jpApplication.loginResultTitle != null && jpApplication.loginResultMessage != null
-                && !jpApplication.loginResultTitle.isEmpty() && !jpApplication.loginResultMessage.isEmpty()) {
+        OnlineUtil.outlineConnectionService((JPApplication) getApplication());
+        if (OLBaseActivity.loginResultTitle != null && OLBaseActivity.loginResultMessage != null
+                && !OLBaseActivity.loginResultTitle.isEmpty() && !OLBaseActivity.loginResultMessage.isEmpty()) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setTitle(jpApplication.loginResultTitle);
-            jpDialogBuilder.setMessage(jpApplication.loginResultMessage);
+            jpDialogBuilder.setTitle(OLBaseActivity.loginResultTitle);
+            jpDialogBuilder.setMessage(OLBaseActivity.loginResultMessage);
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
-                jpApplication.loginResultMessage = "";
-                jpApplication.loginResultTitle = "";
+                OLBaseActivity.loginResultMessage = "";
+                OLBaseActivity.loginResultTitle = "";
                 dialog.dismiss();
             }).buildAndShowDialog();
         }

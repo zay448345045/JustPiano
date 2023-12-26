@@ -168,7 +168,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
                 Toast.makeText(weakReference.get(), "曲库同步成功，已处理曲谱" + count + "首", Toast.LENGTH_SHORT).show();
                 ((OLMainMode) weakReference.get()).jpProgressBar.show();
                 OnlineUtil.cancelAutoReconnect();
-                OnlineUtil.onlineConnectionService(((OLMainMode) weakReference.get()).jpApplication);
+                OnlineUtil.onlineConnectionService((JPApplication) weakReference.get().getApplication());
             }
         } else if (weakReference.get() instanceof MelodySelect) {
             if (Objects.equals("error", result)) {

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.PlayFinish;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -26,7 +27,7 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... v) {
         String str = "";
-        if (!playFinish.get().jpApplication.getAccountName().isEmpty()) {
+        if (!OLBaseActivity.getAccountName().isEmpty()) {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
                     .host(OnlineUtil.server)
@@ -38,7 +39,7 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
             RequestBody body = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("songID", playFinish.get().songID)
-                    .add("userName", playFinish.get().jpApplication.getAccountName())
+                    .add("userName", OLBaseActivity.getAccountName())
                     .add("scoreArray", playFinish.get().scoreArray)
                     .build();
             Request request = new Request.Builder()

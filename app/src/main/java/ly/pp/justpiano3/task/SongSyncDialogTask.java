@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
+import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -65,7 +66,7 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
             } else {
                 olMainMode.get().jpProgressBar.show();
                 OnlineUtil.cancelAutoReconnect();
-                OnlineUtil.onlineConnectionService(olMainMode.get().jpApplication);
+                OnlineUtil.onlineConnectionService((JPApplication) olMainMode.get().getApplication());
                 i = 0;
             }
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olMainMode.get());

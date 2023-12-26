@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.OLBaseActivity;
 import ly.pp.justpiano3.activity.OLMainMode;
 import ly.pp.justpiano3.activity.OLPlayHall;
 import ly.pp.justpiano3.activity.OLPlayHallRoom;
@@ -69,7 +69,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                     }
                     olPlayHallRoom.sortListAndBindAdapter(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
                     olPlayHallRoom.userName.setText(data.getString("U"));
-                    JPApplication.kitiName = data.getString("U");
+                    OLBaseActivity.kitiName = data.getString("U");
                     int lv = data.getInt("LV");
                     int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
                     olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + targetExp);
@@ -310,7 +310,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
                         hashMap.put("B", data.getBundle(String.valueOf(i)).getString("B"));
                         hashMap.put("G", bonusGet);
-                        if (JPApplication.kitiName.equals(name) && bonusGet.equals("0")) {
+                        if (OLBaseActivity.kitiName.equals(name) && bonusGet.equals("0")) {
                             disabled = false;
                         }
                         list.add(hashMap);
