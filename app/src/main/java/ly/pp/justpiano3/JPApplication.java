@@ -3,8 +3,6 @@ package ly.pp.justpiano3;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -183,21 +181,6 @@ public final class JPApplication extends Application {
         OnlineUtil.outlineConnectionService(this);
         // 关闭fluidsynth
         SoundEngineUtil.closeFluidSynth();
-    }
-
-    /**
-     * 重写 getResource 方法，防止系统字体影响
-     */
-    @Override
-    public Resources getResources() {
-        // 禁止app字体大小跟随系统字体大小调节
-        Resources resources = super.getResources();
-        if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
-            Configuration configuration = resources.getConfiguration();
-            configuration.fontScale = 1.0f;
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-        }
-        return resources;
     }
 
     public static SongDatabase getSongDatabase() {
