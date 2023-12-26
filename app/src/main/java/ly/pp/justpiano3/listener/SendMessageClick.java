@@ -15,14 +15,14 @@ import ly.pp.justpiano3.task.PopUserInfoTask;
 public final class SendMessageClick implements OnClickListener {
     private final PopUserInfo popUserInfo;
     private final TextView textView;
-    private final String f5775c;
-    private final String f5776d;
+    private final String userName;
+    private final String account;
 
     public SendMessageClick(PopUserInfo popUserInfo, TextView textView, String str, String str2) {
         this.popUserInfo = popUserInfo;
         this.textView = textView;
-        f5775c = str;
-        f5776d = str2;
+        userName = str;
+        account = str2;
     }
 
     @Override
@@ -36,10 +36,10 @@ public final class SendMessageClick implements OnClickListener {
                 Toast.makeText(popUserInfo, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 jSONObject.put("H", 0);
-                jSONObject.put("T", f5775c);
-                jSONObject.put("F", f5776d);
+                jSONObject.put("T", userName);
+                jSONObject.put("F", account);
                 jSONObject.put("M", valueOf);
-                if (!f5775c.isEmpty() && !f5776d.isEmpty()) {
+                if (!userName.isEmpty() && !account.isEmpty()) {
                     popUserInfo.keywords = jSONObject.toString();
                     new PopUserInfoTask(popUserInfo).execute();
                 }

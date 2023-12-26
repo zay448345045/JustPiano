@@ -5,7 +5,7 @@
 	<string name="app_name">极品钢琴</string>
 	<string name="update_log">更新日志</string>
 	<string name="about">
-		2023-12-29 极品钢琴V4.9版本更新日志：\n
+		2023-12-27 极品钢琴V4.9版本更新日志：\n
 		1.支持加载sf2音源，支持调整延音、混响及按键震动\n
 		2.本地及联网键盘模式新增自由演奏瀑布流功能，优化绘制性能\n
 		3.钢琴键盘拓展至88键，支持传输MIDI设备延音踏板信号\n

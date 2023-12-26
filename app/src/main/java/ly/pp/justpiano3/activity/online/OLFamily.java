@@ -262,7 +262,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             Collections.sort(peopleList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
             bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
         } else if (id == R.id.column_last_login_time) {
-            Collections.sort(peopleList, new Comparator<Map<String, String>>() {
+            Collections.sort(peopleList, new Comparator<>() {
                 private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
                 @Override

@@ -17,11 +17,11 @@ import ly.pp.justpiano3.activity.local.RecordFiles;
 
 public final class RecordFilesAdapter extends BaseAdapter {
     private List<Map<String, Object>> list;
-    private final RecordFiles recordfiles;
+    private final RecordFiles recordFiles;
 
     public RecordFilesAdapter(List<Map<String, Object>> list, RecordFiles recordFiles) {
         this.list = list;
-        recordfiles = recordFiles;
+        this.recordFiles = recordFiles;
     }
 
     public void setDataList(List<Map<String, Object>> list) {
@@ -46,7 +46,7 @@ public final class RecordFilesAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(recordfiles).inflate(R.layout.chat_record_file_list, null);
+            view = LayoutInflater.from(recordFiles).inflate(R.layout.chat_record_file_list, null);
         }
         String fileName = (String) list.get(index).get("filenames");
         String fileTime = (String) list.get(index).get("time");
@@ -55,8 +55,8 @@ public final class RecordFilesAdapter extends BaseAdapter {
         view.findViewById(R.id.showtxt).setVisibility(View.GONE);
         ((TextView) view.findViewById(R.id.txtview)).setText(fileName);
         ((TextView) view.findViewById(R.id.timeview)).setText(fileTime);
-        view.findViewById(R.id.playview).setOnClickListener(v -> recordfiles.play(filePath));
-        imageView.setOnClickListener(v -> recordfiles.delete(index, fileName, filePath));
+        view.findViewById(R.id.playview).setOnClickListener(v -> recordFiles.play(filePath));
+        imageView.setOnClickListener(v -> recordFiles.delete(index, fileName, filePath));
         return view;
     }
 }

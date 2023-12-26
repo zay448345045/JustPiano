@@ -11,18 +11,18 @@ import ly.pp.justpiano3.task.ShowSongsInfoPlayTask;
 public final class ShowSongsInfoPlayClick implements OnClickListener {
 
     private final ShowSongsInfoAdapter showSongsInfoAdapter;
-    private String f5892b;
+    private String songName;
     private final String songID;
-    private int f5894d;
-    private double f5895e;
+    private int score;
+    private double degree;
     private final Intent intent;
 
     public ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String str, String l, int i, double d) {
         this.showSongsInfoAdapter = showSongsInfoAdapter;
-        f5892b = str;
+        songName = str;
         songID = l;
-        f5894d = i;
-        f5895e = d;
+        score = i;
+        degree = d;
         this.intent = new Intent();
         intent.setClass(showSongsInfoAdapter.showSongsInfo, PianoPlay.class);
     }
@@ -35,10 +35,10 @@ public final class ShowSongsInfoPlayClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        showSongsInfoAdapter.showSongsInfo.songName = f5892b;
+        showSongsInfoAdapter.showSongsInfo.songName = songName;
         showSongsInfoAdapter.showSongsInfo.songID = songID;
-        showSongsInfoAdapter.showSongsInfo.score = f5894d;
-        showSongsInfoAdapter.showSongsInfo.nandu = f5895e;
+        showSongsInfoAdapter.showSongsInfo.score = score;
+        showSongsInfoAdapter.showSongsInfo.degree = degree;
         new ShowSongsInfoPlayTask(showSongsInfoAdapter.showSongsInfo, intent).execute();
     }
 }

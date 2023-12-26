@@ -10,16 +10,16 @@ import ly.pp.justpiano3.constant.Consts;
 
 public final class RoomMiniPeopleAdapter extends BaseAdapter {
     private final Context context;
-    private final int[] f5805b;
+    private final int[] genderResource;
 
     RoomMiniPeopleAdapter(Context context, int[] iArr) {
         this.context = context;
-        f5805b = iArr;
+        genderResource = iArr;
     }
 
     @Override
     public int getCount() {
-        return f5805b.length;
+        return genderResource.length;
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class RoomMiniPeopleAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imageView = new ImageView(context);
-        imageView.setImageResource(Consts.sex[f5805b[i]]);
+        imageView.setImageResource(Consts.sex[genderResource[i]]);
         return imageView;
     }
 }

@@ -21,7 +21,6 @@ import java.util.Map;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.online.OLSongsPage;
 import ly.pp.justpiano3.adapter.ShowSongsInfoAdapter;
 import ly.pp.justpiano3.task.ShowSongsInfoTask;
 import ly.pp.justpiano3.utils.GZIPUtil;
@@ -34,7 +33,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
     public String songID;
     public ListView songsListView;
     public JPProgressBar jpprogressBar;
-    public double nandu;
+    public double degree;
     public int score;
     public String head = "1";
     public int page;

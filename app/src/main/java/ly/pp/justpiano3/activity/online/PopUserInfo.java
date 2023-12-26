@@ -107,7 +107,7 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
             if (!kitiName.equals(OLBaseActivity.kitiName)) {
                 headType = 2;
                 String str = kitiName;
-                String P = OLBaseActivity.getAccountName();
+                String acountName = OLBaseActivity.getAccountName();
                 View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
                 TextView textView = inflate.findViewById(R.id.text_1);
                 TextView textView2 = inflate.findViewById(R.id.title_1);
@@ -116,7 +116,7 @@ public final class PopUserInfo extends BaseActivity implements Callback, OnClick
                 textView3.setVisibility(View.GONE);
                 textView2.setText("消息:");
                 new JPDialogBuilder(this).setTitle("发私信给" + str).loadInflate(inflate)
-                        .setFirstButton("发送", new SendMessageClick(this, textView, str, P))
+                        .setFirstButton("发送", new SendMessageClick(this, textView, str, acountName))
                         .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
             }
         }

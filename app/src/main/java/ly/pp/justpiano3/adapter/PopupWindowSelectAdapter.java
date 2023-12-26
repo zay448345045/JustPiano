@@ -15,7 +15,7 @@ import java.util.List;
 import ly.pp.justpiano3.R;
 
 public final class PopupWindowSelectAdapter extends BaseAdapter {
-    Handler handler;
+    private final Handler handler;
     private final List<String> list;
     private final Activity activity;
     private final int messageWhat;

@@ -10,17 +10,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
 
 public final class MiniScoreAdapter extends BaseAdapter {
     private List<Bundle> list;
-    private final LayoutInflater layoutInfalter;
+    private final LayoutInflater layoutInflater;
     private final int roomMode;
-    private final int[] originalRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name};
-    private final int[] teamRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
 
     public MiniScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
         this.list = list;
-        layoutInfalter = layoutInflater;
+        this.layoutInflater = layoutInflater;
         roomMode = i;
     }
 
@@ -48,7 +47,7 @@ public final class MiniScoreAdapter extends BaseAdapter {
         String str;
         int i2;
         String str2;
-        view = layoutInfalter.inflate(R.layout.ol_play_score_view, null);
+        view = layoutInflater.inflate(R.layout.ol_play_score_view, null);
         view.setKeepScreenOn(true);
         try {
             str2 = (String) list.get((byte) i).get("U");
@@ -76,16 +75,16 @@ public final class MiniScoreAdapter extends BaseAdapter {
         } else {
             TextView textView = view.findViewById(R.id.ol_user_text);
             if (roomMode == 1 && i2 > 0) {
-                textView.setBackgroundResource(originalRoomModeResource[i2 - 1]);
+                textView.setBackgroundResource(Consts.originalRoomModeResource[i2 - 1]);
             } else if (roomMode == 2 && i2 > 0) {
-                textView.setBackgroundResource(teamRoomModeResource[i2 - 1]);
+                textView.setBackgroundResource(Consts.teamRoomModeResource[i2 - 1]);
             } else if (roomMode == 0) {
                 if (i2 == 0) {
                     ((TextView) view.findViewById(R.id.ol_state_text)).setText("右     ");
                 } else {
                     ((TextView) view.findViewById(R.id.ol_state_text)).setText("左     ");
                 }
-                textView.setBackgroundResource(originalRoomModeResource[0]);
+                textView.setBackgroundResource(Consts.originalRoomModeResource[0]);
             }
             textView.setText(str2);
             ((TextView) view.findViewById(R.id.ol_score_text)).setText(str);

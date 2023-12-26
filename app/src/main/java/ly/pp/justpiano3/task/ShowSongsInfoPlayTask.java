@@ -68,7 +68,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
         intent.putExtra("songName", showSongsInfo.get().songName);
         intent.putExtra("songID", showSongsInfo.get().songID);
         intent.putExtra("topScore", showSongsInfo.get().score);
-        intent.putExtra("degree", showSongsInfo.get().nandu);
+        intent.putExtra("degree", showSongsInfo.get().degree);
         showSongsInfo.get().startActivity(intent);
         showSongsInfo.get().jpprogressBar.dismiss();
     }
