@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -54,7 +53,6 @@ public class BaseActivity extends ComponentActivity {
         Configuration config = resources.getConfiguration();
         if (config.fontScale != 1.0f) {
             config.fontScale = 1.0f;
-            Context context = getApplicationContext();
             resources.updateConfiguration(config, resources.getDisplayMetrics());
         }
         return resources;
