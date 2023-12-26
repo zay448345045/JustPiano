@@ -697,7 +697,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     @Override
     public boolean handleMessage(Message message) {
         if (message.what == 3) {
-            CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.CHINESE).format(new Date());
+            CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(new Date());
             if (timeTextView != null) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                     BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);

@@ -255,7 +255,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
     @Override
     public boolean handleMessage(Message message) {
         if (message.what == 3) {
-            CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.CHINESE).format(new Date());
+            CharSequence format = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(new Date());
             if (timeTextView != null) {
                 timeTextView.setText(format);
             }
